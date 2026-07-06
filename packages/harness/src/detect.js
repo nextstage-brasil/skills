@@ -23,12 +23,12 @@ export function detectProject(projectRoot) {
     return existsSync(path) && statSync(path).isDirectory() && readdirSync(path).length > 0;
   });
   const hasAgents = existsSync(join(resolved, 'AGENTS.md'));
-  const hasCursorRules = existsSync(join(resolved, '.cursor', 'rules'));
-  const hasClaudeDir = existsSync(join(resolved, '.claude'));
   const hasDocsVersions = existsSync(join(resolved, 'docs', 'versions'));
   const hasInstalledSkills = existsSync(join(resolved, '.agents', 'skills'));
+  const hasPersonas = existsSync(join(resolved, 'agents'));
 
-  const isExisting = hasManifest || hasCodeDir || hasAgents || hasCursorRules || hasDocsVersions;
+  const isExisting =
+    hasManifest || hasCodeDir || hasAgents || hasDocsVersions || hasPersonas;
 
   return {
     projectRoot: resolved,
@@ -37,37 +37,11 @@ export function detectProject(projectRoot) {
       hasManifest,
       hasCodeDir,
       hasAgents,
-      hasCursorRules,
-      hasClaudeDir,
       hasDocsVersions,
       hasInstalledSkills,
+      hasPersonas,
     },
-    harnesses: detectHarnesses(resolved, { hasCursorRules, hasClaudeDir }),
   };
-}
-
-const HARNESS_AGENT_DIRS = {
-  claude: ['.claude', 'agents'],
-  cursor: ['.cursor', 'agents'],
-};
-
-// Which native harness dirs are present, so we know where to project
-// harness-agnostic agent personas (see src/agentPersonas.js). A project can
-// have more than one harness set up at once.
-function detectHarnesses(resolved, { hasCursorRules, hasClaudeDir }) {
-  const harnesses = [];
-  if (hasClaudeDir) harnesses.push('claude');
-  if (hasCursorRules || existsSync(join(resolved, '.cursor'))) harnesses.push('cursor');
-  return harnesses;
-}
-
-export { HARNESS_AGENT_DIRS };
-
-// Where to copy agent personas when the consumer project has no harness dirs yet.
-export const DEFAULT_PROJECTION_HARNESSES = ['cursor'];
-
-export function projectionHarnesses(detected = []) {
-  return detected.length > 0 ? detected : DEFAULT_PROJECTION_HARNESSES;
 }
 
 function resolveDir(dir) {

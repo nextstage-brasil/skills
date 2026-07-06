@@ -7,49 +7,45 @@ Interactive CLI to install [NextStage skills](https://github.com/nextstage-brasi
 ### From npm (after publish)
 
 ```bash
-# Interactive wizard (project directory, preset, scaffold)
 npx @nextstage-brasil/harness
 ```
 
 ### Local clone (before publish)
 
 ```bash
-# One-off from absolute path
 npx file:~/apps/nextstage/skills/packages/harness
-
-# Or link globally
 cd ~/apps/nextstage/skills/packages/harness && npm link
-harness list
 ```
 
 ### Non-interactive
 
 ```bash
-npx @nextstage-brasil/harness --preset recommended --yes
 npx @nextstage-brasil/harness --preset gitlab --yes
-npx @nextstage-brasil/harness --skill execute-gitlab-issue --yes
 npx @nextstage-brasil/harness list
 ```
-
-Replace `npx @nextstage-brasil/harness` with `npx file:<path-to>/packages/harness` or `harness` when using `npm link`.
-
-`init` is an optional alias: `harness init` works the same as calling without a subcommand.
 
 ## What it does
 
 1. Detects whether the target is a **new** or **existing** project.
-2. Resolves skill dependencies from `templates/catalog.json` (mirrors skill `depends` frontmatter).
-3. Runs `npx skills add` against `nextstage-brasil/skills` (or a local clone when detected).
-4. Optionally scaffolds `AGENTS.md`, `docs/context/`, `docs/specs/`, and `docs/versions/`.
+2. Resolves skill dependencies from `templates/catalog.json`.
+3. Runs `npx skills add` → `.agents/skills/`.
+4. Scaffolds `AGENTS.md` and `docs/` (unless `--no-scaffold`).
+5. Copies agent personas to `agents/<name>.md` when the matching skill is installed (unless `--no-agents`).
+
+## Agent personas
+
+Canonical source: repo-root `agents/*.md`.
+
+Installed to `agents/<name>.md` in the target project — same path, harness-agnostic content. No vendor-specific directories.
 
 ## Presets
 
-| Preset | Skills |
-|--------|--------|
-| `recommended` | SDD planning chain + test generators + living specs |
-| `gitlab` | MCP GitLab, review gate, issue execution, board sync |
-| `brownfield` | Bootstrap + reverse-spec |
-| `implementation` | Coder, investigator, review |
+| Preset           | Skills                                               |
+| ---------------- | ---------------------------------------------------- |
+| `recommended`    | SDD planning chain + test generators + living specs  |
+| `gitlab`         | MCP GitLab, review gate, issue execution, board sync |
+| `brownfield`     | Bootstrap + reverse-spec                             |
+| `implementation` | Coder, investigator, review                          |
 
 ## Development
 
@@ -57,19 +53,7 @@ Replace `npx @nextstage-brasil/harness` with `npx file:<path-to>/packages/harnes
 cd packages/harness
 npm install
 npm test
-node bin/cli.js list
-node bin/cli.js --dir /tmp/nextstage-test --preset recommended --yes --dry-run
 ```
-
-## Publish
-
-From `packages/harness` (requires npm login to `@nextstage-brasil` scope):
-
-```bash
-npm publish --access public
-```
-
-After the first publish, `npx @nextstage-brasil/harness` works without a local path.
 
 ## License
 

@@ -18,14 +18,14 @@ Options:
   --source <path>        Skills source (default: nextstage-brasil/skills or local repo)
   --yes, -y              Non-interactive; use recommended preset and default scaffold
   --no-scaffold          Skip AGENTS.md and docs/ scaffolding
-  --no-agents            Skip agent persona projection (.cursor/agents/, .claude/agents/)
+  --no-agents            Skip copying agent personas to agents/
   --dry-run              Show resolved skills without installing
   --help, -h             Show this help
 
 Examples:
   npx @nextstage-brasil/harness
   npx @nextstage-brasil/harness --preset gitlab --yes
-  npx @nextstage-brasil/harness --skill execute-gitlab-issue --yes
+  npx @nextstage-brasil/harness --preset gitlab --yes
   npx @nextstage-brasil/harness list
 `.trim();
 

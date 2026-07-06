@@ -1,5 +1,5 @@
 import * as p from '@clack/prompts';
-import { detectProject, projectionHarnesses } from './detect.js';
+import { detectProject } from './detect.js';
 import {
   allSkillNames,
   getPreset,
@@ -10,8 +10,7 @@ import {
 import { installSkills } from './installer.js';
 import { scaffoldProject } from './scaffold.js';
 import { resolveSource } from './source.js';
-import { availablePersonas, projectAgentPersonas, resolveAgentsDir } from './agentPersonas.js';
-import { HARNESS_AGENT_DIRS } from './detect.js';
+import { availablePersonas, installAgentPersonas, resolveAgentsDir } from './agentPersonas.js';
 
 export async function runInit(argv = {}) {
   p.intro('NextStage harness');
@@ -46,18 +45,11 @@ export async function runInit(argv = {}) {
   const resolvedSource = resolveSource(argv.source);
   const agentsDir = resolveAgentsDir(resolvedSource);
   const matchingPersonas = availablePersonas(agentsDir).filter((name) => resolved.includes(name));
-  const targetHarnesses = projectionHarnesses(detection.harnesses);
-  const usingDefaultHarness = detection.harnesses.length === 0 && targetHarnesses.length > 0;
 
   if (argv['dry-run']) {
     p.log.info(`Source: ${resolvedSource}`);
-    if (matchingPersonas.length > 0) {
-      p.log.info(
-        `Agent personas → ${targetHarnesses.map((h) => HARNESS_AGENT_DIRS[h]?.join('/') ?? h).join(', ')}: ${matchingPersonas.join(', ')}`,
-      );
-      if (usingDefaultHarness) {
-        p.log.info('No harness detected — defaulting to .cursor/agents/');
-      }
+    if (matchingPersonas.length > 0 && !argv['no-agents']) {
+      p.log.info(`Agent personas → agents/: ${matchingPersonas.join(', ')}`);
     }
     p.log.info('Dry run — no files written, no skills installed.');
     p.outro('Done.');
@@ -87,12 +79,8 @@ export async function runInit(argv = {}) {
   }
 
   if (matchingPersonas.length > 0 && !argv['no-agents']) {
-    if (usingDefaultHarness) {
-      p.log.info('No harness detected — installing agent personas to .cursor/agents/');
-    }
-    const personaResult = projectAgentPersonas({
+    const personaResult = installAgentPersonas({
       agentsDir,
-      harnesses: targetHarnesses,
       skills: resolved,
       projectRoot: detection.projectRoot,
     });
@@ -101,9 +89,6 @@ export async function runInit(argv = {}) {
     }
     if (personaResult.skipped.length > 0) {
       p.log.warn(`Agent personas skipped (already exist): ${personaResult.skipped.join(', ')}`);
-    }
-    if (personaResult.created.length === 0 && personaResult.skipped.length === 0) {
-      p.log.warn('No agent personas were written — check that matching skills are in the preset.');
     }
   }
 
@@ -258,9 +243,9 @@ async function resolveScaffoldOptions(argv, detection) {
 
   const force = detection.signals.hasAgents
     ? await p.confirm({
-        message: 'AGENTS.md already exists. Overwrite?',
-        initialValue: false,
-      })
+      message: 'AGENTS.md already exists. Overwrite?',
+      initialValue: false,
+    })
     : false;
 
   if (p.isCancel(force)) {
