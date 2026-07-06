@@ -17,7 +17,9 @@
   },
   "scripts": {
     "test": "node bin/cli.js list && node bin/cli.js --dry-run --yes",
-    "validate:catalog": "node scripts/validate-catalog.js"
+    "validate:catalog": "node scripts/validate-catalog.js",
+    "sync:agents": "node scripts/sync-agents.js",
+    "prepack": "node scripts/sync-agents.js"
   },
   "keywords": [
     "nextstage",

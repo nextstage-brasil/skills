@@ -10,6 +10,7 @@ import {
 import { installSkills } from './installer.js';
 import { scaffoldProject } from './scaffold.js';
 import { resolveSource } from './source.js';
+import { availablePersonas, projectAgentPersonas, resolveAgentsDir } from './agentPersonas.js';
 
 export async function runInit(argv = {}) {
   p.intro('NextStage harness');
@@ -41,8 +42,16 @@ export async function runInit(argv = {}) {
     source: argv.source,
   };
 
+  const resolvedSource = resolveSource(argv.source);
+  const agentsDir = resolveAgentsDir(resolvedSource);
+  const matchingPersonas = availablePersonas(agentsDir).filter((name) => resolved.includes(name));
+
   if (argv['dry-run']) {
-    p.log.info(`Source: ${resolveSource(argv.source)}`);
+    p.log.info(`Source: ${resolvedSource}`);
+    if (matchingPersonas.length > 0) {
+      const harnessLabel = detection.harnesses.length > 0 ? detection.harnesses.join(', ') : 'none detected';
+      p.log.info(`Agent personas that would project (harnesses: ${harnessLabel}): ${matchingPersonas.join(', ')}`);
+    }
     p.log.info('Dry run — no files written, no skills installed.');
     p.outro('Done.');
     return;
@@ -67,6 +76,21 @@ export async function runInit(argv = {}) {
     }
     if (result.skipped.length > 0) {
       p.log.warn(`Skipped (already exist): ${result.skipped.join(', ')}`);
+    }
+  }
+
+  if (matchingPersonas.length > 0 && detection.harnesses.length > 0) {
+    const personaResult = projectAgentPersonas({
+      agentsDir,
+      harnesses: detection.harnesses,
+      skills: resolved,
+      projectRoot: detection.projectRoot,
+    });
+    if (personaResult.created.length > 0) {
+      p.log.success(`Agent personas projected: ${personaResult.created.join(', ')}`);
+    }
+    if (personaResult.skipped.length > 0) {
+      p.log.warn(`Agent personas skipped (already exist): ${personaResult.skipped.join(', ')}`);
     }
   }
 

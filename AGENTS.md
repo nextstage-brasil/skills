@@ -20,3 +20,14 @@ When creating or editing a skill in this repository, **read and follow** the loc
 `~/.agents/skills/skill-creator/SKILL.md`
 
 Use it for structure, frontmatter, description triggering, bundled resources, evals, and iteration — before drafting or changing anything under `skills/`.
+
+## Agent personas
+
+`agents/<name>.md` is a thin, isolated/read-only wrapper over a matching
+`skills/<name>/SKILL.md` — only for the few skills that genuinely benefit
+from running in a separate context (a blocking review gate, an
+investigation that shouldn't pollute the main conversation). It is never a
+place to duplicate a skill's logic, and it must never contain syntax or
+concepts specific to one harness (no Claude Code tool names, no Cursor
+config) — the only harness-specific thing is *where* it gets installed,
+decided by `packages/harness` at install time, not by the file's content.

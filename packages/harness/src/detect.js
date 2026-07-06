@@ -24,6 +24,7 @@ export function detectProject(projectRoot) {
   });
   const hasAgents = existsSync(join(resolved, 'AGENTS.md'));
   const hasCursorRules = existsSync(join(resolved, '.cursor', 'rules'));
+  const hasClaudeDir = existsSync(join(resolved, '.claude'));
   const hasDocsVersions = existsSync(join(resolved, 'docs', 'versions'));
   const hasInstalledSkills = existsSync(join(resolved, '.agents', 'skills'));
 
@@ -37,11 +38,30 @@ export function detectProject(projectRoot) {
       hasCodeDir,
       hasAgents,
       hasCursorRules,
+      hasClaudeDir,
       hasDocsVersions,
       hasInstalledSkills,
     },
+    harnesses: detectHarnesses(resolved, { hasCursorRules, hasClaudeDir }),
   };
 }
+
+const HARNESS_AGENT_DIRS = {
+  claude: ['.claude', 'agents'],
+  cursor: ['.cursor', 'agents'],
+};
+
+// Which native harness dirs are present, so we know where to project
+// harness-agnostic agent personas (see src/agentPersonas.js). A project can
+// have more than one harness set up at once.
+function detectHarnesses(resolved, { hasCursorRules, hasClaudeDir }) {
+  const harnesses = [];
+  if (hasClaudeDir) harnesses.push('claude');
+  if (hasCursorRules || existsSync(join(resolved, '.cursor'))) harnesses.push('cursor');
+  return harnesses;
+}
+
+export { HARNESS_AGENT_DIRS };
 
 function resolveDir(dir) {
   if (dir.startsWith('~')) {

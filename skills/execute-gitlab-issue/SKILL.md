@@ -86,7 +86,7 @@ Types: feat, fix, refactor, test, docs, chore. One commit per repo.
 
 ## Phase 5 — Code review gate (blocking)
 
-Invoke `code-reviewer` in **Issue review mode** with `ISSUE_URL`.
+Invoke `code-reviewer` in **Issue review mode** with `ISSUE_URL`. If the harness supports running isolated personas, prefer `agents/code-reviewer.md` for this gate; otherwise invoke the skill inline.
 
 Workflow does not finish without verdict: `Approved` | `Rejected` | `Blocked`.
 

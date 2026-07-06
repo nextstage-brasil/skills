@@ -3,3 +3,7 @@ __pycache__/
 .idea/
 .vscode/
 node_modules/
+
+# Generated at publish time (packages/harness/scripts/sync-agents.js) from
+# the canonical agents/ directory — never hand-edited, so not versioned.
+packages/harness/templates/agents/
