@@ -2,7 +2,7 @@
 
 Agent-agnostic skills for the [open skills ecosystem](https://skills.sh/), maintained by NextStage Brasil. These workflows guide coding agents through spec-driven development, GitLab integration, code quality, testing, and brownfield onboarding.
 
-Skills are decoupled from any single harness: they use **harness discovery** to find project rules under `.cursor/rules/` or `AGENTS.md`. Install skills with the Skills CLI or `npx @nextstage-brasil/harness`.
+Skills are decoupled from any single harness: they use **harness discovery** to find project rules via `AGENTS.md` at the repo root. Install skills with the Skills CLI or `npx @nextstage-brasil/harness`.
 
 ## Structure
 
@@ -28,33 +28,32 @@ in an isolated, read-only context — a blocking review gate, an investigation
 that shouldn't pollute the main conversation. Each file is plain prose with
 simple frontmatter (`name`, `description`) and points back at its matching
 `skills/<name>/SKILL.md` for the actual logic — it never duplicates it. The
-content itself never mentions a specific harness; `@nextstage-brasil/harness`
-projects it into whichever native location (`.claude/agents/`,
-`.cursor/agents/`, …) it detects in the target project at install time.
+harness copies matching personas to `agents/<name>.md` in the target project.
+Same path, same content — no vendor-specific directories.
 
 ## Skill catalog
 
-| Skill | Purpose |
-|-------|---------|
-| `nextstage-harness` | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
-| `codebase-reverse-spec` | Reverse-engineer legacy code into technology-agnostic business specs |
-| `bootstrap-brownfield` | Map existing codebase stack/modules before first SDD version |
-| `clarify-requirements` | Resolve scope ambiguities before requirements generation |
-| `requirements-generator` | Produce structured `requirements.md` for a version |
-| `analyze-consistency` | Validate requirements before task generation |
-| `version-partitioner` | Split large versions into subversions + roadmap |
-| `task-generator` | Backend/frontend/infra implementation task files |
-| `unit-test-task-generator` | Backend PHPUnit/integration test tasks |
-| `e2e-test-generator` | Cypress E2E planning tasks |
-| `living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs |
-| `mcp-gitlab-usage` | GitLab MCP tool contracts, gates, and flows |
-| `gitlab-board-sync` | Sync existing issues (labels, milestone, time) |
-| `gitlab-ci-generator` | Bootstrap `.gitlab-ci.yml` for SaaS monorepos |
-| `execute-gitlab-issue` | End-to-end GitLab issue execution with review gate |
-| `coder` | Ad-hoc implementation without full SDD cycle |
-| `code-reviewer` | SOLID/security/maintainability review + issue gate |
-| `code-investigator` | Root-cause analysis and minimal fixes |
-| `create-e2e-tests` | Implement/refactor Cypress specs (execution phase) |
+| Skill                      | Purpose                                                                     |
+| -------------------------- | --------------------------------------------------------------------------- |
+| `nextstage-harness`        | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
+| `codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
+| `bootstrap-brownfield`     | Map existing codebase stack/modules before first SDD version                |
+| `clarify-requirements`     | Resolve scope ambiguities before requirements generation                    |
+| `requirements-generator`   | Produce structured `requirements.md` for a version                          |
+| `analyze-consistency`      | Validate requirements before task generation                                |
+| `version-partitioner`      | Split large versions into subversions + roadmap                             |
+| `task-generator`           | Backend/frontend/infra implementation task files                            |
+| `unit-test-task-generator` | Backend PHPUnit/integration test tasks                                      |
+| `e2e-test-generator`       | Cypress E2E planning tasks                                                  |
+| `living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs                     |
+| `mcp-gitlab-usage`         | GitLab MCP tool contracts, gates, and flows                                 |
+| `gitlab-board-sync`        | Sync existing issues (labels, milestone, time)                              |
+| `gitlab-ci-generator`      | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                               |
+| `execute-gitlab-issue`     | End-to-end GitLab issue execution with review gate                          |
+| `coder`                    | Ad-hoc implementation without full SDD cycle                                |
+| `code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
+| `code-investigator`        | Root-cause analysis and minimal fixes                                       |
+| `create-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |
 
 Migration notes: `skills/_meta/MIGRATION.md`.
 
@@ -84,7 +83,6 @@ Interactive wizard: picks a preset, resolves skill dependencies, runs `npx skill
 Non-interactive:
 
 ```bash
-npx @nextstage-brasil/harness --preset recommended --yes
 npx @nextstage-brasil/harness --preset gitlab --yes
 npx @nextstage-brasil/harness list
 ```
@@ -135,11 +133,12 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 ## Harness discovery
 
-| Layer | Location |
-|-------|----------|
+| Layer                  | Location                                                                    |
+| ---------------------- | --------------------------------------------------------------------------- |
 | **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness` or `npx skills add` |
-| **Project rules** | `.cursor/rules/` or `AGENTS.md` at repo root |
-| **SDD artifacts** | `docs/versions/{version}/`, living specs in `docs/specs/` |
+| **Project rules**      | `AGENTS.md` at repo root                                                    |
+| **Agent personas**     | `agents/<name>.md` at repo root                                             |
+| **SDD artifacts**      | `docs/versions/{version}/`, living specs in `docs/specs/`                   |
 
 Typical SDD chain: `clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`coder` / `execute-gitlab-issue`) → `code-reviewer` → `living-spec-consolidator`.
 

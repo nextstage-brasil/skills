@@ -28,6 +28,5 @@ Use it for structure, frontmatter, description triggering, bundled resources, ev
 from running in a separate context (a blocking review gate, an
 investigation that shouldn't pollute the main conversation). It is never a
 place to duplicate a skill's logic, and it must never contain syntax or
-concepts specific to one harness (no Claude Code tool names, no Cursor
-config) — the only harness-specific thing is *where* it gets installed,
-decided by `packages/harness` at install time, not by the file's content.
+concepts specific to one harness. The harness installs them to `agents/<name>.md`
+in the target project — same path as this repository.
