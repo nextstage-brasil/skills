@@ -63,6 +63,13 @@ function detectHarnesses(resolved, { hasCursorRules, hasClaudeDir }) {
 
 export { HARNESS_AGENT_DIRS };
 
+// Where to copy agent personas when the consumer project has no harness dirs yet.
+export const DEFAULT_PROJECTION_HARNESSES = ['cursor'];
+
+export function projectionHarnesses(detected = []) {
+  return detected.length > 0 ? detected : DEFAULT_PROJECTION_HARNESSES;
+}
+
 function resolveDir(dir) {
   if (dir.startsWith('~')) {
     return resolve(process.env.HOME ?? '', dir.slice(1));

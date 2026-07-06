@@ -18,6 +18,7 @@ Options:
   --source <path>        Skills source (default: nextstage-brasil/skills or local repo)
   --yes, -y              Non-interactive; use recommended preset and default scaffold
   --no-scaffold          Skip AGENTS.md and docs/ scaffolding
+  --no-agents            Skip agent persona projection (.cursor/agents/, .claude/agents/)
   --dry-run              Show resolved skills without installing
   --help, -h             Show this help
 
@@ -42,6 +43,7 @@ function parseArgs(argv) {
     yes: false,
     all: false,
     'no-scaffold': false,
+    'no-agents': false,
     'dry-run': false,
     help: false,
   };
@@ -97,6 +99,11 @@ function parseArgs(argv) {
 
     if (arg === '--no-scaffold') {
       result['no-scaffold'] = true;
+      continue;
+    }
+
+    if (arg === '--no-agents') {
+      result['no-agents'] = true;
       continue;
     }
 

@@ -27,9 +27,7 @@ export function availablePersonas(agentsDir) {
 }
 
 // Projects each installed skill's matching persona (if any) into the native
-// agent directory of every harness detected in the consumer project. Skips
-// silently when no harness was detected — this never invents a harness
-// layout that isn't already in use.
+// agent directory for each harness in `harnesses` (see projectionHarnesses()).
 export function projectAgentPersonas({ agentsDir, harnesses, skills, projectRoot, force = false }) {
   const created = [];
   const skipped = [];

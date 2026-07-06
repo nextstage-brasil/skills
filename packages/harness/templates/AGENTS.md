@@ -7,7 +7,7 @@ This project uses [NextStage skills](https://github.com/nextstage-brasil/skills)
 Skills resolve project context at runtime:
 
 1. This file at the repo root is `{product_root}` — read it first.
-2. Load additional rules from agent-specific paths when present (for example `.agents/`, `.cursor/rules/`).
+2. Skills install to `.agents/skills/` (Skills CLI). Isolated agent personas install to `.cursor/agents/` or `.claude/agents/` when those harnesses are present.
 3. SDD artifacts live under `docs/versions/{version}/`; living specs under `docs/specs/`.
 
 See the installed `nextstage-harness` skill for gates, artifact paths, and discovery details.
