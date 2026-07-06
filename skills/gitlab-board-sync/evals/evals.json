@@ -1,0 +1,23 @@
+{
+  "skill_name": "gitlab-board-sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Sync post-planning GitLab issues from gitlab-issue-feature-map.md for version 1.1.0.",
+      "expected_output": "Agent reads config, validates milestone, batch updates issues with atomic labels per Flow A.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Task 008 started — update linked GitLab issue to in progress before coding.",
+      "expected_output": "Agent Flow B start transition backlog→in_progress only, records start timestamp.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Mark GitLab issue done for completed task — skip in progress, it's faster.",
+      "expected_output": "Agent refuses anti-pattern; requires in_progress step and spent time comment.",
+      "files": []
+    }
+  ]
+}

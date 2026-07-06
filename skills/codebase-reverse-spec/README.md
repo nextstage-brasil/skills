@@ -12,7 +12,7 @@ Evolution of `.cursor/skills/codebase-reverse-spec/`. The original skill **deliv
 | Bundled resources | **Broken** — `references/spec_template.md` and `references/anti_leakage_checklist.md` are referenced but **not shipped** with the skill |
 | Traceability during long runs | Weak — confidence markers and evidence tend to get lost between extraction and final writing |
 | Completeness verification | Implicit — no structured check that actors, lifecycles, integrations, negative rules were all covered |
-| Portability | Coupled to factory concepts (`product_root`, BatschSpec agents, `core-scope-isolation`) |
+| Portability | Coupled to legacy factory concepts (`product_root`, factory agents, scope-isolation rules) |
 | Large codebase handling | Mentioned but not operationalized |
 
 ## What changed in v3 (and why)
@@ -46,7 +46,7 @@ Concrete domain-by-domain delivery + synthesis pass. The original said "don't re
 
 ### 6. Decoupled from factory — **portability**
 
-Removed BatschSpec-specific references (`legacy-business-catalog-agent`, `start-planning`, `core-scope-isolation`). Replaced with generic monorepo/external-repo scope guidance. The skill now works standalone in any repo.
+Removed legacy factory-specific references. Replaced with generic monorepo/external-repo scope guidance. The skill now works standalone in any repo.
 
 ### 7. Output language question — **medium impact**
 

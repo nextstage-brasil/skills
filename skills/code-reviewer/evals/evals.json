@@ -1,0 +1,23 @@
+{
+  "skill_name": "code-reviewer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review my uncommitted changes in the auth module before I open a PR.",
+      "expected_output": "Agent loads project rules, runs git diff, outputs Executive Summary, Critical Issues, and improvements with severity ordering.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Issue review gate for https://gitlab.example.com/group/project/-/issues/88 — MR is on branch work/88-fix-login.",
+      "expected_output": "Agent uses issue review mode, diffs correct branches, traces ACs, posts internal comment, ends with Code Review: verdict line.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Save the post-implementation code review report for version 2.0.0 under docs/versions.",
+      "expected_output": "Agent writes code-review-report.md using review-report.template.md structure at version artifact path.",
+      "files": []
+    }
+  ]
+}

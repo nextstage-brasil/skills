@@ -1,0 +1,23 @@
+{
+  "skill_name": "version-partitioner",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Master requirements at apps/erp/docs/versions/3.0.0/ has 18 features — partition into subversions.",
+      "expected_output": "Agent creates version-roadmap.md, subversion folders with excerpt requirements, no task files.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Split version 2.5.0 requirements respecting Feature precedence auth before billing.",
+      "expected_output": "Agent builds DAG, auth slice before billing in deps column, topological folder order.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Partition produced only 2-task slices — consolidate per skill rules.",
+      "expected_output": "Agent merges undersized adjacent slices when no structural blocker, targets 4-7 tasks per slice.",
+      "files": []
+    }
+  ]
+}

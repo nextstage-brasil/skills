@@ -1,0 +1,23 @@
+{
+  "skill_name": "living-spec-consolidator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Version 1.3.0 delivered for apps/crm/ — consolidate living specs from requirements and completed handoff.",
+      "expected_output": "Agent updates or creates domain specs under docs/specs/, updates INDEX.md, changelog entries per domain.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Feature 004 added billing endpoints — merge into existing billing.md without deleting old requirements.",
+      "expected_output": "Agent reads full billing.md, appends/updates requirements and endpoints, records changelog.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Consolidate specs but code-review-report.md is missing for 2.0.0.",
+      "expected_output": "Agent refuses or defers — prerequisite code review report required.",
+      "files": []
+    }
+  ]
+}

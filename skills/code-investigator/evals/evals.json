@@ -1,0 +1,23 @@
+{
+  "skill_name": "code-investigator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "PHPUnit fails with SQLSTATE[23503] foreign key violation on orders test — started after my last commit.",
+      "expected_output": "Agent investigates diff and migrations, identifies FK ordering or factory issue, proposes minimal fix and validation command.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "CI pipeline backend:test fails: Connection refused to postgres:5432 in GitLab job only.",
+      "expected_output": "Agent compares local vs CI env, checks service config and env vars, evidence-based diagnosis with validation steps.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Login form submits but UI shows blank screen — no console errors.",
+      "expected_output": "Agent traces API response shape vs frontend expectations, separates hypothesis from evidence, suggests minimal fix.",
+      "files": []
+    }
+  ]
+}

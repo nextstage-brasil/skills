@@ -1,0 +1,33 @@
+{
+  "name": "@nextstage-brasil/harness-init",
+  "version": "0.1.0",
+  "description": "Interactive CLI to install NextStage skills and scaffold SDD project layout",
+  "type": "module",
+  "bin": {
+    "nextstage-harness": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "templates"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "nextstage",
+    "skills",
+    "harness",
+    "sdd",
+    "agent-skills"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nextstage-brasil/skills.git",
+    "directory": "packages/harness-init"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.1"
+  }
+}

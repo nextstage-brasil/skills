@@ -1,0 +1,17 @@
+{
+  "skill_name": "nextstage-harness",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to generate requirements for version 2.0.0. Where should requirements.md live and how do I find the project harness?",
+      "expected_output": "Agent reads harness-discovery and artifact-layout; resolves {product_root} and {version_san}; paths under docs/versions/{version_san}/requirements.md.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Can I generate tasks now? We have requirements.md but no explicit confirmation yet.",
+      "expected_output": "Agent cites gates.md; identifies missing requirements_confirmed or scope_confirmed; does not generate tasks.",
+      "files": []
+    }
+  ]
+}

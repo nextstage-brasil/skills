@@ -1,0 +1,244 @@
+stages:
+  - test
+  - build
+  - e2e
+  - deploy-backend
+  - deploy-frontend
+  - clear
+  - versioning
+
+# ---------------------------------------------------------------------------
+# Rules
+# ---------------------------------------------------------------------------
+
+.rules-build-frontend:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - "frontend/**/*"
+        - ".gitlab-ci.yml"
+      when: on_success
+    - if: "$CI_COMMIT_BRANCH =~ /^(main|homolog|develop)$/"
+      changes:
+        - "frontend/**/*"
+        - ".gitlab-ci.yml"
+      when: on_success
+    - when: never
+
+.rules-deploy-backend:
+  rules:
+    - if: "$CI_COMMIT_BRANCH =~ /^(main|homolog|develop)$/"
+      changes:
+        - "backend/**/*"
+        - ".gitlab-ci.yml"
+      when: on_success
+    - when: never
+
+.rules-deploy-frontend:
+  rules:
+    - if: "$CI_COMMIT_BRANCH =~ /^(main|homolog|develop)$/"
+      changes:
+        - "frontend/**/*"
+        - ".gitlab-ci.yml"
+      when: on_success
+    - when: never
+
+.rules-e2e-gate:
+  rules:
+    - if: '$RUN_REMOTE_E2E == "true"'
+      when: on_success
+    - if: "$CI_COMMIT_BRANCH =~ /^(main|homolog|develop)$/"
+      changes:
+        - "backend/**/*"
+        - "frontend/**/*"
+        - "testes-cypress/**/*"
+        - ".gitlab-ci.yml"
+      when: on_success
+    - when: never
+
+# ---------------------------------------------------------------------------
+# BACKEND
+# ---------------------------------------------------------------------------
+
+backend:test:
+  stage: test
+  image: nextstage/php:8.5-fpm-nginx
+  interruptible: true
+  variables:
+    APP_ENV: testing
+    DB_HOST: ${TEST_DBHOST}
+    DB_USERNAME: ${TEST_DBUSER}
+    DB_PASSWORD: ${TEST_DBPASS}
+    DB_DATABASE: ${TEST_DBNAME}
+    DB_PORT: "6432"
+    DBHOST: ${TEST_DBHOST}
+    DBUSER: ${TEST_DBUSER}
+    DBPASS: ${TEST_DBPASS}
+    DBNAME: ${TEST_DBNAME}
+    DBPORT: "6432"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+    - when: never
+  before_script:
+    - cd backend
+  script:
+    - echo '{"type":"service_account","project_id":"project-name"}' > config/custom/gcloud.testing.json
+    - composer install --quiet && composer stan
+
+backend:docker:
+  stage: build
+  image: nextstage/docker:dind-gcloud
+  interruptible: true
+  extends: .rules-deploy-backend
+  before_script:
+    - cd backend
+    - source /deployer/deployer.sh
+  script:
+    - sed -i 's/fpm-nginx-dev/fpm-nginx/g' Dockerfile
+    - echo "${GCP_APP_KEY}" > "config/custom/gcloud.${CI_COMMIT_BRANCH}.json"
+    - echo -e "${ENV_BACKEND}" > .env
+    - gcloudDockerDeploy
+
+backend:deploy:
+  stage: deploy-backend
+  image: nextstage/docker:dind-gcloud
+  interruptible: true
+  extends: .rules-deploy-backend
+  needs:
+    - backend:docker
+    - e2e:run
+  before_script:
+    - cd backend
+    - source /deployer/deployer.sh
+  script:
+    - gcloudStartBranch
+
+backend:clear:
+  stage: clear
+  image: nextstage/docker:dind-gcloud
+  interruptible: true
+  extends: .rules-deploy-backend
+  needs:
+    - backend:deploy
+  before_script:
+    - cd backend
+    - source /deployer/deployer.sh
+  script:
+    - gcloudClearOldVersion
+
+backend:versioning:
+  stage: versioning
+  image: nextstage/docker:dind
+  interruptible: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "homolog"'
+      when: on_success
+    - when: never
+  needs:
+    - backend:clear
+  before_script:
+    - cd backend
+  script:
+    - MESSAGE=$(git log -1 --pretty=%B)
+    - sh /deployer/tag.sh -s "$MESSAGE"
+
+# ---------------------------------------------------------------------------
+# FRONTEND
+# ---------------------------------------------------------------------------
+
+frontend:prepare-env:
+  stage: build
+  image: nextstage/docker:dind
+  interruptible: true
+  extends: .rules-build-frontend
+  before_script:
+    - source /deployer/deployer.sh
+  script:
+    - echo -e "${ENV_FRONTEND}" > frontend/.env
+  artifacts:
+    paths:
+      - frontend/.env
+    expire_in: 30 minutes
+
+frontend:build:
+  stage: build
+  image: node:22
+  interruptible: true
+  timeout: 45m
+  extends: .rules-build-frontend
+  needs:
+    - job: frontend:prepare-env
+      artifacts: true
+  cache:
+    key:
+      files:
+        - frontend/yarn.lock
+      prefix: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - frontend/.yarn-cache/
+    policy: pull
+  before_script:
+    - cd frontend
+  script:
+    - yarn install --frozen-lockfile --prefer-offline --cache-folder .yarn-cache
+    - CI=false yarn build
+  artifacts:
+    paths:
+      - frontend/build/
+    expire_in: 1 hour
+
+frontend:deploy:
+  stage: deploy-frontend
+  image: nextstage/docker:dind-gcloud
+  interruptible: true
+  extends: .rules-deploy-frontend
+  needs:
+    - frontend:build
+    - e2e:run
+    - job: backend:deploy
+      optional: true
+  dependencies:
+    - frontend:build
+  before_script:
+    - cd frontend
+    - source /deployer/deployer.sh
+  script:
+    - gcloudDeployToVmFrontend
+
+# ---------------------------------------------------------------------------
+# E2E — gate antes do deploy
+# ---------------------------------------------------------------------------
+
+e2e:install:
+  stage: e2e
+  image: node:20-alpine
+  interruptible: true
+  extends: .rules-e2e-gate
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - testes-cypress/node_modules/
+  before_script:
+    - cd testes-cypress
+  script:
+    - node -v
+    - npm -v
+    - npm ci --prefer-offline --no-audit
+
+e2e:run:
+  stage: e2e
+  image: node:20-alpine
+  interruptible: true
+  extends: .rules-e2e-gate
+  needs:
+    - e2e:install
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - testes-cypress/node_modules/
+  before_script:
+    - cd testes-cypress
+  script:
+    - npm ci --prefer-offline --no-audit
+    - npx cypress run

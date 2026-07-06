@@ -1,0 +1,23 @@
+{
+  "skill_name": "mcp-gitlab-usage",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use talk.md as the base and create the GitLab planning for milestone 2.1.0 - Multitenant billing. Generate requirements and issues in GitLab.",
+      "expected_output": "Agent calls start_execution_planning first with inferred milestone and source path; respects confirmation gates; does not hand-craft issues without MCP tools.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Post an internal delivery report on GitLab issue #42 summarizing what changed in my branch vs develop.",
+      "expected_output": "Agent confirms project_id and issue_iid, summarizes diff, calls add_issue_comment with internal=true.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Mark issue 15 as done — I finished implementing it.",
+      "expected_output": "Agent verifies issue is in_progress before setting done; uses atomic set_issue_labels; records spent time; does not skip intermediate status.",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "skill_name": "gitlab-ci-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Bootstrap GitLab CI for apps/payments/ monorepo with backend and frontend on develop/homolog/main.",
+      "expected_output": "Agent copies template to .gitlab-ci.yml, adapts E2E path and PHP image, documents ci-cd-notes.md.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Our E2E lives in tests-e2e/ not testes-cypress — fix the pipeline template.",
+      "expected_output": "Agent updates changes paths and job working directories in generated YAML.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Disable remote E2E gate for now but keep backend and frontend deploy.",
+      "expected_output": "Agent adjusts rules/needs per skill guidance, documents RUN_REMOTE_E2E=false.",
+      "files": []
+    }
+  ]
+}

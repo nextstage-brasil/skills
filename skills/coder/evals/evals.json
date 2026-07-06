@@ -1,0 +1,23 @@
+{
+  "skill_name": "coder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Product apps/billing-api/ — add nullable cancelled_at timestamp column to connects table via migration.",
+      "expected_output": "Agent reads existing migrations/models, creates minimal migration, no SDD artifacts, no commit unless asked.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Fix N+1 on user list — relationship loaded inside loop in UserController.",
+      "expected_output": "Agent loads rules and file, applies eager loading fix with minimal diff, reports change.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Add CPF mask to the registration form UserForm in the frontend module.",
+      "expected_output": "Agent reads UserForm and project frontend rules, implements mask with data-testid if conventions require, minimal scope.",
+      "files": []
+    }
+  ]
+}

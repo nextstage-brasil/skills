@@ -1,0 +1,23 @@
+{
+  "skill_name": "task-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate backend task 004 for Feature 002 User API — create UserController store endpoint per requirements at apps/hr/docs/versions/1.0.0/.",
+      "expected_output": "Agent writes task-004-*.md with rich description, FK order, validation criteria, no invented endpoints.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Create frontend task for login page with data-testid contract aligned to requirements Feature 001.",
+      "expected_output": "Agent includes data-testid table, i18n and auth checklist items, depends on backend auth task if applicable.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Task for docker-compose update — infra layer, task 002.",
+      "expected_output": "Agent uses task-schema, references requirements infra feature, estimate in seconds.",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+name: Validate skills
+
+on:
+  push:
+    paths:
+      - 'skills/**'
+      - '.github/workflows/validate-skills.yml'
+  pull_request:
+    paths:
+      - 'skills/**'
+      - '.github/workflows/validate-skills.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: No legacy _shared paths
+        run: |
+          set -euo pipefail
+          if rg -q 'skills/_shared|_shared/references' skills/; then
+            echo 'ERROR: Found legacy _shared path references under skills/'
+            rg -n 'skills/_shared|_shared/references' skills/
+            exit 1
+          fi
+          echo 'OK: no legacy _shared paths'
+
+      - name: nextstage-harness skill exists
+        run: |
+          set -euo pipefail
+          if [ ! -f skills/nextstage-harness/SKILL.md ]; then
+            echo 'ERROR: skills/nextstage-harness/SKILL.md is missing'
+            exit 1
+          fi
+          echo 'OK: nextstage-harness/SKILL.md present'
+
+      - name: Harness refs require depends in frontmatter
+        run: |
+          set -euo pipefail
+          failed=0
+          for skill_md in skills/*/SKILL.md; do
+            [ -f "$skill_md" ] || continue
+            body=$(awk 'BEGIN{fm=0} /^---$/{fm++; next} fm>=2{print}' "$skill_md")
+            if echo "$body" | rg -q '\.\./nextstage-harness/'; then
+              frontmatter=$(awk 'BEGIN{fm=0} /^---$/{fm++; next} fm==1{print}' "$skill_md")
+              if ! echo "$frontmatter" | rg -q '^depends:' || ! echo "$frontmatter" | rg -q 'nextstage-harness'; then
+                echo "ERROR: $skill_md references ../nextstage-harness/ but frontmatter lacks depends: nextstage-harness"
+                failed=1
+              fi
+            fi
+          done
+          if [ "$failed" -ne 0 ]; then
+            exit 1
+          fi
+          echo 'OK: all harness references declare depends'

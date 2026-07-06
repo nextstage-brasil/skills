@@ -1,0 +1,107 @@
+{
+  "source": "nextstage-brasil/skills",
+  "depends": {
+    "nextstage-harness": [],
+    "codebase-reverse-spec": [],
+    "bootstrap-brownfield": ["nextstage-harness"],
+    "clarify-requirements": ["nextstage-harness"],
+    "requirements-generator": ["nextstage-harness"],
+    "analyze-consistency": ["nextstage-harness"],
+    "version-partitioner": ["nextstage-harness"],
+    "task-generator": ["nextstage-harness"],
+    "unit-test-task-generator": [],
+    "e2e-test-generator": [],
+    "living-spec-consolidator": ["nextstage-harness"],
+    "mcp-gitlab-usage": ["nextstage-harness"],
+    "gitlab-board-sync": ["mcp-gitlab-usage"],
+    "gitlab-ci-generator": [],
+    "execute-gitlab-issue": ["nextstage-harness", "mcp-gitlab-usage", "code-reviewer"],
+    "coder": ["nextstage-harness"],
+    "code-reviewer": ["nextstage-harness", "mcp-gitlab-usage"],
+    "code-investigator": ["nextstage-harness"],
+    "create-e2e-tests": []
+  },
+  "presets": {
+    "recommended": {
+      "label": "Recommended SDD chain",
+      "description": "Planning, tasks, test generators, and living specs",
+      "skills": [
+        "nextstage-harness",
+        "clarify-requirements",
+        "requirements-generator",
+        "analyze-consistency",
+        "task-generator",
+        "unit-test-task-generator",
+        "e2e-test-generator",
+        "living-spec-consolidator"
+      ]
+    },
+    "gitlab": {
+      "label": "GitLab execution",
+      "description": "MCP GitLab usage, review gate, and issue execution",
+      "skills": [
+        "nextstage-harness",
+        "mcp-gitlab-usage",
+        "code-reviewer",
+        "execute-gitlab-issue",
+        "gitlab-board-sync"
+      ]
+    },
+    "brownfield": {
+      "label": "Brownfield onboarding",
+      "description": "Reverse-spec and stack mapping before first SDD version",
+      "skills": [
+        "nextstage-harness",
+        "bootstrap-brownfield",
+        "codebase-reverse-spec"
+      ]
+    },
+    "implementation": {
+      "label": "Implementation & quality",
+      "description": "Ad-hoc coding, investigation, and review",
+      "skills": [
+        "nextstage-harness",
+        "coder",
+        "code-investigator",
+        "mcp-gitlab-usage",
+        "code-reviewer"
+      ]
+    }
+  },
+  "categories": {
+    "foundation": {
+      "label": "Foundation",
+      "skills": ["nextstage-harness"]
+    },
+    "sdd": {
+      "label": "SDD planning",
+      "skills": [
+        "clarify-requirements",
+        "requirements-generator",
+        "analyze-consistency",
+        "version-partitioner",
+        "task-generator",
+        "unit-test-task-generator",
+        "e2e-test-generator",
+        "living-spec-consolidator"
+      ]
+    },
+    "gitlab": {
+      "label": "GitLab",
+      "skills": [
+        "mcp-gitlab-usage",
+        "gitlab-board-sync",
+        "gitlab-ci-generator",
+        "execute-gitlab-issue"
+      ]
+    },
+    "implementation": {
+      "label": "Implementation",
+      "skills": ["coder", "code-investigator", "code-reviewer", "create-e2e-tests"]
+    },
+    "brownfield": {
+      "label": "Brownfield",
+      "skills": ["bootstrap-brownfield", "codebase-reverse-spec"]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "skill_name": "requirements-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate requirements for version 1.2.0 at apps/inventory/ — add supplier CRUD with multitenancy and REST API.",
+      "expected_output": "Agent creates requirements.md with objective, stack, data model, ordered features, acceptance criteria; uses artifact-layout paths.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "New greenfield Laravel+React product apps/portal/ version 0.1.0 — auth, dashboard, user management. design-brief.md exists.",
+      "expected_output": "Agent loads laravel-react profile, orders infra before domain, includes UI/UX section from brief.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Write requirements for intelligent SaaS chat product with agent-api and SSE streaming.",
+      "expected_output": "Agent uses intelligent-saas profile, documents three-app architecture and setup features before domain.",
+      "files": []
+    }
+  ]
+}

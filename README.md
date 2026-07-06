@@ -1,51 +1,126 @@
 # NextStage Skills
 
-A collection of [agent skills](https://skills.sh/) maintained by NextStage Brasil — agent-agnostic workflows that guide coding agents through recurring engineering, documentation, and modernization tasks. Compatible with Cursor, Claude Code, Codex, and other tools in the open skills ecosystem.
+Agent-agnostic skills for the [open skills ecosystem](https://skills.sh/), maintained by NextStage Brasil. These workflows guide coding agents through spec-driven development, GitLab integration, code quality, testing, and brownfield onboarding.
+
+Skills are decoupled from any single harness: they use **harness discovery** to find project rules under `.cursor/rules/` or `AGENTS.md`. Install skills with the Skills CLI or the NextStage init wizard.
 
 ## Structure
 
 ```
 skills/
+├── _meta/              # Migration notes
+├── nextstage-harness/  # Harness discovery, gates, artifact layout (auto-installed dep)
 └── <skill-name>/
-    ├── SKILL.md              # Main instructions (required)
-    ├── README.md             # Skill evolution notes and changelog
-    ├── references/           # Supporting templates and checklists
-    └── scripts/              # Optional utilities
+    ├── SKILL.md        # Entry point (required)
+    ├── references/     # Templates, checklists, stack profiles
+    ├── scripts/        # Optional utilities
+    └── evals/          # Minimum viable eval prompts
 ```
 
-Each skill is a self-contained directory. The agent discovers and applies skills via the `name` and `description` frontmatter in `SKILL.md`.
+## Skill catalog
+
+| Skill | Purpose |
+|-------|---------|
+| `nextstage-harness` | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
+| `codebase-reverse-spec` | Reverse-engineer legacy code into technology-agnostic business specs |
+| `bootstrap-brownfield` | Map existing codebase stack/modules before first SDD version |
+| `clarify-requirements` | Resolve scope ambiguities before requirements generation |
+| `requirements-generator` | Produce structured `requirements.md` for a version |
+| `analyze-consistency` | Validate requirements before task generation |
+| `version-partitioner` | Split large versions into subversions + roadmap |
+| `task-generator` | Backend/frontend/infra implementation task files |
+| `unit-test-task-generator` | Backend PHPUnit/integration test tasks |
+| `e2e-test-generator` | Cypress E2E planning tasks |
+| `living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs |
+| `mcp-gitlab-usage` | GitLab MCP tool contracts, gates, and flows |
+| `gitlab-board-sync` | Sync existing issues (labels, milestone, time) |
+| `gitlab-ci-generator` | Bootstrap `.gitlab-ci.yml` for SaaS monorepos |
+| `execute-gitlab-issue` | End-to-end GitLab issue execution with review gate |
+| `coder` | Ad-hoc implementation without full SDD cycle |
+| `code-reviewer` | SOLID/security/maintainability review + issue gate |
+| `code-investigator` | Root-cause analysis and minimal fixes |
+| `create-e2e-tests` | Implement/refactor Cypress specs (execution phase) |
+
+Migration notes: `skills/_meta/MIGRATION.md`.
 
 ## Installation
 
-Install via the [Skills CLI](https://skills.sh/) (`npx skills`).
+### Quick start (recommended)
 
-**Project (recommended for teams):**
+```bash
+npx @nextstage-brasil/harness-init init
+```
+
+Interactive wizard: picks a preset, resolves skill dependencies, runs `npx skills add`, and optionally scaffolds `AGENTS.md` plus `docs/` layout.
+
+Non-interactive:
+
+```bash
+npx @nextstage-brasil/harness-init init --preset recommended --yes
+npx @nextstage-brasil/harness-init init --preset gitlab --yes
+npx @nextstage-brasil/harness-init list
+```
+
+See `packages/harness-init/README.md` for all flags.
+
+### Manual install
+
+Install via the [Skills CLI](https://skills.sh/) (`npx skills`). Skills live under `skills/` — use `--full-depth`.
+
+### Dependency resolution
+
+Consumer skills declare `depends` in frontmatter. Once the CLI supports it ([vercel-labs/skills#861](https://github.com/vercel-labs/skills/pull/861)), installing one skill pulls its dependencies automatically:
+
+```bash
+npx skills add nextstage-brasil/skills@execute-gitlab-issue --full-depth -y
+# resolves: nextstage-harness → mcp-gitlab-usage → code-reviewer → execute-gitlab-issue
+```
+
+**Interim (until PR #861 merges):** `depends` is ignored by `skills@1.5.14`. Install peers manually:
+
+```bash
+npx skills add nextstage-brasil/skills --full-depth -y \
+  --skill nextstage-harness --skill mcp-gitlab-usage --skill code-reviewer --skill execute-gitlab-issue
+```
+
+**Single skill (project):**
 
 ```bash
 npx skills add nextstage-brasil/skills@codebase-reverse-spec --full-depth -y
+npx skills add nextstage-brasil/skills@mcp-gitlab-usage --full-depth -y
+npx skills add nextstage-brasil/skills@requirements-generator --full-depth -y
 ```
 
-**Global (all projects):**
+**Global:**
 
 ```bash
-npx skills add nextstage-brasil/skills@codebase-reverse-spec --full-depth -g -y
+npx skills add nextstage-brasil/skills@coder --full-depth -g -y
 ```
 
-**All skills from this repo:**
+**All skills:**
 
 ```bash
 npx skills add nextstage-brasil/skills --full-depth --all -y
 ```
 
-`--full-depth` is required because skills live under `skills/`, not the repository root.
+Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
-Browse available skills: `npx skills add nextstage-brasil/skills --list --full-depth`
+## Harness discovery
+
+| Layer | Location |
+|-------|----------|
+| **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness-init init` or `npx skills add` |
+| **Project rules** | `.cursor/rules/` or `AGENTS.md` at repo root |
+| **SDD artifacts** | `docs/versions/{version}/`, living specs in `docs/specs/` |
+
+Typical SDD chain: `clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`coder` / `execute-gitlab-issue`) → `code-reviewer` → `living-spec-consolidator`.
 
 ## Contributing
 
-1. Create a directory at `skills/<skill-name>/` with `SKILL.md` (YAML frontmatter + markdown body).
-2. Add `references/` and `scripts/` only when they add real value to the workflow.
-3. Document relevant changes in the skill's `README.md`.
+1. Read `AGENTS.md` and follow `skill-creator` (`~/.agents/skills/skill-creator/SKILL.md`).
+2. Create `skills/<skill-name>/SKILL.md` with pushy `description` frontmatter.
+3. Add `references/`, `scripts/`, and `evals/evals.json` when they add value.
+4. English only for all artifacts.
 
 ## License
 
