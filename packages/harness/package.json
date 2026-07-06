@@ -27,6 +27,9 @@
     "agent-skills"
   ],
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/nextstage-brasil/skills.git",

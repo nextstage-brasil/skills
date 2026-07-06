@@ -1,16 +1,16 @@
 # Project agents
 
-This project uses [NextStage skills](https://github.com/nextstage-brasil/skills) for spec-driven development and agent workflows.
+This project uses [NextStage skills](https://github.com/nextstage-brasil/skills) for spec-driven development and agent workflows. Skills are agent-agnostic — install with the [Skills CLI](https://skills.sh/) or `npx @nextstage-brasil/harness`.
 
 ## Harness discovery
 
 Skills resolve project context at runtime:
 
-1. If `.cursor/rules/` or this file exists at the repo root, treat the repo as `{product_root}`.
-2. Load applicable rules from `.cursor/rules/*.mdc` when present.
-3. SDD artifacts live under `docs/versions/{version}/` and living specs under `docs/specs/`.
+1. This file at the repo root is `{product_root}` — read it first.
+2. Load additional rules from agent-specific paths when present (for example `.agents/`, `.cursor/rules/`).
+3. SDD artifacts live under `docs/versions/{version}/`; living specs under `docs/specs/`.
 
-See the installed `nextstage-harness` skill for gates, artifact paths, and discovery details. Install or refresh skills with `npx @nextstage-brasil/harness`.
+See the installed `nextstage-harness` skill for gates, artifact paths, and discovery details.
 
 ## Typical SDD chain
 

@@ -54,6 +54,19 @@ Migration notes: `skills/_meta/MIGRATION.md`.
 npx @nextstage-brasil/harness
 ```
 
+> **Not published yet?** Until `@nextstage-brasil/harness` is on npm, run from a local clone:
+>
+> ```bash
+> npx file:~/apps/nextstage/skills/packages/harness
+> ```
+>
+> Or link once, then use `harness` anywhere:
+>
+> ```bash
+> cd ~/apps/nextstage/skills/packages/harness && npm link
+> harness --preset recommended --yes
+> ```
+
 Interactive wizard: picks a preset, resolves skill dependencies, runs `npx skills add`, and optionally scaffolds `AGENTS.md` plus `docs/` layout.
 
 Non-interactive:

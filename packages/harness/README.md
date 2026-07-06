@@ -4,28 +4,36 @@ Interactive CLI to install [NextStage skills](https://github.com/nextstage-brasi
 
 ## Usage
 
+### From npm (after publish)
+
 ```bash
 # Interactive wizard (project directory, preset, scaffold)
 npx @nextstage-brasil/harness
+```
 
-# Non-interactive — recommended SDD chain
+### Local clone (before publish)
+
+```bash
+# One-off from absolute path
+npx file:~/apps/nextstage/skills/packages/harness
+
+# Or link globally
+cd ~/apps/nextstage/skills/packages/harness && npm link
+harness list
+```
+
+### Non-interactive
+
+```bash
 npx @nextstage-brasil/harness --preset recommended --yes
-
-# GitLab execution preset
 npx @nextstage-brasil/harness --preset gitlab --yes
-
-# Single skill with transitive depends resolved
 npx @nextstage-brasil/harness --skill execute-gitlab-issue --yes
-
-# Override skills source (local dev or fork)
-npx @nextstage-brasil/harness --source /path/to/skills --yes
-NEXTSTAGE_SKILLS_SOURCE=/path/to/skills npx @nextstage-brasil/harness --yes
-
-# List presets and skills
 npx @nextstage-brasil/harness list
 ```
 
-`init` is an optional alias: `npx @nextstage-brasil/harness init` works the same as calling without a subcommand.
+Replace `npx @nextstage-brasil/harness` with `npx file:<path-to>/packages/harness` or `harness` when using `npm link`.
+
+`init` is an optional alias: `harness init` works the same as calling without a subcommand.
 
 ## What it does
 
@@ -52,6 +60,16 @@ npm test
 node bin/cli.js list
 node bin/cli.js --dir /tmp/nextstage-test --preset recommended --yes --dry-run
 ```
+
+## Publish
+
+From `packages/harness` (requires npm login to `@nextstage-brasil` scope):
+
+```bash
+npm publish --access public
+```
+
+After the first publish, `npx @nextstage-brasil/harness` works without a local path.
 
 ## License
 
