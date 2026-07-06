@@ -10,7 +10,7 @@ Skills resolve project context at runtime:
 2. Load applicable rules from `.cursor/rules/*.mdc` when present.
 3. SDD artifacts live under `docs/versions/{version}/` and living specs under `docs/specs/`.
 
-See the installed `nextstage-harness` skill for gates, artifact paths, and discovery details.
+See the installed `nextstage-harness` skill for gates, artifact paths, and discovery details. Install or refresh skills with `npx @nextstage-brasil/harness`.
 
 ## Typical SDD chain
 

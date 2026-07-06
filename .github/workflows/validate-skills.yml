@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'skills/**'
+      - 'packages/harness/**'
       - '.github/workflows/validate-skills.yml'
   pull_request:
     paths:
       - 'skills/**'
+      - 'packages/harness/**'
       - '.github/workflows/validate-skills.yml'
 
 jobs:
@@ -15,6 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: No legacy _shared paths
         run: |
@@ -25,6 +31,16 @@ jobs:
             exit 1
           fi
           echo 'OK: no legacy _shared paths'
+
+      - name: No legacy harness-init package references
+        run: |
+          set -euo pipefail
+          if rg -q '@nextstage-brasil/harness-init|packages/harness-init' --glob '!packages/harness/node_modules/**' .; then
+            echo 'ERROR: Found legacy harness-init package references'
+            rg -n '@nextstage-brasil/harness-init|packages/harness-init' --glob '!packages/harness/node_modules/**' .
+            exit 1
+          fi
+          echo 'OK: no legacy harness-init package references'
 
       - name: nextstage-harness skill exists
         run: |
@@ -54,3 +70,12 @@ jobs:
             exit 1
           fi
           echo 'OK: all harness references declare depends'
+
+      - name: Catalog sync with skills
+        run: node packages/harness/scripts/validate-catalog.js
+
+      - name: Harness CLI smoke test
+        working-directory: packages/harness
+        run: |
+          npm install
+          npm test

@@ -12,7 +12,7 @@ import { scaffoldProject } from './scaffold.js';
 import { resolveSource } from './source.js';
 
 export async function runInit(argv = {}) {
-  p.intro('NextStage harness init');
+  p.intro('NextStage harness');
 
   const projectDir = await resolveProjectDir(argv.dir);
   const detection = detectProject(projectDir);
@@ -249,5 +249,5 @@ export function printList() {
 
   p.log.step('All skills');
   p.log.message(allSkillNames().join(', '));
-  p.outro('Run: npx @nextstage-brasil/harness-init init');
+  p.outro('Run: npx @nextstage-brasil/harness');
 }

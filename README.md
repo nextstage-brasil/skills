@@ -2,7 +2,7 @@
 
 Agent-agnostic skills for the [open skills ecosystem](https://skills.sh/), maintained by NextStage Brasil. These workflows guide coding agents through spec-driven development, GitLab integration, code quality, testing, and brownfield onboarding.
 
-Skills are decoupled from any single harness: they use **harness discovery** to find project rules under `.cursor/rules/` or `AGENTS.md`. Install skills with the Skills CLI or the NextStage init wizard.
+Skills are decoupled from any single harness: they use **harness discovery** to find project rules under `.cursor/rules/` or `AGENTS.md`. Install skills with the Skills CLI or `npx @nextstage-brasil/harness`.
 
 ## Structure
 
@@ -15,6 +15,9 @@ skills/
     ├── references/     # Templates, checklists, stack profiles
     ├── scripts/        # Optional utilities
     └── evals/          # Minimum viable eval prompts
+
+packages/
+└── harness/            # @nextstage-brasil/harness CLI (install wizard)
 ```
 
 ## Skill catalog
@@ -48,7 +51,7 @@ Migration notes: `skills/_meta/MIGRATION.md`.
 ### Quick start (recommended)
 
 ```bash
-npx @nextstage-brasil/harness-init init
+npx @nextstage-brasil/harness
 ```
 
 Interactive wizard: picks a preset, resolves skill dependencies, runs `npx skills add`, and optionally scaffolds `AGENTS.md` plus `docs/` layout.
@@ -56,12 +59,12 @@ Interactive wizard: picks a preset, resolves skill dependencies, runs `npx skill
 Non-interactive:
 
 ```bash
-npx @nextstage-brasil/harness-init init --preset recommended --yes
-npx @nextstage-brasil/harness-init init --preset gitlab --yes
-npx @nextstage-brasil/harness-init list
+npx @nextstage-brasil/harness --preset recommended --yes
+npx @nextstage-brasil/harness --preset gitlab --yes
+npx @nextstage-brasil/harness list
 ```
 
-See `packages/harness-init/README.md` for all flags.
+See `packages/harness/README.md` for all flags.
 
 ### Manual install
 
@@ -109,7 +112,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 | Layer | Location |
 |-------|----------|
-| **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness-init init` or `npx skills add` |
+| **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness` or `npx skills add` |
 | **Project rules** | `.cursor/rules/` or `AGENTS.md` at repo root |
 | **SDD artifacts** | `docs/versions/{version}/`, living specs in `docs/specs/` |
 

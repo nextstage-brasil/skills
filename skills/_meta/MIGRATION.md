@@ -14,7 +14,7 @@ Migration notes for skills promoted into this repository as the canonical home f
 | Scripts | `scripts/` |
 | Evals | `evals/evals.json` — 2–3 realistic prompts per skill |
 | Path coupling | Use `nextstage-harness` (`depends` + `../nextstage-harness/references/harness-discovery.md`); never hardcode legacy factory skill paths |
-| Skill dependencies | Declare `depends:` in frontmatter — resolved by `harness-init` and Skills CLI ([skills#861](https://github.com/vercel-labs/skills/pull/861)) |
+| Skill dependencies | Declare `depends:` in frontmatter — resolved by `@nextstage-brasil/harness` and Skills CLI ([skills#861](https://github.com/vercel-labs/skills/pull/861)) |
 
 ## Harness discovery (summary)
 
@@ -32,7 +32,7 @@ Migration notes for skills promoted into this repository as the canonical home f
 
 ## Skill catalog
 
-See root `README.md` for the full catalog and `packages/harness-init/templates/catalog.json` for install presets and `depends`.
+See root `README.md` for the full catalog and `packages/harness/templates/catalog.json` for install presets and `depends`.
 
 ## Cross-skill dependencies
 
@@ -52,7 +52,7 @@ SDD workflow ordering (`clarify-requirements` → `requirements-generator` → �
 ## Install
 
 ```bash
-npx @nextstage-brasil/harness-init init
+npx @nextstage-brasil/harness
 ```
 
 Or manually:
@@ -61,4 +61,4 @@ Or manually:
 npx skills add nextstage-brasil/skills@<skill-name> --full-depth -y
 ```
 
-When CLI supports `depends`, transitive deps install automatically. Until then (`skills@1.5.14`), use `harness-init` or install peers explicitly — see `README.md`.
+When CLI supports `depends`, transitive deps install automatically. Until then (`skills@1.5.14`), use `@nextstage-brasil/harness` or install peers explicitly — see `README.md`.

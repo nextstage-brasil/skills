@@ -4,8 +4,8 @@ import { runInit, printList } from '../src/init.js';
 
 const HELP = `
 Usage:
-  nextstage-harness init [options]   Install NextStage skills and scaffold project layout
-  nextstage-harness list             List presets and available skills
+  harness init [options]   Install NextStage skills and scaffold project layout (default)
+  harness list             List presets and available skills
 
 Options:
   --dir <path>           Target project directory (default: current)
@@ -22,9 +22,10 @@ Options:
   --help, -h             Show this help
 
 Examples:
-  npx @nextstage-brasil/harness-init init
-  npx @nextstage-brasil/harness-init init --preset gitlab --yes
-  npx @nextstage-brasil/harness-init init --skill execute-gitlab-issue --yes
+  npx @nextstage-brasil/harness
+  npx @nextstage-brasil/harness --preset gitlab --yes
+  npx @nextstage-brasil/harness --skill execute-gitlab-issue --yes
+  npx @nextstage-brasil/harness list
 `.trim();
 
 function parseArgs(argv) {
@@ -49,10 +50,20 @@ function parseArgs(argv) {
     return result;
   }
 
-  result.command = args[0] === 'list' ? 'list' : args[0] === 'init' ? 'init' : 'init';
+  const first = args[0];
+  if (first === 'list') {
+    result.command = 'list';
+  } else if (first === 'init') {
+    result.command = 'init';
+  } else if (first.startsWith('-')) {
+    result.command = 'init';
+  } else {
+    console.error(`Unknown command: ${first}\n\nRun with --help for usage.`);
+    process.exit(1);
+  }
 
   let start = 0;
-  if (args[0] === 'init' || args[0] === 'list') {
+  if (first === 'init' || first === 'list') {
     start = 1;
   }
 
