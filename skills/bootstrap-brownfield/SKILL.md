@@ -11,7 +11,7 @@ Architectural discovery for existing products before SDD planning.
 
 ## Harness discovery
 
-See `../nextstage-harness/references/harness-discovery.md`. Compare findings to `{harness}/rules/*.mdc` when present — checks are advisory if rules missing.
+See `../nextstage-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent. Compare findings to canonical rules when present — checks are advisory if rules missing.
 
 ## When to use
 

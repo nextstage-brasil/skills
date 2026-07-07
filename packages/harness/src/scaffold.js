@@ -1,7 +1,12 @@
 import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { AGENTS_LAYOUT_DIRS } from './agentsLayout.js';
+import {
+  AGENTS_LAYOUT_DIRS,
+  HARNESS_DOCS_DIR,
+  HARNESS_ROOT,
+  HARNESS_RULES_DIR,
+} from './agentsLayout.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const templatesDir = join(__dirname, '..', 'templates');
@@ -12,13 +17,8 @@ export function scaffoldProject(projectRoot, options = {}) {
   const skipped = [];
 
   if (agents) {
-    const target = join(projectRoot, 'AGENTS.md');
-    if (existsSync(target) && !force) {
-      skipped.push('AGENTS.md');
-    } else {
-      copyFileSync(join(templatesDir, 'AGENTS.md'), target);
-      created.push('AGENTS.md');
-    }
+    scaffoldHarnessRoot(projectRoot, { force, created, skipped });
+    scaffoldClaudeStub(projectRoot, { created, skipped });
   }
 
   if (docs) {
@@ -50,6 +50,50 @@ export function scaffoldProject(projectRoot, options = {}) {
   }
 
   return { created, skipped };
+}
+
+function scaffoldHarnessRoot(projectRoot, { force, created, skipped }) {
+  const harnessRoot = join(projectRoot, HARNESS_ROOT);
+  const manifestTarget = join(harnessRoot, 'manifest.json');
+  const rulesTarget = join(projectRoot, HARNESS_RULES_DIR);
+  const archRulesTarget = join(rulesTarget, 'architecture-rules.md');
+  const harnessDocsTarget = join(projectRoot, HARNESS_DOCS_DIR);
+
+  mkdirSync(rulesTarget, { recursive: true });
+  mkdirSync(harnessDocsTarget, { recursive: true });
+
+  if (existsSync(manifestTarget) && !force) {
+    skipped.push(`${HARNESS_ROOT}/manifest.json`);
+  } else {
+    copyFileSync(join(templatesDir, 'harness-manifest.json'), manifestTarget);
+    created.push(`${HARNESS_ROOT}/manifest.json`);
+  }
+
+  if (existsSync(archRulesTarget) && !force) {
+    skipped.push(`${HARNESS_RULES_DIR}/architecture-rules.md`);
+  } else {
+    copyFileSync(
+      join(templatesDir, 'rules', 'architecture-rules.stub.md'),
+      archRulesTarget,
+    );
+    created.push(`${HARNESS_RULES_DIR}/architecture-rules.md`);
+  }
+
+  const harnessGitkeep = join(harnessDocsTarget, '.gitkeep');
+  if (!existsSync(harnessGitkeep)) {
+    writeUtf8(harnessGitkeep, '');
+    created.push(`${HARNESS_DOCS_DIR}/.gitkeep`);
+  }
+}
+
+function scaffoldClaudeStub(projectRoot, { created, skipped }) {
+  const claudePath = join(projectRoot, 'CLAUDE.md');
+  if (existsSync(claudePath)) {
+    skipped.push('CLAUDE.md');
+    return;
+  }
+  writeUtf8(claudePath, '@AGENTS.md\n');
+  created.push('CLAUDE.md');
 }
 
 function writeUtf8(path, content) {

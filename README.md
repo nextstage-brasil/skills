@@ -37,8 +37,9 @@ Same path, same content — no vendor-specific directories.
 | Skill                      | Purpose                                                                     |
 | -------------------------- | --------------------------------------------------------------------------- |
 | `nextstage-harness`        | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
+| `agents-md-generator`      | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer           |
 | `codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
-| `architecture-rules-generator` | Scan codebase and generate lean `architecture-rules.mdc` for agents     |
+| `architecture-rules-generator` | Scan codebase and generate lean `architecture-rules.md` for agents      |
 | `bootstrap-brownfield`     | Map existing codebase stack/modules before first SDD version                |
 | `clarify-requirements`     | Resolve scope ambiguities before requirements generation                    |
 | `requirements-generator`   | Produce structured `requirements.md` for a version                          |
@@ -91,7 +92,7 @@ npx @nextstage-brasil/harness --preset gitlab --yes
 npx @nextstage-brasil/harness list
 ```
 
-See `packages/harness/README.md` for all flags.
+See `packages/harness/README.md` for all flags. Install and migration details: `packages/harness/docs/README_INSTALLER.md`.
 
 ### Manual install
 
@@ -140,10 +141,13 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 | Layer                  | Location                                                                    |
 | ---------------------- | --------------------------------------------------------------------------- |
 | **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness` or `npx skills add` |
-| **Project rules**      | `AGENTS.md` at repo root                                                    |
-| **Agent personas**     | `.agents/agents/<name>.md`                                                |
-| **Agent rules / docs** | `.agents/rules/`, `.agents/docs/`                                           |
-| **SDD artifacts**      | `docs/versions/{version}/`, living specs in `docs/specs/`                   |
+| **Project rules**      | `AGENTS.md` at repo root; canonical rules in `.nextstage-harness/rules/`  |
+| **Generated adapters** | `.cursor/rules/*.mdc`, `.claude/rules/*.md` (via `harness sync`)            |
+| **Agent personas**     | `.agents/agents/<name>.md`                                                  |
+| **Agent docs**         | `.agents/docs/`                                                             |
+| **SDD artifacts**      | `docs/versions/{version}/`, living specs in `docs/specs/`                    |
+
+Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
 Typical SDD chain: `clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`coder` / `execute-gitlab-issue`) → `code-reviewer` → `living-spec-consolidator`.
 

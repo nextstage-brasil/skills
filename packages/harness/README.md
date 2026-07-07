@@ -29,14 +29,19 @@ npx @nextstage-brasil/harness list
 1. Detects whether the target is a **new** or **existing** project.
 2. Resolves skill dependencies from `templates/catalog.json`.
 3. Runs `npx skills add` → `.agents/skills/` (NextStage catalog + `skill-creator` from anthropics/skills).
-4. Scaffolds `AGENTS.md`, `.agents/rules/`, `.agents/docs/`, and `docs/` (unless `--no-scaffold`).
-5. Copies agent personas to `.agents/agents/<name>.md` (unless `--no-agents`).
+4. Scaffolds `AGENTS.md`, `.nextstage-harness/rules/`, `.agents/docs/`, and `docs/` (unless `--no-scaffold`).
+5. Runs `harness sync` and `harness agents-md` after scaffold (unless `--no-scaffold`).
+6. Copies agent personas to `.agents/agents/<name>.md` and syncs to `.cursor/agents/`, `.claude/agents/` (unless `--no-agents`).
+
+Default agents on install: `cursor`, `claude-code`.
+
+Full install guide: [docs/README_INSTALLER.md](docs/README_INSTALLER.md).
 
 ## Agent personas
 
 Canonical source: repo-root `agents/*.md`.
 
-Installed to `.agents/agents/<name>.md` in the target project.
+Installed to `.agents/agents/<name>.md` (canonical). `harness sync` symlinks to `.cursor/agents/` and `.claude/agents/` (`--copy` for plain files).
 
 ## Presets
 

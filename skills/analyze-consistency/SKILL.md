@@ -11,7 +11,7 @@ Pre-execution validation: plan vs plan before coding.
 
 ## Harness discovery
 
-See `../nextstage-harness/references/harness-discovery.md`. Load `{harness}/rules/*.mdc` when present for stack-specific checks.
+See `../nextstage-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent.
 
 ## When to use
 

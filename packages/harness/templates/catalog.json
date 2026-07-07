@@ -4,6 +4,7 @@
     "nextstage-harness": [],
     "codebase-reverse-spec": [],
     "architecture-rules-generator": ["nextstage-harness"],
+    "agents-md-generator": ["nextstage-harness"],
     "bootstrap-brownfield": ["nextstage-harness"],
     "clarify-requirements": ["nextstage-harness"],
     "requirements-generator": ["nextstage-harness"],
@@ -57,6 +58,7 @@
       "description": "Reverse-spec, architecture rules, and stack mapping before first SDD version",
       "skills": [
         "nextstage-harness",
+        "agents-md-generator",
         "architecture-rules-generator",
         "bootstrap-brownfield",
         "codebase-reverse-spec"
@@ -77,7 +79,7 @@
   "categories": {
     "foundation": {
       "label": "Foundation",
-      "skills": ["nextstage-harness"]
+      "skills": ["nextstage-harness", "agents-md-generator"]
     },
     "sdd": {
       "label": "SDD planning",
@@ -108,7 +110,7 @@
     },
     "brownfield": {
       "label": "Brownfield",
-      "skills": ["architecture-rules-generator", "bootstrap-brownfield", "codebase-reverse-spec"]
+      "skills": ["agents-md-generator", "architecture-rules-generator", "bootstrap-brownfield", "codebase-reverse-spec"]
     }
   }
 }

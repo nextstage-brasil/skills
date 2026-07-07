@@ -1,6 +1,6 @@
 {
   "name": "@nextstage-brasil/harness",
-  "version": "0.9.0",
+  "version": "0.9.3",
   "description": "Interactive CLI to install NextStage skills and scaffold SDD project layout",
   "type": "module",
   "bin": {
@@ -16,7 +16,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node bin/cli.js list && node bin/cli.js --dry-run --yes --preset gitlab",
+    "test": "node bin/cli.js list && node bin/cli.js --dry-run --yes --preset gitlab && node test/sync-smoke.mjs",
     "validate:catalog": "node scripts/validate-catalog.js",
     "sync:agents": "node scripts/sync-agents.js",
     "prepack": "node scripts/sync-agents.js"

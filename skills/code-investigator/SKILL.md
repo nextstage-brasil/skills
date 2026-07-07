@@ -11,7 +11,7 @@ Find root cause, explain failure clearly, propose minimal safe fix with validati
 
 ## Harness discovery
 
-See `../nextstage-harness/references/harness-discovery.md`. Load `{harness}/rules/*.mdc` relevant to the affected layer before investigating.
+See `../nextstage-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent.
 
 ## Mission
 

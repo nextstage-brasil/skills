@@ -1,8 +1,3 @@
----
-description: {one_line_description}
-alwaysApply: true
----
-
 # Architecture Rules — {project_name}
 
 Technical constitution for AI agents. Business behavior lives in `{specs_or_docs_path}`.
@@ -11,7 +6,7 @@ Technical constitution for AI agents. Business behavior lives in `{specs_or_docs
 
 - **Product root** = `{product_root}` ({standalone | monorepo path}).
 - Work inside this scope unless the user expands it.
-- Agent harness: read `AGENTS.md` first; skills in `{skills_path}`; rules in `.cursor/rules/`.
+- Agent harness: read `AGENTS.md` first; skills in `{skills_path}`; canonical rules in `.nextstage-harness/rules/`.
 
 ## Stack
 

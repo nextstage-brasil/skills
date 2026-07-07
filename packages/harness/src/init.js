@@ -11,6 +11,11 @@ import { installSkillCreator, installSkills } from './installer.js';
 import { scaffoldProject } from './scaffold.js';
 import { resolveSource } from './source.js';
 import { installAgentPersonas, matchingPersonas, resolveAgentsDir } from './agentPersonas.js';
+import { syncRules } from './syncRules.js';
+import { syncAgents } from './syncAgents.js';
+import { generateAgentsMd } from './generateAgentsMd.js';
+import { buildPostInstallNotes } from './postInstallNotes.js';
+import { DEFAULT_AGENTS } from './agentsLayout.js';
 
 export async function runInit(argv = {}) {
   p.intro('NextStage harness');
@@ -34,10 +39,11 @@ export async function runInit(argv = {}) {
   p.log.step(`Skills to install (${resolved.length}): ${resolved.join(', ')}`);
 
   const scaffoldOptions = await resolveScaffoldOptions(argv, detection);
+  const agents = argv.agent?.length ? argv.agent : DEFAULT_AGENTS;
   const installOptions = {
     projectRoot: detection.projectRoot,
     global: Boolean(argv.global),
-    agents: argv.agent ?? [],
+    agents,
     copy: Boolean(argv.copy),
     source: argv.source,
   };
@@ -48,8 +54,11 @@ export async function runInit(argv = {}) {
 
   if (argv['dry-run']) {
     p.log.info(`Source: ${resolvedSource}`);
+    p.log.info(`Agents: ${agents.join(', ')}`);
     if (personasToInstall.length > 0 && !argv['no-agents']) {
-      p.log.info(`Agent personas → .agents/agents/: ${personasToInstall.join(', ')}`);
+      p.log.info(
+        `Agent personas → .agents/agents/, .cursor/agents/, .claude/agents/: ${personasToInstall.join(', ')}`,
+      );
     }
     p.log.info('Also installs: skill-creator (anthropics/skills)');
     p.log.info('Dry run — no files written, no skills installed.');
@@ -71,13 +80,26 @@ export async function runInit(argv = {}) {
     process.exit(1);
   }
 
+  let scaffoldRan = false;
   if (!scaffoldOptions.skip) {
     const result = scaffoldProject(detection.projectRoot, scaffoldOptions);
+    scaffoldRan = result.created.length > 0;
     if (result.created.length > 0) {
       p.log.success(`Created: ${result.created.join(', ')}`);
     }
     if (result.skipped.length > 0) {
       p.log.warn(`Skipped (already exist): ${result.skipped.join(', ')}`);
+    }
+
+    try {
+      const syncResult = syncRules(detection.projectRoot, { agents });
+      if (syncResult.written.length > 0) {
+        p.log.success(`Synced adapters: ${syncResult.written.length} file(s)`);
+      }
+    } catch (error) {
+      p.log.warn(
+        error instanceof Error ? error.message : String(error),
+      );
     }
   }
 
@@ -88,22 +110,41 @@ export async function runInit(argv = {}) {
       projectRoot: detection.projectRoot,
     });
     if (personaResult.created.length > 0) {
-      p.log.success(`Agent personas: ${personaResult.created.join(', ')}`);
+      p.log.success(`Agent personas (canonical): ${personaResult.created.join(', ')}`);
     }
     if (personaResult.skipped.length > 0) {
       p.log.warn(`Agent personas skipped (already exist): ${personaResult.skipped.join(', ')}`);
     }
+
+    try {
+      const agentSyncResult = syncAgents(detection.projectRoot, { agents, copy: Boolean(argv.copy) });
+      if (agentSyncResult.written.length > 0) {
+        p.log.success(`Agent adapters: ${agentSyncResult.written.join(', ')}`);
+      }
+    } catch (error) {
+      p.log.warn(error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  if (!scaffoldOptions.skip) {
+    try {
+      const agentsMdResult = generateAgentsMd(detection.projectRoot, { force: true });
+      if (!agentsMdResult.skipped) {
+        p.log.success(`Generated: ${agentsMdResult.written.join(', ')}`);
+      }
+    } catch (error) {
+      p.log.warn(error instanceof Error ? error.message : String(error));
+    }
   }
 
   p.note(
-    [
-      'Typical SDD chain:',
-      'clarify-requirements → requirements-generator → analyze-consistency',
-      '→ task-generator → coder / execute-gitlab-issue → code-reviewer',
-      '→ living-spec-consolidator',
-      '',
-      'List installed skills: npx skills list',
-    ].join('\n'),
+    buildPostInstallNotes({
+      preset: argv.preset,
+      installedSkills: resolved,
+      projectRoot: detection.projectRoot,
+      scaffoldRan,
+      noScaffold: Boolean(scaffoldOptions.skip),
+    }),
     'Next steps',
   );
 

@@ -12,7 +12,7 @@ Deep, constructive review of code changes against project rules and acceptance c
 
 ## Harness discovery
 
-See `../nextstage-harness/references/harness-discovery.md`. Before reviewing, read applicable rules from `{harness}/rules/*.mdc` when they exist — load layer-specific rules (backend, frontend, tests, e2e) based on changed files. Read `AGENTS.md` first.
+See `../nextstage-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent. Load layer-specific rules (backend, frontend, tests, e2e) based on changed files.
 
 Do not assume Grogoo/Laravel/React unless detected in project rules or stack context.
 

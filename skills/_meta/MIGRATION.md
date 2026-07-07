@@ -18,14 +18,22 @@ Migration notes for skills promoted into this repository as the canonical home f
 
 ## Harness discovery (summary)
 
-1. If repo has `.cursor/rules/` or `AGENTS.md` → use repo root as `{product_root}`
-2. Load project rules from `.cursor/rules/*.mdc` when they exist; never assume Grogoo/Laravel unless detected
+1. If repo has `AGENTS.md` → use repo root (or monorepo product folder) as `{product_root}`
+2. Load canonical rules from `{harness_root}/rules/*.md` (`.nextstage-harness/rules/`)
+3. Read `architecture-rules.md` first; layer rules by changed files
+4. **Legacy:** `.cursor/rules/*.mdc` only when `{harness_root}/` is absent — migrate with `npx @nextstage-brasil/harness migrate-rules`
+5. Regenerate adapters with `npx @nextstage-brasil/harness sync` after editing canonical rules
+
+See `skills/nextstage-harness/references/harness-discovery.md` and `rules-sync.md`.
 
 ## Canonical variables
 
 | Variable | Default / resolution |
 |----------|----------------------|
 | `{product_root}` | Product folder (e.g. `apps/my-product/`) or repo root in standalone mode |
+| `{harness_root}` | `{product_root}/.nextstage-harness/` |
+| `{rules_canonical}` | `{harness_root}/rules/*.md` |
+| `{skills_canonical}` | `{product_root}/.agents/skills/` |
 | `{specs_root}` | `{product_root}/docs/specs/` |
 | `{version_san}` | Sanitized version id (e.g. `1.0.0`) |
 | Version artifacts | `{product_root}/docs/versions/{version_san}/` |
@@ -43,6 +51,7 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | `nextstage-harness` | — (base dependency) |
 | SDD consumers (`clarify-requirements`, `requirements-generator`, `analyze-consistency`, `task-generator`, `execution-handoff-generator`, `version-partitioner`, `bootstrap-brownfield`, `living-spec-consolidator`, `coder`, `code-investigator`) | `nextstage-harness` |
 | `architecture-rules-generator` | `nextstage-harness` |
+| `agents-md-generator` | `nextstage-harness` |
 | `mcp-gitlab-usage` | `nextstage-harness` |
 | `code-reviewer` | `nextstage-harness`, `mcp-gitlab-usage` |
 | `execute-gitlab-issue` | `nextstage-harness`, `mcp-gitlab-usage`, `code-reviewer` |

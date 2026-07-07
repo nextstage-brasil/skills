@@ -1,6 +1,6 @@
 # Compression guide
 
-`architecture-rules.mdc` is **hot memory** — loaded every session. Every line competes with the user's task context.
+`architecture-rules.md` is **hot memory** — loaded every session. Every line competes with the user's task context.
 
 ## Target
 
@@ -24,12 +24,12 @@
 
 ## Compression tactics
 
-1. **Route by reference** — replace 20-line subsystem docs with `See docs/specs/foo.md` or `backend-rules.mdc`.
+1. **Route by reference** — replace 20-line subsystem docs with `See docs/specs/foo.md` or `backend-rules.md`.
 2. **Collapse duplicates** — if `AGENTS.md` already states SDD chain, one line: "SDD workflow: see AGENTS.md".
 3. **Table over prose** — stack, modules, crons, test suites as tables.
 4. **Drop the obvious** — do not document "use git" or generic SOLID unless the repo encodes a **specific** rule (e.g. "never edit Generated/").
 5. **Mark inference** — `(inferred)` on one line beats a wrong confident rule.
-6. **Split on overflow** — if NsUtil or Grogoo needs >40 lines, create `nsutil-architecture-rules.mdc` and keep one cross-link here.
+6. **Split on overflow** — if NsUtil or Grogoo needs >40 lines, create `nsutil-architecture-rules.md` and keep one cross-link here.
 
 ## Anti-patterns (seen in bloated rules)
 
@@ -41,7 +41,7 @@
 ## Self-check before save
 
 ```
-wc -l .cursor/rules/architecture-rules.mdc
+wc -l .nextstage-harness/rules/architecture-rules.md
 ```
 
-If > 200 lines, run one compression pass: delete lowest-value section, add link, repeat.
+If > 200 lines, run one compression pass: delete lowest-value section, add link, repeat. Then run `npx @nextstage-brasil/harness sync`.

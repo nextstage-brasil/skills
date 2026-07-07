@@ -4,23 +4,41 @@ Use this pattern in every skill that needs project rules, artifact paths, or har
 
 ## Resolution order
 
-1. **Standalone / Cursor** — If the repo has `.cursor/rules/` or `AGENTS.md` at `{product_root}`, treat `{product_root}` as the harness anchor (rules may live under `.cursor/rules/`).
-2. **Rules loading** — Load applicable rules from `.cursor/rules/*.mdc` when they exist. Read `AGENTS.md` first for pointers.
-3. **Product context (implementation)** — When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code.
+1. **Product anchor** — If the repo has `AGENTS.md` at `{product_root}`, treat `{product_root}` as the harness anchor.
+2. **Canonical rules** — Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first (constitution).
+3. **Layer rules** — Load additional rules from `{harness_root}/rules/` matching changed files (backend, frontend, tests, e2e).
+4. **Legacy fallback** — If `{harness_root}/` is missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note. Prefer migrating with `npx @nextstage-brasil/harness migrate-rules`.
+5. **Product context (implementation)** — When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code.
 
 ## Variables
 
 | Variable | Typical value |
 |----------|---------------|
-| `{harness}` | Repo root (rules under `.cursor/rules/`) |
-| `{product_root}` | Product folder or repo root |
+| `{product_root}` | Repo root or monorepo product folder |
+| `{harness_root}` | `{product_root}/.nextstage-harness/` |
+| `{rules_canonical}` | `{harness_root}/rules/*.md` |
+| `{skills_canonical}` | `{product_root}/.agents/skills/` (Skills CLI — do not move) |
+| `{personas_canonical}` | `{product_root}/.agents/agents/` |
+| `{personas_cursor}` | `{product_root}/.cursor/agents/` (symlink) |
+| `{personas_claude}` | `{product_root}/.claude/agents/` (symlink) |
 | `{specs_root}` | `{product_root}/docs/specs/` |
 | `{context_root}` | `{product_root}/docs/context/` |
 | `{version_san}` | Sanitized version (e.g. `1.0.0`) |
 
+**Legacy alias:** `{harness}` → `{product_root}` (deprecated in new docs; prefer `{harness_root}` for rules paths).
+
+## Rules loading order (all consumer skills)
+
+1. Read `AGENTS.md`
+2. Read `{harness_root}/rules/architecture-rules.md` (constitution)
+3. Load layer rules from `{harness_root}/rules/` matching changed files
+4. **Legacy fallback:** if `{harness_root}/` missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note
+
+Adapter generation: see `rules-sync.md`. Agent personas: canonical `.agents/agents/` → `harness sync` → symlinks in `.cursor/agents/`, `.claude/agents/`.
+
 ## No harness found
 
-If none of the resolution steps above match (no `.cursor/rules/`, no `AGENTS.md`): treat the repo as **standalone with no versioning scaffold**. Use repo root as `{product_root}`, load no project-specific rules, and skip any step that depends on `{version_san}` or `docs/versions/` (e.g. version-closure report paths). Do **not** fabricate a `version_san`, do **not** create a `docs/versions/` folder speculatively, and do **not** ask the human to supply one unless the active skill's own workflow explicitly requires versioned output for the task at hand.
+If none of the resolution steps above match (no `{harness_root}/`, no `.cursor/rules/`, no `AGENTS.md`): treat the repo as **standalone with no versioning scaffold**. Use repo root as `{product_root}`, load no project-specific rules, and skip any step that depends on `{version_san}` or `docs/versions/`. Do **not** fabricate a `version_san`, do **not** create a `docs/versions/` folder speculatively, and do **not** ask the human to supply one unless the active skill's own workflow explicitly requires versioned output for the task at hand.
 
 ## Do not assume
 

@@ -1,10 +1,18 @@
 #!/usr/bin/env node
 
 import { runInit, printList } from '../src/init.js';
+import { syncRules } from '../src/syncRules.js';
+import { syncAgents } from '../src/syncAgents.js';
+import { migrateRules } from '../src/migrateRules.js';
+import { generateAgentsMd } from '../src/generateAgentsMd.js';
+import { DEFAULT_AGENTS } from '../src/agentsLayout.js';
 
 const HELP = `
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
+  harness sync [options]   Regenerate Cursor/Claude adapters from canonical rules and personas
+  harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
+  harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
   harness list             List presets and available skills
 
 Options:
@@ -13,19 +21,24 @@ Options:
   --skill <name>         Install specific skill (repeatable)
   --all                  Install every skill in the catalog
   --global, -g           Install skills globally (passed to skills CLI)
-  --agent <name>         Target agent (repeatable; passed to skills CLI)
+  --agent <name>         Target agent (repeatable; default: cursor, claude-code)
   --copy                 Copy skill files instead of symlinking
   --source <path>        Skills source (default: nextstage-brasil/skills or local repo)
   --yes, -y              Non-interactive; install all skills and default scaffold
   --no-scaffold          Skip AGENTS.md and docs/ scaffolding
   --no-agents            Skip copying agent personas to .agents/agents/
+  --check                With sync: verify adapters match canonical (CI mode)
+  --force                With migrate-rules or agents-md: overwrite existing files
   --dry-run              Show resolved skills without installing
   --help, -h             Show this help
 
 Examples:
   npx @nextstage-brasil/harness
   npx @nextstage-brasil/harness --preset gitlab --yes
-  npx @nextstage-brasil/harness --preset gitlab --yes
+  npx @nextstage-brasil/harness sync
+  npx @nextstage-brasil/harness sync --check
+  npx @nextstage-brasil/harness agents-md
+  npx @nextstage-brasil/harness agents-md --force
   npx @nextstage-brasil/harness list
 `.trim();
 
@@ -45,6 +58,8 @@ function parseArgs(argv) {
     'no-scaffold': false,
     'no-agents': false,
     'dry-run': false,
+    check: false,
+    force: false,
     help: false,
   };
 
@@ -52,11 +67,10 @@ function parseArgs(argv) {
     return result;
   }
 
+  const knownCommands = ['init', 'list', 'sync', 'migrate-rules', 'agents-md'];
   const first = args[0];
-  if (first === 'list') {
-    result.command = 'list';
-  } else if (first === 'init') {
-    result.command = 'init';
+  if (knownCommands.includes(first)) {
+    result.command = first;
   } else if (first.startsWith('-')) {
     result.command = 'init';
   } else {
@@ -64,10 +78,7 @@ function parseArgs(argv) {
     process.exit(1);
   }
 
-  let start = 0;
-  if (first === 'init' || first === 'list') {
-    start = 1;
-  }
+  let start = knownCommands.includes(first) ? 1 : 0;
 
   for (let i = start; i < args.length; i += 1) {
     const arg = args[i];
@@ -112,6 +123,16 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (arg === '--check') {
+      result.check = true;
+      continue;
+    }
+
+    if (arg === '--force') {
+      result.force = true;
+      continue;
+    }
+
     const valueFlags = ['--dir', '--preset', '--skill', '--agent', '--source'];
     if (valueFlags.includes(arg)) {
       const value = args[i + 1];
@@ -136,6 +157,71 @@ function parseArgs(argv) {
   return result;
 }
 
+function resolveProjectDir(argvDir) {
+  if (argvDir) return argvDir;
+  return process.cwd();
+}
+
+async function runSync(parsed) {
+  const projectRoot = resolveProjectDir(parsed.dir);
+  const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
+  const rulesResult = syncRules(projectRoot, { agents, check: parsed.check });
+  const agentsResult = syncAgents(projectRoot, { agents, check: parsed.check, copy: parsed.copy });
+  const drifts = [...rulesResult.drifts, ...agentsResult.drifts];
+
+  if (parsed.check) {
+    if (drifts.length > 0) {
+      console.error('Adapter drift detected:');
+      for (const path of drifts) {
+        console.error(`  ${path}`);
+      }
+      process.exit(1);
+    }
+    console.log('OK: rule and agent adapters match canonical sources');
+    return;
+  }
+
+  const totalWritten = rulesResult.written.length + agentsResult.written.length;
+  if (totalWritten > 0) {
+    console.log(`Synced ${totalWritten} adapter file(s)`);
+    if (agentsResult.written.length > 0) {
+      console.log(`  Agent personas → ${agentsResult.written.join(', ')}`);
+    }
+  } else {
+    console.log('No adapters written');
+  }
+}
+
+async function runMigrateRules(parsed) {
+  const projectRoot = resolveProjectDir(parsed.dir);
+  const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
+  const result = migrateRules(projectRoot, { force: parsed.force, agents });
+
+  if (result.migrated.length > 0) {
+    console.log(`Migrated: ${result.migrated.join(', ')}`);
+  }
+  if (result.skipped.length > 0) {
+    console.log(`Skipped (already exist): ${result.skipped.join(', ')}`);
+  }
+  console.log(`Synced ${result.syncResult.written.length} adapter file(s)`);
+}
+
+async function runAgentsMd(parsed) {
+  const projectRoot = resolveProjectDir(parsed.dir);
+  const result = generateAgentsMd(projectRoot, { force: parsed.force });
+
+  if (result.skipped) {
+    console.log(`Skipped: ${result.reason}`);
+    return;
+  }
+
+  console.log(`Wrote: ${result.written.join(', ')}`);
+  console.log(`Skills (${result.skills.length}): ${result.skills.join(', ')}`);
+  if (result.personas.length > 0) {
+    console.log(`Personas: ${result.personas.join(', ')}`);
+  }
+}
+
 async function main() {
   const parsed = parseArgs(process.argv);
 
@@ -146,6 +232,36 @@ async function main() {
 
   if (parsed.command === 'list') {
     printList();
+    return;
+  }
+
+  if (parsed.command === 'sync') {
+    try {
+      await runSync(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (parsed.command === 'migrate-rules') {
+    try {
+      await runMigrateRules(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (parsed.command === 'agents-md') {
+    try {
+      await runAgentsMd(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
     return;
   }
 

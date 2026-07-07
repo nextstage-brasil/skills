@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "name": "architecture-rules",
+      "canonical": "rules/architecture-rules.md",
+      "cursor": {
+        "alwaysApply": true,
+        "description": "Technical constitution for AI agents — stack, layout, patterns, and constraints"
+      },
+      "claude": {
+        "paths": null
+      }
+    }
+  ]
+}

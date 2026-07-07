@@ -1,0 +1,12 @@
+---
+description: Legacy backend rules for migration test
+globs: backend/**
+---
+
+# Backend Rules (legacy)
+
+Edit canonical under `.nextstage-harness/rules/` instead.
+
+## Patterns
+
+- Use repository pattern for data access.

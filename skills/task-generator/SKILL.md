@@ -11,7 +11,7 @@ Convert one atomic slice of a Feature into a detailed `task-NNN-slug.md` for eng
 
 ## Harness discovery
 
-See `../nextstage-harness/references/harness-discovery.md`. Load `{harness}/rules/*.mdc` for the task layer. Read `requirements.md` strictly — do not invent tables or endpoints.
+See `../nextstage-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent. Read `requirements.md` strictly — do not invent tables or endpoints.
 
 ## Scope
 

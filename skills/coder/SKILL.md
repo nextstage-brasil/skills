@@ -11,7 +11,7 @@ Implement ad-hoc coding tasks with minimal diff while respecting project rules.
 
 ## Harness discovery
 
-See `../nextstage-harness/references/harness-discovery.md`. Load `{harness}/rules/*.mdc` for affected layers. Read `AGENTS.md` first.
+See `../nextstage-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent.
 
 ## When to use
 

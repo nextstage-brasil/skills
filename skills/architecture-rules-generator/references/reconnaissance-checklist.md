@@ -1,14 +1,15 @@
 # Reconnaissance checklist
 
-Read-only scan before drafting `architecture-rules.mdc`. Check items in order; skip sections with no signals.
+Read-only scan before drafting `architecture-rules.md`. Check items in order; skip sections with no signals.
 
 ## 1. Harness and existing context
 
 - [ ] `AGENTS.md` — agent workflow, skill paths, completion conventions
-- [ ] `.cursor/rules/*.mdc` — list siblings; note what **not** to duplicate
-- [ ] `.cursor/docs/` — system description, integration notes
+- [ ] `{harness_root}/rules/*.md` — list siblings; note what **not** to duplicate
+- [ ] `.nextstage-harness/docs/` — harness-local notes
 - [ ] `docs/context/` — stack-confirmed, gitlab-sync-config, integration docs
 - [ ] `docs/specs/` — living functional specs (link, do not copy)
+- [ ] Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent
 
 ## 2. Stack manifests
 
