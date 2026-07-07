@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Determine semantic version bump from conventional commits touching packages/harness.
+ * Determine semantic version bump from conventional commits in the push.
  * Writes GITHUB_OUTPUT keys: should_release, new_version, bump_level.
  */
 
@@ -46,7 +46,7 @@ function bumpVersion(version, level) {
 
 function getCommitMessages(commitRange) {
   const output = execSync(
-    `git log ${commitRange} --pretty=format:%s%n%b%n--commit-end-- -- packages/harness`,
+    `git log ${commitRange} --pretty=format:%s%n%b%n--commit-end--`,
     { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] },
   ).trim();
 
@@ -57,36 +57,26 @@ function getCommitMessages(commitRange) {
   return output
     .split('\n--commit-end--\n')
     .map((block) => block.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter((message) => !/^chore\(harness\): release v/.test(message.split('\n')[0] ?? ''));
 }
 
 function getBumpLevel(messages) {
-  let level = null;
+  let hasFeat = false;
 
   for (const message of messages) {
     const subject = message.split('\n')[0] ?? '';
-    const breaking =
-      message.includes('BREAKING CHANGE') ||
-      message.includes('BREAKING-CHANGE') ||
-      /^(\w+)(\([^)]+\))?!:/.test(subject);
 
-    if (breaking) {
+    if (/^version(\([^)]+\))?!?:/.test(subject)) {
       return 'major';
     }
 
     if (/^feat(\([^)]+\))?:/.test(subject)) {
-      level = 'minor';
-      continue;
-    }
-
-    if (/^fix(\([^)]+\))?:/.test(subject)) {
-      if (level !== 'minor') {
-        level = 'patch';
-      }
+      hasFeat = true;
     }
   }
 
-  return level;
+  return hasFeat ? 'minor' : 'patch';
 }
 
 function writeOutput(key, value) {
@@ -101,18 +91,12 @@ function writeOutput(key, value) {
 const messages = getCommitMessages(range);
 
 if (messages.length === 0) {
-  console.log(`No commits touching packages/harness in range ${range}; skipping release.`);
+  console.log(`No commits in range ${range}; skipping release.`);
   writeOutput('should_release', 'false');
   process.exit(0);
 }
 
 const bumpLevel = getBumpLevel(messages);
-if (!bumpLevel) {
-  console.log('No feat/fix/breaking commits for packages/harness; skipping release.');
-  writeOutput('should_release', 'false');
-  process.exit(0);
-}
-
 const newVersion = bumpVersion(currentVersion, bumpLevel);
 console.log(`Current version: ${currentVersion}`);
 console.log(`Bump level: ${bumpLevel}`);

@@ -3,9 +3,6 @@ name: Publish harness
 on:
   push:
     branches: [main]
-    paths:
-      - 'packages/harness/**'
-      - '.github/workflows/publish-harness.yml'
 
 permissions:
   contents: write
@@ -22,12 +19,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          registry-url: https://registry.npmjs.org
+          node-version: '24'
 
       - name: Ensure npm supports trusted publishing
         run: npm install -g npm@latest
@@ -72,10 +67,18 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add packages/harness/package.json
           git commit -m "chore(harness): release v${version} [skip ci]"
-          git tag "harness-v${version}"
+          if ! git rev-parse "harness-v${version}" >/dev/null 2>&1; then
+            git tag "harness-v${version}"
+          fi
+          git pull --rebase origin main
           git push origin main --follow-tags
 
       - name: Publish to npm
         if: steps.release.outputs.should_release == 'true'
         working-directory: packages/harness
-        run: npm publish --access=public
+        run: |
+          if [ -f "$HOME/.npmrc" ]; then
+            grep -v '_authToken' "$HOME/.npmrc" > "$HOME/.npmrc.tmp" || true
+            mv "$HOME/.npmrc.tmp" "$HOME/.npmrc"
+          fi
+          npm publish --access=public

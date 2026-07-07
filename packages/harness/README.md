@@ -57,11 +57,11 @@ npm test
 
 ## Release (CI)
 
-On every push to `main` that changes `packages/harness/**`, GitHub Actions:
+On every push to `main`, GitHub Actions:
 
 1. Runs harness tests
-2. Reads conventional commits in that push that touch `packages/harness`
-3. Bumps semver (`fix:` → patch, `feat:` → minor, breaking → major)
+2. Reads conventional commits in that push (any path in the repo)
+3. Bumps semver: `version:` → major, `feat:` → minor, anything else → patch
 4. Commits `package.json`, tags `harness-v{version}`, and runs `npm publish --access=public`
 
 **Required npm setup (once):** on [npmjs.com](https://www.npmjs.com/package/@nextstage-brasil/harness) → **Settings → Trusted Publisher** → GitHub Actions:
@@ -74,7 +74,7 @@ On every push to `main` that changes `packages/harness/**`, GitHub Actions:
 
 No `NPM_TOKEN` secret is needed — publish uses OIDC (short-lived credentials). After verifying the first release, consider **Publishing access → Require 2FA and disallow tokens**.
 
-Commits without `feat:` / `fix:` / breaking changes skip the release. Use squash merges with conventional PR titles on `main`.
+Every push to `main` with commits publishes. Use `version:` (or `version!:`) only when you need a major bump.
 
 ## License
 
