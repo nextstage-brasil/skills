@@ -61,10 +61,8 @@ On every push to `main`, `.github/workflows/publish-harness.yml`:
 
 1. Runs harness tests
 2. Reads conventional commits in that push (any path in the repo)
-3. Releases only when the push contains `feat:` (minor) or `version:` / `version!:` (major)
+3. Every push publishes. Semver bump: `version:` → major, `feat:` → minor, anything else → patch
 4. Bumps `package.json` + `package-lock.json`, publishes to npm, then commits, tags `harness-v{version}`, and pushes
-
-`fix:`, `chore:`, `docs:`, and other commit types do **not** trigger a release.
 
 ### One-time npm setup (required)
 
@@ -80,7 +78,7 @@ Without this, `npm publish` fails with `ENEEDAUTH`.
 | Repository | `skills` |
 | Workflow filename | `publish-harness.yml` |
 
-4. Save, then push a `feat:` commit to `main` to verify the first publish
+4. Save, then push to `main` to verify the first publish
 
 No `NPM_TOKEN` secret — OIDC only. The workflow uses Node 24, npm 11.5.1+, and `id-token: write`. Do **not** add `registry-url` to `setup-node` (it forces token auth and breaks OIDC).
 
@@ -91,7 +89,7 @@ After the first successful publish, consider **Publishing access → Require 2FA
 If publish failed after a version bump landed on `main` but npm does not have that version, either:
 
 - Re-run the failed workflow after fixing npm trusted publishing, or
-- Bump to the next version with a new `feat:` commit
+- Push again to `main` to bump and retry
 
 ## License
 

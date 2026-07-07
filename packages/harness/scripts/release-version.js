@@ -76,7 +76,7 @@ function getBumpLevel(messages) {
     }
   }
 
-  return hasFeat ? 'minor' : null;
+  return hasFeat ? 'minor' : 'patch';
 }
 
 function writeOutput(key, value) {
@@ -97,13 +97,6 @@ if (messages.length === 0) {
 }
 
 const bumpLevel = getBumpLevel(messages);
-
-if (!bumpLevel) {
-  console.log(`No feat/version commits in range ${range}; skipping release.`);
-  writeOutput('should_release', 'false');
-  process.exit(0);
-}
-
 const newVersion = bumpVersion(currentVersion, bumpLevel);
 console.log(`Current version: ${currentVersion}`);
 console.log(`Bump level: ${bumpLevel}`);
