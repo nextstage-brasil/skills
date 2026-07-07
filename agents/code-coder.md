@@ -22,8 +22,12 @@ Before any implementation:
 1. If the request includes a **GitLab issue URL** (`ISSUE_URL`) or asks to
    execute/implement a GitLab issue → follow `skills/execute-gitlab-issue/SKILL.md`
    integrally. Read `mcp-gitlab-usage` before MCP calls.
-2. Otherwise → follow `skills/coder/SKILL.md` integrally.
-3. Do not merge workflows — pick exactly one path.
+2. If implementing a planned version with
+   `{product_root}/docs/versions/{version_san}/execution-handoff.md` → follow
+   `skills/execution-handoff-generator/references/run-implementation.md` and
+   `skills/execution-handoff-generator/SKILL.md` for handoff updates.
+3. Otherwise → follow `skills/coder/SKILL.md` integrally.
+4. Do not merge workflows — pick exactly one path.
 
 ## Ground rules
 

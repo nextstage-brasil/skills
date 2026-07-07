@@ -31,10 +31,10 @@ Report back:
 
 ## Validation checklist (before commit)
 
-- [ ] Every slice task is `done` or `waived` (waiver reason captured)
+- [ ] Every slice task is `completed` or `waived` (waiver reason captured)
 - [ ] No task left `in_progress` or silently skipped
 - [ ] Changes are confined to `{product_root}/**`
-- [ ] Slice handoff time block updated when the harness tracks it
+- [ ] Slice handoff updated per `execution-handoff-generator` (task rows + time block)
 - [ ] Roadmap row reflects the real state
 
 ## Commit (parent only)

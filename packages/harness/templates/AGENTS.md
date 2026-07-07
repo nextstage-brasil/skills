@@ -18,7 +18,7 @@ See the installed `nextstage-harness` skill for gates, artifact paths, and disco
 
 ## Typical SDD chain
 
-`clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`coder` / `execute-gitlab-issue`) → `code-reviewer` → `living-spec-consolidator`
+`clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → `execution-handoff-generator` → implementation (`coder` / `code-coder` / `execution-orchestrator`) → `code-reviewer` → `living-spec-consolidator`
 
 ## Language
 

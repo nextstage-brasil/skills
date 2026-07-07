@@ -48,4 +48,15 @@ See `version-partitioner` skill and `core-subversions` rule when present in harn
 
 ## Handoff rule
 
-Do not declare planning complete if tasks exist without `execution-handoff.md` when the workflow requires it. Handoff tracks time in seconds through execution and closure.
+- Do not declare planning complete if tasks exist without `execution-handoff.md`.
+- The handoff is the **single source of truth** for version progress — do not
+  duplicate task status inside individual `task-NNN-*.md` files.
+- Must include **Time tracking (seconds)** with `Total process time (s)`
+  (planning → final delivery).
+- Update timestamps and totals during execution, review, living specs, and closure.
+- Generate and maintain via `execution-handoff-generator` skill.
+
+Slice handoff (partitioned versions):
+
+- `{product_root}/docs/versions/{version_san}/subversions/{subversion_san}/execution-handoff.md`
+- Master version may also hold a top-level handoff for aggregate closure.

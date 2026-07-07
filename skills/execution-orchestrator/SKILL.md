@@ -88,8 +88,8 @@ For each slice whose roadmap `status` is `planned` or `in_progress`:
      instruction conflicts with rules or scope, **stop and report a blocker**
      instead of proceeding by assumption
 4. **Validate** the subagent result:
-   - Every slice task marked `done` or `waived` (waiver noted in the handoff)
-   - Slice handoff time block updated if the harness tracks it
+   - Every slice task marked `completed` or `waived` (waiver noted in the handoff)
+   - Slice handoff updated per `execution-handoff-generator` (time block + task rows)
    - Roadmap row updated by the worker (or update it yourself)
 5. **Commit** (parent only): one Conventional Commit per slice.
 6. **Mark** the roadmap row → `completed` (if the worker did not).
@@ -108,7 +108,7 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 4. Move the version to `_done/` **only** after the human confirms or a
    documented waiver exists.
 5. If a version `execution-handoff.md` exists, close its final delivery block
-   and recompute total process seconds.
+   and recompute total process seconds per `execution-handoff-generator`.
 
 ## Stop conditions (only reasons to pause)
 
@@ -152,6 +152,7 @@ Orchestrate the partitioned implementation of apps/my-product 3.8.0.
 | Stage | Skill / persona |
 |-------|-----------------|
 | Partition version → roadmap + subversions | `version-partitioner` |
+| Handoff generation and updates | `execution-handoff-generator` |
 | Slice worker (per-slice implementation) | `code-coder` persona / `coder` skill |
 | End-of-version review gate | `code-reviewer` persona |
 | Living specs consolidation | `living-spec-consolidator` |

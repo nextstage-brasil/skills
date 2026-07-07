@@ -9,6 +9,7 @@
     "analyze-consistency": ["nextstage-harness"],
     "version-partitioner": ["nextstage-harness"],
     "task-generator": ["nextstage-harness"],
+    "execution-handoff-generator": ["nextstage-harness"],
     "unit-test-task-generator": [],
     "e2e-test-generator": [],
     "living-spec-consolidator": ["nextstage-harness"],
@@ -33,6 +34,7 @@
         "requirements-generator",
         "analyze-consistency",
         "task-generator",
+        "execution-handoff-generator",
         "unit-test-task-generator",
         "e2e-test-generator",
         "living-spec-consolidator"
@@ -83,6 +85,7 @@
         "analyze-consistency",
         "version-partitioner",
         "task-generator",
+        "execution-handoff-generator",
         "unit-test-task-generator",
         "e2e-test-generator",
         "living-spec-consolidator"

@@ -72,3 +72,4 @@ For subversions: under `subversions/{subversion_san}/tasks/`.
 
 - `unit-test-task-generator` — after backend implementation tasks
 - `e2e-test-generator` — after frontend tasks with UI
+- `execution-handoff-generator` — after **all** tasks for the version are written (planning closure)

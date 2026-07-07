@@ -44,6 +44,7 @@ Same path, same content — no vendor-specific directories.
 | `analyze-consistency`      | Validate requirements before task generation                                |
 | `version-partitioner`      | Split large versions into subversions + roadmap                             |
 | `task-generator`           | Backend/frontend/infra implementation task files                            |
+| `execution-handoff-generator` | Generate and update `execution-handoff.md` (task order + time tracking) |
 | `unit-test-task-generator` | Backend PHPUnit/integration test tasks                                      |
 | `e2e-test-generator`       | Cypress E2E planning tasks                                                  |
 | `living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs                     |

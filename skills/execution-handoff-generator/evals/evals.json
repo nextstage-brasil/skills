@@ -1,0 +1,23 @@
+{
+  "skill_name": "execution-handoff-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Planning for apps/billing version 2.1.0 is done — eight tasks in docs/versions/2.1.0/tasks/. Generate the execution handoff.",
+      "expected_output": "Agent creates execution-handoff.md with task table (all pending), time tracking section, progress block, and implementer prompt. Does not generate new task files.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Continue implementing apps/crm version 1.3.0 — task 003 just passed validation. Update the handoff.",
+      "expected_output": "Agent marks task 003 completed with timestamps, recalculates Progress and Total process time (s), sets Next task to 004.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Implement version 2.1.0 for apps/billing — handoff and tasks already exist, no version-roadmap.md.",
+      "expected_output": "Agent follows run-implementation.md classic loop: read handoff, update status per task, no orchestrator routing.",
+      "files": []
+    }
+  ]
+}

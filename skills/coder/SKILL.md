@@ -1,6 +1,6 @@
 ---
 name: coder
-description: Ad-hoc coding agent for focused implementation without full SDD planning — bug fixes, isolated components, small refactors, scripts, migrations. Use when the user says "just implement this", "quick fix", "add a field to the form", or gives a concrete coding task without execution-handoff — even without naming an agent. Redirect large multi-day features to planning. Do NOT generate requirements.md, task files, or execution-handoff.
+description: Ad-hoc coding agent for focused implementation without full SDD planning — bug fixes, isolated components, small refactors, scripts, migrations. Use when the user says "just implement this", "quick fix", "add a field to the form", or gives a concrete coding task without execution-handoff — even without naming an agent. When a planned version has execution-handoff.md, follow execution-handoff-generator run-implementation workflow instead of this skill's ad-hoc cycle. Redirect large multi-day features to planning. Do NOT generate requirements.md, task files, or execution-handoff.
 depends:
   - nextstage-harness
 ---
@@ -21,7 +21,10 @@ See `../nextstage-harness/references/harness-discovery.md`. Load `{harness}/rule
 - Scripts, migrations, seeds outside version lifecycle
 - "Just implement this" without `execution-handoff.md`
 
-For full planned versions, use SDD planning workflow + task execution — not this skill.
+For full planned versions with `execution-handoff.md`, follow
+`../execution-handoff-generator/references/run-implementation.md` and update the
+handoff per `../execution-handoff-generator/SKILL.md` — not this skill's ad-hoc
+cycle below.
 
 If the request includes a GitLab **issue URL** (`ISSUE_URL`), use `execute-gitlab-issue` instead — not this skill.
 
