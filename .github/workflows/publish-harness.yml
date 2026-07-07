@@ -1,0 +1,81 @@
+name: Publish harness
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/harness/**'
+      - '.github/workflows/publish-harness.yml'
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: publish-harness-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: https://registry.npmjs.org
+
+      - name: Ensure npm supports trusted publishing
+        run: npm install -g npm@latest
+
+      - name: Resolve commit range
+        id: range
+        run: |
+          set -euo pipefail
+          before="${{ github.event.before }}"
+          after="${{ github.event.after }}"
+          if [ "$before" = "0000000000000000000000000000000000000000" ]; then
+            range="HEAD"
+          else
+            range="${before}..${after}"
+          fi
+          echo "value=$range" >> "$GITHUB_OUTPUT"
+          echo "Commit range: $range"
+
+      - name: Test harness
+        working-directory: packages/harness
+        run: |
+          npm install
+          npm test
+
+      - name: Determine version bump
+        id: release
+        env:
+          RELEASE_COMMIT_RANGE: ${{ steps.range.outputs.value }}
+        run: node packages/harness/scripts/release-version.js
+
+      - name: Bump package version
+        if: steps.release.outputs.should_release == 'true'
+        working-directory: packages/harness
+        run: npm version "${{ steps.release.outputs.new_version }}" --no-git-tag-version
+
+      - name: Commit, tag, and push release
+        if: steps.release.outputs.should_release == 'true'
+        run: |
+          set -euo pipefail
+          version="${{ steps.release.outputs.new_version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/harness/package.json
+          git commit -m "chore(harness): release v${version} [skip ci]"
+          git tag "harness-v${version}"
+          git push origin main --follow-tags
+
+      - name: Publish to npm
+        if: steps.release.outputs.should_release == 'true'
+        working-directory: packages/harness
+        run: npm publish --access=public
