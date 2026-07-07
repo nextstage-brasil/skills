@@ -1,6 +1,6 @@
 ---
 name: clarify-requirements
-description: Resolve ambiguities, gaps, and unstated assumptions in a scope description before generating requirements. Use when the user gives a vague or incomplete scope, mentions "dashboard", "notifications", "integration with X" without detail, starts a new system without docs, or before requirements generation when terms are ambiguous — even if they do not ask to "clarify". Do NOT generate requirements.md in this skill; output enriched context only.
+description: (NS) Resolve ambiguities, gaps, and unstated assumptions in a scope description before generating requirements. Use when the user gives a vague or incomplete scope, mentions "dashboard", "notifications", "integration with X" without detail, starts a new system without docs, or before requirements generation when terms are ambiguous — even if they do not ask to "clarify". Do NOT generate requirements.md in this skill; output enriched context only.
 depends:
   - nextstage-harness
 ---
@@ -26,17 +26,17 @@ See `../nextstage-harness/references/harness-discovery.md`. Stack and architectu
 
 Read the user's description and flag ambiguities:
 
-| Category | Example |
-|----------|---------|
-| Actors | "the user does X" — which role? |
-| Data scope | list fields, pagination, filters? |
-| Integrations | REST, webhook, auth method? |
-| Multitenancy | multi-company isolation? |
-| Business rules | which validations exactly? |
-| State lifecycle | allowed transitions? |
-| Scope limits | what's in/out of this version? |
-| Performance | volume, concurrency, SLA? |
-| Security | auth required, role permissions? |
+| Category        | Example                           |
+| --------------- | --------------------------------- |
+| Actors          | "the user does X" — which role?   |
+| Data scope      | list fields, pagination, filters? |
+| Integrations    | REST, webhook, auth method?       |
+| Multitenancy    | multi-company isolation?          |
+| Business rules  | which validations exactly?        |
+| State lifecycle | allowed transitions?              |
+| Scope limits    | what's in/out of this version?    |
+| Performance     | volume, concurrency, SLA?         |
+| Security        | auth required, role permissions?  |
 
 ### Step 2 — Ask questions
 
@@ -72,13 +72,16 @@ Compile enriched context:
 
 ```markdown
 ## Original scope (user-provided):
+
 [original text]
 
 ## Clarifications obtained:
+
 1. Question: [...]
    Answer: [...]
 
 ## Confirmed premises:
+
 - [Premise 1]
 - [Premise 2]
 ```

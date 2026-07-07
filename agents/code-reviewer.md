@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 description: >-
-  Senior Tech Lead code review persona. Runs in an isolated, read-only context —
+  [NS] Senior Tech Lead code review persona. Runs in an isolated, read-only context —
   never edits files. Use as a blocking review gate before merge, before opening
   PRs, after implementation closure, or when the user asks for a code/PR/issue
   review. Not for implementation (code-coder), root-cause debugging

@@ -1,7 +1,7 @@
 ---
 name: execution-orchestrator
 description: >-
-  Primary orchestration persona for partitioned version implementation. Use as
+  [NS] Primary orchestration persona for partitioned version implementation. Use as
   an explicit named entry point (agent: execution-orchestrator) to drive a
   version-roadmap.md to completion slice-by-slice — one synchronous subagent per
   slice, a commit per slice, advancing without confirmation until all slices are

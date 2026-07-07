@@ -1,6 +1,6 @@
 ---
 name: architecture-rules-generator
-description: Scan a codebase and generate or refresh a lean architecture-rules.md constitution for AI agents — stack, layout, patterns, constraints, and pointers to deeper rules. Use whenever the user asks to generate architecture rules, create .nextstage-harness/rules/architecture-rules.md, bootstrap agent context, codify project conventions, document stack and module layout for agents, or set up always-on project rules — even if they say "document how this repo works for the AI" or "create rules the agent reads every session". Do NOT use for business/functional specs (codebase-reverse-spec), SDD brownfield maps (bootstrap-brownfield), or ad-hoc single-topic Cursor rules without a full architecture pass.
+description: (NS) Scan a codebase and generate or refresh a lean architecture-rules.md constitution for AI agents — stack, layout, patterns, constraints, and pointers to deeper rules. Use whenever the user asks to generate architecture rules, create .nextstage-harness/rules/architecture-rules.md, bootstrap agent context, codify project conventions, document stack and module layout for agents, or set up always-on project rules — even if they say "document how this repo works for the AI" or "create rules the agent reads every session". Do NOT use for business/functional specs (codebase-reverse-spec), SDD brownfield maps (bootstrap-brownfield), or ad-hoc single-topic Cursor rules without a full architecture pass.
 depends:
   - nextstage-harness
 ---
@@ -25,21 +25,21 @@ See `references/compression-guide.md` when the draft exceeds the line budget.
 
 See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-harness/references/rules-sync.md`.
 
-| Output path | When |
-|-------------|------|
-| `{harness_root}/rules/architecture-rules.md` | Default — canonical constitution |
+| Output path                                                     | When                                          |
+| --------------------------------------------------------------- | --------------------------------------------- |
+| `{harness_root}/rules/architecture-rules.md`                    | Default — canonical constitution              |
 | `{product_root}/.nextstage-harness/rules/architecture-rules.md` | Monorepo product folder is the harness anchor |
 
 Read `AGENTS.md` and existing `{harness_root}/rules/*.md` before scanning — reuse and link; do not duplicate sibling rules. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent.
 
 ## When to use
 
-| Trigger | Action |
-|---------|--------|
-| New repo / first agent setup | **Generate** initial constitution |
-| Major stack or layout change | **Refresh** in place |
-| `architecture-rules.md` missing but other rules exist | **Generate** and cross-reference siblings |
-| User says rules are stale or agents keep making same mistake | **Refresh** targeted sections |
+| Trigger                                                      | Action                                    |
+| ------------------------------------------------------------ | ----------------------------------------- |
+| New repo / first agent setup                                 | **Generate** initial constitution         |
+| Major stack or layout change                                 | **Refresh** in place                      |
+| `architecture-rules.md` missing but other rules exist        | **Generate** and cross-reference siblings |
+| User says rules are stale or agents keep making same mistake | **Refresh** targeted sections             |
 
 ## Workflow
 
@@ -70,15 +70,15 @@ Minimum scan:
 
 Turn evidence into agent-actionable rules:
 
-| Category | What to capture |
-|----------|-----------------|
-| **Scope** | Product root, monorepo vs standalone, where specs and agent assets live |
-| **Stack** | Languages, frameworks, DB, cache, queue, local URLs/ports when discoverable |
-| **Layout** | Folder tree (abbreviated), module boundaries |
-| **Patterns** | API style, multitenancy, auth, module conventions, integration boundaries |
-| **Forbidden** | Generated dirs, migration constraints, secrets locations |
+| Category       | What to capture                                                                                                      |
+| -------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Scope**      | Product root, monorepo vs standalone, where specs and agent assets live                                              |
+| **Stack**      | Languages, frameworks, DB, cache, queue, local URLs/ports when discoverable                                          |
+| **Layout**     | Folder tree (abbreviated), module boundaries                                                                         |
+| **Patterns**   | API style, multitenancy, auth, module conventions, integration boundaries                                            |
+| **Forbidden**  | Generated dirs, migration constraints, secrets locations                                                             |
 | **Dev & test** | Docker/containers, **mandatory test container** (e.g. `app_test` — not dev container or host), primary test commands |
-| **Discipline** | Language for code/docs vs user chat, minimal diff, completion style — only if present in repo rules or `AGENTS.md` |
+| **Discipline** | Language for code/docs vs user chat, minimal diff, completion style — only if present in repo rules or `AGENTS.md`   |
 
 For large subsystems, **do not inline** — add one line pointing to a dedicated layer rule and offer to generate that sibling in a follow-up.
 
@@ -91,7 +91,7 @@ Use `references/architecture-rules.template.md` as the skeleton.
 Writing rules:
 
 - Prefer tables and bullet lists over paragraphs.
-- Use **MUST / MUST NOT** only for constraints that prevent real breakage; explain *why* in a few words when non-obvious.
+- Use **MUST / MUST NOT** only for constraints that prevent real breakage; explain _why_ in a few words when non-obvious.
 - End with **Key references** — table mapping topic → file path (specs, sibling rules, `AGENTS.md`).
 - English only in the output file.
 

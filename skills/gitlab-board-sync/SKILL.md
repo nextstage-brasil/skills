@@ -1,6 +1,6 @@
 ---
 name: gitlab-board-sync
-description: Sync existing GitLab issues with local planning and execution — milestone, RF labels, status transitions, assignee, estimates, spent time. Use during implementation when tasks link to GitLab issues or after plan-version-from-gitlab sync — not for creating new issues (use mcp-gitlab-usage). Always use atomic set_issue_labels and three-step status cycle. Read mcp-gitlab-usage for tool contracts.
+description: (NS) Sync existing GitLab issues with local planning and execution — milestone, RF labels, status transitions, assignee, estimates, spent time. Use during implementation when tasks link to GitLab issues or after plan-version-from-gitlab sync — not for creating new issues (use mcp-gitlab-usage). Always use atomic set_issue_labels and three-step status cycle. Read mcp-gitlab-usage for tool contracts.
 depends:
   - mcp-gitlab-usage
 ---
@@ -70,17 +70,17 @@ add_issue_comment (internal=true)
 
 ## Anti-patterns
 
-| Wrong | Right |
-|-------|-------|
-| `assignee` on `update_issue` | `assign_issue` |
-| Two label calls for one transition | Single atomic `set_issue_labels` |
-| Manual `Milestone:` label | `milestone_id` on `update_issue` |
-| `set_issue_estimate` for time spent | `add_issue_spent_time` |
-| Public comment for internal notes | `internal: true` |
+| Wrong                               | Right                            |
+| ----------------------------------- | -------------------------------- |
+| `assignee` on `update_issue`        | `assign_issue`                   |
+| Two label calls for one transition  | Single atomic `set_issue_labels` |
+| Manual `Milestone:` label           | `milestone_id` on `update_issue` |
+| `set_issue_estimate` for time spent | `add_issue_spent_time`           |
+| Public comment for internal notes   | `internal: true`                 |
 
 ## References
 
-| File | When |
-|------|------|
-| `references/gitlab-sync-config.template.md` | Bootstrap config |
-| `mcp-gitlab-usage` | Tool schemas and gates |
+| File                                        | When                   |
+| ------------------------------------------- | ---------------------- |
+| `references/gitlab-sync-config.template.md` | Bootstrap config       |
+| `mcp-gitlab-usage`                          | Tool schemas and gates |

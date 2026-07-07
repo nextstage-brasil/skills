@@ -1,6 +1,6 @@
 ---
 name: requirements-generator
-description: Generate structured requirements.md from scope descriptions, stack context, and design briefs for a product version. Use when starting a new version, the user asks for requirements, RF/features document, or before task generation when requirements.md is missing — even if they only describe the feature in chat. Follow SDD planning gates in nextstage-harness. Do NOT generate task files (use task-generator).
+description: (NS) Generate structured requirements.md from scope descriptions, stack context, and design briefs for a product version. Use when starting a new version, the user asks for requirements, RF/features document, or before task generation when requirements.md is missing — even if they only describe the feature in chat. Follow SDD planning gates in nextstage-harness. Do NOT generate task files (use task-generator).
 depends:
   - nextstage-harness
 ---
@@ -23,11 +23,11 @@ See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-har
 
 Load **one** profile from `references/stacks/` when stack is known:
 
-| Profile | When |
-|---------|------|
-| `generic.md` | Default — stack-agnostic structure |
-| `laravel-react.md` | Laravel + React monorepo detected or confirmed |
-| `intelligent-saas.md` | Backend + frontend + agent-api |
+| Profile               | When                                           |
+| --------------------- | ---------------------------------------------- |
+| `generic.md`          | Default — stack-agnostic structure             |
+| `laravel-react.md`    | Laravel + React monorepo detected or confirmed |
+| `intelligent-saas.md` | Backend + frontend + agent-api                 |
 
 Do not mention framework-specific tooling unless the profile or detected stack applies.
 
@@ -37,26 +37,35 @@ Generate **only** the markdown document (no conversational preamble):
 
 ```markdown
 ## Main objective of the version:
+
 {executive summary}
 
 ## Technology stack:
+
 {confirmed stack — reference applicable rules when harness has them}
 
 ## UI/UX guidelines:
+
 {from design-brief when frontend in scope — omit if backend-only}
 
 ## Data model and APIs:
+
 {tables, FK order, key endpoints — source of truth for tasks}
 
 ## Feature grouping:
+
 ### Feature 001 - TITLE
+
 **Precedence:** None | Feature NNN
 **Layers:** Backend | Frontend | Infrastructure | Tests
 **Detailed description:** ...
+
 #### Acceptance criteria:
+
 - [ ] ...
 
 ## Non-functional requirements (NFRs):
+
 ...
 ```
 
@@ -82,8 +91,8 @@ English unless the user explicitly requests another language for the deliverable
 
 ## References
 
-| File | When |
-|------|------|
-| `references/stacks/generic.md` | Default |
-| `references/stacks/laravel-react.md` | Laravel/React stack |
+| File                                    | When                 |
+| --------------------------------------- | -------------------- |
+| `references/stacks/generic.md`          | Default              |
+| `references/stacks/laravel-react.md`    | Laravel/React stack  |
 | `references/stacks/intelligent-saas.md` | Agent-augmented SaaS |

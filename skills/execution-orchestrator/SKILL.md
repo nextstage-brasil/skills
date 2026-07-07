@@ -1,6 +1,6 @@
 ---
 name: execution-orchestrator
-description: Orchestrate partitioned version implementation slice-by-slice — dispatch one synchronous subagent per slice with small context, commit after each slice, and advance automatically without confirmation until all slices are done or a stop condition is hit. Use whenever a version has a version-roadmap.md with pending slices and the user asks to "run the orchestrated implementation", "execute all slices", "orchestrate the partitioned version", or drive a subversion roadmap to completion. Do NOT use for non-partitioned versions (execute tasks directly), ad-hoc coding (coder), or planning/partitioning (version-partitioner).
+description: (NS) Orchestrate partitioned version implementation slice-by-slice — dispatch one synchronous subagent per slice with small context, commit after each slice, and advance automatically without confirmation until all slices are done or a stop condition is hit. Use whenever a version has a version-roadmap.md with pending slices and the user asks to "run the orchestrated implementation", "execute all slices", "orchestrate the partitioned version", or drive a subversion roadmap to completion. Do NOT use for non-partitioned versions (execute tasks directly), ad-hoc coding (coder), or planning/partitioning (version-partitioner).
 depends:
   - nextstage-harness
 ---
@@ -29,10 +29,10 @@ Communicate with the human in the project's configured language (see
 
 ## Session inputs (ask once if missing)
 
-| Variable | Example |
-|----------|---------|
-| `{product_root}` | `apps/my-product/` |
-| `{version_san}` | `3.8.0-feat-payable-payment-workflow` |
+| Variable         | Example                               |
+| ---------------- | ------------------------------------- |
+| `{product_root}` | `apps/my-product/`                    |
+| `{version_san}`  | `3.8.0-feat-payable-payment-workflow` |
 
 If `{version_san}` is omitted: pick the only version with pending slices in
 `version-roadmap.md`; if ambiguous, ask **once**, then proceed.
@@ -114,15 +114,15 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 
 ## Stop conditions (only reasons to pause)
 
-| Condition | Action |
-|-----------|--------|
+| Condition                                            | Action                                    |
+| ---------------------------------------------------- | ----------------------------------------- |
 | Subagent reports a task `blocked` with no workaround | Stop; document in slice handoff + roadmap |
-| Protected git branch / missing work branch | Stop until a valid work branch exists |
-| Real environment blocker (Docker/tests impossible) | Stop; note in handoff |
-| Inter-slice dependency not satisfied | Stop; fix roadmap or the prior slice |
-| Missing `{product_root}` / `{version_san}` / roadmap | Ask **once**, then proceed |
-| P0 finding in `code-review-report.md` without waiver | Stop before `_done/` move |
-| Human waiver needed (menu apply, `_done/` move) | Stop for that item only |
+| Protected git branch / missing work branch           | Stop until a valid work branch exists     |
+| Real environment blocker (Docker/tests impossible)   | Stop; note in handoff                     |
+| Inter-slice dependency not satisfied                 | Stop; fix roadmap or the prior slice      |
+| Missing `{product_root}` / `{version_san}` / roadmap | Ask **once**, then proceed                |
+| P0 finding in `code-review-report.md` without waiver | Stop before `_done/` move                 |
+| Human waiver needed (menu apply, `_done/` move)      | Stop for that item only                   |
 
 ## Forbidden
 
@@ -151,18 +151,18 @@ Orchestrate the partitioned implementation of apps/my-product 3.8.0.
 
 ## Integration
 
-| Stage | Skill / persona |
-|-------|-----------------|
-| Partition version → roadmap + subversions | `version-partitioner` |
-| Handoff generation and updates | `execution-handoff-generator` |
-| Slice worker (per-slice implementation) | `code-coder` persona / `coder` skill |
-| End-of-version review gate | `code-reviewer` persona |
-| Living specs consolidation | `living-spec-consolidator` |
-| Work branch / GitLab sync | `mcp-gitlab-usage` |
+| Stage                                     | Skill / persona                      |
+| ----------------------------------------- | ------------------------------------ |
+| Partition version → roadmap + subversions | `version-partitioner`                |
+| Handoff generation and updates            | `execution-handoff-generator`        |
+| Slice worker (per-slice implementation)   | `code-coder` persona / `coder` skill |
+| End-of-version review gate                | `code-reviewer` persona              |
+| Living specs consolidation                | `living-spec-consolidator`           |
+| Work branch / GitLab sync                 | `mcp-gitlab-usage`                   |
 
 ## References
 
-| File | When to read |
-|------|--------------|
-| `references/slice-dispatch.md` | Exact slice subagent prompt template and validation checklist |
-| `../version-partitioner/references/partition-workflow.md` | Planning loop that produces the roadmap you consume |
+| File                                                      | When to read                                                  |
+| --------------------------------------------------------- | ------------------------------------------------------------- |
+| `references/slice-dispatch.md`                            | Exact slice subagent prompt template and validation checklist |
+| `../version-partitioner/references/partition-workflow.md` | Planning loop that produces the roadmap you consume           |

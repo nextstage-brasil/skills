@@ -1,6 +1,6 @@
 ---
 name: mcp-gitlab-usage
-description: Guides correct usage of GitLab MCP tools for planning, milestones, issues, merge requests, delivery reports, and board sync. Use whenever the user mentions GitLab, MCP GitLab, create issues, start planning in GitLab, delivery report, issue comments, set_issue_labels, merge requests, or execution sync — even if they do not name this skill. Do NOT hand-craft issue payloads or skip confirmation gates. Do NOT use for non-GitLab project management.
+description: (NS) Guides correct usage of GitLab MCP tools for planning, milestones, issues, merge requests, delivery reports, and board sync. Use whenever the user mentions GitLab, MCP GitLab, create issues, start planning in GitLab, delivery report, issue comments, set_issue_labels, merge requests, or execution sync — even if they do not name this skill. Do NOT hand-craft issue payloads or skip confirmation gates. Do NOT use for non-GitLab project management.
 depends:
   - nextstage-harness
 ---
@@ -40,11 +40,11 @@ When connecting to a GitLab MCP server that exposes `get_mcp_gitlab_skill`:
 
 Cannot be inferred from context:
 
-| Flag | Set `true` only after |
-|------|------------------------|
-| `requirements_confirmed` | Human says yes to validating requirements |
-| `projects_confirmed` | Human confirms all project trios (main, backend, frontend) |
-| `issues_creation_confirmed` | Human says yes to "Should I create the issues in GitLab?" |
+| Flag                        | Set `true` only after                                      |
+| --------------------------- | ---------------------------------------------------------- |
+| `requirements_confirmed`    | Human says yes to validating requirements                  |
+| `projects_confirmed`        | Human confirms all project trios (main, backend, frontend) |
+| `issues_creation_confirmed` | Human says yes to "Should I create the issues in GitLab?"  |
 
 A broad request ("do everything") is **not** confirmation.
 
@@ -71,12 +71,12 @@ Read label names from `gitlab-sync-config.md` or discover via `list_project_labe
 
 ## References
 
-| File | When to read |
-|------|--------------|
-| `references/tool-catalog.md` | Before any tool call — required args and examples |
-| `references/flows.md` | Planning, issue creation, execution sync, delivery report |
-| `../nextstage-harness/references/gates.md` | SDD planning gates |
-| `../nextstage-harness/references/artifact-layout.md` | `requirements.md` and version paths |
+| File                                                 | When to read                                              |
+| ---------------------------------------------------- | --------------------------------------------------------- |
+| `references/tool-catalog.md`                         | Before any tool call — required args and examples         |
+| `references/flows.md`                                | Planning, issue creation, execution sync, delivery report |
+| `../nextstage-harness/references/gates.md`           | SDD planning gates                                        |
+| `../nextstage-harness/references/artifact-layout.md` | `requirements.md` and version paths                       |
 
 ## Error handling — STOP
 

@@ -1,6 +1,6 @@
 ---
 name: e2e-test-generator
-description: Generate E2E test task markdown for Cypress/TypeScript during SDD planning after frontend tasks exist. Use when planning Cypress coverage per feature — not for writing specs (use create-e2e-tests). Requires data-testid contract from frontend task. Device-aware desktop/tablet/mobile structure.
+description: (NS) Generate E2E test task markdown for Cypress/TypeScript during SDD planning after frontend tasks exist. Use when planning Cypress coverage per feature — not for writing specs (use create-e2e-tests). Requires data-testid contract from frontend task. Device-aware desktop/tablet/mobile structure.
 ---
 
 # E2E Test Task Generator
@@ -9,10 +9,10 @@ Planning-phase skill: produce E2E task markdown. Execution-phase: `create-e2e-te
 
 ## Boundary
 
-| Phase | Skill |
-|-------|-------|
-| Planning (task file) | `e2e-test-generator` |
-| Implementation (Cypress code) | `create-e2e-tests` |
+| Phase                         | Skill                |
+| ----------------------------- | -------------------- |
+| Planning (task file)          | `e2e-test-generator` |
+| Implementation (Cypress code) | `create-e2e-tests`   |
 
 ## Harness discovery
 

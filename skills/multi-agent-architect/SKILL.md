@@ -1,6 +1,6 @@
 ---
 name: multi-agent-architect
-description: Interview users through focused technical questions to recommend LangGraph vs CrewAI, propose multi-agent architecture, and design agent personas with tools and models. Use whenever the user wants to build a multi-agent system, choose between LangGraph and CrewAI, design agent crews or graphs, plan human-in-the-loop workflows, or asks how to orchestrate AI agents — even if they only say "I want a bot for my company" or "agents working together". Do NOT use for general app requirements (use clarify-requirements) or implementation coding without architecture intent.
+description: (NS) Interview users through focused technical questions to recommend LangGraph vs CrewAI, propose multi-agent architecture, and design agent personas with tools and models. Use whenever the user wants to build a multi-agent system, choose between LangGraph and CrewAI, design agent crews or graphs, plan human-in-the-loop workflows, or asks how to orchestrate AI agents — even if they only say "I want a bot for my company" or "agents working together". Do NOT use for general app requirements (use clarify-requirements) or implementation coding without architecture intent.
 ---
 
 # Multi-Agent Architect
@@ -16,7 +16,7 @@ Interview relentlessly about every aspect of the use case until shared understan
 1. **One question per turn.** Never bundle. Wait for the user's answer before asking the next question.
 2. **Recommended answer with every question.** Do not ask open-ended surveys — propose your best call and a one-sentence rationale so the user can confirm or correct.
 3. **Depth-first tree walk.** Finish the current branch before opening another. If decision B depends on A, resolve A first.
-4. **Active probing.** When an answer is vague, narrow it in the *next* single question — do not skip ahead.
+4. **Active probing.** When an answer is vague, narrow it in the _next_ single question — do not skip ahead.
 5. **No cheerleading.** Do not praise the plan; surface assumptions and gaps.
 6. **Closure signal.** When all four pillars are resolved, announce the interview is complete and produce the final report.
 
@@ -45,12 +45,12 @@ After the user replies, acknowledge briefly (one line max), lock in the decision
 
 Walk these branches depth-first after objective and I/O are clear. See `references/decision-pillars.md` for branch-specific probes.
 
-| Pillar | LangGraph signal | CrewAI signal |
-|--------|------------------|---------------|
-| **Control vs autonomy** | Rigid rules, deterministic paths, explicit branching | Agents freely decide how to collaborate |
-| **State complexity** | Feedback loops, state rollback, complex conditional routing | Linear or sequential pipeline |
-| **Human-in-the-loop** | Formal approval gates, runtime state edits, pause/resume | Minimal or informal human checkpoints |
-| **Scope and team** | Enterprise resilience, fault tolerance, long-lived system | Fast MVP, persona-driven tasks, small team |
+| Pillar                  | LangGraph signal                                            | CrewAI signal                              |
+| ----------------------- | ----------------------------------------------------------- | ------------------------------------------ |
+| **Control vs autonomy** | Rigid rules, deterministic paths, explicit branching        | Agents freely decide how to collaborate    |
+| **State complexity**    | Feedback loops, state rollback, complex conditional routing | Linear or sequential pipeline              |
+| **Human-in-the-loop**   | Formal approval gates, runtime state edits, pause/resume    | Minimal or informal human checkpoints      |
+| **Scope and team**      | Enterprise resilience, fault tolerance, long-lived system   | Fast MVP, persona-driven tasks, small team |
 
 Track resolved decisions mentally. Do not recommend LangGraph or CrewAI until all pillars are covered.
 
@@ -100,10 +100,10 @@ Required handoff sections (in addition to architecture):
 
 Framework-specific deliverables in the **file only**:
 
-| Framework | Required extra section |
-|-----------|------------------------|
-| **LangGraph** | Mermaid `flowchart` with every node, happy path, and error/interrupt edges |
-| **CrewAI** | Team structure table — crew names, agents per crew, process type, task handoffs |
+| Framework     | Required extra section                                                          |
+| ------------- | ------------------------------------------------------------------------------- |
+| **LangGraph** | Mermaid `flowchart` with every node, happy path, and error/interrupt edges      |
+| **CrewAI**    | Team structure table — crew names, agents per crew, process type, task handoffs |
 
 **Both frameworks** must include in the file:
 

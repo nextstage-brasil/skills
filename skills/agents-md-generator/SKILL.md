@@ -1,6 +1,6 @@
 ---
 name: agents-md-generator
-description: Scan a project with NextStage harness installed and generate or refresh a project-specific AGENTS.md entry point plus a minimal CLAUDE.md that points to it. Use whenever the user asks to generate AGENTS.md, create project agents doc, bootstrap agent entry point, replace harness AGENTS stub, set up Claude/Cursor project rules pointer, or onboard agents after harness init — even if they say "write AGENTS.md for this repo" or "configure agents for this project". Do NOT copy the harness package template verbatim. Do NOT use for technical constitution (architecture-rules-generator), business specs (codebase-reverse-spec), or brownfield stack maps (bootstrap-brownfield).
+description: (NS) Scan a project with NextStage harness installed and generate or refresh a project-specific AGENTS.md entry point plus a minimal CLAUDE.md that points to it. Use whenever the user asks to generate AGENTS.md, create project agents doc, bootstrap agent entry point, replace harness AGENTS stub, set up Claude/Cursor project rules pointer, or onboard agents after harness init — even if they say "write AGENTS.md for this repo" or "configure agents for this project". Do NOT copy the harness package template verbatim. Do NOT use for technical constitution (architecture-rules-generator), business specs (codebase-reverse-spec), or brownfield stack maps (bootstrap-brownfield).
 depends:
   - nextstage-harness
 ---
@@ -23,27 +23,27 @@ Then write `{product_root}/CLAUDE.md` containing **only** a pointer to `AGENTS.m
 
 See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-harness/references/rules-sync.md`.
 
-| Output | Path |
-|--------|------|
+| Output               | Path                       |
+| -------------------- | -------------------------- |
 | Project agents entry | `{product_root}/AGENTS.md` |
-| Claude Code pointer | `{product_root}/CLAUDE.md` |
+| Claude Code pointer  | `{product_root}/CLAUDE.md` |
 
 ## Supporting skills (read-only helpers)
 
-| Skill | Use during recon |
-|-------|------------------|
+| Skill                          | Use during recon                                                      |
+| ------------------------------ | --------------------------------------------------------------------- |
 | `architecture-rules-generator` | Check if constitution exists or is still stub; link, do not duplicate |
-| `bootstrap-brownfield` | Link to `brownfield-map.md` when present |
-| `codebase-reverse-spec` | Link to `system-reverse-spec.md` when present |
+| `bootstrap-brownfield`         | Link to `brownfield-map.md` when present                              |
+| `codebase-reverse-spec`        | Link to `system-reverse-spec.md` when present                         |
 
 ## When to use
 
-| Trigger | Action |
-|---------|--------|
+| Trigger                                            | Action                                                          |
+| -------------------------------------------------- | --------------------------------------------------------------- |
 | After `harness init` (CLI already ran `agents-md`) | **Refine** with project context — do not duplicate CLI baseline |
-| Brownfield / monorepo / team conventions in README | **Generate** or **refresh** with evidence |
-| User hand-edited `AGENTS.md` and wants AI merge | **Refresh** preserving custom sections |
-| User only needs skill list from disk | Use `npx @nextstage-brasil/harness agents-md` instead — no AI |
+| Brownfield / monorepo / team conventions in README | **Generate** or **refresh** with evidence                       |
+| User hand-edited `AGENTS.md` and wants AI merge    | **Refresh** preserving custom sections                          |
+| User only needs skill list from disk               | Use `npx @nextstage-brasil/harness agents-md` instead — no AI   |
 
 ## Workflow
 

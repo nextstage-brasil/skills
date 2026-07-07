@@ -1,7 +1,7 @@
 ---
 name: code-coder
 description: >-
-  Implementation persona with automatic routing. Use when explicitly invoking
+  [NS] Implementation persona with automatic routing. Use when explicitly invoking
   agent: code-coder, "run coder", "implement this", quick fixes, bugfixes,
   features, or GitLab issue execution. If ISSUE_URL is present, routes to
   execute-gitlab-issue; otherwise routes to coder. Not for docs-only, pure

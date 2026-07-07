@@ -1,6 +1,6 @@
 ---
 name: gitlab-ci-generator
-description: Generate and adapt .gitlab-ci.yml for SaaS products with backend and frontend — test, build, E2E gate, deploy by branch. Use when the user asks for GitLab CI, pipeline setup, or CI/CD bootstrap for a monorepo product. Uses references/templates/gitlab-ci.template.yml as baseline. Out of scope for pure agent-runtime repos without backend+frontend layout.
+description: (NS) Generate and adapt .gitlab-ci.yml for SaaS products with backend and frontend — test, build, E2E gate, deploy by branch. Use when the user asks for GitLab CI, pipeline setup, or CI/CD bootstrap for a monorepo product. Uses references/templates/gitlab-ci.template.yml as baseline. Out of scope for pure agent-runtime repos without backend+frontend layout.
 ---
 
 # GitLab CI Generator
@@ -38,14 +38,14 @@ For separate product repos: paths are relative to product root (`backend/`, `fro
 
 ### B — Mandatory adaptations
 
-| Item | Action |
-|------|--------|
-| E2E folder | Match product folder in `changes:` and job `cd` |
-| PHP image | Align to backend Dockerfile |
-| Test commands | Match `composer.json` / `package.json` |
-| Lockfile | `yarn.lock` vs `package-lock.json` in cache key |
-| Deploy branches | Adjust regex if not main/homolog/develop |
-| E2E disabled | Remove e2e jobs from deploy `needs` or document `RUN_REMOTE_E2E=false` |
+| Item            | Action                                                                 |
+| --------------- | ---------------------------------------------------------------------- |
+| E2E folder      | Match product folder in `changes:` and job `cd`                        |
+| PHP image       | Align to backend Dockerfile                                            |
+| Test commands   | Match `composer.json` / `package.json`                                 |
+| Lockfile        | `yarn.lock` vs `package-lock.json` in cache key                        |
+| Deploy branches | Adjust regex if not main/homolog/develop                               |
+| E2E disabled    | Remove e2e jobs from deploy `needs` or document `RUN_REMOTE_E2E=false` |
 
 Do not copy another product's CI file — use this template only.
 
@@ -61,8 +61,8 @@ Lint YAML; confirm jobs match repo layout.
 
 ## References
 
-| File | When |
-|------|------|
+| File                                          | When              |
+| --------------------------------------------- | ----------------- |
 | `references/templates/gitlab-ci.template.yml` | Baseline pipeline |
 
 ## Related skills

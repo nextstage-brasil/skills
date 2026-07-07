@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate — even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT use for root-cause debugging (use code-investigator).
+description: (NS) Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate — even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT use for root-cause debugging (use code-investigator).
 depends:
   - nextstage-harness
   - mcp-gitlab-usage
@@ -87,8 +87,8 @@ Include only when user requests concrete fixes.
 
 ## References
 
-| File | When |
-|------|------|
-| `references/review-report.template.md` | Version closure report |
-| `../nextstage-harness/references/artifact-layout.md` | Report path |
-| `mcp-gitlab-usage` | Posting internal review comments |
+| File                                                 | When                             |
+| ---------------------------------------------------- | -------------------------------- |
+| `references/review-report.template.md`               | Version closure report           |
+| `../nextstage-harness/references/artifact-layout.md` | Report path                      |
+| `mcp-gitlab-usage`                                   | Posting internal review comments |

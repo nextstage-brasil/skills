@@ -1,6 +1,6 @@
 ---
 name: analyze-consistency
-description: Verify internal consistency of requirements.md and adherence to project rules before task generation. Use after scope confirmation, when the user asks to analyze or validate requirements, or after manual edits to requirements — automatically between Gate 2 and task generation. Produces consistency-report.md; does not modify requirements. Do NOT generate tasks.
+description: (NS) Verify internal consistency of requirements.md and adherence to project rules before task generation. Use after scope confirmation, when the user asks to analyze or validate requirements, or after manual edits to requirements — automatically between Gate 2 and task generation. Produces consistency-report.md; does not modify requirements. Do NOT generate tasks.
 depends:
   - nextstage-harness
 ---
@@ -41,37 +41,37 @@ Classify each as ✅ OK | ⚠️ Warning | ❌ Blocker:
 
 **Feature integrity**
 
-| Check | Failure level |
-|-------|---------------|
-| Every feature has title, description, acceptance criteria | ❌ Blocker |
-| At least 2 acceptance criteria per feature | ⚠️ Warning |
-| No circular precedence | ❌ Blocker |
-| At least one root feature (no precedence) | ❌ Blocker |
-| Frontend features mention test ids when E2E expected | ⚠️ Warning |
+| Check                                                     | Failure level |
+| --------------------------------------------------------- | ------------- |
+| Every feature has title, description, acceptance criteria | ❌ Blocker    |
+| At least 2 acceptance criteria per feature                | ⚠️ Warning    |
+| No circular precedence                                    | ❌ Blocker    |
+| At least one root feature (no precedence)                 | ❌ Blocker    |
+| Frontend features mention test ids when E2E expected      | ⚠️ Warning    |
 
 **Test coverage**
 
-| Check | Failure level |
-|-------|---------------|
-| Backend features include unit test criteria | ⚠️ Warning |
-| UI features include E2E criteria | ⚠️ Warning |
-| Infra before domain on greenfield | ⚠️ Warning |
+| Check                                       | Failure level |
+| ------------------------------------------- | ------------- |
+| Backend features include unit test criteria | ⚠️ Warning    |
+| UI features include E2E criteria            | ⚠️ Warning    |
+| Infra before domain on greenfield           | ⚠️ Warning    |
 
 **Data model**
 
-| Check | Failure level |
-|-------|---------------|
-| Clear "Data model and APIs" section | ❌ Blocker |
-| All entities in features listed in data model | ❌ Blocker |
-| FK creation order respected | ❌ Blocker |
-| API endpoints for frontend consumption declared | ❌ Blocker |
+| Check                                           | Failure level |
+| ----------------------------------------------- | ------------- |
+| Clear "Data model and APIs" section             | ❌ Blocker    |
+| All entities in features listed in data model   | ❌ Blocker    |
+| FK creation order respected                     | ❌ Blocker    |
+| API endpoints for frontend consumption declared | ❌ Blocker    |
 
 **Alignment**
 
-| Check | Failure level |
-|-------|---------------|
-| Features support stated objective | ⚠️ Warning |
-| Out-of-scope features present | ⚠️ Warning |
+| Check                             | Failure level |
+| --------------------------------- | ------------- |
+| Features support stated objective | ⚠️ Warning    |
+| Out-of-scope features present     | ⚠️ Warning    |
 
 Apply stack-specific checks from harness rules when they exist (Laravel/React checks are optional).
 
@@ -81,22 +81,28 @@ Save to `{product_root}/docs/versions/{version_san}/consistency-report.md`:
 
 ```markdown
 # Consistency Report — {version_san}
+
 **Date:** {date}
 **Analyzed:** `{path}`
 
 ## Overall result
+
 ✅ 100% approved | ⚠️ Approved with reservations | ❌ Requires correction
 
 ## Blockers (❌)
+
 ...
 
 ## Warnings (⚠️)
+
 ...
 
 ## Passed (✅)
+
 Count and summary
 
 ## Recommendations
+
 Optional improvements
 ```
 

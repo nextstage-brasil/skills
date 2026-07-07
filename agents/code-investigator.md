@@ -1,7 +1,7 @@
 ---
 name: code-investigator
 description: >-
-  Root-cause investigation persona. Runs in an isolated context to keep debugging
+  [NS] Root-cause investigation persona. Runs in an isolated context to keep debugging
   exploration (logs, stack traces, failed hypotheses) from polluting the main
   conversation. Use when tests fail, pipelines break, exceptions appear, or the
   user suspects a bug — even if they only paste an error message. Not for

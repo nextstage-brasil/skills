@@ -1,6 +1,6 @@
 ---
 name: execution-handoff-generator
-description: Generate and update execution-handoff.md for planned SDD versions — operational prompt, per-task status table, and time tracking in seconds. Use at the end of planning after all task-NNN-*.md files exist, when tasks exist but handoff is missing, or when updating task status during version implementation. Do NOT use for ad-hoc coding without a version lifecycle, version partitioning (version-partitioner), or GitLab-only issue execution (execute-gitlab-issue).
+description: (NS) Generate and update execution-handoff.md for planned SDD versions — operational prompt, per-task status table, and time tracking in seconds. Use at the end of planning after all task-NNN-*.md files exist, when tasks exist but handoff is missing, or when updating task status during version implementation. Do NOT use for ad-hoc coding without a version lifecycle, version partitioning (version-partitioner), or GitLab-only issue execution (execute-gitlab-issue).
 depends:
   - nextstage-harness
 ---
@@ -21,11 +21,11 @@ See `../nextstage-harness/references/harness-discovery.md` and
 
 ## When to use
 
-| Trigger | Action |
-|---------|--------|
-| End of planning (all `task-NNN-*.md` written) | **Generate** initial handoff |
-| Tasks exist but handoff is missing | **Generate** before implementation |
-| Task starts, completes, blocks, or is waived | **Update** status + recalculate times |
+| Trigger                                          | Action                                       |
+| ------------------------------------------------ | -------------------------------------------- |
+| End of planning (all `task-NNN-*.md` written)    | **Generate** initial handoff                 |
+| Tasks exist but handoff is missing               | **Generate** before implementation           |
+| Task starts, completes, blocks, or is waived     | **Update** status + recalculate times        |
 | All tasks done — review / living specs / closure | **Update** version status + final timestamps |
 
 For the full implementer loop (read handoff → task cycle → closure), see
@@ -51,14 +51,14 @@ For subversions: write handoff under
 
 For each `task-NNN-*.md` in numeric order:
 
-| Field | Source |
-|-------|--------|
-| ID | `NNN` from filename |
-| File | filename |
-| Title | first `# ...` line |
-| Feature | `**Related feature:**` line |
-| Layer | infer from filename or task body (`backend`, `frontend`, `infra`, `unit-tests`, `e2e`) |
-| Model tier | `**Suggested model tier:**` when present |
+| Field      | Source                                                                                 |
+| ---------- | -------------------------------------------------------------------------------------- |
+| ID         | `NNN` from filename                                                                    |
+| File       | filename                                                                               |
+| Title      | first `# ...` line                                                                     |
+| Feature    | `**Related feature:**` line                                                            |
+| Layer      | infer from filename or task body (`backend`, `frontend`, `infra`, `unit-tests`, `e2e`) |
+| Model tier | `**Suggested model tier:**` when present                                               |
 
 ### 2. Build execution rules block
 
@@ -119,18 +119,18 @@ existing statuses by task ID.
 
 ## Integration
 
-| Stage | Skill / reference |
-|-------|-------------------|
-| After task generation | This skill (generate handoff) |
-| Classic implementation | `references/run-implementation.md` + `coder` / `code-coder` |
-| Partitioned implementation | `execution-orchestrator` (slice handoffs + master closure) |
-| End-of-version review | `code-reviewer` |
-| Living specs | `living-spec-consolidator` |
-| GitLab board sync | `gitlab-board-sync` (when config exists) |
+| Stage                      | Skill / reference                                           |
+| -------------------------- | ----------------------------------------------------------- |
+| After task generation      | This skill (generate handoff)                               |
+| Classic implementation     | `references/run-implementation.md` + `coder` / `code-coder` |
+| Partitioned implementation | `execution-orchestrator` (slice handoffs + master closure)  |
+| End-of-version review      | `code-reviewer`                                             |
+| Living specs               | `living-spec-consolidator`                                  |
+| GitLab board sync          | `gitlab-board-sync` (when config exists)                    |
 
 ## References
 
-| File | When |
-|------|------|
-| `references/execution-handoff.template.md` | Handoff structure |
-| `references/run-implementation.md` | Classic version execution loop |
+| File                                       | When                           |
+| ------------------------------------------ | ------------------------------ |
+| `references/execution-handoff.template.md` | Handoff structure              |
+| `references/run-implementation.md`         | Classic version execution loop |

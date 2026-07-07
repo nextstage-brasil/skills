@@ -1,6 +1,6 @@
 ---
 name: version-partitioner
-description: Partition a large master requirements.md into executable subversions with version-roadmap.md and slice requirements excerpts — without generating tasks. Use when a version has too many features for one planning cycle or the user asks to split a version — after Gate 1 requirements confirmed. Do NOT generate task-NNN files (planning per slice comes later).
+description: (NS) Partition a large master requirements.md into executable subversions with version-roadmap.md and slice requirements excerpts — without generating tasks. Use when a version has too many features for one planning cycle or the user asks to split a version — after Gate 1 requirements confirmed. Do NOT generate task-NNN files (planning per slice comes later).
 depends:
   - nextstage-harness
 ---
@@ -50,10 +50,10 @@ Start `status` as `pending`.
 
 ## References
 
-| File | When |
-|------|------|
-| `references/version-roadmap.template.md` | Roadmap structure |
-| `references/partition-workflow.md` | Orchestrator loop after partition |
+| File                                     | When                              |
+| ---------------------------------------- | --------------------------------- |
+| `references/version-roadmap.template.md` | Roadmap structure                 |
+| `references/partition-workflow.md`       | Orchestrator loop after partition |
 
 ## Integration
 

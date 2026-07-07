@@ -1,6 +1,6 @@
 ---
 name: bootstrap-brownfield
-description: Onboard an existing codebase into spec-driven planning — map stack, modules, rule adherence, and gaps without modifying code. Use when the user says analyze existing project, brownfield bootstrap, or before first requirements on a repo with code but no requirements. Outputs brownfield-map.md for requirements-generator. Read-only on source code.
+description: (NS) Onboard an existing codebase into spec-driven planning — map stack, modules, rule adherence, and gaps without modifying code. Use when the user says analyze existing project, brownfield bootstrap, or before first requirements on a repo with code but no requirements. Outputs brownfield-map.md for requirements-generator. Read-only on source code.
 depends:
   - nextstage-harness
 ---
@@ -50,27 +50,34 @@ Create or update `{product_root}/docs/context/brownfield-map.md`:
 
 ```markdown
 # Architectural map — brownfield bootstrap
+
 **Date:** {date}
 
 ## Identified stack
+
 - Backend: ...
 - Frontend: ...
 - Database, cache, queues, E2E tooling
 
 ## Backend modules
+
 | Module | Controllers | Models | Migrations | Tests |
 
 ## Frontend modules
+
 | Module | Pages | Stores | E2E |
 
 ## Rule adherence
+
 {tables when rules exist}
 
 ## Gaps (priority)
+
 1. Critical ...
 2. Medium ...
 
 ## Recommendations for next planning
+
 - ...
 ```
 

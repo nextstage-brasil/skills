@@ -1,6 +1,6 @@
 ---
 name: unit-test-task-generator
-description: Generate backend unit and integration test task markdown after implementation tasks exist. Use during SDD planning for PHPUnit/Laravel or equivalent backend test coverage per feature — not for E2E (use e2e-test-generator). Requires requirements and related backend task. Documents cross-tenant and auth P0 scenarios when applicable.
+description: (NS) Generate backend unit and integration test task markdown after implementation tasks exist. Use during SDD planning for PHPUnit/Laravel or equivalent backend test coverage per feature — not for E2E (use e2e-test-generator). Requires requirements and related backend task. Documents cross-tenant and auth P0 scenarios when applicable.
 ---
 
 # Unit Test Task Generator
@@ -32,12 +32,12 @@ Load `{harness}/rules/backend-tests-rules.mdc` and `backend-rules.mdc` when pres
 
 ## What to test
 
-| Component | Type | Focus |
-|-----------|------|-------|
-| FormRequest | Unit | Valid/invalid fields, tenant FK rules |
-| Service | Unit | Business logic, mocks |
-| Model | Unit | Scopes, casts, relations |
-| Controller | Integration | Status, response shape, auth, 401/403 |
+| Component    | Type        | Focus                                         |
+| ------------ | ----------- | --------------------------------------------- |
+| FormRequest  | Unit        | Valid/invalid fields, tenant FK rules         |
+| Service      | Unit        | Business logic, mocks                         |
+| Model        | Unit        | Scopes, casts, relations                      |
+| Controller   | Integration | Status, response shape, auth, 401/403         |
 | Tenant scope | Integration | Cross-tenant P0 — never 200 for other company |
 
 ## Output structure

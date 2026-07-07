@@ -1,6 +1,6 @@
 ---
 name: create-e2e-tests
-description: Create and maintain Cypress E2E tests with TypeScript using DRY device-aware command architecture (shared/pages/device). Use when writing or refactoring Cypress specs, custom commands, or implementing E2E tasks — not when planning E2E task markdown (use e2e-test-generator). Read harness e2e rules when present. Mandatory discovery before writing specs.
+description: (NS) Create and maintain Cypress E2E tests with TypeScript using DRY device-aware command architecture (shared/pages/device). Use when writing or refactoring Cypress specs, custom commands, or implementing E2E tasks — not when planning E2E task markdown (use e2e-test-generator). Read harness e2e rules when present. Mandatory discovery before writing specs.
 ---
 
 # Create E2E Tests
@@ -26,11 +26,11 @@ cypress/support/commands/
   device/mobile|tablet|desktop.commands.ts
 ```
 
-| Behavior | Location |
-|----------|----------|
+| Behavior            | Location  |
+| ------------------- | --------- |
 | Same on all devices | `shared/` |
-| Device-exclusive | `device/` |
-| Page DOM structure | `pages/` |
+| Device-exclusive    | `device/` |
+| Page DOM structure  | `pages/`  |
 
 Specs: `describe`/`it`, `cy.visit()`, commands, assertions — **no DOM logic in specs**.
 
@@ -64,10 +64,10 @@ Run project's Cypress command (`npx cypress run` or docker equivalent). Report f
 
 ## References
 
-| File | When |
-|------|------|
+| File                             | When                     |
+| -------------------------------- | ------------------------ |
 | `references/e2e-architecture.md` | Layout and rules summary |
-| `e2e-test-generator` | Task contract source |
+| `e2e-test-generator`             | Task contract source     |
 
 ## Related skills
 

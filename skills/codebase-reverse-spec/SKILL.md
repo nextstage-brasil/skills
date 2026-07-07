@@ -1,6 +1,6 @@
 ---
 name: codebase-reverse-spec
-description: Reverse-engineer an existing, legacy, or brownfield codebase into a technology-agnostic business description of what the system actually does — business rules, actors, permissions, hierarchies, state lifecycles, and external integrations, without implementation details. Use this skill whenever the user mentions brownfield, legacy code, modernization, reverse engineering, codebase analysis, extracting business rules from code, engenharia reversa, documentar sistema legado, gerar spec a partir do código, or wants a functional description faithful to the current product to support rewrite, migration, onboarding, or audit — even if they do not name this skill. Do NOT use for simple code reviews, bug fixes, or when the user explicitly wants a technical architecture document.
+description: (NS) Reverse-engineer an existing, legacy, or brownfield codebase into a technology-agnostic business description of what the system actually does — business rules, actors, permissions, hierarchies, state lifecycles, and external integrations, without implementation details. Use this skill whenever the user mentions brownfield, legacy code, modernization, reverse engineering, codebase analysis, extracting business rules from code, engenharia reversa, documentar sistema legado, gerar spec a partir do código, or wants a functional description faithful to the current product to support rewrite, migration, onboarding, or audit — even if they do not name this skill. Do NOT use for simple code reviews, bug fixes, or when the user explicitly wants a technical architecture document.
 ---
 
 # Codebase Reverse System Description
@@ -11,9 +11,10 @@ Reconstruct, from an existing codebase, a **technology-agnostic** descriptive do
 
 Code is evidence of behavior. The goal is to answer **what the system does and why**, not how it was built. Avoid programming languages, frameworks, libraries, databases, architecture patterns (MVC, microservices, etc.), and class/function names as the axis of explanation.
 
-Golden rule for every sentence: *"If I rewrote this system from scratch on another stack, would this sentence still be true?"* If not, rewrite it in business terms.
+Golden rule for every sentence: _"If I rewrote this system from scratch on another stack, would this sentence still be true?"_ If not, rewrite it in business terms.
 
 Permitted exceptions (only when essential to understand the current domain):
+
 - External integration/provider names (ERPs, gateways, BI, identity, analytics).
 - Access roles/profiles and organizational hierarchy levels.
 - Entity attribute names when needed to preserve business semantics (not to detail technical structure).
@@ -40,13 +41,13 @@ Follow phases in order. Do not skip Phase 0 — without it the final spec mixes 
 
 Ask the user (one question at a time, or `AskQuestion` when appropriate):
 
-| Question | Why it matters |
-| -------- | -------------- |
-| Whole system or a specific module/domain? | Prevents scope creep or missed areas |
-| Executive summary or exhaustive description? | Sets depth and length |
-| Output language? | Spec language may differ from skill/conversation language |
-| Any critical/risky domain needing extra scrutiny? | Prioritizes financial, fiscal, permission, or compliance logic |
-| Deliver incrementally (large codebases) or single document? | Large repos benefit from domain-by-domain drafts |
+| Question                                                    | Why it matters                                                 |
+| ----------------------------------------------------------- | -------------------------------------------------------------- |
+| Whole system or a specific module/domain?                   | Prevents scope creep or missed areas                           |
+| Executive summary or exhaustive description?                | Sets depth and length                                          |
+| Output language?                                            | Spec language may differ from skill/conversation language      |
+| Any critical/risky domain needing extra scrutiny?           | Prioritizes financial, fiscal, permission, or compliance logic |
+| Deliver incrementally (large codebases) or single document? | Large repos benefit from domain-by-domain drafts               |
 
 If the repo is large, do **not** read everything at once. Do reconnaissance first (Phase 1) and prioritize by business impact, not file size.
 
@@ -155,10 +156,10 @@ When the repo exceeds what fits comfortably in one pass:
 
 ## Reference files
 
-| File | When to read |
-| ---- | ------------ |
-| `references/spec_template.md` | Phase 4 — structure of the final document |
+| File                                    | When to read                              |
+| --------------------------------------- | ----------------------------------------- |
+| `references/spec_template.md`           | Phase 4 — structure of the final document |
 | `references/extraction_log_template.md` | Phase 2 — working notes during extraction |
-| `references/coverage_matrix.md` | Phases 1 and 4 — completeness check |
-| `references/anti_leakage_checklist.md` | Phase 4 — pre-delivery sanity pass |
-| `scripts/scan_leakage.sh` | Phase 4 — optional automated first pass |
+| `references/coverage_matrix.md`         | Phases 1 and 4 — completeness check       |
+| `references/anti_leakage_checklist.md`  | Phase 4 — pre-delivery sanity pass        |
+| `scripts/scan_leakage.sh`               | Phase 4 — optional automated first pass   |

@@ -1,6 +1,6 @@
 ---
 name: task-generator
-description: Transform atomic implementation work into rich task markdown files for backend and frontend layers with dependencies, estimates, and layer-specific checklists. Use during SDD planning when generating task-NNN-*.md from requirements features — not for E2E or unit test tasks (use specialized generators). Requires requirements.md. Output English task files under version tasks folder.
+description: (NS) Transform atomic implementation work into rich task markdown files for backend and frontend layers with dependencies, estimates, and layer-specific checklists. Use during SDD planning when generating task-NNN-*.md from requirements features — not for E2E or unit test tasks (use specialized generators). Requires requirements.md. Output English task files under version tasks folder.
 depends:
   - nextstage-harness
 ---
@@ -64,8 +64,8 @@ For subversions: under `subversions/{subversion_san}/tasks/`.
 
 ## References
 
-| File | When |
-|------|------|
+| File                        | When                                     |
+| --------------------------- | ---------------------------------------- |
 | `references/task-schema.md` | Full markdown template and header fields |
 
 ## Related skills

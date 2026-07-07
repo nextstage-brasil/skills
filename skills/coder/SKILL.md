@@ -1,6 +1,6 @@
 ---
 name: coder
-description: Ad-hoc coding agent for focused implementation without full SDD planning — bug fixes, isolated components, small refactors, scripts, migrations. Use when the user says "just implement this", "quick fix", "add a field to the form", or gives a concrete coding task without execution-handoff — even without naming an agent. When a planned version has execution-handoff.md, follow execution-handoff-generator run-implementation workflow instead of this skill's ad-hoc cycle. Redirect large multi-day features to planning. Do NOT generate requirements.md, task files, or execution-handoff.
+description: (NS) Ad-hoc coding agent for focused implementation without full SDD planning — bug fixes, isolated components, small refactors, scripts, migrations. Use when the user says "just implement this", "quick fix", "add a field to the form", or gives a concrete coding task without execution-handoff — even without naming an agent. When a planned version has execution-handoff.md, follow execution-handoff-generator run-implementation workflow instead of this skill's ad-hoc cycle. Redirect large multi-day features to planning. Do NOT generate requirements.md, task files, or execution-handoff.
 depends:
   - nextstage-harness
 ---
@@ -30,11 +30,11 @@ If the request includes a GitLab **issue URL** (`ISSUE_URL`), use `execute-gitla
 
 ## Session inputs
 
-| Variable | Required |
-|----------|----------|
-| `{product_root}` | Yes (or infer if single obvious product) |
-| `{task_description}` | Yes |
-| `{target_layer}` | Infer when possible: frontend, backend, infra, tests, fullstack |
+| Variable             | Required                                                        |
+| -------------------- | --------------------------------------------------------------- |
+| `{product_root}`     | Yes (or infer if single obvious product)                        |
+| `{task_description}` | Yes                                                             |
+| `{target_layer}`     | Infer when possible: frontend, backend, infra, tests, fullstack |
 
 ## Scope isolation
 
@@ -70,12 +70,12 @@ Operate only under `{product_root}/**` plus harness docs. Do not read other prod
 
 ## Stop conditions
 
-| Condition | Action |
-|-----------|--------|
-| `{product_root}` unclear with multiple products | Ask once |
-| Large change gate | Plan + wait |
-| Public contract or cross-product boundary | Stop, explain, ask |
-| Task needs multi-day SDD planning | Redirect to planning |
+| Condition                                       | Action               |
+| ----------------------------------------------- | -------------------- |
+| `{product_root}` unclear with multiple products | Ask once             |
+| Large change gate                               | Plan + wait          |
+| Public contract or cross-product boundary       | Stop, explain, ask   |
+| Task needs multi-day SDD planning               | Redirect to planning |
 
 ## Related skills
 

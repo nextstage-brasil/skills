@@ -1,6 +1,6 @@
 ---
 name: living-spec-consolidator
-description: Consolidate delivered version deltas into living domain specs under docs/specs/ — INDEX.md and per-domain markdown. Use after version delivery when requirements, code-review-report, and execution-handoff exist — typically at version closure. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval.
+description: (NS) Consolidate delivered version deltas into living domain specs under docs/specs/ — INDEX.md and per-domain markdown. Use after version delivery when requirements, code-review-report, and execution-handoff exist — typically at version closure. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval.
 depends:
   - nextstage-harness
 ---
@@ -32,15 +32,15 @@ See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-har
 
 Map features to canonical domains (examples):
 
-| Feature area | Domain file |
-|--------------|-------------|
-| Auth, login, RBAC | `auth.md` |
-| Users, profiles | `users.md` |
-| Billing | `billing.md` |
-| Notifications | `notifications.md` |
-| Reports | `reports.md` |
-| Integrations | `integrations.md` |
-| Agent / graph | `agent.md` |
+| Feature area      | Domain file        |
+| ----------------- | ------------------ |
+| Auth, login, RBAC | `auth.md`          |
+| Users, profiles   | `users.md`         |
+| Billing           | `billing.md`       |
+| Notifications     | `notifications.md` |
+| Reports           | `reports.md`       |
+| Integrations      | `integrations.md`  |
+| Agent / graph     | `agent.md`         |
 
 Naming: English, kebab-case, singular (`user-profile.md`). Multi-domain features update multiple specs.
 
@@ -63,9 +63,9 @@ Create or update `{specs_root}/INDEX.md`:
 ```markdown
 # Domain specs — {product_name}
 
-| Domain | File | Last updated | Versions |
-|--------|------|--------------|----------|
-| auth | `docs/specs/auth.md` | {date} | {version_san} |
+| Domain | File                 | Last updated | Versions      |
+| ------ | -------------------- | ------------ | ------------- |
+| auth   | `docs/specs/auth.md` | {date}       | {version_san} |
 ```
 
 ### 4. Consolidation report

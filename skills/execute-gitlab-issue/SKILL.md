@@ -1,6 +1,6 @@
 ---
 name: execute-gitlab-issue
-description: Execute a GitLab issue end-to-end — worktrees, implementation, atomic commits, MRs, MCP status sync, mandatory code review gate. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly — not for local-only ad-hoc coding (use coder). Requires mcp-gitlab-usage for MCP and code-reviewer for Phase 5 gate.
+description: (NS) Execute a GitLab issue end-to-end — worktrees, implementation, atomic commits, MRs, MCP status sync, mandatory code review gate. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly — not for local-only ad-hoc coding (use coder). Requires mcp-gitlab-usage for MCP and code-reviewer for Phase 5 gate.
 depends:
   - nextstage-harness
   - mcp-gitlab-usage
@@ -17,10 +17,10 @@ See `../nextstage-harness/references/harness-discovery.md`. Read `mcp-gitlab-usa
 
 ## Inputs
 
-| Variable | Required |
-|----------|----------|
-| `ISSUE_URL` | Yes |
-| `SOURCE_BRANCH` | No — Gate 1 if omitted |
+| Variable         | Required                            |
+| ---------------- | ----------------------------------- |
+| `ISSUE_URL`      | Yes                                 |
+| `SOURCE_BRANCH`  | No — Gate 1 if omitted              |
 | `{product_root}` | When multiple products in workspace |
 
 `WORKTREE_ROOT = {product_root}/.worktrees/{ISSUE_ID}`
@@ -95,31 +95,31 @@ Workflow does not finish without verdict: `Approved` | `Rejected` | `Blocked`.
 
 ## Stop and ask the human
 
-| Condition | Action |
-|-----------|--------|
-| Gate 1: `SOURCE_BRANCH` missing/invalid after fetch | Stop — ask once |
-| Worktree conflict (same issue, another agent) | Stop unless explicit resume |
-| Ambiguous or conflicting acceptance criteria | Stop — ask once |
-| MCP unavailable or auth failure | Stop — state blocker |
-| `project_id` trio not confirmed | Stop per `mcp-gitlab-usage` |
-| Work on protected/base branch per `gitlab-sync-config.md` | Stop |
-| Destructive ops (issue delete, force-push main/master) | Stop — require explicit human |
-| Product decision not stated in the issue | Stop — ask once |
+| Condition                                                 | Action                        |
+| --------------------------------------------------------- | ----------------------------- |
+| Gate 1: `SOURCE_BRANCH` missing/invalid after fetch       | Stop — ask once               |
+| Worktree conflict (same issue, another agent)             | Stop unless explicit resume   |
+| Ambiguous or conflicting acceptance criteria              | Stop — ask once               |
+| MCP unavailable or auth failure                           | Stop — state blocker          |
+| `project_id` trio not confirmed                           | Stop per `mcp-gitlab-usage`   |
+| Work on protected/base branch per `gitlab-sync-config.md` | Stop                          |
+| Destructive ops (issue delete, force-push main/master)    | Stop — require explicit human |
+| Product decision not stated in the issue                  | Stop — ask once               |
 
 See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 
 ## Related skills
 
-| Skill | Role |
-|-------|------|
-| `mcp-gitlab-usage` | All GitLab tools |
-| `gitlab-board-sync` | Status label semantics |
-| `code-reviewer` | Phase 5 gate |
-| `coder` | Implementation patterns |
+| Skill               | Role                    |
+| ------------------- | ----------------------- |
+| `mcp-gitlab-usage`  | All GitLab tools        |
+| `gitlab-board-sync` | Status label semantics  |
+| `code-reviewer`     | Phase 5 gate            |
+| `coder`             | Implementation patterns |
 
 ## References
 
-| File | When |
-|------|------|
-| `references/worktree-setup.md` | Multi-repo worktrees |
+| File                           | When                     |
+| ------------------------------ | ------------------------ |
+| `references/worktree-setup.md` | Multi-repo worktrees     |
 | `references/mr-conventions.md` | MR title, draft, linking |
