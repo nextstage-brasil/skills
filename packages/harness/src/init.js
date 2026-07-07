@@ -13,6 +13,7 @@ import { resolveSource } from './source.js';
 import { installAgentPersonas, matchingPersonas, resolveAgentsDir } from './agentPersonas.js';
 import { syncRules } from './syncRules.js';
 import { syncAgents } from './syncAgents.js';
+import { syncSkills } from './syncSkills.js';
 import { generateAgentsMd } from './generateAgentsMd.js';
 import { buildPostInstallNotes } from './postInstallNotes.js';
 import { DEFAULT_AGENTS } from './agentsLayout.js';
@@ -60,7 +61,7 @@ export async function runInit(argv = {}) {
         `Agent personas → .agents/agents/, .cursor/agents/, .claude/agents/: ${personasToInstall.join(', ')}`,
       );
     }
-    p.log.info('Also installs: skill-creator (anthropics/skills)');
+    p.log.info('Skill symlinks → .cursor/skills/, .claude/skills/ (after install)');
     p.log.info('Dry run — no files written, no skills installed.');
     p.outro('Done.');
     return;
@@ -78,6 +79,18 @@ export async function runInit(argv = {}) {
     spinner.stop('Installation failed.');
     p.cancel(error instanceof Error ? error.message : String(error));
     process.exit(1);
+  }
+
+  try {
+    const skillsSyncResult = syncSkills(detection.projectRoot, {
+      agents,
+      copy: Boolean(argv.copy),
+    });
+    if (skillsSyncResult.written.length > 0) {
+      p.log.success(`Skill adapters: ${skillsSyncResult.written.length} symlink(s)`);
+    }
+  } catch (error) {
+    p.log.warn(error instanceof Error ? error.message : String(error));
   }
 
   let scaffoldRan = false;

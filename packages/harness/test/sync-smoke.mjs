@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync, writeFileSync, mkdirSync, copyFileSync, lstatSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync, mkdirSync, copyFileSync, lstatSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { scaffoldProject } from '../src/scaffold.js';
 import { syncRules, hashBody, stripFrontmatter } from '../src/syncRules.js';
 import { syncAgents } from '../src/syncAgents.js';
+import { syncSkills } from '../src/syncSkills.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { migrateRules } from '../src/migrateRules.js';
 
@@ -76,9 +77,20 @@ try {
   check = runCli(['sync', '--check', '--dir', tempDir], harnessRoot);
   assert(check.status === 0, `sync --check should pass after re-sync: ${check.stderr}${check.stdout}`);
 
-  assert(check.status === 0, `sync --check should pass after re-sync: ${check.stderr}${check.stdout}`);
+  // 5. skill symlinks to cursor/claude
+  const skillsCanonical = join(tempDir, '.agents', 'skills', 'coder');
+  mkdirSync(skillsCanonical, { recursive: true });
+  writeFileSync(join(skillsCanonical, 'SKILL.md'), '---\nname: coder\ndescription: test\n---\n\n# Coder\n', 'utf8');
+  const skillSync = syncSkills(tempDir, { agents: ['cursor', 'claude-code'] });
+  assert(skillSync.written.length === 2, 'syncSkills should write cursor and claude adapters');
+  const cursorSkill = join(tempDir, '.cursor', 'skills', 'coder');
+  assert(exists(cursorSkill), 'cursor skill symlink missing');
+  assert(
+    lstatSync(cursorSkill).isSymbolicLink() || skillSync.written[0].includes('copy'),
+    'cursor skill should be symlink unless copy fallback',
+  );
 
-  // 5. agents-md from installed skills layout
+  // 6. agents-md from installed skills layout
   const skillsDir = join(tempDir, '.agents', 'skills', 'nextstage-harness');
   mkdirSync(skillsDir, { recursive: true });
   writeFileSync(join(skillsDir, 'SKILL.md'), '# stub\n', 'utf8');
@@ -88,7 +100,7 @@ try {
   assert(readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8').trim() === '@AGENTS.md', 'CLAUDE.md must point to AGENTS.md');
   assert(readFileSync(join(tempDir, 'AGENTS.md'), 'utf8').includes('nextstage-harness'), 'AGENTS.md should list installed skill');
 
-  // 6. agent persona sync to cursor/claude adapters
+  // 7. agent persona sync to cursor/claude adapters
   const personaDir = join(tempDir, '.agents', 'agents');
   mkdirSync(personaDir, { recursive: true });
   writeFileSync(join(personaDir, 'test-persona.md'), '---\nname: test-persona\ndescription: smoke\n---\n\n# Test\n', 'utf8');
@@ -103,7 +115,7 @@ try {
     'cursor agent should be symlink unless copy fallback',
   );
 
-  // 7. migrate-rules round-trip from fixture
+  // 8. migrate-rules round-trip from fixture
   const migrateDir = mkdtempSync(join(tmpdir(), 'harness-migrate-'));
   try {
     const legacyDir = join(migrateDir, '.cursor', 'rules');
@@ -142,10 +154,5 @@ try {
 }
 
 function exists(path) {
-  try {
-    readFileSync(path);
-    return true;
-  } catch {
-    return false;
-  }
+  return existsSync(path);
 }

@@ -12,5 +12,6 @@ export const AGENTS_LAYOUT_DIRS = [
 ];
 
 export const AGENTS_PERSONAS_DIR = join(AGENTS_HOME, 'agents');
+export const AGENTS_SKILLS_DIR = join(AGENTS_HOME, 'skills');
 
 export const DEFAULT_AGENTS = ['cursor', 'claude-code'];

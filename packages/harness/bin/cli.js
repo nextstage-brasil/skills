@@ -3,6 +3,7 @@
 import { runInit, printList } from '../src/init.js';
 import { syncRules } from '../src/syncRules.js';
 import { syncAgents } from '../src/syncAgents.js';
+import { syncSkills } from '../src/syncSkills.js';
 import { migrateRules } from '../src/migrateRules.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { DEFAULT_AGENTS } from '../src/agentsLayout.js';
@@ -10,7 +11,7 @@ import { DEFAULT_AGENTS } from '../src/agentsLayout.js';
 const HELP = `
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
-  harness sync [options]   Regenerate Cursor/Claude adapters from canonical rules and personas
+  harness sync [options]   Regenerate rule, skill, and persona adapters from canonical sources
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
   harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
   harness list             List presets and available skills
@@ -166,8 +167,9 @@ async function runSync(parsed) {
   const projectRoot = resolveProjectDir(parsed.dir);
   const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
   const rulesResult = syncRules(projectRoot, { agents, check: parsed.check });
+  const skillsResult = syncSkills(projectRoot, { agents, check: parsed.check, copy: parsed.copy });
   const agentsResult = syncAgents(projectRoot, { agents, check: parsed.check, copy: parsed.copy });
-  const drifts = [...rulesResult.drifts, ...agentsResult.drifts];
+  const drifts = [...rulesResult.drifts, ...skillsResult.drifts, ...agentsResult.drifts];
 
   if (parsed.check) {
     if (drifts.length > 0) {
@@ -177,15 +179,19 @@ async function runSync(parsed) {
       }
       process.exit(1);
     }
-    console.log('OK: rule and agent adapters match canonical sources');
+    console.log('OK: rule, skill, and agent adapters match canonical sources');
     return;
   }
 
-  const totalWritten = rulesResult.written.length + agentsResult.written.length;
+  const totalWritten =
+    rulesResult.written.length + skillsResult.written.length + agentsResult.written.length;
   if (totalWritten > 0) {
-    console.log(`Synced ${totalWritten} adapter file(s)`);
+    console.log(`Synced ${totalWritten} adapter(s)`);
+    if (skillsResult.written.length > 0) {
+      console.log(`  Skills → ${skillsResult.written.length} path(s)`);
+    }
     if (agentsResult.written.length > 0) {
-      console.log(`  Agent personas → ${agentsResult.written.join(', ')}`);
+      console.log(`  Personas → ${agentsResult.written.length} path(s)`);
     }
   } else {
     console.log('No adapters written');

@@ -34,7 +34,7 @@ Use this pattern in every skill that needs project rules, artifact paths, or har
 3. Load layer rules from `{harness_root}/rules/` matching changed files
 4. **Legacy fallback:** if `{harness_root}/` missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note
 
-Adapter generation: see `rules-sync.md`. Agent personas: canonical `.agents/agents/` → `harness sync` → symlinks in `.cursor/agents/`, `.claude/agents/`.
+Adapter generation: see `rules-sync.md`. Skills: canonical `.agents/skills/` → `harness sync` → symlinks in `.cursor/skills/`, `.claude/skills/`. Personas: `.agents/agents/` → `.cursor/agents/`, `.claude/agents/`.
 
 ## No harness found
 

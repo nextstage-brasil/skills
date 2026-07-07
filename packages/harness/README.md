@@ -1,16 +1,16 @@
 # @nextstage-brasil/harness
 
-Interactive CLI to install [NextStage skills](https://github.com/nextstage-brasil/skills) and scaffold SDD project layout.
+Interactive CLI to install [NextStage skills](https://github.com/nextstage-brasil/skills) and scaffold SDD project layout with multi-agent rules sync.
 
 ## Usage
 
-### From npm (after publish)
+### From npm
 
 ```bash
 npx @nextstage-brasil/harness
 ```
 
-### Local clone (before publish)
+### Local clone
 
 ```bash
 npx file:~/apps/nextstage/skills/packages/harness
@@ -24,33 +24,75 @@ npx @nextstage-brasil/harness --preset gitlab --yes
 npx @nextstage-brasil/harness list
 ```
 
-## What it does
+## Commands
 
-1. Detects whether the target is a **new** or **existing** project.
+| Command | Description |
+|---------|-------------|
+| `harness` / `harness init` | Install skills, scaffold layout, sync adapters, generate `AGENTS.md` |
+| `harness list` | Presets and skill catalog |
+| `harness sync` | Regenerate `.cursor/rules/`, `.claude/rules/`, and persona symlinks |
+| `harness sync --check` | CI mode — exit 1 if adapters drift from canonical |
+| `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
+| `harness agents-md --force` | Overwrite existing `AGENTS.md` |
+| `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` → `.nextstage-harness/rules/` |
+
+Common flags: `--dir`, `--preset`, `--skill`, `--agent` (default `cursor`, `claude-code`), `--copy`, `--no-scaffold`, `--no-agents`, `--dry-run`, `--yes`.
+
+## What `init` does
+
+1. Detects **new** vs **existing** project.
 2. Resolves skill dependencies from `templates/catalog.json`.
-3. Runs `npx skills add` → `.agents/skills/` (NextStage catalog + `skill-creator` from anthropics/skills).
-4. Scaffolds `AGENTS.md`, `.nextstage-harness/rules/`, `.agents/docs/`, and `docs/` (unless `--no-scaffold`).
-5. Runs `harness sync` and `harness agents-md` after scaffold (unless `--no-scaffold`).
-6. Copies agent personas to `.agents/agents/<name>.md` and syncs to `.cursor/agents/`, `.claude/agents/` (unless `--no-agents`).
+3. Runs `npx skills add` → `.agents/skills/` (+ `skill-creator` from anthropics/skills).
+4. Scaffolds `.nextstage-harness/`, `.agents/`, and `docs/` (unless `--no-scaffold`).
+5. Runs `harness sync` — rule adapters, skill symlinks (`.cursor/skills/`, `.claude/skills/`), persona symlinks.
+6. Runs `harness agents-md` — `AGENTS.md` from installed skills + `CLAUDE.md` (`@AGENTS.md`).
+7. Copies agent personas to `.agents/agents/` (unless `--no-agents`).
 
-Default agents on install: `cursor`, `claude-code`.
+## Project layout (after init)
 
-Full install guide: [docs/README_INSTALLER.md](docs/README_INSTALLER.md).
+| Path | Role |
+|------|------|
+| `AGENTS.md` | Project entry (CLI-generated; refine with `agents-md-generator` skill) |
+| `CLAUDE.md` | Pointer to `AGENTS.md` |
+| `.nextstage-harness/rules/` | Canonical rules — **edit here** |
+| `.cursor/rules/`, `.claude/rules/` | Generated rule adapters |
+| `.agents/skills/` | Installed skills (canonical — Skills CLI) |
+| `.cursor/skills/`, `.claude/skills/` | Symlinked skill adapters (`harness sync`) |
+| `.agents/agents/` | Canonical personas |
+| `.cursor/agents/`, `.claude/agents/` | Symlinked subagents |
+| `docs/context`, `docs/specs`, `docs/versions` | SDD artifacts |
 
 ## Agent personas
 
-Canonical source: repo-root `agents/*.md`.
+Canonical source: [github.com/nextstage-brasil/skills/agents](https://github.com/nextstage-brasil/skills/tree/main/agents).
 
-Installed to `.agents/agents/<name>.md` (canonical). `harness sync` symlinks to `.cursor/agents/` and `.claude/agents/` (`--copy` for plain files).
+Installed to `.agents/agents/<name>.md`. `harness sync` symlinks to `.cursor/agents/` and `.claude/agents/` (`--copy` for plain files).
+
+| Persona | Installs when |
+|---------|---------------|
+| `code-coder` | `coder` or `execute-gitlab-issue` |
+| `code-reviewer` | `code-reviewer` |
+| `code-investigator` | `code-investigator` |
+| `execution-orchestrator` | `execution-orchestrator` or `version-partitioner` |
 
 ## Presets
 
-| Preset           | Skills                                               |
-| ---------------- | ---------------------------------------------------- |
-| `recommended`    | SDD planning chain + test generators + living specs  |
-| `gitlab`         | MCP GitLab, review gate, issue execution, board sync |
-| `brownfield`     | Bootstrap + reverse-spec                             |
-| `implementation` | Coder, investigator, review                          |
+| Preset | Skills |
+|--------|--------|
+| `recommended` | SDD planning chain + test generators + living specs |
+| `gitlab` | MCP GitLab, review gate, issue execution, board sync |
+| `brownfield` | `agents-md-generator`, architecture rules, bootstrap, reverse-spec |
+| `implementation` | Coder, investigator, review |
+
+## Post-install (brownfield / existing code)
+
+CLI writes baseline `AGENTS.md`. In your agent, run next:
+
+1. `architecture-rules-generator` → `.nextstage-harness/rules/architecture-rules.md` → `harness sync`
+2. `bootstrap-brownfield` → `docs/context/brownfield-map.md` (optional)
+3. `codebase-reverse-spec` → `docs/context/system-reverse-spec.md` (optional)
+
+Full guide: [docs/README_INSTALLER.md](docs/README_INSTALLER.md).
 
 ## Development
 

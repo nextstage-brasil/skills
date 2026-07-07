@@ -15,9 +15,9 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
     docs/
   .cursor/rules/*.mdc               # GENERATED — Cursor rule adapters
   .claude/rules/*.md                # GENERATED — Claude Code rule adapters
-  .agents/skills/                   # Skills CLI (unchanged)
-  .cursor/skills/ → symlink
-  .claude/skills/ → symlink
+  .agents/skills/                   # Installed skills (Skills CLI canonical)
+  .cursor/skills/ → symlink          # Cursor skill adapters (harness sync)
+  .claude/skills/ → symlink          # Claude skill adapters (harness sync)
   .agents/agents/                   # CANONICAL — agent personas (edit here)
   .cursor/agents/*.md → symlink     # Cursor subagents
   .claude/agents/*.md → symlink      # Claude Code subagents
@@ -26,7 +26,9 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 
 **Rules:** edit `.nextstage-harness/rules/` → `harness sync` → `.cursor/rules/`, `.claude/rules/`.
 
-**Personas (subagents):** edit `.agents/agents/` → `harness sync` → symlinks in `.cursor/agents/`, `.claude/agents/` (or copies with `--copy`).
+**Personas (subagents):** edit `.agents/agents/` → `harness sync` → symlinks in `.cursor/agents/`, `.claude/agents/`.
+
+**Skills:** canonical in `.agents/skills/` (Skills CLI). `harness sync` also symlinks to `.cursor/skills/` and `.claude/skills/` so Cursor discovers them in `/` (Skills CLI omits this for Cursor as a "universal" agent).
 
 ## 2. Commands
 
@@ -34,7 +36,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 |---------|-------------|
 | `npx @nextstage-brasil/harness` | Interactive init (default) |
 | `harness init [options]` | Install skills + scaffold + sync |
-| `harness sync` | Regenerate rule and agent adapters from canonical |
+| `harness sync` | Regenerate rule, skill, and persona adapters from canonical |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |
 | `harness sync --check` | CI mode — exit 1 on adapter drift |
