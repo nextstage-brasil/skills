@@ -1,0 +1,23 @@
+{
+  "skill_name": "multi-agent-architect",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to build a bot for my company. Not sure where to start — maybe LangGraph or CrewAI?",
+      "expected_output": "Agent posts ~200-word summary, asks save path, writes self-contained handoff report with interview record, functional requirements, state schema, and LangGraph mermaid.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I need a multi-agent system that researches competitors, drafts a report, and requires my approval before sending email to clients. We have 2 weeks for MVP but it must not send email without me clicking approve.",
+      "expected_output": "Agent asks ONE question at a time with recommended answers; after sufficient turns posts ~200-word on-screen recommendation, asks for save path, then writes full report with LangGraph mermaid diagram and tooling stack.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Three specialist agents — researcher, writer, editor — working in sequence on blog posts. No human review, just fast iteration. Small team, Python okay.",
+      "expected_output": "Agent locks in context, asks ONE question at a time; posts ~200-word recommendation, asks save path, writes full report with CrewAI team structure table and tooling stack.",
+      "files": []
+    }
+  ]
+}
