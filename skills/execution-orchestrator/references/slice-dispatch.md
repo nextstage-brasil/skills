@@ -15,6 +15,10 @@ Version:     {version_san}
 Subversion:  {subversion_san}
 Active path: {product_root}/docs/versions/{version_san}/subversions/{subversion_san}/
 
+Before coding:
+- Load product context from {product_root}/docs/context/ per the Implementation
+  boot rule in nextstage-harness artifact-layout.md (list folder, read layer-relevant files).
+
 Mandate:
 - Implement ALL tasks in this slice, in order, with no confirmation between tasks.
 - Do NOT commit — the orchestrator commits once per slice.

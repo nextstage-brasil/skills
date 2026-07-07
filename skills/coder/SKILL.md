@@ -44,7 +44,7 @@ Operate only under `{product_root}/**` plus harness docs. Do not read other prod
 
 1. Read `AGENTS.md`
 2. Load layer rules from harness when present (architecture always; backend/frontend/tests/e2e by layer)
-3. Read `{product_root}/docs/context/design-brief.md` if task touches UI
+3. Load product context: follow **Implementation boot rule** in `../nextstage-harness/references/artifact-layout.md`
 4. `git status` and `git diff`
 5. **Read target files before writing**
 

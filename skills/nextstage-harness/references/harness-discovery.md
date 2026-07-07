@@ -6,6 +6,7 @@ Use this pattern in every skill that needs project rules, artifact paths, or har
 
 1. **Standalone / Cursor** — If the repo has `.cursor/rules/` or `AGENTS.md` at `{product_root}`, treat `{product_root}` as the harness anchor (rules may live under `.cursor/rules/`).
 2. **Rules loading** — Load applicable rules from `.cursor/rules/*.mdc` when they exist. Read `AGENTS.md` first for pointers.
+3. **Product context (implementation)** — When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code.
 
 ## Variables
 
@@ -14,6 +15,7 @@ Use this pattern in every skill that needs project rules, artifact paths, or har
 | `{harness}` | Repo root (rules under `.cursor/rules/`) |
 | `{product_root}` | Product folder or repo root |
 | `{specs_root}` | `{product_root}/docs/specs/` |
+| `{context_root}` | `{product_root}/docs/context/` |
 | `{version_san}` | Sanitized version (e.g. `1.0.0`) |
 
 ## No harness found

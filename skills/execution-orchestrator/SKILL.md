@@ -80,6 +80,8 @@ For each slice whose roadmap `status` is `planned` or `in_progress`:
      the slice worker, invoked by the execution orchestrator
    - Paths limited to
      `{product_root}/docs/versions/{version_san}/subversions/{subversion_san}/`
+     for slice tasks; also load `{product_root}/docs/context/` per
+     `artifact-layout.md` **Implementation boot rule** before coding
      (+ layer rules from the harness as needed)
    - Mandate: implement **all** tasks of the slice, no confirmation between
      tasks, **no commit** (the parent commits)

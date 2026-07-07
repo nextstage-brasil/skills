@@ -29,7 +29,8 @@ See `../nextstage-harness/references/harness-discovery.md`. Read `mcp-gitlab-usa
 
 1. Resolve `{product_root}` (factory: `apps/{slug}/`; standalone: repo root)
 2. Discover git repos under `{product_root}` (`backend/`, `frontend/`, meta-repo root, etc.)
-3. Ensure `.worktrees/` in gitignore
+3. Load product context: follow **Implementation boot rule** in `../nextstage-harness/references/artifact-layout.md`
+4. Ensure `.worktrees/` in gitignore
 
 ## Phase 1 — Prepare
 

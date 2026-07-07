@@ -27,9 +27,10 @@ before coding.
 1. Read `execution-handoff.md` **in full**
 2. Validate **Time tracking (seconds)** section exists; add from template if missing
 3. Read `requirements.md` (overview — do not replan)
-4. Identify **Next task** (first `pending`, or resume `in_progress`)
-5. Load harness rules for the task layer
-6. If `Implementation — start` is empty, fill with current ISO local timestamp
+4. Load product context: follow **Implementation boot rule** in `../../nextstage-harness/references/artifact-layout.md`
+5. Identify **Next task** (first `pending`, or resume `in_progress`)
+6. Load harness rules for the task layer
+7. If `Implementation — start` is empty, fill with current ISO local timestamp
 
 ### Work branch (step 1.5 — GitLab)
 

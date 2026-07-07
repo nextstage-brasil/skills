@@ -11,6 +11,7 @@ This project uses [NextStage skills](https://github.com/nextstage-brasil/skills)
 | `.agents/agents/` | Isolated agent personas |
 | `.agents/rules/` | Project-specific agent rules |
 | `.agents/docs/` | Agent-oriented project docs |
+| `docs/context/` | Product-wide context (stack, design, brownfield, GitLab sync) — read before implementation |
 | `docs/versions/` | SDD version artifacts |
 | `docs/specs/` | Living domain specs |
 

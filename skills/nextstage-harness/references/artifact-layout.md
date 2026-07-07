@@ -8,6 +8,7 @@ Canonical paths for spec-driven planning and delivery artifacts.
 - **`{product_root}`** — Path where the product lives (monorepo subfolder or repo root).
 - **`{version_san}`** — Sanitized version id (e.g. `1.0.0`).
 - **`{specs_root}`** — Default `{product_root}/docs/specs/` (living domain specs).
+- **`{context_root}`** — Default `{product_root}/docs/context/` (product-wide context for planning and implementation).
 
 ## Isolation
 
@@ -35,6 +36,34 @@ Canonical paths for spec-driven planning and delivery artifacts.
 | Execution handoff | `{product_root}/docs/versions/{version_san}/execution-handoff.md` |
 | Living spec index | `{specs_root}/INDEX.md` |
 | Domain spec | `{specs_root}/{domain}.md` |
+
+## Product context (`{context_root}`)
+
+Stable product-wide context — stack, design, brownfield notes, GitLab sync — lives
+outside version folders so every implementer reads the same source.
+
+| File | Purpose |
+|------|---------|
+| `stack-confirmed.md` | Confirmed stack, constraints, test environment |
+| `design-brief.md` | UI/UX tokens, layout, component style |
+| `brownfield-map.md` | Existing modules, gaps, legacy constraints |
+| `gitlab-sync-config.md` | GitLab project ids, status labels, branches |
+| `ci-cd-notes.md` | Pipeline and deployment notes |
+
+Other `*.md` files in `{context_root}/` (including subfolders) are valid — read
+them when the task layer or filename suggests relevance.
+
+### Implementation boot rule
+
+Before writing code for any task (ad-hoc, handoff, slice, or GitLab issue):
+
+1. If `{context_root}/` exists, **list** its contents (including one level of
+   subdirectories).
+2. **Read** every file that applies to the task layer — at minimum
+   `stack-confirmed.md` when present; add `design-brief.md` for UI work;
+   `brownfield-map.md` when touching legacy areas; `gitlab-sync-config.md` when
+   syncing with GitLab or choosing branches.
+3. Do not skip this step because the active path is a version or subversion folder.
 
 ## Subversions (optional)
 
