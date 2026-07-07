@@ -77,7 +77,7 @@ Turn evidence into agent-actionable rules:
 | **Layout** | Folder tree (abbreviated), module boundaries |
 | **Patterns** | API style, multitenancy, auth, module conventions, integration boundaries |
 | **Forbidden** | Generated dirs, migration constraints, secrets locations |
-| **Dev & test** | Docker/containers, mandatory test environment, primary test commands |
+| **Dev & test** | Docker/containers, **mandatory test container** (e.g. `app_test` — not dev container or host), primary test commands |
 | **Discipline** | Language for code/docs vs user chat, minimal diff, completion style — only if present in repo rules or `AGENTS.md` |
 
 For large subsystems, **do not inline** — add one line pointing to a dedicated layer rule and offer to generate that sibling in a follow-up.
@@ -123,6 +123,7 @@ When updating an existing file:
 - [ ] Every stack row verified from manifests or config
 - [ ] Generated/forbidden paths listed if they exist
 - [ ] Test command is copy-pasteable when Docker/CI is detected
+- [ ] When a separate test container/service exists, constitution states **MUST** run tests there (not dev container or host)
 - [ ] No duplication of full content from sibling rules — links only
 - [ ] No business-domain rules (those belong in `docs/specs/`)
 - [ ] `harness sync` run or user instructed to run it

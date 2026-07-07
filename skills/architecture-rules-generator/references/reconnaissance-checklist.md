@@ -44,7 +44,7 @@ Read-only scan before drafting `architecture-rules.md`. Check items in order; sk
 
 - [ ] Test directories and naming (`tests/`, `testes-cypress/`, `__tests__/`)
 - [ ] PHPUnit/Pest/Jest/Vitest/Cypress config
-- [ ] **Mandatory environment** (Docker container name, `app_test` vs host)
+- [ ] **Mandatory test environment** — which container/service runs tests (`app_test` vs dev `app` vs host); agents MUST use the test container, not dev or host
 - [ ] `.gitlab-ci.yml` or GitHub Actions test jobs (copy exact commands when found)
 
 ## 6. Agent-relevant constraints

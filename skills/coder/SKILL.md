@@ -56,7 +56,7 @@ Operate only under `{product_root}/**` plus harness docs. Do not read other prod
 - **No commits** unless human explicitly asks — when committing, see `../nextstage-harness/references/agent-git-identity.md`
 - **No SDD artifacts** — no `task-NNN.md`, `requirements.md`, `execution-handoff.md`
 - **No gratuitous comments** unless requested
-- Run tests in project's documented environment (Docker, local, etc.)
+- Run tests only in the environment documented in architecture-rules (test container when Docker defines one — not the dev container or host)
 
 ## Per-task cycle
 

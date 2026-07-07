@@ -34,6 +34,8 @@ Technical constitution for AI agents. Business behavior lives in `{specs_or_docs
 
 ## Development and testing
 
+- **MUST:** Run tests only in the project's designated test environment (e.g. `app_test` container). **MUST NOT** run the test suite in the dev container or on the host when a separate test container/service is documented.
+
 {docker_table_or_commands}
 
 | Suite | Location | Run |
