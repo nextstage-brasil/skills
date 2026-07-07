@@ -58,6 +58,20 @@ jobs:
         working-directory: packages/harness
         run: npm version "${{ steps.release.outputs.new_version }}" --no-git-tag-version
 
+      - name: Publish to npm
+        if: steps.release.outputs.should_release == 'true'
+        working-directory: packages/harness
+        env:
+          NODE_AUTH_TOKEN: ''
+        run: |
+          set -euo pipefail
+          unset NODE_AUTH_TOKEN || true
+          if [ -f "$HOME/.npmrc" ]; then
+            grep -v '_authToken' "$HOME/.npmrc" > "$HOME/.npmrc.tmp" || true
+            mv "$HOME/.npmrc.tmp" "$HOME/.npmrc"
+          fi
+          npm publish --access=public
+
       - name: Commit, tag, and push release
         if: steps.release.outputs.should_release == 'true'
         run: |
@@ -72,13 +86,3 @@ jobs:
           fi
           git pull --rebase origin main
           git push origin main --follow-tags
-
-      - name: Publish to npm
-        if: steps.release.outputs.should_release == 'true'
-        working-directory: packages/harness
-        run: |
-          if [ -f "$HOME/.npmrc" ]; then
-            grep -v '_authToken' "$HOME/.npmrc" > "$HOME/.npmrc.tmp" || true
-            mv "$HOME/.npmrc.tmp" "$HOME/.npmrc"
-          fi
-          npm publish --access=public

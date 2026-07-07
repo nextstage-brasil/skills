@@ -57,14 +57,22 @@ npm test
 
 ## Release (CI)
 
-On every push to `main`, GitHub Actions:
+On every push to `main`, `.github/workflows/publish-harness.yml`:
 
 1. Runs harness tests
 2. Reads conventional commits in that push (any path in the repo)
-3. Bumps semver: `version:` → major, `feat:` → minor, anything else → patch
-4. Commits `package.json`, tags `harness-v{version}`, and runs `npm publish --access=public`
+3. Releases only when the push contains `feat:` (minor) or `version:` / `version!:` (major)
+4. Bumps `package.json` + `package-lock.json`, publishes to npm, then commits, tags `harness-v{version}`, and pushes
 
-**Required npm setup (once):** on [npmjs.com](https://www.npmjs.com/package/@nextstage-brasil/harness) → **Settings → Trusted Publisher** → GitHub Actions:
+`fix:`, `chore:`, `docs:`, and other commit types do **not** trigger a release.
+
+### One-time npm setup (required)
+
+Without this, `npm publish` fails with `ENEEDAUTH`.
+
+1. Log in to [npmjs.com](https://www.npmjs.com/) as a maintainer of `@nextstage-brasil/harness`
+2. Package → **Settings → Trusted publishing** → **GitHub Actions**
+3. Configure exactly:
 
 | Field | Value |
 | ----- | ----- |
@@ -72,9 +80,18 @@ On every push to `main`, GitHub Actions:
 | Repository | `skills` |
 | Workflow filename | `publish-harness.yml` |
 
-No `NPM_TOKEN` secret is needed — publish uses OIDC (short-lived credentials). After verifying the first release, consider **Publishing access → Require 2FA and disallow tokens**.
+4. Save, then push a `feat:` commit to `main` to verify the first publish
 
-Every push to `main` with commits publishes. Use `version:` (or `version!:`) only when you need a major bump.
+No `NPM_TOKEN` secret — OIDC only. The workflow uses Node 24, npm 11.5.1+, and `id-token: write`. Do **not** add `registry-url` to `setup-node` (it forces token auth and breaks OIDC).
+
+After the first successful publish, consider **Publishing access → Require 2FA and disallow tokens**.
+
+### Manual recovery
+
+If publish failed after a version bump landed on `main` but npm does not have that version, either:
+
+- Re-run the failed workflow after fixing npm trusted publishing, or
+- Bump to the next version with a new `feat:` commit
 
 ## License
 
