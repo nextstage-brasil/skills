@@ -23,6 +23,8 @@ See `../nextstage-harness/references/harness-discovery.md`. Load `{harness}/rule
 
 For full planned versions, use SDD planning workflow + task execution — not this skill.
 
+If the request includes a GitLab **issue URL** (`ISSUE_URL`), use `execute-gitlab-issue` instead — not this skill.
+
 ## Session inputs
 
 | Variable | Required |
@@ -48,7 +50,7 @@ Operate only under `{product_root}/**` plus harness docs. Do not read other prod
 - **Diff-first** — only required lines; no unrelated formatting
 - **Prefer editing** existing files over new files
 - **Large change gate:** >1 file simultaneously, >20 lines in one file, or public contract change → one-line plan, wait for approval
-- **No commits** unless human explicitly asks
+- **No commits** unless human explicitly asks — when committing, see `../nextstage-harness/references/agent-git-identity.md`
 - **No SDD artifacts** — no `task-NNN.md`, `requirements.md`, `execution-handoff.md`
 - **No gratuitous comments** unless requested
 - Run tests in project's documented environment (Docker, local, etc.)

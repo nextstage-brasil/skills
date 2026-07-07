@@ -1,22 +1,22 @@
 import { spawnSync } from 'node:child_process';
 import { resolveSource } from './source.js';
 
-export function installSkills(skills, options = {}) {
-  const {
-    projectRoot = process.cwd(),
-    global = false,
-    agents = [],
-    copy = false,
-    source,
-  } = options;
+export const SKILL_CREATOR_SOURCE = 'https://github.com/anthropics/skills';
 
-  const resolvedSource = resolveSource(source);
-
+function runSkillsAdd({
+  source,
+  skills,
+  projectRoot = process.cwd(),
+  global = false,
+  agents = [],
+  copy = false,
+  extraArgs = [],
+}) {
   if (skills.length === 0) {
     throw new Error('No skills selected for installation');
   }
 
-  const args = ['skills', 'add', resolvedSource, '--full-depth', '-y'];
+  const args = ['skills', 'add', source, '-y', ...extraArgs];
 
   for (const skill of skills) {
     args.push('--skill', skill);
@@ -41,4 +41,42 @@ export function installSkills(skills, options = {}) {
   if (result.status !== 0) {
     throw new Error(`skills add failed with exit code ${result.status}`);
   }
+}
+
+export function installSkills(skills, options = {}) {
+  const {
+    projectRoot = process.cwd(),
+    global = false,
+    agents = [],
+    copy = false,
+    source,
+  } = options;
+
+  runSkillsAdd({
+    source: resolveSource(source),
+    skills,
+    projectRoot,
+    global,
+    agents,
+    copy,
+    extraArgs: ['--full-depth'],
+  });
+}
+
+export function installSkillCreator(options = {}) {
+  const {
+    projectRoot = process.cwd(),
+    global = false,
+    agents = [],
+    copy = false,
+  } = options;
+
+  runSkillsAdd({
+    source: SKILL_CREATOR_SOURCE,
+    skills: ['skill-creator'],
+    projectRoot,
+    global,
+    agents,
+    copy,
+  });
 }

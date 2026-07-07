@@ -16,19 +16,20 @@ skills/
     ├── scripts/        # Optional utilities
     └── evals/          # Minimum viable eval prompts
 
-agents/                 # Isolated, read-only personas (thin wrappers over a matching skill)
+agents/                 # Agent personas (thin wrappers over a backing skill)
 └── <name>.md           # Harness-agnostic — no Claude/Cursor-specific syntax
 
 packages/
 └── harness/            # @nextstage-brasil/harness CLI (install wizard)
 ```
 
-`agents/` holds personas for the handful of skills that benefit from running
-in an isolated, read-only context — a blocking review gate, an investigation
-that shouldn't pollute the main conversation. Each file is plain prose with
-simple frontmatter (`name`, `description`) and points back at its matching
-`skills/<name>/SKILL.md` for the actual logic — it never duplicates it. The
-harness copies matching personas to `.agents/agents/<name>.md` in the target project.
+`agents/` holds personas for skills that benefit from an explicit agent entry
+point — a blocking review gate, an isolated investigation, or a named
+invocation such as `agent: code-coder` when the skill name differs. Each file
+is plain prose with simple frontmatter (`name`, `description`) and points
+back at its backing `skills/<skill>/SKILL.md` for the actual logic — it never
+duplicates it. The harness copies matching personas to `.agents/agents/<name>.md`
+in the target project (`code-coder` when `coder` is installed).
 Same path, same content — no vendor-specific directories.
 
 ## Skill catalog

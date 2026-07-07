@@ -23,10 +23,13 @@ Use it for structure, frontmatter, description triggering, bundled resources, ev
 
 ## Agent personas
 
-`agents/<name>.md` is a thin, isolated/read-only wrapper over a matching
-`skills/<name>/SKILL.md` — only for the few skills that genuinely benefit
-from running in a separate context (a blocking review gate, an
-investigation that shouldn't pollute the main conversation). It is never a
-place to duplicate a skill's logic, and it must never contain syntax or
-concepts specific to one harness. The harness installs them to `.agents/agents/<name>.md`
-in the target project.
+`agents/<name>.md` is a thin wrapper over a skill's `SKILL.md` — only for
+the few skills that benefit from an explicit agent entry point (a blocking
+review gate, an investigation that shouldn't pollute the main conversation,
+or a named invocation such as `agent: code-coder` when the skill name
+differs). It is never a place to duplicate a skill's logic, and it must
+never contain syntax or concepts specific to one harness. The harness
+installs them to `.agents/agents/<name>.md` in the target project when
+the backing skill is installed (`code-coder` ships when `coder` or
+`execute-gitlab-issue` is present; it routes by `ISSUE_URL` to the GitLab
+workflow or to ad-hoc `coder`).

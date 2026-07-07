@@ -7,6 +7,25 @@ import { AGENTS_PERSONAS_DIR } from './agentsLayout.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const bundledAgentsDir = join(__dirname, '..', 'templates', 'agents');
 
+/** Persona file name → skills; persona installs when any listed skill is present. */
+const PERSONA_SKILL_DEPS = {
+  'code-coder': ['coder', 'execute-gitlab-issue'],
+};
+
+export function personaRequiredSkills(personaName) {
+  return PERSONA_SKILL_DEPS[personaName] ?? [personaName];
+}
+
+export function personaRequiredSkill(personaName) {
+  return personaRequiredSkills(personaName)[0];
+}
+
+export function matchingPersonas(agentsDir, skills) {
+  return availablePersonas(agentsDir).filter((name) =>
+    personaRequiredSkills(name).some((skill) => skills.includes(skill)),
+  );
+}
+
 export function resolveAgentsDir(source) {
   if (typeof source === 'string' && existsSync(join(source, 'agents'))) {
     return join(source, 'agents');
@@ -32,7 +51,7 @@ export function installAgentPersonas({ agentsDir, skills, projectRoot, force = f
     return { created, skipped };
   }
 
-  const personas = availablePersonas(agentsDir).filter((name) => skills.includes(name));
+  const personas = matchingPersonas(agentsDir, skills);
   const targetDir = join(projectRoot, AGENTS_PERSONAS_DIR);
 
   for (const persona of personas) {

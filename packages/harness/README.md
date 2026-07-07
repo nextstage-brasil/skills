@@ -28,7 +28,7 @@ npx @nextstage-brasil/harness list
 
 1. Detects whether the target is a **new** or **existing** project.
 2. Resolves skill dependencies from `templates/catalog.json`.
-3. Runs `npx skills add` → `.agents/skills/`.
+3. Runs `npx skills add` → `.agents/skills/` (NextStage catalog + `skill-creator` from anthropics/skills).
 4. Scaffolds `AGENTS.md`, `.agents/rules/`, `.agents/docs/`, and `docs/` (unless `--no-scaffold`).
 5. Copies agent personas to `.agents/agents/<name>.md` (unless `--no-agents`).
 

@@ -16,7 +16,7 @@ Options:
   --agent <name>         Target agent (repeatable; passed to skills CLI)
   --copy                 Copy skill files instead of symlinking
   --source <path>        Skills source (default: nextstage-brasil/skills or local repo)
-  --yes, -y              Non-interactive; use recommended preset and default scaffold
+  --yes, -y              Non-interactive; install all skills and default scaffold
   --no-scaffold          Skip AGENTS.md and docs/ scaffolding
   --no-agents            Skip copying agent personas to .agents/agents/
   --dry-run              Show resolved skills without installing

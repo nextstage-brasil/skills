@@ -7,10 +7,10 @@ import {
   listPresets,
   resolveDepends,
 } from './catalog.js';
-import { installSkills } from './installer.js';
+import { installSkillCreator, installSkills } from './installer.js';
 import { scaffoldProject } from './scaffold.js';
 import { resolveSource } from './source.js';
-import { availablePersonas, installAgentPersonas, resolveAgentsDir } from './agentPersonas.js';
+import { installAgentPersonas, matchingPersonas, resolveAgentsDir } from './agentPersonas.js';
 
 export async function runInit(argv = {}) {
   p.intro('NextStage harness');
@@ -21,7 +21,7 @@ export async function runInit(argv = {}) {
   p.log.info(
     detection.kind === 'existing'
       ? 'Existing project detected — manual skill selection starts empty unless you pick a preset.'
-      : 'New or empty project — recommended preset is pre-selected when you choose manually.',
+      : 'New or empty project — all skills are pre-selected by default.',
   );
 
   const skills = await resolveSkills(argv, detection);
@@ -44,13 +44,14 @@ export async function runInit(argv = {}) {
 
   const resolvedSource = resolveSource(argv.source);
   const agentsDir = resolveAgentsDir(resolvedSource);
-  const matchingPersonas = availablePersonas(agentsDir).filter((name) => resolved.includes(name));
+  const personasToInstall = matchingPersonas(agentsDir, resolved);
 
   if (argv['dry-run']) {
     p.log.info(`Source: ${resolvedSource}`);
-    if (matchingPersonas.length > 0 && !argv['no-agents']) {
-      p.log.info(`Agent personas → .agents/agents/: ${matchingPersonas.join(', ')}`);
+    if (personasToInstall.length > 0 && !argv['no-agents']) {
+      p.log.info(`Agent personas → .agents/agents/: ${personasToInstall.join(', ')}`);
     }
+    p.log.info('Also installs: skill-creator (anthropics/skills)');
     p.log.info('Dry run — no files written, no skills installed.');
     p.outro('Done.');
     return;
@@ -61,6 +62,8 @@ export async function runInit(argv = {}) {
 
   try {
     installSkills(resolved, installOptions);
+    spinner.message('Installing skill-creator (anthropics/skills)…');
+    installSkillCreator(installOptions);
     spinner.stop('Skills installed.');
   } catch (error) {
     spinner.stop('Installation failed.');
@@ -78,7 +81,7 @@ export async function runInit(argv = {}) {
     }
   }
 
-  if (matchingPersonas.length > 0 && !argv['no-agents']) {
+  if (personasToInstall.length > 0 && !argv['no-agents']) {
     const personaResult = installAgentPersonas({
       agentsDir,
       skills: resolved,
@@ -146,17 +149,18 @@ async function resolveSkills(argv, detection) {
   }
 
   if (!process.stdin.isTTY || argv.yes) {
-    return getPreset('recommended')?.skills ?? ['nextstage-harness'];
+    return allSkillNames();
   }
 
   const mode = await p.select({
     message: 'What do you want to install?',
+    initialValue: 'all',
     options: [
-      { value: 'recommended', label: 'Recommended SDD chain', hint: 'planning + test generators' },
+      { value: 'all', label: 'All skills', hint: 'recommended' },
+      { value: 'recommended', label: 'SDD chain', hint: 'planning + test generators' },
       { value: 'gitlab', label: 'GitLab execution', hint: 'MCP + review + issue flow' },
       { value: 'brownfield', label: 'Brownfield onboarding' },
       { value: 'implementation', label: 'Implementation & quality' },
-      { value: 'all', label: 'All skills' },
       { value: 'manual', label: 'Choose manually' },
     ],
   });

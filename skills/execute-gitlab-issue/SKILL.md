@@ -72,6 +72,8 @@ Review 100% of changed code; fix critical/warning before commit.
 
 ### Commit (per repo with changes)
 
+See `../nextstage-harness/references/agent-git-identity.md` when attributing commits.
+
 ```
 <type>(#{ISSUE_ID}): <imperative description in English>
 ```
@@ -89,6 +91,21 @@ Types: feat, fix, refactor, test, docs, chore. One commit per repo.
 Invoke `code-reviewer` in **Issue review mode** with `ISSUE_URL`. If the harness supports running isolated personas, prefer `.agents/agents/code-reviewer.md` for this gate; otherwise invoke the skill inline.
 
 Workflow does not finish without verdict: `Approved` | `Rejected` | `Blocked`.
+
+## Stop and ask the human
+
+| Condition | Action |
+|-----------|--------|
+| Gate 1: `SOURCE_BRANCH` missing/invalid after fetch | Stop — ask once |
+| Worktree conflict (same issue, another agent) | Stop unless explicit resume |
+| Ambiguous or conflicting acceptance criteria | Stop — ask once |
+| MCP unavailable or auth failure | Stop — state blocker |
+| `project_id` trio not confirmed | Stop per `mcp-gitlab-usage` |
+| Work on protected/base branch per `gitlab-sync-config.md` | Stop |
+| Destructive ops (issue delete, force-push main/master) | Stop — require explicit human |
+| Product decision not stated in the issue | Stop — ask once |
+
+See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 
 ## Related skills
 
