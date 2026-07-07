@@ -19,7 +19,8 @@
     "coder": ["nextstage-harness"],
     "code-reviewer": ["nextstage-harness", "mcp-gitlab-usage"],
     "code-investigator": ["nextstage-harness"],
-    "create-e2e-tests": []
+    "create-e2e-tests": [],
+    "multi-agent-architect": []
   },
   "presets": {
     "recommended": {
