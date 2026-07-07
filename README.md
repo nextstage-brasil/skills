@@ -28,7 +28,7 @@ in an isolated, read-only context — a blocking review gate, an investigation
 that shouldn't pollute the main conversation. Each file is plain prose with
 simple frontmatter (`name`, `description`) and points back at its matching
 `skills/<name>/SKILL.md` for the actual logic — it never duplicates it. The
-harness copies matching personas to `agents/<name>.md` in the target project.
+harness copies matching personas to `.agents/agents/<name>.md` in the target project.
 Same path, same content — no vendor-specific directories.
 
 ## Skill catalog
@@ -137,7 +137,8 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 | ---------------------- | --------------------------------------------------------------------------- |
 | **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness` or `npx skills add` |
 | **Project rules**      | `AGENTS.md` at repo root                                                    |
-| **Agent personas**     | `agents/<name>.md` at repo root                                             |
+| **Agent personas**     | `.agents/agents/<name>.md`                                                |
+| **Agent rules / docs** | `.agents/rules/`, `.agents/docs/`                                           |
 | **SDD artifacts**      | `docs/versions/{version}/`, living specs in `docs/specs/`                   |
 
 Typical SDD chain: `clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`coder` / `execute-gitlab-issue`) → `code-reviewer` → `living-spec-consolidator`.

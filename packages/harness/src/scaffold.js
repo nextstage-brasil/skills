@@ -1,6 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { AGENTS_LAYOUT_DIRS } from './agentsLayout.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const templatesDir = join(__dirname, '..', 'templates');
@@ -21,6 +22,16 @@ export function scaffoldProject(projectRoot, options = {}) {
   }
 
   if (docs) {
+    for (const dir of AGENTS_LAYOUT_DIRS) {
+      const target = join(projectRoot, dir);
+      if (existsSync(target)) {
+        skipped.push(`${dir}/`);
+      } else {
+        mkdirSync(target, { recursive: true });
+        created.push(`${dir}/`);
+      }
+    }
+
     for (const dir of ['docs/context', 'docs/specs', 'docs/versions']) {
       const target = join(projectRoot, dir);
       if (existsSync(target)) {

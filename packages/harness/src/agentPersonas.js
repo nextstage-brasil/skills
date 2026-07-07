@@ -2,9 +2,10 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { AGENTS_PERSONAS_DIR } from './agentsLayout.js';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const bundledAgentsDir = join(__dirname, '..', 'templates', 'agents');
-export const PROJECT_AGENTS_DIR = 'agents';
 
 export function resolveAgentsDir(source) {
   if (typeof source === 'string' && existsSync(join(source, 'agents'))) {
@@ -32,11 +33,11 @@ export function installAgentPersonas({ agentsDir, skills, projectRoot, force = f
   }
 
   const personas = availablePersonas(agentsDir).filter((name) => skills.includes(name));
-  const targetDir = join(projectRoot, PROJECT_AGENTS_DIR);
+  const targetDir = join(projectRoot, AGENTS_PERSONAS_DIR);
 
   for (const persona of personas) {
     const target = join(targetDir, `${persona}.md`);
-    const label = `${PROJECT_AGENTS_DIR}/${persona}.md`;
+    const label = `${AGENTS_PERSONAS_DIR}/${persona}.md`;
 
     if (existsSync(target) && !force) {
       skipped.push(label);

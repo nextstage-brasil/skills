@@ -29,14 +29,14 @@ npx @nextstage-brasil/harness list
 1. Detects whether the target is a **new** or **existing** project.
 2. Resolves skill dependencies from `templates/catalog.json`.
 3. Runs `npx skills add` → `.agents/skills/`.
-4. Scaffolds `AGENTS.md` and `docs/` (unless `--no-scaffold`).
-5. Copies agent personas to `agents/<name>.md` when the matching skill is installed (unless `--no-agents`).
+4. Scaffolds `AGENTS.md`, `.agents/rules/`, `.agents/docs/`, and `docs/` (unless `--no-scaffold`).
+5. Copies agent personas to `.agents/agents/<name>.md` (unless `--no-agents`).
 
 ## Agent personas
 
 Canonical source: repo-root `agents/*.md`.
 
-Installed to `agents/<name>.md` in the target project — same path, harness-agnostic content. No vendor-specific directories.
+Installed to `.agents/agents/<name>.md` in the target project.
 
 ## Presets
 

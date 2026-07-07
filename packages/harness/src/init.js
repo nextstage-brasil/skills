@@ -49,7 +49,7 @@ export async function runInit(argv = {}) {
   if (argv['dry-run']) {
     p.log.info(`Source: ${resolvedSource}`);
     if (matchingPersonas.length > 0 && !argv['no-agents']) {
-      p.log.info(`Agent personas → agents/: ${matchingPersonas.join(', ')}`);
+      p.log.info(`Agent personas → .agents/agents/: ${matchingPersonas.join(', ')}`);
     }
     p.log.info('Dry run — no files written, no skills installed.');
     p.outro('Done.');
