@@ -1,0 +1,23 @@
+{
+  "skill_name": "architecture-rules-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate architecture-rules.mdc for this Laravel + React monorepo. Product is under apps/billing-api/ with backend/ and frontend/.",
+      "expected_output": "Agent scans manifests and layout, drafts lean alwaysApply rule at apps/billing-api/.cursor/rules/architecture-rules.mdc with stack table, layout, test commands, no business spec content.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Our architecture-rules.mdc is outdated after we moved modules to app/Modules/. Refresh it — keep the Portuguese communication bullet.",
+      "expected_output": "Agent refreshes in place, updates module layout from code, preserves hand-edited communication rule, stays under ~200 lines.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Bootstrap agent context for a legacy PHP repo that uses ns-util. No architecture-rules yet but we have docs/specs/.",
+      "expected_output": "Agent generates constitution, detects NsUtil, links to nsutil-architecture-rules.mdc instead of inlining, points specs to docs/specs/.",
+      "files": []
+    }
+  ]
+}

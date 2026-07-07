@@ -3,6 +3,7 @@
   "depends": {
     "nextstage-harness": [],
     "codebase-reverse-spec": [],
+    "architecture-rules-generator": ["nextstage-harness"],
     "bootstrap-brownfield": ["nextstage-harness"],
     "clarify-requirements": ["nextstage-harness"],
     "requirements-generator": ["nextstage-harness"],
@@ -53,9 +54,10 @@
     },
     "brownfield": {
       "label": "Brownfield onboarding",
-      "description": "Reverse-spec and stack mapping before first SDD version",
+      "description": "Reverse-spec, architecture rules, and stack mapping before first SDD version",
       "skills": [
         "nextstage-harness",
+        "architecture-rules-generator",
         "bootstrap-brownfield",
         "codebase-reverse-spec"
       ]
@@ -106,7 +108,7 @@
     },
     "brownfield": {
       "label": "Brownfield",
-      "skills": ["bootstrap-brownfield", "codebase-reverse-spec"]
+      "skills": ["architecture-rules-generator", "bootstrap-brownfield", "codebase-reverse-spec"]
     }
   }
 }

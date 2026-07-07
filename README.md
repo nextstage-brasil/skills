@@ -38,6 +38,7 @@ Same path, same content — no vendor-specific directories.
 | -------------------------- | --------------------------------------------------------------------------- |
 | `nextstage-harness`        | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
 | `codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
+| `architecture-rules-generator` | Scan codebase and generate lean `architecture-rules.mdc` for agents     |
 | `bootstrap-brownfield`     | Map existing codebase stack/modules before first SDD version                |
 | `clarify-requirements`     | Resolve scope ambiguities before requirements generation                    |
 | `requirements-generator`   | Produce structured `requirements.md` for a version                          |

@@ -42,6 +42,7 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 |-------|-----------|
 | `nextstage-harness` | — (base dependency) |
 | SDD consumers (`clarify-requirements`, `requirements-generator`, `analyze-consistency`, `task-generator`, `execution-handoff-generator`, `version-partitioner`, `bootstrap-brownfield`, `living-spec-consolidator`, `coder`, `code-investigator`) | `nextstage-harness` |
+| `architecture-rules-generator` | `nextstage-harness` |
 | `mcp-gitlab-usage` | `nextstage-harness` |
 | `code-reviewer` | `nextstage-harness`, `mcp-gitlab-usage` |
 | `execute-gitlab-issue` | `nextstage-harness`, `mcp-gitlab-usage`, `code-reviewer` |
