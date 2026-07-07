@@ -1,0 +1,16 @@
+{
+  "evals": [
+    {
+      "prompt": "Version 3.8.0 of apps/billing already has a version-roadmap.md with five planned slices. Run the whole partitioned implementation for me — one slice at a time, commit each slice, don't stop to ask me between slices.",
+      "expected": "Invokes execution-orchestrator: boots by reading AGENTS.md + version-roadmap.md, then loops slice-by-slice dispatching one blocking code-coder subagent per slice, committing after each, advancing without confirmation until all slices are completed or a stop condition hits."
+    },
+    {
+      "prompt": "Orchestrate the partitioned implementation of apps/my-product 3.8.0.",
+      "expected": "Invokes execution-orchestrator and drives the roadmap DAG in order with a synchronous subagent per slice and a Conventional Commit per slice."
+    },
+    {
+      "prompt": "apps/shop version 2.1.0 has a roadmap but no partition yet — I need to split it into subversions before anything else.",
+      "expected": "Does NOT invoke execution-orchestrator (no pending slices to execute yet); routes to version-partitioner to produce the roadmap first."
+    }
+  ]
+}

@@ -10,6 +10,7 @@ const bundledAgentsDir = join(__dirname, '..', 'templates', 'agents');
 /** Persona file name → skills; persona installs when any listed skill is present. */
 const PERSONA_SKILL_DEPS = {
   'code-coder': ['coder', 'execute-gitlab-issue'],
+  'execution-orchestrator': ['execution-orchestrator', 'version-partitioner'],
 };
 
 export function personaRequiredSkills(personaName) {

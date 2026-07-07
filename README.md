@@ -52,6 +52,7 @@ Same path, same content — no vendor-specific directories.
 | `gitlab-ci-generator`      | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                               |
 | `execute-gitlab-issue`     | End-to-end GitLab issue execution with review gate                          |
 | `coder`                    | Ad-hoc implementation without full SDD cycle                                |
+| `execution-orchestrator`   | Drive a partitioned version slice-by-slice (subagent + commit per slice)    |
 | `code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
 | `code-investigator`        | Root-cause analysis and minimal fixes                                       |
 | `create-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |

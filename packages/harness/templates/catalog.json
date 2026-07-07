@@ -17,6 +17,7 @@
     "gitlab-ci-generator": [],
     "execute-gitlab-issue": ["nextstage-harness", "mcp-gitlab-usage", "code-reviewer"],
     "coder": ["nextstage-harness"],
+    "execution-orchestrator": ["nextstage-harness"],
     "code-reviewer": ["nextstage-harness", "mcp-gitlab-usage"],
     "code-investigator": ["nextstage-harness"],
     "create-e2e-tests": [],
@@ -98,7 +99,7 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["coder", "code-investigator", "code-reviewer", "create-e2e-tests"]
+      "skills": ["coder", "execution-orchestrator", "code-investigator", "code-reviewer", "create-e2e-tests"]
     },
     "brownfield": {
       "label": "Brownfield",
