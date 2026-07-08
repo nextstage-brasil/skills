@@ -59,6 +59,7 @@ Same path, same content — no vendor-specific directories.
 | `code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
 | `code-investigator`        | Root-cause analysis and minimal fixes                                       |
 | `create-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |
+| `skill-creator`            | Create project-local skills in `.agents/skills/` + `harness sync`           |
 
 Migration notes: `skills/_meta/MIGRATION.md`.
 

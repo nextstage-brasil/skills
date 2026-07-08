@@ -1,0 +1,23 @@
+{
+  "skill_name": "skill-creator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a project skill that generates PHPDoc from selected PHP methods. We use NextStage harness — save it where our other skills live.",
+      "expected_output": "Agent loads upstream skill-creator workflow, drafts .agents/skills/phpdoc-generator/SKILL.md, creates evals/evals.json, runs npx @nextstage-brasil/harness sync, reports sync success.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Our custom deploy-checklist skill isn't triggering well. Improve the description and re-run a quick eval — this is our app repo with .nextstage-harness installed.",
+      "expected_output": "Agent uses skill-creator-workspace/ for iteration, edits .agents/skills/deploy-checklist/SKILL.md, offers description optimization; runs harness sync if adapters need refresh.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Add eval prompts for the api-mock-helper skill we already have under .agents/skills/.",
+      "expected_output": "Agent writes .agents/skills/api-mock-helper/evals/evals.json with 2–3 realistic prompts; no catalog.json changes; optional harness sync.",
+      "files": []
+    }
+  ]
+}

@@ -71,9 +71,16 @@ export async function runInit(argv = {}) {
   spinner.start('Installing skills via npx skills add…');
 
   try {
-    installSkills(resolved, installOptions);
+    const wantsNsSkillCreator = resolved.includes('skill-creator');
+    const resolvedWithoutSkillCreator = resolved.filter((skill) => skill !== 'skill-creator');
+
+    installSkills(resolvedWithoutSkillCreator, installOptions);
     spinner.message('Installing skill-creator (anthropics/skills)…');
     installSkillCreator(installOptions);
+    if (wantsNsSkillCreator) {
+      spinner.message('Overlaying NextStage skill-creator wrapper…');
+      installSkills(['skill-creator'], installOptions);
+    }
     spinner.stop('Skills installed.');
   } catch (error) {
     spinner.stop('Installation failed.');

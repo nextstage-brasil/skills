@@ -24,7 +24,8 @@
     "code-reviewer": ["nextstage-harness", "mcp-gitlab-usage"],
     "code-investigator": ["nextstage-harness"],
     "create-e2e-tests": [],
-    "multi-agent-architect": []
+    "multi-agent-architect": [],
+    "skill-creator": ["nextstage-harness"]
   },
   "presets": {
     "recommended": {
@@ -79,7 +80,7 @@
   "categories": {
     "foundation": {
       "label": "Foundation",
-      "skills": ["nextstage-harness", "agents-md-generator"]
+      "skills": ["nextstage-harness", "agents-md-generator", "skill-creator"]
     },
     "sdd": {
       "label": "SDD planning",

@@ -31,7 +31,7 @@ Before drafting or changing anything under `skills/`, **read and follow** the us
 
 `~/.agents/skills/skill-creator/SKILL.md`
 
-Use it for structure, frontmatter, description triggering, bundled resources, evals, and iteration.
+Use it for structure, frontmatter, description triggering, bundled resources, evals, and iteration. Save catalog skills to `skills/<name>/` here and update `packages/harness/templates/catalog.json` per conventions below.
 
 ### Conventions (summary)
 
