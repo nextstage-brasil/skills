@@ -1,6 +1,5 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { AGENTS_PERSONAS_DIR } from './agentsLayout.js';
 
 const MANIFEST_FILES = [
   'package.json',
@@ -26,10 +25,9 @@ export function detectProject(projectRoot) {
   const hasAgents = existsSync(join(resolved, 'AGENTS.md'));
   const hasDocsVersions = existsSync(join(resolved, 'docs', 'versions'));
   const hasInstalledSkills = existsSync(join(resolved, '.agents', 'skills'));
-  const hasPersonas = existsSync(join(resolved, AGENTS_PERSONAS_DIR));
 
   const isExisting =
-    hasManifest || hasCodeDir || hasAgents || hasDocsVersions || hasPersonas;
+    hasManifest || hasCodeDir || hasAgents || hasDocsVersions || hasInstalledSkills;
 
   return {
     projectRoot: resolved,
@@ -40,7 +38,6 @@ export function detectProject(projectRoot) {
       hasAgents,
       hasDocsVersions,
       hasInstalledSkills,
-      hasPersonas,
     },
   };
 }

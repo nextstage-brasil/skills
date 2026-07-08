@@ -7,8 +7,8 @@ roadmap or master requirements.
 ## Prompt template
 
 ```
-Embody the code-coder persona (backing `coder` skill) as a slice worker,
-invoked by the execution orchestrator.
+Follow the `code-coder` skill as a slice worker, invoked by the execution
+orchestrator.
 
 Product:     {product_root}
 Version:     {version_san}

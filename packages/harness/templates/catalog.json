@@ -19,7 +19,7 @@
     "gitlab-board-sync": ["mcp-gitlab-usage"],
     "gitlab-ci-generator": [],
     "execute-gitlab-issue": ["nextstage-harness", "mcp-gitlab-usage", "code-reviewer"],
-    "coder": ["nextstage-harness"],
+    "code-coder": ["nextstage-harness"],
     "execution-orchestrator": ["nextstage-harness"],
     "code-reviewer": ["nextstage-harness", "mcp-gitlab-usage"],
     "code-investigator": ["nextstage-harness"],
@@ -70,7 +70,7 @@
       "description": "Ad-hoc coding, investigation, and review",
       "skills": [
         "nextstage-harness",
-        "coder",
+        "code-coder",
         "code-investigator",
         "mcp-gitlab-usage",
         "code-reviewer"
@@ -107,7 +107,7 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["coder", "execution-orchestrator", "code-investigator", "code-reviewer", "create-e2e-tests"]
+      "skills": ["code-coder", "execution-orchestrator", "code-investigator", "code-reviewer", "create-e2e-tests"]
     },
     "brownfield": {
       "label": "Brownfield",

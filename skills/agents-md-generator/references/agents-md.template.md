@@ -21,11 +21,7 @@
 
 {list_from_.agents/skills/ — group by role when helpful}
 
-## Agent personas (subagents)
-
-{list_from_.agents/agents/ with one-line invoke hint, or "none installed"}
-
-Invoke examples: `agent: code-coder`, delegate to `code-reviewer` for review gates.
+Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`, `/execution-orchestrator`).
 
 ## Workflows
 
@@ -35,7 +31,7 @@ Invoke examples: `agent: code-coder`, delegate to `code-reviewer` for review gat
 
 ### Implementation
 
-{implementation_path — coder vs execute-gitlab-issue vs execution-orchestrator based on installed skills}
+{implementation_path — code-coder vs execute-gitlab-issue vs execution-orchestrator based on installed skills}
 
 ### Brownfield / context (when applicable)
 
@@ -49,7 +45,7 @@ Invoke examples: `agent: code-coder`, delegate to `code-reviewer` for review gat
 
 - Canonical rules: `{harness_root}/rules/*.md` — edit here
 - Regenerate adapters: `npx @nextstage-brasil/harness sync`
-- Personas: `.agents/agents/` → symlinks in `.cursor/agents/`, `.claude/agents/`
+- Skills: `.agents/skills/` → symlinks in `.cursor/skills/`, `.claude/skills/`
 
 See installed `nextstage-harness` skill (`harness-discovery.md`, `rules-sync.md`).
 

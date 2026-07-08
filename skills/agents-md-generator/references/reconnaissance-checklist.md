@@ -14,8 +14,7 @@ Read-only scan before drafting project `AGENTS.md`. Skip sections with no signal
 - [ ] `.nextstage-harness/manifest.json`
 - [ ] `.nextstage-harness/rules/` (list files; note if `architecture-rules.md` is stub)
 - [ ] `.agents/skills/` — **installed skills** (source of truth for workflows section)
-- [ ] `.agents/agents/` — personas present
-- [ ] `.cursor/agents/`, `.claude/agents/` — adapter symlinks (informational)
+- [ ] `.cursor/skills/`, `.claude/skills/` — skill adapter symlinks (informational)
 - [ ] `docs/context/`, `docs/specs/`, `docs/versions/` — SDD scaffold present
 - [ ] Legacy only: `.cursor/rules/*.mdc` without `.nextstage-harness/` — note migration path
 
@@ -39,7 +38,6 @@ Internal summary:
 
 1. `{product_root}` resolution with evidence
 2. Installed skills list (exact directory names)
-3. Personas available
-4. Which workflows apply (SDD full chain, GitLab-only, implementation-only, brownfield)
-5. Layout rows to include vs omit
-6. Hand-edited `AGENTS.md` sections to preserve on refresh
+3. Which workflows apply (SDD full chain, GitLab-only, implementation-only, brownfield)
+4. Layout rows to include vs omit
+5. Hand-edited `AGENTS.md` sections to preserve on refresh

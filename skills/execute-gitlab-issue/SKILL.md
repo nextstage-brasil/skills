@@ -1,6 +1,6 @@
 ---
 name: execute-gitlab-issue
-description: (NS) Execute a GitLab issue end-to-end — worktrees, implementation, atomic commits, MRs, MCP status sync, mandatory code review gate. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly — not for local-only ad-hoc coding (use coder). Requires mcp-gitlab-usage for MCP and code-reviewer for Phase 5 gate.
+description: (NS) Execute a GitLab issue end-to-end — worktrees, implementation, atomic commits, MRs, MCP status sync, mandatory code review gate. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly — not for local-only ad-hoc coding (use code-coder). Requires mcp-gitlab-usage for MCP and code-reviewer for Phase 5 gate.
 depends:
   - nextstage-harness
   - mcp-gitlab-usage
@@ -89,7 +89,8 @@ Types: feat, fix, refactor, test, docs, chore. One commit per repo.
 
 ## Phase 5 — Code review gate (blocking)
 
-Invoke `code-reviewer` in **Issue review mode** with `ISSUE_URL`. If the harness supports running isolated personas, prefer `.agents/agents/code-reviewer.md` for this gate; otherwise invoke the skill inline.
+Invoke the `code-reviewer` skill in **Issue review mode** with `ISSUE_URL`
+(read-only gate — do not edit files in the review step).
 
 Workflow does not finish without verdict: `Approved` | `Rejected` | `Blocked`.
 
@@ -115,7 +116,7 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 | `mcp-gitlab-usage`  | All GitLab tools        |
 | `gitlab-board-sync` | Status label semantics  |
 | `code-reviewer`     | Phase 5 gate            |
-| `coder`             | Implementation patterns |
+| `code-coder`        | Implementation patterns |
 
 ## References
 

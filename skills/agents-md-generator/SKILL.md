@@ -60,12 +60,11 @@ Follow `references/reconnaissance-checklist.md`. Read-only on application source
 Minimum:
 
 1. List `.agents/skills/` (installed skill directory names).
-2. List `.agents/agents/` (personas).
-3. Detect harness paths (`.nextstage-harness/`, `docs/`, legacy `.cursor/rules/`).
-4. Skim `README.md` for project name and summary.
-5. Note brownfield/context artifacts under `docs/context/`.
+2. Detect harness paths (`.nextstage-harness/`, `docs/`, legacy `.cursor/rules/`).
+3. Skim `README.md` for project name and summary.
+4. Note brownfield/context artifacts under `docs/context/`.
 
-**Checkpoint (recommended):** Present detected skills, personas, and proposed SDD chain; confirm before writing. Skip only on explicit autonomous run.
+**Checkpoint (recommended):** Present detected skills and proposed SDD chain; confirm before writing. Skip only on explicit autonomous run.
 
 ### Step 3 — Draft AGENTS.md
 
@@ -73,8 +72,7 @@ Use `references/agents-md.template.md` as skeleton.
 
 Writing rules:
 
-- **Installed skills** — exact names from `.agents/skills/`; build SDD chain only from skills that are installed.
-- **Personas** — list files in `.agents/agents/` with invoke hints (`code-coder`, `code-reviewer`, etc.).
+- **Installed skills** — exact names from `.agents/skills/`; build SDD chain only from skills that are installed. Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`).
 - **Layout table** — include rows only for paths that exist; omit or mark "not present" for missing scaffold.
 - **Preserve** `<!-- harness-sync-managed: ... -->` block if present (update timestamp only if user asked).
 - **Do not** inline full architecture rules — one line pointing to `architecture-rules.md`.
@@ -98,14 +96,14 @@ No other content. If the file had extra content, replace entirely unless the use
 
 ### Step 6 — Report
 
-Brief bullets (3–5): product root, skills detected, personas, recommended next skill (`architecture-rules-generator` if constitution missing), whether create or refresh.
+Brief bullets (3–5): product root, skills detected, recommended next skill (`architecture-rules-generator` if constitution missing), whether create or refresh.
 
 ## Refresh mode
 
 When updating existing `AGENTS.md`:
 
 1. Preserve **Project-specific notes**, language policy, and GitLab/MCP names if still accurate.
-2. Replace installed-skills, personas, layout, and workflow sections from current evidence.
+2. Replace installed-skills, layout, and workflow sections from current evidence.
 3. Re-write `CLAUDE.md` to `@AGENTS.md` only if it drifted.
 
 ## Quality bar (self-check before save)

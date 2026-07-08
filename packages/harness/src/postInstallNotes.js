@@ -49,6 +49,7 @@ export function buildPostInstallNotes({
     lines.push('');
     lines.push('Optional: skill agents-md-generator — refine AGENTS.md with project context (brownfield).');
     lines.push('Refresh CLI baseline: npx @nextstage-brasil/harness agents-md --force');
+    lines.push('New project rules: npx @nextstage-brasil/harness add-rule <name> (see .nextstage-harness/README.md)');
 
     if (isExistingPreset) {
       lines.push('');
@@ -65,7 +66,7 @@ export function buildPostInstallNotes({
   }
 
   lines.push('');
-  lines.push('SDD chain: clarify-requirements → requirements-generator → task-generator → coder → code-reviewer');
+  lines.push('SDD chain: clarify-requirements → requirements-generator → task-generator → code-coder → code-reviewer');
 
   return lines.join('\n');
 }

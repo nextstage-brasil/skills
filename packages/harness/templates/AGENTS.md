@@ -12,13 +12,13 @@ This project uses [NextStage skills](https://github.com/nextstage-brasil/skills)
 |------|---------|
 | `AGENTS.md` | Project rules entry point (`{product_root}`) |
 | `.nextstage-harness/rules/` | Canonical project rules (edit here) |
+| `.nextstage-harness/README.md` | How to add/edit rules |
 | `.nextstage-harness/manifest.json` | Adapter config for `harness sync` |
 | `.cursor/rules/` | Generated Cursor adapters (do not edit) |
 | `.claude/rules/` | Generated Claude Code adapters (do not edit) |
 | `.agents/skills/` | Installed skills (Skills CLI) |
-| `.agents/agents/` | Isolated agent personas (canonical — edit here) |
-| `.cursor/agents/` | Symlinked Cursor subagents (do not edit) |
-| `.claude/agents/` | Symlinked Claude Code subagents (do not edit) |
+| `.cursor/skills/` | Symlinked Cursor skills (do not edit) |
+| `.claude/skills/` | Symlinked Claude Code skills (do not edit) |
 | `.agents/docs/` | Agent-oriented project docs |
 | `docs/context/` | Product-wide context (stack, design, brownfield, GitLab sync) — read before implementation |
 | `docs/versions/` | SDD version artifacts |
@@ -28,7 +28,9 @@ See the installed `nextstage-harness` skill for gates, artifact paths, and disco
 
 ## Typical SDD chain
 
-`clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → `execution-handoff-generator` → implementation (`coder` / `code-coder` / `execution-orchestrator`) → `code-reviewer` → `living-spec-consolidator`
+`clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → `execution-handoff-generator` → implementation (`code-coder` / `execution-orchestrator`) → `code-reviewer` → `living-spec-consolidator`
+
+Invoke skills via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`).
 
 ## Language
 

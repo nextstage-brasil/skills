@@ -80,6 +80,7 @@ Include only when user requests concrete fixes.
 
 ## Constraints
 
+- **Read-only.** Do not edit, create, or delete files — output is a review report, not a fix
 - Direct and constructive; no personal criticism
 - Do not rewrite unrelated code
 - Base findings on actual diff and rules read

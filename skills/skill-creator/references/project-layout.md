@@ -17,8 +17,7 @@ Reference for skill-creator when authoring skills in a consumer project.
 │   │       ├── scripts/
 │   │       └── evals/
 │   │           └── evals.json
-│   └── agents/
-│       └── <persona>.md          # Optional thin wrappers
+│   └── docs/                     # Optional agent-oriented notes
 ├── .cursor/skills/               # Symlinked — harness sync
 ├── .claude/skills/               # Symlinked — harness sync
 └── skill-creator-workspace/      # Eval runs (optional; gitignore locally)

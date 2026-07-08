@@ -18,9 +18,7 @@
   },
   "scripts": {
     "test": "node bin/cli.js list && node bin/cli.js --dry-run --yes --preset gitlab && node test/sync-smoke.mjs",
-    "validate:catalog": "node scripts/validate-catalog.js",
-    "sync:agents": "node scripts/sync-agents.js",
-    "prepack": "node scripts/sync-agents.js"
+    "validate:catalog": "node scripts/validate-catalog.js"
   },
   "keywords": [
     "nextstage",

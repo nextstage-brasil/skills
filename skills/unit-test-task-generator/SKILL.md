@@ -10,7 +10,7 @@ Create `task-NNN-*.md` for backend unit and HTTP integration tests covering a Fe
 ## Boundary
 
 - **Planning:** this skill (task markdown)
-- **Execution:** implement tests per task — use `coder` or implementation workflow
+- **Execution:** implement tests per task — use `code-coder` or implementation workflow
 
 ## Harness discovery
 

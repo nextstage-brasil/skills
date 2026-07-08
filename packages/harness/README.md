@@ -30,13 +30,23 @@ npx @nextstage-brasil/harness list
 |---------|-------------|
 | `harness` / `harness init` | Install skills, scaffold layout, sync adapters, generate `AGENTS.md` |
 | `harness list` | Presets and skill catalog |
-| `harness sync` | Regenerate `.cursor/rules/`, `.claude/rules/`, and persona symlinks |
+| `harness sync` | Regenerate `.cursor/rules/`, `.claude/rules/`, and skill symlinks |
 | `harness sync --check` | CI mode — exit 1 if adapters drift from canonical |
+| `harness add-rule <name>` | Create rule under `.nextstage-harness/rules/`, update manifest, sync |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` → `.nextstage-harness/rules/` |
 
-Common flags: `--dir`, `--preset`, `--skill`, `--agent` (default `cursor`, `claude-code`), `--copy`, `--no-scaffold`, `--no-agents`, `--dry-run`, `--yes`.
+Common flags: `--dir`, `--preset`, `--skill`, `--agent` (default `cursor`, `claude-code`), `--copy`, `--no-scaffold`, `--dry-run`, `--yes`.
+
+`add-rule` flags: `--description`, `--globs` (comma-separated; skips `alwaysApply`), `--force`.
+
+```bash
+npx @nextstage-brasil/harness add-rule api-conventions --description "API conventions"
+npx @nextstage-brasil/harness add-rule frontend --globs "apps/web/**"
+```
+
+See `.nextstage-harness/README.md` in consumer projects for the human guide.
 
 ## What `init` does
 
@@ -44,9 +54,8 @@ Common flags: `--dir`, `--preset`, `--skill`, `--agent` (default `cursor`, `clau
 2. Resolves skill dependencies from `templates/catalog.json`.
 3. Runs `npx skills add` → `.agents/skills/` (+ `skill-creator` from anthropics/skills).
 4. Scaffolds `.nextstage-harness/`, `.agents/`, and `docs/` (unless `--no-scaffold`).
-5. Runs `harness sync` — rule adapters, skill symlinks (`.cursor/skills/`, `.claude/skills/`), persona symlinks.
+5. Runs `harness sync` — rule adapters and skill symlinks (`.cursor/skills/`, `.claude/skills/`).
 6. Runs `harness agents-md` — `AGENTS.md` from installed skills + `CLAUDE.md` (`@AGENTS.md`).
-7. Copies agent personas to `.agents/agents/` (unless `--no-agents`).
 
 ## Project layout (after init)
 
@@ -55,25 +64,11 @@ Common flags: `--dir`, `--preset`, `--skill`, `--agent` (default `cursor`, `clau
 | `AGENTS.md` | Project entry (CLI-generated; refine with `agents-md-generator` skill) |
 | `CLAUDE.md` | Pointer to `AGENTS.md` |
 | `.nextstage-harness/rules/` | Canonical rules — **edit here** |
+| `.nextstage-harness/README.md` | How to add/edit rules (scaffolded) |
 | `.cursor/rules/`, `.claude/rules/` | Generated rule adapters |
 | `.agents/skills/` | Installed skills (canonical — Skills CLI) |
 | `.cursor/skills/`, `.claude/skills/` | Symlinked skill adapters (`harness sync`) |
-| `.agents/agents/` | Canonical personas |
-| `.cursor/agents/`, `.claude/agents/` | Symlinked subagents |
 | `docs/context`, `docs/specs`, `docs/versions` | SDD artifacts |
-
-## Agent personas
-
-Canonical source: [github.com/nextstage-brasil/skills/agents](https://github.com/nextstage-brasil/skills/tree/main/agents).
-
-Installed to `.agents/agents/<name>.md`. `harness sync` symlinks to `.cursor/agents/` and `.claude/agents/` (`--copy` for plain files).
-
-| Persona | Installs when |
-|---------|---------------|
-| `code-coder` | `coder` or `execute-gitlab-issue` |
-| `code-reviewer` | `code-reviewer` |
-| `code-investigator` | `code-investigator` |
-| `execution-orchestrator` | `execution-orchestrator` or `version-partitioner` |
 
 ## Presets
 
@@ -82,7 +77,7 @@ Installed to `.agents/agents/<name>.md`. `harness sync` symlinks to `.cursor/age
 | `recommended` | SDD planning chain + test generators + living specs |
 | `gitlab` | MCP GitLab, review gate, issue execution, board sync |
 | `brownfield` | `agents-md-generator`, architecture rules, bootstrap, reverse-spec |
-| `implementation` | Coder, investigator, review |
+| `implementation` | Code-coder, investigator, review |
 
 ## Post-install (brownfield / existing code)
 

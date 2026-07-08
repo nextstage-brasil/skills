@@ -79,6 +79,14 @@ function scaffoldHarnessRoot(projectRoot, { force, created, skipped }) {
     created.push(`${HARNESS_RULES_DIR}/architecture-rules.md`);
   }
 
+  const readmeTarget = join(harnessRoot, 'README.md');
+  if (existsSync(readmeTarget) && !force) {
+    skipped.push(`${HARNESS_ROOT}/README.md`);
+  } else {
+    copyFileSync(join(templatesDir, 'harness-README.md'), readmeTarget);
+    created.push(`${HARNESS_ROOT}/README.md`);
+  }
+
   const harnessGitkeep = join(harnessDocsTarget, '.gitkeep');
   if (!existsSync(harnessGitkeep)) {
     writeUtf8(harnessGitkeep, '');

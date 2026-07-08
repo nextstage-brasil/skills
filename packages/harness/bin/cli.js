@@ -2,16 +2,17 @@
 
 import { runInit, printList } from '../src/init.js';
 import { syncRules } from '../src/syncRules.js';
-import { syncAgents } from '../src/syncAgents.js';
 import { syncSkills } from '../src/syncSkills.js';
 import { migrateRules } from '../src/migrateRules.js';
+import { addRule } from '../src/addRule.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
-import { DEFAULT_AGENTS } from '../src/agentsLayout.js';
+import { DEFAULT_AGENTS, HARNESS_ROOT } from '../src/agentsLayout.js';
 
 const HELP = `
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
-  harness sync [options]   Regenerate rule, skill, and persona adapters from canonical sources
+  harness sync [options]   Regenerate rule and skill adapters from canonical sources
+  harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
   harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
   harness list             List presets and available skills
@@ -27,9 +28,10 @@ Options:
   --source <path>        Skills source (default: nextstage-brasil/skills or local repo)
   --yes, -y              Non-interactive; install all skills and default scaffold
   --no-scaffold          Skip AGENTS.md and docs/ scaffolding
-  --no-agents            Skip copying agent personas to .agents/agents/
   --check                With sync: verify adapters match canonical (CI mode)
-  --force                With migrate-rules or agents-md: overwrite existing files
+  --force                Overwrite existing files (migrate-rules, agents-md, add-rule)
+  --description <text>   With add-rule: short purpose for the rule
+  --globs <patterns>     With add-rule: comma-separated globs (skips alwaysApply)
   --dry-run              Show resolved skills without installing
   --help, -h             Show this help
 
@@ -38,6 +40,8 @@ Examples:
   npx @nextstage-brasil/harness --preset gitlab --yes
   npx @nextstage-brasil/harness sync
   npx @nextstage-brasil/harness sync --check
+  npx @nextstage-brasil/harness add-rule api-conventions --description "API conventions"
+  npx @nextstage-brasil/harness add-rule frontend --globs "apps/web/**"
   npx @nextstage-brasil/harness agents-md
   npx @nextstage-brasil/harness agents-md --force
   npx @nextstage-brasil/harness list
@@ -57,18 +61,27 @@ function parseArgs(argv) {
     yes: false,
     all: false,
     'no-scaffold': false,
-    'no-agents': false,
     'dry-run': false,
     check: false,
     force: false,
     help: false,
+    name: undefined,
+    description: undefined,
+    globs: undefined,
   };
 
   if (args.length === 0) {
     return result;
   }
 
-  const knownCommands = ['init', 'list', 'sync', 'migrate-rules', 'agents-md'];
+  const knownCommands = [
+    'init',
+    'list',
+    'sync',
+    'migrate-rules',
+    'agents-md',
+    'add-rule',
+  ];
   const first = args[0];
   if (knownCommands.includes(first)) {
     result.command = first;
@@ -114,11 +127,6 @@ function parseArgs(argv) {
       continue;
     }
 
-    if (arg === '--no-agents') {
-      result['no-agents'] = true;
-      continue;
-    }
-
     if (arg === '--dry-run') {
       result['dry-run'] = true;
       continue;
@@ -134,7 +142,15 @@ function parseArgs(argv) {
       continue;
     }
 
-    const valueFlags = ['--dir', '--preset', '--skill', '--agent', '--source'];
+    const valueFlags = [
+      '--dir',
+      '--preset',
+      '--skill',
+      '--agent',
+      '--source',
+      '--description',
+      '--globs',
+    ];
     if (valueFlags.includes(arg)) {
       const value = args[i + 1];
       if (!value || value.startsWith('-')) {
@@ -147,7 +163,14 @@ function parseArgs(argv) {
       if (arg === '--skill') result.skill.push(value);
       if (arg === '--agent') result.agent.push(value);
       if (arg === '--source') result.source = value;
+      if (arg === '--description') result.description = value;
+      if (arg === '--globs') result.globs = value;
       i += 1;
+      continue;
+    }
+
+    if (result.command === 'add-rule' && !arg.startsWith('-') && !result.name) {
+      result.name = arg;
       continue;
     }
 
@@ -168,8 +191,7 @@ async function runSync(parsed) {
   const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
   const rulesResult = syncRules(projectRoot, { agents, check: parsed.check });
   const skillsResult = syncSkills(projectRoot, { agents, check: parsed.check, copy: parsed.copy });
-  const agentsResult = syncAgents(projectRoot, { agents, check: parsed.check, copy: parsed.copy });
-  const drifts = [...rulesResult.drifts, ...skillsResult.drifts, ...agentsResult.drifts];
+  const drifts = [...rulesResult.drifts, ...skillsResult.drifts];
 
   if (parsed.check) {
     if (drifts.length > 0) {
@@ -179,19 +201,15 @@ async function runSync(parsed) {
       }
       process.exit(1);
     }
-    console.log('OK: rule, skill, and agent adapters match canonical sources');
+    console.log('OK: rule and skill adapters match canonical sources');
     return;
   }
 
-  const totalWritten =
-    rulesResult.written.length + skillsResult.written.length + agentsResult.written.length;
+  const totalWritten = rulesResult.written.length + skillsResult.written.length;
   if (totalWritten > 0) {
     console.log(`Synced ${totalWritten} adapter(s)`);
     if (skillsResult.written.length > 0) {
       console.log(`  Skills → ${skillsResult.written.length} path(s)`);
-    }
-    if (agentsResult.written.length > 0) {
-      console.log(`  Personas → ${agentsResult.written.length} path(s)`);
     }
   } else {
     console.log('No adapters written');
@@ -223,9 +241,28 @@ async function runAgentsMd(parsed) {
 
   console.log(`Wrote: ${result.written.join(', ')}`);
   console.log(`Skills (${result.skills.length}): ${result.skills.join(', ')}`);
-  if (result.personas.length > 0) {
-    console.log(`Personas: ${result.personas.join(', ')}`);
+}
+
+async function runAddRule(parsed) {
+  if (!parsed.name) {
+    console.error('Usage: harness add-rule <name> [--description <text>] [--globs <patterns>]');
+    process.exit(1);
   }
+
+  const projectRoot = resolveProjectDir(parsed.dir);
+  const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
+  const result = addRule(projectRoot, {
+    name: parsed.name,
+    description: parsed.description,
+    globs: parsed.globs,
+    force: parsed.force,
+    agents,
+  });
+
+  const action = result.overwritten ? 'Overwrote' : 'Created';
+  console.log(`${action}: ${result.canonical}`);
+  console.log(`Updated: ${HARNESS_ROOT}/manifest.json`);
+  console.log(`Synced ${result.syncResult.written.length} adapter file(s)`);
 }
 
 async function main() {
@@ -264,6 +301,16 @@ async function main() {
   if (parsed.command === 'agents-md') {
     try {
       await runAgentsMd(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (parsed.command === 'add-rule') {
+    try {
+      await runAddRule(parsed);
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
       process.exit(1);

@@ -1,6 +1,6 @@
 ---
 name: execution-orchestrator
-description: (NS) Orchestrate partitioned version implementation slice-by-slice — dispatch one synchronous subagent per slice with small context, commit after each slice, and advance automatically without confirmation until all slices are done or a stop condition is hit. Use whenever a version has a version-roadmap.md with pending slices and the user asks to "run the orchestrated implementation", "execute all slices", "orchestrate the partitioned version", or drive a subversion roadmap to completion. Do NOT use for non-partitioned versions (execute tasks directly), ad-hoc coding (coder), or planning/partitioning (version-partitioner).
+description: (NS) Orchestrate partitioned version implementation slice-by-slice — dispatch one synchronous subagent per slice with small context, commit after each slice, and advance automatically without confirmation until all slices are done or a stop condition is hit. Use whenever a version has a version-roadmap.md with pending slices and the user asks to "run the orchestrated implementation", "execute all slices", "orchestrate the partitioned version", or drive a subversion roadmap to completion. Do NOT use for non-partitioned versions (execute tasks directly), ad-hoc coding (code-coder), or planning/partitioning (version-partitioner).
 depends:
   - nextstage-harness
 ---
@@ -76,8 +76,8 @@ For each slice whose roadmap `status` is `planned` or `in_progress`:
 3. **Dispatch** one subagent (**blocking / synchronous**, not backgrounded)
    whose prompt contains **only**:
    - `{product_root}`, `{version_san}`, `{subversion_san}`
-   - Instruction to embody the `code-coder` persona (backing `coder` skill) as
-     the slice worker, invoked by the execution orchestrator
+   - Instruction to follow the `code-coder` skill as the slice worker, invoked by
+     the execution orchestrator
    - Paths limited to
      `{product_root}/docs/versions/{version_san}/subversions/{subversion_san}/`
      for slice tasks; also load `{product_root}/docs/context/` per
@@ -103,9 +103,8 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 
 1. Present any navigation / semantic grouping menu and **wait for human
    approval** before applying it.
-2. Run the post-implementation review: dispatch the `code-reviewer` persona
-   (isolated, read-only) over the version diff; it writes
-   `code-review-report.md`.
+2. Run the post-implementation review: invoke the `code-reviewer` skill
+   (read-only) over the version diff; it writes `code-review-report.md`.
 3. Consolidate living specs when the version status allows — `living-spec-consolidator`.
 4. Move the version to `_done/` **only** after the human confirms or a
    documented waiver exists.
@@ -140,7 +139,7 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 ```
 Product: apps/my-product/
 Version: 3.8.0-feat-payable-payment-workflow
-Agent: execution-orchestrator
+Skill: execution-orchestrator
 Run all slices of the roadmap in orchestrated mode (sync subagent per slice,
 commit per slice).
 ```
@@ -151,14 +150,14 @@ Orchestrate the partitioned implementation of apps/my-product 3.8.0.
 
 ## Integration
 
-| Stage                                     | Skill / persona                      |
-| ----------------------------------------- | ------------------------------------ |
-| Partition version → roadmap + subversions | `version-partitioner`                |
-| Handoff generation and updates            | `execution-handoff-generator`        |
-| Slice worker (per-slice implementation)   | `code-coder` persona / `coder` skill |
-| End-of-version review gate                | `code-reviewer` persona              |
-| Living specs consolidation                | `living-spec-consolidator`           |
-| Work branch / GitLab sync                 | `mcp-gitlab-usage`                   |
+| Stage                                     | Skill                        |
+| ----------------------------------------- | ---------------------------- |
+| Partition version → roadmap + subversions | `version-partitioner`        |
+| Handoff generation and updates            | `execution-handoff-generator` |
+| Slice worker (per-slice implementation)   | `code-coder`                 |
+| End-of-version review gate                | `code-reviewer`              |
+| Living specs consolidation                | `living-spec-consolidator`   |
+| Work branch / GitLab sync                 | `mcp-gitlab-usage`           |
 
 ## References
 

@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "We just ran harness init on this Laravel monorepo. Replace the stub AGENTS.md with a project-specific one and set up CLAUDE.md.",
-      "expected_output": "Agent scans .agents/skills/, personas, and harness layout; writes tailored AGENTS.md at repo root with installed skills and SDD chain; writes CLAUDE.md with only @AGENTS.md; does not copy harness template verbatim.",
+      "expected_output": "Agent scans .agents/skills/ and harness layout; writes tailored AGENTS.md at repo root with installed skills and SDD chain; writes CLAUDE.md with only @AGENTS.md; does not copy harness template verbatim.",
       "files": []
     },
     {

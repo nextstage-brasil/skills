@@ -9,6 +9,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
   AGENTS.md                         # entry pointer (human-edited)
   CLAUDE.md                         # stub @AGENTS.md (if missing)
   .nextstage-harness/               # CANONICAL — edit rules here
+    README.md                       # Human guide (add/edit rules)
     manifest.json
     rules/
       architecture-rules.md
@@ -18,17 +19,13 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
   .agents/skills/                   # Installed skills (Skills CLI canonical)
   .cursor/skills/ → symlink          # Cursor skill adapters (harness sync)
   .claude/skills/ → symlink          # Claude skill adapters (harness sync)
-  .agents/agents/                   # CANONICAL — agent personas (edit here)
-  .cursor/agents/*.md → symlink     # Cursor subagents
-  .claude/agents/*.md → symlink      # Claude Code subagents
+  .agents/docs/                     # Optional agent-oriented notes
   docs/context|specs|versions/      # SDD artifacts
 ```
 
-**Rules:** edit `.nextstage-harness/rules/` → `harness sync` → `.cursor/rules/`, `.claude/rules/`.
+**Rules:** edit `.nextstage-harness/rules/` → `harness sync` → `.cursor/rules/`, `.claude/rules/`. Prefer `harness add-rule <name>` for new rules (creates stub, updates `manifest.json`, syncs). See `.nextstage-harness/README.md`.
 
-**Personas (subagents):** edit `.agents/agents/` → `harness sync` → symlinks in `.cursor/agents/`, `.claude/agents/`.
-
-**Skills:** canonical in `.agents/skills/` (Skills CLI). `harness sync` also symlinks to `.cursor/skills/` and `.claude/skills/` so Cursor discovers them in `/` (Skills CLI omits this for Cursor as a "universal" agent).
+**Skills:** canonical in `.agents/skills/` (Skills CLI). `harness sync` also symlinks to `.cursor/skills/` and `.claude/skills/` so Cursor discovers them in `/` (Skills CLI omits this for Cursor as a "universal" agent). Invoke via the Skills menu / slash (e.g. `/code-coder`).
 
 ## 2. Commands
 
@@ -36,7 +33,8 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 |---------|-------------|
 | `npx @nextstage-brasil/harness` | Interactive init (default) |
 | `harness init [options]` | Install skills + scaffold + sync |
-| `harness sync` | Regenerate rule, skill, and persona adapters from canonical |
+| `harness sync` | Regenerate rule and skill adapters from canonical |
+| `harness add-rule <name>` | Create canonical rule + manifest entry + sync |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |
 | `harness sync --check` | CI mode — exit 1 on adapter drift |
@@ -52,9 +50,11 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 | `--agent <name>` | Repeatable; default `cursor`, `claude-code` |
 | `--yes`, `-y` | Non-interactive |
 | `--no-scaffold` | Skills only — skip AGENTS.md and `.nextstage-harness/` |
-| `--no-agents` | Skip persona install and adapter sync |
 | `--dir <path>` | Target project directory |
 | `--source <path>` | Skills source override |
+| `--description <text>` | With `add-rule`: short purpose |
+| `--globs <patterns>` | With `add-rule`: comma-separated globs (not always-apply) |
+| `--force` | Overwrite existing (`migrate-rules`, `agents-md`, `add-rule`) |
 | `--dry-run` | Show resolved plan without installing |
 
 ## 3. Install scenarios
@@ -78,7 +78,7 @@ Same scaffold plus brownfield skills. Follow post-install prompts (§10).
 ### Skills only (no harness scaffold)
 
 ```bash
-npx skills add nextstage-brasil/skills --full-depth -y --skill coder
+npx skills add nextstage-brasil/skills --full-depth -y --skill code-coder
 ```
 
 Skills install under `.agents/skills/` with agent symlinks. No `.nextstage-harness/` unless you run `harness init` without `--no-scaffold`.
@@ -101,39 +101,22 @@ git commit -m "chore: sync agent rule adapters"
 | `.cursor/rules/*.mdc` | Cursor rule adapter | No — generated |
 | `.claude/rules/*.md` | Claude Code rule adapter | No — generated |
 
-### Agent personas (subagents)
+### Skills
 
 | Path | Role | Edit? |
 |------|------|-------|
-| `.agents/agents/*.md` | Canonical personas | **Yes** |
-| `.cursor/agents/*.md` | Cursor subagents | No — symlink to canonical |
-| `.claude/agents/*.md` | Claude Code subagents | No — symlink to canonical |
-
-Cursor and Claude **do not** read `.agents/agents/` for subagent discovery — they load `.cursor/agents/` and `.claude/agents/` respectively. `harness init` and `harness sync` create symlinks (or copies with `--copy`).
+| `.agents/skills/<name>/` | Canonical skills (Skills CLI) | **Yes** |
+| `.cursor/skills/<name>/` | Cursor skill adapter | No — symlink |
+| `.claude/skills/<name>/` | Claude Code skill adapter | No — symlink |
 
 ## 5. Cursor vs Claude
 
 | Agent | Loads automatically | Adapter locations |
 |-------|---------------------|-------------------|
-| Cursor | `.cursor/rules/*.mdc`, `.cursor/agents/*.md` | `.cursor/rules/`, `.cursor/agents/` |
-| Claude Code | `.claude/rules/*.md`, `.claude/agents/*.md` | `.claude/rules/`, `.claude/agents/` |
+| Cursor | `.cursor/rules/*.mdc`, `.cursor/skills/` | `.cursor/rules/`, `.cursor/skills/` |
+| Claude Code | `.claude/rules/*.md`, `.claude/skills/` | `.claude/rules/`, `.claude/skills/` |
 
-Both read the same canonical body from `.nextstage-harness/rules/` (rules) and `.agents/agents/` (personas). Rule adapters are generated files; persona adapters are symlinks to canonical (copies with `--copy`).
-
-Skills load from `.agents/skills/` with symlinks to `.cursor/skills/` and `.claude/skills/` (default agents on init).
-
-### Which personas install?
-
-Matching depends on installed skills (see `packages/harness/src/agentPersonas.js`):
-
-| Persona | Installs when skill present |
-|---------|----------------------------|
-| `code-coder` | `coder` or `execute-gitlab-issue` |
-| `code-reviewer` | `code-reviewer` |
-| `code-investigator` | `code-investigator` |
-| `execution-orchestrator` | `execution-orchestrator` or `version-partitioner` |
-
-Invoke in Cursor/Claude: `agent: code-coder`, delegate to subagent by name, etc.
+Both read the same canonical bodies from `.nextstage-harness/rules/` (rules) and `.agents/skills/` (skills). Rule adapters are generated files; skill adapters are symlinks to canonical (copies with `--copy`).
 
 ## 6. Git policy
 
@@ -141,7 +124,6 @@ Commit:
 
 - `.nextstage-harness/` (canonical rules + manifest)
 - `.cursor/rules/`, `.claude/rules/` (generated rule adapters)
-- `.agents/agents/`, `.cursor/agents/`, `.claude/agents/` (canonical personas + generated subagent adapters)
 - `.agents/skills/` and `skills-lock.json` (Skills CLI)
 - `AGENTS.md`, `CLAUDE.md` (if present)
 
@@ -185,7 +167,7 @@ Run these **in Cursor or Claude Code** after `harness init` (not auto-invoked by
 
 ### 10.0 Project AGENTS.md (CLI — automatic on init)
 
-`harness init` runs `harness agents-md` automatically. No AI — lists installed skills, personas, and layout from disk.
+`harness init` runs `harness agents-md` automatically. No AI — lists installed skills and layout from disk.
 
 ```bash
 npx @nextstage-brasil/harness agents-md

@@ -10,9 +10,7 @@ import {
 import { installSkillCreator, installSkills } from './installer.js';
 import { scaffoldProject } from './scaffold.js';
 import { resolveSource } from './source.js';
-import { installAgentPersonas, matchingPersonas, resolveAgentsDir } from './agentPersonas.js';
 import { syncRules } from './syncRules.js';
-import { syncAgents } from './syncAgents.js';
 import { syncSkills } from './syncSkills.js';
 import { generateAgentsMd } from './generateAgentsMd.js';
 import { buildPostInstallNotes } from './postInstallNotes.js';
@@ -50,17 +48,10 @@ export async function runInit(argv = {}) {
   };
 
   const resolvedSource = resolveSource(argv.source);
-  const agentsDir = resolveAgentsDir(resolvedSource);
-  const personasToInstall = matchingPersonas(agentsDir, resolved);
 
   if (argv['dry-run']) {
     p.log.info(`Source: ${resolvedSource}`);
     p.log.info(`Agents: ${agents.join(', ')}`);
-    if (personasToInstall.length > 0 && !argv['no-agents']) {
-      p.log.info(
-        `Agent personas → .agents/agents/, .cursor/agents/, .claude/agents/: ${personasToInstall.join(', ')}`,
-      );
-    }
     p.log.info('Skill symlinks → .cursor/skills/, .claude/skills/ (after install)');
     p.log.info('Dry run — no files written, no skills installed.');
     p.outro('Done.');
@@ -120,29 +111,6 @@ export async function runInit(argv = {}) {
       p.log.warn(
         error instanceof Error ? error.message : String(error),
       );
-    }
-  }
-
-  if (personasToInstall.length > 0 && !argv['no-agents']) {
-    const personaResult = installAgentPersonas({
-      agentsDir,
-      skills: resolved,
-      projectRoot: detection.projectRoot,
-    });
-    if (personaResult.created.length > 0) {
-      p.log.success(`Agent personas (canonical): ${personaResult.created.join(', ')}`);
-    }
-    if (personaResult.skipped.length > 0) {
-      p.log.warn(`Agent personas skipped (already exist): ${personaResult.skipped.join(', ')}`);
-    }
-
-    try {
-      const agentSyncResult = syncAgents(detection.projectRoot, { agents, copy: Boolean(argv.copy) });
-      if (agentSyncResult.written.length > 0) {
-        p.log.success(`Agent adapters: ${agentSyncResult.written.join(', ')}`);
-      }
-    } catch (error) {
-      p.log.warn(error instanceof Error ? error.message : String(error));
     }
   }
 

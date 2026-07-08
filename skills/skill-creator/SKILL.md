@@ -60,17 +60,15 @@ Summary:
 
 Follow upstream skill-creator stages (capture intent → draft → eval → improve → repeat). At each write step, use the **path overrides** above.
 
-Optional project persona: add `{product_root}/.agents/agents/<name>.md` as a thin wrapper pointing at the backing skill — then run sync (see below).
-
 ## Post-create — harness sync
 
-After skill files (and optional `.agents/agents/<name>.md`) are written or materially updated, run from `{product_root}`:
+After skill files are written or materially updated, run from `{product_root}`:
 
 ```bash
 npx @nextstage-brasil/harness sync
 ```
 
-This regenerates skill symlinks (`.cursor/skills/`, `.claude/skills/`) and persona adapters so Cursor and Claude Code discover the new skill.
+This regenerates skill symlinks (`.cursor/skills/`, `.claude/skills/`) so Cursor and Claude Code discover the new skill.
 
 Use `npx @nextstage-brasil/harness sync --check` in CI when verifying adapters are up to date.
 

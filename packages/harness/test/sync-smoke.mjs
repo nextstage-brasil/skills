@@ -5,7 +5,6 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { scaffoldProject } from '../src/scaffold.js';
 import { syncRules, hashBody, stripFrontmatter } from '../src/syncRules.js';
-import { syncAgents } from '../src/syncAgents.js';
 import { syncSkills } from '../src/syncSkills.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { migrateRules } from '../src/migrateRules.js';
@@ -41,6 +40,14 @@ try {
   assert(
     scaffoldResult.created.some((f) => f.includes('.nextstage-harness/rules/architecture-rules.md')),
     'scaffold should create architecture-rules stub',
+  );
+  assert(
+    scaffoldResult.created.some((f) => f.includes('.nextstage-harness/README.md')),
+    'scaffold should create .nextstage-harness/README.md',
+  );
+  assert(
+    readFileSync(join(tempDir, '.nextstage-harness', 'README.md'), 'utf8').includes('add-rule'),
+    'harness README should mention add-rule',
   );
 
   // 2. sync generates adapters with matching hash
@@ -78,12 +85,12 @@ try {
   assert(check.status === 0, `sync --check should pass after re-sync: ${check.stderr}${check.stdout}`);
 
   // 5. skill symlinks to cursor/claude
-  const skillsCanonical = join(tempDir, '.agents', 'skills', 'coder');
+  const skillsCanonical = join(tempDir, '.agents', 'skills', 'code-coder');
   mkdirSync(skillsCanonical, { recursive: true });
-  writeFileSync(join(skillsCanonical, 'SKILL.md'), '---\nname: coder\ndescription: test\n---\n\n# Coder\n', 'utf8');
+  writeFileSync(join(skillsCanonical, 'SKILL.md'), '---\nname: code-coder\ndescription: test\n---\n\n# Code Coder\n', 'utf8');
   const skillSync = syncSkills(tempDir, { agents: ['cursor', 'claude-code'] });
   assert(skillSync.written.length === 2, 'syncSkills should write cursor and claude adapters');
-  const cursorSkill = join(tempDir, '.cursor', 'skills', 'coder');
+  const cursorSkill = join(tempDir, '.cursor', 'skills', 'code-coder');
   assert(exists(cursorSkill), 'cursor skill symlink missing');
   assert(
     lstatSync(cursorSkill).isSymbolicLink() || skillSync.written[0].includes('copy'),
@@ -100,22 +107,7 @@ try {
   assert(readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8').trim() === '@AGENTS.md', 'CLAUDE.md must point to AGENTS.md');
   assert(readFileSync(join(tempDir, 'AGENTS.md'), 'utf8').includes('nextstage-harness'), 'AGENTS.md should list installed skill');
 
-  // 7. agent persona sync to cursor/claude adapters
-  const personaDir = join(tempDir, '.agents', 'agents');
-  mkdirSync(personaDir, { recursive: true });
-  writeFileSync(join(personaDir, 'test-persona.md'), '---\nname: test-persona\ndescription: smoke\n---\n\n# Test\n', 'utf8');
-  const agentSync = syncAgents(tempDir, { agents: ['cursor', 'claude-code'] });
-  assert(agentSync.written.length === 2, 'syncAgents should write cursor and claude adapters');
-  const cursorAgent = join(tempDir, '.cursor', 'agents', 'test-persona.md');
-  const claudeAgent = join(tempDir, '.claude', 'agents', 'test-persona.md');
-  assert(exists(cursorAgent), 'cursor agent adapter missing');
-  assert(exists(claudeAgent), 'claude agent adapter missing');
-  assert(
-    lstatSync(cursorAgent).isSymbolicLink() || agentSync.written[0].includes('copy'),
-    'cursor agent should be symlink unless copy fallback',
-  );
-
-  // 8. migrate-rules round-trip from fixture
+  // 7. migrate-rules round-trip from fixture
   const migrateDir = mkdtempSync(join(tmpdir(), 'harness-migrate-'));
   try {
     const legacyDir = join(migrateDir, '.cursor', 'rules');
@@ -142,6 +134,74 @@ try {
   } finally {
     rmSync(migrateDir, { recursive: true, force: true });
   }
+
+  // 8. add-rule creates canonical + manifest + adapters
+  const addResult = runCli(
+    [
+      'add-rule',
+      'api-conventions',
+      '--description',
+      'API conventions for agents',
+      '--dir',
+      tempDir,
+    ],
+    harnessRoot,
+  );
+  assert(addResult.status === 0, `add-rule should succeed: ${addResult.stderr}${addResult.stdout}`);
+
+  const addedCanonical = join(tempDir, '.nextstage-harness', 'rules', 'api-conventions.md');
+  assert(exists(addedCanonical), 'add-rule should create canonical file');
+  assert(
+    readFileSync(addedCanonical, 'utf8').includes('# Api Conventions'),
+    'add-rule stub should use title-cased name',
+  );
+
+  const manifest = JSON.parse(
+    readFileSync(join(tempDir, '.nextstage-harness', 'manifest.json'), 'utf8'),
+  );
+  assert(
+    manifest.rules.some((r) => r.name === 'api-conventions' && r.cursor?.alwaysApply === true),
+    'add-rule should register alwaysApply entry in manifest',
+  );
+  assert(
+    exists(join(tempDir, '.cursor', 'rules', 'api-conventions.mdc')),
+    'add-rule should sync cursor adapter',
+  );
+  assert(
+    exists(join(tempDir, '.claude', 'rules', 'api-conventions.md')),
+    'add-rule should sync claude adapter',
+  );
+
+  const dup = runCli(['add-rule', 'api-conventions', '--dir', tempDir], harnessRoot);
+  assert(dup.status === 1, 'add-rule without --force should fail on existing rule');
+
+  const globsResult = runCli(
+    [
+      'add-rule',
+      'frontend-rules',
+      '--globs',
+      'apps/web/**,packages/ui/**',
+      '--description',
+      'Frontend conventions',
+      '--dir',
+      tempDir,
+    ],
+    harnessRoot,
+  );
+  assert(
+    globsResult.status === 0,
+    `add-rule with --globs should succeed: ${globsResult.stderr}${globsResult.stdout}`,
+  );
+  const manifestAfterGlobs = JSON.parse(
+    readFileSync(join(tempDir, '.nextstage-harness', 'manifest.json'), 'utf8'),
+  );
+  const frontendEntry = manifestAfterGlobs.rules.find((r) => r.name === 'frontend-rules');
+  assert(frontendEntry?.cursor?.globs === 'apps/web/**,packages/ui/**', 'globs should be in manifest');
+  assert(
+    Array.isArray(frontendEntry?.claude?.paths) && frontendEntry.claude.paths.length === 2,
+    'claude.paths should mirror globs',
+  );
+  assert(!frontendEntry.cursor.alwaysApply, 'globs mode should not set alwaysApply');
 
   console.log('OK: harness sync smoke tests passed');
 } catch (error) {

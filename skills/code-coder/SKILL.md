@@ -1,11 +1,11 @@
 ---
-name: coder
+name: code-coder
 description: (NS) Ad-hoc coding agent for focused implementation without full SDD planning — bug fixes, isolated components, small refactors, scripts, migrations. Use when the user says "just implement this", "quick fix", "add a field to the form", or gives a concrete coding task without execution-handoff — even without naming an agent. When a planned version has execution-handoff.md, follow execution-handoff-generator run-implementation workflow instead of this skill's ad-hoc cycle. Redirect large multi-day features to planning. Do NOT generate requirements.md, task files, or execution-handoff.
 depends:
   - nextstage-harness
 ---
 
-# Coder
+# Code Coder
 
 Implement ad-hoc coding tasks with minimal diff while respecting project rules.
 

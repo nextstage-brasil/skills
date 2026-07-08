@@ -122,7 +122,7 @@ existing statuses by task ID.
 | Stage                      | Skill / reference                                           |
 | -------------------------- | ----------------------------------------------------------- |
 | After task generation      | This skill (generate handoff)                               |
-| Classic implementation     | `references/run-implementation.md` + `coder` / `code-coder` |
+| Classic implementation     | `references/run-implementation.md` + `code-coder` |
 | Partitioned implementation | `execution-orchestrator` (slice handoffs + master closure)  |
 | End-of-version review      | `code-reviewer`                                             |
 | Living specs               | `living-spec-consolidator`                                  |

@@ -16,21 +16,11 @@ skills/
     ├── scripts/        # Optional utilities
     └── evals/          # Minimum viable eval prompts
 
-agents/                 # Agent personas (thin wrappers over a backing skill)
-└── <name>.md           # Harness-agnostic — no Claude/Cursor-specific syntax
-
 packages/
 └── harness/            # @nextstage-brasil/harness CLI (install wizard)
 ```
 
-`agents/` holds personas for skills that benefit from an explicit agent entry
-point — a blocking review gate, an isolated investigation, or a named
-invocation such as `agent: code-coder` when the skill name differs. Each file
-is plain prose with simple frontmatter (`name`, `description`) and points
-back at its backing `skills/<skill>/SKILL.md` for the actual logic — it never
-duplicates it. The harness copies matching personas to `.agents/agents/<name>.md`
-in the target project (`code-coder` when `coder` is installed).
-Same path, same content — no vendor-specific directories.
+Skills are invoked via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`).
 
 ## Skill catalog
 
@@ -54,7 +44,7 @@ Same path, same content — no vendor-specific directories.
 | `gitlab-board-sync`        | Sync existing issues (labels, milestone, time)                              |
 | `gitlab-ci-generator`      | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                               |
 | `execute-gitlab-issue`     | End-to-end GitLab issue execution with review gate                          |
-| `coder`                    | Ad-hoc implementation without full SDD cycle                                |
+| `code-coder`               | Ad-hoc implementation without full SDD cycle                                |
 | `execution-orchestrator`   | Drive a partitioned version slice-by-slice (subagent + commit per slice)    |
 | `code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
 | `code-investigator`        | Root-cause analysis and minimal fixes                                       |
@@ -126,7 +116,7 @@ npx skills add nextstage-brasil/skills@requirements-generator --full-depth -y
 **Global:**
 
 ```bash
-npx skills add nextstage-brasil/skills@coder --full-depth -g -y
+npx skills add nextstage-brasil/skills@code-coder --full-depth -g -y
 ```
 
 **All skills:**
@@ -144,13 +134,13 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 | **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness` or `npx skills add` |
 | **Project rules**      | `AGENTS.md` at repo root; canonical rules in `.nextstage-harness/rules/`  |
 | **Generated adapters** | `.cursor/rules/*.mdc`, `.claude/rules/*.md` (via `harness sync`)            |
-| **Agent personas**     | `.agents/agents/<name>.md`                                                  |
+| **Installed skills**   | `.agents/skills/` → symlinks in `.cursor/skills/`, `.claude/skills/`      |
 | **Agent docs**         | `.agents/docs/`                                                             |
 | **SDD artifacts**      | `docs/versions/{version}/`, living specs in `docs/specs/`                    |
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
-Typical SDD chain: `clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`coder` / `execute-gitlab-issue`) → `code-reviewer` → `living-spec-consolidator`.
+Typical SDD chain: `clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`code-coder` / `execute-gitlab-issue`) → `code-reviewer` → `living-spec-consolidator`.
 
 ## Contributing
 

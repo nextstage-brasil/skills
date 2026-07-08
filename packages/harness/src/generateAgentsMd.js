@@ -16,19 +16,19 @@ const SDD_PLANNING = [
   'e2e-test-generator',
 ];
 
-const IMPL_SKILLS = ['coder', 'execute-gitlab-issue', 'execution-orchestrator'];
+const IMPL_SKILLS = ['code-coder', 'execute-gitlab-issue', 'execution-orchestrator'];
 const CLOSE_SKILLS = ['code-reviewer', 'living-spec-consolidator'];
 
 const LAYOUT_PATHS = [
   { path: 'AGENTS.md', purpose: 'Project rules entry point' },
   { path: HARNESS_RULES_DIR, purpose: 'Canonical project rules' },
+  { path: join(HARNESS_ROOT, 'README.md'), purpose: 'How to add/edit rules' },
   { path: join(HARNESS_ROOT, 'manifest.json'), purpose: 'Adapter config for harness sync' },
   { path: '.cursor/rules/', purpose: 'Generated Cursor rule adapters' },
   { path: '.claude/rules/', purpose: 'Generated Claude rule adapters' },
   { path: join(AGENTS_HOME, 'skills/'), purpose: 'Installed skills (Skills CLI)' },
-  { path: join(AGENTS_HOME, 'agents/'), purpose: 'Agent personas (canonical)' },
-  { path: '.cursor/agents/', purpose: 'Symlinked Cursor subagents' },
-  { path: '.claude/agents/', purpose: 'Symlinked Claude Code subagents' },
+  { path: '.cursor/skills/', purpose: 'Symlinked Cursor skills' },
+  { path: '.claude/skills/', purpose: 'Symlinked Claude skills' },
   { path: join(AGENTS_HOME, 'docs/'), purpose: 'Agent-oriented project docs' },
   { path: 'docs/context/', purpose: 'Product context (stack, brownfield)' },
   { path: 'docs/versions/', purpose: 'SDD version artifacts' },
@@ -43,15 +43,6 @@ function listSkillDirs(projectRoot) {
       const path = join(skillsDir, entry);
       return statSync(path).isDirectory();
     })
-    .sort();
-}
-
-function listPersonas(projectRoot) {
-  const personasDir = join(projectRoot, AGENTS_HOME, 'agents');
-  if (!existsSync(personasDir)) return [];
-  return readdirSync(personasDir)
-    .filter((entry) => entry.endsWith('.md'))
-    .map((entry) => entry.replace(/\.md$/, ''))
     .sort();
 }
 
@@ -89,8 +80,8 @@ function buildImplementationNote(installed) {
   if (set.has('execution-orchestrator')) {
     return 'Partitioned versions → `execution-orchestrator` (slice-by-slice).';
   }
-  if (set.has('coder')) {
-    return 'Ad-hoc tasks → `coder` or persona `code-coder`.';
+  if (set.has('code-coder')) {
+    return 'Ad-hoc tasks → `code-coder`.';
   }
   return '_No implementation skills installed._';
 }
@@ -127,7 +118,6 @@ export function generateAgentsMd(projectRoot, options = {}) {
     }
   }
 
-  const personas = listPersonas(root);
   const projectName = readProjectTitle(root);
   const harnessRoot = `${HARNESS_ROOT}/`;
   const syncManaged = preserveSyncManaged(
@@ -140,10 +130,6 @@ export function generateAgentsMd(projectRoot, options = {}) {
   });
 
   const skillsList = installed.map((skill) => `- \`${skill}\``).join('\n');
-  const personasBlock =
-    personas.length > 0
-      ? personas.map((name) => `- \`${name}\` — invoke as \`agent: ${name}\``).join('\n')
-      : '_No personas installed. Run harness init with matching skills or `harness sync`._';
 
   const hasHarness = pathExists(root, HARNESS_ROOT);
   const archRulesNote = hasHarness
@@ -176,9 +162,7 @@ ${layoutRows.join('\n')}
 
 ${skillsList}
 
-## Agent personas (subagents)
-
-${personasBlock}
+Invoke via the Skills menu / slash (e.g. \`/code-coder\`, \`/code-reviewer\`).
 
 ## Workflows
 
@@ -203,7 +187,7 @@ ${buildImplementationNote(installed)}
 - Canonical rules: \`.nextstage-harness/rules/*.md\`
 - Regenerate adapters: \`npx @nextstage-brasil/harness sync\`
 - Refresh this file: \`npx @nextstage-brasil/harness agents-md\`
-- Personas: \`.agents/agents/\` → symlinks in \`.cursor/agents/\`, \`.claude/agents/\`
+- Skills: \`.agents/skills/\` → symlinks in \`.cursor/skills/\`, \`.claude/skills/\`
 
 See \`nextstage-harness\` skill (\`harness-discovery.md\`, \`rules-sync.md\`).
 
@@ -220,6 +204,5 @@ Project code comments and documentation: English unless the team defines otherwi
     skipped: false,
     written: ['AGENTS.md', 'CLAUDE.md'],
     skills: installed,
-    personas,
   };
 }

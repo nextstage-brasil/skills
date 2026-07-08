@@ -6,6 +6,7 @@ Canonical project rules live under `{harness_root}/rules/*.md`. Adapters for Cur
 
 ```
 .nextstage-harness/
+  README.md              # human guide — where to edit, how to add rules
   manifest.json          # adapter config (v1 schema)
   rules/
     architecture-rules.md   # constitution (always loaded)
@@ -51,7 +52,13 @@ Canonical project rules live under `{harness_root}/rules/*.md`. Adapters for Cur
 | `cursor.description` | Cursor rule description (required when `alwaysApply`) |
 | `claude.paths` | Claude path scope array; `null` = global (omit `paths:` frontmatter) |
 
-After adding a new canonical rule file, add a matching entry to `manifest.json`, then run `sync`.
+After adding a new canonical rule file, add a matching entry to `manifest.json`, then run `sync`. Prefer:
+
+```bash
+npx @nextstage-brasil/harness add-rule <name> --description "…"
+```
+
+That creates the stub, updates the manifest, and syncs adapters in one step.
 
 ## Adapter generation
 
@@ -73,7 +80,8 @@ Generation marker (first line of body):
 
 | Command | Behavior |
 |---------|----------|
-| `harness sync` | Regenerate rule adapters + skill/persona symlinks |
+| `harness add-rule <name>` | Create stub + manifest entry + sync (`--description`, `--globs`, `--force`) |
+| `harness sync` | Regenerate rule adapters + skill symlinks |
 | `harness sync --check` | CI mode — compare hashes, no writes; exit 1 on drift |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` → canonical + manifest update + sync |
 | `harness migrate-rules --force` | Overwrite existing canonical files |
