@@ -10,18 +10,24 @@
 
 | Variable | Value |
 | -------- | ----- |
-| `{product_root}` | {resolved_product_root} |
+| `{product_root}` | `.` |
 | `{harness_root}` | {resolved_harness_root_or_absent} |
+
+`{product_root}` is always relative to this file (`.`). Never write an absolute machine path.
 
 ## Layout
 
-{layout_table_rows — only paths that exist or are scaffolded; mark missing as "not present"}
+{layout_table_rows — only paths that exist or are scaffolded; mark missing as "not present". Do not list `.agents/agents/` or persona wrappers.}
 
 ## Installed skills
 
-{list_from_.agents/skills/ — group by role when helpful}
+Group by role (Foundation / SDD planning / GitLab / Implementation / Brownfield / Other). Compact table — one row per role that has at least one installed skill. Exact names from `.agents/skills/`.
 
-Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`, `/execution-orchestrator`).
+| Role | Skills |
+| ---- | ------ |
+{role_rows}
+
+Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`, `/execution-orchestrator`). **Skills are the entry points** — do not invent or document a separate "Agent personas / subagents" section.
 
 ## Workflows
 
@@ -31,7 +37,7 @@ Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`, `/exec
 
 ### Implementation
 
-{implementation_path — code-coder vs execute-gitlab-issue vs execution-orchestrator based on installed skills}
+{implementation_path — code-coder vs code-autonomous vs execute-gitlab-issue vs execution-orchestrator based on installed skills}
 
 ### Brownfield / context (when applicable)
 
@@ -48,6 +54,11 @@ Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`, `/exec
 - Skills: `.agents/skills/` → symlinks in `.cursor/skills/`, `.claude/skills/`
 
 See installed `nextstage-harness` skill (`harness-discovery.md`, `rules-sync.md`).
+
+## Testing
+
+- **PHPUnit** — run only inside the appropriate Docker test container (never on the host, never in the app/dev container). Resolve the container name from `architecture-rules.md`, `docs/context/stack-confirmed.md`, or Compose/service docs when present. If the container is not documented or unclear, **ask once** before running tests — do not guess.
+{optional_project_specific_test_notes — only when evidenced: exact compose service name, phpunit wrapper script, etc.}
 
 ## Language
 

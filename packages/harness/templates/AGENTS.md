@@ -6,6 +6,13 @@ This project uses [NextStage skills](https://github.com/nextstage-brasil/skills)
 
 <!-- harness-sync-managed: last-sync=never -->
 
+## Product anchor
+
+| Variable | Value |
+| -------- | ----- |
+| `{product_root}` | `.` |
+| `{harness_root}` | `.nextstage-harness/` |
+
 ## Layout
 
 | Path | Purpose |
@@ -28,9 +35,13 @@ See the installed `nextstage-harness` skill for gates, artifact paths, and disco
 
 ## Typical SDD chain
 
-`clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → `execution-handoff-generator` → implementation (`code-coder` / `execution-orchestrator`) → `code-reviewer` → `living-spec-consolidator`
+`clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → `execution-handoff-generator` → implementation (`code-coder` / `code-autonomous` / `execute-gitlab-issue` / `execution-orchestrator`) → `code-reviewer` → `living-spec-consolidator`
 
-Invoke skills via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`).
+Invoke skills via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`). Skills are the entry points — no separate agent personas layer.
+
+## Testing
+
+- **PHPUnit** — run only inside the appropriate Docker test container (never on the host, never in the app/dev container). Resolve the container name from `architecture-rules.md`, `docs/context/stack-confirmed.md`, or Compose/service docs when present. If the container is not documented or unclear, **ask once** before running tests — do not guess.
 
 ## Language
 

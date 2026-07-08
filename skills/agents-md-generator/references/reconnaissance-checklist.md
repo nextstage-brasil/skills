@@ -17,6 +17,7 @@ Read-only scan before drafting project `AGENTS.md`. Skip sections with no signal
 - [ ] `.cursor/skills/`, `.claude/skills/` — skill adapter symlinks (informational)
 - [ ] `docs/context/`, `docs/specs/`, `docs/versions/` — SDD scaffold present
 - [ ] Legacy only: `.cursor/rules/*.mdc` without `.nextstage-harness/` — note migration path
+- [ ] Ignore legacy `.agents/agents/` / persona wrappers if present — skills replace that layer; do not document personas in `AGENTS.md`
 
 ## 3. Workflow signals
 
@@ -31,6 +32,7 @@ Read-only scan before drafting project `AGENTS.md`. Skip sections with no signal
 - [ ] Git branch policy in docs or rules
 - [ ] Commit message style
 - [ ] Test-before-commit requirements
+- [ ] PHPUnit / Docker — compose service or test container name in `architecture-rules.md`, `stack-confirmed.md`, or Compose files (document under Testing if found; else keep ask-once)
 
 ## Output of this phase
 
