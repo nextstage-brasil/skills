@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Here's my local plan file docs/versions/1.2.0/execution-plan.md — run it autonomously, no GitLab issue involved.",
-      "expected_output": "Standalone pipeline: agent creates its own worktree under .worktrees/{version_san}/, self-decides planning depth, runs the doubt protocol, dispatches implementation, and closes with an internal code-reviewer loop (max 3 rounds) — no GitLab MCP calls at any point.",
+      "expected_output": "Standalone pipeline: agent creates its own worktree under {product_root}/.worktrees/{version_san}/ (never under .cursor/), self-decides planning depth, runs the doubt protocol, dispatches implementation only inside that worktree/branch, and closes with an internal code-reviewer loop (max 3 rounds) — no GitLab MCP calls. If worktree creation fails, aborts instead of editing the main checkout.",
       "files": []
     },
     {

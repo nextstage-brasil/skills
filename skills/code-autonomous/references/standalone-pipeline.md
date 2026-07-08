@@ -23,6 +23,27 @@ WORKTREE_ROOT = {product_root}/.worktrees/{version_san}/
 WORK_BRANCH = work/{version_san}
 ```
 
+**Hard rules for this step:**
+
+- `{product_root}` is the product/repo root — never `.cursor` or any Cursor IDE folder.
+- Use plain `git worktree add` into `{product_root}/.worktrees/{version_san}/` (mkdir parent if needed).
+- Do **not** use Cursor Task / best-of-n / agent-runtime worktrees as a substitute.
+- If `git worktree add` fails → **abort** with the exact error; do **not** continue in the main checkout.
+- **Never** implement on `main`/`master` (or the base branch) as a workaround. That violates isolation even if a sandbox blocked the worktree.
+- Exception only when the human **explicitly** said for this run: do not create a new branch / work in place on the current branch. Document that exception in the report.
+
+### Preflight before any code write
+
+From the shell about to edit files:
+
+```bash
+pwd                                          # must equal WORKTREE_ROOT (or be inside it)
+git -C "{WORKTREE_ROOT}" rev-parse --abbrev-ref HEAD   # must equal WORK_BRANCH
+git -C "{WORKTREE_ROOT}" rev-parse --show-toplevel     # must equal WORKTREE_ROOT
+```
+
+If any check fails → stop and report. Do not edit. Do not "proceed on main".
+
 Resolve the base branch the same way `execute-gitlab-issue`'s Gate 1 would (explicit in the descriptor, or ask once) — `main`/`master` are valid bases here since there's no issue-branch-resolution rule forcing otherwise, but confirm with the human if the descriptor doesn't state one. Abort if a worktree already exists for this `{version_san}` and is in use by another run, unless this is an explicit resume.
 
 ## 4. Plan, resolve doubts, dispatch

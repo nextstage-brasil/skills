@@ -64,7 +64,7 @@ After resolution: `git fetch origin {SOURCE_BRANCH}` then `git ls-remote --exit-
 
 ### Gate 1.5 — Single worktree (monorepo)
 
-Create `WORKTREE_ROOT` per `references/worktree-setup.md`. Abort if a worktree already exists for this `ISSUE_ID` and is in use by another run, unless this is an explicit resume. Never implement in the main checkout.
+Create `WORKTREE_ROOT` per `references/worktree-setup.md` — always `{product_root}/.worktrees/{ISSUE_ID}`, never under `.cursor/`. Abort if a worktree already exists for this `ISSUE_ID` and is in use by another run, unless this is an explicit resume. Never implement in the main checkout or on `main`/`master`/`SOURCE_BRANCH`. If `git worktree add` fails → abort with the exact error (do not fall back to the main checkout "to keep going"). Isolation is a hard gate before Phase 2.
 
 ### MCP setup
 
