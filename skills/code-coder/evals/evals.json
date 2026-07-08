@@ -4,19 +4,19 @@
     {
       "id": 1,
       "prompt": "Product apps/billing-api/ — add nullable cancelled_at timestamp column to connects table via migration.",
-      "expected_output": "Agent reads existing migrations/models, creates minimal migration, no SDD artifacts, no commit unless asked.",
+      "expected_output": "Agent reads existing migrations/models, creates minimal migration, no SDD artifacts, no commit unless asked, then runs the mandatory code-reviewer loop (up to 3 rounds) before reporting.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "Fix N+1 on user list — relationship loaded inside loop in UserController.",
-      "expected_output": "Agent loads rules and file, applies eager loading fix with minimal diff, reports change.",
+      "expected_output": "Agent loads rules and file, applies eager loading fix with minimal diff, runs the mandatory code-reviewer loop (up to 3 rounds), reports change and final verdict.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Add CPF mask to the registration form UserForm in the frontend module.",
-      "expected_output": "Agent reads UserForm and project frontend rules, implements mask with data-testid if conventions require, minimal scope.",
+      "expected_output": "Agent reads UserForm and project frontend rules, implements mask with data-testid if conventions require, minimal scope, then runs the mandatory code-reviewer loop (up to 3 rounds) before reporting.",
       "files": []
     }
   ]

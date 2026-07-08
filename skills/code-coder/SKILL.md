@@ -66,7 +66,20 @@ Operate only under `{product_root}/**` plus harness docs. Do not read other prod
 4. Identify minimal diff
 5. Apply (or present plan if large-change gate)
 6. Run tests if in scope
-7. Report what changed and follow-ups
+7. **Review loop** — invoke `code-reviewer` and iterate on findings (see below)
+8. Report what changed, final review verdict, and follow-ups
+
+## Review loop (mandatory)
+
+After tests pass (step 6), run an internal review loop before reporting done.
+
+- Invoke `code-reviewer` on the working-tree diff (`git diff`) — no `ISSUE_URL`, no version-closure path. Just the ad-hoc diff.
+- **Max 3 rounds.** After each review:
+  - **No Critical Issues** (satisfactory score) → proceed to report.
+  - **Critical Issues** with rounds left → apply the minimal diff that resolves each Critical (`code-reviewer` is read-only, so this skill applies the fixes), re-run tests if in scope, then re-review.
+  - **Rounds exhausted** with Criticals still open → **stop and report as blocked**. List the unresolved Criticals. Do not report success.
+- Keep fixes within the original task scope. If a Critical finding requires changes outside scope (public contract, cross-product, multi-day work), stop and escalate per **Stop conditions** instead of expanding the diff.
+- Warnings and Suggestions do not block: carry them into the final report as follow-ups.
 
 ## Stop conditions
 
@@ -79,7 +92,7 @@ Operate only under `{product_root}/**` plus harness docs. Do not read other prod
 
 ## Related skills
 
-- `code-reviewer` — after implementation
+- `code-reviewer` — mandatory review loop after implementation (see **Review loop**)
 - `code-investigator` — if blocked by unclear bug
 - `code-autonomous` — autonomous multi-agent execution (GitLab issue or local plan); for a GitLab issue, use `execute-gitlab-issue` instead
 
