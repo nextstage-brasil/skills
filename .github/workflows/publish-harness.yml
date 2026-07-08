@@ -24,9 +24,6 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Ensure npm supports trusted publishing
-        run: npm install -g npm@latest
-
       - name: Resolve commit range
         id: range
         run: |
