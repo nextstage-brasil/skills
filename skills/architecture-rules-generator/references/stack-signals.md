@@ -27,7 +27,7 @@ Use manifests and folder names to classify the stack. **Never assume** a profile
 
 | Signal | Note in constitution |
 | ------ | -------------------- |
-| `docker-compose.yml` with `app`, `app_test` | Separate dev vs test containers — **MUST** document test commands via `app_test` only |
+| `docker-compose.yml` with `app`, `app_test` | Separate dev vs test containers — document test service name and commands (agents follow `AGENTS.md` for when/how to run) |
 | `redis` service | Cache/queue; note facade vs direct client if enforced in code |
 | `postgres` / `mysql` service | DB + port from compose or `.env.example` |
 | `queue` / `worker` service | Queue worker must run for async features |

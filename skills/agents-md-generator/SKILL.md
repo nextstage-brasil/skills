@@ -75,7 +75,7 @@ Writing rules:
 - **Product anchor** — `{product_root}` = `.` (relative to this `AGENTS.md`). Never write an absolute local path.
 - **Installed skills** — exact names from `.agents/skills/`, **grouped by role** in a compact table (Foundation / SDD / GitLab / Implementation / Brownfield / Other). Do not dump a flat bullet list of every skill. Build the SDD chain only from skills that are installed. Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`).
 - **No persona section** — do not add "Agent personas", "subagents", or `.agents/agents/` rows. Skills are the only entry points.
-- **Testing** — always include the PHPUnit-in-container rule from the template. If recon finds an exact compose service / wrapper script, name it under Testing; if not, keep the ask-once fallback.
+- **Docker and testing** — include `../nextstage-harness/references/docker-and-testing.md` verbatim in every `AGENTS.md`. Add project-specific container name or wrapper script only when recon finds evidence.
 - **Layout table** — include rows only for paths that exist; omit or mark "not present" for missing scaffold. Omit persona/agent-wrapper paths.
 - **Preserve** `<!-- harness-sync-managed: ... -->` block if present (update timestamp only if user asked).
 - **Do not** inline full architecture rules — one line pointing to `architecture-rules.md`.
@@ -116,7 +116,7 @@ When updating existing `AGENTS.md`:
 - [ ] Skills are grouped by role (not a flat dump of all names)
 - [ ] No "Agent personas" / subagents section
 - [ ] `{product_root}` is relative (`.` or a monorepo-relative path — never an absolute machine path)
-- [ ] Testing section includes PHPUnit-in-container + ask-once when unclear
+- [ ] Docker and testing section present (from template)
 - [ ] SDD chain uses only installed skills
 - [ ] `CLAUDE.md` is exactly `@AGENTS.md` (single pointer)
 - [ ] No stack/module deep-dive (belongs in `architecture-rules.md`)

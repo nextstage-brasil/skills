@@ -55,9 +55,9 @@ Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`, `/exec
 
 See installed `nextstage-harness` skill (`harness-discovery.md`, `rules-sync.md`).
 
-## Testing
+## Docker and testing
 
-- **PHPUnit** — run only inside the appropriate Docker test container (never on the host, never in the app/dev container). Resolve the container name from `architecture-rules.md`, `docs/context/stack-confirmed.md`, or Compose/service docs when present. If the container is not documented or unclear, **ask once** before running tests — do not guess.
+Include verbatim from `../nextstage-harness/references/docker-and-testing.md` (keep in sync with `packages/harness/templates/snippets/docker-and-testing.md`).
 {optional_project_specific_test_notes — only when evidenced: exact compose service name, phpunit wrapper script, etc.}
 
 ## Language

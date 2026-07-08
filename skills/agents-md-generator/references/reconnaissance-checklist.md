@@ -32,7 +32,7 @@ Read-only scan before drafting project `AGENTS.md`. Skip sections with no signal
 - [ ] Git branch policy in docs or rules
 - [ ] Commit message style
 - [ ] Test-before-commit requirements
-- [ ] PHPUnit / Docker — compose service or test container name in `architecture-rules.md`, `stack-confirmed.md`, or Compose files (document under Testing if found; else keep ask-once)
+- [ ] Docker / PHPUnit — test container name or compose service in `architecture-rules.md`, `stack-confirmed.md`, or Compose files (optional extra line under Docker and testing in `AGENTS.md` when found)
 
 ## Output of this phase
 
