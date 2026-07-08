@@ -1,5 +1,7 @@
 # Merge request conventions
 
+Single MR per issue (monorepo model — no per-repo MR map).
+
 ## Creation (via MCP)
 
 - **Source:** `{WORK_BRANCH}`
@@ -9,17 +11,15 @@
 - **Labels:** `Status: In progress` (or config equivalent)
 - **Draft:** `true` until review passes
 
-## Multirepo
+## Gate 0 reuse
 
-- One MR per affected repository
-- Record `MR_URLS` map repo → URL for review phase
-- `code-reviewer` diffs each MR branch pair
+If `REUSE_MODE = true`, reuse the existing MR — never open a second one. Record its URL as `MR_URLS`.
 
 ## After approval
 
-- Mark MR ready (remove draft) per team process
-- Human or workflow merges — not required in skill unless asked
+- Mark MR ready (remove draft) per team process.
+- Human or workflow merges — not required in skill unless asked.
 
 ## project_id
 
-Resolve per repository — backend and frontend may differ. Confirm trio with human per `mcp-gitlab-usage`.
+Resolve per `mcp-gitlab-usage`; confirm the trio with the human before creating or reusing the MR.

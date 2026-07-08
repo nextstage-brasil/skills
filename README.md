@@ -43,8 +43,9 @@ Skills are invoked via the Skills menu / slash (e.g. `/code-coder`, `/code-revie
 | `mcp-gitlab-usage`         | GitLab MCP tool contracts, gates, and flows                                 |
 | `gitlab-board-sync`        | Sync existing issues (labels, milestone, time)                              |
 | `gitlab-ci-generator`      | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                               |
-| `execute-gitlab-issue`     | End-to-end GitLab issue execution with review gate                          |
+| `execute-gitlab-issue`     | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `code-autonomous` |
 | `code-coder`               | Ad-hoc implementation without full SDD cycle                                |
+| `code-autonomous`          | Harness-aware autonomous execution engine — planning-depth self-decision, doubt resolution, multi-agent dispatch (issue engine or standalone) |
 | `execution-orchestrator`   | Drive a partitioned version slice-by-slice (subagent + commit per slice)    |
 | `code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
 | `code-investigator`        | Root-cause analysis and minimal fixes                                       |
@@ -140,7 +141,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
-Typical SDD chain: `clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`code-coder` / `execute-gitlab-issue`) → `code-reviewer` → `living-spec-consolidator`.
+Typical SDD chain: `clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`code-coder` / `execute-gitlab-issue` / `code-autonomous`) → `code-reviewer` → `living-spec-consolidator`.
 
 ## Contributing
 

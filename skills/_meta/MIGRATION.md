@@ -54,7 +54,8 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | `agents-md-generator` | `nextstage-harness` |
 | `mcp-gitlab-usage` | `nextstage-harness` |
 | `code-reviewer` | `nextstage-harness`, `mcp-gitlab-usage` |
-| `execute-gitlab-issue` | `nextstage-harness`, `mcp-gitlab-usage`, `code-reviewer` |
+| `execute-gitlab-issue` | `nextstage-harness`, `mcp-gitlab-usage`, `code-reviewer`, `code-autonomous` (calls it internally for Phase 2) |
+| `code-autonomous` | `nextstage-harness`, `code-reviewer` |
 | `gitlab-board-sync` | `mcp-gitlab-usage` |
 
 SDD workflow ordering (`clarify-requirements` → `requirements-generator` → …) and planning/execution pairs (`e2e-test-generator` ↔ `create-e2e-tests`) stay as "Related skills" text only — separate install phases.

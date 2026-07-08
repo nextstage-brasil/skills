@@ -18,7 +18,8 @@
     "mcp-gitlab-usage": ["nextstage-harness"],
     "gitlab-board-sync": ["mcp-gitlab-usage"],
     "gitlab-ci-generator": [],
-    "execute-gitlab-issue": ["nextstage-harness", "mcp-gitlab-usage", "code-reviewer"],
+    "execute-gitlab-issue": ["nextstage-harness", "mcp-gitlab-usage", "code-reviewer", "code-autonomous"],
+    "code-autonomous": ["nextstage-harness", "code-reviewer"],
     "code-coder": ["nextstage-harness"],
     "execution-orchestrator": ["nextstage-harness"],
     "code-reviewer": ["nextstage-harness", "mcp-gitlab-usage"],
@@ -71,6 +72,7 @@
       "skills": [
         "nextstage-harness",
         "code-coder",
+        "code-autonomous",
         "code-investigator",
         "mcp-gitlab-usage",
         "code-reviewer"
@@ -107,7 +109,7 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["code-coder", "execution-orchestrator", "code-investigator", "code-reviewer", "create-e2e-tests"]
+      "skills": ["code-coder", "code-autonomous", "execution-orchestrator", "code-investigator", "code-reviewer", "create-e2e-tests"]
     },
     "brownfield": {
       "label": "Brownfield",

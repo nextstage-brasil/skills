@@ -1,0 +1,23 @@
+{
+  "skill_name": "code-autonomous",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Here's my local plan file docs/versions/1.2.0/execution-plan.md — run it autonomously, no GitLab issue involved.",
+      "expected_output": "Standalone pipeline: agent creates its own worktree under .worktrees/{version_san}/, self-decides planning depth, runs the doubt protocol, dispatches implementation, and closes with an internal code-reviewer loop (max 3 rounds) — no GitLab MCP calls at any point.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Autonomously implement this pasted spec: add a notifications module with a backend queue worker, a frontend inbox UI, and a DB migration for the notifications table. No issue, just run with it end to end.",
+      "expected_output": "Agent recognizes multi-part scope, generates a light requirements.md + tasks/task-NNN-*.md + execution-plan.md under docs/versions/{version_san}/, dispatches backend/migration and frontend as parallel work units (disjoint file scopes) with the migration sequenced before anything depending on the new table, and reports version_san, worktree path, and review verdict at the end.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Act as the Phase 2 execution engine for execute-gitlab-issue on issue #482 — worktree at .worktrees/482/, branch work/482-fix-login-timeout already checked out from origin/develop. Implement the fix and report back.",
+      "expected_output": "Agent runs Engine mode only: does not create a worktree or branch (uses the ones given), does not call any GitLab-mutating MCP tool, dispatches the work unit(s) inside the given worktree, makes checkpoint commits, and returns a structured result (unit statuses, files changed, doubt: null or an escalation event, estimate_seconds on first call) instead of a chat-facing final report.",
+      "files": []
+    }
+  ]
+}

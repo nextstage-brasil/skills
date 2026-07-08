@@ -16,7 +16,7 @@ const SDD_PLANNING = [
   'e2e-test-generator',
 ];
 
-const IMPL_SKILLS = ['code-coder', 'execute-gitlab-issue', 'execution-orchestrator'];
+const IMPL_SKILLS = ['code-coder', 'code-autonomous', 'execute-gitlab-issue', 'execution-orchestrator'];
 const CLOSE_SKILLS = ['code-reviewer', 'living-spec-consolidator'];
 
 const LAYOUT_PATHS = [
@@ -75,7 +75,10 @@ function buildSddChain(installed) {
 function buildImplementationNote(installed) {
   const set = new Set(installed);
   if (set.has('execute-gitlab-issue')) {
-    return 'GitLab issues → `execute-gitlab-issue` (+ `code-reviewer` gate when installed).';
+    return 'GitLab issue → `execute-gitlab-issue` (delegates coding to `code-autonomous`); local plan/ad-hoc autonomous → `code-autonomous` standalone.';
+  }
+  if (set.has('code-autonomous')) {
+    return 'Local plan/ad-hoc autonomous execution → `code-autonomous` standalone.';
   }
   if (set.has('execution-orchestrator')) {
     return 'Partitioned versions → `execution-orchestrator` (slice-by-slice).';

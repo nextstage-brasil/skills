@@ -81,6 +81,7 @@ Operate only under `{product_root}/**` plus harness docs. Do not read other prod
 
 - `code-reviewer` — after implementation
 - `code-investigator` — if blocked by unclear bug
+- `code-autonomous` — autonomous multi-agent execution (GitLab issue or local plan); for a GitLab issue, use `execute-gitlab-issue` instead
 
 ## Forbidden
 
