@@ -24,14 +24,22 @@ Load `{harness}/rules/e2e-tests-rules.mdc` and `frontend-rules.mdc` when present
 - Frontend implementation task(s) with **data-testid contract**
 - If contract missing → stop and request frontend task update
 
+## E2E project location
+
+Default (greenfield): **`{product_root}/tests-e2e/`** — independent Node package; paths below are relative to that root.
+
+Brownfield: use detected Cypress root (`tests-e2e/`, legacy `testes-cypress/`, or `frontend/`). Do not plan new specs under `frontend/cypress/` when no E2E exists yet.
+
 ## Output highlights
 
 Task file must include:
 
 - Summary and detailed coverage strategy
+- **E2E root** — `tests-e2e/` (or detected brownfield path)
 - **data-testid contract table** (copied from frontend task — do not invent)
-- Spec paths under `cypress/e2e/device/{desktop|tablet|mobile}/[feature]/`
-- Command files: `shared/`, `pages/`, `device/`
+- Spec paths under `tests-e2e/cypress/e2e/device/{desktop|tablet|mobile}/[feature]/` (adjust prefix if brownfield)
+- Command files under `tests-e2e/cypress/support/commands/` — `shared/`, `pages/`, `device/`
+- Bootstrap note when project has no E2E yet: executor must run `create-e2e-tests` Phase 0 before specs
 - Success, error, and **RBAC by URL** scenarios
 - Device coverage matrix
 - Validation criteria: no fixed `cy.wait(N)`, commands not DOM in specs, `@smoke`/`@regression` tags

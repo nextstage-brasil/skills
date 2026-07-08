@@ -20,7 +20,7 @@ Use manifests and folder names to classify the stack. **Never assume** a profile
 | `vue` in `package.json` | Vue |
 | `next` in `package.json` | Next.js |
 | `mobx`, `zustand`, `redux` | State library — one line in stack table |
-| `cypress` or `testes-cypress/` | Cypress E2E |
+| `cypress` in `tests-e2e/package.json` or legacy `testes-cypress/` / `frontend/cypress/` | Cypress E2E — prefer `tests-e2e/` at `{product_root}/` |
 | `vitest` / `jest` | Unit/integration frontend tests |
 
 ## Infrastructure

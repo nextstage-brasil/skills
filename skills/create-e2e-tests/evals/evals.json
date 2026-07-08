@@ -18,6 +18,12 @@
       "prompt": "Add staff route RBAC test — direct URL visit without permission must not show CRUD.",
       "expected_output": "Agent cy.visit protected route, asserts redirect/403, uses testids from contract.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Greenfield SaaS monorepo has backend and frontend but zero Cypress. Implement first E2E for login per task-005.",
+      "expected_output": "Agent bootstraps {product_root}/tests-e2e/ with own package.json and cypress.config.ts, does not touch frontend/package.json, then adds commands and device specs.",
+      "files": []
     }
   ]
 }

@@ -42,7 +42,7 @@ Read-only scan before drafting `architecture-rules.md`. Check items in order; sk
 
 ## 5. Testing and CI
 
-- [ ] Test directories and naming (`tests/`, `testes-cypress/`, `__tests__/`)
+- [ ] Test directories and naming (`tests/`, `tests-e2e/`, legacy `testes-cypress/` or `frontend/cypress/`)
 - [ ] PHPUnit/Pest/Jest/Vitest/Cypress config
 - [ ] **Test environment** — which container/service runs tests (`app_test` vs dev `app`); document name and commands here; agents follow `AGENTS.md` for behavioral rules
 - [ ] `.gitlab-ci.yml` or GitHub Actions test jobs (copy exact commands when found)
