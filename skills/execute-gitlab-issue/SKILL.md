@@ -60,7 +60,12 @@ An issue may already have a work branch (e.g. returned by a human reviewer). Det
 
 `main`/`master` are always invalid, no exceptions — reject even if named explicitly. Never default to the currently checked-out branch.
 
-After resolution: `git fetch origin {SOURCE_BRANCH}` then `git ls-remote --exit-code --heads origin {SOURCE_BRANCH}`. Missing → abort with the exact error, do not create the branch or substitute another.
+After resolution, validate on the remote per `references/source-branch-resolution.md`:
+
+1. `git fetch origin`
+2. Confirm the branch exists with `git ls-remote --exit-code --heads origin {SOURCE_BRANCH}`.
+3. When the exact name is missing, try `_` ↔ `-` alternates (e.g. `develop_1.32` ↔ `develop-1.32`) and adopt the **exact name** returned by the remote.
+4. Still missing → abort with the exact error; do not create the branch or substitute another.
 
 ### Gate 1.5 — Single worktree (monorepo)
 
@@ -131,6 +136,7 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 
 | File                                       | When                                          |
 | -------------------------------------------- | ---------------------------------------------- |
+| `references/source-branch-resolution.md`     | Gate 1 — remote branch validation (`_` / `-`) |
 | `references/worktree-setup.md`               | `ISSUE_ID` → `run_id` override (canonical mechanics in `nextstage-harness`) |
 | `references/mr-conventions.md`               | MR title, draft, linking, reuse note          |
 | `references/delivery-report.template.md`     | Phase 3 internal delivery comment             |
