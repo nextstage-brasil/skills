@@ -58,6 +58,8 @@ status_backlog → status_in_progress → status_done
 
 Read label names from `gitlab-sync-config.md` or discover via `list_project_labels`. Full flow: `references/flows.md`.
 
+**`SOURCE_BRANCH` for issue execution:** resolved by `execute-gitlab-issue` Gate 1 — milestone/version discovery with mandatory `develop` fallback (`../execute-gitlab-issue/references/source-branch-resolution.md`). Do not pick a base branch ad hoc when delegating to that skill.
+
 ## Delivery report
 
 1. Confirm issue target (`project_id` + `issue_iid` or URL).

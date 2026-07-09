@@ -7,6 +7,7 @@ import { scaffoldProject } from '../src/scaffold.js';
 import { syncRules, hashBody, stripFrontmatter } from '../src/syncRules.js';
 import { syncSkills } from '../src/syncSkills.js';
 import { syncDockerignore, buildDockerignoreBlock } from '../src/syncDockerignore.js';
+import { syncGitignore, buildGitignoreBlock } from '../src/syncGitignore.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { migrateRules } from '../src/migrateRules.js';
 
@@ -212,6 +213,8 @@ try {
   const dockerignoreContent = readFileSync(dockerignorePath, 'utf8');
   assert(dockerignoreContent.startsWith('node_modules\n'), 'syncDockerignore should preserve existing entries');
   assert(dockerignoreContent.includes('/AGENTS.md'), 'dockerignore should include AGENTS.md');
+  assert(dockerignoreContent.includes('/AGENTS.local.md'), 'dockerignore should include AGENTS.local.md');
+  assert(dockerignoreContent.includes('/.worktrees/'), 'dockerignore should include .worktrees');
   assert(dockerignoreContent.includes('/CLAUDE.md'), 'dockerignore should include CLAUDE.md');
   assert(dockerignoreContent.includes('/skills-lock.json'), 'dockerignore should include skills-lock.json');
   assert(
@@ -221,6 +224,23 @@ try {
 
   const dockerignoreResync = syncDockerignore(tempDir);
   assert(dockerignoreResync.written.length === 0, 'syncDockerignore should be idempotent');
+
+  // 10. syncGitignore patches existing .gitignore
+  const gitignorePath = join(tempDir, '.gitignore');
+  writeFileSync(gitignorePath, 'vendor/\n', 'utf8');
+  const gitignoreSync = syncGitignore(tempDir);
+  assert(gitignoreSync.written.length === 1, 'syncGitignore should update .gitignore');
+  const gitignoreContent = readFileSync(gitignorePath, 'utf8');
+  assert(gitignoreContent.startsWith('vendor/\n'), 'syncGitignore should preserve existing entries');
+  assert(gitignoreContent.includes('/AGENTS.local.md'), 'gitignore should include AGENTS.local.md');
+  assert(gitignoreContent.includes('/.worktrees/'), 'gitignore should include .worktrees');
+  assert(
+    gitignoreContent.includes(buildGitignoreBlock().trim()),
+    'gitignore should contain full managed block',
+  );
+
+  const gitignoreResync = syncGitignore(tempDir);
+  assert(gitignoreResync.written.length === 0, 'syncGitignore should be idempotent');
 
   console.log('OK: harness sync smoke tests passed');
 } catch (error) {

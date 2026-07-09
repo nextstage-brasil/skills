@@ -52,20 +52,13 @@ An issue may already have a work branch (e.g. returned by a human reviewer). Det
 
 ### Gate 1 — SOURCE_BRANCH (mandatory, blocking; skipped when `REUSE_MODE = true`)
 
-`SOURCE_BRANCH` is never inferred ad hoc. It is valid only when:
+Resolve `SOURCE_BRANCH` only via `references/source-branch-resolution.md` (priority order: human → issue text → product rule → milestone/version discovery → mandatory `develop` fallback).
 
-1. **Product branch-resolution rule** — apply `{harness_root}/rules/branch-resolution.md` when the harness defines one; a resolved branch is pre-confirmed.
-2. **Explicit in the issue** — the source branch is stated textually and unambiguously in the issue title/description/comments; record the source (field + exact excerpt).
-3. **Explicit human confirmation** — the human names/confirms the branch in this run.
+- **Never** infer from the current checkout or ad hoc heuristics.
+- **Never** auto-use any branch except a discovered version-relative `develop_*` / `develop-*` or the `develop` fallback — other bases (`homolog`, `release/*`, etc.) require explicit human confirmation this run.
+- `main` / `master` are always invalid as `SOURCE_BRANCH`, even if named in the issue.
 
-`main`/`master` are always invalid, no exceptions — reject even if named explicitly. Never default to the currently checked-out branch.
-
-After resolution, validate on the remote per `references/source-branch-resolution.md`:
-
-1. `git fetch origin`
-2. Confirm the branch exists with `git ls-remote --exit-code --heads origin {SOURCE_BRANCH}`.
-3. When the exact name is missing, try `_` ↔ `-` alternates (e.g. `develop_1.32` ↔ `develop-1.32`) and adopt the **exact name** returned by the remote.
-4. Still missing → abort with theexact error; do not create the branch or substitute another.
+After resolution, validate on the remote (fetch, `ls-remote`, `_` ↔ `-` alternates) per the same reference. When the mandatory `develop` fallback is missing on the remote → abort with the exact error; ask the operator once.
 
 ### Gate 1.5 — Single worktree (monorepo)
 
@@ -110,7 +103,8 @@ Create `WORKTREE_ROOT` per `references/worktree-setup.md` — always `{product_r
 
 | Condition                                                 | Action                                            |
 | --------------------------------------------------------- | ------------------------------------------------- |
-| Gate 1: `SOURCE_BRANCH` missing/invalid after fetch       | Stop — ask once                                   |
+| Gate 1: `develop` fallback missing on remote                  | Stop — ask once                                   |
+| Gate 1: non-allowed base branch without human confirmation  | Stop — ask once                                   |
 | Worktree conflict (same issue, another run)               | Stop unless explicit resume                       |
 | Ambiguous or conflicting acceptance criteria              | Stop — ask once                                   |
 | MCP unavailable or auth failure                           | Stop — state blocker                              |
@@ -136,7 +130,7 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 
 | File                                     | When                                                                        |
 | ---------------------------------------- | --------------------------------------------------------------------------- |
-| `references/source-branch-resolution.md` | Gate 1 — remote branch validation (`_` / `-`)                               |
+| `references/source-branch-resolution.md` | Gate 1 — milestone/version discovery, `develop` fallback, remote validation |
 | `references/worktree-setup.md`           | `ISSUE_ID` → `run_id` override (canonical mechanics in `nextstage-harness`) |
 | `references/mr-conventions.md`           | MR title, draft, linking, reuse note                                        |
 | `references/delivery-report.template.md` | Phase 3 internal delivery comment                                           |

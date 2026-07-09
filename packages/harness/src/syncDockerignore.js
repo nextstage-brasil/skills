@@ -4,21 +4,17 @@ import {
   DOCKERIGNORE_BLOCK_HEADER,
   DOCKERIGNORE_ENTRIES,
 } from './agentsLayout.js';
+import { patchIgnoreContent } from './patchIgnoreContent.js';
 
 export function buildDockerignoreBlock() {
   return `${DOCKERIGNORE_BLOCK_HEADER}\n${DOCKERIGNORE_ENTRIES.join('\n')}\n`;
 }
 
 /**
- * Append the harness block when missing. Existing lines are never modified.
+ * Append the harness block when missing, or merge missing entries into an existing block.
  */
 export function patchDockerignoreContent(existingContent) {
-  if (existingContent.includes(DOCKERIGNORE_BLOCK_HEADER)) {
-    return existingContent;
-  }
-  const block = buildDockerignoreBlock();
-  const trimmed = existingContent.replace(/\s+$/, '');
-  return trimmed.length === 0 ? block : `${trimmed}\n\n${block}`;
+  return patchIgnoreContent(existingContent, DOCKERIGNORE_BLOCK_HEADER, DOCKERIGNORE_ENTRIES);
 }
 
 /**

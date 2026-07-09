@@ -22,7 +22,7 @@
     {
       "id": 4,
       "prompt": "Execute issue https://gitlab.example.com/acme/app/-/issues/90 — it says to delete the legacy `user_sessions` table as part of the cleanup, but doesn't say what to do with existing rows.",
-      "expected_output": "Agent applies first-act status Em andamento, resolves worktree/branch, delegates to the code-autonomous engine. Engine flags the data-loss decision as a destructive doubt instead of guessing. Agent sets status to Em Impedimento (blocked), posts a GitLab comment mentioning the issue author with the question/options/recommended default, mirrors the same question in chat, and on answer resumes: sets status back to Em andamento and re-invokes the engine with the resolved doubt.",
+      "expected_output": "Agent applies first-act status Em andamento, resolves SOURCE_BRANCH via milestone/version discovery (develop fallback when no version branch), worktree/branch, delegates to code-autonomous. Engine flags destructive doubt; agent blocks, comments @author, resumes on answer.",
       "files": []
     }
   ]

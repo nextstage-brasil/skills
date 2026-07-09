@@ -4,6 +4,7 @@ import { runInit, printList } from '../src/init.js';
 import { syncRules } from '../src/syncRules.js';
 import { syncSkills } from '../src/syncSkills.js';
 import { syncDockerignore } from '../src/syncDockerignore.js';
+import { syncGitignore } from '../src/syncGitignore.js';
 import { migrateRules } from '../src/migrateRules.js';
 import { addRule } from '../src/addRule.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
@@ -195,6 +196,9 @@ async function runSync(parsed) {
   const dockerignoreResult = parsed.check
     ? { written: [], skipped: [] }
     : syncDockerignore(projectRoot);
+  const gitignoreResult = parsed.check
+    ? { written: [], skipped: [] }
+    : syncGitignore(projectRoot);
   const drifts = [...rulesResult.drifts, ...skillsResult.drifts];
 
   if (parsed.check) {
@@ -212,7 +216,8 @@ async function runSync(parsed) {
   const totalWritten =
     rulesResult.written.length
     + skillsResult.written.length
-    + dockerignoreResult.written.length;
+    + dockerignoreResult.written.length
+    + gitignoreResult.written.length;
   if (totalWritten > 0) {
     console.log(`Synced ${totalWritten} adapter(s)`);
     if (skillsResult.written.length > 0) {
@@ -220,6 +225,9 @@ async function runSync(parsed) {
     }
     if (dockerignoreResult.written.length > 0) {
       console.log('  .dockerignore → harness ignore block');
+    }
+    if (gitignoreResult.written.length > 0) {
+      console.log('  .gitignore → harness ignore block');
     }
   } else {
     console.log('No adapters written');
