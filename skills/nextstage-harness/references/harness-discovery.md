@@ -27,9 +27,10 @@ Use this pattern in every skill that needs project rules, artifact paths, or har
 ## Rules loading order (all consumer skills)
 
 1. Read `AGENTS.md`
-2. Read `{harness_root}/rules/architecture-rules.md` (constitution)
-3. Load layer rules from `{harness_root}/rules/` matching changed files
-4. **Legacy fallback:** if `{harness_root}/` missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note
+2. If `agents.local.md` exists at `{product_root}` (case-insensitive filename), read it after `AGENTS.md`
+3. Read `{harness_root}/rules/architecture-rules.md` (constitution)
+4. Load layer rules from `{harness_root}/rules/` matching changed files
+5. **Legacy fallback:** if `{harness_root}/` missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note
 
 Adapter generation: see `rules-sync.md`. Skills: canonical `.agents/skills/` → `harness sync` → symlinks in `.cursor/skills/`, `.claude/skills/`.
 

@@ -5,6 +5,7 @@ Read-only scan before drafting project `AGENTS.md`. Skip sections with no signal
 ## 1. Anchor and existing docs
 
 - [ ] Existing `AGENTS.md` — preserve hand-edited sections on refresh
+- [ ] `agents.local.md` at `{product_root}` (case-insensitive) — note present/absent for layout row; do not copy contents into `AGENTS.md`
 - [ ] Existing `CLAUDE.md` — will be replaced with `@AGENTS.md` pointer only
 - [ ] `README.md` — project name, summary, setup hints
 - [ ] Monorepo layout — `apps/`, `packages/`, which folder is `{product_root}`

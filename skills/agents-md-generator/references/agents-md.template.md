@@ -4,6 +4,8 @@
 
 **Before implementation, read `{harness_root}/rules/architecture-rules.md`** when it exists. If missing, run `architecture-rules-generator` first.
 
+**Local overrides:** When `agents.local.md` exists at `{product_root}` (case-insensitive filename), read it **after** this file.
+
 <!-- harness-sync-managed: last-sync=never -->
 
 ## Product anchor

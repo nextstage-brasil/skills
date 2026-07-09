@@ -52,6 +52,7 @@ See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-har
 1. Resolve `{product_root}` (repo root or monorepo product folder).
 2. Resolve `{harness_root}` = `{product_root}/.nextstage-harness/` when present.
 3. Determine **create** vs **refresh**; read existing `AGENTS.md` if present.
+4. Note whether `agents.local.md` exists at `{product_root}` (case-insensitive filename) — include the local-overrides rule in output; do not copy its contents into `AGENTS.md`.
 
 ### Step 2 — Reconnaissance
 
@@ -73,6 +74,7 @@ Use `references/agents-md.template.md` as skeleton.
 Writing rules:
 
 - **Product anchor** — `{product_root}` = `.` (relative to this `AGENTS.md`). Never write an absolute local path.
+- **Local overrides** — include: when `agents.local.md` exists at `{product_root}` (case-insensitive), agents must read it after `AGENTS.md`. Add a layout row marking present/not present; never inline `agents.local.md` content.
 - **Installed skills** — exact names from `.agents/skills/`, **grouped by role** in a compact table (Foundation / SDD / GitLab / Implementation / Brownfield / Other). Do not dump a flat bullet list of every skill. Build the SDD chain only from skills that are installed. Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`).
 - **No persona section** — do not add "Agent personas", "subagents", or `.agents/agents/` rows. Skills are the only entry points.
 - **Docker and testing** — include `../nextstage-harness/references/docker-and-testing.md` verbatim in every `AGENTS.md`. Add project-specific container name or wrapper script only when recon finds evidence.
@@ -111,6 +113,7 @@ When updating existing `AGENTS.md`:
 
 ## Quality bar (self-check before save)
 
+- [ ] Local overrides rule present (`agents.local.md`, case-insensitive)
 - [ ] Not a verbatim copy of harness `templates/AGENTS.md`
 - [ ] Every listed skill exists under `.agents/skills/`
 - [ ] Skills are grouped by role (not a flat dump of all names)
