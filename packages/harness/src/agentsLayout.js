@@ -13,3 +13,18 @@ export const AGENTS_LAYOUT_DIRS = [
 export const AGENTS_SKILLS_DIR = join(AGENTS_HOME, 'skills');
 
 export const DEFAULT_AGENTS = ['cursor', 'claude-code'];
+
+export const DOCKERIGNORE_BLOCK_HEADER = '# Nextstage-harness ignore files';
+
+/** Paths excluded from Docker build context (managed by harness sync). */
+export const DOCKERIGNORE_ENTRIES = [
+  '/docs',
+  '/.agents',
+  '/.claude',
+  '/.cursor',
+  '/.gitlab',
+  '/.nextstage-harness',
+  '/AGENTS.md',
+  '/CLAUDE.md',
+  '/skills-lock.json',
+];

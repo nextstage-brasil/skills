@@ -10,7 +10,7 @@ Create `task-NNN-*.md` for backend unit and HTTP integration tests covering a Fe
 ## Boundary
 
 - **Planning:** this skill (task markdown)
-- **Execution:** implement tests per task — use `code-coder` or implementation workflow
+- **Execution:** implement tests per task — use `create-backend-tests` or implementation workflow
 
 ## Harness discovery
 
@@ -45,9 +45,12 @@ Load `{harness}/rules/backend-tests-rules.mdc` and `backend-rules.mdc` when pres
 See factory pattern in skill body — include:
 
 - Summary and detailed test plan (not duplicate)
+- **Backend root** — `{product_root}/backend/` (monorepo) or detected brownfield path
 - Files under `tests/Unit/` and `tests/Feature/`
 - Scenario checklists per component
 - Mandatory patterns: RefreshDatabase, factories, response shape, cross-tenant cases
+- **Run command** — `vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error` in Docker with 120s timeout (see `create-backend-tests`)
+- Bootstrap note when project has no `tests/` yet: executor must run `create-backend-tests` Phase 0 before test classes
 
 ## Dependencies
 
@@ -57,9 +60,10 @@ Task must reference `task-NNN.md` of the backend implementation it covers.
 
 - Happy-path-only tasks for tenant-scoped CRUD are **incomplete** without cross-tenant P0
 - Do not point tests at production database
-- Match project's test runner commands (e.g. `php artisan test`)
+- Match project's test runner commands — PHPUnit: `vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error` in Docker, 120s timeout
 
 ## Related skills
 
 - `task-generator` — implementation tasks first
+- `create-backend-tests` — execution and bootstrap
 - `e2e-test-generator` — UI coverage

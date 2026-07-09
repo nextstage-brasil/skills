@@ -12,6 +12,7 @@ import { scaffoldProject } from './scaffold.js';
 import { resolveSource } from './source.js';
 import { syncRules } from './syncRules.js';
 import { syncSkills } from './syncSkills.js';
+import { syncDockerignore } from './syncDockerignore.js';
 import { generateAgentsMd } from './generateAgentsMd.js';
 import { buildPostInstallNotes } from './postInstallNotes.js';
 import { DEFAULT_AGENTS } from './agentsLayout.js';
@@ -111,6 +112,15 @@ export async function runInit(argv = {}) {
       p.log.warn(
         error instanceof Error ? error.message : String(error),
       );
+    }
+
+    try {
+      const dockerignoreResult = syncDockerignore(detection.projectRoot);
+      if (dockerignoreResult.written.length > 0) {
+        p.log.success('Updated .dockerignore with harness ignore paths');
+      }
+    } catch (error) {
+      p.log.warn(error instanceof Error ? error.message : String(error));
     }
   }
 

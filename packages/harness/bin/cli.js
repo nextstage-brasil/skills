@@ -3,6 +3,7 @@
 import { runInit, printList } from '../src/init.js';
 import { syncRules } from '../src/syncRules.js';
 import { syncSkills } from '../src/syncSkills.js';
+import { syncDockerignore } from '../src/syncDockerignore.js';
 import { migrateRules } from '../src/migrateRules.js';
 import { addRule } from '../src/addRule.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
@@ -191,6 +192,9 @@ async function runSync(parsed) {
   const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
   const rulesResult = syncRules(projectRoot, { agents, check: parsed.check });
   const skillsResult = syncSkills(projectRoot, { agents, check: parsed.check, copy: parsed.copy });
+  const dockerignoreResult = parsed.check
+    ? { written: [], skipped: [] }
+    : syncDockerignore(projectRoot);
   const drifts = [...rulesResult.drifts, ...skillsResult.drifts];
 
   if (parsed.check) {
@@ -205,11 +209,17 @@ async function runSync(parsed) {
     return;
   }
 
-  const totalWritten = rulesResult.written.length + skillsResult.written.length;
+  const totalWritten =
+    rulesResult.written.length
+    + skillsResult.written.length
+    + dockerignoreResult.written.length;
   if (totalWritten > 0) {
     console.log(`Synced ${totalWritten} adapter(s)`);
     if (skillsResult.written.length > 0) {
       console.log(`  Skills → ${skillsResult.written.length} path(s)`);
+    }
+    if (dockerignoreResult.written.length > 0) {
+      console.log('  .dockerignore → harness ignore block');
     }
   } else {
     console.log('No adapters written');

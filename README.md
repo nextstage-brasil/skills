@@ -50,6 +50,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/code-coder`, `/code-revie
 | `code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
 | `code-investigator`        | Root-cause analysis and minimal fixes                                       |
 | `create-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |
+| `create-backend-tests`     | Implement/refactor PHPUnit tests in Docker (execution phase)                |
 | `skill-creator`            | Create project-local skills in `.agents/skills/` + `harness sync`           |
 
 Migration notes: `skills/_meta/MIGRATION.md`.

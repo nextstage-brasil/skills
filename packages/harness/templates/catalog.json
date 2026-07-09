@@ -25,6 +25,7 @@
     "code-reviewer": ["nextstage-harness", "mcp-gitlab-usage"],
     "code-investigator": ["nextstage-harness"],
     "create-e2e-tests": [],
+    "create-backend-tests": [],
     "multi-agent-architect": [],
     "skill-creator": ["nextstage-harness"]
   },
@@ -109,7 +110,7 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["code-coder", "code-autonomous", "execution-orchestrator", "code-investigator", "code-reviewer", "create-e2e-tests"]
+      "skills": ["code-coder", "code-autonomous", "execution-orchestrator", "code-investigator", "code-reviewer", "create-e2e-tests", "create-backend-tests"]
     },
     "brownfield": {
       "label": "Brownfield",

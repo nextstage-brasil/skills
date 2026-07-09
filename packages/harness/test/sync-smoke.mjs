@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { scaffoldProject } from '../src/scaffold.js';
 import { syncRules, hashBody, stripFrontmatter } from '../src/syncRules.js';
 import { syncSkills } from '../src/syncSkills.js';
+import { syncDockerignore, buildDockerignoreBlock } from '../src/syncDockerignore.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { migrateRules } from '../src/migrateRules.js';
 
@@ -202,6 +203,24 @@ try {
     'claude.paths should mirror globs',
   );
   assert(!frontendEntry.cursor.alwaysApply, 'globs mode should not set alwaysApply');
+
+  // 9. syncDockerignore patches existing .dockerignore
+  const dockerignorePath = join(tempDir, '.dockerignore');
+  writeFileSync(dockerignorePath, 'node_modules\n', 'utf8');
+  const dockerignoreSync = syncDockerignore(tempDir);
+  assert(dockerignoreSync.written.length === 1, 'syncDockerignore should update .dockerignore');
+  const dockerignoreContent = readFileSync(dockerignorePath, 'utf8');
+  assert(dockerignoreContent.startsWith('node_modules\n'), 'syncDockerignore should preserve existing entries');
+  assert(dockerignoreContent.includes('/AGENTS.md'), 'dockerignore should include AGENTS.md');
+  assert(dockerignoreContent.includes('/CLAUDE.md'), 'dockerignore should include CLAUDE.md');
+  assert(dockerignoreContent.includes('/skills-lock.json'), 'dockerignore should include skills-lock.json');
+  assert(
+    dockerignoreContent.includes(buildDockerignoreBlock().trim()),
+    'dockerignore should contain full managed block',
+  );
+
+  const dockerignoreResync = syncDockerignore(tempDir);
+  assert(dockerignoreResync.written.length === 0, 'syncDockerignore should be idempotent');
 
   console.log('OK: harness sync smoke tests passed');
 } catch (error) {
