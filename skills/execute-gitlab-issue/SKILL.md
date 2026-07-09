@@ -19,10 +19,10 @@ See `../nextstage-harness/references/harness-discovery.md`. Read `mcp-gitlab-usa
 ## Inputs
 
 | Variable         | Required                            |
-| ---------------- | ------------------------------------ |
-| `ISSUE_URL`      | Yes                                  |
-| `SOURCE_BRANCH`  | No — resolved by Gate 1 if omitted   |
-| `{product_root}` | When multiple products in workspace  |
+| ---------------- | ----------------------------------- |
+| `ISSUE_URL`      | Yes                                 |
+| `SOURCE_BRANCH`  | No — resolved by Gate 1 if omitted  |
+| `{product_root}` | When multiple products in workspace |
 
 Single worktree, single branch, single MR, single commit per issue (monorepo model — no per-repo looping):
 
@@ -65,7 +65,7 @@ After resolution, validate on the remote per `references/source-branch-resolutio
 1. `git fetch origin`
 2. Confirm the branch exists with `git ls-remote --exit-code --heads origin {SOURCE_BRANCH}`.
 3. When the exact name is missing, try `_` ↔ `-` alternates (e.g. `develop_1.32` ↔ `develop-1.32`) and adopt the **exact name** returned by the remote.
-4. Still missing → abort with the exact error; do not create the branch or substitute another.
+4. Still missing → abort with theexact error; do not create the branch or substitute another.
 
 ### Gate 1.5 — Single worktree (monorepo)
 
@@ -108,35 +108,35 @@ Create `WORKTREE_ROOT` per `references/worktree-setup.md` — always `{product_r
 
 ## Stop and ask the human
 
-| Condition                                                  | Action                        |
-| ----------------------------------------------------------- | ------------------------------ |
-| Gate 1: `SOURCE_BRANCH` missing/invalid after fetch          | Stop — ask once               |
-| Worktree conflict (same issue, another run)                 | Stop unless explicit resume   |
-| Ambiguous or conflicting acceptance criteria                 | Stop — ask once               |
-| MCP unavailable or auth failure                              | Stop — state blocker          |
-| `project_id` trio not confirmed                              | Stop per `mcp-gitlab-usage`   |
-| Work on protected/base branch per `gitlab-sync-config.md`    | Stop                          |
-| Destructive ops (issue delete, force-push main/master)       | Stop — require explicit human |
-| Product decision not stated in the issue                     | Stop — ask once               |
-| Engine reports a destructive doubt                           | Pause/resume per Phase 2 step 4 — not a hard stop |
+| Condition                                                 | Action                                            |
+| --------------------------------------------------------- | ------------------------------------------------- |
+| Gate 1: `SOURCE_BRANCH` missing/invalid after fetch       | Stop — ask once                                   |
+| Worktree conflict (same issue, another run)               | Stop unless explicit resume                       |
+| Ambiguous or conflicting acceptance criteria              | Stop — ask once                                   |
+| MCP unavailable or auth failure                           | Stop — state blocker                              |
+| `project_id` trio not confirmed                           | Stop per `mcp-gitlab-usage`                       |
+| Work on protected/base branch per `gitlab-sync-config.md` | Stop                                              |
+| Destructive ops (issue delete, force-push main/master)    | Stop — require explicit human                     |
+| Product decision not stated in the issue                  | Stop — ask once                                   |
+| Engine reports a destructive doubt                        | Pause/resume per Phase 2 step 4 — not a hard stop |
 
 See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 
 ## Related skills
 
-| Skill              | Role                                    |
-| ------------------ | ---------------------------------------- |
-| `mcp-gitlab-usage`  | All GitLab tools                        |
-| `gitlab-board-sync` | Status label semantics                  |
-| `code-reviewer`     | Phase 4 gate                            |
-| `code-autonomous`   | Phase 2 execution engine                |
-| `code-coder`        | Non-GitLab ad-hoc implementation        |
+| Skill               | Role                             |
+| ------------------- | -------------------------------- |
+| `mcp-gitlab-usage`  | All GitLab tools                 |
+| `gitlab-board-sync` | Status label semantics           |
+| `code-reviewer`     | Phase 4 gate                     |
+| `code-autonomous`   | Phase 2 execution engine         |
+| `code-coder`        | Non-GitLab ad-hoc implementation |
 
 ## References
 
-| File                                       | When                                          |
-| -------------------------------------------- | ---------------------------------------------- |
-| `references/source-branch-resolution.md`     | Gate 1 — remote branch validation (`_` / `-`) |
-| `references/worktree-setup.md`               | `ISSUE_ID` → `run_id` override (canonical mechanics in `nextstage-harness`) |
-| `references/mr-conventions.md`               | MR title, draft, linking, reuse note          |
-| `references/delivery-report.template.md`     | Phase 3 internal delivery comment             |
+| File                                     | When                                                                        |
+| ---------------------------------------- | --------------------------------------------------------------------------- |
+| `references/source-branch-resolution.md` | Gate 1 — remote branch validation (`_` / `-`)                               |
+| `references/worktree-setup.md`           | `ISSUE_ID` → `run_id` override (canonical mechanics in `nextstage-harness`) |
+| `references/mr-conventions.md`           | MR title, draft, linking, reuse note                                        |
+| `references/delivery-report.template.md` | Phase 3 internal delivery comment                                           |
