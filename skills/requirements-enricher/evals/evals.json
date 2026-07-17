@@ -1,0 +1,53 @@
+{
+  "skill_name": "requirements-enricher",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Refine requirements for this issue before execution: https://gitlab.com/group/app/-/issues/1234",
+      "expected_output": "Reads issue via MCP, investigates relevant module, posts internal comment with @author (opener) and numbered requester-facing questions; no label/branch questions",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Run grill-me on issue #567 — list what's missing and post on the issue for the author to answer",
+      "expected_output": "Batch numbered questions in one internal GitLab comment; no interactive one-by-one chat Q&A; questions in plain UX language",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Issue mentions 'adjust Person filter' but is vague. ISSUE_URL=... DRY_RUN=true",
+      "expected_output": "Shows comment draft in chat only; Assumptions may cite code paths; Questions ask when filter applies, combined criteria, empty state — not table/SQL/branch",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Issue missing Team label and milestone 1.32 with remote branch develop_1.32. Enrich requirements.",
+      "expected_output": "Does NOT ask about missing Team label or which develop branch to use; at most may ask if milestone is correct; focuses on product behavior gaps",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Technical gap: PESSOA|CLUBE has no idFuncao. Formulate enricher questions.",
+      "expected_output": "Question like 'Does latest role only apply when filtering by Club too? What counts as latest?' — never 'the linktable with relation PESSOA|CLUBE...'",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Enrich issue opened by author with author.name 'GDP DataCloud Brasil' and author.username 'GDPDC'.",
+      "expected_output": "First comment line uses @GDPDC (literal author.username from read_issue), not @gdp_datacloudbrasil or any slug of author.name",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Enrich issue with 3 blocking questions.",
+      "expected_output": "First line starts with ❌ and mentions 3 blocking question(s); not ✅",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Enrich issue with no blocking gaps.",
+      "expected_output": "First line starts with ✅ and Ready for execution; uses execution-ready template; no Questions section",
+      "files": []
+    }
+  ]
+}

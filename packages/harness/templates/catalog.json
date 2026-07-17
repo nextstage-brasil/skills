@@ -19,6 +19,7 @@
     "gitlab-board-sync": ["mcp-gitlab-usage"],
     "gitlab-ci-generator": [],
     "execute-gitlab-issue": ["nextstage-harness", "mcp-gitlab-usage", "code-reviewer", "code-autonomous"],
+    "requirements-enricher": ["nextstage-harness", "mcp-gitlab-usage"],
     "code-autonomous": ["nextstage-harness", "code-reviewer"],
     "code-coder": ["nextstage-harness"],
     "execution-orchestrator": ["nextstage-harness"],
@@ -51,6 +52,7 @@
       "skills": [
         "nextstage-harness",
         "mcp-gitlab-usage",
+        "requirements-enricher",
         "code-reviewer",
         "execute-gitlab-issue",
         "gitlab-board-sync"
@@ -103,6 +105,7 @@
       "label": "GitLab",
       "skills": [
         "mcp-gitlab-usage",
+        "requirements-enricher",
         "gitlab-board-sync",
         "gitlab-ci-generator",
         "execute-gitlab-issue"
