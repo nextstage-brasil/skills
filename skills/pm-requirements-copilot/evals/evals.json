@@ -1,0 +1,53 @@
+{
+  "skill_name": "pm-requirements-copilot",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Here's the transcript of our discovery call for the RouteWise fleet management project. Turn this into structured requirements: 'Carlos: we need the system to alert dispatchers in real time when a driver exceeds the speed limit. Marcus: sure, we can pull that from the GPS trackers. Carlos: also we want a monthly maintenance report and predictive maintenance eventually. Priya: predictive maintenance needs an accelerometer sensor we don't have yet, lead time is 60 days.'",
+      "expected_output": "Does NOT dump all pipeline phases. Opens Phase 1 Clarification with batched questions about OKR/business objective, scale, deadline pressure, and stakeholders. Does not produce Domain Map or User Stories yet.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "OKR: reduce fleet incident response time by 30% by Q3. 200 dispatchers, LGPD applies, MVP deadline September. Now prioritize this backlog by reason not gut feeling: US-01 speed alerts (reach 200, impact high), US-02 maintenance report (reach 50, impact medium), US-03 predictive maintenance (reach 200, impact high, blocked by hardware).",
+      "expected_output": "Runs Phase 3: builds JSON input, calls rice_wsjf.py (or shows script invocation), produces RICE/WSJF tables anchored to the declared OKR. Ends with a gate question before scheduling — does not jump to sprint plan or forecast.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "We've confirmed the backlog ranking. Team of 3 devs, 2-week sprints, 65% capacity. Run the full pipeline through forecast for US-01 (O=2,M=3,P=5 weeks), US-02 (O=1,M=2,P=4), US-03 blocked until week 9. When do we deliver?",
+      "expected_output": "Runs Phases 4 then 5 sequentially (with gate between them if not told to skip). Calls pert_montecarlo.py. States P85 explicitly as the committed delivery date. Does not also produce status report or risk monitor.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Here's today's sprint review transcript — just give me the action items: 'Ana: the API timeout fix shipped. Bruno: we still need QA sign-off on the export feature before Friday. Carlos: client asked to move the demo to next Tuesday.'",
+      "expected_output": "Triggers Phase 8 Meeting Digest directly — action table with owners/deadlines from transcript, no re-run of clarification or structuring phases.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Write a status report for the board — sprint 4, 8 of 10 stories delivered, 3 bugs opened 1 resolved, velocity dropped 2 sprints in a row, hardware blocker on US-03 still unresolved.",
+      "expected_output": "Triggers Phase 7 Status Report — three audience-specific reports from the same data. Managerial report shows Red status. Executive report has no story points or velocity jargon.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "quick mode: 'the app should be more secure and give users a good experience when uploading files of any type'",
+      "expected_output": "Skips full clarification — marks missing context as [ASSUMPTION]. Produces only User Stories + Open Questions + GitLab cards. Flags anti-patterns for unverifiable outcome and infinite scope. Does not proceed to prioritization without a gate.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "We've confirmed the backlog ranking (US-01, US-02, US-03). Build the sprint schedule.",
+      "expected_output": "Does NOT infer team size, capacity, or sprint length from the backlog. Sends the Phase 4 fill-in template from references/03-scheduling.md (team composition, capacity %, sprint length, duration) and stops — no schedule is produced until the template is filled, even though 'quick mode' shortcuts exist elsewhere in the pipeline.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Discovery transcript for project RouteWise: [...]. Also, save everything as markdown as we go.",
+      "expected_output": "Confirms the docs base folder (default docs/routewise/) once in Phase 1. After the Phase 1 gate, writes docs/routewise/00-clarification.md and docs/routewise/roadmap.md with the same content as the chat summary before asking the gate question. Does not re-ask about the docs path in later phases.",
+      "files": []
+    }
+  ]
+}
