@@ -13,7 +13,7 @@ export function buildPostInstallNotes({
   const isBrownfield =
     preset === 'brownfield' ||
     installedSkills.includes('harness-prepare') ||
-    installedSkills.includes('bootstrap-brownfield');
+    installedSkills.includes('harness-bootstrap-brownfield');
   const hasPrepare = installedSkills.includes('harness-prepare');
 
   if (noScaffold) {
@@ -36,17 +36,17 @@ export function buildPostInstallNotes({
     lines.push('  CLI:     npx @nextstage-brasil/harness prepare');
     lines.push('');
     lines.push('  Full chain (one session):');
-    lines.push('    architecture-rules-generator');
+    lines.push('    harness-architecture-rules');
     lines.push('    → harness sync');
-    lines.push('    → bootstrap-brownfield');
-    lines.push('    → codebase-reverse-spec');
-    lines.push('    → agents-md-generator');
+    lines.push('    → harness-bootstrap-brownfield');
+    lines.push('    → harness-codebase-reverse-spec');
+    lines.push('    → harness-agents-md');
     lines.push('');
     lines.push('  Skip if greenfield with no application code yet.');
   } else {
-    lines.push('  Optional: /architecture-rules-generator when code exists');
+    lines.push('  Optional: /harness-architecture-rules when code exists');
     lines.push('  Then:     npx @nextstage-brasil/harness sync');
-    lines.push('  Refine:   /agents-md-generator');
+    lines.push('  Refine:   /harness-agents-md');
   }
 
   lines.push('');
@@ -56,8 +56,8 @@ export function buildPostInstallNotes({
   lines.push('   New rule:  npx @nextstage-brasil/harness add-rule <name>');
   lines.push('   Sync:      npx @nextstage-brasil/harness sync');
   lines.push('');
-  lines.push('SDD: clarify-requirements → requirements-generator →');
-  lines.push('     task-generator → code-coder → code-reviewer');
+  lines.push('SDD: pm-clarify-requirements → pm-requirements-generator →');
+  lines.push('     pm-task-generator → code-coder → code-reviewer');
 
   return lines.join('\n');
 }

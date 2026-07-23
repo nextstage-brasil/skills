@@ -22,8 +22,8 @@ Use when the descriptor is multi-part or ambiguous enough that skipping decompos
 
 Generate, under `{product_root}/docs/versions/{version_san}/` (version allocated as fix/feat from the descriptor content, per `../nextstage-harness/references/artifact-layout.md`):
 
-- `requirements.md` — light version: scope, acceptance criteria, out-of-scope, one paragraph each — this is a self-approved internal artifact, not the full `clarify-requirements` → `requirements-generator` human-gated chain.
-- `tasks/task-NNN-*.md` — one per work unit, same shape as `task-generator` output but generated internally.
+- `requirements.md` — light version: scope, acceptance criteria, out-of-scope, one paragraph each — this is a self-approved internal artifact, not the full `pm-clarify-requirements` → `pm-requirements-generator` human-gated chain.
+- `tasks/task-NNN-*.md` — one per work unit, same shape as `pm-task-generator` output but generated internally.
 - `execution-plan.md` — the DAG: which units are independent (parallelizable) and which have edges (sequential), used directly by `multi-agent-dispatch.md`.
 
 Do this before dispatching anything. Both Engine mode and the standalone pipeline follow this same heuristic — the only difference is where `{version_san}` comes from (issue slug vs. standalone descriptor).

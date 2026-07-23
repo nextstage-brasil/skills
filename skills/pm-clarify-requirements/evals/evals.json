@@ -1,0 +1,35 @@
+{
+  "skill_name": "pm-clarify-requirements",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Plan version 1.0 for a notification system that integrates with Slack and email. That's all I have so far.",
+      "expected_output": "Agent asks up to 5 focused questions on actors, channels, triggers, multitenancy; does not generate requirements.md.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I answered your clarification questions — here's my reply: admins configure webhooks, users only receive in-app alerts, single-tenant for now.",
+      "expected_output": "Agent summarizes confirmed scope, asks to proceed, compiles enriched context for pm-requirements-generator.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Add a dashboard to the app.",
+      "expected_output": "Agent identifies ambiguities (KPIs, roles, data sources) and asks clarifying questions before requirements.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Refine this version scope from descritivo.md — Laravel+React repo with backend/ and frontend/ but no docs/context/brownfield-map.md.",
+      "expected_output": "Agent runs harness-bootstrap-brownfield first, creates brownfield-map.md, does not grep application code for clarification; then asks scope questions.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Clarify scope for version 2.3.0 — brownfield-map.md exists with Date 2025-11-01.",
+      "expected_output": "Agent stops at Step 0.4 gate, shows last map date 2025-11-01, asks refresh or keep, waits for human before scope questions.",
+      "files": []
+    }
+  ]
+}

@@ -31,7 +31,7 @@ When invoked at version closure, save output to `{product_root}/docs/versions/{v
 
 When invoker passes `ISSUE_URL` (or `project_id` + `issue_iid`):
 
-1. Delegate issue context to `execute-gitlab-issue` context flow or `gitlab-issue-context-agent` — do not call `read_issue` yourself if a synthesis block is provided.
+1. Delegate issue context to `execution-gitlab-issue` context flow or `gitlab-issue-context-agent` — do not call `read_issue` yourself if a synthesis block is provided.
 2. Diff `origin/<target>...origin/<source>` from synthesis — never review wrong branch.
 3. **Requirement proof gate:** every AC needs behavioral evidence; producer-only code without consumer is Critical.
 4. **Verdict (exactly one):** `Approved` | `Rejected` | `Blocked`

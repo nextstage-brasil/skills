@@ -26,7 +26,7 @@ For full planned versions with `execution-handoff.md`, follow
 handoff per `../execution-handoff-generator/SKILL.md` — not this skill's ad-hoc
 cycle below.
 
-If the request includes a GitLab **issue URL** (`ISSUE_URL`), use `execute-gitlab-issue` instead — not this skill.
+If the request includes a GitLab **issue URL** (`ISSUE_URL`), use `execution-gitlab-issue` instead — not this skill.
 
 ## Session inputs
 
@@ -94,7 +94,7 @@ After tests pass (step 6), run an internal review loop before reporting done.
 
 - `code-reviewer` — mandatory review loop after implementation (see **Review loop**)
 - `code-investigator` — if blocked by unclear bug
-- `code-autonomous` — autonomous multi-agent execution (GitLab issue or local plan); for a GitLab issue, use `execute-gitlab-issue` instead
+- `code-autonomous` — autonomous multi-agent execution (GitLab issue or local plan); for a GitLab issue, use `execution-gitlab-issue` instead
 
 ## Forbidden
 

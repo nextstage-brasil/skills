@@ -62,7 +62,7 @@ See `.nextstage-harness/README.md` in consumer projects for the human guide.
 
 | Path | Role |
 |------|------|
-| `AGENTS.md` | Project entry (CLI-generated; refine with `agents-md-generator` skill) |
+| `AGENTS.md` | Project entry (CLI-generated; refine with `harness-agents-md` skill) |
 | `CLAUDE.md` | Pointer to `AGENTS.md` |
 | `.nextstage-harness/rules/` | Canonical rules — **edit here** |
 | `.nextstage-harness/README.md` | How to add/edit rules (scaffolded) |
@@ -77,7 +77,7 @@ See `.nextstage-harness/README.md` in consumer projects for the human guide.
 |--------|--------|
 | `recommended` | SDD planning chain + test generators + living specs |
 | `gitlab` | MCP GitLab, review gate, issue execution, board sync |
-| `brownfield` | `agents-md-generator`, architecture rules, bootstrap, reverse-spec |
+| `brownfield` | `harness-agents-md`, architecture rules, bootstrap, reverse-spec |
 | `implementation` | Code-coder, investigator, review |
 
 ## Post-install (brownfield / existing code)

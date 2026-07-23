@@ -1,0 +1,23 @@
+{
+  "skill_name": "pm-unit-test-task-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate unit test task for Feature 003 Orders after task-007-order-service.md was created.",
+      "expected_output": "Agent writes test task with Unit+Feature scenarios, cross-tenant P0, depends on task-007.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Backend auth feature needs PHPUnit coverage — implementation tasks 010-012 exist.",
+      "expected_output": "Agent covers FormRequest, Service, HTTP auth cases including 401 and rate limit when applicable.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Create test task for multitenancy CRUD on branches module.",
+      "expected_output": "Agent explicitly lists cross-tenant GET/PATCH/DELETE P0 scenarios per skill rules.",
+      "files": []
+    }
+  ]
+}

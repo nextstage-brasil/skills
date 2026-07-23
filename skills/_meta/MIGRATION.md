@@ -49,16 +49,16 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | Skill | `depends` |
 |-------|-----------|
 | `nextstage-harness` | — (base dependency) |
-| SDD consumers (`clarify-requirements`, `requirements-generator`, `analyze-consistency`, `task-generator`, `execution-handoff-generator`, `version-partitioner`, `bootstrap-brownfield`, `living-spec-consolidator`, `code-coder`, `code-investigator`) | `nextstage-harness` |
-| `architecture-rules-generator` | `nextstage-harness` |
-| `agents-md-generator` | `nextstage-harness` |
+| SDD consumers (`pm-clarify-requirements`, `pm-requirements-generator`, `pm-analyze-consistency`, `pm-task-generator`, `execution-handoff-generator`, `pm-version-partitioner`, `harness-bootstrap-brownfield`, `pm-living-spec-consolidator`, `code-coder`, `code-investigator`) | `nextstage-harness` |
+| `harness-architecture-rules` | `nextstage-harness` |
+| `harness-agents-md` | `nextstage-harness` |
 | `mcp-gitlab-usage` | `nextstage-harness` |
 | `code-reviewer` | `nextstage-harness`, `mcp-gitlab-usage` |
-| `execute-gitlab-issue` | `nextstage-harness`, `mcp-gitlab-usage`, `code-reviewer`, `code-autonomous` (calls it internally for Phase 2) |
+| `execution-gitlab-issue` | `nextstage-harness`, `mcp-gitlab-usage`, `code-reviewer`, `code-autonomous` (calls it internally for Phase 2) |
 | `code-autonomous` | `nextstage-harness`, `code-reviewer` |
 | `gitlab-board-sync` | `mcp-gitlab-usage` |
 
-SDD workflow ordering (`clarify-requirements` → `requirements-generator` → …) and planning/execution pairs (`e2e-test-generator` ↔ `create-e2e-tests`) stay as "Related skills" text only — separate install phases.
+SDD workflow ordering (`pm-clarify-requirements` → `pm-requirements-generator` → …) and planning/execution pairs (`pm-e2e-test-generator` ↔ `code-e2e-tests`) stay as "Related skills" text only — separate install phases.
 
 ## Install
 
@@ -73,3 +73,27 @@ npx skills add nextstage-brasil/skills@<skill-name> --full-depth -y
 ```
 
 When CLI supports `depends`, transitive deps install automatically. Until then (`skills@1.5.14`), use `@nextstage-brasil/harness` or install peers explicitly — see `README.md`.
+
+## Breaking change — domain prefix rename (2026-07)
+
+Skills were renamed with domain prefixes (`pm-`, `code-`, `execution-`, `harness-`). Old install paths no longer exist in the catalog.
+
+| Old name | New name |
+| -------- | -------- |
+| `clarify-requirements` | `pm-clarify-requirements` |
+| `requirements-generator` | `pm-requirements-generator` |
+| `analyze-consistency` | `pm-analyze-consistency` |
+| `version-partitioner` | `pm-version-partitioner` |
+| `task-generator` | `pm-task-generator` |
+| `unit-test-task-generator` | `pm-unit-test-task-generator` |
+| `e2e-test-generator` | `pm-e2e-test-generator` |
+| `living-spec-consolidator` | `pm-living-spec-consolidator` |
+| `create-e2e-tests` | `code-e2e-tests` |
+| `create-backend-tests` | `code-backend-tests` |
+| `execute-gitlab-issue` | `execution-gitlab-issue` |
+| `agents-md-generator` | `harness-agents-md` |
+| `architecture-rules-generator` | `harness-architecture-rules` |
+| `bootstrap-brownfield` | `harness-bootstrap-brownfield` |
+| `codebase-reverse-spec` | `harness-codebase-reverse-spec` |
+
+**Consumer action:** reinstall via `npx @nextstage-brasil/harness` or `npx skills add nextstage-brasil/skills@<new-name>`. After install, `harness init` automatically removes retired directories when the replacement skill is present. Preview cleanup with `npx @nextstage-brasil/harness prune-retired-skills --dry-run`.

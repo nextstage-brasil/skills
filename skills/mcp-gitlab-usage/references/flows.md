@@ -28,7 +28,7 @@ set_issue_labels:
 
 Record start timestamp for `add_issue_spent_time`.
 
-**Base branch:** when starting implementation via `execute-gitlab-issue`, resolve `SOURCE_BRANCH` per `../execute-gitlab-issue/references/source-branch-resolution.md` (milestone/version → `develop_*` / `develop-*` on remote, else mandatory `develop` only — never another base without human confirmation).
+**Base branch:** when starting implementation via `execution-gitlab-issue`, resolve `SOURCE_BRANCH` per `../execution-gitlab-issue/references/source-branch-resolution.md` (milestone/version → `develop_*` / `develop-*` on remote, else mandatory `develop` only — never another base without human confirmation).
 
 ### At task completion (after validation)
 

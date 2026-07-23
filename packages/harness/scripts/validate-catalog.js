@@ -8,8 +8,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(__dirname, '..', '..', '..');
 const skillsDir = join(repoRoot, 'skills');
 const catalogPath = join(__dirname, '..', 'templates', 'catalog.json');
+const retiredPath = join(__dirname, '..', 'templates', 'retired-skills.json');
 
 const catalog = JSON.parse(readFileSync(catalogPath, 'utf8'));
+const retiredSkills = JSON.parse(readFileSync(retiredPath, 'utf8'));
 const catalogSkills = new Set(Object.keys(catalog.depends));
 
 const skillDirs = readdirSync(skillsDir).filter((entry) => {
@@ -57,6 +59,18 @@ for (const skill of skillDirs) {
     if (!expected.includes(dep)) {
       errors.push(`${skill}: frontmatter depends on ${dep} but catalog.json does not`);
     }
+  }
+}
+
+for (const [oldName, newName] of Object.entries(retiredSkills)) {
+  if (catalogSkills.has(oldName)) {
+    errors.push(`retired-skills.json lists "${oldName}" but it is still in catalog.json`);
+  }
+  if (!catalogSkills.has(newName)) {
+    errors.push(`retired-skills.json maps "${oldName}" to unknown skill "${newName}"`);
+  }
+  if (oldName === newName) {
+    errors.push(`retired-skills.json has identity mapping for "${oldName}"`);
   }
 }
 

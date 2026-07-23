@@ -10,6 +10,7 @@ import { syncDockerignore, buildDockerignoreBlock } from '../src/syncDockerignor
 import { syncGitignore, buildGitignoreBlock } from '../src/syncGitignore.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { migrateRules } from '../src/migrateRules.js';
+import { pruneRetiredSkills, assessPruneRetiredSkills } from '../src/pruneRetiredSkills.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const harnessRoot = join(__dirname, '..');
@@ -241,6 +242,42 @@ try {
 
   const gitignoreResync = syncGitignore(tempDir);
   assert(gitignoreResync.written.length === 0, 'syncGitignore should be idempotent');
+
+  // 11. prune-retired-skills removes old dirs only when replacement exists
+  const agentsSkillsDir = join(tempDir, '.agents', 'skills');
+  const oldSkillDir = join(agentsSkillsDir, 'task-generator');
+  const newSkillDir = join(agentsSkillsDir, 'pm-task-generator');
+  const cursorOldSkill = join(tempDir, '.cursor', 'skills', 'task-generator');
+  mkdirSync(oldSkillDir, { recursive: true });
+  writeFileSync(join(oldSkillDir, 'SKILL.md'), '# old\n', 'utf8');
+  mkdirSync(dirname(cursorOldSkill), { recursive: true });
+  mkdirSync(cursorOldSkill, { recursive: true });
+  writeFileSync(join(cursorOldSkill, 'SKILL.md'), '# old adapter\n', 'utf8');
+
+  const blocked = assessPruneRetiredSkills(tempDir);
+  assert(
+    blocked.skipped.some((entry) => entry.oldName === 'task-generator'),
+    'prune should skip when replacement is missing',
+  );
+  assert(blocked.removable.length === 0, 'prune should not remove without replacement');
+
+  mkdirSync(newSkillDir, { recursive: true });
+  writeFileSync(join(newSkillDir, 'SKILL.md'), '# new\n', 'utf8');
+  writeFileSync(
+    join(tempDir, 'skills-lock.json'),
+    JSON.stringify({ version: 1, skills: { 'task-generator': { source: 'test' } } }, null, 2),
+    'utf8',
+  );
+
+  const pruned = pruneRetiredSkills(tempDir);
+  assert(pruned.removed.length >= 2, 'prune should remove canonical and adapter paths');
+  assert(!existsSync(oldSkillDir), 'old canonical skill dir should be removed');
+  assert(!existsSync(cursorOldSkill), 'old cursor adapter should be removed');
+  assert(existsSync(newSkillDir), 'replacement skill dir should remain');
+  assert(pruned.lockPruned.includes('task-generator'), 'prune should drop retired skills-lock entry');
+
+  const dryRunCli = runCli(['prune-retired-skills', '--dry-run', '--dir', tempDir], harnessRoot);
+  assert(dryRunCli.status === 0, `prune-retired-skills --dry-run should pass: ${dryRunCli.stderr}${dryRunCli.stdout}`);
 
   console.log('OK: harness sync smoke tests passed');
 } catch (error) {

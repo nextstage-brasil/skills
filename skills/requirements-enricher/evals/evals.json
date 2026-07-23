@@ -48,6 +48,12 @@
       "prompt": "Enrich issue with no blocking gaps.",
       "expected_output": "First line starts with ✅ and Ready for execution; uses execution-ready template; no Questions section",
       "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Grill-me on this scope before we plan the version: users need a dashboard filter by club and role, show only active members, paginated list.",
+      "expected_output": "Chat mode: inline verdict + numbered product questions in chat; no GitLab comment, no files created; investigates codebase if product_root available",
+      "files": []
     }
   ]
 }

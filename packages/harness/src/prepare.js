@@ -5,10 +5,10 @@ import { AGENTS_SKILLS_DIR, HARNESS_ROOT } from './agentsLayout.js';
 export const PREPARE_SKILL = 'harness-prepare';
 
 export const PREPARE_WORKER_SKILLS = [
-  'architecture-rules-generator',
-  'bootstrap-brownfield',
-  'codebase-reverse-spec',
-  'agents-md-generator',
+  'harness-architecture-rules',
+  'harness-bootstrap-brownfield',
+  'harness-codebase-reverse-spec',
+  'harness-agents-md',
 ];
 
 export function listInstalledSkillNames(projectRoot) {
@@ -73,11 +73,11 @@ export function buildPrepareMessage(assessment) {
   lines.push('  Run full harness prepare for this project.');
   lines.push('');
   lines.push('Chain (automatic, one session):');
-  lines.push('  1. architecture-rules-generator → .nextstage-harness/rules/architecture-rules.md');
+  lines.push('  1. harness-architecture-rules → .nextstage-harness/rules/architecture-rules.md');
   lines.push('  2. harness sync');
-  lines.push('  3. bootstrap-brownfield → docs/context/brownfield-map.md');
-  lines.push('  4. codebase-reverse-spec → docs/context/system-reverse-spec.md');
-  lines.push('  5. agents-md-generator → AGENTS.md + CLAUDE.md');
+  lines.push('  3. harness-bootstrap-brownfield → docs/context/brownfield-map.md');
+  lines.push('  4. harness-codebase-reverse-spec → docs/context/system-reverse-spec.md');
+  lines.push('  5. harness-agents-md → AGENTS.md + CLAUDE.md');
   lines.push('');
 
   if (!assessment.harnessPresent) {

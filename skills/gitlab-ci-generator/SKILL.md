@@ -67,5 +67,5 @@ Lint YAML; confirm jobs match repo layout.
 
 ## Related skills
 
-- `create-e2e-tests` — E2E folder conventions
-- `e2e-test-generator` — planning E2E scope
+- `code-e2e-tests` — E2E folder conventions
+- `pm-e2e-test-generator` — planning E2E scope

@@ -1,6 +1,6 @@
 ---
 name: execution-orchestrator
-description: (NS) Orchestrate partitioned version implementation slice-by-slice — dispatch one synchronous subagent per slice with small context, commit after each slice, and advance automatically without confirmation until all slices are done or a stop condition is hit. Use whenever a version has a version-roadmap.md with pending slices and the user asks to "run the orchestrated implementation", "execute all slices", "orchestrate the partitioned version", or drive a subversion roadmap to completion. Do NOT use for non-partitioned versions (execute tasks directly), ad-hoc coding (code-coder), or planning/partitioning (version-partitioner).
+description: (NS) Orchestrate partitioned version implementation slice-by-slice — dispatch one synchronous subagent per slice with small context, commit after each slice, and advance automatically without confirmation until all slices are done or a stop condition is hit. Use whenever a version has a version-roadmap.md with pending slices and the user asks to "run the orchestrated implementation", "execute all slices", "orchestrate the partitioned version", or drive a subversion roadmap to completion. Do NOT use for non-partitioned versions (execute tasks directly), ad-hoc coding (code-coder), or planning/partitioning (pm-version-partitioner).
 depends:
   - nextstage-harness
 ---
@@ -105,7 +105,7 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
    approval** before applying it.
 2. Run the post-implementation review: invoke the `code-reviewer` skill
    (read-only) over the version diff; it writes `code-review-report.md`.
-3. Consolidate living specs when the version status allows — `living-spec-consolidator`.
+3. Consolidate living specs when the version status allows — `pm-living-spec-consolidator`.
 4. Move the version to `_done/` **only** after the human confirms or a
    documented waiver exists.
 5. If a version `execution-handoff.md` exists, close its final delivery block
@@ -152,11 +152,11 @@ Orchestrate the partitioned implementation of apps/my-product 3.8.0.
 
 | Stage                                     | Skill                        |
 | ----------------------------------------- | ---------------------------- |
-| Partition version → roadmap + subversions | `version-partitioner`        |
+| Partition version → roadmap + subversions | `pm-version-partitioner`        |
 | Handoff generation and updates            | `execution-handoff-generator` |
 | Slice worker (per-slice implementation)   | `code-coder`                 |
 | End-of-version review gate                | `code-reviewer`              |
-| Living specs consolidation                | `living-spec-consolidator`   |
+| Living specs consolidation                | `pm-living-spec-consolidator`   |
 | Work branch / GitLab sync                 | `mcp-gitlab-usage`           |
 
 ## References
@@ -164,4 +164,4 @@ Orchestrate the partitioned implementation of apps/my-product 3.8.0.
 | File                                                      | When to read                                                  |
 | --------------------------------------------------------- | ------------------------------------------------------------- |
 | `references/slice-dispatch.md`                            | Exact slice subagent prompt template and validation checklist |
-| `../version-partitioner/references/partition-workflow.md` | Planning loop that produces the roadmap you consume           |
+| `../pm-version-partitioner/references/partition-workflow.md` | Planning loop that produces the roadmap you consume           |

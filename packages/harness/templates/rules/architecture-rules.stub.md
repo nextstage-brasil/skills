@@ -1,6 +1,6 @@
 # Architecture Rules
 
-Technical constitution for AI agents. Replace this stub by running the `architecture-rules-generator` skill, then `npx @nextstage-brasil/harness sync`.
+Technical constitution for AI agents. Replace this stub by running the `harness-architecture-rules` skill, then `npx @nextstage-brasil/harness sync`.
 
 ## Scope
 
@@ -11,7 +11,7 @@ Technical constitution for AI agents. Replace this stub by running the `architec
 
 | Layer | Technology |
 | ----- | ---------- |
-| TBD   | Run architecture-rules-generator |
+| TBD   | Run harness-architecture-rules |
 
 ## Key references
 

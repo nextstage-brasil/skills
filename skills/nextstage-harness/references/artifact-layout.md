@@ -14,7 +14,7 @@ Canonical paths for spec-driven planning and delivery artifacts.
 
 - All version planning artifacts live under `{product_root}/docs/versions/{version_san}/`.
 - Do not save product specs at repo root `/docs/` unless explicitly documented.
-- Living specs live under `{specs_root}/` — see `living-spec-consolidator` skill.
+- Living specs live under `{specs_root}/` — see `pm-living-spec-consolidator` skill.
 
 ## Minimum tree (create before writing)
 
@@ -73,7 +73,7 @@ When a version is partitioned:
 - Slice folder: `{product_root}/docs/versions/{version_san}/subversions/{subversion_san}/`
 - Slice requirements: excerpt under each subversion folder
 
-See `version-partitioner` skill and `core-subversions` rule when present in harness.
+See `pm-version-partitioner` skill and `core-subversions` rule when present in harness.
 
 ## Handoff rule
 

@@ -1,16 +1,16 @@
 ---
 name: requirements-enricher
 description:
-  (NS) Enrich GitLab issue requirements before autonomous execution. Given ISSUE_URL,
-  read the issue and comments via MCP, investigate the codebase and product context,
-  run a grill-me-style gap analysis, and post a single internal comment with all
-  numbered questions for the issue author (requester) in plain product language —
-  never dev/ops meta-questions. Use whenever the user asks to enrich/refine requirements,
-  clarify an issue, prepare an issue for execution, run grill-me on an issue, generate
-  blocking questions, or says the issue is vague/incomplete — even without naming this
-  skill. Do NOT use for full issue execution (execute-gitlab-issue), code review
-  (code-reviewer), version planning (start_execution_planning), or generating
-  requirements.md (requirements-generator).
+  (NS) Enrich requirements before autonomous execution — GitLab issue or chat context.
+  **Issue mode:** given ISSUE_URL, read issue and comments via MCP, investigate codebase,
+  run grill-me gap analysis, post one internal comment with numbered questions for the
+  issue author. **Chat mode:** when the user pastes or describes requirements/scope in
+  conversation (no issue), run the same analysis and render numbered questions inline
+  in chat only — no files, no GitLab posts. Use whenever the user asks to enrich/refine
+  requirements, clarify scope, prepare for execution, run grill-me, or generate blocking
+  questions — with or without a GitLab issue. Do NOT use for full issue execution
+  (execution-gitlab-issue), code review (code-reviewer), version planning
+  (start_execution_planning), or generating requirements.md (pm-requirements-generator).
 depends:
   - nextstage-harness
   - mcp-gitlab-usage
@@ -18,7 +18,16 @@ depends:
 
 # Requirements Enricher
 
-Prepare a GitLab issue for **autonomous execution** by closing requirement gaps before any branch, code, or status change.
+Prepare requirements for **autonomous execution** by closing gaps before any branch, code, or status change.
+
+## Mode detection
+
+| Mode | Trigger | Delivery |
+| ---- | ------- | -------- |
+| **Issue** | `ISSUE_URL` present or user points to a GitLab issue | Post one **internal** GitLab comment (Phase 4) |
+| **Chat** | User pastes/describes requirements in conversation — no issue URL | Render verdict + numbered questions **inline in chat only** — no files, no GitLab, no version artifacts |
+
+Both modes share Phases 2–3 (investigation + grill-me). Phase 1 (MCP load) applies only in **issue** mode.
 
 ## Harness discovery
 
@@ -28,21 +37,29 @@ Read `../mcp-gitlab-usage/SKILL.md` before MCP calls (`get_mcp_gitlab_skill` ver
 
 ## Objective
 
-Given `ISSUE_URL`, produce one **internal** GitLab comment that:
+**Issue mode:** given `ISSUE_URL`, produce one **internal** GitLab comment that:
 
 1. Summarizes what you understood from the issue + comments
 2. Opens with a **verdict icon** — `✅` (ready) or `❌` (blocking questions)
 3. Lists **all** blocking/open questions **numbered sequentially** (never one-by-one in chat)
 4. **@mentions** the issue **author** (who opened it) so they can reply in the issue thread
 
-Do **not** implement, commit, change issue status, or ask questions interactively in chat (except when blocked on missing `ISSUE_URL` or MCP access).
+**Chat mode:** given requirements text from the conversation, produce an **inline** response that:
+
+1. Summarizes what you understood from the user's description
+2. Opens with the same **verdict icon** — `✅` or `❌`
+3. Lists **all** blocking/open questions **numbered sequentially** in the chat reply
+4. Does **not** @mention anyone (no issue author)
+
+Do **not** implement, commit, change issue status, create files, or ask questions interactively one-by-one (except when blocked on missing context or MCP access in issue mode).
 
 ## When to use
 
-- User provides `ISSUE_URL` and wants requirements clarified before coding
-- User invokes grill-me on an issue
-- `code-autonomous` / human flags the issue as underspecified
-- Pre-step before `execute-gitlab-issue` when acceptance criteria are incomplete
+- User provides `ISSUE_URL` and wants requirements clarified before coding (**issue** mode)
+- User pastes a feature brief, scope, or acceptance criteria in chat without a GitLab issue (**chat** mode)
+- User invokes grill-me on requirements (issue or chat)
+- `code-autonomous` / human flags work as underspecified
+- Pre-step before `execution-gitlab-issue` when acceptance criteria are incomplete
 
 ## Prerequisites
 
@@ -52,12 +69,15 @@ Do **not** implement, commit, change issue status, or ask questions interactivel
 
 ## Inputs
 
-| Variable    | Required | Description                                     |
-| ----------- | -------- | ----------------------------------------------- |
-| `ISSUE_URL` | Yes      | Full GitLab issue link                          |
-| `DRY_RUN`   | No       | If true, show comment in chat only; do not post |
+| Variable    | Required | Description |
+| ----------- | -------- | ----------- |
+| `ISSUE_URL` | Issue mode only | Full GitLab issue link |
+| Requirements text | Chat mode only | User message, pasted brief, or attached scope |
+| `DRY_RUN`   | No       | Issue mode: if true, show comment in chat only; do not post |
 
-## Phase 1 — Load issue context (MCP)
+## Phase 1 — Load issue context (issue mode only)
+
+**Skip this phase in chat mode.** Use the user's message and any pasted context as the requirements source instead.
 
 **Parse URL** → `project_id` (or `project_name` for discovery) + `issue_iid`.
 
@@ -97,7 +117,9 @@ author_username = <author.username>   # literal string from MCP; case-sensitive
 - **Constraints** — note labels/milestone/due date for _your_ context; do **not** turn missing labels into questions.
 - **Already answered** — facts from comments that remove ambiguity; do not re-ask these.
 
-If `ISSUE_URL` is missing or MCP is unavailable, stop with a single line telling the human what is missing (do not invent issue content).
+If `ISSUE_URL` is missing in issue mode, or MCP is unavailable, stop with a single line telling the human what is missing (do not invent issue content).
+
+In **chat mode**, synthesize Goal, Acceptance criteria, Constraints, and Already answered from the conversation text using the same structure as above.
 
 ## Phase 2 — Investigate codebase and product context
 
@@ -183,7 +205,9 @@ See `references/question-checklist.md`. Prefer product/UX/acceptance gaps only.
 
 Cap at **15 questions**; merge related micro-questions. If zero gaps remain, say so explicitly and post a short "ready for execution" internal note instead of filler questions.
 
-## Phase 4 — Post internal comment (MCP)
+## Phase 4 — Deliver results
+
+### Issue mode (MCP)
 
 Unless `DRY_RUN=true`, call `add_issue_comment` with:
 
@@ -209,9 +233,27 @@ Use the **execution-ready** template when `N = 0`; use the **questions** templat
 
 Do **not** use `set_issue_status`, `update_issue`, or `create_issue` in this skill.
 
+### Chat mode (inline)
+
+Render the same structure as the comment template **directly in the chat reply**:
+
+- Verdict icon on the first line (`✅` ready / `❌` with question count)
+- **Current understanding** — short summary
+- **Assumptions** — safe defaults you applied
+- **Areas investigated** — relevant files/modules (OK to include paths here)
+- **Questions** — numbered list in plain product language (no @mentions)
+
+Do **not** create files, post to GitLab, or write version artifacts (`requirements.md`, task files, etc.).
+
+**After delivery (both modes):** reply in chat with:
+
+- Issue mode: link or `project_id` + `issue_iid`; count of questions posted
+- Chat mode: count of questions; one-line note if scope looks execution-ready vs blocked
+
 ## Language
 
-- GitLab comment: **English** unless the user or `{product_root}` docs explicitly require another language for stakeholder communication.
+- GitLab comment (issue mode): **English** unless the user or `{product_root}` docs explicitly require another language for stakeholder communication.
+- Chat reply (chat mode): match the language the user used unless they request otherwise.
 - In **Questions**: no file paths, class names, SQL, or env vars
 - In **Current understanding / Assumptions / Areas investigated**: code paths OK (for the executing agent)
 
@@ -234,20 +276,22 @@ Do **not** use `set_issue_status`, `update_issue`, or `create_issue` in this ski
 
 | Skill                    | When                                                                |
 | ------------------------ | ------------------------------------------------------------------- |
-| `execute-gitlab-issue`   | After requirements are clear; implements the issue                  |
+| `execution-gitlab-issue`   | After requirements are clear; implements the issue                  |
 | `code-reviewer`          | After code exists; reviews diffs                                    |
 | `mcp-gitlab-usage`       | All MCP calls, version check, `add_issue_comment` contract          |
-| `clarify-requirements`   | Version-scope clarification in chat before `requirements-generator` |
-| `requirements-generator` | Produces `requirements.md` for a version — not per-issue enrichment |
+| `pm-clarify-requirements`   | Version-scope clarification in chat before `pm-requirements-generator` |
+| `pm-requirements-generator` | Produces `requirements.md` for a version — not per-issue enrichment |
 
 ## Quick checklist
 
-- [ ] `ISSUE_URL` parsed; `read_issue` + `list_issue_comments` done
-- [ ] `author_username` = literal `author.username` from `read_issue` (not name/slug/guess)
+- [ ] Mode detected: issue (`ISSUE_URL`) vs chat (conversation text)
+- [ ] Issue mode: `read_issue` + `list_issue_comments` done; `author_username` = literal `author.username`
+- [ ] Chat mode: requirements synthesized from user message; no MCP issue load
 - [ ] Codebase and product context investigated; technical gaps → assumptions or rewritten for requester
-- [ ] Questions: author-facing, plain language, no labels/branch/schema as questions
-- [ ] Comment uses template; verdict icon `✅` or `❌` on first line; `@author` (opener) present; `internal: true`
-- [ ] No status change, no code edits, no interactive Q&A in chat
+- [ ] Questions: requester-facing, plain language, no labels/branch/schema as questions
+- [ ] Issue mode: comment uses template; verdict icon; `@author`; `internal: true`
+- [ ] Chat mode: verdict + questions inline only; no files, no GitLab posts
+- [ ] No status change, no code edits, no interactive Q&A one-by-one
 
 ## References
 

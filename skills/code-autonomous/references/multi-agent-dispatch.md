@@ -36,7 +36,7 @@ Report: files changed, summary of the diff, any new destructive doubt (do not gu
 ## Checkpoint commits
 
 - One commit per completed sequential unit, or one per completed parallel batch (all units in that batch finished) — committed inside the worktree as work progresses.
-- Commit message: `<type>(unit): <imperative summary>` — these are internal checkpoints, not the final delivery commit. The caller (`execute-gitlab-issue`) squashes to one Conventional Commit at delivery; the standalone pipeline may keep them or squash per its own closure preference.
+- Commit message: `<type>(unit): <imperative summary>` — these are internal checkpoints, not the final delivery commit. The caller (`execution-gitlab-issue`) squashes to one Conventional Commit at delivery; the standalone pipeline may keep them or squash per its own closure preference.
 - Never skip a checkpoint to "batch" multiple units into one commit — checkpoints are what make a paused/resumed run (doubt escalation) safe to pick back up.
 
 ## Fix-loop re-dispatch

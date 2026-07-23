@@ -9,6 +9,7 @@ import { migrateRules } from '../src/migrateRules.js';
 import { addRule } from '../src/addRule.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { runPrepare } from '../src/prepare.js';
+import { pruneRetiredSkills, formatPruneReport } from '../src/pruneRetiredSkills.js';
 import { DEFAULT_AGENTS, HARNESS_ROOT } from '../src/agentsLayout.js';
 
 const HELP = `
@@ -19,6 +20,7 @@ Usage:
   harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
   harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
+  harness prune-retired-skills  Remove renamed skill dirs after replacement is installed
   harness list             List presets and available skills
 
 Options:
@@ -49,6 +51,7 @@ Examples:
   npx @nextstage-brasil/harness agents-md
   npx @nextstage-brasil/harness agents-md --force
   npx @nextstage-brasil/harness prepare
+  npx @nextstage-brasil/harness prune-retired-skills --dry-run
   npx @nextstage-brasil/harness list
 `.trim();
 
@@ -84,6 +87,7 @@ function parseArgs(argv) {
     'list',
     'sync',
     'migrate-rules',
+    'prune-retired-skills',
     'agents-md',
     'add-rule',
     'prepare',
@@ -296,6 +300,16 @@ async function runAddRule(parsed) {
   console.log(`Synced ${result.syncResult.written.length} adapter file(s)`);
 }
 
+async function runPruneRetiredSkills(parsed) {
+  const projectRoot = resolveProjectDir(parsed.dir);
+  const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
+  const result = pruneRetiredSkills(projectRoot, {
+    dryRun: Boolean(parsed['dry-run']),
+    agents,
+  });
+  console.log(formatPruneReport(result));
+}
+
 async function main() {
   const parsed = parseArgs(process.argv);
 
@@ -342,6 +356,16 @@ async function main() {
   if (parsed.command === 'prepare') {
     try {
       await runPrepareCmd(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (parsed.command === 'prune-retired-skills') {
+    try {
+      await runPruneRetiredSkills(parsed);
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
       process.exit(1);

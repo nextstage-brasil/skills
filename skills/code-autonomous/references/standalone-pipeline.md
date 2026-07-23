@@ -1,6 +1,6 @@
 # Standalone pipeline (non-GitLab origin)
 
-Full flow when this skill is the entry point — no `execute-gitlab-issue` involved.
+Full flow when this skill is the entry point — no `execution-gitlab-issue` involved.
 
 ## 1. Resolve the descriptor
 
@@ -44,7 +44,7 @@ git -C "{WORKTREE_ROOT}" rev-parse --show-toplevel     # must equal WORKTREE_ROO
 
 If any check fails → stop and report. Do not edit. Do not "proceed on main".
 
-Resolve the base branch the same way `execute-gitlab-issue`'s Gate 1 would (explicit in the descriptor, or ask once), including remote validation with `_` ↔ `-` alternates per `../../execute-gitlab-issue/references/source-branch-resolution.md` — `main`/`master` are valid bases here since there's no issue-branch-resolution rule forcing otherwise, but confirm with the human if the descriptor doesn't state one. Abort if a worktree already exists for this `{version_san}` and is in use by another run, unless this is an explicit resume.
+Resolve the base branch the same way `execution-gitlab-issue`'s Gate 1 would (explicit in the descriptor, or ask once), including remote validation with `_` ↔ `-` alternates per `../../execution-gitlab-issue/references/source-branch-resolution.md` — `main`/`master` are valid bases here since there's no issue-branch-resolution rule forcing otherwise, but confirm with the human if the descriptor doesn't state one. Abort if a worktree already exists for this `{version_san}` and is in use by another run, unless this is an explicit resume.
 
 ## 4. Plan, resolve doubts, dispatch
 

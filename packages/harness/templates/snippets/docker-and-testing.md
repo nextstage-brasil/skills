@@ -24,4 +24,4 @@ timeout 120 docker exec -w {workdir} {test_container} \
   vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error
 ```
 
-Execution details and bootstrap: `create-backend-tests` skill.
+Execution details and bootstrap: `code-backend-tests` skill.

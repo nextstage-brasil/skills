@@ -16,6 +16,7 @@ import { syncDockerignore } from './syncDockerignore.js';
 import { syncGitignore } from './syncGitignore.js';
 import { generateAgentsMd } from './generateAgentsMd.js';
 import { buildPostInstallNotes } from './postInstallNotes.js';
+import { pruneRetiredSkills } from './pruneRetiredSkills.js';
 import { DEFAULT_AGENTS } from './agentsLayout.js';
 
 export async function runInit(argv = {}) {
@@ -79,6 +80,20 @@ export async function runInit(argv = {}) {
     spinner.stop('Installation failed.');
     p.cancel(error instanceof Error ? error.message : String(error));
     process.exit(1);
+  }
+
+  try {
+    const pruneResult = pruneRetiredSkills(detection.projectRoot, { agents });
+    if (pruneResult.removed.length > 0) {
+      const names = pruneResult.removable.map((entry) => entry.oldName).join(', ');
+      p.log.success(`Removed retired skills: ${names}`);
+    }
+    if (pruneResult.skipped.length > 0) {
+      const names = pruneResult.skipped.map((entry) => entry.oldName).join(', ');
+      p.log.warn(`Retired skills kept (replacement missing): ${names}`);
+    }
+  } catch (error) {
+    p.log.warn(error instanceof Error ? error.message : String(error));
   }
 
   try {

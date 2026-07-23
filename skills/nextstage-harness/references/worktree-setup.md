@@ -1,6 +1,6 @@
 # Worktree setup (single tree, monorepo)
 
-Canonical mechanics for isolating a run in a dedicated `git worktree`. Consumer skills (`execute-gitlab-issue`, `code-autonomous`) derive their own `{run_id}` and point here instead of duplicating the commands.
+Canonical mechanics for isolating a run in a dedicated `git worktree`. Consumer skills (`execution-gitlab-issue`, `code-autonomous`) derive their own `{run_id}` and point here instead of duplicating the commands.
 
 ## Path (mandatory)
 
@@ -60,7 +60,7 @@ If `git worktree add` fails (permissions, sandbox, path conflict, missing remote
 
 | Consumer            | `{run_id}`                          |
 | -------------------- | ------------------------------------ |
-| `execute-gitlab-issue` | `{ISSUE_ID}` (see its `references/worktree-setup.md` override) |
+| `execution-gitlab-issue` | `{ISSUE_ID}` (see its `references/worktree-setup.md` override) |
 | `code-autonomous` standalone | `{version_san}` (see its `references/standalone-pipeline.md`) |
 
 ## Cleanup

@@ -1,0 +1,23 @@
+{
+  "skill_name": "pm-analyze-consistency",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run consistency analysis on apps/shop/docs/versions/2.0.0/requirements.md before we generate tasks.",
+      "expected_output": "Agent reads requirements, runs checks, writes consistency-report.md, states proceed/stop decision.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I edited requirements — Feature 003 references table orders but data model only lists users.",
+      "expected_output": "Agent flags blocker for missing entity in data model, does not edit requirements file.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Requirements look good — any blockers for task generation?",
+      "expected_output": "Agent performs full check matrix; if 100% pass explains Gate 3 can be skipped.",
+      "files": []
+    }
+  ]
+}

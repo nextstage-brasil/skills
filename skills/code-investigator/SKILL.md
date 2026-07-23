@@ -1,6 +1,6 @@
 ---
 name: code-investigator
-description: (NS) Senior technical investigation, debugging, and root cause analysis from errors, logs, stack traces, failing tests, CI failures, or unexpected behavior. Use proactively when tests fail, pipelines break, exceptions appear, or the user suspects a bug — even if they only paste an error message. Do NOT use for pre-merge code review (use code-reviewer) or scope clarification (use clarify-requirements).
+description: (NS) Senior technical investigation, debugging, and root cause analysis from errors, logs, stack traces, failing tests, CI failures, or unexpected behavior. Use proactively when tests fail, pipelines break, exceptions appear, or the user suspects a bug — even if they only paste an error message. Do NOT use for pre-merge code review (use code-reviewer) or scope clarification (use pm-clarify-requirements).
 depends:
   - nextstage-harness
 ---

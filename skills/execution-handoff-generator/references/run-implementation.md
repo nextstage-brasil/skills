@@ -93,7 +93,7 @@ When the product has frontend navigation changes, present grouping proposals and
 
 When status is `completed` or `completed_with_caveats`:
 
-1. Invoke `living-spec-consolidator`
+1. Invoke `pm-living-spec-consolidator`
 2. Note in handoff; fill `Living specs — end`; recalculate totals
 
 ### Step 6 — Version archive

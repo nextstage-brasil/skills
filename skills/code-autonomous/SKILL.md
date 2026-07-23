@@ -1,6 +1,6 @@
 ---
 name: code-autonomous
-description: (NS) Harness-aware autonomous execution engine — self-decides planning depth, resolves doubts against docs/context and docs/specs before escalating, dispatches multi-agent implementation in an isolated worktree. Use as the standalone entry point for a local plan file, a pasted execution plan, or an ad-hoc "run this autonomously" request with no GitLab issue involved. Also acts as the Phase 2 execution engine when invoked by execute-gitlab-issue — do not run the standalone pipeline in that case. Not for simple single-step edits (use code-coder) and not for GitLab issues directly (use execute-gitlab-issue, which calls this skill internally).
+description: (NS) Harness-aware autonomous execution engine — self-decides planning depth, resolves doubts against docs/context and docs/specs before escalating, dispatches multi-agent implementation in an isolated worktree. Use as the standalone entry point for a local plan file, a pasted execution plan, or an ad-hoc "run this autonomously" request with no GitLab issue involved. Also acts as the Phase 2 execution engine when invoked by execution-gitlab-issue — do not run the standalone pipeline in that case. Not for simple single-step edits (use code-coder) and not for GitLab issues directly (use execution-gitlab-issue, which calls this skill internally).
 depends:
   - nextstage-harness
   - code-reviewer
@@ -24,12 +24,12 @@ See `../nextstage-harness/references/harness-discovery.md`.
 
 ## Routing (read first)
 
-1. **Origin is a GitLab issue** (`ISSUE_URL` or issue reference) → follow `execute-gitlab-issue` end to end; this skill only runs as its Phase 2 engine (**Engine mode** below). Do not run the standalone pipeline, do not touch GitLab state, do not create a worktree.
+1. **Origin is a GitLab issue** (`ISSUE_URL` or issue reference) → follow `execution-gitlab-issue` end to end; this skill only runs as its Phase 2 engine (**Engine mode** below). Do not run the standalone pipeline, do not touch GitLab state, do not create a worktree.
 2. **Otherwise** (local plan file, pasted text/plan, ad-hoc autonomous request without an issue) → run the **standalone pipeline**: own worktree, own state, own review loop.
 
 See `references/routing.md` for the full decision detail and the Engine-mode input/output contract.
 
-## Engine mode (invoked by `execute-gitlab-issue`)
+## Engine mode (invoked by `execution-gitlab-issue`)
 
 Inputs (already resolved by the caller — this skill never creates them): issue payload, `{product_root}`, `WORKTREE_ROOT`, `WORK_BRANCH`, `SOURCE_BRANCH`.
 
@@ -71,7 +71,7 @@ See `references/standalone-pipeline.md` for the full flow.
 
 | Skill                 | Role                                                       |
 | ---------------------- | ------------------------------------------------------------ |
-| `execute-gitlab-issue` | GitLab flow owner — calls this skill for Phase 2             |
+| `execution-gitlab-issue` | GitLab flow owner — calls this skill for Phase 2             |
 | `code-coder`           | Subagent implementation pattern used per work unit            |
 | `code-reviewer`        | Review gate (issue mode via caller, version-closure mode standalone) |
 | `nextstage-harness`    | Artifact layout, worktree mechanics, discovery               |
@@ -80,7 +80,7 @@ See `references/standalone-pipeline.md` for the full flow.
 
 | File                                | When                                                                |
 | ------------------------------------ | --------------------------------------------------------------------- |
-| `references/routing.md`              | Issue vs. standalone decision; Engine-mode I/O contract with `execute-gitlab-issue` |
+| `references/routing.md`              | Issue vs. standalone decision; Engine-mode I/O contract with `execution-gitlab-issue` |
 | `references/planning-decision.md`    | Self-evaluation heuristic: single unit vs. requirements+tasks+plan  |
 | `references/doubt-resolution.md`     | Self-ask, docs-first lookup, destructive criteria, escalation shape |
 | `references/multi-agent-dispatch.md` | DAG + disjoint-scope parallel rule, subagent prompt, checkpoint commits |

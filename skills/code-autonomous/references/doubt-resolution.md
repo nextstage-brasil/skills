@@ -23,7 +23,7 @@ Everything else — naming, internal structure, which of several equally valid c
 
 ## Escalation event shape (Engine mode)
 
-Return this to `execute-gitlab-issue` instead of mutating any GitLab state:
+Return this to `execution-gitlab-issue` instead of mutating any GitLab state:
 
 ```json
 {

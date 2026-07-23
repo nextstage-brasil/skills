@@ -1,6 +1,6 @@
 ---
 name: execution-handoff-generator
-description: (NS) Generate and update execution-handoff.md for planned SDD versions — operational prompt, per-task status table, and time tracking in seconds. Use at the end of planning after all task-NNN-*.md files exist, when tasks exist but handoff is missing, or when updating task status during version implementation. Do NOT use for ad-hoc coding without a version lifecycle, version partitioning (version-partitioner), or GitLab-only issue execution (execute-gitlab-issue).
+description: (NS) Generate and update execution-handoff.md for planned SDD versions — operational prompt, per-task status table, and time tracking in seconds. Use at the end of planning after all task-NNN-*.md files exist, when tasks exist but handoff is missing, or when updating task status during version implementation. Do NOT use for ad-hoc coding without a version lifecycle, version partitioning (pm-version-partitioner), or GitLab-only issue execution (execution-gitlab-issue).
 depends:
   - nextstage-harness
 ---
@@ -125,7 +125,7 @@ existing statuses by task ID.
 | Classic implementation     | `references/run-implementation.md` + `code-coder` |
 | Partitioned implementation | `execution-orchestrator` (slice handoffs + master closure)  |
 | End-of-version review      | `code-reviewer`                                             |
-| Living specs               | `living-spec-consolidator`                                  |
+| Living specs               | `pm-living-spec-consolidator`                                  |
 | GitLab board sync          | `gitlab-board-sync` (when config exists)                    |
 
 ## References

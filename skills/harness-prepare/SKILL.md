@@ -1,12 +1,12 @@
 ---
 name: harness-prepare
-description: (NS) Run the full post-harness-init AI bootstrap in one session — architecture rules, harness sync, brownfield map, business reverse spec, and project AGENTS.md. Use whenever the user says harness prepare, post-install setup, bootstrap this project after harness init, onboard brownfield repo, run full project preparation, or wants all brownfield skills in sequence without invoking each slash command manually — even if they list architecture-rules-generator, bootstrap-brownfield, codebase-reverse-spec, and agents-md-generator as separate next steps. Do NOT use for greenfield repos with no application code yet, single-skill runs (invoke the worker skill directly), or CLI-only baseline AGENTS.md (use harness agents-md).
+description: (NS) Run the full post-harness-init AI bootstrap in one session — architecture rules, harness sync, brownfield map, business reverse spec, and project AGENTS.md. Use whenever the user says harness prepare, post-install setup, bootstrap this project after harness init, onboard brownfield repo, run full project preparation, or wants all brownfield skills in sequence without invoking each slash command manually — even if they list harness-architecture-rules, harness-bootstrap-brownfield, harness-codebase-reverse-spec, and harness-agents-md as separate next steps. Do NOT use for greenfield repos with no application code yet, single-skill runs (invoke the worker skill directly), or CLI-only baseline AGENTS.md (use harness agents-md).
 depends:
   - nextstage-harness
-  - architecture-rules-generator
-  - bootstrap-brownfield
-  - codebase-reverse-spec
-  - agents-md-generator
+  - harness-architecture-rules
+  - harness-bootstrap-brownfield
+  - harness-codebase-reverse-spec
+  - harness-agents-md
 ---
 
 # Harness Prepare
@@ -39,7 +39,7 @@ See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-har
 ## Prerequisites
 
 1. `harness init` completed (or equivalent: `.agents/skills/` + `.nextstage-harness/` present).
-2. Worker skills installed: `architecture-rules-generator`, `bootstrap-brownfield`, `codebase-reverse-spec`, `agents-md-generator`.
+2. Worker skills installed: `harness-architecture-rules`, `harness-bootstrap-brownfield`, `harness-codebase-reverse-spec`, `harness-agents-md`.
 3. Read-only access to application source under `{product_root}`.
 
 If a worker skill is missing, stop and tell the user:
@@ -54,7 +54,7 @@ npx @nextstage-brasil/harness --preset brownfield --yes
 2. Confirm **once** (combine into one message when possible):
    - `{product_root}` path (monorepo product folder vs repo root)
    - Output language for markdown artifacts (default: user conversation language)
-   - For `codebase-reverse-spec`: whole product vs specific module; executive vs exhaustive (default: whole product, executive summary first)
+   - For `harness-codebase-reverse-spec`: whole product vs specific module; executive vs exhaustive (default: whole product, executive summary first)
 3. Verify application code exists under `{product_root}` (manifests, `src/`, `app/`, etc.). If absent, stop — greenfield has nothing to scan.
 4. Read existing `AGENTS.md`, `architecture-rules.md`, and `docs/context/*` to choose **create** vs **refresh** per step.
 
@@ -63,14 +63,14 @@ npx @nextstage-brasil/harness --preset brownfield --yes
 - Execute **all four worker steps** in the fixed order below.
 - **Do not** ask "continue to next step?" between steps.
 - **Do not** perform worker workflows yourself in the parent session — follow each worker skill's workflow in the same session (read the worker `SKILL.md` at the start of each step).
-- **Do not** skip `codebase-reverse-spec` — full prepare includes it.
+- **Do not** skip `harness-codebase-reverse-spec` — full prepare includes it.
 - After step 1, run `npx @nextstage-brasil/harness sync` (shell) before step 2.
 
 ## Step sequence
 
 ### Step 1 — Architecture rules
 
-**Skill:** `architecture-rules-generator`
+**Skill:** `harness-architecture-rules`
 
 **Goal:** Create or refresh `{harness_root}/rules/architecture-rules.md`.
 
@@ -95,7 +95,7 @@ Do not proceed to step 2 until sync succeeds.
 
 ### Step 2 — Brownfield map
 
-**Skill:** `bootstrap-brownfield`
+**Skill:** `harness-bootstrap-brownfield`
 
 **Goal:** Create or update `{product_root}/docs/context/brownfield-map.md`.
 
@@ -110,7 +110,7 @@ Follow the worker skill workflow. Read-only on application code.
 
 ### Step 3 — Business reverse spec
 
-**Skill:** `codebase-reverse-spec`
+**Skill:** `harness-codebase-reverse-spec`
 
 **Goal:** Create or update `{product_root}/docs/context/system-reverse-spec.md`.
 
@@ -126,7 +126,7 @@ Follow the worker skill workflow. Technology-agnostic output only.
 
 ### Step 4 — AGENTS.md (last)
 
-**Skill:** `agents-md-generator`
+**Skill:** `harness-agents-md`
 
 **Goal:** Refresh `{product_root}/AGENTS.md` and write minimal `{product_root}/CLAUDE.md`.
 
@@ -169,13 +169,13 @@ When all steps succeed, report:
 
 1. Paths written or refreshed (four outputs + sync).
 2. Suggested git commit message: `chore: harness prepare — rules, brownfield map, reverse spec, AGENTS.md`
-3. Next SDD step: `clarify-requirements` when ready to plan version 1.0.
+3. Next SDD step: `pm-clarify-requirements` when ready to plan version 1.0.
 
 ## Forbidden
 
-- Do not reorder steps (especially `agents-md-generator` before constitution and context artifacts).
+- Do not reorder steps (especially `harness-agents-md` before constitution and context artifacts).
 - Do not skip `harness sync` after architecture rules.
-- Do not skip `codebase-reverse-spec` in full prepare.
+- Do not skip `harness-codebase-reverse-spec` in full prepare.
 - Do not edit `.cursor/` or `.claude/` directly — canonical only.
 - Do not modify application source code during prepare.
 
@@ -199,4 +199,4 @@ Prepare the project — architecture rules, brownfield map, reverse spec, and AG
 | ----- | ----- |
 | CLI install + scaffold | `npx @nextstage-brasil/harness init` |
 | Check prerequisites | `npx @nextstage-brasil/harness prepare` |
-| SDD planning after prepare | `clarify-requirements` → `requirements-generator` |
+| SDD planning after prepare | `pm-clarify-requirements` → `pm-requirements-generator` |

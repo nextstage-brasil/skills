@@ -15,7 +15,7 @@
     },
     {
       "id": 3,
-      "prompt": "Act as the Phase 2 execution engine for execute-gitlab-issue on issue #482 — worktree at .worktrees/482/, branch work/482-fix-login-timeout already checked out from origin/develop. Implement the fix and report back.",
+      "prompt": "Act as the Phase 2 execution engine for execution-gitlab-issue on issue #482 — worktree at .worktrees/482/, branch work/482-fix-login-timeout already checked out from origin/develop. Implement the fix and report back.",
       "expected_output": "Agent runs Engine mode only: does not create a worktree or branch (uses the ones given), does not call any GitLab-mutating MCP tool, dispatches the work unit(s) inside the given worktree, makes checkpoint commits, and returns a structured result (unit statuses, files changed, doubt: null or an escalation event, estimate_seconds on first call) instead of a chat-facing final report.",
       "files": []
     }

@@ -66,7 +66,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 npx @nextstage-brasil/harness --preset recommended --yes
 ```
 
-Creates scaffold, stub `architecture-rules.md`, syncs adapters. Run `architecture-rules-generator` in your agent when code exists.
+Creates scaffold, stub `architecture-rules.md`, syncs adapters. Run `harness-architecture-rules` in your agent when code exists.
 
 ### Brownfield (existing codebase)
 
@@ -184,11 +184,11 @@ Run full harness prepare for {product_root}.
 
 **Chain (automatic, one session):**
 
-1. `architecture-rules-generator` → `.nextstage-harness/rules/architecture-rules.md`
+1. `harness-architecture-rules` → `.nextstage-harness/rules/architecture-rules.md`
 2. `npx @nextstage-brasil/harness sync`
-3. `bootstrap-brownfield` → `docs/context/brownfield-map.md`
-4. `codebase-reverse-spec` → `docs/context/system-reverse-spec.md`
-5. `agents-md-generator` → `AGENTS.md` + `CLAUDE.md`
+3. `harness-bootstrap-brownfield` → `docs/context/brownfield-map.md`
+4. `harness-codebase-reverse-spec` → `docs/context/system-reverse-spec.md`
+5. `harness-agents-md` → `AGENTS.md` + `CLAUDE.md`
 
 **Greenfield with no code yet:** skip until application code exists.
 
@@ -211,17 +211,17 @@ Use when you need only one artifact:
 
 | Skill | Output |
 | ----- | ------ |
-| `architecture-rules-generator` | `.nextstage-harness/rules/architecture-rules.md` |
-| `bootstrap-brownfield` | `docs/context/brownfield-map.md` |
-| `codebase-reverse-spec` | `docs/context/system-reverse-spec.md` |
-| `agents-md-generator` | `AGENTS.md`, `CLAUDE.md` |
+| `harness-architecture-rules` | `.nextstage-harness/rules/architecture-rules.md` |
+| `harness-bootstrap-brownfield` | `docs/context/brownfield-map.md` |
+| `harness-codebase-reverse-spec` | `docs/context/system-reverse-spec.md` |
+| `harness-agents-md` | `AGENTS.md`, `CLAUDE.md` |
 
 After architecture rules, always run `npx @nextstage-brasil/harness sync`.
 
 ### Recommended order (when not using harness-prepare)
 
 ```
-architecture-rules-generator → harness sync → bootstrap-brownfield → codebase-reverse-spec → agents-md-generator
+harness-architecture-rules → harness sync → harness-bootstrap-brownfield → harness-codebase-reverse-spec → harness-agents-md
 ```
 
 Rationale: constitution first; context artifacts next; AGENTS.md last so it links to all outputs.

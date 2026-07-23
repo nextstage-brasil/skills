@@ -1,0 +1,23 @@
+{
+  "skill_name": "harness-agents-md",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We just ran harness init on this Laravel monorepo. Replace the stub AGENTS.md with a project-specific one and set up CLAUDE.md.",
+      "expected_output": "Agent scans .agents/skills/ and harness layout; writes tailored AGENTS.md at repo root with installed skills and SDD chain; writes CLAUDE.md with only @AGENTS.md; does not copy harness template verbatim.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Refresh AGENTS.md — we installed execution-gitlab-issue and code-reviewer since last time. Keep our Portuguese chat bullet.",
+      "expected_output": "Agent updates skills and workflow sections from .agents/skills/, preserves hand-edited language bullet, refreshes CLAUDE.md pointer if needed.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Generate AGENTS.md for apps/billing-api/ in this monorepo. Only the billing-api folder uses NextStage harness.",
+      "expected_output": "Agent resolves product_root as apps/billing-api/, lists skills and paths relative to that folder, writes AGENTS.md and CLAUDE.md there.",
+      "files": []
+    }
+  ]
+}

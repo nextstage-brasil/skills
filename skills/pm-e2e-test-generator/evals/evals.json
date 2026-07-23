@@ -1,0 +1,23 @@
+{
+  "skill_name": "pm-e2e-test-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Plan E2E task for Feature 005 User CRUD — frontend task-015 includes data-testid contract.",
+      "expected_output": "Agent generates E2E task with device paths, RBAC URL scenarios, depends on task-015.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Generate Cypress task for login feature but frontend task has no testid contract.",
+      "expected_output": "Agent blocks and requests frontend task update before proceeding.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "E2E planning for staff-only reports module with menu and direct URL protection.",
+      "expected_output": "Agent includes RBAC scenarios for hidden menu and cy.visit direct URL denial.",
+      "files": []
+    }
+  ]
+}

@@ -27,30 +27,33 @@ Skills are invoked via the Skills menu / slash (e.g. `/code-coder`, `/code-revie
 | Skill                      | Purpose                                                                     |
 | -------------------------- | --------------------------------------------------------------------------- |
 | `nextstage-harness`        | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
-| `agents-md-generator`      | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer           |
-| `codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
-| `architecture-rules-generator` | Scan codebase and generate lean `architecture-rules.md` for agents      |
-| `bootstrap-brownfield`     | Map existing codebase stack/modules before first SDD version                |
-| `clarify-requirements`     | Resolve scope ambiguities before requirements generation                    |
-| `requirements-generator`   | Produce structured `requirements.md` for a version                          |
-| `analyze-consistency`      | Validate requirements before task generation                                |
-| `version-partitioner`      | Split large versions into subversions + roadmap                             |
-| `task-generator`           | Backend/frontend/infra implementation task files                            |
+| `harness-agents-md`      | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer           |
+| `harness-codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
+| `harness-architecture-rules` | Scan codebase and generate lean `architecture-rules.md` for agents      |
+| `harness-bootstrap-brownfield`     | Map existing codebase stack/modules before first SDD version                |
+| `pm-clarify-requirements`     | Resolve scope ambiguities before requirements generation                    |
+| `pm-requirements-generator`   | Produce structured `requirements.md` for a version                          |
+| `pm-analyze-consistency`      | Validate requirements before task generation                                |
+| `pm-version-partitioner`      | Split large versions into subversions + roadmap                             |
+| `pm-task-generator`           | Backend/frontend/infra implementation task files                            |
 | `execution-handoff-generator` | Generate and update `execution-handoff.md` (task order + time tracking) |
-| `unit-test-task-generator` | Backend PHPUnit/integration test tasks                                      |
-| `e2e-test-generator`       | Cypress E2E planning tasks                                                  |
-| `living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs                     |
+| `pm-unit-test-task-generator` | Backend PHPUnit/integration test tasks                                      |
+| `pm-e2e-test-generator`       | Cypress E2E planning tasks                                                  |
+| `pm-living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs                     |
 | `mcp-gitlab-usage`         | GitLab MCP tool contracts, gates, and flows                                 |
 | `gitlab-board-sync`        | Sync existing issues (labels, milestone, time)                              |
 | `gitlab-ci-generator`      | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                               |
-| `execute-gitlab-issue`     | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `code-autonomous` |
+| `execution-gitlab-issue`     | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `code-autonomous` |
 | `code-coder`               | Ad-hoc implementation without full SDD cycle                                |
 | `code-autonomous`          | Harness-aware autonomous execution engine — planning-depth self-decision, doubt resolution, multi-agent dispatch (issue engine or standalone) |
 | `execution-orchestrator`   | Drive a partitioned version slice-by-slice (subagent + commit per slice)    |
 | `code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
 | `code-investigator`        | Root-cause analysis and minimal fixes                                       |
-| `create-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |
-| `create-backend-tests`     | Implement/refactor PHPUnit tests in Docker (execution phase)                |
+| `code-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |
+| `code-backend-tests`     | Implement/refactor PHPUnit tests in Docker (execution phase)                |
+| `harness-prepare`          | Orchestrate full brownfield onboarding chain after harness init             |
+| `requirements-enricher`    | Grill-me gap analysis for GitLab issues or chat context                     |
+| `pm-requirements-copilot`  | End-to-end PM workflow — clarification through delivery forecast            |
 | `skill-creator`            | Create project-local skills in `.agents/skills/` + `harness sync`           |
 
 Migration notes: `skills/_meta/MIGRATION.md`.
@@ -96,23 +99,23 @@ Install via the [Skills CLI](https://skills.sh/) (`npx skills`). Skills live und
 Consumer skills declare `depends` in frontmatter. Once the CLI supports it ([vercel-labs/skills#861](https://github.com/vercel-labs/skills/pull/861)), installing one skill pulls its dependencies automatically:
 
 ```bash
-npx skills add nextstage-brasil/skills@execute-gitlab-issue --full-depth -y
-# resolves: nextstage-harness → mcp-gitlab-usage → code-reviewer → execute-gitlab-issue
+npx skills add nextstage-brasil/skills@execution-gitlab-issue --full-depth -y
+# resolves: nextstage-harness → mcp-gitlab-usage → code-reviewer → execution-gitlab-issue
 ```
 
 **Interim (until PR #861 merges):** `depends` is ignored by `skills@1.5.14`. Install peers manually:
 
 ```bash
 npx skills add nextstage-brasil/skills --full-depth -y \
-  --skill nextstage-harness --skill mcp-gitlab-usage --skill code-reviewer --skill execute-gitlab-issue
+  --skill nextstage-harness --skill mcp-gitlab-usage --skill code-reviewer --skill execution-gitlab-issue
 ```
 
 **Single skill (project):**
 
 ```bash
-npx skills add nextstage-brasil/skills@codebase-reverse-spec --full-depth -y
+npx skills add nextstage-brasil/skills@harness-codebase-reverse-spec --full-depth -y
 npx skills add nextstage-brasil/skills@mcp-gitlab-usage --full-depth -y
-npx skills add nextstage-brasil/skills@requirements-generator --full-depth -y
+npx skills add nextstage-brasil/skills@pm-requirements-generator --full-depth -y
 ```
 
 **Global:**
@@ -142,7 +145,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
-Typical SDD chain: `clarify-requirements` → `requirements-generator` → `analyze-consistency` → `task-generator` → implementation (`code-coder` / `execute-gitlab-issue` / `code-autonomous`) → `code-reviewer` → `living-spec-consolidator`.
+Typical SDD chain: `pm-clarify-requirements` → `pm-requirements-generator` → `pm-analyze-consistency` → `pm-task-generator` → implementation (`code-coder` / `execution-gitlab-issue` / `code-autonomous`) → `code-reviewer` → `pm-living-spec-consolidator`.
 
 ## Contributing
 

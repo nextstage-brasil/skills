@@ -4,12 +4,12 @@
 
 Ask once, first thing: **is the origin a GitLab issue?**
 
-- Yes (`ISSUE_URL`, an issue reference like `#123`, or the invoker states it is executing an issue) → `execute-gitlab-issue` owns the flow. If you were invoked directly with an issue origin and no caller context, redirect to `execute-gitlab-issue` instead of proceeding — don't touch GitLab state yourself.
+- Yes (`ISSUE_URL`, an issue reference like `#123`, or the invoker states it is executing an issue) → `execution-gitlab-issue` owns the flow. If you were invoked directly with an issue origin and no caller context, redirect to `execution-gitlab-issue` instead of proceeding — don't touch GitLab state yourself.
 - No (local `.plan.md` path, pasted plan text, ad-hoc "implement this autonomously" request) → run the standalone pipeline in this skill, start to finish.
 
 This mirrors the single entry point used across the catalog: whoever the human invokes, the GitLab-origin check happens before any worktree or branch decision.
 
-## Engine mode contract (when called by `execute-gitlab-issue`)
+## Engine mode contract (when called by `execution-gitlab-issue`)
 
 ### Inputs the caller guarantees
 
@@ -21,7 +21,7 @@ This mirrors the single entry point used across the catalog: whoever the human i
 
 ### What the engine must never do in this mode
 
-- Call any GitLab-mutating MCP tool (status labels, comments, MR creation, spent time). Those belong to `execute-gitlab-issue`.
+- Call any GitLab-mutating MCP tool (status labels, comments, MR creation, spent time). Those belong to `execution-gitlab-issue`.
 - Create or remove worktrees/branches.
 - Ask a question directly in chat for a destructive doubt — return the escalation event instead (see `doubt-resolution.md`); the caller owns the human-facing side of that gate.
 
@@ -43,4 +43,4 @@ Any of these, with no issue in play:
 - The human pastes plan text directly and asks for autonomous execution.
 - The human asks for autonomous multi-step implementation without pointing at an existing SDD version's `execution-handoff.md` (that case belongs to `execution-orchestrator` instead — redirect if you detect it).
 
-In standalone mode this skill is the only owner of the run: no `execute-gitlab-issue` phases apply, and GitLab is out of scope unless `docs/context/gitlab-sync-config.md` exists and the human explicitly asks for an MR at closure.
+In standalone mode this skill is the only owner of the run: no `execution-gitlab-issue` phases apply, and GitLab is out of scope unless `docs/context/gitlab-sync-config.md` exists and the human explicitly asks for an MR at closure.

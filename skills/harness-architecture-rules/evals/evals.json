@@ -1,0 +1,23 @@
+{
+  "skill_name": "harness-architecture-rules",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate architecture-rules.md for this Laravel + React monorepo. Product is under apps/billing-api/ with backend/ and frontend/.",
+      "expected_output": "Agent scans manifests and layout, drafts lean canonical rule at apps/billing-api/.nextstage-harness/rules/architecture-rules.md with stack table, layout, test commands, no business spec content, then runs harness sync.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Our architecture-rules.md is outdated after we moved modules to app/Modules/. Refresh it — keep the Portuguese communication bullet.",
+      "expected_output": "Agent refreshes in place, updates module layout from code, preserves hand-edited communication rule, stays under ~200 lines, runs harness sync.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Bootstrap agent context for a legacy PHP repo that uses ns-util. No architecture-rules yet but we have docs/specs/.",
+      "expected_output": "Agent generates canonical constitution, detects NsUtil, links to nsutil-architecture-rules.md instead of inlining, points specs to docs/specs/, updates manifest, runs harness sync.",
+      "files": []
+    }
+  ]
+}

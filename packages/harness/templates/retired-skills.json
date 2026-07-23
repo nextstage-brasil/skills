@@ -1,0 +1,17 @@
+{
+  "clarify-requirements": "pm-clarify-requirements",
+  "requirements-generator": "pm-requirements-generator",
+  "analyze-consistency": "pm-analyze-consistency",
+  "version-partitioner": "pm-version-partitioner",
+  "task-generator": "pm-task-generator",
+  "unit-test-task-generator": "pm-unit-test-task-generator",
+  "e2e-test-generator": "pm-e2e-test-generator",
+  "living-spec-consolidator": "pm-living-spec-consolidator",
+  "create-e2e-tests": "code-e2e-tests",
+  "create-backend-tests": "code-backend-tests",
+  "execute-gitlab-issue": "execution-gitlab-issue",
+  "agents-md-generator": "harness-agents-md",
+  "architecture-rules-generator": "harness-architecture-rules",
+  "bootstrap-brownfield": "harness-bootstrap-brownfield",
+  "codebase-reverse-spec": "harness-codebase-reverse-spec"
+}

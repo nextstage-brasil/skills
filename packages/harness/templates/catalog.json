@@ -2,38 +2,39 @@
   "source": "nextstage-brasil/skills",
   "depends": {
     "nextstage-harness": [],
-    "codebase-reverse-spec": [],
-    "architecture-rules-generator": ["nextstage-harness"],
-    "agents-md-generator": ["nextstage-harness"],
-    "bootstrap-brownfield": ["nextstage-harness"],
+    "harness-codebase-reverse-spec": [],
+    "harness-architecture-rules": ["nextstage-harness"],
+    "harness-agents-md": ["nextstage-harness"],
+    "harness-bootstrap-brownfield": ["nextstage-harness"],
     "harness-prepare": [
       "nextstage-harness",
-      "architecture-rules-generator",
-      "bootstrap-brownfield",
-      "codebase-reverse-spec",
-      "agents-md-generator"
+      "harness-architecture-rules",
+      "harness-bootstrap-brownfield",
+      "harness-codebase-reverse-spec",
+      "harness-agents-md"
     ],
-    "clarify-requirements": ["nextstage-harness"],
-    "requirements-generator": ["nextstage-harness"],
-    "analyze-consistency": ["nextstage-harness"],
-    "version-partitioner": ["nextstage-harness"],
-    "task-generator": ["nextstage-harness"],
+    "pm-clarify-requirements": ["nextstage-harness"],
+    "pm-requirements-generator": ["nextstage-harness"],
+    "pm-analyze-consistency": ["nextstage-harness"],
+    "pm-version-partitioner": ["nextstage-harness"],
+    "pm-task-generator": ["nextstage-harness"],
     "execution-handoff-generator": ["nextstage-harness"],
-    "unit-test-task-generator": [],
-    "e2e-test-generator": [],
-    "living-spec-consolidator": ["nextstage-harness"],
+    "pm-unit-test-task-generator": [],
+    "pm-e2e-test-generator": [],
+    "pm-living-spec-consolidator": ["nextstage-harness"],
+    "pm-requirements-copilot": [],
     "mcp-gitlab-usage": ["nextstage-harness"],
     "gitlab-board-sync": ["mcp-gitlab-usage"],
     "gitlab-ci-generator": [],
-    "execute-gitlab-issue": ["nextstage-harness", "mcp-gitlab-usage", "code-reviewer", "code-autonomous"],
+    "execution-gitlab-issue": ["nextstage-harness", "mcp-gitlab-usage", "code-reviewer", "code-autonomous"],
     "requirements-enricher": ["nextstage-harness", "mcp-gitlab-usage"],
     "code-autonomous": ["nextstage-harness", "code-reviewer"],
     "code-coder": ["nextstage-harness"],
     "execution-orchestrator": ["nextstage-harness"],
     "code-reviewer": ["nextstage-harness", "mcp-gitlab-usage"],
     "code-investigator": ["nextstage-harness"],
-    "create-e2e-tests": [],
-    "create-backend-tests": [],
+    "code-e2e-tests": [],
+    "code-backend-tests": [],
     "multi-agent-architect": [],
     "skill-creator": ["nextstage-harness"]
   },
@@ -43,14 +44,14 @@
       "description": "Planning, tasks, test generators, and living specs",
       "skills": [
         "nextstage-harness",
-        "clarify-requirements",
-        "requirements-generator",
-        "analyze-consistency",
-        "task-generator",
+        "pm-clarify-requirements",
+        "pm-requirements-generator",
+        "pm-analyze-consistency",
+        "pm-task-generator",
         "execution-handoff-generator",
-        "unit-test-task-generator",
-        "e2e-test-generator",
-        "living-spec-consolidator"
+        "pm-unit-test-task-generator",
+        "pm-e2e-test-generator",
+        "pm-living-spec-consolidator"
       ]
     },
     "gitlab": {
@@ -61,7 +62,7 @@
         "mcp-gitlab-usage",
         "requirements-enricher",
         "code-reviewer",
-        "execute-gitlab-issue",
+        "execution-gitlab-issue",
         "gitlab-board-sync"
       ]
     },
@@ -89,20 +90,20 @@
   "categories": {
     "foundation": {
       "label": "Foundation",
-      "skills": ["nextstage-harness", "agents-md-generator", "harness-prepare", "skill-creator"]
+      "skills": ["nextstage-harness", "harness-agents-md", "harness-prepare", "skill-creator"]
     },
     "sdd": {
       "label": "SDD planning",
       "skills": [
-        "clarify-requirements",
-        "requirements-generator",
-        "analyze-consistency",
-        "version-partitioner",
-        "task-generator",
-        "execution-handoff-generator",
-        "unit-test-task-generator",
-        "e2e-test-generator",
-        "living-spec-consolidator"
+        "pm-clarify-requirements",
+        "pm-requirements-generator",
+        "pm-analyze-consistency",
+        "pm-version-partitioner",
+        "pm-task-generator",
+        "pm-unit-test-task-generator",
+        "pm-e2e-test-generator",
+        "pm-living-spec-consolidator",
+        "pm-requirements-copilot"
       ]
     },
     "gitlab": {
@@ -112,16 +113,16 @@
         "requirements-enricher",
         "gitlab-board-sync",
         "gitlab-ci-generator",
-        "execute-gitlab-issue"
+        "execution-gitlab-issue"
       ]
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["code-coder", "code-autonomous", "execution-orchestrator", "code-investigator", "code-reviewer", "create-e2e-tests", "create-backend-tests"]
+      "skills": ["code-coder", "code-autonomous", "execution-orchestrator", "execution-handoff-generator", "execution-gitlab-issue", "code-investigator", "code-reviewer", "code-e2e-tests", "code-backend-tests"]
     },
     "brownfield": {
       "label": "Brownfield",
-      "skills": ["harness-prepare", "agents-md-generator", "architecture-rules-generator", "bootstrap-brownfield", "codebase-reverse-spec"]
+      "skills": ["harness-prepare", "harness-agents-md", "harness-architecture-rules", "harness-bootstrap-brownfield", "harness-codebase-reverse-spec"]
     }
   }
 }

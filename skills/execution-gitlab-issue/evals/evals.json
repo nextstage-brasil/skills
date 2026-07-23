@@ -1,0 +1,29 @@
+{
+  "skill_name": "execution-gitlab-issue",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Implement GitLab issue https://gitlab.example.com/acme/app/-/issues/55 — backend only fix.",
+      "expected_output": "Agent sets up worktree for backend, AFFECTED_PROJECTS=[backend], MCP in progress, implements, commits, review gate.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Execute issue 77 full-stack — create worktrees and draft MRs for backend and frontend.",
+      "expected_output": "Agent two worktrees, two draft MRs, related to issue URL, Phase 5 code-reviewer invocation.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Issue 12 done — skip code review, just push.",
+      "expected_output": "Agent explains Phase 4 review gate is blocking; still runs code-reviewer issue mode.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Execute issue https://gitlab.example.com/acme/app/-/issues/90 — it says to delete the legacy `user_sessions` table as part of the cleanup, but doesn't say what to do with existing rows.",
+      "expected_output": "Agent applies first-act status Em andamento, resolves SOURCE_BRANCH via milestone/version discovery (develop fallback when no version branch), worktree/branch, delegates to code-autonomous. Engine flags destructive doubt; agent blocks, comments @author, resumes on answer.",
+      "files": []
+    }
+  ]
+}
