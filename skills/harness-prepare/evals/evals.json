@@ -1,0 +1,16 @@
+{
+  "evals": [
+    {
+      "prompt": "I just ran harness init with the brownfield preset on apps/billing. Run full prepare — all brownfield steps in one session.",
+      "expected": "Invokes harness-prepare: confirms product_root once, then runs architecture-rules-generator, harness sync, bootstrap-brownfield, codebase-reverse-spec, and agents-md-generator in that order without asking between steps."
+    },
+    {
+      "prompt": "/harness-prepare for this repo (monorepo product at apps/shop/).",
+      "expected": "Invokes harness-prepare with product_root=apps/shop/, produces architecture-rules.md, brownfield-map.md, system-reverse-spec.md, and refreshed AGENTS.md with links to those artifacts."
+    },
+    {
+      "prompt": "Greenfield — empty repo, only harness scaffold, no app code yet. Run harness prepare.",
+      "expected": "Does not run the full chain; stops and explains prepare needs application code to scan, or suggests running prepare after first code exists."
+    }
+  ]
+}

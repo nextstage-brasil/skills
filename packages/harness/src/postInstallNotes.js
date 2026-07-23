@@ -12,7 +12,9 @@ export function buildPostInstallNotes({
   const lines = [];
   const isBrownfield =
     preset === 'brownfield' ||
+    installedSkills.includes('harness-prepare') ||
     installedSkills.includes('bootstrap-brownfield');
+  const hasPrepare = installedSkills.includes('harness-prepare');
 
   if (noScaffold) {
     lines.push('Skills installed (--no-scaffold). Scaffold skipped.');
@@ -26,38 +28,28 @@ export function buildPostInstallNotes({
   }
 
   lines.push('────────────────────────────────');
-  lines.push('1) Architecture rules (do this in your AI agent)');
-  lines.push('');
-  lines.push('   Skill:  /architecture-rules-generator');
-  lines.push('   Prompt: Scan this codebase and generate');
-  lines.push('           architecture-rules.md for {product_root}=.');
-  lines.push('           Then run harness sync.');
-  lines.push('   Output: .nextstage-harness/rules/architecture-rules.md');
-  lines.push('   After:  npx @nextstage-brasil/harness sync');
+  lines.push('Next step (in your AI agent)');
   lines.push('');
 
-  if (isBrownfield) {
-    lines.push('1b) Brownfield map (optional, existing codebases)');
+  if (hasPrepare || isBrownfield) {
+    lines.push('  Skill:   /harness-prepare');
+    lines.push('  CLI:     npx @nextstage-brasil/harness prepare');
     lines.push('');
-    lines.push('   Skill:  /bootstrap-brownfield');
-    lines.push('   Prompt: Bootstrap brownfield analysis for');
-    lines.push('           {product_root}=. before we plan version 1.0.');
-    lines.push('   Output: docs/context/brownfield-map.md');
+    lines.push('  Full chain (one session):');
+    lines.push('    architecture-rules-generator');
+    lines.push('    → harness sync');
+    lines.push('    → bootstrap-brownfield');
+    lines.push('    → codebase-reverse-spec');
+    lines.push('    → agents-md-generator');
     lines.push('');
+    lines.push('  Skip if greenfield with no application code yet.');
+  } else {
+    lines.push('  Optional: /architecture-rules-generator when code exists');
+    lines.push('  Then:     npx @nextstage-brasil/harness sync');
+    lines.push('  Refine:   /agents-md-generator');
   }
 
-  lines.push('────────────────────────────────');
-  lines.push('2) AGENTS.md');
   lines.push('');
-  lines.push('   CLI baseline (no AI):');
-  lines.push('     npx @nextstage-brasil/harness agents-md --force');
-  lines.push('');
-  lines.push('   Refine with project context (AI skill):');
-  lines.push('     Skill:  /agents-md-generator');
-  lines.push('     Prompt: Generate or refresh AGENTS.md for this project');
-  lines.push('             from installed skills and recon.');
-  lines.push('');
-
   lines.push('────────────────────────────────');
   lines.push('Extras');
   lines.push('');
@@ -66,11 +58,6 @@ export function buildPostInstallNotes({
   lines.push('');
   lines.push('SDD: clarify-requirements → requirements-generator →');
   lines.push('     task-generator → code-coder → code-reviewer');
-
-  if (['recommended', 'gitlab', 'implementation', 'brownfield'].includes(preset)) {
-    lines.push('');
-    lines.push('Skip AI steps if greenfield with no code yet.');
-  }
 
   return lines.join('\n');
 }

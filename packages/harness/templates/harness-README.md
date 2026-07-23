@@ -44,6 +44,8 @@ npx @nextstage-brasil/harness sync
 |---------------|------|
 | Skills | `.agents/skills/<name>/` |
 
+Install catalog skills with `npx skills add` or `harness init`. For full brownfield onboarding after init, run `/harness-prepare` in your agent (or `npx @nextstage-brasil/harness prepare` for instructions).
+
 Then run `harness sync` so Cursor and Claude skill adapters stay in sync.
 
 ## Mental model

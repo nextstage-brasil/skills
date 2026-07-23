@@ -6,6 +6,13 @@
     "architecture-rules-generator": ["nextstage-harness"],
     "agents-md-generator": ["nextstage-harness"],
     "bootstrap-brownfield": ["nextstage-harness"],
+    "harness-prepare": [
+      "nextstage-harness",
+      "architecture-rules-generator",
+      "bootstrap-brownfield",
+      "codebase-reverse-spec",
+      "agents-md-generator"
+    ],
     "clarify-requirements": ["nextstage-harness"],
     "requirements-generator": ["nextstage-harness"],
     "analyze-consistency": ["nextstage-harness"],
@@ -60,13 +67,10 @@
     },
     "brownfield": {
       "label": "Brownfield onboarding",
-      "description": "Reverse-spec, architecture rules, and stack mapping before first SDD version",
+      "description": "Full prepare chain — rules, stack map, reverse spec, and AGENTS.md",
       "skills": [
         "nextstage-harness",
-        "agents-md-generator",
-        "architecture-rules-generator",
-        "bootstrap-brownfield",
-        "codebase-reverse-spec"
+        "harness-prepare"
       ]
     },
     "implementation": {
@@ -85,7 +89,7 @@
   "categories": {
     "foundation": {
       "label": "Foundation",
-      "skills": ["nextstage-harness", "agents-md-generator", "skill-creator"]
+      "skills": ["nextstage-harness", "agents-md-generator", "harness-prepare", "skill-creator"]
     },
     "sdd": {
       "label": "SDD planning",
@@ -117,7 +121,7 @@
     },
     "brownfield": {
       "label": "Brownfield",
-      "skills": ["agents-md-generator", "architecture-rules-generator", "bootstrap-brownfield", "codebase-reverse-spec"]
+      "skills": ["harness-prepare", "agents-md-generator", "architecture-rules-generator", "bootstrap-brownfield", "codebase-reverse-spec"]
     }
   }
 }

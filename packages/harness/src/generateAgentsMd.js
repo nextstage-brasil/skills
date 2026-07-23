@@ -186,8 +186,9 @@ export function generateAgentsMd(projectRoot, options = {}) {
   ];
 
   const hasHarness = pathExists(root, HARNESS_ROOT);
+  const hasPrepare = installed.includes('harness-prepare');
   const archRulesNote = hasHarness
-    ? `**Before implementation, read \`.nextstage-harness/rules/architecture-rules.md\`.** If still the harness stub, run \`architecture-rules-generator\` then \`npx @nextstage-brasil/harness sync\`.`
+    ? `**Before implementation, read \`.nextstage-harness/rules/architecture-rules.md\`.** If still the harness stub, run \`/harness-prepare\` or \`architecture-rules-generator\` then \`npx @nextstage-brasil/harness sync\`.`
     : '**Harness rules not scaffolded** — run `harness init` or `harness migrate-rules`.';
 
   const content = `# Project agents — ${projectName}
@@ -232,11 +233,13 @@ ${buildImplementationNote(installed)}
 
 ### Brownfield / context
 
-| Artifact | Path | Skill |
+${hasPrepare ? '**Full onboarding:** `/harness-prepare` (or `npx @nextstage-brasil/harness prepare`) runs all steps below in one session.\n\n' : ''}| Artifact | Path | Skill |
 | -------- | ---- | ----- |
+| Full prepare chain | (all rows below) | \`harness-prepare\` |
 | Architecture constitution | \`.nextstage-harness/rules/architecture-rules.md\` | \`architecture-rules-generator\` |
 | Brownfield map | \`docs/context/brownfield-map.md\` | \`bootstrap-brownfield\` |
 | Business reverse spec | \`docs/context/system-reverse-spec.md\` | \`codebase-reverse-spec\` |
+| Project agents entry | \`AGENTS.md\` | \`agents-md-generator\` |
 
 ## Rules and sync
 

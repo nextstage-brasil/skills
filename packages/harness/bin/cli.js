@@ -8,11 +8,13 @@ import { syncGitignore } from '../src/syncGitignore.js';
 import { migrateRules } from '../src/migrateRules.js';
 import { addRule } from '../src/addRule.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
+import { runPrepare } from '../src/prepare.js';
 import { DEFAULT_AGENTS, HARNESS_ROOT } from '../src/agentsLayout.js';
 
 const HELP = `
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
+  harness prepare          Print full brownfield prepare instructions (/harness-prepare)
   harness sync [options]   Regenerate rule and skill adapters from canonical sources
   harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
@@ -46,6 +48,7 @@ Examples:
   npx @nextstage-brasil/harness add-rule frontend --globs "apps/web/**"
   npx @nextstage-brasil/harness agents-md
   npx @nextstage-brasil/harness agents-md --force
+  npx @nextstage-brasil/harness prepare
   npx @nextstage-brasil/harness list
 `.trim();
 
@@ -83,6 +86,7 @@ function parseArgs(argv) {
     'migrate-rules',
     'agents-md',
     'add-rule',
+    'prepare',
   ];
   const first = args[0];
   if (knownCommands.includes(first)) {
@@ -248,6 +252,15 @@ async function runMigrateRules(parsed) {
   console.log(`Synced ${result.syncResult.written.length} adapter file(s)`);
 }
 
+async function runPrepareCmd(parsed) {
+  const projectRoot = resolveProjectDir(parsed.dir);
+  const result = runPrepare(projectRoot);
+  console.log(result.message);
+  if (!result.assessment.ready) {
+    process.exit(1);
+  }
+}
+
 async function runAgentsMd(parsed) {
   const projectRoot = resolveProjectDir(parsed.dir);
   const result = generateAgentsMd(projectRoot, { force: parsed.force });
@@ -319,6 +332,16 @@ async function main() {
   if (parsed.command === 'agents-md') {
     try {
       await runAgentsMd(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (parsed.command === 'prepare') {
+    try {
+      await runPrepareCmd(parsed);
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
       process.exit(1);

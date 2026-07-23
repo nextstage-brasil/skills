@@ -30,6 +30,7 @@ npx @nextstage-brasil/harness list
 |---------|-------------|
 | `harness` / `harness init` | Install skills, scaffold layout, sync adapters, generate `AGENTS.md` |
 | `harness list` | Presets and skill catalog |
+| `harness prepare` | Print full brownfield prepare instructions (`/harness-prepare`) |
 | `harness sync` | Regenerate `.cursor/rules/`, `.claude/rules/`, and skill symlinks |
 | `harness sync --check` | CI mode — exit 1 if adapters drift from canonical |
 | `harness add-rule <name>` | Create rule under `.nextstage-harness/rules/`, update manifest, sync |
@@ -83,9 +84,10 @@ See `.nextstage-harness/README.md` in consumer projects for the human guide.
 
 CLI writes baseline `AGENTS.md`. In your agent, run next:
 
-1. `architecture-rules-generator` → `.nextstage-harness/rules/architecture-rules.md` → `harness sync`
-2. `bootstrap-brownfield` → `docs/context/brownfield-map.md` (optional)
-3. `codebase-reverse-spec` → `docs/context/system-reverse-spec.md` (optional)
+1. `/harness-prepare` — full chain: architecture rules → sync → brownfield map → reverse spec → AGENTS.md
+2. Or check prerequisites: `npx @nextstage-brasil/harness prepare`
+
+Individual skills remain available if you need only one step.
 
 Full guide: [docs/README_INSTALLER.md](docs/README_INSTALLER.md).
 

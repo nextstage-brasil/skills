@@ -33,6 +33,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 |---------|-------------|
 | `npx @nextstage-brasil/harness` | Interactive init (default) |
 | `harness init [options]` | Install skills + scaffold + sync |
+| `harness prepare` | Print full brownfield prepare instructions (`/harness-prepare`) |
 | `harness sync` | Regenerate rule and skill adapters from canonical |
 | `harness add-rule <name>` | Create canonical rule + manifest entry + sync |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
@@ -165,7 +166,33 @@ git add .nextstage-harness/ .cursor/rules/ .claude/rules/
 
 Run these **in Cursor or Claude Code** after `harness init` (not auto-invoked by CLI).
 
-### 10.0 Project AGENTS.md (CLI — automatic on init)
+### 10.0 Full prepare (recommended — brownfield preset)
+
+**Skill:** `harness-prepare` (`/harness-prepare`)
+
+**CLI check:**
+
+```bash
+npx @nextstage-brasil/harness prepare
+```
+
+**Prompt:**
+
+```
+Run full harness prepare for {product_root}.
+```
+
+**Chain (automatic, one session):**
+
+1. `architecture-rules-generator` → `.nextstage-harness/rules/architecture-rules.md`
+2. `npx @nextstage-brasil/harness sync`
+3. `bootstrap-brownfield` → `docs/context/brownfield-map.md`
+4. `codebase-reverse-spec` → `docs/context/system-reverse-spec.md`
+5. `agents-md-generator` → `AGENTS.md` + `CLAUDE.md`
+
+**Greenfield with no code yet:** skip until application code exists.
+
+### 10.1 CLI AGENTS.md baseline (automatic on init)
 
 `harness init` runs `harness agents-md` automatically. No AI — lists installed skills and layout from disk.
 
@@ -176,56 +203,25 @@ npx @nextstage-brasil/harness agents-md --force   # overwrite hand-edited file
 
 **Output:** `AGENTS.md`, `CLAUDE.md` (`@AGENTS.md` only)
 
-**Optional refine (brownfield / monorepo):** skill `agents-md-generator` — project-specific prose and conventions.
+Step 5 of `/harness-prepare` refines this with project context.
 
-### 10.1 Architecture rules (technical constitution)
+### 10.2 Individual worker skills (optional)
 
-**Skill:** `architecture-rules-generator`
+Use when you need only one artifact:
 
-**Prompt:**
+| Skill | Output |
+| ----- | ------ |
+| `architecture-rules-generator` | `.nextstage-harness/rules/architecture-rules.md` |
+| `bootstrap-brownfield` | `docs/context/brownfield-map.md` |
+| `codebase-reverse-spec` | `docs/context/system-reverse-spec.md` |
+| `agents-md-generator` | `AGENTS.md`, `CLAUDE.md` |
 
-```
-Scan this codebase and generate architecture-rules.md for {product_root}. Then run harness sync.
-```
+After architecture rules, always run `npx @nextstage-brasil/harness sync`.
 
-**Output:** `.nextstage-harness/rules/architecture-rules.md`
-
-**Then:**
-
-```bash
-npx @nextstage-brasil/harness sync
-```
-
-### 10.2 Brownfield map (brownfield preset only)
-
-**Skill:** `bootstrap-brownfield`
-
-**Prompt:**
+### Recommended order (when not using harness-prepare)
 
 ```
-Bootstrap brownfield analysis for {product_root} before we plan version 1.0.
+architecture-rules-generator → harness sync → bootstrap-brownfield → codebase-reverse-spec → agents-md-generator
 ```
 
-**Output:** `docs/context/brownfield-map.md`
-
-### 10.3 Business reverse spec (optional)
-
-**Skill:** `codebase-reverse-spec`
-
-**Prompt:**
-
-```
-Reverse-engineer this codebase into a technology-agnostic system description. Save to docs/context/system-reverse-spec.md
-```
-
-**Output:** `docs/context/system-reverse-spec.md`
-
-### Recommended order (existing codebases)
-
-```
-architecture-rules-generator → bootstrap-brownfield → codebase-reverse-spec → clarify-requirements
-```
-
-Rationale: CLI already wrote baseline `AGENTS.md` on init; constitution next; then stack map and business spec.
-
-**Greenfield with no code yet:** skip §10.1–10.3 until you have a codebase to scan.
+Rationale: constitution first; context artifacts next; AGENTS.md last so it links to all outputs.
