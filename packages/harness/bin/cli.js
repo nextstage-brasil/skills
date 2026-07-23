@@ -25,7 +25,7 @@ Usage:
 
 Options:
   --dir <path>           Target project directory (default: current)
-  --preset <name>        Preset: recommended | gitlab | brownfield | implementation
+  --preset <name>        Preset: recommended | gitlab | brownfield | implementation | agents-api
   --skill <name>         Install specific skill (repeatable)
   --all                  Install every skill in the catalog
   --global, -g           Install skills globally (passed to skills CLI)
@@ -44,6 +44,7 @@ Options:
 Examples:
   npx @nextstage-brasil/harness
   npx @nextstage-brasil/harness --preset gitlab --yes
+  npx @nextstage-brasil/harness --preset agents-api --yes
   npx @nextstage-brasil/harness sync
   npx @nextstage-brasil/harness sync --check
   npx @nextstage-brasil/harness add-rule api-conventions --description "API conventions"

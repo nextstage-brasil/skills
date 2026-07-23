@@ -9,9 +9,11 @@ const repoRoot = join(__dirname, '..', '..', '..');
 const skillsDir = join(repoRoot, 'skills');
 const catalogPath = join(__dirname, '..', 'templates', 'catalog.json');
 const retiredPath = join(__dirname, '..', 'templates', 'retired-skills.json');
+const externalPath = join(__dirname, '..', 'templates', 'external-skills.json');
 
 const catalog = JSON.parse(readFileSync(catalogPath, 'utf8'));
 const retiredSkills = JSON.parse(readFileSync(retiredPath, 'utf8'));
+const externalCatalog = JSON.parse(readFileSync(externalPath, 'utf8'));
 const catalogSkills = new Set(Object.keys(catalog.depends));
 
 const skillDirs = readdirSync(skillsDir).filter((entry) => {
@@ -74,6 +76,39 @@ for (const [oldName, newName] of Object.entries(retiredSkills)) {
   }
 }
 
+for (const [skillId, entry] of Object.entries(externalCatalog.skills ?? {})) {
+  if (!entry.source) {
+    errors.push(`external-skills.json: "${skillId}" missing source`);
+  }
+  if (!entry.stack || !externalCatalog.stacks?.[entry.stack]) {
+    errors.push(`external-skills.json: "${skillId}" has unknown stack "${entry.stack}"`);
+  }
+  if (catalogSkills.has(skillId)) {
+    errors.push(`external-skills.json: "${skillId}" collides with a NextStage catalog skill`);
+  }
+}
+
+for (const [presetId, preset] of Object.entries(externalCatalog.presets ?? {})) {
+  for (const skillId of preset.skills ?? []) {
+    if (!externalCatalog.skills?.[skillId]) {
+      errors.push(`external-skills.json preset "${presetId}" references unknown skill "${skillId}"`);
+    }
+  }
+  for (const skillId of preset.nsSkills ?? []) {
+    if (!catalogSkills.has(skillId)) {
+      errors.push(`external-skills.json preset "${presetId}" references unknown NS skill "${skillId}"`);
+    }
+  }
+  if (presetId === 'agents-api') {
+    const presetSkills = new Set(preset.skills ?? []);
+    for (const skillId of Object.keys(externalCatalog.skills ?? {})) {
+      if (!presetSkills.has(skillId)) {
+        errors.push(`agents-api preset must include all external skills; missing "${skillId}"`);
+      }
+    }
+  }
+}
+
 function parseDepends(frontmatter) {
   const match = frontmatter.match(/^depends:\s*\n((?:[ \t]+-\s+.+\n?)*)$/m);
   if (!match) return [];
@@ -88,4 +123,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`OK: catalog.json in sync with ${skillDirs.length} skills`);
+console.log(`OK: catalog.json in sync with ${skillDirs.length} skills; ${Object.keys(externalCatalog.skills ?? {}).length} external skills`);

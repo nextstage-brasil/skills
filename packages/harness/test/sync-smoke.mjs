@@ -11,6 +11,7 @@ import { syncGitignore, buildGitignoreBlock } from '../src/syncGitignore.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { migrateRules } from '../src/migrateRules.js';
 import { pruneRetiredSkills, assessPruneRetiredSkills } from '../src/pruneRetiredSkills.js';
+import { groupExternalSkillsBySource, getExternalPreset } from '../src/externalSkills.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const harnessRoot = join(__dirname, '..');
@@ -278,6 +279,25 @@ try {
 
   const dryRunCli = runCli(['prune-retired-skills', '--dry-run', '--dir', tempDir], harnessRoot);
   assert(dryRunCli.status === 0, `prune-retired-skills --dry-run should pass: ${dryRunCli.stderr}${dryRunCli.stdout}`);
+
+  // 12. external skills registry groups installs by source
+  const grouped = groupExternalSkillsBySource(['langchain-fundamentals', 'langgraph-persistence', 'vitest']);
+  assert(grouped.length === 2, 'external skills should group by source repo');
+  const langchainGroup = grouped.find((group) => group.source === 'langchain-ai/langchain-skills');
+  assert(langchainGroup?.skills.length === 2, 'langchain repo should include two skills');
+
+  const agentsApiPreset = getExternalPreset('agents-api');
+  assert(agentsApiPreset?.skills.length === 6, 'agents-api preset should include all six external skills');
+  assert(agentsApiPreset?.skills.includes('langgraph-persistence'), 'agents-api preset should include langgraph skill');
+  assert(agentsApiPreset?.skills.includes('postgresql-table-design'), 'agents-api preset should include postgresql skill');
+  assert(agentsApiPreset?.nsSkills.includes('multi-agent-architect'), 'agents-api preset should include NS architect skill');
+
+  const agentsApiDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents-api', '--dir', tempDir], harnessRoot);
+  assert(agentsApiDryRun.status === 0, `agents-api preset dry-run should pass: ${agentsApiDryRun.stderr}${agentsApiDryRun.stdout}`);
+  assert(
+    agentsApiDryRun.stdout.includes('langchain-fundamentals') && agentsApiDryRun.stdout.includes('vitest'),
+    'agents-api dry-run should list all external skills',
+  );
 
   console.log('OK: harness sync smoke tests passed');
 } catch (error) {

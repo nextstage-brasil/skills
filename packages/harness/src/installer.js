@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { resolveSource } from './source.js';
+import { groupExternalSkillsBySource } from './externalSkills.js';
 
 export const SKILL_CREATOR_SOURCE = 'https://github.com/anthropics/skills';
 
@@ -79,4 +80,29 @@ export function installSkillCreator(options = {}) {
     agents,
     copy,
   });
+}
+
+export function installExternalSkills(skillIds, options = {}) {
+  if (skillIds.length === 0) {
+    return;
+  }
+
+  const groups = groupExternalSkillsBySource(skillIds);
+  const {
+    projectRoot = process.cwd(),
+    global = false,
+    agents = [],
+    copy = false,
+  } = options;
+
+  for (const group of groups) {
+    runSkillsAdd({
+      source: group.source,
+      skills: group.skills,
+      projectRoot,
+      global,
+      agents,
+      copy,
+    });
+  }
 }

@@ -1,0 +1,60 @@
+{
+  "stacks": {
+    "agents-api": {
+      "label": "Agents API projects",
+      "description": "LangChain/LangGraph agent APIs — MCP, evaluation, testing, and persistence"
+    }
+  },
+  "skills": {
+    "langchain-fundamentals": {
+      "source": "langchain-ai/langchain-skills",
+      "stack": "agents-api",
+      "label": "LangChain fundamentals"
+    },
+    "langgraph-persistence": {
+      "source": "langchain-ai/langchain-skills",
+      "stack": "agents-api",
+      "label": "LangGraph persistence"
+    },
+    "mcp-builder": {
+      "source": "anthropics/skills",
+      "stack": "agents-api",
+      "label": "MCP builder"
+    },
+    "vitest": {
+      "source": "antfu/skills",
+      "stack": "agents-api",
+      "label": "Vitest"
+    },
+    "llm-evaluation": {
+      "source": "wshobson/agents",
+      "stack": "agents-api",
+      "label": "LLM evaluation"
+    },
+    "postgresql-table-design": {
+      "source": "wshobson/agents",
+      "stack": "agents-api",
+      "label": "PostgreSQL table design"
+    }
+  },
+  "presets": {
+    "agents-api": {
+      "label": "Agents API projects",
+      "description": "Agent API services — not for general web apps or SDD-only repos",
+      "nsSkills": [
+        "nextstage-harness",
+        "multi-agent-architect",
+        "code-coder",
+        "code-reviewer"
+      ],
+      "skills": [
+        "langchain-fundamentals",
+        "langgraph-persistence",
+        "mcp-builder",
+        "vitest",
+        "llm-evaluation",
+        "postgresql-table-design"
+      ]
+    }
+  }
+}
