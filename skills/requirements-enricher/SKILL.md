@@ -128,7 +128,7 @@ Scope investigation to what the issue touches. Goal: discover **real product amb
 **Read product context when relevant:**
 
 - `{product_root}/docs/context/brownfield-map.md` — existing modules, legacy constraints.
-- `{product_root}/docs/context/system-reverse-spec.md` when present.
+- `{product_root}/docs/context/system-reverse-spec.agent.md` when present (prefer); else `system-reverse-spec.md`.
 - `{harness_root}/rules/architecture-rules.md` — routes, modules, layering.
 - `{product_root}/docs/context/gitlab-sync-config.md` — status labels, project ids (for your context only).
 

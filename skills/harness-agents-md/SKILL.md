@@ -34,7 +34,7 @@ See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-har
 | ------------------------------ | --------------------------------------------------------------------- |
 | `harness-architecture-rules` | Check if constitution exists or is still stub; link, do not duplicate |
 | `harness-bootstrap-brownfield`         | Link to `brownfield-map.md` when present                              |
-| `harness-codebase-reverse-spec`        | Link to `system-reverse-spec.md` when present                         |
+| `harness-codebase-reverse-spec`        | Link to `system-reverse-spec.md` + `.agent.md` when present           |
 
 ## When to use
 

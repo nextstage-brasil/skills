@@ -22,8 +22,9 @@ See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-har
 | Output | Path |
 | ------ | ---- |
 | Technical constitution | `{harness_root}/rules/architecture-rules.md` |
-| Stack / module map | `{product_root}/docs/context/brownfield-map.md` |
-| Business reverse spec | `{product_root}/docs/context/system-reverse-spec.md` |
+| Stack / module map (agent-dense) | `{product_root}/docs/context/brownfield-map.md` |
+| Business reverse spec (human) | `{product_root}/docs/context/system-reverse-spec.md` |
+| Business reverse index (agent) | `{product_root}/docs/context/system-reverse-spec.agent.md` |
 | Project agents entry | `{product_root}/AGENTS.md` |
 | Claude pointer | `{product_root}/CLAUDE.md` |
 
@@ -80,6 +81,7 @@ npx @nextstage-brasil/harness --preset brownfield --yes
 ```
 Scan {product_root} and generate or refresh architecture-rules.md.
 Evidence-based only; mark inferred items. Target 80–200 lines.
+Telegraphic tables/bullets — agent hot memory, not prose.
 ```
 
 Follow the worker skill workflow completely. Read-only on application code.
@@ -104,7 +106,7 @@ Do not proceed to step 2 until sync succeeds.
 
 ```
 Bootstrap brownfield analysis for {product_root}.
-Compare findings to architecture-rules.md when present.
+Agent-dense brownfield-map.md (tables only). Link architecture-rules.md for stack — do not duplicate.
 ```
 
 Follow the worker skill workflow. Read-only on application code.
@@ -113,13 +115,14 @@ Follow the worker skill workflow. Read-only on application code.
 
 **Skill:** `harness-codebase-reverse-spec`
 
-**Goal:** Create or update `{product_root}/docs/context/system-reverse-spec.md`.
+**Goal:** Create or update `{product_root}/docs/context/system-reverse-spec.md` **and** `system-reverse-spec.agent.md`.
 
 **Prompt anchor:**
 
 ```
 Reverse-engineer {product_root} into a technology-agnostic system description.
-Save to docs/context/system-reverse-spec.md.
+Executive depth (default). Save human body to docs/context/system-reverse-spec.md
+and agent-dense index to docs/context/system-reverse-spec.agent.md.
 Autonomous run: use boot answers for scope and language; skip recon checkpoint unless a blocker.
 ```
 
@@ -135,7 +138,7 @@ Follow the worker skill workflow. Technology-agnostic output only.
 
 ```
 Refresh AGENTS.md for {product_root} from installed skills and artifacts produced in this session.
-Link to architecture-rules.md, brownfield-map.md, and system-reverse-spec.md — do not duplicate their bodies.
+Link to architecture-rules.md, brownfield-map.md, system-reverse-spec.md, and system-reverse-spec.agent.md — do not duplicate their bodies.
 Preserve hand-edited sections unless recon proves them wrong.
 ```
 
@@ -148,8 +151,8 @@ Before advancing, confirm the step output file exists and is non-stub:
 | Step | File | Min signal |
 | ---- | ---- | ---------- |
 | 1 | `architecture-rules.md` | Stack, layout, or constraints with real paths |
-| 2 | `brownfield-map.md` | Identified stack section filled |
-| 3 | `system-reverse-spec.md` | Business entities or use cases present |
+| 2 | `brownfield-map.md` | Module tables filled; stack is pointer (not a prose dump) |
+| 3 | `system-reverse-spec.md` + `.agent.md` | Human body has entities/use cases; agent index has entity/rule tables |
 | 4 | `AGENTS.md` | Links to harness rules and `docs/context/` |
 
 If a step produces only a stub or errors, **stop** — report which step failed and what is missing. Do not continue with empty upstream artifacts.
@@ -169,7 +172,7 @@ If a step produces only a stub or errors, **stop** — report which step failed 
 When all steps succeed, report:
 
 1. Paths written or refreshed (four outputs + sync).
-2. Suggested git commit message: `chore: harness prepare — rules, brownfield map, reverse spec, AGENTS.md`
+2. Suggested git commit message: `chore: harness prepare — rules, brownfield map, reverse spec (+ agent index), AGENTS.md`
 3. Next SDD step: `pm-clarify-requirements` when ready to plan version 1.0.
 
 ## Forbidden

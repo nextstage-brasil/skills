@@ -66,9 +66,9 @@ Reply with one of:
 7. On **`keep`:** note in session context that the human accepted map date `{date}`; continue to Step 1 using the existing file.
 8. On ambiguous reply: ask once more — do not start Step 1 until `refresh` or `keep` is clear.
 
-Also read `{product_root}/docs/context/system-reverse-spec.md` when present (after the gate resolves).
+Also read `{product_root}/docs/context/system-reverse-spec.agent.md` when present (prefer over the prose body); else `system-reverse-spec.md` (after the gate resolves).
 
-Allowed reads before Step 1 (brownfield): user scope file, `brownfield-map.md`, `system-reverse-spec.md`, `{harness_root}/rules/architecture-rules.md`, files under `{product_root}/docs/versions/{version_san}/` for the active version.
+Allowed reads before Step 1 (brownfield): user scope file, `brownfield-map.md`, `system-reverse-spec.agent.md` / `system-reverse-spec.md`, `{harness_root}/rules/architecture-rules.md`, files under `{product_root}/docs/versions/{version_san}/` for the active version.
 
 **Forbidden before Step 1:** ad-hoc `grep`/code search in `backend/`, `frontend/`, or `src/` to "reduce ambiguity"; skipping Step 0.4 when a map exists.
 

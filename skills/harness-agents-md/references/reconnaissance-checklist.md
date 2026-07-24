@@ -25,7 +25,7 @@ Read-only scan before drafting project `AGENTS.md`. Skip sections with no signal
 - [ ] GitLab: `mcp-gitlab-usage` skill, `.gitlab-ci.yml`, issue templates, MCP config in docs
 - [ ] SDD artifacts under `docs/versions/` — active versioning
 - [ ] `execution-handoff.md` pattern in recent versions
-- [ ] Brownfield artifacts: `brownfield-map.md`, `system-reverse-spec.md`
+- [ ] Brownfield artifacts: `brownfield-map.md`, `system-reverse-spec.md`, `system-reverse-spec.agent.md`
 
 ## 4. Team conventions (only if evidenced)
 

@@ -13,7 +13,7 @@ This is **not** a business spec (`harness-codebase-reverse-spec`) or an SDD plan
 
 ## Design principles
 
-1. **Agent-first** — file paths, entry points, forbidden zones, and test commands. A developer skimming prose is not the audience.
+1. **Agent-first** — file paths, entry points, forbidden zones, and test commands. Telegraphic tables/bullets; a developer skimming prose is not the audience.
 2. **Lean by default** — target **80–200 lines** (hard cap ~250). Depth belongs in scoped layer rules or `docs/`; this file routes to them.
 3. **Evidence-based** — every rule must trace to something found in the repo. Mark `inferred` items; do not invent stack or patterns.
 4. **Load-bearing** — agents trust this absolutely. Stale rules cause silent failures; prefer omission over guesswork.

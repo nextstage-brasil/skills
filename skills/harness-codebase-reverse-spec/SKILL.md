@@ -44,7 +44,7 @@ Ask the user (one question at a time, or `AskQuestion` when appropriate):
 | Question                                                    | Why it matters                                                 |
 | ----------------------------------------------------------- | -------------------------------------------------------------- |
 | Whole system or a specific module/domain?                   | Prevents scope creep or missed areas                           |
-| Executive summary or exhaustive description?                | Sets depth and length                                          |
+| Executive summary or exhaustive description? (default: **executive**) | Sets depth; prepare/autonomous always default executive |
 | Output language?                                            | Spec language may differ from skill/conversation language      |
 | Any critical/risky domain needing extra scrutiny?           | Prioritizes financial, fiscal, permission, or compliance logic |
 | Deliver incrementally (large codebases) or single document? | Large repos benefit from domain-by-domain drafts               |
@@ -111,7 +111,16 @@ Organize extracted material into:
 
 ### Phase 4 — Final spec writing
 
-Use `references/spec_template.md` as the base. Adapt title/emphasis to "description of the implemented system." Do not write as a future PRD or a technical code report. Tone: declarative, present tense, describing observed product behavior.
+Use `references/spec_template.md` for the **human-readable** body. Adapt title/emphasis to "description of the implemented system." Tone: declarative, present tense, observed product behavior.
+
+**Depth (from Phase 0 / prepare boot):**
+
+| Mode | Human body (`system-reverse-spec.md`) | Agent index |
+| ---- | ------------------------------------- | ----------- |
+| **Executive** (default) | Overview short; entities/use cases/rules as compact tables or short bullets — not novels | **Always write** `system-reverse-spec.agent.md` from `references/agent_index.template.md` |
+| **Exhaustive** | Full sections per template; deeper flows | Still write the agent index (tables mirror the body) |
+
+Agent index rules: tables and one-liners only; no paragraph prose; agents load the index first when both exist.
 
 Before delivery, run the sanity pass:
 
@@ -128,11 +137,12 @@ Before delivery, run the sanity pass:
 
 Deliver:
 
-1. **Final spec** — markdown by default; docx only if the user requests Word format.
-2. **Extraction log** (optional to share) — the working `extraction_log` if the user wants traceability to evidence.
-3. **"Areas to validate with the team"** appendix — short list of inferred/ambiguous rules and suspected bugs. Epistemic honesty: the spec must not fake certainty.
+1. **Final spec** — `{product_root}/docs/context/system-reverse-spec.md` (markdown; docx only if requested).
+2. **Agent index** — `{product_root}/docs/context/system-reverse-spec.agent.md` (always for executive/prepare; always recommended for exhaustive).
+3. **Extraction log** (optional to share) — working log if the user wants evidence traceability.
+4. **"Areas to validate with the team"** — in the human body appendix and mirrored as one-liners in the agent index.
 
-Ask whether the user wants to deepen a specific module, adjust detail level, deliver the next domain slice (large repos), or export another format.
+Ask whether the user wants to deepen a module, switch to exhaustive, deliver the next domain slice, or export another format.
 
 ## Large codebase strategy
 
@@ -158,7 +168,8 @@ When the repo exceeds what fits comfortably in one pass:
 
 | File                                    | When to read                              |
 | --------------------------------------- | ----------------------------------------- |
-| `references/spec_template.md`           | Phase 4 — structure of the final document |
+| `references/spec_template.md`           | Phase 4 — human-readable final document   |
+| `references/agent_index.template.md`    | Phase 4 — agent-dense companion index     |
 | `references/extraction_log_template.md` | Phase 2 — working notes during extraction |
 | `references/coverage_matrix.md`         | Phases 1 and 4 — completeness check       |
 | `references/anti_leakage_checklist.md`  | Phase 4 — pre-delivery sanity pass        |

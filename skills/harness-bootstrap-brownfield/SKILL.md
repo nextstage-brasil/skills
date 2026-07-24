@@ -9,9 +9,11 @@ depends:
 
 Architectural discovery for existing products before SDD planning.
 
+Output is **agent-dense** (tables, counts, gap list) — not a human essay. See `references/agent-dense.md`.
+
 ## Harness discovery
 
-See `../nextstage-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent. Compare findings to canonical rules when present — checks are advisory if rules missing.
+See `../nextstage-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent. Compare findings to canonical rules when present — checks are advisory if rules missing. **Do not copy the constitution stack into the map** — link it.
 
 ## When to use
 
@@ -46,44 +48,17 @@ Use stack-agnostic checks when no harness rules.
 
 ### Step 4 — Report
 
-Create or update `{product_root}/docs/context/brownfield-map.md`:
+Create or update `{product_root}/docs/context/brownfield-map.md` from `references/brownfield-map.template.md` and `references/agent-dense.md`.
 
-```markdown
-# Architectural map — brownfield bootstrap
+Writing rules:
 
-**Date:** {date}
-
-## Identified stack
-
-- Backend: ...
-- Frontend: ...
-- Database, cache, queues, E2E tooling
-
-## Backend modules
-
-| Module | Controllers | Models | Migrations | Tests |
-
-## Frontend modules
-
-| Module | Pages | Stores | E2E |
-
-## Rule adherence
-
-{tables when rules exist}
-
-## Gaps (priority)
-
-1. Critical ...
-2. Medium ...
-
-## Recommendations for next planning
-
-- ...
-```
+- Tables / one-liners only — no overview paragraphs.
+- Stack = pointer to `architecture-rules.md` (+ optional one-line delta).
+- Gaps = priority table; Next planning ≤3 bullets.
 
 ### Step 5 — Present
 
-Summarize 3–5 bullets, highlight critical gaps, ask whether to start version planning or review gaps.
+Chat summary only (3–5 bullets: date, critical gaps, next skill). Do not paste the map body into chat.
 
 ## Critical rules
 
@@ -91,9 +66,18 @@ Summarize 3–5 bullets, highlight critical gaps, ask whether to start version p
 - Report only under `{product_root}/docs/context/`
 - Pass `brownfield-map.md` to `pm-requirements-generator` as context
 - Update existing map rather than duplicate
+- Never duplicate full stack from `architecture-rules.md`
 
 ## Related skills
 
+- `harness-architecture-rules` — constitution (stack/layout source of truth)
 - `harness-codebase-reverse-spec` — business behavior extraction (deeper than bootstrap)
 - `pm-requirements-generator` — next step after bootstrap
 - `pm-clarify-requirements` — when scope still vague
+
+## References
+
+| File | When |
+| ---- | ---- |
+| `references/brownfield-map.template.md` | Step 4 skeleton |
+| `references/agent-dense.md` | Writing constraints |

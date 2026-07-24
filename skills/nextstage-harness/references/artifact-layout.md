@@ -46,7 +46,9 @@ outside version folders so every implementer reads the same source.
 |------|---------|
 | `stack-confirmed.md` | Confirmed stack, constraints, test environment |
 | `design-brief.md` | UI/UX tokens, layout, component style |
-| `brownfield-map.md` | Existing modules, gaps, legacy constraints |
+| `brownfield-map.md` | Agent-dense module/gap map (stack via `architecture-rules.md`) |
+| `system-reverse-spec.md` | Human-readable business reverse description |
+| `system-reverse-spec.agent.md` | Agent-dense index of the reverse spec (prefer when both exist) |
 | `gitlab-sync-config.md` | GitLab project ids, status labels, branches |
 | `ci-cd-notes.md` | Pipeline and deployment notes |
 
@@ -61,8 +63,9 @@ Before writing code for any task (ad-hoc, handoff, slice, or GitLab issue):
    subdirectories).
 2. **Read** every file that applies to the task layer — at minimum
    `stack-confirmed.md` when present; add `design-brief.md` for UI work;
-   `brownfield-map.md` when touching legacy areas; `gitlab-sync-config.md` when
-   syncing with GitLab or choosing branches.
+   `brownfield-map.md` when touching legacy areas; prefer
+   `system-reverse-spec.agent.md` over the prose body when both exist;
+   `gitlab-sync-config.md` when syncing with GitLab or choosing branches.
 3. Do not skip this step because the active path is a version or subversion folder.
 
 ## Subversions (optional)

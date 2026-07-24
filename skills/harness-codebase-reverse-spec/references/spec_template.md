@@ -1,10 +1,13 @@
 # System Specification: [Product/System Name]
 
 > Reverse-engineered from the existing implementation. Describes observed product behavior in business language.
+>
+> **Depth:** executive (default for prepare / autonomous runs) unless the user asked for exhaustive.
+> **Agent companion:** when present, agents prefer `system-reverse-spec.agent.md` for planning; humans read this file.
 
 ## 1. Overview
 
-[2–4 paragraphs: what problem the system solves, who uses it, the main operational flow, and any market/locale context observable from the product (language, compliance framing, etc.). Present tense. No stack mentions.]
+[Executive: 1–2 short paragraphs max. Exhaustive: 2–4 paragraphs. What problem the system solves, who uses it, main operational flow. Present tense. No stack.]
 
 ## 2. Actors
 

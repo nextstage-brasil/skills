@@ -48,6 +48,7 @@ Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`, `/exec
 | Architecture constitution | `.nextstage-harness/rules/architecture-rules.md` | `harness-architecture-rules` |
 | Brownfield map | `docs/context/brownfield-map.md` | `harness-bootstrap-brownfield` |
 | Business reverse spec | `docs/context/system-reverse-spec.md` | `harness-codebase-reverse-spec` |
+| Business reverse index (agents) | `docs/context/system-reverse-spec.agent.md` | Prefer when present |
 
 ## Rules and sync
 

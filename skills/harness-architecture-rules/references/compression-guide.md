@@ -8,6 +8,7 @@
 | ------ | ------ |
 | Lines | 80–200 (hard max 250) |
 | Prose paragraphs | Avoid — use tables and bullets |
+| Bullet style | Telegraphic — one fact per line; no filler ("Note that…", "It is important…") |
 | Module tables | ≤ 12 rows; merge minor modules into "Other" |
 | Code blocks | ≤ 2 short blocks (test commands, compose exec) |
 
@@ -27,9 +28,10 @@
 1. **Route by reference** — replace 20-line subsystem docs with `See docs/specs/foo.md` or `backend-rules.md`.
 2. **Collapse duplicates** — if `AGENTS.md` already states SDD chain, one line: "SDD workflow: see AGENTS.md".
 3. **Table over prose** — stack, modules, crons, test suites as tables.
-4. **Drop the obvious** — do not document "use git" or generic SOLID unless the repo encodes a **specific** rule (e.g. "never edit Generated/").
-5. **Mark inference** — `(inferred)` on one line beats a wrong confident rule.
-6. **Split on overflow** — if NsUtil or Grogoo needs >40 lines, create `nsutil-architecture-rules.md` and keep one cross-link here.
+4. **Telegraphic bullets** — subject → constraint; drop articles and throat-clearing when meaning stays clear.
+5. **Drop the obvious** — do not document "use git" or generic SOLID unless the repo encodes a **specific** rule (e.g. "never edit Generated/").
+6. **Mark inference** — `(inferred)` on one line beats a wrong confident rule.
+7. **Split on overflow** — if NsUtil or Grogoo needs >40 lines, create `nsutil-architecture-rules.md` and keep one cross-link here.
 
 ## Anti-patterns (seen in bloated rules)
 
