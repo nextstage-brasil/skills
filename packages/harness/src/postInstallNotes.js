@@ -33,28 +33,20 @@ export function buildPostInstallNotes({
   lines.push('');
 
   if (hasPrepare || isBrownfield) {
-    lines.push('  REQUIRED after install or update:');
-    lines.push('    Run the skill:  /harness-prepare');
-    lines.push('    (or CLI:       npx @nextstage-brasil/harness prepare)');
-    lines.push('    This builds architecture rules, brownfield context, and AGENTS.md.');
-    lines.push('    Skip only if greenfield with no application code yet.');
+    lines.push('  After install or update, run in your AI agent:');
+    lines.push('    /harness-prepare');
     lines.push('');
-    lines.push('  What /harness-prepare runs (one session):');
-    lines.push('    harness-architecture-rules');
-    lines.push('    → harness sync');
-    lines.push('    → harness-bootstrap-brownfield');
-    lines.push('    → harness-codebase-reverse-spec');
-    lines.push('    → harness-agents-md');
+    lines.push('  Builds architecture rules, brownfield context, and AGENTS.md.');
+    lines.push('  Skip only if greenfield (no application code yet).');
     lines.push('');
-    lines.push('  Re-run when context goes stale:');
-    lines.push('    • After major refactors, new modules, or stack changes');
-    lines.push('    • Before SDD planning when brownfield docs may be outdated');
+    lines.push('  Chain (one session):');
+    lines.push('    architecture-rules → sync → brownfield → reverse-spec → AGENTS.md');
+    lines.push('');
+    lines.push('  Re-run when context goes stale (major refactors / stack changes).');
     lines.push('');
   } else {
     lines.push('  After install or update (when code exists):');
-    lines.push('    Optional: /harness-architecture-rules');
-    lines.push('    Then:     npx @nextstage-brasil/harness sync');
-    lines.push('    Refine:   /harness-agents-md');
+    lines.push('    /harness-architecture-rules → harness sync → /harness-agents-md');
     lines.push('');
   }
 

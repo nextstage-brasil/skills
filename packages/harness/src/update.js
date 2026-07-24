@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import * as p from '@clack/prompts';
 import { listInstalledSkillNames } from './prepare.js';
 import { installSkills, updateInstalledSkills } from './installer.js';
 import { pruneRetiredSkills } from './pruneRetiredSkills.js';
@@ -37,12 +38,13 @@ export async function runUpdate(argv = {}) {
   }
 
   if (skills.length === 0) {
-    console.log('No installed skills to update.');
+    p.log.warn('No installed skills to update.');
     return { skills: [], skipped: true };
   }
 
   if (argv['dry-run']) {
-    console.log(`Would update ${skills.length} skill(s): ${skills.join(', ')}`);
+    p.log.info(`Would update ${skills.length} skill(s)`);
+    p.log.message(skills.join(', '));
     return { skills, dryRun: true };
   }
 
@@ -66,43 +68,53 @@ export async function runUpdate(argv = {}) {
     installSkills(['skill-creator'], installOptions);
   }
 
+  const details = [];
+
   const pruneResult = pruneRetiredSkills(projectRoot, { agents });
   if (pruneResult.removed.length > 0) {
     const names = pruneResult.removable.map((entry) => entry.oldName).join(', ');
-    console.log(`Removed retired skills: ${names}`);
+    details.push(`Retired skills removed: ${names}`);
   }
 
   const skillsSync = syncSkills(projectRoot, { agents, copy: Boolean(argv.copy) });
   if (skillsSync.written.length > 0) {
-    console.log(`Synced ${skillsSync.written.length} skill adapter(s)`);
+    details.push(`Skill adapters synced: ${skillsSync.written.length}`);
   }
 
   if (existsSync(join(projectRoot, HARNESS_ROOT))) {
     const rulesSync = syncRules(projectRoot, { agents });
     if (rulesSync.written.length > 0) {
-      console.log(`Synced ${rulesSync.written.length} rule adapter(s)`);
+      details.push(`Rule adapters synced: ${rulesSync.written.length}`);
     }
   }
 
   const prunedAdapters = pruneExcludedAgentAdapters(projectRoot, agents);
   if (prunedAdapters.removed.length > 0) {
-    console.log(`Removed ${prunedAdapters.removed.length} adapter path(s) for excluded agents`);
+    details.push(`Excluded-agent adapters removed: ${prunedAdapters.removed.length}`);
   }
 
   const readmeResult = refreshHarnessReadme(projectRoot);
   if (readmeResult.updated) {
-    console.log(`Updated: ${HARNESS_ROOT}/README.md`);
+    details.push(`Refreshed ${HARNESS_ROOT}/README.md`);
   }
 
-  console.log(`Updated ${skills.length} skill(s): ${skills.join(', ')}`);
+  p.log.success(`Updated ${skills.length} skill${skills.length === 1 ? '' : 's'}`);
+  for (const line of details) {
+    p.log.message(line);
+  }
+
   const installed = listInstalledSkillNames(projectRoot);
   if (installed.includes('harness-prepare')) {
-    console.log('');
-    console.log('Next steps (in your AI agent)');
-    console.log('  REQUIRED after install or update:');
-    console.log('    Run the skill:  /harness-prepare');
-    console.log('    (or CLI:       npx @nextstage-brasil/harness prepare)');
-    console.log('    Skip only if greenfield with no application code yet.');
+    p.note(
+      [
+        '/harness-prepare',
+        '',
+        'Builds architecture rules, brownfield context, and AGENTS.md.',
+        'Skip only if greenfield (no application code yet).',
+      ].join('\n'),
+      'Next — run in your AI agent',
+    );
   }
+
   return { skills, skipped: false };
 }
