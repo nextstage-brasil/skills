@@ -47,8 +47,7 @@ export function detectProject(projectRoot) {
 
 /** True when cwd already has a NextStage harness install. */
 export function isHarnessInstalled(projectRoot) {
-  const { signals } = detectProject(projectRoot);
-  return signals.hasHarness || signals.hasInstalledSkills;
+  return existsSync(join(resolveDir(projectRoot), HARNESS_ROOT));
 }
 
 function resolveDir(dir) {
