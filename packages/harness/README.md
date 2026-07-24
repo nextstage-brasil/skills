@@ -170,6 +170,7 @@ npx @nextstage-brasil/harness init \
 | Import legacy `.cursor/rules/*.mdc` | `npx @nextstage-brasil/harness migrate-rules --force` |
 | Brownfield instructions | `npx @nextstage-brasil/harness prepare` |
 | Show / set agents | `npx @nextstage-brasil/harness agents` · `agents set --agent cursor` |
+| Uninstall harness | `npx @nextstage-brasil/harness uninstall --dry-run` then `--yes` |
 
 In the agent, invoke skills via menu or slash: `/nextstage-spec-driven`, `/code-coder`, `/code-reviewer`, …
 
@@ -230,6 +231,7 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 | `harness add-rule <name>` | New rule under `.nextstage-harness/rules/` + sync |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` |
 | `harness prune-retired-skills` | Remove renamed skill dirs after replacement |
+| `harness uninstall` | Remove skills, adapters, `.nextstage-harness/`, lock, ignore blocks (`docs/` kept) |
 | `harness agents` | Show active agents from manifest |
 | `harness agents set` | Persist agents, sync, prune unused adapter trees |
 
@@ -246,6 +248,7 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 | `--copy` | Copy skills instead of symlinks |
 | `--global` / `-g` | Global skills install (Skills CLI) |
 | `--no-scaffold` | Skills only — skip harness layout / `AGENTS.md` / `docs/` |
+| `--keep-agents-md` | With `uninstall`: keep `AGENTS.md` / `CLAUDE.md` |
 | `--yes` / `-y` | Non-interactive |
 | `--dry-run` | Print plan, write nothing |
 | `--force` | Overwrite (`agents-md`, `migrate-rules`, `add-rule`) |

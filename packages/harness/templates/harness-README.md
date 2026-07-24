@@ -142,6 +142,16 @@ npx @nextstage-brasil/harness prune-retired-skills --dry-run
 npx @nextstage-brasil/harness prune-retired-skills
 ```
 
+### Uninstall harness
+
+Removes skills, adapters, `.nextstage-harness/`, `skills-lock.json`, and managed ignore blocks. Keeps `docs/`.
+
+```bash
+npx @nextstage-brasil/harness uninstall --dry-run
+npx @nextstage-brasil/harness uninstall --yes
+npx @nextstage-brasil/harness uninstall --yes --keep-agents-md
+```
+
 ---
 
 ## Sync
@@ -238,6 +248,7 @@ Brownfield refinement: **`/harness-agents-md`** in your agent.
 | `harness prepare` | Brownfield prepare instructions |
 | `harness migrate-rules` | Import legacy Cursor rules |
 | `harness prune-retired-skills` | Remove renamed skill dirs |
+| `harness uninstall` | Remove harness install (keeps `docs/`) |
 
 Also refreshed on every `harness sync`, `harness update`, and `harness init` when `.nextstage-harness/` exists.
 

@@ -16,6 +16,7 @@ import { logResolvedAgents } from '../src/logResolvedAgents.js';
 import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js';
 import { HARNESS_ROOT, resolveAgents } from '../src/agentsLayout.js';
 import { refreshHarnessReadme } from '../src/refreshHarnessReadme.js';
+import { runUninstallCommand } from '../src/uninstall.js';
 
 const HELP = `
 Usage:
@@ -27,6 +28,7 @@ Usage:
   harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
   harness prune-retired-skills  Remove renamed skill dirs after replacement is installed
   harness update [options] Update installed skills only (does not install new ones)
+  harness uninstall [options]  Remove harness install (skills, adapters, scaffold)
   harness agents [set]   Show or set project agents (.nextstage-harness/manifest.json)
   harness list             List presets and available skills
 
@@ -41,6 +43,7 @@ Options:
   --source <path>        Skills source (default: nextstage-brasil/skills or local repo)
   --yes, -y              Non-interactive; install all skills and default scaffold
   --no-scaffold          Skip AGENTS.md and docs/ scaffolding
+  --keep-agents-md       With uninstall: keep AGENTS.md and CLAUDE.md
   --check                With sync: verify adapters match canonical (CI mode)
   --force                Overwrite existing files (migrate-rules, agents-md, add-rule)
   --description <text>   With add-rule: short purpose for the rule
@@ -63,6 +66,8 @@ Examples:
   npx @nextstage-brasil/harness prune-retired-skills --dry-run
   npx @nextstage-brasil/harness update
   npx @nextstage-brasil/harness update --dry-run
+  npx @nextstage-brasil/harness uninstall --dry-run
+  npx @nextstage-brasil/harness uninstall --yes
   npx @nextstage-brasil/harness agents
   npx @nextstage-brasil/harness agents set --agent cursor
   npx @nextstage-brasil/harness list
@@ -89,6 +94,7 @@ function parseArgs(argv) {
     name: undefined,
     description: undefined,
     globs: undefined,
+    'keep-agents-md': false,
     subcommand: undefined,
     positional: [],
   };
@@ -107,6 +113,7 @@ function parseArgs(argv) {
     'add-rule',
     'prepare',
     'update',
+    'uninstall',
     'agents',
   ];
   const first = args[0];
@@ -171,6 +178,11 @@ function parseArgs(argv) {
 
     if (arg === '--force') {
       result.force = true;
+      continue;
+    }
+
+    if (arg === '--keep-agents-md') {
+      result['keep-agents-md'] = true;
       continue;
     }
 
@@ -360,6 +372,15 @@ async function runPruneRetiredSkills(parsed) {
   console.log(formatPruneReport(result));
 }
 
+async function runUninstallCmd(parsed) {
+  const projectRoot = resolveProjectDir(parsed.dir);
+  await runUninstallCommand(projectRoot, {
+    dryRun: Boolean(parsed['dry-run']),
+    yes: Boolean(parsed.yes),
+    keepAgentsMd: Boolean(parsed['keep-agents-md']),
+  });
+}
+
 async function main() {
   const parsed = parseArgs(process.argv);
 
@@ -436,6 +457,16 @@ async function main() {
   if (parsed.command === 'update') {
     try {
       await runUpdate(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (parsed.command === 'uninstall') {
+    try {
+      await runUninstallCmd(parsed);
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
       process.exit(1);

@@ -16,6 +16,14 @@ import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js
 import { listSkillsToUpdate } from '../src/update.js';
 import { resolveAgentsConfig } from '../src/agentsLayout.js';
 import { writeManifestAgents } from '../src/manifest.js';
+import { runUninstall, assessUninstall } from '../src/uninstall.js';
+import { stripIgnoreContent } from '../src/patchIgnoreContent.js';
+import {
+  DOCKERIGNORE_BLOCK_HEADER,
+  DOCKERIGNORE_ENTRIES,
+  GITIGNORE_BLOCK_HEADER,
+  GITIGNORE_ENTRIES,
+} from '../src/agentsLayout.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const harnessRoot = join(__dirname, '..');
@@ -391,6 +399,84 @@ try {
   assert(
     listOut.stdout.includes('--skill gitlab-board-sync --no-scaffold'),
     'list should show single-skill install command',
+  );
+
+  // 14. uninstall removes harness install, keeps docs/
+  mkdirSync(join(tempDir, 'docs', 'context'), { recursive: true });
+  writeFileSync(join(tempDir, 'docs', 'context', 'keep-me.md'), '# keep\n', 'utf8');
+  writeFileSync(join(tempDir, 'user-rule.md'), '# mine\n', 'utf8');
+  mkdirSync(join(tempDir, '.cursor', 'rules'), { recursive: true });
+  writeFileSync(join(tempDir, '.cursor', 'rules', 'user-rule.mdc'), '# not harness\n', 'utf8');
+
+  const uninstallDry = runCli(['uninstall', '--dry-run', '--dir', tempDir], harnessRoot);
+  assert(uninstallDry.status === 0, `uninstall --dry-run should pass: ${uninstallDry.stderr}${uninstallDry.stdout}`);
+  assert(uninstallDry.stdout.includes('Dry run'), 'uninstall dry-run should say dry run');
+  assert(existsSync(join(tempDir, '.nextstage-harness')), 'dry-run must not delete harness root');
+
+  const assessed = assessUninstall(tempDir);
+  assert(assessed.found, 'assessUninstall should find harness install');
+  assert(
+    assessed.removable.some((path) => path.endsWith('.nextstage-harness')),
+    'assess should include harness root',
+  );
+
+  const strippedDocker = stripIgnoreContent(
+    readFileSync(dockerignorePath, 'utf8'),
+    DOCKERIGNORE_BLOCK_HEADER,
+    DOCKERIGNORE_ENTRIES,
+  );
+  assert(strippedDocker.includes('node_modules'), 'strip dockerignore should keep user entries');
+  assert(!strippedDocker.includes(DOCKERIGNORE_BLOCK_HEADER), 'strip dockerignore should drop header');
+
+  const strippedGit = stripIgnoreContent(
+    readFileSync(gitignorePath, 'utf8'),
+    GITIGNORE_BLOCK_HEADER,
+    GITIGNORE_ENTRIES,
+  );
+  assert(strippedGit.includes('vendor/'), 'strip gitignore should keep user entries');
+  assert(!strippedGit.includes(GITIGNORE_BLOCK_HEADER), 'strip gitignore should drop header');
+
+  const uninstalled = runUninstall(tempDir, { dryRun: false });
+  assert(uninstalled.removed.length > 0, 'uninstall should remove paths');
+  assert(!existsSync(join(tempDir, '.nextstage-harness')), 'uninstall should remove harness root');
+  assert(!existsSync(join(tempDir, '.agents', 'skills')), 'uninstall should remove skills');
+  assert(!existsSync(join(tempDir, 'AGENTS.md')), 'uninstall should remove AGENTS.md');
+  assert(!existsSync(join(tempDir, 'CLAUDE.md')), 'uninstall should remove CLAUDE.md');
+  assert(!existsSync(join(tempDir, 'skills-lock.json')), 'uninstall should remove skills-lock.json');
+  assert(existsSync(join(tempDir, 'docs', 'context', 'keep-me.md')), 'uninstall must keep docs/');
+  assert(
+    existsSync(join(tempDir, '.cursor', 'rules', 'user-rule.mdc')),
+    'uninstall must keep non-harness rule adapters',
+  );
+  assert(
+    !readFileSync(dockerignorePath, 'utf8').includes(DOCKERIGNORE_BLOCK_HEADER),
+    'uninstall should strip dockerignore block',
+  );
+  assert(
+    readFileSync(dockerignorePath, 'utf8').includes('node_modules'),
+    'uninstall should preserve user dockerignore entries',
+  );
+
+  const keepMdDir = mkdtempSync(join(tmpdir(), 'harness-uninstall-keep-'));
+  try {
+    scaffoldProject(keepMdDir, { agents: true, docs: false });
+    writeFileSync(join(keepMdDir, 'AGENTS.md'), '# keep\n', 'utf8');
+    writeFileSync(join(keepMdDir, 'CLAUDE.md'), '@AGENTS.md\n', 'utf8');
+    const keepResult = runUninstall(keepMdDir, { keepAgentsMd: true });
+    assert(existsSync(join(keepMdDir, 'AGENTS.md')), '--keep-agents-md should keep AGENTS.md');
+    assert(existsSync(join(keepMdDir, 'CLAUDE.md')), '--keep-agents-md should keep CLAUDE.md');
+    assert(!existsSync(join(keepMdDir, '.nextstage-harness')), 'keep-agents-md still removes harness root');
+    assert(keepResult.removed.length > 0, 'keep-agents-md uninstall should still remove harness files');
+  } finally {
+    rmSync(keepMdDir, { recursive: true, force: true });
+  }
+
+  const emptyUninstall = runCli(['uninstall', '--yes', '--dir', tempDir], harnessRoot);
+  assert(emptyUninstall.status === 0, `second uninstall should succeed: ${emptyUninstall.stderr}${emptyUninstall.stdout}`);
+  assert(
+    emptyUninstall.stdout.includes('Nothing to uninstall')
+      || emptyUninstall.stdout.includes('no harness install'),
+    'second uninstall should report nothing left',
   );
 
   console.log('OK: harness sync smoke tests passed');

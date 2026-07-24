@@ -40,6 +40,8 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 | `harness sync --check` | CI mode — exit 1 on adapter drift |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` |
 | `harness migrate-rules --force` | Overwrite existing canonical |
+| `harness uninstall` | Remove harness install (skills, adapters, scaffold; keeps `docs/`) |
+| `harness uninstall --keep-agents-md` | Same, but keep `AGENTS.md` / `CLAUDE.md` |
 | `harness list` | Presets and skill catalog |
 
 ### Flags
@@ -50,6 +52,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 | `--agent <name>` | Repeatable; default `cursor`, `claude-code` |
 | `--yes`, `-y` | Non-interactive |
 | `--no-scaffold` | Skills only — skip AGENTS.md and `.nextstage-harness/` |
+| `--keep-agents-md` | With `uninstall`: keep `AGENTS.md` / `CLAUDE.md` |
 | `--dir <path>` | Target project directory |
 | `--source <path>` | Skills source override |
 | `--description <text>` | With `add-rule`: short purpose |
