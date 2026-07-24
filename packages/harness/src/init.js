@@ -296,7 +296,7 @@ async function resolveInstallPlanFromArgv(argv, detection) {
 async function selectSkillsManually(detection) {
   const categories = listCategories();
   const selectedNs = new Set(
-    detection.kind === 'new' ? ['nextstage-harness'] : [],
+    detection.kind === 'new' ? ['nextstage-harness', 'harness-prepare'] : [],
   );
   const selectedExternal = new Set();
 

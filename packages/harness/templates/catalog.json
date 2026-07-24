@@ -1,5 +1,6 @@
 {
   "source": "nextstage-brasil/skills",
+  "alwaysInstall": ["nextstage-harness", "harness-prepare"],
   "depends": {
     "nextstage-harness": [],
     "harness-codebase-reverse-spec": [],

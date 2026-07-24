@@ -16,6 +16,12 @@ const retiredSkills = JSON.parse(readFileSync(retiredPath, 'utf8'));
 const externalCatalog = JSON.parse(readFileSync(externalPath, 'utf8'));
 const catalogSkills = new Set(Object.keys(catalog.depends));
 
+for (const skill of catalog.alwaysInstall ?? []) {
+  if (!catalogSkills.has(skill)) {
+    errors.push(`alwaysInstall references unknown skill: ${skill}`);
+  }
+}
+
 const skillDirs = readdirSync(skillsDir).filter((entry) => {
   const path = join(skillsDir, entry);
   return (

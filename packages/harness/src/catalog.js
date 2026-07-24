@@ -19,9 +19,14 @@ export function allSkillNames() {
   return Object.keys(depends).sort();
 }
 
+export function alwaysInstallSkills() {
+  const { alwaysInstall = [] } = loadCatalog();
+  return [...alwaysInstall];
+}
+
 export function resolveDepends(selected) {
   const { depends } = loadCatalog();
-  const result = new Set(selected);
+  const result = new Set([...alwaysInstallSkills(), ...selected]);
 
   let changed = true;
   while (changed) {
