@@ -331,6 +331,17 @@ try {
   const updateMissing = runCli(['update', '--skill', 'missing-skill', '--dir', tempDir], harnessRoot);
   assert(updateMissing.status === 1, 'update --skill for missing skill should fail');
 
+  const listOut = runCli(['list'], harnessRoot);
+  assert(listOut.status === 0, `list should pass: ${listOut.stderr}${listOut.stdout}`);
+  assert(
+    listOut.stdout.includes('--preset gitlab --yes'),
+    'list should show preset install command',
+  );
+  assert(
+    listOut.stdout.includes('--skill gitlab-board-sync --no-scaffold'),
+    'list should show single-skill install command',
+  );
+
   console.log('OK: harness sync smoke tests passed');
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));

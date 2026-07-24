@@ -422,5 +422,31 @@ export function printList() {
 
   p.log.step('All NextStage skills');
   p.log.message(allSkillNames().join(', '));
-  p.outro('Run: npx @nextstage-brasil/harness');
+
+  const presetIds = [
+    ...listPresets().map((preset) => preset.id),
+    ...listExternalPresets().map((preset) => preset.id),
+  ].join(' | ');
+
+  p.note(
+    [
+      `Presets: ${presetIds}`,
+      '',
+      'Install a preset (skills + dependencies + scaffold):',
+      '  npx @nextstage-brasil/harness --preset gitlab --yes',
+      '  npx @nextstage-brasil/harness --preset agents-api --yes',
+      '',
+      'Install one skill only (no scaffold):',
+      '  npx @nextstage-brasil/harness --skill gitlab-board-sync --no-scaffold -y',
+      '',
+      'Preview what a preset would install:',
+      '  npx @nextstage-brasil/harness --preset gitlab --dry-run',
+      '',
+      'Refresh skills already in the project:',
+      '  npx @nextstage-brasil/harness update',
+    ].join('\n'),
+    'Install',
+  );
+
+  p.outro('Interactive wizard: npx @nextstage-brasil/harness');
 }
