@@ -15,7 +15,7 @@ depends:
 
 # Harness Prepare
 
-Orchestrate the **full brownfield onboarding chain** after `harness init`. You do **not** replace the worker skills — you run them **in order**, one blocking step at a time, with a single upfront scope confirmation.
+Orchestrate the **full brownfield onboarding chain** after `harness init`. You do **not** replace the worker skills — you run them **in order**, one blocking step at a time. No upfront confirmation gate when boot checks pass.
 
 State lives in **files on disk**, not chat history. Re-read outputs before each subsequent step.
 
@@ -57,17 +57,22 @@ npx @nextstage-brasil/harness --preset delivery --yes
 ## Boot (mandatory, once per session)
 
 1. Resolve `{product_root}` and `{harness_root}` per harness discovery.
-2. Confirm **once** (combine into one message when possible):
-   - `{product_root}` path (monorepo product folder vs repo root)
-   - Output language for markdown artifacts (default: user conversation language)
-   - For `harness-codebase-reverse-spec`: whole product vs specific module; executive vs exhaustive (default: whole product, executive summary first)
-3. Verify application code exists under `{product_root}` (manifests, `src/`, `app/`, etc.). If absent, stop — greenfield has nothing to scan.
-4. Read existing `AGENTS.md`, `architecture-rules.md`, and `docs/context/*` to choose **create** vs **refresh** per step.
+2. Apply defaults (do **not** ask when checks pass):
+   - Output language for markdown artifacts = user conversation language
+   - Reverse-spec scope = whole product; depth = executive
+   - Mode = **create** or **refresh** from existing artifacts on disk
+3. Run boot checks:
+   - Worker skills present (`harness-architecture-rules`, `harness-bootstrap-brownfield`, `harness-codebase-reverse-spec`, `harness-agents-md`)
+   - Application code under `{product_root}` (manifests, `src/`, `app/`, etc.)
+4. **If any check fails:** show a short failure table (what failed + how to fix) and **stop**. Do not ask to confirm a broken scope.
+5. **If all checks pass:** show a one-line or compact scope summary (`{product_root}`, `{harness_root}`, language, reverse-spec defaults, create/refresh) and **proceed immediately** into Step 1 — do **not** wait for "Confirma?" / user approval.
 
 ## Orchestration mandate
 
+- After a successful boot summary, start Step 1 in the **same turn** (no confirmation wait).
 - Execute **all four worker steps** in the fixed order below.
 - **Do not** ask "continue to next step?" between steps.
+- **Do not** ask "Confirma?" / scope approval when boot checks are green.
 - **Do not** perform worker workflows yourself in the parent session — follow each worker skill's workflow in the same session (read the worker `SKILL.md` at the start of each step).
 - **Do not** skip `harness-codebase-reverse-spec` — full prepare includes it.
 - After step 1, run `npx @nextstage-brasil/harness sync` (shell) before step 2.
@@ -127,7 +132,7 @@ Follow the worker skill workflow. Read-only on application code.
 Reverse-engineer {product_root} into a technology-agnostic system description.
 Executive depth (default). Save human body to docs/context/system-reverse-spec.md
 and agent-dense index to docs/context/system-reverse-spec.agent.md.
-Autonomous run: use boot answers for scope and language; skip recon checkpoint unless a blocker.
+Autonomous run: use boot defaults for scope and language; skip recon checkpoint unless a blocker.
 ```
 
 Follow the worker skill workflow. Technology-agnostic output only.
@@ -165,11 +170,11 @@ If a step produces only a stub or errors, **stop** — report which step failed 
 
 | Condition | Action |
 | --------- | ------ |
-| No application code under `{product_root}` | Stop — greenfield; run prepare later |
-| Worker skill not installed | Stop — suggest `harness --preset delivery --yes` or `harness init` |
+| No application code under `{product_root}` | Stop — show failure; greenfield has nothing to scan |
+| Worker skill not installed | Stop — show failure; suggest `harness --preset delivery --yes` or `harness init` |
 | Step output missing or still harness stub | Stop — fix step before continuing |
 | `harness sync` fails | Stop — report error |
-| User revokes scope mid-run | Stop at current step boundary |
+| User stops the run mid-chain | Stop at current step boundary |
 
 ## Completion summary
 
@@ -181,6 +186,7 @@ When all steps succeed, report:
 
 ## Forbidden
 
+- Do not ask for scope confirmation when boot checks pass — show summary and proceed.
 - Do not reorder steps (especially `harness-agents-md` before constitution and context artifacts).
 - Do not skip `harness sync` after architecture rules.
 - Do not skip `harness-codebase-reverse-spec` in full prepare.
