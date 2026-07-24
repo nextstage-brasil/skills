@@ -13,10 +13,10 @@ Create and improve **project-local skills** in the active harness project. The e
 
 Resolve paths per `../nextstage-harness/references/harness-discovery.md`:
 
-| Variable | Value |
-| -------- | ----- |
-| `{product_root}` | Repo or monorepo product folder (where `AGENTS.md` lives) |
-| `{skills_canonical}` | `{product_root}/.agents/skills/` |
+| Variable             | Value                                                     |
+| -------------------- | --------------------------------------------------------- |
+| `{product_root}`     | Repo or monorepo product folder (where `AGENTS.md` lives) |
+| `{skills_canonical}` | `{product_root}/.agents/skills/`                          |
 
 If `{harness_root}` is missing, tell the user to run `npx @nextstage-brasil/harness` first — this skill expects a harness-scaffolded project.
 
@@ -35,13 +35,13 @@ Apply the **path overrides** and **post-create sync** below on top of upstream i
 
 ## Path overrides (project)
 
-| Artifact | Path | Notes |
-| -------- | ---- | ----- |
-| New/edited skill | `{skills_canonical}/<kebab-case-name>/` | `name` frontmatter must match directory |
-| `SKILL.md` | `{skills_canonical}/<name>/SKILL.md` | English unless the team defines otherwise in `AGENTS.md` |
-| `references/`, `scripts/`, `evals/` | Under the skill directory | See `references/project-layout.md` |
-| Eval workspace | `{product_root}/skill-creator-workspace/` | `iteration-N/eval-<id>/` per upstream |
-| Upstream tooling | `{skills_canonical}/skill-creator/` | `scripts/`, `eval-viewer/` from anthropics bundle |
+| Artifact                            | Path                                      | Notes                                                    |
+| ----------------------------------- | ----------------------------------------- | -------------------------------------------------------- |
+| New/edited skill                    | `{skills_canonical}/<kebab-case-name>/`   | `name` frontmatter must match directory                  |
+| `SKILL.md`                          | `{skills_canonical}/<name>/SKILL.md`      | English unless the team defines otherwise in `AGENTS.md` |
+| `references/`, `scripts/`, `evals/` | Under the skill directory                 | See `references/project-layout.md`                       |
+| Eval workspace                      | `{product_root}/skill-creator-workspace/` | `iteration-N/eval-<id>/` per upstream                    |
+| Upstream tooling                    | `{skills_canonical}/skill-creator/`       | `scripts/`, `eval-viewer/` from anthropics bundle        |
 
 **Never** save project skills to `skills/` at repo root (that layout is for the nextstage-brasil/skills **catalog** repo only).
 
