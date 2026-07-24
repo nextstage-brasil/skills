@@ -95,5 +95,14 @@ export async function runUpdate(argv = {}) {
   }
 
   console.log(`Updated ${skills.length} skill(s): ${skills.join(', ')}`);
+  const installed = listInstalledSkillNames(projectRoot);
+  if (installed.includes('harness-prepare')) {
+    console.log('');
+    console.log('Next steps (in your AI agent)');
+    console.log('  REQUIRED after install or update:');
+    console.log('    Run the skill:  /harness-prepare');
+    console.log('    (or CLI:       npx @nextstage-brasil/harness prepare)');
+    console.log('    Skip only if greenfield with no application code yet.');
+  }
   return { skills, skipped: false };
 }

@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import * as p from '@clack/prompts';
-import { detectProject } from './detect.js';
+import { detectProject, isHarnessInstalled } from './detect.js';
 import {
   allSkillNames,
   alwaysInstallSkills,
@@ -56,7 +56,7 @@ export async function runInit(argv = {}) {
   ].filter(Boolean).join('\n');
   p.log.step(skillSummary);
 
-  const scaffoldOptions = await resolveScaffoldOptions(argv, detection);
+  const scaffoldOptions = resolveScaffoldOptions(argv);
   const agentFlags = argv.agent ?? [];
   const { agents } = agentFlags.length > 0
     ? { agents: normalizeAgentIds(agentFlags) }
@@ -191,8 +191,10 @@ export async function runInit(argv = {}) {
 
   if (!scaffoldOptions.skip) {
     try {
-      const agentsMdResult = generateAgentsMd(detection.projectRoot, { force: true });
-      if (!agentsMdResult.skipped) {
+      const agentsMdResult = generateAgentsMd(detection.projectRoot, { force: false });
+      if (agentsMdResult.skipped) {
+        p.log.info(agentsMdResult.reason);
+      } else {
         p.log.success(`Generated: ${agentsMdResult.written.join(', ')}`);
       }
     } catch (error) {
@@ -234,14 +236,20 @@ export async function runInit(argv = {}) {
 async function resolveProjectDir(argvDir) {
   if (argvDir) return argvDir;
 
+  const cwd = process.cwd();
   if (!process.stdin.isTTY) {
-    return process.cwd();
+    return cwd;
+  }
+
+  if (isHarnessInstalled(cwd)) {
+    p.log.info(`Using ${cwd} (harness already installed)`);
+    return cwd;
   }
 
   const dir = await p.text({
     message: 'Project directory',
-    placeholder: process.cwd(),
-    defaultValue: process.cwd(),
+    placeholder: cwd,
+    defaultValue: cwd,
   });
 
   if (p.isCancel(dir)) {
@@ -249,7 +257,7 @@ async function resolveProjectDir(argvDir) {
     process.exit(0);
   }
 
-  return dir || process.cwd();
+  return dir || cwd;
 }
 
 async function resolveInstallPlanFromArgv(argv, detection) {
@@ -393,55 +401,16 @@ async function selectSkillsManually(detection) {
   });
 }
 
-async function resolveScaffoldOptions(argv, detection) {
+function resolveScaffoldOptions(argv) {
   if (argv['no-scaffold']) {
     return { skip: true };
-  }
-
-  if (argv.yes) {
-    return {
-      skip: false,
-      agents: !detection.signals.hasAgents,
-      docs: !detection.signals.hasDocsVersions,
-      force: false,
-    };
-  }
-
-  if (!process.stdin.isTTY) {
-    return { skip: false, agents: true, docs: true, force: false };
-  }
-
-  const scaffold = await p.confirm({
-    message: 'Scaffold AGENTS.md and docs/ layout?',
-    initialValue: true,
-  });
-
-  if (p.isCancel(scaffold)) {
-    p.cancel('Init cancelled.');
-    process.exit(0);
-  }
-
-  if (!scaffold) {
-    return { skip: true };
-  }
-
-  const force = detection.signals.hasAgents
-    ? await p.confirm({
-      message: 'AGENTS.md already exists. Overwrite?',
-      initialValue: false,
-    })
-    : false;
-
-  if (p.isCancel(force)) {
-    p.cancel('Init cancelled.');
-    process.exit(0);
   }
 
   return {
     skip: false,
     agents: true,
     docs: true,
-    force: Boolean(force),
+    force: false,
   };
 }
 

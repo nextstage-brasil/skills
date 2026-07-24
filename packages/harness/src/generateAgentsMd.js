@@ -172,15 +172,6 @@ function preserveSyncManaged(existingContent) {
   return match?.[0] ?? SYNC_MANAGED_DEFAULT;
 }
 
-function isGeneratedOrStub(content) {
-  if (!content) return true;
-  return (
-    content.includes(GENERATED_MARKER)
-    || content.includes('Replace this stub by running the `harness-architecture-rules` skill')
-    || content.includes('Typical SDD chain')
-  );
-}
-
 export function generateAgentsMd(projectRoot, options = {}) {
   const { force = false } = options;
   const root = resolve(projectRoot);
@@ -193,10 +184,7 @@ export function generateAgentsMd(projectRoot, options = {}) {
   }
 
   if (existsSync(agentsPath) && !force) {
-    const existing = readFileSync(agentsPath, 'utf8');
-    if (!isGeneratedOrStub(existing)) {
-      return { skipped: true, reason: 'AGENTS.md exists (use --force to overwrite)' };
-    }
+    return { skipped: true, reason: 'AGENTS.md exists (use --force to overwrite)' };
   }
 
   const projectName = readProjectTitle(root);

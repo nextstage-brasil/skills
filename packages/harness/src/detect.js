@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { AGENTS_SKILLS_DIR, HARNESS_ROOT } from './agentsLayout.js';
 
 const MANIFEST_FILES = [
   'package.json',
@@ -24,10 +25,11 @@ export function detectProject(projectRoot) {
   });
   const hasAgents = existsSync(join(resolved, 'AGENTS.md'));
   const hasDocsVersions = existsSync(join(resolved, 'docs', 'versions'));
-  const hasInstalledSkills = existsSync(join(resolved, '.agents', 'skills'));
+  const hasInstalledSkills = existsSync(join(resolved, AGENTS_SKILLS_DIR));
+  const hasHarness = existsSync(join(resolved, HARNESS_ROOT));
 
   const isExisting =
-    hasManifest || hasCodeDir || hasAgents || hasDocsVersions || hasInstalledSkills;
+    hasManifest || hasCodeDir || hasAgents || hasDocsVersions || hasInstalledSkills || hasHarness;
 
   return {
     projectRoot: resolved,
@@ -38,8 +40,15 @@ export function detectProject(projectRoot) {
       hasAgents,
       hasDocsVersions,
       hasInstalledSkills,
+      hasHarness,
     },
   };
+}
+
+/** True when cwd already has a NextStage harness install. */
+export function isHarnessInstalled(projectRoot) {
+  const { signals } = detectProject(projectRoot);
+  return signals.hasHarness || signals.hasInstalledSkills;
 }
 
 function resolveDir(dir) {
