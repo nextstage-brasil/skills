@@ -32,7 +32,7 @@ Usage:
 
 Options:
   --dir <path>           Target project directory (default: current)
-  --preset <name>        Preset: recommended | gitlab | brownfield | implementation | agents-api
+  --preset <name>        Preset: delivery | recommended | gitlab | brownfield | implementation | complements | full | agents-api
   --skill <name>         Install specific skill (repeatable)
   --all                  Install every skill in the catalog
   --global, -g           Install skills globally (passed to skills CLI)
@@ -50,6 +50,7 @@ Options:
 
 Examples:
   npx @nextstage-brasil/harness
+  npx @nextstage-brasil/harness --preset delivery --yes
   npx @nextstage-brasil/harness --preset gitlab --yes
   npx @nextstage-brasil/harness --preset agents-api --yes
   npx @nextstage-brasil/harness sync

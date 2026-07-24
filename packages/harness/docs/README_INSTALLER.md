@@ -46,7 +46,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 
 | Flag | Effect |
 |------|--------|
-| `--preset <name>` | `recommended`, `gitlab`, `brownfield`, `implementation` |
+| `--preset <name>` | `delivery` (default), `recommended` (alias), `gitlab`, `brownfield`, `implementation`, `complements`, `full` |
 | `--agent <name>` | Repeatable; default `cursor`, `claude-code` |
 | `--yes`, `-y` | Non-interactive |
 | `--no-scaffold` | Skills only — skip AGENTS.md and `.nextstage-harness/` |
@@ -62,18 +62,18 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 ### Greenfield (new project)
 
 ```bash
-npx @nextstage-brasil/harness --preset recommended --yes
+npx @nextstage-brasil/harness --preset delivery --yes
 ```
 
-Creates scaffold, stub `architecture-rules.md`, syncs adapters. Run `harness-architecture-rules` in your agent when code exists.
+Creates scaffold, stub `architecture-rules.md`, syncs adapters. Base install includes `nextstage-sdd` and `harness-prepare`. Run `harness-architecture-rules` in your agent when code exists.
 
 ### Brownfield (existing codebase)
 
 ```bash
-npx @nextstage-brasil/harness --preset brownfield --yes
+npx @nextstage-brasil/harness --preset delivery --yes
 ```
 
-Same scaffold plus brownfield skills. Follow post-install prompts (§10).
+Same as greenfield — `harness-prepare` is always installed. Follow post-install prompts and run `/harness-prepare` in your agent (§10).
 
 ### Skills only (no harness scaffold)
 

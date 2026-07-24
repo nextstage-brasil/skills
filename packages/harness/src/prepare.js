@@ -96,7 +96,7 @@ export function buildPrepareMessage(assessment) {
       ...assessment.missingWorkers,
     ];
     lines.push(`⚠  Missing skills: ${missing.join(', ')}`);
-    lines.push('   Install: npx @nextstage-brasil/harness --preset brownfield --yes');
+    lines.push('   Install: npx @nextstage-brasil/harness --preset delivery --yes');
     lines.push('');
   }
 

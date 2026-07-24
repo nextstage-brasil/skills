@@ -80,7 +80,7 @@ npx @nextstage-brasil/harness
 >
 > ```bash
 > cd ~/apps/nextstage/skills/packages/harness && npm link
-> harness --preset recommended --yes
+> harness --preset delivery --yes
 > ```
 
 Interactive wizard: picks a preset, resolves skill dependencies, runs `npx skills add`, and optionally scaffolds `AGENTS.md` plus `docs/` layout.

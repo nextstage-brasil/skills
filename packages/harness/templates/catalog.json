@@ -57,58 +57,71 @@
     "skill-creator": ["nextstage-harness"]
   },
   "presets": {
-    "recommended": {
-      "label": "Recommended SDD chain",
-      "description": "Planning, tasks, test generators, and living specs",
+    "delivery": {
+      "label": "SDD delivery (default)",
+      "description": "Base install always includes nextstage-sdd and harness-prepare; adds PHPUnit and Cypress task generators",
       "skills": [
-        "nextstage-harness",
-        "nextstage-sdd",
-        "pm-clarify-requirements",
-        "pm-requirements-generator",
-        "pm-analyze-consistency",
-        "pm-task-generator",
-        "execution-handoff-generator",
         "pm-unit-test-task-generator",
-        "pm-e2e-test-generator",
-        "pm-living-spec-consolidator"
+        "pm-e2e-test-generator"
+      ]
+    },
+    "recommended": {
+      "label": "SDD delivery (alias)",
+      "description": "Alias for delivery — prefer --preset delivery",
+      "skills": [
+        "pm-unit-test-task-generator",
+        "pm-e2e-test-generator"
       ]
     },
     "gitlab": {
       "label": "GitLab execution",
-      "description": "MCP GitLab usage, review gate, and issue execution",
+      "description": "Issue execution, board sync, requirements enricher, and CI bootstrap (mcp-gitlab-usage is already a base dependency)",
       "skills": [
-        "nextstage-harness",
-        "mcp-gitlab-usage",
-        "requirements-enricher",
-        "code-reviewer",
         "execution-gitlab-issue",
-        "gitlab-board-sync"
+        "gitlab-board-sync",
+        "requirements-enricher",
+        "gitlab-ci-generator"
       ]
     },
     "brownfield": {
       "label": "Brownfield onboarding",
-      "description": "Full prepare chain — rules, stack map, reverse spec, and AGENTS.md",
-      "skills": [
-        "nextstage-harness",
-        "harness-prepare"
-      ]
+      "description": "No extra skills — harness-prepare is always installed. After init run /harness-prepare in your agent",
+      "skills": []
     },
     "implementation": {
       "label": "Implementation & quality",
-      "description": "Ad-hoc coding, investigation, and review",
+      "description": "Root-cause investigation and test implementation (PHPUnit, Cypress execution skills)",
       "skills": [
-        "nextstage-harness",
-        "code-coder",
-        "code-autonomous",
         "code-investigator",
-        "mcp-gitlab-usage",
-        "code-reviewer"
+        "code-e2e-tests",
+        "code-backend-tests"
       ]
     },
     "complements": {
       "label": "Project complements",
-      "description": "Optional code-* delivery complements — soft-integrated by nextstage-sdd",
+      "description": "code-frontend-design, code-docs-writer, code-best-practices — soft-integrated by nextstage-sdd",
       "skills": ["code-frontend-design", "code-docs-writer", "code-best-practices"]
+    },
+    "full": {
+      "label": "Full optional stack",
+      "description": "All optional add-ons: delivery test generators, GitLab, quality, complements, PM copilot, skill-creator, multi-agent-architect",
+      "skills": [
+        "pm-unit-test-task-generator",
+        "pm-e2e-test-generator",
+        "execution-gitlab-issue",
+        "gitlab-board-sync",
+        "requirements-enricher",
+        "gitlab-ci-generator",
+        "code-investigator",
+        "code-e2e-tests",
+        "code-backend-tests",
+        "code-frontend-design",
+        "code-docs-writer",
+        "code-best-practices",
+        "pm-requirements-copilot",
+        "skill-creator",
+        "multi-agent-architect"
+      ]
     }
   },
   "categories": {

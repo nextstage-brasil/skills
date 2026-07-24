@@ -3,6 +3,7 @@ import * as p from '@clack/prompts';
 import { detectProject } from './detect.js';
 import {
   allSkillNames,
+  alwaysInstallSkills,
   getPreset,
   listCategories,
   listPresets,
@@ -291,12 +292,14 @@ async function resolveInstallPlanFromArgv(argv, detection) {
 
   const mode = await p.select({
     message: 'What do you want to install?',
-    initialValue: 'recommended',
+    initialValue: 'delivery',
     options: [
-      { value: 'recommended', label: 'SDD chain', hint: 'planning + test generators' },
-      { value: 'gitlab', label: 'GitLab execution', hint: 'MCP + review + issue flow' },
-      { value: 'brownfield', label: 'Brownfield onboarding' },
-      { value: 'implementation', label: 'Implementation & quality' },
+      { value: 'delivery', label: 'SDD delivery (default)', hint: 'base + PHPUnit/Cypress task generators' },
+      { value: 'gitlab', label: 'GitLab add-ons', hint: 'issue execution, board sync, CI generator' },
+      { value: 'implementation', label: 'Quality & test execution', hint: 'investigator + PHPUnit/Cypress impl' },
+      { value: 'complements', label: 'UI, docs, security complements', hint: 'code-frontend-design, code-docs-writer, code-best-practices' },
+      { value: 'full', label: 'Full optional stack', hint: 'all add-ons except --all niche skills' },
+      { value: 'brownfield', label: 'Brownfield only', hint: 'same base install — run /harness-prepare after' },
       { value: 'all', label: 'All NextStage skills', hint: 'excludes Agents API external skills' },
       ...listExternalPresets().map((preset) => ({
         value: `external:${preset.id}`,
@@ -334,7 +337,7 @@ async function resolveInstallPlanFromArgv(argv, detection) {
 async function selectSkillsManually(detection) {
   const categories = listCategories();
   const selectedNs = new Set(
-    detection.kind === 'new' ? ['nextstage-harness', 'harness-prepare'] : [],
+    detection.kind === 'new' ? alwaysInstallSkills() : [],
   );
   const selectedExternal = new Set();
 
@@ -471,6 +474,7 @@ export function printList() {
       `Presets: ${presetIds}`,
       '',
       'Install a preset (skills + dependencies + scaffold):',
+      '  npx @nextstage-brasil/harness --preset delivery --yes',
       '  npx @nextstage-brasil/harness --preset gitlab --yes',
       '  npx @nextstage-brasil/harness --preset agents-api --yes',
       '',

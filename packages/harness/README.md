@@ -233,13 +233,20 @@ See `.nextstage-harness/README.md` in consumer projects for the human guide.
 
 ## Presets
 
-| Preset | Skills |
-|--------|--------|
-| `recommended` | SDD planning chain + test generators + living specs |
-| `gitlab` | MCP GitLab, review gate, issue execution, board sync |
-| `brownfield` | `harness-agents-md`, architecture rules, bootstrap, reverse-spec |
-| `implementation` | Code-coder, investigator, review |
-| `agents-api` | Agents API projects — all curated external skills + architect/coder/reviewer |
+Every install includes **alwaysInstall**: `nextstage-harness`, `harness-prepare`, `nextstage-sdd` (and transitive `depends` — full SDD worker chain + brownfield workers + `mcp-gitlab-usage` via `code-reviewer`).
+
+Presets list **add-ons** on top of that base:
+
+| Preset | Adds |
+|--------|------|
+| `delivery` | PHPUnit + Cypress **task** generators (default) |
+| `recommended` | Alias for `delivery` |
+| `gitlab` | Issue execution, board sync, requirements enricher, CI generator |
+| `brownfield` | Nothing extra — use when you only want the base; run `/harness-prepare` after init |
+| `implementation` | Investigator + PHPUnit/Cypress **execution** skills |
+| `complements` | `code-frontend-design`, `code-docs-writer`, `code-best-practices` |
+| `full` | All optional add-ons above + PM copilot, skill-creator, multi-agent-architect |
+| `agents-api` | External preset — LangChain/LangGraph/MCP skills (see `harness list`) |
 
 See `harness list` for the full skill id list and external preset breakdown.
 

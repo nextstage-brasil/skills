@@ -51,7 +51,7 @@ See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-har
 If a worker skill is missing, stop and tell the user:
 
 ```bash
-npx @nextstage-brasil/harness --preset brownfield --yes
+npx @nextstage-brasil/harness --preset delivery --yes
 ```
 
 ## Boot (mandatory, once per session)
@@ -166,7 +166,7 @@ If a step produces only a stub or errors, **stop** — report which step failed 
 | Condition | Action |
 | --------- | ------ |
 | No application code under `{product_root}` | Stop — greenfield; run prepare later |
-| Worker skill not installed | Stop — suggest `harness --preset brownfield --yes` |
+| Worker skill not installed | Stop — suggest `harness --preset delivery --yes` or `harness init` |
 | Step output missing or still harness stub | Stop — fix step before continuing |
 | `harness sync` fails | Stop — report error |
 | User revokes scope mid-run | Stop at current step boundary |
