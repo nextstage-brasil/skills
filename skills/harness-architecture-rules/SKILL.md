@@ -62,7 +62,7 @@ Minimum scan:
 3. Entry points (HTTP routers, `index.php`, `main.ts`, CLI commands, workers).
 4. Module/domain folders and **generated** or **build** directories (never-edit zones).
 5. Test layout and how tests are run (scripts, Docker, CI snippets).
-6. Existing docs under `docs/`, `.nextstage-harness/docs/`, `README.md`.
+6. Existing docs under `docs/`, `README.md`.
 
 **Checkpoint (recommended):** Present a short recon map (stack, layout, modules, generated zones, test command) and ask the user to confirm or correct before drafting. Skip only on explicit autonomous run.
 

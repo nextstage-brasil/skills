@@ -6,7 +6,7 @@ Read-only scan before drafting `architecture-rules.md`. Check items in order; sk
 
 - [ ] `AGENTS.md` — agent workflow, skill paths, completion conventions
 - [ ] `{harness_root}/rules/*.md` — list siblings; note what **not** to duplicate
-- [ ] `.nextstage-harness/docs/` — harness-local notes
+- [ ] `docs/context/`, `docs/specs/` — product docs when present
 - [ ] `docs/context/` — stack-confirmed, gitlab-sync-config, integration docs
 - [ ] `docs/specs/` — living functional specs (link, do not copy)
 - [ ] Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent

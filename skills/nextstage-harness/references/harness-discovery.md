@@ -32,7 +32,7 @@ Use this pattern in every skill that needs project rules, artifact paths, or har
 4. Load layer rules from `{harness_root}/rules/` matching changed files
 5. **Legacy fallback:** if `{harness_root}/` missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note
 
-Adapter generation: see `rules-sync.md`. Skills: canonical `.agents/skills/` → `harness sync` → symlinks in `.cursor/skills/`, `.claude/skills/`.
+Adapter generation: see `rules-sync.md`. Skills: canonical `.agents/skills/`; `harness sync` symlinks to `.claude/skills/` for Claude Code only (Cursor reads canonical directly).
 
 ## No harness found
 

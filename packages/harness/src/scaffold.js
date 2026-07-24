@@ -3,7 +3,6 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   AGENTS_LAYOUT_DIRS,
-  HARNESS_DOCS_DIR,
   HARNESS_ROOT,
   HARNESS_RULES_DIR,
 } from './agentsLayout.js';
@@ -57,10 +56,8 @@ function scaffoldHarnessRoot(projectRoot, { force, created, skipped }) {
   const manifestTarget = join(harnessRoot, 'manifest.json');
   const rulesTarget = join(projectRoot, HARNESS_RULES_DIR);
   const archRulesTarget = join(rulesTarget, 'architecture-rules.md');
-  const harnessDocsTarget = join(projectRoot, HARNESS_DOCS_DIR);
 
   mkdirSync(rulesTarget, { recursive: true });
-  mkdirSync(harnessDocsTarget, { recursive: true });
 
   if (existsSync(manifestTarget) && !force) {
     skipped.push(`${HARNESS_ROOT}/manifest.json`);
@@ -85,12 +82,6 @@ function scaffoldHarnessRoot(projectRoot, { force, created, skipped }) {
   } else {
     copyFileSync(join(templatesDir, 'harness-README.md'), readmeTarget);
     created.push(`${HARNESS_ROOT}/README.md`);
-  }
-
-  const harnessGitkeep = join(harnessDocsTarget, '.gitkeep');
-  if (!existsSync(harnessGitkeep)) {
-    writeUtf8(harnessGitkeep, '');
-    created.push(`${HARNESS_DOCS_DIR}/.gitkeep`);
   }
 }
 

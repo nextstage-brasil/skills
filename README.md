@@ -139,7 +139,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 | **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness` or `npx skills add` |
 | **Project rules**      | `AGENTS.md` at repo root; canonical rules in `.nextstage-harness/rules/`  |
 | **Generated adapters** | `.cursor/rules/*.mdc`, `.claude/rules/*.md` (via `harness sync`)            |
-| **Installed skills**   | `.agents/skills/` → symlinks in `.cursor/skills/`, `.claude/skills/`      |
+| **Installed skills**   | `.agents/skills/` (Cursor); `.claude/skills/` symlink for Claude Code |
 | **Agent docs**         | `.agents/docs/`                                                             |
 | **SDD artifacts**      | `docs/versions/{version}/`, living specs in `docs/specs/`                    |
 

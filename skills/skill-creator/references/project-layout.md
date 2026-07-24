@@ -18,8 +18,7 @@ Reference for skill-creator when authoring skills in a consumer project.
 │   │       └── evals/
 │   │           └── evals.json
 │   └── docs/                     # Optional agent-oriented notes
-├── .cursor/skills/               # Symlinked — harness sync
-├── .claude/skills/               # Symlinked — harness sync
+├── .claude/skills/               # Symlinked — harness sync (Claude Code)
 └── skill-creator-workspace/      # Eval runs (optional; gitignore locally)
 ```
 
@@ -42,7 +41,7 @@ depends:
 npx @nextstage-brasil/harness sync
 ```
 
-Syncs `.agents/skills/` → `.cursor/skills/`, `.claude/skills/` so agents discover the skill in the menu.
+Syncs `.agents/skills/` → `.claude/skills/` for Claude Code. Cursor reads `.agents/skills/` directly.
 
 ## Not this layout
 

@@ -88,17 +88,21 @@ try {
   check = runCli(['sync', '--check', '--dir', tempDir], harnessRoot);
   assert(check.status === 0, `sync --check should pass after re-sync: ${check.stderr}${check.stdout}`);
 
-  // 5. skill symlinks to cursor/claude
+  // 5. skill adapters — Claude only (Cursor reads .agents/skills/ directly)
   const skillsCanonical = join(tempDir, '.agents', 'skills', 'code-coder');
   mkdirSync(skillsCanonical, { recursive: true });
   writeFileSync(join(skillsCanonical, 'SKILL.md'), '---\nname: code-coder\ndescription: test\n---\n\n# Code Coder\n', 'utf8');
   const skillSync = syncSkills(tempDir, { agents: ['cursor', 'claude-code'] });
-  assert(skillSync.written.length === 2, 'syncSkills should write cursor and claude adapters');
-  const cursorSkill = join(tempDir, '.cursor', 'skills', 'code-coder');
-  assert(exists(cursorSkill), 'cursor skill symlink missing');
+  assert(skillSync.written.some((entry) => entry.includes('.claude/skills')), 'syncSkills should write claude adapter');
   assert(
-    lstatSync(cursorSkill).isSymbolicLink() || skillSync.written[0].includes('copy'),
-    'cursor skill should be symlink unless copy fallback',
+    !skillSync.written.some((entry) => entry.includes('.cursor/skills') && !entry.includes('removed-legacy-adapter')),
+    'syncSkills should not create cursor skill adapters',
+  );
+  const claudeSkill = join(tempDir, '.claude', 'skills', 'code-coder');
+  assert(exists(claudeSkill), 'claude skill symlink missing');
+  assert(
+    lstatSync(claudeSkill).isSymbolicLink() || skillSync.written.some((entry) => entry.includes('copy')),
+    'claude skill should be symlink unless copy fallback',
   );
 
   // 6. agents-md from installed skills layout

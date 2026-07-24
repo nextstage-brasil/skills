@@ -86,7 +86,6 @@ export function migrateRules(projectRoot, options = {}) {
   const harnessRoot = join(projectRoot, HARNESS_ROOT);
   const rulesDir = join(projectRoot, HARNESS_RULES_DIR);
   mkdirSync(rulesDir, { recursive: true });
-  mkdirSync(join(harnessRoot, 'docs'), { recursive: true });
 
   const manifest = loadManifest(harnessRoot);
   const migrated = [];

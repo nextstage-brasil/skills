@@ -15,7 +15,7 @@ Read-only scan before drafting project `AGENTS.md`. Skip sections with no signal
 - [ ] `.nextstage-harness/manifest.json`
 - [ ] `.nextstage-harness/rules/` (list files; note if `architecture-rules.md` is stub)
 - [ ] `.agents/skills/` — **installed skills** (source of truth for workflows section)
-- [ ] `.cursor/skills/`, `.claude/skills/` — skill adapter symlinks (informational)
+- [ ] `.claude/skills/` — Claude Code skill adapter symlinks (informational; Cursor uses `.agents/skills/`)
 - [ ] `docs/context/`, `docs/specs/`, `docs/versions/` — SDD scaffold present
 - [ ] Legacy only: `.cursor/rules/*.mdc` without `.nextstage-harness/` — note migration path
 - [ ] Ignore legacy `.agents/agents/` / persona wrappers if present — skills replace that layer; do not document personas in `AGENTS.md`

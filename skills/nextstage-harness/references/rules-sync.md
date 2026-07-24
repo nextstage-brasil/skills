@@ -11,15 +11,22 @@ Canonical project rules live under `{harness_root}/rules/*.md`. Adapters for Cur
   rules/
     architecture-rules.md   # constitution (always loaded)
     backend-rules.md        # optional layer rules
-  docs/                     # harness-local docs
 
 .cursor/rules/*.mdc         # generated — Cursor rule adapter
 .claude/rules/*.md          # generated — Claude Code rule adapter
 
-.agents/skills/             # canonical — Skills CLI
-.cursor/skills/             # symlinked — harness sync (Cursor / menu)
-.claude/skills/             # symlinked — harness sync (Claude Code)
+.agents/skills/             # canonical — Skills CLI (Cursor reads here directly)
+.claude/skills/             # symlinked — harness sync (Claude Code only)
 ```
+
+**Agent skill discovery**
+
+| Agent | Reads skills from | Harness sync |
+|-------|-------------------|--------------|
+| Cursor (incl. subagents) | `.agents/skills/` at project root | None — canonical path is enough |
+| Claude Code | `.claude/skills/` (not `.agents/skills/` natively) | Symlink `.agents/skills/{name}/` → `.claude/skills/{name}/` |
+
+Cursor subagents spawned during a session use the same project skill catalog as the parent agent — no separate `.cursor/skills/` copy required.
 
 ## Manifest schema (v1)
 
@@ -68,7 +75,7 @@ That creates the stub, updates the manifest, and syncs adapters in one step.
 2. Writes `.cursor/rules/{name}.mdc` with Cursor frontmatter + generation marker + body.
 3. Writes `.claude/rules/{name}.md` with Claude `paths:` frontmatter when configured + same marker + body.
 4. Embeds `<!-- harness-sync:sha256=<hash> -->` in each adapter for drift detection.
-5. Symlinks `.agents/skills/{name}/` → `.cursor/skills/{name}/` and `.claude/skills/{name}/` (Skills CLI keeps canonical in `.agents/skills/` only for Cursor).
+5. Symlinks `.agents/skills/{name}/` → `.claude/skills/{name}/` when Claude Code is a target agent. Cursor uses `.agents/skills/` directly — legacy `.cursor/skills/` harness symlinks are removed on sync.
 
 Generation marker (first line of body):
 
@@ -81,7 +88,7 @@ Generation marker (first line of body):
 | Command | Behavior |
 |---------|----------|
 | `harness add-rule <name>` | Create stub + manifest entry + sync (`--description`, `--globs`, `--force`) |
-| `harness sync` | Regenerate rule adapters + skill symlinks |
+| `harness sync` | Regenerate rule adapters + Claude skill symlinks |
 | `harness sync --check` | CI mode — compare hashes, no writes; exit 1 on drift |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` → canonical + manifest update + sync |
 | `harness migrate-rules --force` | Overwrite existing canonical files |

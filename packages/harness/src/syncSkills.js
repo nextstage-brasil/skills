@@ -25,17 +25,18 @@ function isSymlinkTo(linkPath, canonicalPath) {
 }
 
 function removePath(path) {
-  if (!existsSync(path)) return;
+  if (!existsSync(path)) return false;
   const stat = lstatSync(path);
   if (stat.isSymbolicLink()) {
     unlinkSync(path);
-    return;
+    return true;
   }
   if (stat.isDirectory()) {
     rmSync(path, { recursive: true, force: true });
-    return;
+    return true;
   }
   unlinkSync(path);
+  return true;
 }
 
 function writeSkillAdapter(canonicalPath, adapterPath, copy) {
@@ -70,34 +71,62 @@ function listSkillNames(canonicalDir) {
   });
 }
 
+/**
+ * Cursor discovers skills from `.agents/skills/` directly (no `.cursor/skills/` adapter).
+ * Claude Code still reads `.claude/skills/` — symlink canonical skills there when requested.
+ */
+function skillAdapterDirs(projectRoot, agents) {
+  const dirs = [];
+  if (agents.includes('claude-code')) {
+    dirs.push({ agent: 'claude-code', path: join(projectRoot, '.claude', 'skills') });
+  }
+  return dirs;
+}
+
+function pruneLegacyCursorSkillAdapters(projectRoot, canonicalDir, skillNames) {
+  const cursorSkillsDir = join(projectRoot, '.cursor', 'skills');
+  if (!existsSync(cursorSkillsDir)) {
+    return [];
+  }
+
+  const removed = [];
+  for (const name of skillNames) {
+    const adapterPath = join(cursorSkillsDir, name);
+    const canonicalPath = join(canonicalDir, name);
+    if (isSymlinkTo(adapterPath, canonicalPath)) {
+      removePath(adapterPath);
+      removed.push(adapterPath);
+    }
+  }
+  return removed;
+}
+
 export function syncSkills(projectRoot, options = {}) {
   const { agents = ['cursor', 'claude-code'], check = false, copy = false } = options;
   const canonicalDir = join(projectRoot, AGENTS_SKILLS_DIR);
 
   if (!existsSync(canonicalDir)) {
-    return { ok: true, drifts: [], written: [], skipped: true };
+    return { ok: true, drifts: [], written: [], removed: [], skipped: true };
   }
 
   const skillNames = listSkillNames(canonicalDir);
   if (skillNames.length === 0) {
-    return { ok: true, drifts: [], written: [], skipped: true };
+    return { ok: true, drifts: [], written: [], removed: [], skipped: true };
   }
 
-  const adapterTargets = [];
-  if (agents.includes('cursor')) {
-    adapterTargets.push(join(projectRoot, '.cursor', 'skills'));
-  }
-  if (agents.includes('claude-code')) {
-    adapterTargets.push(join(projectRoot, '.claude', 'skills'));
-  }
-
+  const adapterTargets = skillAdapterDirs(projectRoot, agents);
   const drifts = [];
   const written = [];
+  const removed = [];
+
+  if (!check) {
+    removed.push(...pruneLegacyCursorSkillAdapters(projectRoot, canonicalDir, skillNames));
+  }
 
   for (const name of skillNames) {
     const canonicalPath = join(canonicalDir, name);
 
-    for (const adapterDir of adapterTargets) {
+    for (const { agent, path: adapterDir } of adapterTargets) {
       const adapterPath = join(adapterDir, name);
       if (check) {
         if (!adapterMatches(canonicalPath, adapterPath)) {
@@ -105,10 +134,14 @@ export function syncSkills(projectRoot, options = {}) {
         }
       } else {
         const mode = writeSkillAdapter(canonicalPath, adapterPath, copy);
-        written.push(`${adapterPath} (${mode})`);
+        written.push(`${adapterPath} (${agent}, ${mode})`);
       }
     }
   }
 
-  return { ok: drifts.length === 0, drifts, written, check, skipped: false };
+  for (const path of removed) {
+    written.push(`${path} (cursor, removed-legacy-adapter)`);
+  }
+
+  return { ok: drifts.length === 0, drifts, written, removed, check, skipped: false };
 }

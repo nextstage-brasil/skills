@@ -67,7 +67,7 @@ export async function runInit(argv = {}) {
       p.log.info(`External skills: ${plan.externalSkills.join(', ')}`);
     }
     p.log.info(`Agents: ${agents.join(', ')}`);
-    p.log.info('Skill symlinks → .cursor/skills/, .claude/skills/ (after install)');
+    p.log.info('Skill adapters → .claude/skills/ when Claude Code is targeted; Cursor reads `.agents/skills/` directly');
     p.log.info('Dry run — no files written, no skills installed.');
     p.outro('Done.');
     return;

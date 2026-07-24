@@ -68,7 +68,7 @@ After skill files are written or materially updated, run from `{product_root}`:
 npx @nextstage-brasil/harness sync
 ```
 
-This regenerates skill symlinks (`.cursor/skills/`, `.claude/skills/`) so Cursor and Claude Code discover the new skill.
+This regenerates Claude skill symlinks (`.claude/skills/`) so Claude Code discovers the new skill. Cursor reads `.agents/skills/` directly.
 
 Use `npx @nextstage-brasil/harness sync --check` in CI when verifying adapters are up to date.
 

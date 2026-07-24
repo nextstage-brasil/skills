@@ -4,7 +4,6 @@ export const AGENTS_HOME = '.agents';
 
 export const HARNESS_ROOT = '.nextstage-harness';
 export const HARNESS_RULES_DIR = join(HARNESS_ROOT, 'rules');
-export const HARNESS_DOCS_DIR = join(HARNESS_ROOT, 'docs');
 
 export const AGENTS_LAYOUT_DIRS = [
   join(AGENTS_HOME, 'docs'),

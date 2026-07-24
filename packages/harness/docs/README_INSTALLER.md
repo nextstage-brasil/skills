@@ -16,16 +16,15 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
     docs/
   .cursor/rules/*.mdc               # GENERATED — Cursor rule adapters
   .claude/rules/*.md                # GENERATED — Claude Code rule adapters
-  .agents/skills/                   # Installed skills (Skills CLI canonical)
-  .cursor/skills/ → symlink          # Cursor skill adapters (harness sync)
-  .claude/skills/ → symlink          # Claude skill adapters (harness sync)
+  .agents/skills/                   # Installed skills (Skills CLI canonical; Cursor reads here)
+  .claude/skills/ → symlink          # Claude Code skill adapters (harness sync)
   .agents/docs/                     # Optional agent-oriented notes
   docs/context|specs|versions/      # SDD artifacts
 ```
 
 **Rules:** edit `.nextstage-harness/rules/` → `harness sync` → `.cursor/rules/`, `.claude/rules/`. Prefer `harness add-rule <name>` for new rules (creates stub, updates `manifest.json`, syncs). See `.nextstage-harness/README.md`.
 
-**Skills:** canonical in `.agents/skills/` (Skills CLI). `harness sync` also symlinks to `.cursor/skills/` and `.claude/skills/` so Cursor discovers them in `/` (Skills CLI omits this for Cursor as a "universal" agent). Invoke via the Skills menu / slash (e.g. `/code-coder`).
+**Skills:** canonical in `.agents/skills/` (Skills CLI). **Cursor** (including subagents) discovers skills there directly. **Claude Code** reads `.claude/skills/` — `harness sync` symlinks from canonical when Claude is a target agent. Invoke via the Skills menu / slash (e.g. `/code-coder`).
 
 ## 2. Commands
 
@@ -106,18 +105,17 @@ git commit -m "chore: sync agent rule adapters"
 
 | Path | Role | Edit? |
 |------|------|-------|
-| `.agents/skills/<name>/` | Canonical skills (Skills CLI) | **Yes** |
-| `.cursor/skills/<name>/` | Cursor skill adapter | No — symlink |
+| `.agents/skills/<name>/` | Canonical skills (Skills CLI; Cursor reads here) | **Yes** |
 | `.claude/skills/<name>/` | Claude Code skill adapter | No — symlink |
 
 ## 5. Cursor vs Claude
 
 | Agent | Loads automatically | Adapter locations |
 |-------|---------------------|-------------------|
-| Cursor | `.cursor/rules/*.mdc`, `.cursor/skills/` | `.cursor/rules/`, `.cursor/skills/` |
-| Claude Code | `.claude/rules/*.md`, `.claude/skills/` | `.claude/rules/`, `.claude/skills/` |
+| Cursor (incl. subagents) | `.agents/skills/` at project root | Rules: `.cursor/rules/` only |
+| Claude Code | `.claude/skills/` | Rules: `.claude/rules/`; skills symlinked from `.agents/skills/` |
 
-Both read the same canonical bodies from `.nextstage-harness/rules/` (rules) and `.agents/skills/` (skills). Rule adapters are generated files; skill adapters are symlinks to canonical (copies with `--copy`).
+Both read the same canonical rule bodies from `.nextstage-harness/rules/`. Skills canonical path is `.agents/skills/`; Claude Code needs the `.claude/skills/` symlink layer. Rule adapters are generated files; Claude skill adapters are symlinks to canonical (copies with `--copy`).
 
 ## 6. Git policy
 

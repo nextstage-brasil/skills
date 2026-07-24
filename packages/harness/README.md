@@ -24,6 +24,147 @@ npx @nextstage-brasil/harness --preset gitlab --yes
 npx @nextstage-brasil/harness list
 ```
 
+### Install specific skills only
+
+Use `--skill` (repeatable). Harness resolves `depends` from `templates/catalog.json` and installs only what you asked for plus required dependencies — not the full catalog.
+
+```bash
+# Preview what would be installed (no files written)
+npx @nextstage-brasil/harness --skill multi-agent-architect --dry-run
+
+# One NextStage skill — skills only, no AGENTS.md / docs scaffold
+npx @nextstage-brasil/harness --skill multi-agent-architect --no-scaffold -y
+
+# Multiple skills
+npx @nextstage-brasil/harness --skill code-coder --skill code-reviewer --no-scaffold -y
+
+# External skill (Agents API registry — see external-skills.json)
+npx @nextstage-brasil/harness --skill langchain-fundamentals --no-scaffold -y
+```
+
+Skill ids match directory names (`harness list` or repo `skills/<name>/`). Example: **multi-agent-architect** (LangGraph vs CrewAI architecture interviews) — no preset required.
+
+If a skill declares `depends` in the catalog (e.g. `code-reviewer` → `nextstage-harness`, `mcp-gitlab-usage`), those peers are installed automatically. Skills with empty `depends` (e.g. `multi-agent-architect`) install alone.
+
+To add one skill to a project that already has harness:
+
+```bash
+cd your-project
+npx @nextstage-brasil/harness --skill multi-agent-architect --no-scaffold -y
+npx @nextstage-brasil/harness sync
+```
+
+Without harness (Skills CLI only):
+
+```bash
+npx skills add nextstage-brasil/skills@multi-agent-architect --full-depth -y
+```
+
+### Complete example (`init` — all compatible flags)
+
+Selection mode is **one of** `--preset`, `--skill` (repeatable), or `--all`. The example below uses `--skill` (two skills: one NextStage + one external).
+
+```bash
+npx @nextstage-brasil/harness init \
+  --dir ./my-agent-service \
+  --skill multi-agent-architect \
+  --skill langchain-fundamentals \
+  --agent cursor \
+  --agent claude-code \
+  --source nextstage-brasil/skills \
+  --copy \
+  --global \
+  --no-scaffold \
+  --yes
+```
+
+| Flag | Example value | Effect |
+|------|---------------|--------|
+| `init` | (command) | Explicit init; default when you run `harness` with no subcommand |
+| `--dir` | `./my-agent-service` | Target project root (default: current directory) |
+| `--skill` | `multi-agent-architect` | Install this skill (+ catalog `depends`); repeat for more |
+| `--agent` | `cursor`, `claude-code` | Symlink/copy skills into each agent folder; repeat per agent |
+| `--source` | `nextstage-brasil/skills` | NextStage catalog source (or local clone path) |
+| `--copy` | (flag) | Copy skill files instead of symlinks (Skills CLI `--copy`) |
+| `--global` / `-g` | (flag) | Install skills globally (passed through to Skills CLI) |
+| `--no-scaffold` | (flag) | Skip `.nextstage-harness/`, `AGENTS.md`, and `docs/` scaffolding |
+| `--yes` / `-y` | (flag) | Non-interactive; skip wizard prompts |
+
+**Preview the same install without writing files:**
+
+```bash
+npx @nextstage-brasil/harness init \
+  --dir ./my-agent-service \
+  --skill multi-agent-architect \
+  --dry-run
+```
+
+**Preset instead of `--skill`** (installs bundled set + dependencies):
+
+```bash
+npx @nextstage-brasil/harness init \
+  --dir ./my-agent-service \
+  --preset agents-api \
+  --agent cursor \
+  --yes
+```
+
+**Environment alternative to `--source`:**
+
+```bash
+export NEXTSTAGE_SKILLS_SOURCE=~/apps/nextstage/skills
+npx @nextstage-brasil/harness --skill multi-agent-architect --no-scaffold -y
+```
+
+### Other commands — full flag examples
+
+```bash
+# Sync adapters (rules + skill symlinks)
+npx @nextstage-brasil/harness sync \
+  --dir ./my-agent-service \
+  --agent cursor \
+  --agent claude-code \
+  --copy
+
+# CI: fail if adapters drift from canonical
+npx @nextstage-brasil/harness sync --dir ./my-agent-service --check
+
+# Regenerate AGENTS.md from installed skills
+npx @nextstage-brasil/harness agents-md --dir ./my-agent-service --force
+
+# Import legacy Cursor rules
+npx @nextstage-brasil/harness migrate-rules --dir ./my-agent-service --agent cursor --force
+
+# New canonical rule + sync
+npx @nextstage-brasil/harness add-rule api-conventions \
+  --dir ./my-agent-service \
+  --description "REST API conventions for agent services" \
+  --globs "src/api/**,apps/agent-api/**" \
+  --agent cursor \
+  --force
+
+# Brownfield prepare instructions
+npx @nextstage-brasil/harness prepare --dir ./my-agent-service
+
+# Remove renamed skill dirs (preview first)
+npx @nextstage-brasil/harness prune-retired-skills --dir ./my-agent-service --dry-run
+npx @nextstage-brasil/harness prune-retired-skills --dir ./my-agent-service
+
+# Catalog
+npx @nextstage-brasil/harness list
+```
+
+| Command | Flags |
+|---------|-------|
+| `init` | `--dir`, `--preset`, `--skill`, `--all`, `--global`, `--agent`, `--copy`, `--source`, `--yes`, `--no-scaffold`, `--dry-run` |
+| `sync` | `--dir`, `--agent`, `--copy`, `--check` |
+| `agents-md` | `--dir`, `--force` |
+| `migrate-rules` | `--dir`, `--agent`, `--force` |
+| `add-rule <name>` | `--dir`, `--agent`, `--description`, `--globs`, `--force` |
+| `prepare` | `--dir` |
+| `prune-retired-skills` | `--dir`, `--dry-run` |
+| `list` | — |
+
 ## Commands
 
 | Command | Description |
@@ -37,8 +178,9 @@ npx @nextstage-brasil/harness list
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` → `.nextstage-harness/rules/` |
+| `harness prune-retired-skills` | Remove renamed skill dirs after replacement is installed |
 
-Common flags: `--dir`, `--preset`, `--skill`, `--agent` (default `cursor`, `claude-code`), `--copy`, `--no-scaffold`, `--dry-run`, `--yes`.
+Common flags: `--dir`, `--preset`, `--skill` (repeatable), `--agent` (default `cursor`, `claude-code`), `--copy`, `--no-scaffold`, `--dry-run`, `--yes`.
 
 `add-rule` flags: `--description`, `--globs` (comma-separated; skips `alwaysApply`), `--force`.
 
@@ -55,7 +197,7 @@ See `.nextstage-harness/README.md` in consumer projects for the human guide.
 2. Resolves skill dependencies from `templates/catalog.json`.
 3. Runs `npx skills add` → `.agents/skills/` (+ `skill-creator` from anthropics/skills).
 4. Scaffolds `.nextstage-harness/`, `.agents/`, and `docs/` (unless `--no-scaffold`).
-5. Runs `harness sync` — rule adapters and skill symlinks (`.cursor/skills/`, `.claude/skills/`).
+5. Runs `harness sync` — rule adapters + Claude skill symlinks (Cursor uses `.agents/skills/` directly).
 6. Runs `harness agents-md` — `AGENTS.md` from installed skills + `CLAUDE.md` (`@AGENTS.md`).
 
 ## Project layout (after init)
@@ -67,8 +209,8 @@ See `.nextstage-harness/README.md` in consumer projects for the human guide.
 | `.nextstage-harness/rules/` | Canonical rules — **edit here** |
 | `.nextstage-harness/README.md` | How to add/edit rules (scaffolded) |
 | `.cursor/rules/`, `.claude/rules/` | Generated rule adapters |
-| `.agents/skills/` | Installed skills (canonical — Skills CLI) |
-| `.cursor/skills/`, `.claude/skills/` | Symlinked skill adapters (`harness sync`) |
+| `.agents/skills/` | Installed skills (canonical — Skills CLI; Cursor reads here) |
+| `.claude/skills/` | Symlinked Claude Code skill adapters (`harness sync`) |
 | `docs/context`, `docs/specs`, `docs/versions` | SDD artifacts |
 
 ## Presets
@@ -79,6 +221,9 @@ See `.nextstage-harness/README.md` in consumer projects for the human guide.
 | `gitlab` | MCP GitLab, review gate, issue execution, board sync |
 | `brownfield` | `harness-agents-md`, architecture rules, bootstrap, reverse-spec |
 | `implementation` | Code-coder, investigator, review |
+| `agents-api` | Agents API projects — all curated external skills + architect/coder/reviewer |
+
+See `harness list` for the full skill id list and external preset breakdown.
 
 ## Post-install (brownfield / existing code)
 

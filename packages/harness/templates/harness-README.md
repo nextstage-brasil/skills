@@ -8,7 +8,6 @@ Canonical project rules for AI agents. Edit here — not under `.cursor/` or `.c
 |------|------|
 | `rules/*.md` | Rule bodies — edit these |
 | `manifest.json` | Registers rules for `harness sync` |
-| `docs/` | Optional agent-oriented notes |
 
 Generated adapters (do not edit):
 
@@ -46,7 +45,7 @@ npx @nextstage-brasil/harness sync
 
 Install catalog skills with `npx skills add` or `harness init`. For full brownfield onboarding after init, run `/harness-prepare` in your agent (or `npx @nextstage-brasil/harness prepare` for instructions).
 
-Then run `harness sync` so Cursor and Claude skill adapters stay in sync.
+Then run `harness sync` so Claude Code skill adapters stay in sync. Cursor reads `.agents/skills/` directly.
 
 ## Mental model
 

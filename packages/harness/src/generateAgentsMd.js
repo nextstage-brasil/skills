@@ -34,9 +34,8 @@ const LAYOUT_PATHS = [
   { path: join(HARNESS_ROOT, 'manifest.json'), purpose: 'Adapter config for harness sync' },
   { path: '.cursor/rules/', purpose: 'Generated Cursor rule adapters' },
   { path: '.claude/rules/', purpose: 'Generated Claude rule adapters' },
-  { path: join(AGENTS_HOME, 'skills/'), purpose: 'Installed skills (Skills CLI)' },
-  { path: '.cursor/skills/', purpose: 'Symlinked Cursor skills' },
-  { path: '.claude/skills/', purpose: 'Symlinked Claude skills' },
+  { path: join(AGENTS_HOME, 'skills/'), purpose: 'Installed skills (Skills CLI; Cursor reads here)' },
+  { path: '.claude/skills/', purpose: 'Symlinked Claude Code skills (harness sync)' },
   { path: join(AGENTS_HOME, 'docs/'), purpose: 'Agent-oriented project docs' },
   { path: 'docs/context/', purpose: 'Product context (stack, brownfield)' },
   { path: 'docs/versions/', purpose: 'SDD version artifacts' },
@@ -246,7 +245,7 @@ ${hasPrepare ? '**Full onboarding:** `/harness-prepare` (or `npx @nextstage-bras
 - Canonical rules: \`.nextstage-harness/rules/*.md\`
 - Regenerate adapters: \`npx @nextstage-brasil/harness sync\`
 - Refresh this file: \`npx @nextstage-brasil/harness agents-md\`
-- Skills: \`.agents/skills/\` → symlinks in \`.cursor/skills/\`, \`.claude/skills/\`
+- Skills: \`.agents/skills/\` (canonical; Cursor reads here) — \`.claude/skills/\` symlinked for Claude Code when harness sync runs
 
 See \`nextstage-harness\` skill (\`harness-discovery.md\`, \`rules-sync.md\`).
 

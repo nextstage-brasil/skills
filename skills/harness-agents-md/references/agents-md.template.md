@@ -53,7 +53,7 @@ Invoke via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`, `/exec
 
 - Canonical rules: `{harness_root}/rules/*.md` — edit here
 - Regenerate adapters: `npx @nextstage-brasil/harness sync`
-- Skills: `.agents/skills/` → symlinks in `.cursor/skills/`, `.claude/skills/`
+- Skills: `.agents/skills/` (canonical; Cursor reads here) — `.claude/skills/` symlinked for Claude Code
 
 See installed `nextstage-harness` skill (`harness-discovery.md`, `rules-sync.md`).
 
