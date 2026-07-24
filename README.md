@@ -27,7 +27,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/code-coder`, `/code-revie
 | Skill                      | Purpose                                                                     |
 | -------------------------- | --------------------------------------------------------------------------- |
 | `nextstage-harness`        | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
-| `nextstage-sdd`            | Delivery face — clarify → spec → tasks → implement → close (auto-size)      |
+| `nextstage-spec-driven`            | Delivery face — clarify → spec → tasks → implement → close (auto-size)      |
 | `harness-prepare`          | Orchestrate full brownfield onboarding chain after harness init (manual)    |
 | `harness-agents-md`      | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer           |
 | `harness-codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
@@ -149,7 +149,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
-Typical delivery: `/nextstage-sdd` (auto-sizes and delegates). Manual brownfield first: `/harness-prepare`. Worker chain: `pm-clarify-requirements` → `pm-requirements-generator` → `pm-analyze-consistency` → `pm-task-generator` → implementation (`code-coder` / `execution-gitlab-issue` / `code-autonomous`) → `code-reviewer` → `pm-living-spec-consolidator`. Optional complements: `npx @nextstage-brasil/harness --preset complements --yes`.
+Typical delivery: `/nextstage-spec-driven` (auto-sizes and delegates). Manual brownfield first: `/harness-prepare`. Worker chain: `pm-clarify-requirements` → `pm-requirements-generator` → `pm-analyze-consistency` → `pm-task-generator` → implementation (`code-coder` / `execution-gitlab-issue` / `code-autonomous`) → `code-reviewer` → `pm-living-spec-consolidator`. Optional complements: `npx @nextstage-brasil/harness --preset complements --yes`.
 
 ## Contributing
 

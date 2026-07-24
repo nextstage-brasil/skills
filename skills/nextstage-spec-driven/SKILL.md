@@ -1,5 +1,5 @@
 ---
-name: nextstage-sdd
+name: nextstage-spec-driven
 description: (NS) Spec-driven delivery face — clarify scope, write requirements, generate tasks, implement a version, quick fix, or resume paused work. Use whenever the user wants to specify a feature, start or continue a version, implement from tasks, ship a quick fix, resume SDD, or says "let's build X" without naming individual PM/code skills — even if they skip formal planning words. Auto-sizes Small/Medium/Large and delegates to worker skills. Do NOT use for brownfield onboarding, codebase mapping, architecture rules, or full project prepare (use /harness-prepare manually). Do NOT auto-run harness-prepare or list Prepare in the pipeline.
 license: Apache-2.0
 metadata:
@@ -7,6 +7,7 @@ metadata:
   version: "1.0"
 depends:
   - nextstage-harness
+  - harness-prepare
   - pm-clarify-requirements
   - pm-requirements-generator
   - pm-analyze-consistency
@@ -20,7 +21,7 @@ depends:
   - pm-living-spec-consolidator
 ---
 
-# NextStage SDD
+# NextStage Spec-Driven
 
 **Delivery face** for the spec-driven journey: clarify → specify → (consistency / partition) → tasks → execute → close.
 
@@ -166,7 +167,7 @@ When a version or quick fix closes, report:
 ## Invocation examples
 
 ```
-/nextstage-sdd
+/nextstage-spec-driven
 ```
 
 ```

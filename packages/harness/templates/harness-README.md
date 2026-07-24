@@ -21,7 +21,7 @@ npx @nextstage-brasil/harness <command>
 | Update skills already installed | `npx @nextstage-brasil/harness update` |
 | Brownfield onboarding (manual) | `/harness-prepare` |
 | Brownfield instructions (terminal) | `npx @nextstage-brasil/harness prepare` |
-| Spec-driven delivery | `/nextstage-sdd` |
+| Spec-driven delivery | `/nextstage-spec-driven` |
 | Optional complements (UI, docs, security) | `npx @nextstage-brasil/harness --preset complements --yes` |
 
 **In your AI agent:** open `AGENTS.md` at the project root, then invoke skills via the menu or slash (e.g. `/code-coder`, `/mcp-gitlab-usage`).
@@ -163,7 +163,7 @@ npx @nextstage-brasil/harness sync --check
 
 ## Brownfield onboarding (manual)
 
-For existing codebases, run once (and again after major refactors). **Not** part of `/nextstage-sdd`.
+For existing codebases, run once (and again after major refactors). **Not** part of `/nextstage-spec-driven`.
 
 **In agent:** `/harness-prepare`  
 **Chain:** architecture-rules → sync → brownfield map → reverse spec → AGENTS.md
@@ -176,7 +176,7 @@ Artifacts land under `docs/context/`, `docs/specs/`, `docs/versions/`.
 
 ## SDD delivery
 
-**Entry:** `/nextstage-sdd` — auto-sizes Small / Medium / Large and delegates to worker skills.
+**Entry:** `/nextstage-spec-driven` — auto-sizes Small / Medium / Large and delegates to worker skills.
 
 Typical worker chain (invoke via slash in your agent):
 

@@ -53,7 +53,7 @@ Create subfolders only when they match project convention.
 
 ## Integration
 
-When called from `nextstage-sdd`, document **delivered behavior** — do not invent requirements.
+When called from `nextstage-spec-driven`, document **delivered behavior** — do not invent requirements.
 
 ## Forbidden
 

@@ -26,7 +26,7 @@ npx @nextstage-brasil/harness list
 
 ### Install specific skills only
 
-Use `--skill` (repeatable). Harness resolves `depends` from `templates/catalog.json` and installs only what you asked for plus required dependencies — not the full catalog. Every install also includes `alwaysInstall` skills (`nextstage-harness`, `harness-prepare`, `nextstage-sdd`) and their transitive `depends`.
+Use `--skill` (repeatable). Harness resolves `depends` from `templates/catalog.json` and installs only what you asked for plus required dependencies — not the full catalog. Every install also includes `alwaysInstall` skills (`nextstage-harness`, `harness-prepare`, `nextstage-spec-driven`) and their transitive `depends`.
 
 ```bash
 # Preview what would be installed (no files written)
@@ -44,7 +44,7 @@ npx @nextstage-brasil/harness --skill langchain-fundamentals --no-scaffold -y
 
 Skill ids match directory names (`harness list` or repo `skills/<name>/`). Example: **multi-agent-architect** (LangGraph vs CrewAI architecture interviews) — no preset required.
 
-If a skill declares `depends` in the catalog (e.g. `code-reviewer` → `nextstage-harness`, `mcp-gitlab-usage`), those peers are installed automatically. `alwaysInstall` (`nextstage-harness`, `harness-prepare`, `nextstage-sdd`) is merged into every install plan before `depends` resolution.
+If a skill declares `depends` in the catalog (e.g. `code-reviewer` → `nextstage-harness`, `mcp-gitlab-usage`), those peers are installed automatically. `alwaysInstall` (`nextstage-harness`, `harness-prepare`, `nextstage-spec-driven`) is merged into every install plan before `depends` resolution.
 
 To add one skill to a project that already has harness:
 
@@ -233,7 +233,7 @@ See `.nextstage-harness/README.md` in consumer projects for the human guide.
 
 ## Presets
 
-Every install includes **alwaysInstall**: `nextstage-harness`, `harness-prepare`, `nextstage-sdd` (and transitive `depends` — full SDD worker chain + brownfield workers + `mcp-gitlab-usage` via `code-reviewer`).
+Every install includes **alwaysInstall**: `nextstage-harness`, `harness-prepare`, `nextstage-spec-driven` (and transitive `depends` — full SDD worker chain + brownfield workers + `mcp-gitlab-usage` via `code-reviewer`).
 
 Presets list **add-ons** on top of that base:
 
@@ -255,7 +255,7 @@ See `harness list` for the full skill id list and external preset breakdown.
 CLI writes baseline `AGENTS.md`. In your agent, run next:
 
 1. `/harness-prepare` — full chain: architecture rules → sync → brownfield map → reverse spec → AGENTS.md (manual; skip if greenfield)
-2. `/nextstage-sdd` — delivery entry (clarify → spec → tasks → implement)
+2. `/nextstage-spec-driven` — delivery entry (clarify → spec → tasks → implement)
 3. Optional: `npx @nextstage-brasil/harness --preset complements --yes`
 4. Or check prerequisites: `npx @nextstage-brasil/harness prepare`
 

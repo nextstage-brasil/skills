@@ -145,7 +145,7 @@ function buildComplementsNote(installed) {
   const missing = COMPLEMENT_SKILLS.filter((skill) => !set.has(skill));
 
   if (present.length === COMPLEMENT_SKILLS.length) {
-    return 'All optional complements installed (`code-frontend-design`, `code-docs-writer`, `code-best-practices`). `/nextstage-sdd` delegates to them when relevant.';
+    return 'All optional complements installed (`code-frontend-design`, `code-docs-writer`, `code-best-practices`). `/nextstage-spec-driven` delegates to them when relevant.';
   }
 
   const rows = COMPLEMENT_SKILLS.map((skill) => {
@@ -164,7 +164,7 @@ function buildComplementsNote(installed) {
       ? `\nInstall missing complements: \`npx @nextstage-brasil/harness --preset complements --yes\``
       : '';
 
-  return `Optional complements (soft-integrated by \`/nextstage-sdd\`):\n\n| Skill | When | Status |\n| ----- | ---- | ------ |\n${rows.join('\n')}${installHint}`;
+  return `Optional complements (soft-integrated by \`/nextstage-spec-driven\`):\n\n| Skill | When | Status |\n| ----- | ---- | ------ |\n${rows.join('\n')}${installHint}`;
 }
 
 function preserveSyncManaged(existingContent) {
@@ -216,7 +216,7 @@ export function generateAgentsMd(projectRoot, options = {}) {
 
   const hasHarness = pathExists(root, HARNESS_ROOT);
   const hasPrepare = installed.includes('harness-prepare');
-  const hasSdd = installed.includes('nextstage-sdd');
+  const hasSdd = installed.includes('nextstage-spec-driven');
   const archRulesNote = hasHarness
     ? `**Before implementation, read \`.nextstage-harness/rules/architecture-rules.md\`.** If still the harness stub, run \`/harness-prepare\` or \`harness-architecture-rules\` then \`npx @nextstage-brasil/harness sync\`.`
     : '**Harness rules not scaffolded** — run `harness init` or `harness migrate-rules`.';
@@ -255,7 +255,7 @@ Invoke via the Skills menu / slash (e.g. \`/code-coder\`, \`/code-reviewer\`). S
 
 ### Brownfield / context (manual)
 
-${hasPrepare ? '**Full onboarding:** `/harness-prepare` (or `npx @nextstage-brasil/harness prepare`) runs all steps below in one session — **not** part of `/nextstage-sdd`.\n**Keep context fresh:** re-run `/harness-prepare` after major refactors or when brownfield artifacts are stale.\n\n' : ''}| Artifact | Path | Skill |
+${hasPrepare ? '**Full onboarding:** `/harness-prepare` (or `npx @nextstage-brasil/harness prepare`) runs all steps below in one session — **not** part of `/nextstage-spec-driven`.\n**Keep context fresh:** re-run `/harness-prepare` after major refactors or when brownfield artifacts are stale.\n\n' : ''}| Artifact | Path | Skill |
 | -------- | ---- | ----- |
 | Full prepare chain | (all rows below) | \`harness-prepare\` |
 | Architecture constitution | \`.nextstage-harness/rules/architecture-rules.md\` | \`harness-architecture-rules\` |
@@ -265,7 +265,7 @@ ${hasPrepare ? '**Full onboarding:** `/harness-prepare` (or `npx @nextstage-bras
 
 ### Delivery (spec-driven)
 
-${hasSdd ? '**Entry:** `/nextstage-sdd` — auto-sizes Small / Medium / Large and delegates to worker skills. Does **not** auto-run prepare.\n\n' : ''}${buildSddChain(installed)}
+${hasSdd ? '**Entry:** `/nextstage-spec-driven` — auto-sizes Small / Medium / Large and delegates to worker skills. Does **not** auto-run prepare.\n\n' : ''}${buildSddChain(installed)}
 
 ### Implementation
 

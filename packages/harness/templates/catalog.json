@@ -1,10 +1,11 @@
 {
   "source": "nextstage-brasil/skills",
-  "alwaysInstall": ["nextstage-harness", "harness-prepare", "nextstage-sdd"],
+  "alwaysInstall": ["nextstage-harness", "harness-prepare", "nextstage-spec-driven"],
   "depends": {
     "nextstage-harness": [],
-    "nextstage-sdd": [
+    "nextstage-spec-driven": [
       "nextstage-harness",
+      "harness-prepare",
       "pm-clarify-requirements",
       "pm-requirements-generator",
       "pm-analyze-consistency",
@@ -58,15 +59,15 @@
   },
   "presets": {
     "delivery": {
-      "label": "SDD delivery (default)",
-      "description": "Base install always includes nextstage-sdd and harness-prepare; adds PHPUnit and Cypress task generators",
+      "label": "NextStage Spec-Driven",
+      "description": "Base install includes nextstage-spec-driven and harness-prepare; adds PHPUnit and Cypress task generators",
       "skills": [
         "pm-unit-test-task-generator",
         "pm-e2e-test-generator"
       ]
     },
     "recommended": {
-      "label": "SDD delivery (alias)",
+      "label": "NextStage Spec-Driven (alias)",
       "description": "Alias for delivery — prefer --preset delivery",
       "skills": [
         "pm-unit-test-task-generator",
@@ -99,7 +100,7 @@
     },
     "complements": {
       "label": "Project complements",
-      "description": "code-frontend-design, code-docs-writer, code-best-practices — soft-integrated by nextstage-sdd",
+      "description": "code-frontend-design, code-docs-writer, code-best-practices — soft-integrated by nextstage-spec-driven",
       "skills": ["code-frontend-design", "code-docs-writer", "code-best-practices"]
     },
     "full": {
@@ -127,7 +128,7 @@
   "categories": {
     "foundation": {
       "label": "Foundation",
-      "skills": ["nextstage-harness", "nextstage-sdd", "harness-agents-md", "harness-prepare", "skill-creator"]
+      "skills": ["nextstage-harness", "nextstage-spec-driven", "harness-agents-md", "harness-prepare", "skill-creator"]
     },
     "complements": {
       "label": "Project complements",
@@ -136,6 +137,7 @@
     "sdd": {
       "label": "SDD planning",
       "skills": [
+        "nextstage-spec-driven",
         "pm-clarify-requirements",
         "pm-requirements-generator",
         "pm-analyze-consistency",

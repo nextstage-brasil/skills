@@ -15,7 +15,7 @@ export function buildPostInstallNotes({
     installedSkills.includes('harness-prepare') ||
     installedSkills.includes('harness-bootstrap-brownfield');
   const hasPrepare = installedSkills.includes('harness-prepare');
-  const hasSdd = installedSkills.includes('nextstage-sdd');
+  const hasSdd = installedSkills.includes('nextstage-spec-driven');
 
   if (noScaffold) {
     lines.push('Skills installed (--no-scaffold). Scaffold skipped.');
@@ -60,7 +60,7 @@ export function buildPostInstallNotes({
 
   if (hasSdd) {
     lines.push('  Delivery (spec → tasks → implement):');
-    lines.push('    Skill:   /nextstage-sdd');
+    lines.push('    Skill:   /nextstage-spec-driven');
     lines.push('    Auto-sizes Small / Medium / Large and delegates to worker skills.');
     lines.push('');
   }
@@ -77,7 +77,7 @@ export function buildPostInstallNotes({
   lines.push('   Agents:    npx @nextstage-brasil/harness agents');
   lines.push('');
   if (hasSdd) {
-    lines.push('Delivery: /nextstage-sdd (clarify → spec → tasks → implement → close)');
+    lines.push('Delivery: /nextstage-spec-driven (clarify → spec → tasks → implement → close)');
   } else {
     lines.push('SDD: pm-clarify-requirements → pm-requirements-generator →');
     lines.push('     pm-task-generator → code-coder → code-reviewer');

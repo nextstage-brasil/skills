@@ -1,6 +1,6 @@
 ---
 name: code-best-practices
-description: (NS) Security, compatibility, and modern web quality pass — headers, CSP, dependencies, accessibility baselines, and pragmatic modernization. Use when the user asks to harden security, fix CSP/CORS/headers, improve compatibility, or modernize stack quality — even without saying "best practices". Orthogonal to code-reviewer SOLID/MR gate. Do NOT use for full MR review (use code-reviewer) or feature implementation (use code-coder / nextstage-sdd).
+description: (NS) Security, compatibility, and modern web quality pass — headers, CSP, dependencies, accessibility baselines, and pragmatic modernization. Use when the user asks to harden security, fix CSP/CORS/headers, improve compatibility, or modernize stack quality — even without saying "best practices". Orthogonal to code-reviewer SOLID/MR gate. Do NOT use for full MR review (use code-reviewer) or feature implementation (use code-coder / nextstage-spec-driven).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -26,7 +26,7 @@ See `../nextstage-harness/references/harness-discovery.md`. Read `architecture-r
 | Browser compatibility baseline | Yes | — |
 | Accessibility quick pass (landmarks, alt, labels) | Yes | — |
 | "Review this MR" / SOLID deep dive | No | `code-reviewer` |
-| New feature implementation | No | `code-coder` / `nextstage-sdd` |
+| New feature implementation | No | `code-coder` / `nextstage-spec-driven` |
 
 ## Workflow
 

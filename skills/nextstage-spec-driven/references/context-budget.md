@@ -4,7 +4,7 @@ Keep the active window focused. Prefer **disk artifacts** over pasting large doc
 
 ## Base load (every SDD session)
 
-1. Parent `nextstage-sdd` SKILL.md (already loaded).
+1. Parent `nextstage-spec-driven` SKILL.md (already loaded).
 2. Harness discovery + artifact-layout pointers.
 3. `{harness_root}/rules/architecture-rules.md` when implementing.
 4. **One** version folder: `docs/versions/{version_san}/` for the active version only.

@@ -294,7 +294,7 @@ async function resolveInstallPlanFromArgv(argv, detection) {
     message: 'What do you want to install?',
     initialValue: 'delivery',
     options: [
-      { value: 'delivery', label: 'SDD delivery (default)', hint: 'base + PHPUnit/Cypress task generators' },
+      { value: 'delivery', label: 'NextStage Spec-Driven', hint: 'base + PHPUnit/Cypress task generators' },
       { value: 'gitlab', label: 'GitLab add-ons', hint: 'issue execution, board sync, CI generator' },
       { value: 'implementation', label: 'Quality & test execution', hint: 'investigator + PHPUnit/Cypress impl' },
       { value: 'complements', label: 'UI, docs, security complements', hint: 'code-frontend-design, code-docs-writer, code-best-practices' },

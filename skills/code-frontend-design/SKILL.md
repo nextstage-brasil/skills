@@ -1,6 +1,6 @@
 ---
 name: code-frontend-design
-description: (NS) Distinctive production UI — layout, typography, motion, and component polish that avoids generic AI-slop aesthetics. Use whenever the user builds or refines pages, components, dashboards, forms, or design-brief work, or asks for better UI/UX — even if they do not say "design". Load docs/context/design-brief.md when present. Do NOT use for backend-only work, requirements writing, or full SDD orchestration (use nextstage-sdd).
+description: (NS) Distinctive production UI — layout, typography, motion, and component polish that avoids generic AI-slop aesthetics. Use whenever the user builds or refines pages, components, dashboards, forms, or design-brief work, or asks for better UI/UX — even if they do not say "design". Load docs/context/design-brief.md when present. Do NOT use for backend-only work, requirements writing, or full SDD orchestration (use nextstage-spec-driven).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -51,7 +51,7 @@ See `references/anti-slop.md` and `references/checklist.md`.
 - **Motion with purpose** — micro-interactions for feedback, not decoration loops.
 - **Accessible by default** — semantic HTML, labels, focus rings.
 
-## Integration with nextstage-sdd
+## Integration with nextstage-spec-driven
 
 When invoked from the SDD face skill, stay scoped to UI tasks — do not expand into requirements or task generation.
 

@@ -65,7 +65,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 npx @nextstage-brasil/harness --preset delivery --yes
 ```
 
-Creates scaffold, stub `architecture-rules.md`, syncs adapters. Base install includes `nextstage-sdd` and `harness-prepare`. Run `harness-architecture-rules` in your agent when code exists.
+Creates scaffold, stub `architecture-rules.md`, syncs adapters. Base install includes `nextstage-spec-driven` and `harness-prepare`. Run `harness-architecture-rules` in your agent when code exists.
 
 ### Brownfield (existing codebase)
 
