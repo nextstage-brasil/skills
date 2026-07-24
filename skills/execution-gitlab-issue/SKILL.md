@@ -55,8 +55,8 @@ An issue may already have a work branch (e.g. returned by a human reviewer). Det
 Resolve `SOURCE_BRANCH` only via `references/source-branch-resolution.md` (priority order: human → issue text → product rule → milestone/version discovery → mandatory `develop` fallback).
 
 - **Never** infer from the current checkout or ad hoc heuristics.
-- **Never** auto-use any branch except a discovered version-relative `develop_*` / `develop-*` or the `develop` fallback — other bases (`homolog`, `release/*`, etc.) require explicit human confirmation this run.
-- `main` / `master` are always invalid as `SOURCE_BRANCH`, even if named in the issue.
+- **Never** auto-use any branch except a discovered version-relative `develop_*` / `develop-*` or the `develop` fallback — other bases (`homolog`, `release/*`, `main`, `master`, etc.) require explicit human confirmation this run.
+- `main` / `master` are allowed as `SOURCE_BRANCH` **only** with express human authorization this run — never auto; issue text naming them alone is not enough (ask once).
 
 After resolution, validate on the remote (fetch, `ls-remote`, `_` ↔ `-` alternates) per the same reference. When the mandatory `develop` fallback is missing on the remote → abort with the exact error; ask the operator once.
 
@@ -104,7 +104,7 @@ Create `WORKTREE_ROOT` per `references/worktree-setup.md` — always `{product_r
 | Condition                                                 | Action                                            |
 | --------------------------------------------------------- | ------------------------------------------------- |
 | Gate 1: `develop` fallback missing on remote                  | Stop — ask once                                   |
-| Gate 1: non-allowed base branch without human confirmation  | Stop — ask once                                   |
+| Gate 1: non-default base (`main`/`master`/`homolog`/…) without express human confirmation this run | Stop — ask once |
 | Worktree conflict (same issue, another run)               | Stop unless explicit resume                       |
 | Ambiguous or conflicting acceptance criteria              | Stop — ask once                                   |
 | MCP unavailable or auth failure                           | Stop — state blocker                              |

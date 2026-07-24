@@ -107,6 +107,11 @@ export function buildPrepareMessage(assessment) {
 
   if (assessment.ready) {
     lines.push('✓  Prerequisites OK — invoke /harness-prepare in your agent.');
+    lines.push('');
+    lines.push('Re-run regularly to refresh project context:');
+    lines.push('  • After major refactors, new modules, or stack changes');
+    lines.push('  • Before SDD planning when brownfield docs may be stale');
+    lines.push('  • Updates: architecture-rules, brownfield-map, system-reverse-spec, AGENTS.md');
   }
 
   return lines.join('\n');

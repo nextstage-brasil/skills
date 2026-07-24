@@ -33,6 +33,7 @@ See `../nextstage-harness/references/harness-discovery.md` and `../nextstage-har
 | ------- | ------ |
 | Right after `harness init` (brownfield preset) | **Run full prepare** |
 | User says "prepare the project" / `/harness-prepare` | **Run full prepare** |
+| Major refactors, new modules/stack, or stale context docs | **Re-run full prepare** |
 | User wants one worker only | **Do not** use this skill — invoke the worker directly |
 | Greenfield, no application code | **Stop** — explain prepare needs a codebase to scan |
 

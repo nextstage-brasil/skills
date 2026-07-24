@@ -35,14 +35,19 @@ export function buildPostInstallNotes({
     lines.push('  Skill:   /harness-prepare');
     lines.push('  CLI:     npx @nextstage-brasil/harness prepare');
     lines.push('');
-    lines.push('  Full chain (one session):');
+    lines.push('  First run — full chain (one session):');
     lines.push('    harness-architecture-rules');
     lines.push('    → harness sync');
     lines.push('    → harness-bootstrap-brownfield');
     lines.push('    → harness-codebase-reverse-spec');
     lines.push('    → harness-agents-md');
     lines.push('');
-    lines.push('  Skip if greenfield with no application code yet.');
+    lines.push('  Re-run regularly to refresh project context:');
+    lines.push('    • After major refactors, new modules, or stack changes');
+    lines.push('    • Before SDD planning when brownfield docs may be stale');
+    lines.push('    • Same command: /harness-prepare (updates rules + context + AGENTS.md)');
+    lines.push('');
+    lines.push('  Skip first run if greenfield with no application code yet.');
   } else {
     lines.push('  Optional: /harness-architecture-rules when code exists');
     lines.push('  Then:     npx @nextstage-brasil/harness sync');

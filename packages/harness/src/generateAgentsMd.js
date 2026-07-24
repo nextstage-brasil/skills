@@ -232,7 +232,7 @@ ${buildImplementationNote(installed)}
 
 ### Brownfield / context
 
-${hasPrepare ? '**Full onboarding:** `/harness-prepare` (or `npx @nextstage-brasil/harness prepare`) runs all steps below in one session.\n\n' : ''}| Artifact | Path | Skill |
+${hasPrepare ? '**Full onboarding:** `/harness-prepare` (or `npx @nextstage-brasil/harness prepare`) runs all steps below in one session.\n**Keep context fresh:** re-run `/harness-prepare` after major refactors or when brownfield artifacts are stale.\n\n' : ''}| Artifact | Path | Skill |
 | -------- | ---- | ----- |
 | Full prepare chain | (all rows below) | \`harness-prepare\` |
 | Architecture constitution | \`.nextstage-harness/rules/architecture-rules.md\` | \`harness-architecture-rules\` |

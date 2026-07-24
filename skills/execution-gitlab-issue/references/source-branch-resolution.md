@@ -16,7 +16,12 @@ Apply the **first** match; record the source (field, excerpt, or rule name).
 
 **Forbidden without human confirmation (priority 1):** never auto-select `main`, `master`, `homolog`, the current checkout, or any branch other than a step 1–4 result or the `develop` fallback.
 
-`main` / `master` are **always invalid** as `SOURCE_BRANCH`, even if named explicitly in the issue — reject and ask the operator for an allowed base.
+### `main` / `master` as `SOURCE_BRANCH`
+
+- **Never auto-select** `main` or `master` (discovery, product rule, issue text, or checkout inference).
+- **Allowed only with express human authorization this run** (priority 1): the operator must name/confirm `main` or `master` as the base for this execution.
+- Naming `main`/`master` in the issue (title, description, comments) is **not** enough — treat as a signal, then **ask once** for express authorization before using it.
+- After authorization, proceed with remote validation like any other `SOURCE_BRANCH`.
 
 ## Milestone / version discovery (step 4)
 
@@ -70,6 +75,8 @@ git -C "{product_root}" fetch origin
 | `2.1.0 - Multitenant` | `develop_2.1` | `develop_2.1` |
 | `develop-1.32` (explicit) | `develop_1.32` | `develop_1.32` |
 | *(no milestone/version)* | *(no develop\_*)* | `develop` |
+| Human confirms `main` this run | `main` | `main` |
+| Issue says `main`, human not asked yet | `main` | Ask once — do not use until express yes |
 
 ## Product rule
 
