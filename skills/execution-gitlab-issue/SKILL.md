@@ -1,6 +1,10 @@
 ---
 name: execution-gitlab-issue
 description: (NS) Execute a GitLab issue end-to-end — first-act status, branch-reuse and source-branch gates, single-worktree isolation, atomic delivery, MR lifecycle, mandatory code review gate with bounded fix loop. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly — not for local-only ad-hoc coding (use code-coder) or non-GitLab autonomous runs (use code-autonomous standalone). Delegates actual coding to the code-autonomous engine. Requires mcp-gitlab-usage for MCP and code-reviewer for the review gate.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
   - mcp-gitlab-usage

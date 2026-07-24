@@ -1,6 +1,10 @@
 ---
 name: multi-agent-architect
 description: (NS) Interview users through focused technical questions to recommend LangGraph vs CrewAI, propose multi-agent architecture, and design agent personas with tools and models. Use whenever the user wants to build a multi-agent system, choose between LangGraph and CrewAI, design agent crews or graphs, plan human-in-the-loop workflows, or asks how to orchestrate AI agents — even if they only say "I want a bot for my company" or "agents working together". Do NOT use for general app requirements (use pm-clarify-requirements) or implementation coding without architecture intent.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 ---
 
 # Multi-Agent Architect

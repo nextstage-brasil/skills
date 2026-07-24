@@ -1,6 +1,10 @@
 ---
 name: pm-unit-test-task-generator
 description: (NS) Generate backend unit and integration test task markdown after implementation tasks exist. Use during SDD planning for PHPUnit/Laravel or equivalent backend test coverage per feature — not for E2E (use pm-e2e-test-generator). Requires requirements and related backend task. Documents cross-tenant and auth P0 scenarios when applicable.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 ---
 
 # Unit Test Task Generator

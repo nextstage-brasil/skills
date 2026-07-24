@@ -1,6 +1,10 @@
 ---
 name: harness-prepare
 description: (NS) Run the full post-harness-init AI bootstrap in one session — architecture rules, harness sync, brownfield map, business reverse spec, and project AGENTS.md. Use whenever the user says harness prepare, post-install setup, bootstrap this project after harness init, onboard brownfield repo, run full project preparation, or wants all brownfield skills in sequence without invoking each slash command manually — even if they list harness-architecture-rules, harness-bootstrap-brownfield, harness-codebase-reverse-spec, and harness-agents-md as separate next steps. Do NOT use for greenfield repos with no application code yet, single-skill runs (invoke the worker skill directly), or CLI-only baseline AGENTS.md (use harness agents-md).
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
   - harness-architecture-rules

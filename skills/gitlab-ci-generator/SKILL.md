@@ -1,6 +1,10 @@
 ---
 name: gitlab-ci-generator
 description: (NS) Generate and adapt .gitlab-ci.yml for SaaS products with backend and frontend — test, build, E2E gate, deploy by branch. Use when the user asks for GitLab CI, pipeline setup, or CI/CD bootstrap for a monorepo product. Uses references/templates/gitlab-ci.template.yml as baseline. Out of scope for pure agent-runtime repos without backend+frontend layout.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 ---
 
 # GitLab CI Generator

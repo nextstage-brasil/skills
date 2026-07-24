@@ -1,6 +1,10 @@
 ---
 name: execution-orchestrator
 description: (NS) Orchestrate partitioned version implementation slice-by-slice — dispatch one synchronous subagent per slice with small context, commit after each slice, and advance automatically without confirmation until all slices are done or a stop condition is hit. Use whenever a version has a version-roadmap.md with pending slices and the user asks to "run the orchestrated implementation", "execute all slices", "orchestrate the partitioned version", or drive a subversion roadmap to completion. Do NOT use for non-partitioned versions (execute tasks directly), ad-hoc coding (code-coder), or planning/partitioning (pm-version-partitioner).
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
 ---

@@ -1,6 +1,10 @@
 ---
 name: pm-analyze-consistency
 description: (NS) Verify internal consistency of requirements.md and adherence to project rules before task generation. Use after scope confirmation, when the user asks to analyze or validate requirements, or after manual edits to requirements — automatically between Gate 2 and task generation. Produces consistency-report.md; does not modify requirements. Do NOT generate tasks.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
 ---

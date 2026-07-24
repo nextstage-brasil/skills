@@ -1,6 +1,10 @@
 ---
 name: code-backend-tests
 description: (NS) Create and maintain PHPUnit unit and integration tests in the backend package (bootstrap tests/ when missing). Mandatory Docker-only execution with phpunit --testdox --stop-on-failure --stop-on-error and 120s timeout. Use when writing or refactoring PHPUnit tests, implementing unit-test tasks, or scaffolding backend tests on greenfield Laravel/PHP projects — not when planning test task markdown (use pm-unit-test-task-generator). Read harness backend-tests rules when present.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 ---
 
 # Create Backend Tests

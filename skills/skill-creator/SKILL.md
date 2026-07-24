@@ -1,6 +1,10 @@
 ---
 name: skill-creator
 description: (NS) Create or improve project-local agent skills in a NextStage harness project — draft SKILL.md under .agents/skills/, run evals, then harness sync. Use whenever the user asks to create a skill, add a custom skill to this project, author SKILL.md, iterate on skill evals/benchmarks, or optimize skill descriptions — even if they say "make a skill for our repo" or "skill-creator". Do NOT use for contributing to the nextstage-brasil/skills catalog (that repo has its own maintainer workflow in AGENTS.md).
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
 ---

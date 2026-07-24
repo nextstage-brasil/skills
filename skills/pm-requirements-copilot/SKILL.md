@@ -1,6 +1,10 @@
 ---
 name: pm-requirements-copilot
 description: End-to-end PM workflow skill — from raw transcript to committed delivery date. Runs a gated phase pipeline (clarification → structuring → RICE/WSJF prioritization → sprint scheduling → PERT/Monte Carlo forecast) and on-demand modes (risk monitor, status report, meeting digest, compliance checklist, NL-to-issue parsing, OKR aligner). Use whenever the user pastes a discovery transcript, asks to structure requirements, prioritize a backlog, build a sprint schedule, forecast delivery (P50/P85/P95), monitor project health, write a status report, digest a meeting, create a deploy checklist, parse a Slack message into a ticket, or validate OKRs — even if they don't name the phase or framework. Never dumps all phases at once; stops at each gate for confirmation. Deterministic math always via scripts/, never in the LLM. GitLab MCP when real project data is needed.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 ---
 
 # PM Requirements Copilot

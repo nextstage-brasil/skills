@@ -11,6 +11,10 @@ description:
   questions — with or without a GitLab issue. Do NOT use for full issue execution
   (execution-gitlab-issue), code review (code-reviewer), version planning
   (start_execution_planning), or generating requirements.md (pm-requirements-generator).
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
   - mcp-gitlab-usage

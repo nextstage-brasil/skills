@@ -1,6 +1,10 @@
 ---
 name: harness-codebase-reverse-spec
 description: (NS) Reverse-engineer an existing, legacy, or brownfield codebase into a technology-agnostic business description of what the system actually does — business rules, actors, permissions, hierarchies, state lifecycles, and external integrations, without implementation details. Use this skill whenever the user mentions brownfield, legacy code, modernization, reverse engineering, codebase analysis, extracting business rules from code, engenharia reversa, documentar sistema legado, gerar spec a partir do código, or wants a functional description faithful to the current product to support rewrite, migration, onboarding, or audit — even if they do not name this skill. Do NOT use for simple code reviews, bug fixes, or when the user explicitly wants a technical architecture document.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 ---
 
 # Codebase Reverse System Description

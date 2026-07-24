@@ -1,6 +1,10 @@
 ---
 name: pm-task-generator
 description: (NS) Transform atomic implementation work into rich task markdown files for backend and frontend layers with dependencies, estimates, and layer-specific checklists. Use during SDD planning when generating task-NNN-*.md from requirements features — not for E2E or unit test tasks (use specialized generators). Requires requirements.md. Output English task files under version tasks folder.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
 ---

@@ -1,6 +1,10 @@
 ---
 name: nextstage-harness
 description: (NS) Harness discovery, artifact layout, and SDD planning gates for NextStage skills. Installed automatically as a dependency — use when resolving AGENTS.md, .nextstage-harness/rules, docs/versions paths, or confirmation gates.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 ---
 
 # NextStage Harness

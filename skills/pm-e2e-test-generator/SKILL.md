@@ -1,6 +1,10 @@
 ---
 name: pm-e2e-test-generator
 description: (NS) Generate E2E test task markdown for Cypress/TypeScript during SDD planning after frontend tasks exist. Use when planning Cypress coverage per feature — not for writing specs (use code-e2e-tests). Requires data-testid contract from frontend task. Device-aware desktop/tablet/mobile structure.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 ---
 
 # E2E Test Task Generator

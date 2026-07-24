@@ -1,6 +1,10 @@
 ---
 name: pm-living-spec-consolidator
 description: (NS) Consolidate delivered version deltas into living domain specs under docs/specs/ — INDEX.md and per-domain markdown. Use after version delivery when requirements, code-review-report, and execution-handoff exist — typically at version closure. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
 ---

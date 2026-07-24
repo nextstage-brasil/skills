@@ -1,6 +1,10 @@
 ---
 name: harness-bootstrap-brownfield
 description: (NS) Onboard an existing codebase into spec-driven planning — map stack, modules, rule adherence, and gaps without modifying code. Use when the user says analyze existing project, brownfield bootstrap, or before first requirements on a repo with code but no requirements. Outputs brownfield-map.md for pm-requirements-generator. Read-only on source code.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
 ---

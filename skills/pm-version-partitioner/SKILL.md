@@ -1,6 +1,10 @@
 ---
 name: pm-version-partitioner
 description: (NS) Partition a large master requirements.md into executable subversions with version-roadmap.md and slice requirements excerpts — without generating tasks. Use when a version has too many features for one planning cycle or the user asks to split a version — after Gate 1 requirements confirmed. Do NOT generate task-NNN files (planning per slice comes later).
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
 ---

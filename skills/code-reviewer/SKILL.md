@@ -1,6 +1,10 @@
 ---
 name: code-reviewer
 description: (NS) Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate — even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT use for root-cause debugging (use code-investigator).
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
   - mcp-gitlab-usage

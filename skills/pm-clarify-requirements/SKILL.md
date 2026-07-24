@@ -1,6 +1,10 @@
 ---
 name: pm-clarify-requirements
 description: (NS) Resolve ambiguities, gaps, and unstated assumptions in a scope description before generating requirements. On brownfield repos, runs harness-bootstrap-brownfield when brownfield-map.md is missing; when a map exists, mandatory human gate to refresh or keep it (shows last map date). Use when the user gives a vague or incomplete scope, mentions "dashboard", "notifications", "integration with X" without detail, or before requirements generation when terms are ambiguous — even if they do not ask to "clarify". Do NOT generate requirements.md in this skill; output enriched context only.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
 ---

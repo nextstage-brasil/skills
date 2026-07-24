@@ -1,6 +1,10 @@
 ---
 name: code-autonomous
 description: (NS) Harness-aware autonomous execution engine — self-decides planning depth, resolves doubts against docs/context and docs/specs before escalating, dispatches multi-agent implementation in an isolated worktree. Use as the standalone entry point for a local plan file, a pasted execution plan, or an ad-hoc "run this autonomously" request with no GitLab issue involved. Also acts as the Phase 2 execution engine when invoked by execution-gitlab-issue — do not run the standalone pipeline in that case. Not for simple single-step edits (use code-coder) and not for GitLab issues directly (use execution-gitlab-issue, which calls this skill internally).
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
   - code-reviewer

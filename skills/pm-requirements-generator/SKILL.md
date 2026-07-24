@@ -1,6 +1,10 @@
 ---
 name: pm-requirements-generator
 description: (NS) Generate structured requirements.md from scope descriptions, stack context, and design briefs for a product version. Use when starting a new version, the user asks for requirements, RF/features document, or before task generation when requirements.md is missing — even if they only describe the feature in chat. Follow SDD planning gates in nextstage-harness. Do NOT generate task files (use pm-task-generator).
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 depends:
   - nextstage-harness
 ---

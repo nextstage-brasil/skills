@@ -1,6 +1,10 @@
 ---
 name: code-e2e-tests
 description: (NS) Create and maintain Cypress E2E tests in an independent tests-e2e/ Node package at product root (bootstrap when missing). DRY device-aware command architecture (shared/pages/device). Use when writing or refactoring Cypress specs, custom commands, scaffolding E2E on greenfield projects, or implementing E2E tasks — not when planning E2E task markdown (use pm-e2e-test-generator). Read harness e2e rules when present. Mandatory discovery before writing specs.
+license: Apache-2.0
+metadata:
+  author: nextstage-brasil
+  version: "1.0"
 ---
 
 # Create E2E Tests
