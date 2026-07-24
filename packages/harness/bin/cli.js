@@ -11,7 +11,11 @@ import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { runPrepare } from '../src/prepare.js';
 import { pruneRetiredSkills, formatPruneReport } from '../src/pruneRetiredSkills.js';
 import { runUpdate } from '../src/update.js';
-import { DEFAULT_AGENTS, HARNESS_ROOT } from '../src/agentsLayout.js';
+import { runAgentsShow, runAgentsSet } from '../src/projectAgents.js';
+import { logResolvedAgents } from '../src/logResolvedAgents.js';
+import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js';
+import { HARNESS_ROOT, resolveAgents } from '../src/agentsLayout.js';
+import { refreshHarnessReadme } from '../src/refreshHarnessReadme.js';
 
 const HELP = `
 Usage:
@@ -23,6 +27,7 @@ Usage:
   harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
   harness prune-retired-skills  Remove renamed skill dirs after replacement is installed
   harness update [options] Update installed skills only (does not install new ones)
+  harness agents [set]   Show or set project agents (.nextstage-harness/manifest.json)
   harness list             List presets and available skills
 
 Options:
@@ -31,7 +36,7 @@ Options:
   --skill <name>         Install specific skill (repeatable)
   --all                  Install every skill in the catalog
   --global, -g           Install skills globally (passed to skills CLI)
-  --agent <name>         Target agent (repeatable; default: cursor, claude-code)
+  --agent <name>         Target agent (repeatable; default from manifest or cursor + claude-code)
   --copy                 Copy skill files instead of symlinking
   --source <path>        Skills source (default: nextstage-brasil/skills or local repo)
   --yes, -y              Non-interactive; install all skills and default scaffold
@@ -57,6 +62,8 @@ Examples:
   npx @nextstage-brasil/harness prune-retired-skills --dry-run
   npx @nextstage-brasil/harness update
   npx @nextstage-brasil/harness update --dry-run
+  npx @nextstage-brasil/harness agents
+  npx @nextstage-brasil/harness agents set --agent cursor
   npx @nextstage-brasil/harness list
 `.trim();
 
@@ -81,6 +88,8 @@ function parseArgs(argv) {
     name: undefined,
     description: undefined,
     globs: undefined,
+    subcommand: undefined,
+    positional: [],
   };
 
   if (args.length === 0) {
@@ -97,6 +106,7 @@ function parseArgs(argv) {
     'add-rule',
     'prepare',
     'update',
+    'agents',
   ];
   const first = args[0];
   if (knownCommands.includes(first)) {
@@ -109,6 +119,11 @@ function parseArgs(argv) {
   }
 
   let start = knownCommands.includes(first) ? 1 : 0;
+
+  if (result.command === 'agents' && args[start] === 'set') {
+    result.subcommand = 'set';
+    start += 1;
+  }
 
   for (let i = start; i < args.length; i += 1) {
     const arg = args[i];
@@ -190,6 +205,11 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (result.command === 'agents' && result.subcommand === 'set' && !arg.startsWith('-')) {
+      result.positional.push(arg);
+      continue;
+    }
+
     console.error(`Unknown argument: ${arg}`);
     process.exit(1);
   }
@@ -204,7 +224,8 @@ function resolveProjectDir(argvDir) {
 
 async function runSync(parsed) {
   const projectRoot = resolveProjectDir(parsed.dir);
-  const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
+  logResolvedAgents(projectRoot, parsed.agent);
+  const agents = resolveAgents(projectRoot, parsed.agent);
   const rulesResult = syncRules(projectRoot, { agents, check: parsed.check });
   const skillsResult = syncSkills(projectRoot, { agents, check: parsed.check, copy: parsed.copy });
   const dockerignoreResult = parsed.check
@@ -246,11 +267,23 @@ async function runSync(parsed) {
   } else {
     console.log('No adapters written');
   }
+
+  const prunedAdapters = pruneExcludedAgentAdapters(projectRoot, agents);
+  if (prunedAdapters.removed.length > 0) {
+    console.log(`Removed ${prunedAdapters.removed.length} adapter path(s) for excluded agents`);
+  }
+
+  if (!parsed.check) {
+    const readmeResult = refreshHarnessReadme(projectRoot);
+    if (readmeResult.updated) {
+      console.log(`Updated: ${HARNESS_ROOT}/README.md`);
+    }
+  }
 }
 
 async function runMigrateRules(parsed) {
   const projectRoot = resolveProjectDir(parsed.dir);
-  const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
+  const agents = resolveAgents(projectRoot, parsed.agent);
   const result = migrateRules(projectRoot, { force: parsed.force, agents });
 
   if (result.migrated.length > 0) {
@@ -260,6 +293,11 @@ async function runMigrateRules(parsed) {
     console.log(`Skipped (already exist): ${result.skipped.join(', ')}`);
   }
   console.log(`Synced ${result.syncResult.written.length} adapter file(s)`);
+
+  const prunedAdapters = pruneExcludedAgentAdapters(projectRoot, agents);
+  if (prunedAdapters.removed.length > 0) {
+    console.log(`Removed ${prunedAdapters.removed.length} adapter path(s) for excluded agents`);
+  }
 }
 
 async function runPrepareCmd(parsed) {
@@ -291,7 +329,7 @@ async function runAddRule(parsed) {
   }
 
   const projectRoot = resolveProjectDir(parsed.dir);
-  const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
+  const agents = resolveAgents(projectRoot, parsed.agent);
   const result = addRule(projectRoot, {
     name: parsed.name,
     description: parsed.description,
@@ -304,11 +342,16 @@ async function runAddRule(parsed) {
   console.log(`${action}: ${result.canonical}`);
   console.log(`Updated: ${HARNESS_ROOT}/manifest.json`);
   console.log(`Synced ${result.syncResult.written.length} adapter file(s)`);
+
+  const prunedAdapters = pruneExcludedAgentAdapters(projectRoot, agents);
+  if (prunedAdapters.removed.length > 0) {
+    console.log(`Removed ${prunedAdapters.removed.length} adapter path(s) for excluded agents`);
+  }
 }
 
 async function runPruneRetiredSkills(parsed) {
   const projectRoot = resolveProjectDir(parsed.dir);
-  const agents = parsed.agent.length > 0 ? parsed.agent : DEFAULT_AGENTS;
+  const agents = resolveAgents(projectRoot, parsed.agent);
   const result = pruneRetiredSkills(projectRoot, {
     dryRun: Boolean(parsed['dry-run']),
     agents,
@@ -392,6 +435,22 @@ async function main() {
   if (parsed.command === 'update') {
     try {
       await runUpdate(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (parsed.command === 'agents') {
+    try {
+      const projectRoot = resolveProjectDir(parsed.dir);
+      if (parsed.subcommand === 'set') {
+        const agentIds = parsed.agent.length > 0 ? parsed.agent : parsed.positional;
+        runAgentsSet(projectRoot, agentIds, { copy: parsed.copy });
+      } else {
+        runAgentsShow(projectRoot, { agent: parsed.agent });
+      }
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
       process.exit(1);

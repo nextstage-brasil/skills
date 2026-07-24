@@ -6,6 +6,7 @@ import {
   HARNESS_ROOT,
   HARNESS_RULES_DIR,
 } from './agentsLayout.js';
+import { refreshHarnessReadme } from './refreshHarnessReadme.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const templatesDir = join(__dirname, '..', 'templates');
@@ -76,12 +77,14 @@ function scaffoldHarnessRoot(projectRoot, { force, created, skipped }) {
     created.push(`${HARNESS_RULES_DIR}/architecture-rules.md`);
   }
 
-  const readmeTarget = join(harnessRoot, 'README.md');
-  if (existsSync(readmeTarget) && !force) {
-    skipped.push(`${HARNESS_ROOT}/README.md`);
-  } else {
-    copyFileSync(join(templatesDir, 'harness-README.md'), readmeTarget);
-    created.push(`${HARNESS_ROOT}/README.md`);
+  const readmeResult = refreshHarnessReadme(projectRoot);
+  if (!readmeResult.skipped) {
+    const label = `${HARNESS_ROOT}/README.md`;
+    if (readmeResult.created) {
+      created.push(label);
+    } else {
+      created.push(`${label} (updated)`);
+    }
   }
 }
 

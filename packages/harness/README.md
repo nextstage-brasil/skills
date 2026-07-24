@@ -175,6 +175,8 @@ npx @nextstage-brasil/harness list
 | `prepare` | `--dir` |
 | `prune-retired-skills` | `--dir`, `--dry-run` |
 | `update` | `--dir`, `--skill` (repeatable), `--global`, `--agent`, `--copy`, `--dry-run` |
+| `agents` | `--dir` — show active agents from manifest |
+| `agents set` | `--dir`, `--agent` (repeatable) or positional agent names — persist + sync + prune |
 | `list` | — |
 
 ## Commands
@@ -193,6 +195,8 @@ npx @nextstage-brasil/harness list
 | `harness prune-retired-skills` | Remove renamed skill dirs after replacement is installed |
 | `harness update` | Update skills already in `.agents/skills/` (no new installs) |
 | `harness update --dry-run` | Preview which installed skills would be updated |
+| `harness agents` | Show active agents (from `.nextstage-harness/manifest.json`) |
+| `harness agents set --agent cursor` | Persist cursor-only; sync adapters; remove `.claude/` |
 
 Common flags: `--dir`, `--preset`, `--skill` (repeatable), `--agent` (default `cursor`, `claude-code`), `--copy`, `--no-scaffold`, `--dry-run`, `--yes`.
 

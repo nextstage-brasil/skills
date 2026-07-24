@@ -58,8 +58,11 @@ export function buildPostInstallNotes({
   lines.push('────────────────────────────────');
   lines.push('Extras');
   lines.push('');
+  lines.push('   Guide:    .nextstage-harness/README.md');
   lines.push('   New rule:  npx @nextstage-brasil/harness add-rule <name>');
   lines.push('   Sync:      npx @nextstage-brasil/harness sync');
+  lines.push('   Update:    npx @nextstage-brasil/harness update');
+  lines.push('   Agents:    npx @nextstage-brasil/harness agents');
   lines.push('');
   lines.push('SDD: pm-clarify-requirements → pm-requirements-generator →');
   lines.push('     pm-task-generator → code-coder → code-reviewer');

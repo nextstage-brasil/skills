@@ -8,7 +8,8 @@ import {
 } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { AGENTS_SKILLS_DIR, DEFAULT_AGENTS } from './agentsLayout.js';
+import { AGENTS_SKILLS_DIR } from './agentsLayout.js';
+import { DEFAULT_AGENTS } from './agentIds.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const retiredPath = join(__dirname, '..', 'templates', 'retired-skills.json');

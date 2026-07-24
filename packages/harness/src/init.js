@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import * as p from '@clack/prompts';
 import { detectProject } from './detect.js';
 import {
@@ -23,7 +24,12 @@ import { syncGitignore } from './syncGitignore.js';
 import { generateAgentsMd } from './generateAgentsMd.js';
 import { buildPostInstallNotes } from './postInstallNotes.js';
 import { pruneRetiredSkills } from './pruneRetiredSkills.js';
-import { DEFAULT_AGENTS } from './agentsLayout.js';
+import { normalizeAgentIds } from './agentIds.js';
+import { resolveAgentsConfig, HARNESS_ROOT } from './agentsLayout.js';
+import { writeManifestAgents, manifestPath } from './manifest.js';
+import { refreshHarnessReadme } from './refreshHarnessReadme.js';
+import { logResolvedAgents } from './logResolvedAgents.js';
+import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
 
 export async function runInit(argv = {}) {
   p.intro('NextStage harness');
@@ -50,7 +56,10 @@ export async function runInit(argv = {}) {
   p.log.step(skillSummary);
 
   const scaffoldOptions = await resolveScaffoldOptions(argv, detection);
-  const agents = argv.agent?.length ? argv.agent : DEFAULT_AGENTS;
+  const agentFlags = argv.agent ?? [];
+  const { agents } = agentFlags.length > 0
+    ? { agents: normalizeAgentIds(agentFlags) }
+    : resolveAgentsConfig(detection.projectRoot, []);
   const installOptions = {
     projectRoot: detection.projectRoot,
     global: Boolean(argv.global),
@@ -67,6 +76,9 @@ export async function runInit(argv = {}) {
       p.log.info(`External skills: ${plan.externalSkills.join(', ')}`);
     }
     p.log.info(`Agents: ${agents.join(', ')}`);
+    if (agentFlags.length === 0) {
+      logResolvedAgents(detection.projectRoot, []);
+    }
     p.log.info('Skill adapters → .claude/skills/ when Claude Code is targeted; Cursor reads `.agents/skills/` directly');
     p.log.info('Dry run — no files written, no skills installed.');
     p.outro('Done.');
@@ -126,6 +138,15 @@ export async function runInit(argv = {}) {
     p.log.warn(error instanceof Error ? error.message : String(error));
   }
 
+  try {
+    const prunedAdapters = pruneExcludedAgentAdapters(detection.projectRoot, agents);
+    if (prunedAdapters.removed.length > 0) {
+      p.log.success(`Removed adapters for excluded agents: ${prunedAdapters.removed.length} path(s)`);
+    }
+  } catch (error) {
+    p.log.warn(error instanceof Error ? error.message : String(error));
+  }
+
   let scaffoldRan = false;
   if (!scaffoldOptions.skip) {
     const result = scaffoldProject(detection.projectRoot, scaffoldOptions);
@@ -176,6 +197,23 @@ export async function runInit(argv = {}) {
     } catch (error) {
       p.log.warn(error instanceof Error ? error.message : String(error));
     }
+  }
+
+  try {
+    if (existsSync(manifestPath(detection.projectRoot))) {
+      writeManifestAgents(detection.projectRoot, agents);
+    }
+  } catch (error) {
+    p.log.warn(error instanceof Error ? error.message : String(error));
+  }
+
+  try {
+    const readmeResult = refreshHarnessReadme(detection.projectRoot);
+    if (readmeResult.updated) {
+      p.log.success(`Updated: ${HARNESS_ROOT}/README.md`);
+    }
+  } catch (error) {
+    p.log.warn(error instanceof Error ? error.message : String(error));
   }
 
   p.note(
@@ -444,6 +482,10 @@ export function printList() {
       '',
       'Refresh skills already in the project:',
       '  npx @nextstage-brasil/harness update',
+      '',
+      'Project agents (stored in .nextstage-harness/manifest.json):',
+      '  npx @nextstage-brasil/harness agents',
+      '  npx @nextstage-brasil/harness agents set --agent cursor',
     ].join('\n'),
     'Install',
   );

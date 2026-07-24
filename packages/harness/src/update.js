@@ -5,7 +5,10 @@ import { installSkills, updateInstalledSkills } from './installer.js';
 import { pruneRetiredSkills } from './pruneRetiredSkills.js';
 import { syncSkills } from './syncSkills.js';
 import { syncRules } from './syncRules.js';
-import { DEFAULT_AGENTS, HARNESS_ROOT } from './agentsLayout.js';
+import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
+import { HARNESS_ROOT, resolveAgents } from './agentsLayout.js';
+import { logResolvedAgents } from './logResolvedAgents.js';
+import { refreshHarnessReadme } from './refreshHarnessReadme.js';
 
 export function listSkillsToUpdate(projectRoot, requested = []) {
   const installed = listInstalledSkillNames(projectRoot);
@@ -24,7 +27,9 @@ export function listSkillsToUpdate(projectRoot, requested = []) {
 
 export async function runUpdate(argv = {}) {
   const projectRoot = argv.dir ?? process.cwd();
-  const agents = argv.agent?.length ? argv.agent : DEFAULT_AGENTS;
+  const agentFlags = argv.agent ?? [];
+  logResolvedAgents(projectRoot, agentFlags);
+  const agents = resolveAgents(projectRoot, agentFlags);
   const { skills, notInstalled } = listSkillsToUpdate(projectRoot, argv.skill ?? []);
 
   if (notInstalled.length > 0) {
@@ -77,6 +82,16 @@ export async function runUpdate(argv = {}) {
     if (rulesSync.written.length > 0) {
       console.log(`Synced ${rulesSync.written.length} rule adapter(s)`);
     }
+  }
+
+  const prunedAdapters = pruneExcludedAgentAdapters(projectRoot, agents);
+  if (prunedAdapters.removed.length > 0) {
+    console.log(`Removed ${prunedAdapters.removed.length} adapter path(s) for excluded agents`);
+  }
+
+  const readmeResult = refreshHarnessReadme(projectRoot);
+  if (readmeResult.updated) {
+    console.log(`Updated: ${HARNESS_ROOT}/README.md`);
   }
 
   console.log(`Updated ${skills.length} skill(s): ${skills.join(', ')}`);

@@ -12,7 +12,10 @@ import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { migrateRules } from '../src/migrateRules.js';
 import { pruneRetiredSkills, assessPruneRetiredSkills } from '../src/pruneRetiredSkills.js';
 import { groupExternalSkillsBySource, getExternalPreset } from '../src/externalSkills.js';
+import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js';
 import { listSkillsToUpdate } from '../src/update.js';
+import { resolveAgentsConfig } from '../src/agentsLayout.js';
+import { writeManifestAgents } from '../src/manifest.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const harnessRoot = join(__dirname, '..');
@@ -53,6 +56,17 @@ try {
   assert(
     readFileSync(join(tempDir, '.nextstage-harness', 'README.md'), 'utf8').includes('add-rule'),
     'harness README should mention add-rule',
+  );
+
+  writeFileSync(join(tempDir, '.nextstage-harness', 'README.md'), '# stale guide\n', 'utf8');
+  const readmeResync = scaffoldProject(tempDir, { agents: true, docs: false });
+  assert(
+    readmeResync.created.some((entry) => entry.includes('README.md (updated)')),
+    'scaffold should refresh existing harness README',
+  );
+  assert(
+    readFileSync(join(tempDir, '.nextstage-harness', 'README.md'), 'utf8').includes('Start here'),
+    'refreshed README should match current template',
   );
 
   // 2. sync generates adapters with matching hash
@@ -331,8 +345,45 @@ try {
   const updateMissing = runCli(['update', '--skill', 'missing-skill', '--dir', tempDir], harnessRoot);
   assert(updateMissing.status === 1, 'update --skill for missing skill should fail');
 
+  mkdirSync(join(tempDir, '.claude', 'skills', 'nextstage-harness'), { recursive: true });
+  writeFileSync(join(tempDir, '.claude', 'skills', 'nextstage-harness', 'SKILL.md'), '# claude\n', 'utf8');
+  const prunedAgents = pruneExcludedAgentAdapters(tempDir, ['cursor']);
+  assert(prunedAgents.removed.some((path) => path.endsWith('.claude')), 'cursor-only should remove .claude adapters');
+  assert(!existsSync(join(tempDir, '.claude')), '.claude should be removed after cursor-only prune');
+
+  const agentsOnlyDir = mkdtempSync(join(tmpdir(), 'harness-agents-manifest-'));
+  try {
+    scaffoldProject(agentsOnlyDir, { agents: true, docs: false });
+    writeManifestAgents(agentsOnlyDir, ['cursor']);
+    const resolved = resolveAgentsConfig(agentsOnlyDir, []);
+    assert(
+      resolved.agents.length === 1 && resolved.agents[0] === 'cursor' && resolved.source === 'manifest',
+      'resolveAgentsConfig should read manifest.agents',
+    );
+
+    const agentsSet = runCli(['agents', 'set', 'cursor', '--dir', agentsOnlyDir], harnessRoot);
+    assert(agentsSet.status === 0, `agents set should pass: ${agentsSet.stderr}${agentsSet.stdout}`);
+    const manifestAfterSet = JSON.parse(
+      readFileSync(join(agentsOnlyDir, '.nextstage-harness', 'manifest.json'), 'utf8'),
+    );
+    assert(
+      JSON.stringify(manifestAfterSet.agents) === JSON.stringify(['cursor']),
+      'agents set should persist cursor in manifest',
+    );
+
+    const agentsShow = runCli(['agents', '--dir', agentsOnlyDir], harnessRoot);
+    assert(agentsShow.status === 0, `agents show should pass: ${agentsShow.stderr}${agentsShow.stdout}`);
+    assert(agentsShow.stdout.includes('cursor'), 'agents show should list cursor');
+  } finally {
+    rmSync(agentsOnlyDir, { recursive: true, force: true });
+  }
+
   const listOut = runCli(['list'], harnessRoot);
   assert(listOut.status === 0, `list should pass: ${listOut.stderr}${listOut.stdout}`);
+  assert(
+    listOut.stdout.includes('agents set --agent cursor'),
+    'list should show agents set command',
+  );
   assert(
     listOut.stdout.includes('--preset gitlab --yes'),
     'list should show preset install command',
