@@ -27,6 +27,8 @@ Skills are invoked via the Skills menu / slash (e.g. `/code-coder`, `/code-revie
 | Skill                      | Purpose                                                                     |
 | -------------------------- | --------------------------------------------------------------------------- |
 | `nextstage-harness`        | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
+| `nextstage-sdd`            | Delivery face — clarify → spec → tasks → implement → close (auto-size)      |
+| `harness-prepare`          | Orchestrate full brownfield onboarding chain after harness init (manual)    |
 | `harness-agents-md`      | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer           |
 | `harness-codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
 | `harness-architecture-rules` | Scan codebase and generate lean `architecture-rules.md` for agents      |
@@ -51,7 +53,9 @@ Skills are invoked via the Skills menu / slash (e.g. `/code-coder`, `/code-revie
 | `code-investigator`        | Root-cause analysis and minimal fixes                                       |
 | `code-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |
 | `code-backend-tests`     | Implement/refactor PHPUnit tests in Docker (execution phase)                |
-| `harness-prepare`          | Orchestrate full brownfield onboarding chain after harness init             |
+| `code-frontend-design`          | Distinctive production UI; anti–generic AI aesthetics (optional complement) |
+| `code-docs-writer`              | README and `docs/` guides for humans (optional complement)                  |
+| `code-best-practices`           | Security headers, compatibility, modernization pass (optional complement)    |
 | `requirements-enricher`    | Grill-me gap analysis for GitLab issues or chat context                     |
 | `pm-requirements-copilot`  | End-to-end PM workflow — clarification through delivery forecast            |
 | `skill-creator`            | Create project-local skills in `.agents/skills/` + `harness sync`           |
@@ -145,7 +149,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
-Typical SDD chain: `pm-clarify-requirements` → `pm-requirements-generator` → `pm-analyze-consistency` → `pm-task-generator` → implementation (`code-coder` / `execution-gitlab-issue` / `code-autonomous`) → `code-reviewer` → `pm-living-spec-consolidator`.
+Typical delivery: `/nextstage-sdd` (auto-sizes and delegates). Manual brownfield first: `/harness-prepare`. Worker chain: `pm-clarify-requirements` → `pm-requirements-generator` → `pm-analyze-consistency` → `pm-task-generator` → implementation (`code-coder` / `execution-gitlab-issue` / `code-autonomous`) → `code-reviewer` → `pm-living-spec-consolidator`. Optional complements: `npx @nextstage-brasil/harness --preset complements --yes`.
 
 ## Contributing
 

@@ -19,8 +19,10 @@ npx @nextstage-brasil/harness <command>
 | See which agents this project uses | `npx @nextstage-brasil/harness agents` |
 | Refresh rules + skill adapters | `npx @nextstage-brasil/harness sync` |
 | Update skills already installed | `npx @nextstage-brasil/harness update` |
-| Brownfield onboarding (in Cursor/Claude) | `/harness-prepare` |
+| Brownfield onboarding (manual) | `/harness-prepare` |
 | Brownfield instructions (terminal) | `npx @nextstage-brasil/harness prepare` |
+| Spec-driven delivery | `/nextstage-sdd` |
+| Optional complements (UI, docs, security) | `npx @nextstage-brasil/harness --preset complements --yes` |
 
 **In your AI agent:** open `AGENTS.md` at the project root, then invoke skills via the menu or slash (e.g. `/code-coder`, `/mcp-gitlab-usage`).
 
@@ -159,9 +161,9 @@ npx @nextstage-brasil/harness sync --check
 
 ---
 
-## Brownfield onboarding
+## Brownfield onboarding (manual)
 
-For existing codebases, run once (and again after major refactors):
+For existing codebases, run once (and again after major refactors). **Not** part of `/nextstage-sdd`.
 
 **In agent:** `/harness-prepare`  
 **Chain:** architecture-rules → sync → brownfield map → reverse spec → AGENTS.md
@@ -172,9 +174,11 @@ Artifacts land under `docs/context/`, `docs/specs/`, `docs/versions/`.
 
 ---
 
-## SDD workflow (skills)
+## SDD delivery
 
-Typical planning → implementation chain (invoke via slash in your agent):
+**Entry:** `/nextstage-sdd` — auto-sizes Small / Medium / Large and delegates to worker skills.
+
+Typical worker chain (invoke via slash in your agent):
 
 ```
 pm-clarify-requirements
@@ -182,6 +186,12 @@ pm-clarify-requirements
   → pm-task-generator
   → code-coder
   → code-reviewer
+```
+
+Optional complements (UI, docs, security hygiene):
+
+```bash
+npx @nextstage-brasil/harness --preset complements --yes
 ```
 
 GitLab execution: preset `gitlab` or skills like `mcp-gitlab-usage`, `execution-gitlab-issue`, `gitlab-board-sync`.

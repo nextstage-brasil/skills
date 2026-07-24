@@ -1,8 +1,25 @@
 {
   "source": "nextstage-brasil/skills",
-  "alwaysInstall": ["nextstage-harness", "harness-prepare"],
+  "alwaysInstall": ["nextstage-harness", "harness-prepare", "nextstage-sdd"],
   "depends": {
     "nextstage-harness": [],
+    "nextstage-sdd": [
+      "nextstage-harness",
+      "pm-clarify-requirements",
+      "pm-requirements-generator",
+      "pm-analyze-consistency",
+      "pm-version-partitioner",
+      "pm-task-generator",
+      "execution-handoff-generator",
+      "code-coder",
+      "code-autonomous",
+      "execution-orchestrator",
+      "code-reviewer",
+      "pm-living-spec-consolidator"
+    ],
+    "code-frontend-design": ["nextstage-harness"],
+    "code-docs-writer": ["nextstage-harness"],
+    "code-best-practices": ["nextstage-harness"],
     "harness-codebase-reverse-spec": [],
     "harness-architecture-rules": ["nextstage-harness"],
     "harness-agents-md": ["nextstage-harness"],
@@ -45,6 +62,7 @@
       "description": "Planning, tasks, test generators, and living specs",
       "skills": [
         "nextstage-harness",
+        "nextstage-sdd",
         "pm-clarify-requirements",
         "pm-requirements-generator",
         "pm-analyze-consistency",
@@ -86,12 +104,21 @@
         "mcp-gitlab-usage",
         "code-reviewer"
       ]
+    },
+    "complements": {
+      "label": "Project complements",
+      "description": "Optional code-* delivery complements — soft-integrated by nextstage-sdd",
+      "skills": ["code-frontend-design", "code-docs-writer", "code-best-practices"]
     }
   },
   "categories": {
     "foundation": {
       "label": "Foundation",
-      "skills": ["nextstage-harness", "harness-agents-md", "harness-prepare", "skill-creator"]
+      "skills": ["nextstage-harness", "nextstage-sdd", "harness-agents-md", "harness-prepare", "skill-creator"]
+    },
+    "complements": {
+      "label": "Project complements",
+      "skills": ["code-frontend-design", "code-docs-writer", "code-best-practices"]
     },
     "sdd": {
       "label": "SDD planning",
@@ -119,7 +146,7 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["code-coder", "code-autonomous", "execution-orchestrator", "execution-handoff-generator", "execution-gitlab-issue", "code-investigator", "code-reviewer", "code-e2e-tests", "code-backend-tests"]
+      "skills": ["code-coder", "code-autonomous", "code-frontend-design", "code-docs-writer", "code-best-practices", "execution-orchestrator", "execution-handoff-generator", "execution-gitlab-issue", "code-investigator", "code-reviewer", "code-e2e-tests", "code-backend-tests"]
     },
     "brownfield": {
       "label": "Brownfield",

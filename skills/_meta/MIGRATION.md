@@ -95,5 +95,8 @@ Skills were renamed with domain prefixes (`pm-`, `code-`, `execution-`, `harness
 | `architecture-rules-generator` | `harness-architecture-rules` |
 | `bootstrap-brownfield` | `harness-bootstrap-brownfield` |
 | `codebase-reverse-spec` | `harness-codebase-reverse-spec` |
+| `frontend-design` | `code-frontend-design` |
+| `docs-writer` | `code-docs-writer` |
+| `best-practices` | `code-best-practices` |
 
 **Consumer action:** reinstall via `npx @nextstage-brasil/harness` or `npx skills add nextstage-brasil/skills@<new-name>`. After install, `harness init` automatically removes retired directories when the replacement skill is present. Preview cleanup with `npx @nextstage-brasil/harness prune-retired-skills --dry-run`.

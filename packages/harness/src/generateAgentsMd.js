@@ -27,6 +27,8 @@ const SDD_PLANNING = [
 const IMPL_SKILLS = ['code-coder', 'code-autonomous', 'execution-gitlab-issue', 'execution-orchestrator'];
 const CLOSE_SKILLS = ['code-reviewer', 'pm-living-spec-consolidator'];
 
+const COMPLEMENT_SKILLS = ['code-frontend-design', 'code-docs-writer', 'code-best-practices'];
+
 const LAYOUT_PATHS = [
   { path: 'AGENTS.md', purpose: 'Project rules entry point' },
   { path: HARNESS_RULES_DIR, purpose: 'Canonical project rules' },
@@ -137,6 +139,34 @@ function buildInstalledSkillsSection(installed) {
   return `| Role | Skills |\n| ---- | ------ |\n${rows.join('\n')}`;
 }
 
+function buildComplementsNote(installed) {
+  const set = new Set(installed);
+  const present = COMPLEMENT_SKILLS.filter((skill) => set.has(skill));
+  const missing = COMPLEMENT_SKILLS.filter((skill) => !set.has(skill));
+
+  if (present.length === COMPLEMENT_SKILLS.length) {
+    return 'All optional complements installed (`code-frontend-design`, `code-docs-writer`, `code-best-practices`). `/nextstage-sdd` delegates to them when relevant.';
+  }
+
+  const rows = COMPLEMENT_SKILLS.map((skill) => {
+    const status = set.has(skill) ? 'installed' : 'not installed';
+    const when =
+      skill === 'code-frontend-design'
+        ? 'UI pages and components'
+        : skill === 'code-docs-writer'
+          ? 'README and docs/ guides'
+          : 'Security headers and modernization pass';
+    return `| \`${skill}\` | ${when} | ${status} |`;
+  });
+
+  const installHint =
+    missing.length > 0
+      ? `\nInstall missing complements: \`npx @nextstage-brasil/harness --preset complements --yes\``
+      : '';
+
+  return `Optional complements (soft-integrated by \`/nextstage-sdd\`):\n\n| Skill | When | Status |\n| ----- | ---- | ------ |\n${rows.join('\n')}${installHint}`;
+}
+
 function preserveSyncManaged(existingContent) {
   const match = existingContent?.match(/<!-- harness-sync-managed: last-sync=[^>]+ -->/);
   return match?.[0] ?? SYNC_MANAGED_DEFAULT;
@@ -186,6 +216,7 @@ export function generateAgentsMd(projectRoot, options = {}) {
 
   const hasHarness = pathExists(root, HARNESS_ROOT);
   const hasPrepare = installed.includes('harness-prepare');
+  const hasSdd = installed.includes('nextstage-sdd');
   const archRulesNote = hasHarness
     ? `**Before implementation, read \`.nextstage-harness/rules/architecture-rules.md\`.** If still the harness stub, run \`/harness-prepare\` or \`harness-architecture-rules\` then \`npx @nextstage-brasil/harness sync\`.`
     : '**Harness rules not scaffolded** — run `harness init` or `harness migrate-rules`.';
@@ -222,23 +253,27 @@ Invoke via the Skills menu / slash (e.g. \`/code-coder\`, \`/code-reviewer\`). S
 
 ## Workflows
 
-### SDD planning chain
+### Brownfield / context (manual)
 
-${buildSddChain(installed)}
-
-### Implementation
-
-${buildImplementationNote(installed)}
-
-### Brownfield / context
-
-${hasPrepare ? '**Full onboarding:** `/harness-prepare` (or `npx @nextstage-brasil/harness prepare`) runs all steps below in one session.\n**Keep context fresh:** re-run `/harness-prepare` after major refactors or when brownfield artifacts are stale.\n\n' : ''}| Artifact | Path | Skill |
+${hasPrepare ? '**Full onboarding:** `/harness-prepare` (or `npx @nextstage-brasil/harness prepare`) runs all steps below in one session — **not** part of `/nextstage-sdd`.\n**Keep context fresh:** re-run `/harness-prepare` after major refactors or when brownfield artifacts are stale.\n\n' : ''}| Artifact | Path | Skill |
 | -------- | ---- | ----- |
 | Full prepare chain | (all rows below) | \`harness-prepare\` |
 | Architecture constitution | \`.nextstage-harness/rules/architecture-rules.md\` | \`harness-architecture-rules\` |
 | Brownfield map | \`docs/context/brownfield-map.md\` | \`harness-bootstrap-brownfield\` |
 | Business reverse spec | \`docs/context/system-reverse-spec.md\` | \`harness-codebase-reverse-spec\` |
 | Project agents entry | \`AGENTS.md\` | \`harness-agents-md\` |
+
+### Delivery (spec-driven)
+
+${hasSdd ? '**Entry:** `/nextstage-sdd` — auto-sizes Small / Medium / Large and delegates to worker skills. Does **not** auto-run prepare.\n\n' : ''}${buildSddChain(installed)}
+
+### Implementation
+
+${buildImplementationNote(installed)}
+
+### Optional complements
+
+${buildComplementsNote(installed)}
 
 ## Rules and sync
 

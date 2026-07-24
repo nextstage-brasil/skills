@@ -1,0 +1,12 @@
+{
+  "evals": [
+    {
+      "prompt": "Redesign the settings page — it looks like every other AI dashboard. React + Tailwind project.",
+      "expected": "Invokes code-frontend-design: loads design-brief if present, audits existing patterns, applies distinctive layout/typography without generic purple gradient hero."
+    },
+    {
+      "prompt": "Add a primary button component matching our design tokens in docs/context/design-brief.md.",
+      "expected": "Reads design-brief.md, implements button with brief tokens, follows project component conventions."
+    }
+  ]
+}

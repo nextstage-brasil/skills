@@ -13,5 +13,8 @@
   "agents-md-generator": "harness-agents-md",
   "architecture-rules-generator": "harness-architecture-rules",
   "bootstrap-brownfield": "harness-bootstrap-brownfield",
-  "codebase-reverse-spec": "harness-codebase-reverse-spec"
+  "codebase-reverse-spec": "harness-codebase-reverse-spec",
+  "frontend-design": "code-frontend-design",
+  "docs-writer": "code-docs-writer",
+  "best-practices": "code-best-practices"
 }

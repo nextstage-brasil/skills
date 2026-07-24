@@ -15,6 +15,7 @@ export function buildPostInstallNotes({
     installedSkills.includes('harness-prepare') ||
     installedSkills.includes('harness-bootstrap-brownfield');
   const hasPrepare = installedSkills.includes('harness-prepare');
+  const hasSdd = installedSkills.includes('nextstage-sdd');
 
   if (noScaffold) {
     lines.push('Skills installed (--no-scaffold). Scaffold skipped.');
@@ -32,8 +33,9 @@ export function buildPostInstallNotes({
   lines.push('');
 
   if (hasPrepare || isBrownfield) {
-    lines.push('  Skill:   /harness-prepare');
-    lines.push('  CLI:     npx @nextstage-brasil/harness prepare');
+    lines.push('  Brownfield (manual, once / when stale):');
+    lines.push('    Skill:   /harness-prepare');
+    lines.push('    CLI:     npx @nextstage-brasil/harness prepare');
     lines.push('');
     lines.push('  First run — full chain (one session):');
     lines.push('    harness-architecture-rules');
@@ -48,13 +50,23 @@ export function buildPostInstallNotes({
     lines.push('    • Same command: /harness-prepare (updates rules + context + AGENTS.md)');
     lines.push('');
     lines.push('  Skip first run if greenfield with no application code yet.');
+    lines.push('');
   } else {
     lines.push('  Optional: /harness-architecture-rules when code exists');
     lines.push('  Then:     npx @nextstage-brasil/harness sync');
     lines.push('  Refine:   /harness-agents-md');
+    lines.push('');
   }
 
-  lines.push('');
+  if (hasSdd) {
+    lines.push('  Delivery (spec → tasks → implement):');
+    lines.push('    Skill:   /nextstage-sdd');
+    lines.push('    Auto-sizes Small / Medium / Large and delegates to worker skills.');
+    lines.push('');
+  }
+
+  lines.push('  Optional complements (UI, docs, security hygiene):');
+  lines.push('    npx @nextstage-brasil/harness --preset complements --yes');
   lines.push('────────────────────────────────');
   lines.push('Extras');
   lines.push('');
@@ -64,8 +76,12 @@ export function buildPostInstallNotes({
   lines.push('   Update:    npx @nextstage-brasil/harness update');
   lines.push('   Agents:    npx @nextstage-brasil/harness agents');
   lines.push('');
-  lines.push('SDD: pm-clarify-requirements → pm-requirements-generator →');
-  lines.push('     pm-task-generator → code-coder → code-reviewer');
+  if (hasSdd) {
+    lines.push('Delivery: /nextstage-sdd (clarify → spec → tasks → implement → close)');
+  } else {
+    lines.push('SDD: pm-clarify-requirements → pm-requirements-generator →');
+    lines.push('     pm-task-generator → code-coder → code-reviewer');
+  }
 
   return lines.join('\n');
 }
