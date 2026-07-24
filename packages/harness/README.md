@@ -54,6 +54,13 @@ npx @nextstage-brasil/harness --skill multi-agent-architect --no-scaffold -y
 npx @nextstage-brasil/harness sync
 ```
 
+To refresh skills already installed (e.g. after a catalog release) without pulling new ones:
+
+```bash
+cd your-project
+npx @nextstage-brasil/harness update
+```
+
 Without harness (Skills CLI only):
 
 ```bash
@@ -150,6 +157,10 @@ npx @nextstage-brasil/harness prepare --dir ./my-agent-service
 npx @nextstage-brasil/harness prune-retired-skills --dir ./my-agent-service --dry-run
 npx @nextstage-brasil/harness prune-retired-skills --dir ./my-agent-service
 
+# Update installed skills only (does not install new catalog skills)
+npx @nextstage-brasil/harness update --dir ./my-agent-service
+npx @nextstage-brasil/harness update --dir ./my-agent-service --dry-run
+
 # Catalog
 npx @nextstage-brasil/harness list
 ```
@@ -163,6 +174,7 @@ npx @nextstage-brasil/harness list
 | `add-rule <name>` | `--dir`, `--agent`, `--description`, `--globs`, `--force` |
 | `prepare` | `--dir` |
 | `prune-retired-skills` | `--dir`, `--dry-run` |
+| `update` | `--dir`, `--skill` (repeatable), `--global`, `--agent`, `--copy`, `--dry-run` |
 | `list` | — |
 
 ## Commands
@@ -179,6 +191,8 @@ npx @nextstage-brasil/harness list
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` → `.nextstage-harness/rules/` |
 | `harness prune-retired-skills` | Remove renamed skill dirs after replacement is installed |
+| `harness update` | Update skills already in `.agents/skills/` (no new installs) |
+| `harness update --dry-run` | Preview which installed skills would be updated |
 
 Common flags: `--dir`, `--preset`, `--skill` (repeatable), `--agent` (default `cursor`, `claude-code`), `--copy`, `--no-scaffold`, `--dry-run`, `--yes`.
 

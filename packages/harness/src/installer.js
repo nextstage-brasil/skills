@@ -82,6 +82,35 @@ export function installSkillCreator(options = {}) {
   });
 }
 
+export function updateInstalledSkills(skillNames, options = {}) {
+  if (skillNames.length === 0) {
+    return;
+  }
+
+  const { projectRoot = process.cwd(), global = false } = options;
+  const args = ['skills', 'update', ...skillNames, '-y'];
+
+  if (global) {
+    args.push('-g');
+  } else {
+    args.push('-p');
+  }
+
+  const result = spawnSync('npx', args, {
+    cwd: projectRoot,
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
+  });
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  if (result.status !== 0) {
+    throw new Error(`skills update failed with exit code ${result.status}`);
+  }
+}
+
 export function installExternalSkills(skillIds, options = {}) {
   if (skillIds.length === 0) {
     return;

@@ -10,6 +10,7 @@ import { addRule } from '../src/addRule.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { runPrepare } from '../src/prepare.js';
 import { pruneRetiredSkills, formatPruneReport } from '../src/pruneRetiredSkills.js';
+import { runUpdate } from '../src/update.js';
 import { DEFAULT_AGENTS, HARNESS_ROOT } from '../src/agentsLayout.js';
 
 const HELP = `
@@ -21,6 +22,7 @@ Usage:
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
   harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
   harness prune-retired-skills  Remove renamed skill dirs after replacement is installed
+  harness update [options] Update installed skills only (does not install new ones)
   harness list             List presets and available skills
 
 Options:
@@ -53,6 +55,8 @@ Examples:
   npx @nextstage-brasil/harness agents-md --force
   npx @nextstage-brasil/harness prepare
   npx @nextstage-brasil/harness prune-retired-skills --dry-run
+  npx @nextstage-brasil/harness update
+  npx @nextstage-brasil/harness update --dry-run
   npx @nextstage-brasil/harness list
 `.trim();
 
@@ -92,6 +96,7 @@ function parseArgs(argv) {
     'agents-md',
     'add-rule',
     'prepare',
+    'update',
   ];
   const first = args[0];
   if (knownCommands.includes(first)) {
@@ -377,6 +382,16 @@ async function main() {
   if (parsed.command === 'add-rule') {
     try {
       await runAddRule(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (parsed.command === 'update') {
+    try {
+      await runUpdate(parsed);
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
       process.exit(1);

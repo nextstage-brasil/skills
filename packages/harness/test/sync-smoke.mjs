@@ -12,6 +12,7 @@ import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { migrateRules } from '../src/migrateRules.js';
 import { pruneRetiredSkills, assessPruneRetiredSkills } from '../src/pruneRetiredSkills.js';
 import { groupExternalSkillsBySource, getExternalPreset } from '../src/externalSkills.js';
+import { listSkillsToUpdate } from '../src/update.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const harnessRoot = join(__dirname, '..');
@@ -302,6 +303,33 @@ try {
     agentsApiDryRun.stdout.includes('langchain-fundamentals') && agentsApiDryRun.stdout.includes('vitest'),
     'agents-api dry-run should list all external skills',
   );
+
+  // 13. update — only installed skills, dry-run
+  const updateEmptyDir = mkdtempSync(join(tmpdir(), 'harness-update-empty-'));
+  try {
+    const updateEmpty = runCli(['update', '--dir', updateEmptyDir], harnessRoot);
+    assert(updateEmpty.status === 0, `update with no skills should succeed: ${updateEmpty.stderr}${updateEmpty.stdout}`);
+    assert(
+      updateEmpty.stdout.includes('No installed skills to update'),
+      'update should report when nothing is installed',
+    );
+  } finally {
+    rmSync(updateEmptyDir, { recursive: true, force: true });
+  }
+
+  const plan = listSkillsToUpdate(tempDir, ['nextstage-harness', 'missing-skill']);
+  assert(plan.skills.length === 1 && plan.skills[0] === 'nextstage-harness', 'update plan should filter to installed only');
+  assert(plan.notInstalled.includes('missing-skill'), 'update plan should track missing skills');
+
+  const updateDryRun = runCli(['update', '--dry-run', '--dir', tempDir], harnessRoot);
+  assert(updateDryRun.status === 0, `update --dry-run should pass: ${updateDryRun.stderr}${updateDryRun.stdout}`);
+  assert(
+    updateDryRun.stdout.includes('nextstage-harness'),
+    'update dry-run should list installed skills',
+  );
+
+  const updateMissing = runCli(['update', '--skill', 'missing-skill', '--dir', tempDir], harnessRoot);
+  assert(updateMissing.status === 1, 'update --skill for missing skill should fail');
 
   console.log('OK: harness sync smoke tests passed');
 } catch (error) {
