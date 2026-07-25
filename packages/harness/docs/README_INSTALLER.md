@@ -24,7 +24,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 
 **Rules:** edit `.nextstage-harness/rules/` → `harness sync` → `.cursor/rules/`, `.claude/rules/`. Prefer `harness add-rule <name>` for new rules (creates stub, updates `manifest.json`, syncs). See `.nextstage-harness/README.md`.
 
-**Skills:** canonical in `.agents/skills/` (Skills CLI). **Cursor** (including subagents) discovers skills there directly. **Claude Code** reads `.claude/skills/` — `harness sync` symlinks from canonical when Claude is a target agent. Invoke via the Skills menu / slash (e.g. `/code-coder`).
+**Skills:** canonical in `.agents/skills/` (Skills CLI). **Cursor** (including subagents) discovers skills there directly. **Claude Code** reads `.claude/skills/` — `harness sync` symlinks from canonical when Claude is a target agent. Invoke via the Skills menu / slash (e.g. `/ns-code-coder`).
 
 ## 2. Commands
 
@@ -32,7 +32,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 |---------|-------------|
 | `npx @nextstage-brasil/harness` | Interactive init (default) |
 | `harness init [options]` | Install skills + scaffold + sync |
-| `harness prepare` | Print full brownfield prepare instructions (`/harness-prepare`) |
+| `harness prepare` | Print full brownfield prepare instructions (`/ns-harness-prepare`) |
 | `harness sync` | Regenerate rule and skill adapters from canonical |
 | `harness add-rule <name>` | Create canonical rule + manifest entry + sync |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
@@ -48,7 +48,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 
 | Flag | Effect |
 |------|--------|
-| `--preset <name>` | `delivery` (default), `recommended` (alias), `gitlab`, `brownfield`, `implementation`, `complements`, `full` |
+| `--preset <name>` | `spec-driven` (default), `spec-driven-gitlab`, `project-manager`, `brownfield`, `full` |
 | `--agent <name>` | Repeatable; default `cursor`, `claude-code` |
 | `--yes`, `-y` | Non-interactive |
 | `--no-scaffold` | Skills only — skip AGENTS.md and `.nextstage-harness/` |
@@ -65,23 +65,23 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 ### Greenfield (new project)
 
 ```bash
-npx @nextstage-brasil/harness --preset delivery --yes
+npx @nextstage-brasil/harness --preset spec-driven --yes
 ```
 
-Creates scaffold, stub `architecture-rules.md`, syncs adapters. Base install includes `nextstage-spec-driven` and `harness-prepare`. Run `harness-architecture-rules` in your agent when code exists.
+Creates scaffold, stub `architecture-rules.md`, syncs adapters. Use `--preset spec-driven` for `ns-spec-driven` + workers (or `--preset brownfield` for prepare-only). Run `ns-harness-architecture-rules` in your agent when code exists.
 
 ### Brownfield (existing codebase)
 
 ```bash
-npx @nextstage-brasil/harness --preset delivery --yes
+npx @nextstage-brasil/harness --preset spec-driven --yes
 ```
 
-Same as greenfield — `harness-prepare` is always installed. Follow post-install prompts and run `/harness-prepare` in your agent (§10).
+Same as greenfield — use `--preset brownfield` so `ns-harness-prepare` is installed. Follow post-install prompts and run `/ns-harness-prepare` in your agent (§10).
 
 ### Skills only (no harness scaffold)
 
 ```bash
-npx skills add nextstage-brasil/skills --full-depth -y --skill code-coder
+npx skills add nextstage-brasil/skills --full-depth -y --skill ns-code-coder
 ```
 
 Skills install under `.agents/skills/` with agent symlinks. No `.nextstage-harness/` unless you run `harness init` without `--no-scaffold`.
@@ -169,7 +169,7 @@ Run these **in Cursor or Claude Code** after `harness init` (not auto-invoked by
 
 ### 10.0 Full prepare (recommended — brownfield preset)
 
-**Skill:** `harness-prepare` (`/harness-prepare`)
+**Skill:** `ns-harness-prepare` (`/ns-harness-prepare`)
 
 **CLI check:**
 
@@ -185,11 +185,11 @@ Run full harness prepare for {product_root}.
 
 **Chain (automatic, one session):**
 
-1. `harness-architecture-rules` → `.nextstage-harness/rules/architecture-rules.md`
+1. `ns-harness-architecture-rules` → `.nextstage-harness/rules/architecture-rules.md`
 2. `npx @nextstage-brasil/harness sync`
-3. `harness-bootstrap-brownfield` → `docs/context/brownfield-map.md`
-4. `harness-codebase-reverse-spec` → `docs/context/system-reverse-spec.md`
-5. `harness-agents-md` → `AGENTS.md` + `CLAUDE.md`
+3. `ns-harness-bootstrap-brownfield` → `docs/context/brownfield-map.md`
+4. `ns-harness-codebase-reverse-spec` → `docs/context/system-reverse-spec.md`
+5. `ns-harness-agents-md` → `AGENTS.md` + `CLAUDE.md`
 
 **Greenfield with no code yet:** skip until application code exists.
 
@@ -204,7 +204,7 @@ npx @nextstage-brasil/harness agents-md --force   # overwrite hand-edited file
 
 **Output:** `AGENTS.md`, `CLAUDE.md` (`@AGENTS.md` only)
 
-Step 5 of `/harness-prepare` refines this with project context.
+Step 5 of `/ns-harness-prepare` refines this with project context.
 
 ### 10.2 Individual worker skills (optional)
 
@@ -212,17 +212,17 @@ Use when you need only one artifact:
 
 | Skill | Output |
 | ----- | ------ |
-| `harness-architecture-rules` | `.nextstage-harness/rules/architecture-rules.md` |
-| `harness-bootstrap-brownfield` | `docs/context/brownfield-map.md` |
-| `harness-codebase-reverse-spec` | `docs/context/system-reverse-spec.md` |
-| `harness-agents-md` | `AGENTS.md`, `CLAUDE.md` |
+| `ns-harness-architecture-rules` | `.nextstage-harness/rules/architecture-rules.md` |
+| `ns-harness-bootstrap-brownfield` | `docs/context/brownfield-map.md` |
+| `ns-harness-codebase-reverse-spec` | `docs/context/system-reverse-spec.md` |
+| `ns-harness-agents-md` | `AGENTS.md`, `CLAUDE.md` |
 
 After architecture rules, always run `npx @nextstage-brasil/harness sync`.
 
-### Recommended order (when not using harness-prepare)
+### Recommended order (when not using ns-harness-prepare)
 
 ```
-harness-architecture-rules → harness sync → harness-bootstrap-brownfield → harness-codebase-reverse-spec → harness-agents-md
+ns-harness-architecture-rules → harness sync → ns-harness-bootstrap-brownfield → ns-harness-codebase-reverse-spec → ns-harness-agents-md
 ```
 
 Rationale: constitution first; context artifacts next; AGENTS.md last so it links to all outputs.

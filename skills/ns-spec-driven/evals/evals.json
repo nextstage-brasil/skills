@@ -1,0 +1,17 @@
+{
+  "skill_name": "ns-spec-driven",
+  "evals": [
+    {
+      "prompt": "Specify user notification preferences for version 2.1 — email and in-app toggles.",
+      "expected": "Invokes ns-spec-driven: auto-sizes Medium+, delegates to ns-sdd-clarify-requirements if ambiguous then ns-sdd-requirements-generator for docs/versions/2.1/requirements.md. Does not run ns-harness-prepare."
+    },
+    {
+      "prompt": "docs/versions/1.0.0/ already has tasks and execution-handoff.md. Implement the next pending task.",
+      "expected": "Invokes ns-spec-driven resume path: reads execution-handoff.md, skips planning phases, delegates execute via ns-execution-handoff-generator run-implementation and ns-code-coder or ns-code-autonomous. No new requirements.md."
+    },
+    {
+      "prompt": "Quick fix: add a maxlength attribute to the profile name input — one file.",
+      "expected": "Invokes ns-spec-driven quick mode: routes to ns-code-coder only, skips PM chain and ns-harness-prepare. May mention installing ns-code-frontend-design once if UI polish implied; does not require it installed."
+    }
+  ]
+}

@@ -2,13 +2,13 @@ import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { AGENTS_SKILLS_DIR, HARNESS_ROOT } from './agentsLayout.js';
 
-export const PREPARE_SKILL = 'harness-prepare';
+export const PREPARE_SKILL = 'ns-harness-prepare';
 
 export const PREPARE_WORKER_SKILLS = [
-  'harness-architecture-rules',
-  'harness-bootstrap-brownfield',
-  'harness-codebase-reverse-spec',
-  'harness-agents-md',
+  'ns-harness-architecture-rules',
+  'ns-harness-bootstrap-brownfield',
+  'ns-harness-codebase-reverse-spec',
+  'ns-harness-agents-md',
 ];
 
 export function listInstalledSkillNames(projectRoot) {
@@ -67,17 +67,17 @@ export function buildPrepareMessage(assessment) {
   lines.push('');
   lines.push('Run in Cursor or Claude Code:');
   lines.push('');
-  lines.push('  /harness-prepare');
+  lines.push('  /ns-harness-prepare');
   lines.push('');
   lines.push('Or prompt:');
   lines.push('  Run full harness prepare for this project.');
   lines.push('');
   lines.push('Chain (automatic, one session):');
-  lines.push('  1. harness-architecture-rules → .nextstage-harness/rules/architecture-rules.md');
+  lines.push('  1. ns-harness-architecture-rules → .nextstage-harness/rules/architecture-rules.md');
   lines.push('  2. harness sync');
-  lines.push('  3. harness-bootstrap-brownfield → docs/context/brownfield-map.md');
-  lines.push('  4. harness-codebase-reverse-spec → docs/context/system-reverse-spec.md');
-  lines.push('  5. harness-agents-md → AGENTS.md + CLAUDE.md');
+  lines.push('  3. ns-harness-bootstrap-brownfield → docs/context/brownfield-map.md');
+  lines.push('  4. ns-harness-codebase-reverse-spec → docs/context/system-reverse-spec.md');
+  lines.push('  5. ns-harness-agents-md → AGENTS.md + CLAUDE.md');
   lines.push('');
 
   if (!assessment.harnessPresent) {
@@ -96,7 +96,7 @@ export function buildPrepareMessage(assessment) {
       ...assessment.missingWorkers,
     ];
     lines.push(`⚠  Missing skills: ${missing.join(', ')}`);
-    lines.push('   Install: npx @nextstage-brasil/harness --preset delivery --yes');
+    lines.push('   Install: npx @nextstage-brasil/harness --preset spec-driven --yes');
     lines.push('');
   }
 
@@ -106,7 +106,7 @@ export function buildPrepareMessage(assessment) {
   }
 
   if (assessment.ready) {
-    lines.push('✓  Prerequisites OK — invoke /harness-prepare in your agent.');
+    lines.push('✓  Prerequisites OK — invoke /ns-harness-prepare in your agent.');
     lines.push('');
     lines.push('Re-run regularly to refresh project context:');
     lines.push('  • After major refactors, new modules, or stack changes');

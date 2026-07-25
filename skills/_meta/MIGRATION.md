@@ -13,7 +13,7 @@ Migration notes for skills promoted into this repository as the canonical home f
 | Templates / checklists | `references/` |
 | Scripts | `scripts/` |
 | Evals | `evals/evals.json` — 2–3 realistic prompts per skill |
-| Path coupling | Use `nextstage-harness` (`depends` + `../nextstage-harness/references/harness-discovery.md`); never hardcode legacy factory skill paths |
+| Path coupling | Use `ns-harness` (`depends` + `../ns-harness/references/harness-discovery.md`); never hardcode legacy factory skill paths |
 | Skill dependencies | Declare `depends:` in frontmatter — resolved by `@nextstage-brasil/harness` and Skills CLI ([skills#861](https://github.com/vercel-labs/skills/pull/861)) |
 
 ## Harness discovery (summary)
@@ -24,14 +24,14 @@ Migration notes for skills promoted into this repository as the canonical home f
 4. **Legacy:** `.cursor/rules/*.mdc` only when `{harness_root}/` is absent — migrate with `npx @nextstage-brasil/harness migrate-rules`
 5. Regenerate adapters with `npx @nextstage-brasil/harness sync` after editing canonical rules
 
-See `skills/nextstage-harness/references/harness-discovery.md` and `rules-sync.md`.
+See `skills/ns-harness/references/harness-discovery.md` and `rules-sync.md`.
 
 ## Canonical variables
 
 | Variable | Default / resolution |
 |----------|----------------------|
 | `{product_root}` | Product folder (e.g. `apps/my-product/`) or repo root in standalone mode |
-| `{harness_root}` | `{product_root}/.nextstage-harness/` |
+| `{harness_root}` | `{product_root}/.nextstage-harness/` (on-disk harness root — **not** the skill name) |
 | `{rules_canonical}` | `{harness_root}/rules/*.md` |
 | `{skills_canonical}` | `{product_root}/.agents/skills/` |
 | `{specs_root}` | `{product_root}/docs/specs/` |
@@ -48,17 +48,17 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 
 | Skill | `depends` |
 |-------|-----------|
-| `nextstage-harness` | — (base dependency) |
-| SDD consumers (`pm-clarify-requirements`, `pm-requirements-generator`, `pm-analyze-consistency`, `pm-task-generator`, `execution-handoff-generator`, `pm-version-partitioner`, `harness-bootstrap-brownfield`, `pm-living-spec-consolidator`, `code-coder`, `code-investigator`) | `nextstage-harness` |
-| `harness-architecture-rules` | `nextstage-harness` |
-| `harness-agents-md` | `nextstage-harness` |
-| `mcp-gitlab-usage` | `nextstage-harness` |
-| `code-reviewer` | `nextstage-harness`, `mcp-gitlab-usage` |
-| `execution-gitlab-issue` | `nextstage-harness`, `mcp-gitlab-usage`, `code-reviewer`, `code-autonomous` (calls it internally for Phase 2) |
-| `code-autonomous` | `nextstage-harness`, `code-reviewer` |
-| `gitlab-board-sync` | `mcp-gitlab-usage` |
+| `ns-harness` | — (base dependency) |
+| SDD consumers (`ns-sdd-clarify-requirements`, `ns-sdd-requirements-generator`, `ns-sdd-analyze-consistency`, `ns-sdd-task-generator`, `ns-execution-handoff-generator`, `ns-sdd-version-partitioner`, `ns-harness-bootstrap-brownfield`, `ns-sdd-living-spec-consolidator`, `ns-code-coder`, `ns-code-investigator`) | `ns-harness` |
+| `ns-harness-architecture-rules` | `ns-harness` |
+| `ns-harness-agents-md` | `ns-harness` |
+| `ns-mcp-gitlab-usage` | `ns-harness` |
+| `ns-code-reviewer` | `ns-harness`, `ns-mcp-gitlab-usage` |
+| `ns-execution-gitlab-issue` | `ns-harness`, `ns-mcp-gitlab-usage`, `ns-code-reviewer`, `ns-code-autonomous` (calls it internally for Phase 2) |
+| `ns-code-autonomous` | `ns-harness`, `ns-code-reviewer` |
+| `ns-gitlab-board-sync` | `ns-mcp-gitlab-usage` |
 
-SDD workflow ordering (`pm-clarify-requirements` → `pm-requirements-generator` → …) and planning/execution pairs (`pm-e2e-test-generator` ↔ `code-e2e-tests`) stay as "Related skills" text only — separate install phases.
+SDD workflow ordering (`ns-sdd-clarify-requirements` → `ns-sdd-requirements-generator` → …) and planning/execution pairs (`ns-pm-e2e-test-task-generator` ↔ `ns-code-e2e-tests`) stay as "Related skills" text only — separate install phases.
 
 ## Install
 
@@ -74,12 +74,49 @@ npx skills add nextstage-brasil/skills@<skill-name> --full-depth -y
 
 When CLI supports `depends`, transitive deps install automatically. Until then (`skills@1.5.14`), use `@nextstage-brasil/harness` or install peers explicitly — see `README.md`.
 
+## Breaking change — `ns-` prefix + SDD workers (2026-07-25)
+
+All catalog skills were renamed with a global `ns-` prefix. Six SDD planning workers dropped the `pm-` domain prefix in favor of `sdd-`. The human PM face skill was renamed to `ns-project-manager`.
+
+| Change | Detail |
+| ------ | ------ |
+| Global prefix | Every skill directory/frontmatter `name` is now `ns-<…>` (34 skills) |
+| Face / base short names | `nextstage-harness` → `ns-harness`; `nextstage-spec-driven` → `ns-spec-driven` |
+| SDD workers | `pm-clarify-requirements` → `ns-sdd-clarify-requirements` (also: requirements-generator, analyze-consistency, version-partitioner, task-generator, living-spec-consolidator) |
+| PM face | `pm-requirements-copilot` → `ns-project-manager` |
+| Harness on-disk root | Unchanged: still `{product_root}/.nextstage-harness/` |
+| `alwaysInstall` | Only `ns-harness` — Spec-Driven / prepare come from presets (`spec-driven`, `brownfield`, …) |
+| `project-manager` preset | `ns-project-manager` + `ns-requirements-enricher` (no SDD/code workers) |
+| `ns-skill-creator` | NextStage wrapper installs as `ns-skill-creator`; upstream anthropics bundle remains at `.agents/skills/skill-creator/` (not pruned) |
+
+**Consumer action:** reinstall via `npx @nextstage-brasil/harness` or `npx skills add nextstage-brasil/skills@<new-name>`. After install, `harness init` / `harness update` removes retired directories when the replacement skill is present (`packages/harness/templates/retired-skills.json`). Preview: `npx @nextstage-brasil/harness prune-retired-skills --dry-run`.
+
+New preset: `--preset project-manager` (`ns-project-manager`, `ns-requirements-enricher`).
+
+## Rename — `ns-pm-e2e-test-generator` → `ns-pm-e2e-test-task-generator` (2026-07-25)
+
+Aligned with sibling `ns-pm-unit-test-task-generator`: the `-task-` segment clarifies the skill produces planning task markdown, not Cypress code (that's `ns-code-e2e-tests`). Retired in `packages/harness/templates/retired-skills.json`.
+
+## Breaking change — preset consolidation (2026-07-25)
+
+Presets that bundled `ns-spec-driven` for a single add-on (`gitlab`, `implementation`, `complements`) produced near-duplicate, confusing skill lists (21-23 overlapping skills each) because `--preset` only accepts one value. Renamed and merged for clarity:
+
+| Old preset | New preset | Detail |
+| ---------- | ---------- | ------ |
+| `delivery` | `spec-driven` | Same skills, clearer name |
+| `recommended` | *(removed)* | Was a dead alias of `delivery` |
+| `gitlab` | `spec-driven-gitlab` | Name now signals it's additive on top of `spec-driven` |
+| `implementation`, `complements`, `spec-driven-quality` | *(removed)* | Near-duplicates of `spec-driven`; install quality skills via `--skill` or `--preset full` |
+| `project-manager`, `brownfield`, `full`, `agents-api` | Unchanged | |
+
+**Consumer action:** update any scripted `--preset delivery` / `--preset gitlab` / `--preset implementation` / `--preset complements` / `--preset recommended` / `--preset spec-driven-quality` calls. Use `spec-driven`, `spec-driven-gitlab`, `--skill …`, or `full`.
+
 ## Breaking change — domain prefix rename (2026-07)
 
-Skills were renamed with domain prefixes (`pm-`, `code-`, `execution-`, `harness-`). Old install paths no longer exist in the catalog.
+Skills were renamed with domain prefixes (`pm-`, `code-`, `execution-`, `harness-`). Those mid-names are themselves retired in favor of the `ns-` names above; the table below is historical.
 
-| Old name | New name |
-| -------- | -------- |
+| Old name | Mid name (pre-`ns-`) |
+| -------- | -------------------- |
 | `clarify-requirements` | `pm-clarify-requirements` |
 | `requirements-generator` | `pm-requirements-generator` |
 | `analyze-consistency` | `pm-analyze-consistency` |
@@ -98,5 +135,3 @@ Skills were renamed with domain prefixes (`pm-`, `code-`, `execution-`, `harness
 | `frontend-design` | `code-frontend-design` |
 | `docs-writer` | `code-docs-writer` |
 | `best-practices` | `code-best-practices` |
-
-**Consumer action:** reinstall via `npx @nextstage-brasil/harness` or `npx skills add nextstage-brasil/skills@<new-name>`. After install, `harness init` automatically removes retired directories when the replacement skill is present. Preview cleanup with `npx @nextstage-brasil/harness prune-retired-skills --dry-run`.

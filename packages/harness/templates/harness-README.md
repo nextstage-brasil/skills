@@ -19,12 +19,12 @@ npx @nextstage-brasil/harness <command>
 | See which agents this project uses | `npx @nextstage-brasil/harness agents` |
 | Refresh rules + skill adapters | `npx @nextstage-brasil/harness sync` |
 | Update skills already installed | `npx @nextstage-brasil/harness update` |
-| Brownfield onboarding (manual) | `/harness-prepare` |
+| Brownfield onboarding (manual) | `/ns-harness-prepare` |
 | Brownfield instructions (terminal) | `npx @nextstage-brasil/harness prepare` |
-| Spec-driven delivery | `/nextstage-spec-driven` |
-| Optional complements (UI, docs, security) | `npx @nextstage-brasil/harness --preset complements --yes` |
+| Spec-driven delivery | `/ns-spec-driven` |
+| Optional complements (UI, docs, security) | `npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y` |
 
-**In your AI agent:** open `AGENTS.md` at the project root, then invoke skills via the menu or slash (e.g. `/code-coder`, `/mcp-gitlab-usage`).
+**In your AI agent:** open `AGENTS.md` at the project root, then invoke skills via the menu or slash (e.g. `/ns-code-coder`, `/ns-mcp-gitlab-usage`).
 
 ---
 
@@ -35,7 +35,7 @@ npx @nextstage-brasil/harness <command>
 | `rules/*.md` | Canonical rule bodies | **Yes** |
 | `manifest.json` | Rule registry + project `agents` | When adding rules or changing agents |
 | `.agents/skills/<name>/` | Installed skills (Skills CLI) | Via `harness init` / `update` / `skills add` |
-| `AGENTS.md` | Project entry for agents | CLI baseline; refine with `/harness-agents-md` |
+| `AGENTS.md` | Project entry for agents | CLI baseline; refine with `/ns-harness-agents-md` |
 | `.cursor/rules/*.mdc` | Cursor rule adapters | **No** — generated |
 | `.claude/rules/*.md` | Claude rule adapters | **No** — generated |
 | `.claude/skills/` | Claude skill symlinks | **No** — generated when `claude-code` is active |
@@ -96,7 +96,7 @@ npx @nextstage-brasil/harness sync
 
 ### Architecture rules (brownfield)
 
-Replace the stub `rules/architecture-rules.md` by running **`/harness-architecture-rules`** in your agent, then:
+Replace the stub `rules/architecture-rules.md` by running **`/ns-harness-architecture-rules`** in your agent, then:
 
 ```bash
 npx @nextstage-brasil/harness sync
@@ -113,13 +113,13 @@ npx @nextstage-brasil/harness sync
 npx @nextstage-brasil/harness list
 
 # One skill (+ catalog dependencies)
-npx @nextstage-brasil/harness --skill gitlab-board-sync --no-scaffold -y
+npx @nextstage-brasil/harness --skill ns-gitlab-board-sync --no-scaffold -y
 
 # Full preset (e.g. GitLab execution chain)
-npx @nextstage-brasil/harness --preset gitlab --yes
+npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes
 
 # Preview without writing files
-npx @nextstage-brasil/harness --preset gitlab --dry-run
+npx @nextstage-brasil/harness --preset spec-driven-gitlab --dry-run
 ```
 
 ### Update installed skills only
@@ -173,9 +173,9 @@ npx @nextstage-brasil/harness sync --check
 
 ## Brownfield onboarding (manual)
 
-For existing codebases, run once (and again after major refactors). **Not** part of `/nextstage-spec-driven`.
+For existing codebases, run once (and again after major refactors). **Not** part of `/ns-spec-driven`.
 
-**In agent:** `/harness-prepare`  
+**In agent:** `/ns-harness-prepare`  
 **Chain:** architecture-rules → sync → brownfield map → reverse spec → AGENTS.md
 
 **Terminal:** `npx @nextstage-brasil/harness prepare` prints full instructions.
@@ -186,25 +186,25 @@ Artifacts land under `docs/context/`, `docs/specs/`, `docs/versions/`.
 
 ## SDD delivery
 
-**Entry:** `/nextstage-spec-driven` — auto-sizes Small / Medium / Large and delegates to worker skills.
+**Entry:** `/ns-spec-driven` — auto-sizes Small / Medium / Large and delegates to worker skills.
 
 Typical worker chain (invoke via slash in your agent):
 
 ```
-pm-clarify-requirements
-  → pm-requirements-generator
-  → pm-task-generator
-  → code-coder
-  → code-reviewer
+ns-sdd-clarify-requirements
+  → ns-sdd-requirements-generator
+  → ns-sdd-task-generator
+  → ns-code-coder
+  → ns-code-reviewer
 ```
 
-Optional complements (UI, docs, security hygiene):
+Optional complements (UI, docs, security hygiene) — install per skill:
 
 ```bash
-npx @nextstage-brasil/harness --preset complements --yes
+npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y
 ```
 
-GitLab execution: preset `gitlab` or skills like `mcp-gitlab-usage`, `execution-gitlab-issue`, `gitlab-board-sync`.
+GitLab execution: preset `spec-driven-gitlab` or skills like `ns-mcp-gitlab-usage`, `ns-execution-gitlab-issue`, `ns-gitlab-board-sync`.
 
 ---
 
@@ -217,7 +217,7 @@ npx @nextstage-brasil/harness agents-md
 npx @nextstage-brasil/harness agents-md --force
 ```
 
-Brownfield refinement: **`/harness-agents-md`** in your agent.
+Brownfield refinement: **`/ns-harness-agents-md`** in your agent.
 
 ---
 

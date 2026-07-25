@@ -1,0 +1,16 @@
+{
+  "evals": [
+    {
+      "prompt": "I just ran harness init with the brownfield preset on apps/billing. Run full prepare — all brownfield steps in one session.",
+      "expected": "Invokes ns-harness-prepare: shows boot scope summary when checks pass and proceeds immediately (no confirmation gate); runs ns-harness-architecture-rules, harness sync, ns-harness-bootstrap-brownfield, ns-harness-codebase-reverse-spec, and ns-harness-agents-md in that order without asking between steps. Stops with a failure report only if a boot check fails."
+    },
+    {
+      "prompt": "/ns-harness-prepare for this repo (monorepo product at apps/shop/).",
+      "expected": "Invokes ns-harness-prepare with product_root=apps/shop/, produces architecture-rules.md, brownfield-map.md, system-reverse-spec.md, and refreshed AGENTS.md with links to those artifacts."
+    },
+    {
+      "prompt": "Greenfield — empty repo, only harness scaffold, no app code yet. Run harness prepare.",
+      "expected": "Does not run the full chain; stops and explains prepare needs application code to scan, or suggests running prepare after first code exists."
+    }
+  ]
+}

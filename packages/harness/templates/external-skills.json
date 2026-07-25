@@ -42,10 +42,10 @@
       "label": "Agents API projects",
       "description": "Agent API services — not for general web apps or SDD-only repos",
       "nsSkills": [
-        "nextstage-harness",
-        "multi-agent-architect",
-        "code-coder",
-        "code-reviewer"
+        "ns-harness",
+        "ns-multi-agent-architect",
+        "ns-code-coder",
+        "ns-code-reviewer"
       ],
       "skills": [
         "langchain-fundamentals",

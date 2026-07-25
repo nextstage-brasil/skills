@@ -17,7 +17,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node bin/cli.js list && node bin/cli.js --dry-run --yes --preset gitlab && node test/sync-smoke.mjs",
+    "test": "node bin/cli.js list && node bin/cli.js --dry-run --yes --preset spec-driven-gitlab && node test/sync-smoke.mjs",
     "validate:catalog": "node scripts/validate-catalog.js"
   },
   "keywords": [

@@ -1,0 +1,12 @@
+{
+  "evals": [
+    {
+      "prompt": "Audit security headers for our Express API — we have no CSP yet.",
+      "expected": "Invokes ns-code-best-practices: scans Express config/middleware, reports CSP and related headers using checklist, suggests minimal safe additions."
+    },
+    {
+      "prompt": "Review this merge request for SOLID violations.",
+      "expected": "Does not use ns-code-best-practices as primary; should route to ns-code-reviewer instead."
+    }
+  ]
+}

@@ -42,14 +42,14 @@ jobs:
           fi
           echo 'OK: no legacy harness-init package references'
 
-      - name: nextstage-harness skill exists
+      - name: ns-harness skill exists
         run: |
           set -euo pipefail
-          if [ ! -f skills/nextstage-harness/SKILL.md ]; then
-            echo 'ERROR: skills/nextstage-harness/SKILL.md is missing'
+          if [ ! -f skills/ns-harness/SKILL.md ]; then
+            echo 'ERROR: skills/ns-harness/SKILL.md is missing'
             exit 1
           fi
-          echo 'OK: nextstage-harness/SKILL.md present'
+          echo 'OK: ns-harness/SKILL.md present'
 
       - name: Harness refs require depends in frontmatter
         run: |
@@ -58,10 +58,10 @@ jobs:
           for skill_md in skills/*/SKILL.md; do
             [ -f "$skill_md" ] || continue
             body=$(awk 'BEGIN{fm=0} /^---$/{fm++; next} fm>=2{print}' "$skill_md")
-            if echo "$body" | rg -q '\.\./nextstage-harness/'; then
+            if echo "$body" | rg -q '\.\./ns-harness/'; then
               frontmatter=$(awk 'BEGIN{fm=0} /^---$/{fm++; next} fm==1{print}' "$skill_md")
-              if ! echo "$frontmatter" | rg -q '^depends:' || ! echo "$frontmatter" | rg -q 'nextstage-harness'; then
-                echo "ERROR: $skill_md references ../nextstage-harness/ but frontmatter lacks depends: nextstage-harness"
+              if ! echo "$frontmatter" | rg -q '^depends:' || ! echo "$frontmatter" | rg -q 'ns-harness'; then
+                echo "ERROR: $skill_md references ../ns-harness/ but frontmatter lacks depends: ns-harness"
                 failed=1
               fi
             fi

@@ -21,7 +21,7 @@ import { runUninstallCommand } from '../src/uninstall.js';
 const HELP = `
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
-  harness prepare          Print full brownfield prepare instructions (/harness-prepare)
+  harness prepare          Print full brownfield prepare instructions (/ns-harness-prepare)
   harness sync [options]   Regenerate rule and skill adapters from canonical sources
   harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
@@ -34,7 +34,7 @@ Usage:
 
 Options:
   --dir <path>           Target project directory (default: current)
-  --preset <name>        Preset: delivery | recommended | gitlab | brownfield | implementation | complements | full | agents-api
+  --preset <name>        Preset: spec-driven | spec-driven-gitlab | project-manager | brownfield | full | agents-api
   --skill <name>         Install specific skill (repeatable)
   --all                  Install every skill in the catalog
   --global, -g           Install skills globally (passed to skills CLI)
@@ -53,8 +53,8 @@ Options:
 
 Examples:
   npx @nextstage-brasil/harness
-  npx @nextstage-brasil/harness --preset delivery --yes
-  npx @nextstage-brasil/harness --preset gitlab --yes
+  npx @nextstage-brasil/harness --preset spec-driven --yes
+  npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes
   npx @nextstage-brasil/harness --preset agents-api --yes
   npx @nextstage-brasil/harness sync
   npx @nextstage-brasil/harness sync --check

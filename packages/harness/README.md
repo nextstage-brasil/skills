@@ -24,7 +24,7 @@ Interactive wizard. Prefer CI / scripts? Use flags below — every common path i
 | `AGENTS.md` + `CLAUDE.md` | Project entry for agents |
 | `docs/context`, `docs/specs`, `docs/versions` | SDD artifact folders (unless `--no-scaffold`) |
 
-Every install also pulls **alwaysInstall** skills: `nextstage-harness`, `harness-prepare`, `nextstage-spec-driven` (plus their dependencies). Presets add optional skills on top.
+Every install also pulls **alwaysInstall** skills: `ns-harness` (plus its dependencies). Presets add Spec-Driven, PM, GitLab, and other packs on top.
 
 ---
 
@@ -38,14 +38,14 @@ cd your-project
 npx @nextstage-brasil/harness
 
 # 3. Or skip prompts — Spec-Driven default pack
-npx @nextstage-brasil/harness --preset delivery --yes
+npx @nextstage-brasil/harness --preset spec-driven --yes
 ```
 
 Then open the project in your agent and:
 
 1. Read `AGENTS.md`
-2. **Brownfield:** run `/harness-prepare` once
-3. **Delivery:** run `/nextstage-spec-driven`
+2. **Brownfield:** run `/ns-harness-prepare` once
+3. **Delivery:** run `/ns-spec-driven`
 
 See installed presets/skills anytime:
 
@@ -59,10 +59,10 @@ npx @nextstage-brasil/harness list
 
 ### New project (greenfield)
 
-Scaffold + Spec-Driven skills. Start delivering with `/nextstage-spec-driven`.
+Scaffold + Spec-Driven skills. Start delivering with `/ns-spec-driven`.
 
 ```bash
-npx @nextstage-brasil/harness --preset delivery --yes
+npx @nextstage-brasil/harness --preset spec-driven --yes
 ```
 
 ### Existing codebase (brownfield)
@@ -72,7 +72,7 @@ Same install — then onboard the repo so agents understand architecture and liv
 ```bash
 npx @nextstage-brasil/harness --preset brownfield --yes
 # In your agent:
-#   /harness-prepare
+#   /ns-harness-prepare
 ```
 
 Need the full prepare prompt in the terminal?
@@ -83,10 +83,18 @@ npx @nextstage-brasil/harness prepare
 
 ### GitLab-heavy team
 
-Issue execution, board sync, requirements enricher, CI generator — on top of the SDD base.
+Issue execution, board sync, requirements enricher, CI generator — on top of Spec-Driven.
 
 ```bash
-npx @nextstage-brasil/harness --preset gitlab --yes
+npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes
+```
+
+### Project Manager (no code execution)
+
+Human PM workflow only — `ns-project-manager` + requirements enricher. Does **not** install SDD workers or coding skills.
+
+```bash
+npx @nextstage-brasil/harness --preset project-manager --yes
 ```
 
 ### Only one skill (no scaffold)
@@ -94,22 +102,22 @@ npx @nextstage-brasil/harness --preset gitlab --yes
 Install a skill + its catalog `depends`. Skips `.nextstage-harness/`, `AGENTS.md`, and `docs/`.
 
 ```bash
-npx @nextstage-brasil/harness --skill multi-agent-architect --no-scaffold -y
-npx @nextstage-brasil/harness --skill code-coder --skill code-reviewer --no-scaffold -y
+npx @nextstage-brasil/harness --skill ns-multi-agent-architect --no-scaffold -y
+npx @nextstage-brasil/harness --skill ns-code-coder --skill ns-code-reviewer --no-scaffold -y
 ```
 
 Already have harness? Add a skill and refresh adapters:
 
 ```bash
-npx @nextstage-brasil/harness --skill gitlab-board-sync --no-scaffold -y
+npx @nextstage-brasil/harness --skill ns-gitlab-board-sync --no-scaffold -y
 npx @nextstage-brasil/harness sync
 ```
 
 ### Preview before writing files
 
 ```bash
-npx @nextstage-brasil/harness --preset gitlab --dry-run
-npx @nextstage-brasil/harness --skill code-frontend-design --dry-run
+npx @nextstage-brasil/harness --preset spec-driven-gitlab --dry-run
+npx @nextstage-brasil/harness --skill ns-code-frontend-design --dry-run
 ```
 
 ### Cursor only (or Cursor + Claude)
@@ -130,11 +138,15 @@ npx @nextstage-brasil/harness update
 npx @nextstage-brasil/harness update --dry-run
 ```
 
-### Optional complements (UI, docs, security pass)
+### Optional complements (UI, docs, security)
+
+Install individually (or use `--preset full`):
 
 ```bash
-npx @nextstage-brasil/harness --preset complements --yes
+npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y
 ```
+
+Investigator / test execution skills (`ns-code-investigator`, `ns-code-e2e-tests`, `ns-code-backend-tests`) likewise via `--skill` or `--preset full`.
 
 ### Agents API / LangChain stack
 
@@ -149,7 +161,7 @@ npx @nextstage-brasil/harness --preset agents-api --yes
 ```bash
 npx @nextstage-brasil/harness init \
   --dir ./my-agent-service \
-  --preset delivery \
+  --preset spec-driven \
   --agent cursor \
   --yes
 ```
@@ -172,7 +184,7 @@ npx @nextstage-brasil/harness init \
 | Show / set agents | `npx @nextstage-brasil/harness agents` · `agents set --agent cursor` |
 | Uninstall harness | `npx @nextstage-brasil/harness uninstall --dry-run` then `--yes` |
 
-In the agent, invoke skills via menu or slash: `/nextstage-spec-driven`, `/code-coder`, `/code-reviewer`, …
+In the agent, invoke skills via menu or slash: `/ns-spec-driven`, `/ns-code-coder`, `/ns-code-reviewer`, …
 
 Consumer guide (scaffolded into projects): `.nextstage-harness/README.md`  
 Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
@@ -181,16 +193,15 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 
 ## Presets
 
-**Base (always):** `nextstage-harness`, `harness-prepare`, `nextstage-spec-driven` (+ transitive deps).
+**Base (always):** `ns-harness` (+ transitive deps).
 
 | Preset | Use when you want… |
 |--------|-------------------|
-| `delivery` / `recommended` | Default Spec-Driven pack (clarify → spec → tasks → implement) |
-| `brownfield` | Base only — then `/harness-prepare` on existing code |
-| `gitlab` | GitLab issues, board sync, enricher, CI generator |
-| `implementation` | Investigator + PHPUnit / Cypress **execution** skills |
-| `complements` | Frontend design, docs writer, best-practices pass |
-| `full` | All optional add-ons (PM copilot, skill-creator, multi-agent-architect, …) |
+| `spec-driven` | Complete SDD stack (clarify → spec → tasks → implement) + test task generators |
+| `spec-driven-gitlab` | Everything in `spec-driven`, plus GitLab issues, board sync, enricher, CI generator |
+| `project-manager` | Human PM toolkit — `ns-project-manager` + requirements enricher (**no** SDD/code workers) |
+| `brownfield` | Harness + `/ns-harness-prepare` chain on existing code |
+| `full` | Every skill in the catalog |
 | `agents-api` | LangChain / LangGraph / MCP external skills + NS base |
 
 ```bash
@@ -223,7 +234,7 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 |---------|-------------|
 | `harness` / `harness init` | Install skills, scaffold, sync adapters, generate `AGENTS.md` |
 | `harness list` | Presets and skill catalog |
-| `harness prepare` | Print brownfield prepare instructions (`/harness-prepare`) |
+| `harness prepare` | Print brownfield prepare instructions (`/ns-harness-prepare`) |
 | `harness sync` | Regenerate rule + skill adapters |
 | `harness sync --check` | CI — exit 1 if adapters drift |
 | `harness update` | Update skills already in `.agents/skills/` |
@@ -260,7 +271,7 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 ```bash
 npx @nextstage-brasil/harness init \
   --dir ./my-agent-service \
-  --skill multi-agent-architect \
+  --skill ns-multi-agent-architect \
   --skill langchain-fundamentals \
   --agent cursor \
   --agent claude-code \
@@ -274,7 +285,7 @@ npx @nextstage-brasil/harness init \
 
 ```bash
 export NEXTSTAGE_SKILLS_SOURCE=~/apps/nextstage/skills
-npx @nextstage-brasil/harness --skill code-coder --no-scaffold -y
+npx @nextstage-brasil/harness --skill ns-code-coder --no-scaffold -y
 
 # Or run the package from a clone
 npx file:~/apps/nextstage/skills/packages/harness

@@ -30,7 +30,7 @@ export function listExternalPresets() {
   return Object.entries(presets).map(([id, preset]) => ({
     id,
     ...preset,
-    nsSkills: resolveDepends(preset.nsSkills ?? ['nextstage-harness']),
+    nsSkills: resolveDepends(preset.nsSkills ?? ['ns-harness']),
     skills: [...preset.skills],
   }));
 }

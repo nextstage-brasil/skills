@@ -1,171 +1,160 @@
 {
   "source": "nextstage-brasil/skills",
-  "alwaysInstall": ["nextstage-harness", "harness-prepare", "nextstage-spec-driven"],
+  "alwaysInstall": ["ns-harness"],
   "depends": {
-    "nextstage-harness": [],
-    "nextstage-spec-driven": [
-      "nextstage-harness",
-      "harness-prepare",
-      "pm-clarify-requirements",
-      "pm-requirements-generator",
-      "pm-analyze-consistency",
-      "pm-version-partitioner",
-      "pm-task-generator",
-      "execution-handoff-generator",
-      "code-coder",
-      "code-autonomous",
-      "execution-orchestrator",
-      "code-reviewer",
-      "pm-living-spec-consolidator"
+    "ns-harness": [],
+    "ns-spec-driven": [
+      "ns-harness",
+      "ns-harness-prepare",
+      "ns-sdd-clarify-requirements",
+      "ns-sdd-requirements-generator",
+      "ns-sdd-analyze-consistency",
+      "ns-sdd-version-partitioner",
+      "ns-sdd-task-generator",
+      "ns-execution-handoff-generator",
+      "ns-code-coder",
+      "ns-code-autonomous",
+      "ns-execution-orchestrator",
+      "ns-code-reviewer",
+      "ns-sdd-living-spec-consolidator"
     ],
-    "code-frontend-design": ["nextstage-harness"],
-    "code-docs-writer": ["nextstage-harness"],
-    "code-best-practices": ["nextstage-harness"],
-    "harness-codebase-reverse-spec": [],
-    "harness-architecture-rules": ["nextstage-harness"],
-    "harness-agents-md": ["nextstage-harness"],
-    "harness-bootstrap-brownfield": ["nextstage-harness"],
-    "harness-prepare": [
-      "nextstage-harness",
-      "harness-architecture-rules",
-      "harness-bootstrap-brownfield",
-      "harness-codebase-reverse-spec",
-      "harness-agents-md"
+    "ns-code-frontend-design": ["ns-harness"],
+    "ns-code-docs-writer": ["ns-harness"],
+    "ns-code-best-practices": ["ns-harness"],
+    "ns-harness-codebase-reverse-spec": [],
+    "ns-harness-architecture-rules": ["ns-harness"],
+    "ns-harness-agents-md": ["ns-harness"],
+    "ns-harness-bootstrap-brownfield": ["ns-harness"],
+    "ns-harness-prepare": [
+      "ns-harness",
+      "ns-harness-architecture-rules",
+      "ns-harness-bootstrap-brownfield",
+      "ns-harness-codebase-reverse-spec",
+      "ns-harness-agents-md"
     ],
-    "pm-clarify-requirements": ["nextstage-harness"],
-    "pm-requirements-generator": ["nextstage-harness"],
-    "pm-analyze-consistency": ["nextstage-harness"],
-    "pm-version-partitioner": ["nextstage-harness"],
-    "pm-task-generator": ["nextstage-harness"],
-    "execution-handoff-generator": ["nextstage-harness"],
-    "pm-unit-test-task-generator": [],
-    "pm-e2e-test-generator": [],
-    "pm-living-spec-consolidator": ["nextstage-harness"],
-    "pm-requirements-copilot": [],
-    "mcp-gitlab-usage": ["nextstage-harness"],
-    "gitlab-board-sync": ["mcp-gitlab-usage"],
-    "gitlab-ci-generator": [],
-    "execution-gitlab-issue": ["nextstage-harness", "mcp-gitlab-usage", "code-reviewer", "code-autonomous"],
-    "requirements-enricher": ["nextstage-harness", "mcp-gitlab-usage"],
-    "code-autonomous": ["nextstage-harness", "code-reviewer"],
-    "code-coder": ["nextstage-harness"],
-    "execution-orchestrator": ["nextstage-harness"],
-    "code-reviewer": ["nextstage-harness", "mcp-gitlab-usage"],
-    "code-investigator": ["nextstage-harness"],
-    "code-e2e-tests": [],
-    "code-backend-tests": [],
-    "multi-agent-architect": [],
-    "skill-creator": ["nextstage-harness"]
+    "ns-sdd-clarify-requirements": ["ns-harness"],
+    "ns-sdd-requirements-generator": ["ns-harness"],
+    "ns-sdd-analyze-consistency": ["ns-harness"],
+    "ns-sdd-version-partitioner": ["ns-harness"],
+    "ns-sdd-task-generator": ["ns-harness"],
+    "ns-execution-handoff-generator": ["ns-harness"],
+    "ns-pm-unit-test-task-generator": [],
+    "ns-pm-e2e-test-task-generator": [],
+    "ns-sdd-living-spec-consolidator": ["ns-harness"],
+    "ns-project-manager": [],
+    "ns-mcp-gitlab-usage": ["ns-harness"],
+    "ns-gitlab-board-sync": ["ns-mcp-gitlab-usage"],
+    "ns-gitlab-ci-generator": [],
+    "ns-execution-gitlab-issue": ["ns-harness", "ns-mcp-gitlab-usage", "ns-code-reviewer", "ns-code-autonomous"],
+    "ns-requirements-enricher": ["ns-harness", "ns-mcp-gitlab-usage"],
+    "ns-code-autonomous": ["ns-harness", "ns-code-reviewer"],
+    "ns-code-coder": ["ns-harness"],
+    "ns-execution-orchestrator": ["ns-harness"],
+    "ns-code-reviewer": ["ns-harness", "ns-mcp-gitlab-usage"],
+    "ns-code-investigator": ["ns-harness"],
+    "ns-code-e2e-tests": [],
+    "ns-code-backend-tests": [],
+    "ns-multi-agent-architect": [],
+    "ns-skill-creator": ["ns-harness"]
   },
   "presets": {
-    "delivery": {
-      "label": "NextStage Spec-Driven",
-      "description": "Base install includes nextstage-spec-driven and harness-prepare; adds PHPUnit and Cypress task generators",
+    "spec-driven": {
+      "label": "Spec-Driven delivery",
+      "description": "Complete SDD engineering stack — face, planning workers, implementation, review, PHPUnit/Cypress task generators",
       "skills": [
-        "pm-unit-test-task-generator",
-        "pm-e2e-test-generator"
+        "ns-spec-driven",
+        "ns-pm-unit-test-task-generator",
+        "ns-pm-e2e-test-task-generator"
       ]
     },
-    "recommended": {
-      "label": "NextStage Spec-Driven (alias)",
-      "description": "Alias for delivery — prefer --preset delivery",
+    "spec-driven-gitlab": {
+      "label": "Spec-Driven + GitLab",
+      "description": "Everything in spec-driven, plus GitLab issue execution, board sync, requirements enricher, and CI bootstrap",
       "skills": [
-        "pm-unit-test-task-generator",
-        "pm-e2e-test-generator"
+        "ns-spec-driven",
+        "ns-execution-gitlab-issue",
+        "ns-gitlab-board-sync",
+        "ns-requirements-enricher",
+        "ns-gitlab-ci-generator"
       ]
     },
-    "gitlab": {
-      "label": "GitLab execution",
-      "description": "Issue execution, board sync, requirements enricher, and CI bootstrap (mcp-gitlab-usage is already a base dependency)",
-      "skills": [
-        "execution-gitlab-issue",
-        "gitlab-board-sync",
-        "requirements-enricher",
-        "gitlab-ci-generator"
-      ]
+    "project-manager": {
+      "label": "Project Manager toolkit",
+      "description": "Human PM workflow — clarify, prioritize, forecast, status, risk — no code execution",
+      "skills": ["ns-project-manager", "ns-requirements-enricher"]
     },
     "brownfield": {
       "label": "Brownfield onboarding",
-      "description": "No extra skills — harness-prepare is always installed. After init run /harness-prepare in your agent",
-      "skills": []
-    },
-    "implementation": {
-      "label": "Implementation & quality",
-      "description": "Root-cause investigation and test implementation (PHPUnit, Cypress execution skills)",
-      "skills": [
-        "code-investigator",
-        "code-e2e-tests",
-        "code-backend-tests"
-      ]
-    },
-    "complements": {
-      "label": "Project complements",
-      "description": "code-frontend-design, code-docs-writer, code-best-practices — soft-integrated by nextstage-spec-driven",
-      "skills": ["code-frontend-design", "code-docs-writer", "code-best-practices"]
+      "description": "Harness + prepare chain — after init run /ns-harness-prepare in your agent",
+      "skills": ["ns-harness-prepare"]
     },
     "full": {
       "label": "Full optional stack",
-      "description": "All optional add-ons: delivery test generators, GitLab, quality, complements, PM copilot, skill-creator, multi-agent-architect",
+      "description": "Every skill in the catalog: spec-driven, GitLab, quality add-ons, PM, skill-creator, multi-agent-architect",
       "skills": [
-        "pm-unit-test-task-generator",
-        "pm-e2e-test-generator",
-        "execution-gitlab-issue",
-        "gitlab-board-sync",
-        "requirements-enricher",
-        "gitlab-ci-generator",
-        "code-investigator",
-        "code-e2e-tests",
-        "code-backend-tests",
-        "code-frontend-design",
-        "code-docs-writer",
-        "code-best-practices",
-        "pm-requirements-copilot",
-        "skill-creator",
-        "multi-agent-architect"
+        "ns-spec-driven",
+        "ns-pm-unit-test-task-generator",
+        "ns-pm-e2e-test-task-generator",
+        "ns-execution-gitlab-issue",
+        "ns-gitlab-board-sync",
+        "ns-requirements-enricher",
+        "ns-gitlab-ci-generator",
+        "ns-code-investigator",
+        "ns-code-e2e-tests",
+        "ns-code-backend-tests",
+        "ns-code-frontend-design",
+        "ns-code-docs-writer",
+        "ns-code-best-practices",
+        "ns-project-manager",
+        "ns-skill-creator",
+        "ns-multi-agent-architect"
       ]
     }
   },
   "categories": {
     "foundation": {
       "label": "Foundation",
-      "skills": ["nextstage-harness", "nextstage-spec-driven", "harness-agents-md", "harness-prepare", "skill-creator"]
+      "skills": ["ns-harness", "ns-spec-driven", "ns-harness-agents-md", "ns-harness-prepare", "ns-skill-creator"]
     },
     "complements": {
       "label": "Project complements",
-      "skills": ["code-frontend-design", "code-docs-writer", "code-best-practices"]
+      "skills": ["ns-code-frontend-design", "ns-code-docs-writer", "ns-code-best-practices"]
     },
     "sdd": {
       "label": "SDD planning",
       "skills": [
-        "nextstage-spec-driven",
-        "pm-clarify-requirements",
-        "pm-requirements-generator",
-        "pm-analyze-consistency",
-        "pm-version-partitioner",
-        "pm-task-generator",
-        "pm-unit-test-task-generator",
-        "pm-e2e-test-generator",
-        "pm-living-spec-consolidator",
-        "pm-requirements-copilot"
+        "ns-spec-driven",
+        "ns-sdd-clarify-requirements",
+        "ns-sdd-requirements-generator",
+        "ns-sdd-analyze-consistency",
+        "ns-sdd-version-partitioner",
+        "ns-sdd-task-generator",
+        "ns-pm-unit-test-task-generator",
+        "ns-pm-e2e-test-task-generator",
+        "ns-sdd-living-spec-consolidator"
       ]
+    },
+    "project-manager": {
+      "label": "Project Manager",
+      "skills": ["ns-project-manager", "ns-requirements-enricher"]
     },
     "gitlab": {
       "label": "GitLab",
       "skills": [
-        "mcp-gitlab-usage",
-        "requirements-enricher",
-        "gitlab-board-sync",
-        "gitlab-ci-generator",
-        "execution-gitlab-issue"
+        "ns-mcp-gitlab-usage",
+        "ns-requirements-enricher",
+        "ns-gitlab-board-sync",
+        "ns-gitlab-ci-generator",
+        "ns-execution-gitlab-issue"
       ]
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["code-coder", "code-autonomous", "code-frontend-design", "code-docs-writer", "code-best-practices", "execution-orchestrator", "execution-handoff-generator", "execution-gitlab-issue", "code-investigator", "code-reviewer", "code-e2e-tests", "code-backend-tests"]
+      "skills": ["ns-code-coder", "ns-code-autonomous", "ns-code-frontend-design", "ns-code-docs-writer", "ns-code-best-practices", "ns-execution-orchestrator", "ns-execution-handoff-generator", "ns-execution-gitlab-issue", "ns-code-investigator", "ns-code-reviewer", "ns-code-e2e-tests", "ns-code-backend-tests"]
     },
     "brownfield": {
       "label": "Brownfield",
-      "skills": ["harness-prepare", "harness-agents-md", "harness-architecture-rules", "harness-bootstrap-brownfield", "harness-codebase-reverse-spec"]
+      "skills": ["ns-harness-prepare", "ns-harness-agents-md", "ns-harness-architecture-rules", "ns-harness-bootstrap-brownfield", "ns-harness-codebase-reverse-spec"]
     }
   }
 }

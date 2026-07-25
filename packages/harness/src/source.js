@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const DEFAULT_SOURCE = 'nextstage-brasil/skills';
-const MARKER = join('skills', 'nextstage-harness', 'SKILL.md');
+const MARKER = join('skills', 'ns-harness', 'SKILL.md');
 
 export function resolveSource(explicit) {
   if (explicit) return explicit;

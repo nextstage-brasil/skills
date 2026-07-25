@@ -42,7 +42,7 @@ Use it for structure, frontmatter, description triggering, bundled resources, ev
 | Templates / checklists | `references/` |
 | Scripts | `scripts/` |
 | Evals | `evals/evals.json` — 2–3 realistic prompts |
-| Harness coupling | Declare `depends: nextstage-harness` when referencing `../nextstage-harness/` |
+| Harness coupling | Declare `depends: ns-harness` when referencing `../ns-harness/` |
 | Catalog | Add or update `depends` in `packages/harness/templates/catalog.json` for every new skill |
 
 Full migration and path rules: `skills/_meta/MIGRATION.md`.
@@ -62,7 +62,7 @@ See `packages/harness/README.md` for CLI flags and release notes.
 CI (`.github/workflows/validate-skills.yml`) runs on changes under `skills/` and `packages/harness/`:
 
 - No legacy `_shared` or `harness-init` references
-- `nextstage-harness` skill present
+- `ns-harness` skill present
 - Harness references declare `depends` in frontmatter
 - Catalog matches skill directories (`node packages/harness/scripts/validate-catalog.js`)
 - Harness CLI smoke tests

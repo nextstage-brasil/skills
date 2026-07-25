@@ -12,10 +12,10 @@ export function buildPostInstallNotes({
   const lines = [];
   const isBrownfield =
     preset === 'brownfield' ||
-    installedSkills.includes('harness-prepare') ||
-    installedSkills.includes('harness-bootstrap-brownfield');
-  const hasPrepare = installedSkills.includes('harness-prepare');
-  const hasSdd = installedSkills.includes('nextstage-spec-driven');
+    installedSkills.includes('ns-harness-prepare') ||
+    installedSkills.includes('ns-harness-bootstrap-brownfield');
+  const hasPrepare = installedSkills.includes('ns-harness-prepare');
+  const hasSdd = installedSkills.includes('ns-spec-driven');
 
   if (noScaffold) {
     lines.push('Skills installed (--no-scaffold). Scaffold skipped.');
@@ -34,7 +34,7 @@ export function buildPostInstallNotes({
 
   if (hasPrepare || isBrownfield) {
     lines.push('  After install or update, run in your AI agent:');
-    lines.push('    /harness-prepare');
+    lines.push('    /ns-harness-prepare');
     lines.push('');
     lines.push('  Builds architecture rules, brownfield context, and AGENTS.md.');
     lines.push('  Skip only if greenfield (no application code yet).');
@@ -46,19 +46,19 @@ export function buildPostInstallNotes({
     lines.push('');
   } else {
     lines.push('  After install or update (when code exists):');
-    lines.push('    /harness-architecture-rules → harness sync → /harness-agents-md');
+    lines.push('    /ns-harness-architecture-rules → harness sync → /ns-harness-agents-md');
     lines.push('');
   }
 
   if (hasSdd) {
     lines.push('  Delivery (spec → tasks → implement):');
-    lines.push('    Skill:   /nextstage-spec-driven');
+    lines.push('    Skill:   /ns-spec-driven');
     lines.push('    Auto-sizes Small / Medium / Large and delegates to worker skills.');
     lines.push('');
   }
 
   lines.push('  Optional complements (UI, docs, security hygiene):');
-  lines.push('    npx @nextstage-brasil/harness --preset complements --yes');
+  lines.push('    npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y');
   lines.push('────────────────────────────────');
   lines.push('Extras');
   lines.push('');
@@ -69,10 +69,10 @@ export function buildPostInstallNotes({
   lines.push('   Agents:    npx @nextstage-brasil/harness agents');
   lines.push('');
   if (hasSdd) {
-    lines.push('Delivery: /nextstage-spec-driven (clarify → spec → tasks → implement → close)');
+    lines.push('Delivery: /ns-spec-driven (clarify → spec → tasks → implement → close)');
   } else {
-    lines.push('SDD: pm-clarify-requirements → pm-requirements-generator →');
-    lines.push('     pm-task-generator → code-coder → code-reviewer');
+    lines.push('SDD: ns-sdd-clarify-requirements → ns-sdd-requirements-generator →');
+    lines.push('     ns-sdd-task-generator → ns-code-coder → ns-code-reviewer');
   }
 
   return lines.join('\n');

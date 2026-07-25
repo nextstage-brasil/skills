@@ -112,16 +112,16 @@ try {
   assert(check.status === 0, `sync --check should pass after re-sync: ${check.stderr}${check.stdout}`);
 
   // 5. skill adapters — Claude only (Cursor reads .agents/skills/ directly)
-  const skillsCanonical = join(tempDir, '.agents', 'skills', 'code-coder');
+  const skillsCanonical = join(tempDir, '.agents', 'skills', 'ns-code-coder');
   mkdirSync(skillsCanonical, { recursive: true });
-  writeFileSync(join(skillsCanonical, 'SKILL.md'), '---\nname: code-coder\ndescription: test\n---\n\n# Code Coder\n', 'utf8');
+  writeFileSync(join(skillsCanonical, 'SKILL.md'), '---\nname: ns-code-coder\ndescription: test\n---\n\n# Code Coder\n', 'utf8');
   const skillSync = syncSkills(tempDir, { agents: ['cursor', 'claude-code'] });
   assert(skillSync.written.some((entry) => entry.includes('.claude/skills')), 'syncSkills should write claude adapter');
   assert(
     !skillSync.written.some((entry) => entry.includes('.cursor/skills') && !entry.includes('removed-legacy-adapter')),
     'syncSkills should not create cursor skill adapters',
   );
-  const claudeSkill = join(tempDir, '.claude', 'skills', 'code-coder');
+  const claudeSkill = join(tempDir, '.claude', 'skills', 'ns-code-coder');
   assert(exists(claudeSkill), 'claude skill symlink missing');
   assert(
     lstatSync(claudeSkill).isSymbolicLink() || skillSync.written.some((entry) => entry.includes('copy')),
@@ -129,14 +129,14 @@ try {
   );
 
   // 6. agents-md from installed skills layout
-  const skillsDir = join(tempDir, '.agents', 'skills', 'nextstage-harness');
+  const skillsDir = join(tempDir, '.agents', 'skills', 'ns-harness');
   mkdirSync(skillsDir, { recursive: true });
   writeFileSync(join(skillsDir, 'SKILL.md'), '# stub\n', 'utf8');
   const agentsMd = generateAgentsMd(tempDir, { force: true });
   assert(!agentsMd.skipped, 'agents-md should write files');
   assert(exists(join(tempDir, 'AGENTS.md')), 'AGENTS.md missing');
   assert(readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8').trim() === '@AGENTS.md', 'CLAUDE.md must point to AGENTS.md');
-  assert(readFileSync(join(tempDir, 'AGENTS.md'), 'utf8').includes('nextstage-harness'), 'AGENTS.md should list installed skill');
+  assert(readFileSync(join(tempDir, 'AGENTS.md'), 'utf8').includes('ns-harness'), 'AGENTS.md should list installed skill');
 
   // 7. migrate-rules round-trip from fixture
   const migrateDir = mkdtempSync(join(tmpdir(), 'harness-migrate-'));
@@ -274,7 +274,7 @@ try {
   // 11. prune-retired-skills removes old dirs only when replacement exists
   const agentsSkillsDir = join(tempDir, '.agents', 'skills');
   const oldSkillDir = join(agentsSkillsDir, 'task-generator');
-  const newSkillDir = join(agentsSkillsDir, 'pm-task-generator');
+  const newSkillDir = join(agentsSkillsDir, 'ns-sdd-task-generator');
   const cursorOldSkill = join(tempDir, '.cursor', 'skills', 'task-generator');
   mkdirSync(oldSkillDir, { recursive: true });
   writeFileSync(join(oldSkillDir, 'SKILL.md'), '# old\n', 'utf8');
@@ -317,7 +317,7 @@ try {
   assert(agentsApiPreset?.skills.length === 6, 'agents-api preset should include all six external skills');
   assert(agentsApiPreset?.skills.includes('langgraph-persistence'), 'agents-api preset should include langgraph skill');
   assert(agentsApiPreset?.skills.includes('postgresql-table-design'), 'agents-api preset should include postgresql skill');
-  assert(agentsApiPreset?.nsSkills.includes('multi-agent-architect'), 'agents-api preset should include NS architect skill');
+  assert(agentsApiPreset?.nsSkills.includes('ns-multi-agent-architect'), 'agents-api preset should include NS architect skill');
 
   const agentsApiDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents-api', '--dir', tempDir], harnessRoot);
   assert(agentsApiDryRun.status === 0, `agents-api preset dry-run should pass: ${agentsApiDryRun.stderr}${agentsApiDryRun.stdout}`);
@@ -339,22 +339,22 @@ try {
     rmSync(updateEmptyDir, { recursive: true, force: true });
   }
 
-  const plan = listSkillsToUpdate(tempDir, ['nextstage-harness', 'missing-skill']);
-  assert(plan.skills.length === 1 && plan.skills[0] === 'nextstage-harness', 'update plan should filter to installed only');
+  const plan = listSkillsToUpdate(tempDir, ['ns-harness', 'missing-skill']);
+  assert(plan.skills.length === 1 && plan.skills[0] === 'ns-harness', 'update plan should filter to installed only');
   assert(plan.notInstalled.includes('missing-skill'), 'update plan should track missing skills');
 
   const updateDryRun = runCli(['update', '--dry-run', '--dir', tempDir], harnessRoot);
   assert(updateDryRun.status === 0, `update --dry-run should pass: ${updateDryRun.stderr}${updateDryRun.stdout}`);
   assert(
-    updateDryRun.stdout.includes('nextstage-harness'),
+    updateDryRun.stdout.includes('ns-harness'),
     'update dry-run should list installed skills',
   );
 
   const updateMissing = runCli(['update', '--skill', 'missing-skill', '--dir', tempDir], harnessRoot);
   assert(updateMissing.status === 1, 'update --skill for missing skill should fail');
 
-  mkdirSync(join(tempDir, '.claude', 'skills', 'nextstage-harness'), { recursive: true });
-  writeFileSync(join(tempDir, '.claude', 'skills', 'nextstage-harness', 'SKILL.md'), '# claude\n', 'utf8');
+  mkdirSync(join(tempDir, '.claude', 'skills', 'ns-harness'), { recursive: true });
+  writeFileSync(join(tempDir, '.claude', 'skills', 'ns-harness', 'SKILL.md'), '# claude\n', 'utf8');
   const prunedAgents = pruneExcludedAgentAdapters(tempDir, ['cursor']);
   assert(prunedAgents.removed.some((path) => path.endsWith('.claude')), 'cursor-only should remove .claude adapters');
   assert(!existsSync(join(tempDir, '.claude')), '.claude should be removed after cursor-only prune');
@@ -393,11 +393,11 @@ try {
     'list should show agents set command',
   );
   assert(
-    listOut.stdout.includes('--preset gitlab --yes'),
+    listOut.stdout.includes('--preset spec-driven-gitlab --yes'),
     'list should show preset install command',
   );
   assert(
-    listOut.stdout.includes('--skill gitlab-board-sync --no-scaffold'),
+    listOut.stdout.includes('--skill ns-gitlab-board-sync --no-scaffold'),
     'list should show single-skill install command',
   );
 

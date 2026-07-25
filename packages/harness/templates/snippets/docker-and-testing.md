@@ -1,4 +1,4 @@
-<!-- Canonical snippet for harness CLI. Keep in sync with skills/nextstage-harness/references/docker-and-testing.md -->
+<!-- Canonical snippet for harness CLI. Keep in sync with skills/ns-harness/references/docker-and-testing.md -->
 ## Docker and testing
 
 Strict rules — no exceptions:
@@ -24,4 +24,4 @@ timeout 120 docker exec -w {workdir} {test_container} \
   vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error
 ```
 
-Execution details and bootstrap: `code-backend-tests` skill.
+Execution details and bootstrap: `ns-code-backend-tests` skill.

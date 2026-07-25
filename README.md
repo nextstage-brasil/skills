@@ -9,7 +9,7 @@ Skills are decoupled from any single harness: they use **harness discovery** to 
 ```
 skills/
 ├── _meta/              # Migration notes
-├── nextstage-harness/  # Harness discovery, gates, artifact layout (auto-installed dep)
+├── ns-harness/  # Harness discovery, gates, artifact layout (auto-installed dep)
 └── <skill-name>/
     ├── SKILL.md        # Entry point (required)
     ├── references/     # Templates, checklists, stack profiles
@@ -20,45 +20,45 @@ packages/
 └── harness/            # @nextstage-brasil/harness CLI (install wizard)
 ```
 
-Skills are invoked via the Skills menu / slash (e.g. `/code-coder`, `/code-reviewer`).
+Skills are invoked via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code-reviewer`).
 
 ## Skill catalog
 
 | Skill                      | Purpose                                                                     |
 | -------------------------- | --------------------------------------------------------------------------- |
-| `nextstage-harness`        | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
-| `nextstage-spec-driven`            | Delivery face — clarify → spec → tasks → implement → close (auto-size)      |
-| `harness-prepare`          | Orchestrate full brownfield onboarding chain after harness init (manual)    |
-| `harness-agents-md`      | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer           |
-| `harness-codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
-| `harness-architecture-rules` | Scan codebase and generate lean `architecture-rules.md` for agents      |
-| `harness-bootstrap-brownfield`     | Map existing codebase stack/modules before first SDD version                |
-| `pm-clarify-requirements`     | Resolve scope ambiguities before requirements generation                    |
-| `pm-requirements-generator`   | Produce structured `requirements.md` for a version                          |
-| `pm-analyze-consistency`      | Validate requirements before task generation                                |
-| `pm-version-partitioner`      | Split large versions into subversions + roadmap                             |
-| `pm-task-generator`           | Backend/frontend/infra implementation task files                            |
-| `execution-handoff-generator` | Generate and update `execution-handoff.md` (task order + time tracking) |
-| `pm-unit-test-task-generator` | Backend PHPUnit/integration test tasks                                      |
-| `pm-e2e-test-generator`       | Cypress E2E planning tasks                                                  |
-| `pm-living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs                     |
-| `mcp-gitlab-usage`         | GitLab MCP tool contracts, gates, and flows                                 |
-| `gitlab-board-sync`        | Sync existing issues (labels, milestone, time)                              |
-| `gitlab-ci-generator`      | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                               |
-| `execution-gitlab-issue`     | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `code-autonomous` |
-| `code-coder`               | Ad-hoc implementation without full SDD cycle                                |
-| `code-autonomous`          | Harness-aware autonomous execution engine — planning-depth self-decision, doubt resolution, multi-agent dispatch (issue engine or standalone) |
-| `execution-orchestrator`   | Drive a partitioned version slice-by-slice (subagent + commit per slice)    |
-| `code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
-| `code-investigator`        | Root-cause analysis and minimal fixes                                       |
-| `code-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |
-| `code-backend-tests`     | Implement/refactor PHPUnit tests in Docker (execution phase)                |
-| `code-frontend-design`          | Distinctive production UI; anti–generic AI aesthetics (optional complement) |
-| `code-docs-writer`              | README and `docs/` guides for humans (optional complement)                  |
-| `code-best-practices`           | Security headers, compatibility, modernization pass (optional complement)    |
-| `requirements-enricher`    | Grill-me gap analysis for GitLab issues or chat context                     |
-| `pm-requirements-copilot`  | End-to-end PM workflow — clarification through delivery forecast            |
-| `skill-creator`            | Create project-local skills in `.agents/skills/` + `harness sync`           |
+| `ns-harness`        | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
+| `ns-spec-driven`            | Delivery face — clarify → spec → tasks → implement → close (auto-size)      |
+| `ns-harness-prepare`          | Orchestrate full brownfield onboarding chain after harness init (manual)    |
+| `ns-harness-agents-md`      | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer           |
+| `ns-harness-codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
+| `ns-harness-architecture-rules` | Scan codebase and generate lean `architecture-rules.md` for agents      |
+| `ns-harness-bootstrap-brownfield`     | Map existing codebase stack/modules before first SDD version                |
+| `ns-sdd-clarify-requirements`     | Resolve scope ambiguities before requirements generation                    |
+| `ns-sdd-requirements-generator`   | Produce structured `requirements.md` for a version                          |
+| `ns-sdd-analyze-consistency`      | Validate requirements before task generation                                |
+| `ns-sdd-version-partitioner`      | Split large versions into subversions + roadmap                             |
+| `ns-sdd-task-generator`           | Backend/frontend/infra implementation task files                            |
+| `ns-execution-handoff-generator` | Generate and update `execution-handoff.md` (task order + time tracking) |
+| `ns-pm-unit-test-task-generator` | Backend PHPUnit/integration test tasks                                      |
+| `ns-pm-e2e-test-task-generator`  | Cypress E2E planning tasks                                                  |
+| `ns-sdd-living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs                     |
+| `ns-mcp-gitlab-usage`         | GitLab MCP tool contracts, gates, and flows                                 |
+| `ns-gitlab-board-sync`        | Sync existing issues (labels, milestone, time)                              |
+| `ns-gitlab-ci-generator`      | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                               |
+| `ns-execution-gitlab-issue`     | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `ns-code-autonomous` |
+| `ns-code-coder`               | Ad-hoc implementation without full SDD cycle                                |
+| `ns-code-autonomous`          | Harness-aware autonomous execution engine — planning-depth self-decision, doubt resolution, multi-agent dispatch (issue engine or standalone) |
+| `ns-execution-orchestrator`   | Drive a partitioned version slice-by-slice (subagent + commit per slice)    |
+| `ns-code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
+| `ns-code-investigator`        | Root-cause analysis and minimal fixes                                       |
+| `ns-code-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |
+| `ns-code-backend-tests`     | Implement/refactor PHPUnit tests in Docker (execution phase)                |
+| `ns-code-frontend-design`          | Distinctive production UI; anti–generic AI aesthetics (optional complement) |
+| `ns-code-docs-writer`              | README and `docs/` guides for humans (optional complement)                  |
+| `ns-code-best-practices`           | Security headers, compatibility, modernization pass (optional complement)    |
+| `ns-requirements-enricher`    | Grill-me gap analysis for GitLab issues or chat context                     |
+| `ns-project-manager`  | End-to-end PM workflow — clarification through delivery forecast            |
+| `ns-skill-creator`            | Create project-local skills in `.agents/skills/` + `harness sync`           |
 
 Migration notes: `skills/_meta/MIGRATION.md`.
 
@@ -80,7 +80,7 @@ npx @nextstage-brasil/harness
 >
 > ```bash
 > cd ~/apps/nextstage/skills/packages/harness && npm link
-> harness --preset delivery --yes
+> harness --preset spec-driven --yes
 > ```
 
 Interactive wizard: picks a preset, resolves skill dependencies, runs `npx skills add`, and optionally scaffolds `AGENTS.md` plus `docs/` layout.
@@ -88,7 +88,8 @@ Interactive wizard: picks a preset, resolves skill dependencies, runs `npx skill
 Non-interactive:
 
 ```bash
-npx @nextstage-brasil/harness --preset gitlab --yes
+npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes
+npx @nextstage-brasil/harness --preset project-manager --yes
 npx @nextstage-brasil/harness list
 ```
 
@@ -103,29 +104,29 @@ Install via the [Skills CLI](https://skills.sh/) (`npx skills`). Skills live und
 Consumer skills declare `depends` in frontmatter. Once the CLI supports it ([vercel-labs/skills#861](https://github.com/vercel-labs/skills/pull/861)), installing one skill pulls its dependencies automatically:
 
 ```bash
-npx skills add nextstage-brasil/skills@execution-gitlab-issue --full-depth -y
-# resolves: nextstage-harness → mcp-gitlab-usage → code-reviewer → execution-gitlab-issue
+npx skills add nextstage-brasil/skills@ns-execution-gitlab-issue --full-depth -y
+# resolves: ns-harness → ns-mcp-gitlab-usage → ns-code-reviewer → ns-execution-gitlab-issue
 ```
 
 **Interim (until PR #861 merges):** `depends` is ignored by `skills@1.5.14`. Install peers manually:
 
 ```bash
 npx skills add nextstage-brasil/skills --full-depth -y \
-  --skill nextstage-harness --skill mcp-gitlab-usage --skill code-reviewer --skill execution-gitlab-issue
+  --skill ns-harness --skill ns-mcp-gitlab-usage --skill ns-code-reviewer --skill ns-execution-gitlab-issue
 ```
 
 **Single skill (project):**
 
 ```bash
-npx skills add nextstage-brasil/skills@harness-codebase-reverse-spec --full-depth -y
-npx skills add nextstage-brasil/skills@mcp-gitlab-usage --full-depth -y
-npx skills add nextstage-brasil/skills@pm-requirements-generator --full-depth -y
+npx skills add nextstage-brasil/skills@ns-harness-codebase-reverse-spec --full-depth -y
+npx skills add nextstage-brasil/skills@ns-mcp-gitlab-usage --full-depth -y
+npx skills add nextstage-brasil/skills@ns-sdd-requirements-generator --full-depth -y
 ```
 
 **Global:**
 
 ```bash
-npx skills add nextstage-brasil/skills@code-coder --full-depth -g -y
+npx skills add nextstage-brasil/skills@ns-code-coder --full-depth -g -y
 ```
 
 **All skills:**
@@ -149,7 +150,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
-Typical delivery: `/nextstage-spec-driven` (auto-sizes and delegates). Manual brownfield first: `/harness-prepare`. Worker chain: `pm-clarify-requirements` → `pm-requirements-generator` → `pm-analyze-consistency` → `pm-task-generator` → implementation (`code-coder` / `execution-gitlab-issue` / `code-autonomous`) → `code-reviewer` → `pm-living-spec-consolidator`. Optional complements: `npx @nextstage-brasil/harness --preset complements --yes`.
+Typical delivery: `/ns-spec-driven` (auto-sizes and delegates). Manual brownfield first: `/ns-harness-prepare`. Worker chain: `ns-sdd-clarify-requirements` → `ns-sdd-requirements-generator` → `ns-sdd-analyze-consistency` → `ns-sdd-task-generator` → implementation (`ns-code-coder` / `ns-execution-gitlab-issue` / `ns-code-autonomous`) → `ns-code-reviewer` → `ns-sdd-living-spec-consolidator`. Optional complements: `--skill ns-code-frontend-design` (etc.) or `--preset full`.
 
 ## Contributing
 

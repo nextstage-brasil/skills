@@ -56,16 +56,16 @@ export async function runUpdate(argv = {}) {
     source: argv.source,
   };
 
-  const hasSkillCreator = skills.includes('skill-creator');
-  const withoutSkillCreator = skills.filter((name) => name !== 'skill-creator');
+  const hasSkillCreator = skills.includes('ns-skill-creator');
+  const withoutSkillCreator = skills.filter((name) => name !== 'ns-skill-creator');
 
   if (withoutSkillCreator.length > 0) {
     updateInstalledSkills(withoutSkillCreator, installOptions);
   }
 
   if (hasSkillCreator) {
-    updateInstalledSkills(['skill-creator'], installOptions);
-    installSkills(['skill-creator'], installOptions);
+    updateInstalledSkills(['ns-skill-creator'], installOptions);
+    installSkills(['ns-skill-creator'], installOptions);
   }
 
   const details = [];
@@ -104,10 +104,10 @@ export async function runUpdate(argv = {}) {
   }
 
   const installed = listInstalledSkillNames(projectRoot);
-  if (installed.includes('harness-prepare')) {
+  if (installed.includes('ns-harness-prepare')) {
     p.note(
       [
-        '/harness-prepare',
+        '/ns-harness-prepare',
         '',
         'Builds architecture rules, brownfield context, and AGENTS.md.',
         'Skip only if greenfield (no application code yet).',

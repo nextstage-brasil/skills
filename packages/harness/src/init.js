@@ -90,8 +90,8 @@ export async function runInit(argv = {}) {
   spinner.start('Installing skills via npx skills add…');
 
   try {
-    const wantsNsSkillCreator = plan.nsSkills.includes('skill-creator');
-    const resolvedWithoutSkillCreator = plan.nsSkills.filter((skill) => skill !== 'skill-creator');
+    const wantsNsSkillCreator = plan.nsSkills.includes('ns-skill-creator');
+    const resolvedWithoutSkillCreator = plan.nsSkills.filter((skill) => skill !== 'ns-skill-creator');
 
     if (resolvedWithoutSkillCreator.length > 0) {
       installSkills(resolvedWithoutSkillCreator, installOptions);
@@ -99,8 +99,8 @@ export async function runInit(argv = {}) {
     if (wantsNsSkillCreator) {
       spinner.message('Installing skill-creator (anthropics/skills)…');
       installSkillCreator(installOptions);
-      spinner.message('Overlaying NextStage skill-creator wrapper…');
-      installSkills(['skill-creator'], installOptions);
+      spinner.message('Installing NextStage ns-skill-creator wrapper…');
+      installSkills(['ns-skill-creator'], installOptions);
     }
     if (plan.externalSkills.length > 0) {
       spinner.message(`Installing external skills: ${plan.externalSkills.join(', ')}…`);
@@ -300,14 +300,13 @@ async function resolveInstallPlanFromArgv(argv, detection) {
 
   const mode = await p.select({
     message: 'What do you want to install?',
-    initialValue: 'delivery',
+    initialValue: 'spec-driven',
     options: [
-      { value: 'delivery', label: 'NextStage Spec-Driven', hint: 'base + PHPUnit/Cypress task generators' },
-      { value: 'gitlab', label: 'GitLab add-ons', hint: 'issue execution, board sync, CI generator' },
-      { value: 'implementation', label: 'Quality & test execution', hint: 'investigator + PHPUnit/Cypress impl' },
-      { value: 'complements', label: 'UI, docs, security complements', hint: 'code-frontend-design, code-docs-writer, code-best-practices' },
-      { value: 'full', label: 'Full optional stack', hint: 'all add-ons except --all niche skills' },
-      { value: 'brownfield', label: 'Brownfield only', hint: 'same base install — run /harness-prepare after' },
+      { value: 'spec-driven', label: 'Spec-Driven delivery', hint: 'face + workers + PHPUnit/Cypress task generators' },
+      { value: 'spec-driven-gitlab', label: 'Spec-Driven + GitLab', hint: 'adds issue execution, board sync, CI generator' },
+      { value: 'project-manager', label: 'Project Manager toolkit', hint: 'ns-project-manager + enricher — no code execution' },
+      { value: 'brownfield', label: 'Brownfield only', hint: 'harness + prepare — run /ns-harness-prepare after' },
+      { value: 'full', label: 'Full optional stack', hint: 'every skill in the catalog' },
       { value: 'all', label: 'All NextStage skills', hint: 'excludes Agents API external skills' },
       ...listExternalPresets().map((preset) => ({
         value: `external:${preset.id}`,
@@ -330,7 +329,7 @@ async function resolveInstallPlanFromArgv(argv, detection) {
   if (mode.startsWith('external:')) {
     const preset = getExternalPreset(mode.slice('external:'.length));
     return resolveInstallPlan({
-      nsSkillIds: preset?.nsSkills ?? ['nextstage-harness'],
+      nsSkillIds: preset?.nsSkills ?? ['ns-harness'],
       externalSkillIds: preset?.skills ?? [],
     });
   }
@@ -443,15 +442,15 @@ export function printList() {
       `Presets: ${presetIds}`,
       '',
       'Install a preset (skills + dependencies + scaffold):',
-      '  npx @nextstage-brasil/harness --preset delivery --yes',
-      '  npx @nextstage-brasil/harness --preset gitlab --yes',
+      '  npx @nextstage-brasil/harness --preset spec-driven --yes',
+      '  npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes',
       '  npx @nextstage-brasil/harness --preset agents-api --yes',
       '',
       'Install one skill only (no scaffold):',
-      '  npx @nextstage-brasil/harness --skill gitlab-board-sync --no-scaffold -y',
+      '  npx @nextstage-brasil/harness --skill ns-gitlab-board-sync --no-scaffold -y',
       '',
       'Preview what a preset would install:',
-      '  npx @nextstage-brasil/harness --preset gitlab --dry-run',
+      '  npx @nextstage-brasil/harness --preset spec-driven-gitlab --dry-run',
       '',
       'Refresh skills already in the project:',
       '  npx @nextstage-brasil/harness update',
