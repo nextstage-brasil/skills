@@ -11,13 +11,13 @@ If a GitLab MCP server is configured, offer to pull milestone burndown and merge
 ## Step 2 — Generate three reports
 
 ### Report 1: Technical team
-Audience: developers, QA, tech leads. Language: technical. Length: 150–250 words. Format: prose + next-sprint actions.
+Audience: developers, QA, tech leads. Register: technical. Natural language: same as the human (see SKILL.md Language matching). Length: 150–250 words. Format: prose + next-sprint actions.
 
 ### Report 2: Manager / PM / PMO
-Audience: project manager, coordinator, PMO. Language: risk- and decision-oriented — Green/Yellow/Red badge, at most 2 required decisions. Length: 150–200 words.
+Audience: project manager, coordinator, PMO. Register: risk- and decision-oriented — Green/Yellow/Red badge, at most 2 required decisions. Natural language: same as the human. Length: 150–200 words.
 
 ### Report 3: Executive / leadership
-Audience: C-level, directors. Language: business only — **never** mention story points, velocity, Lead Time, or unexplained acronyms. Length: 80–120 words.
+Audience: C-level, directors. Register: business only — **never** mention story points, velocity, Lead Time, or unexplained acronyms. Natural language: same as the human. Length: 80–120 words.
 
 ## Status classification rule
 

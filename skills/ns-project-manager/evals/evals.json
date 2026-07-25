@@ -48,6 +48,12 @@
       "prompt": "Discovery transcript for project RouteWise: [...]. Also, save everything as markdown as we go.",
       "expected_output": "Confirms the docs base folder (default docs/routewise/) once in Phase 1. After the Phase 1 gate, writes docs/routewise/00-clarification.md and docs/routewise/roadmap.md with the same content as the chat summary before asking the gate question. Does not re-ask about the docs path in later phases.",
       "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Escreve um status report para a diretoria — sprint 4, 8 de 10 stories entregues, 3 bugs abertos 1 resolvido, velocity caiu 2 sprints seguidos, bloqueio de hardware no US-03 ainda aberto.",
+      "expected_output": "Triggers Phase 7 Status Report. All three audience reports and the chat reply are in Portuguese (matching the human). Executive report has no story-points/velocity jargon. Managerial report shows Red. Does not reply in English.",
+      "files": []
     }
   ]
 }

@@ -1,6 +1,6 @@
 ---
 name: ns-project-manager
-description: End-to-end PM workflow skill — from raw transcript to committed delivery date. Runs a gated phase pipeline (clarification → structuring → RICE/WSJF prioritization → sprint scheduling → PERT/Monte Carlo forecast) and on-demand modes (risk monitor, status report, meeting digest, compliance checklist, NL-to-issue parsing, OKR aligner). Use whenever the user pastes a discovery transcript, asks to structure requirements, prioritize a backlog, build a sprint schedule, forecast delivery (P50/P85/P95), monitor project health, write a status report, digest a meeting, create a deploy checklist, parse a Slack message into a ticket, or validate OKRs — even if they don't name the phase or framework. Never dumps all phases at once; stops at each gate for confirmation. Deterministic math always via scripts/, never in the LLM. GitLab MCP when real project data is needed.
+description: (NS) Gated PM: clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk/status/meeting/OKR. Use on transcripts, backlog, timeline, delivery date, status — even if PM unnamed.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -100,6 +100,22 @@ Read `references/anti-patterns.md` before structuring any User Story in Phase 2.
 
 Use the GitLab MCP server already configured in this environment. If unavailable, say so and proceed with user-provided data. Never invent tool names or setup steps. No mutation (`create_issue`/`update_issue`) without explicit human confirmation.
 
+## Language matching (mandatory)
+
+Detect the language of the **human's latest message** (not the skill files, not pasted third-party English docs alone) and use that language for:
+
+- Chat replies, gate questions, clarifications, and fill-in templates shown to the user
+- All phase summaries and on-demand reports (status, meeting digest, risk monitor, compliance, OKR, forecasts)
+- Persisted `docs/<project-slug>/*.md` / `roadmap.md` content
+
+Rules:
+
+1. **Mirror the human** — Portuguese in → Portuguese out; English in → English out; same for any other language they write in.
+2. **Mixed input** — if the human writes in language A and pastes a transcript/data in language B, reply and report in **A**; quote source phrases in B only when needed for fidelity.
+3. **Switch** — if the human changes language mid-conversation, switch immediately; do not stay locked to the first turn.
+4. **Keep as-is** — proper nouns, IDs, script/CLI names, JSON keys for scripts, GitLab labels, and framework acronyms (RICE, WSJF, P50/P85/P95, OKR) stay in their canonical form.
+5. **Default** — if the human's language is ambiguous (emoji-only, single proper noun), default to English.
+
 ## Global behavioral constraints
 
 - Never invent stakeholders, systems, integrations, SLAs, or metrics not in the input.
@@ -107,7 +123,8 @@ Use the GitLab MCP server already configured in this environment. If unavailable
 - Never compute RICE, WSJF, Monte Carlo, flow metrics, or OKR rubric in the LLM — always run the script.
 - Never dump multiple pipeline phases in one response.
 - Gold plating forbidden: every output line traces back to input or prior phase data.
-- Close analytical drafts with: "⚠️ Requires human review before entering a sprint."
+- Close analytical drafts with the human-language equivalent of: "⚠️ Requires human review before entering a sprint."
+- Always follow **Language matching** above for every user-facing output.
 
 ## File index
 
