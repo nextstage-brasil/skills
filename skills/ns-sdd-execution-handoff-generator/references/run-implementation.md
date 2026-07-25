@@ -13,7 +13,7 @@ session.
 - `{product_root}/docs/versions/{version_san}/execution-handoff.md` exists
 - `{product_root}/docs/versions/{version_san}/tasks/task-*.md` exist
 
-If tasks exist but handoff does not: invoke **`ns-execution-handoff-generator`**
+If tasks exist but handoff does not: invoke **`ns-sdd-execution-handoff-generator`**
 before coding.
 
 ## Routing (step 0)
@@ -61,7 +61,7 @@ For each task until scope is done or all tasks complete:
    - **Progress** and **Next task**
 7. Advance to next `pending` task
 
-See `../ns-execution-handoff-generator/SKILL.md` for status-update rules and version
+See `../SKILL.md` for status-update rules and version
 status transitions.
 
 ## Session end (step 3)
@@ -113,6 +113,6 @@ After human confirms (or documented waiver):
 
 ## References
 
-- Handoff generation and updates: `../ns-execution-handoff-generator/SKILL.md`
+- Handoff generation and updates: `../SKILL.md`
 - Handoff template: `execution-handoff.template.md`
 - Orchestrated mode: `../../ns-execution-orchestrator/SKILL.md`

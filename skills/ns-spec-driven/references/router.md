@@ -38,7 +38,7 @@ Map natural-language triggers to **phase** and **worker skill path** (under `.ag
 | Trigger phrases | Worker | Order |
 | --------------- | ------ | ----- |
 | "generate tasks", "task breakdown", Medium+ execute prep | `ns-sdd-task-generator` | After requirements (+ consistency if Large) |
-| after tasks exist | `ns-execution-handoff-generator` | Creates/updates `execution-handoff.md` |
+| after tasks exist | `ns-sdd-execution-handoff-generator` | Creates/updates `execution-handoff.md` |
 
 ## Execute
 
@@ -47,7 +47,7 @@ Map natural-language triggers to **phase** and **worker skill path** (under `.ag
 | "implement", "build it", "run tasks" | See parent SKILL.md execute routing |
 | GitLab issue URL | `ns-execution-gitlab-issue` (if installed + MCP) |
 | subversion / slice | `ns-execution-orchestrator` |
-| handoff present | `ns-execution-handoff-generator` references + `ns-code-coder` / `ns-code-autonomous` |
+| handoff present | `ns-sdd-execution-handoff-generator` references + `ns-code-coder` / `ns-code-autonomous` |
 
 ## Close
 

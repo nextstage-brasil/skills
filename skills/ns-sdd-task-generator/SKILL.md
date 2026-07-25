@@ -76,4 +76,4 @@ For subversions: under `subversions/{subversion_san}/tasks/`.
 
 - `ns-pm-unit-test-task-generator` — after backend implementation tasks
 - `ns-pm-e2e-test-task-generator` — after frontend tasks with UI
-- `ns-execution-handoff-generator` — after **all** tasks for the version are written (planning closure)
+- `ns-sdd-execution-handoff-generator` — after **all** tasks for the version are written (planning closure)

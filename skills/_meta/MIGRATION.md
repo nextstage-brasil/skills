@@ -49,7 +49,7 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | Skill | `depends` |
 |-------|-----------|
 | `ns-harness` | — (base dependency) |
-| SDD consumers (`ns-sdd-clarify-requirements`, `ns-sdd-requirements-generator`, `ns-sdd-analyze-consistency`, `ns-sdd-task-generator`, `ns-execution-handoff-generator`, `ns-sdd-version-partitioner`, `ns-harness-bootstrap-brownfield`, `ns-sdd-living-spec-consolidator`, `ns-code-coder`, `ns-code-investigator`) | `ns-harness` |
+| SDD consumers (`ns-sdd-clarify-requirements`, `ns-sdd-requirements-generator`, `ns-sdd-analyze-consistency`, `ns-sdd-task-generator`, `ns-sdd-execution-handoff-generator`, `ns-sdd-version-partitioner`, `ns-harness-bootstrap-brownfield`, `ns-sdd-living-spec-consolidator`, `ns-code-coder`, `ns-code-investigator`) | `ns-harness` |
 | `ns-harness-architecture-rules` | `ns-harness` |
 | `ns-harness-agents-md` | `ns-harness` |
 | `ns-mcp-gitlab-usage` | `ns-harness` |
@@ -92,6 +92,10 @@ All catalog skills were renamed with a global `ns-` prefix. Six SDD planning wor
 **Consumer action:** reinstall via `npx @nextstage-brasil/harness` or `npx skills add nextstage-brasil/skills@<new-name>`. After install, `harness init` / `harness update` removes retired directories when the replacement skill is present (`packages/harness/templates/retired-skills.json`). Preview: `npx @nextstage-brasil/harness prune-retired-skills --dry-run`.
 
 New preset: `--preset project-manager` (`ns-project-manager`, `ns-requirements-enricher`).
+
+## Rename — `ns-execution-handoff-generator` → `ns-sdd-execution-handoff-generator` (2026-07-25)
+
+Aligned with other SDD planning workers (`ns-sdd-*`). Bridge planning → implementation unchanged; only the skill id moved. Retired in `packages/harness/templates/retired-skills.json`.
 
 ## Rename — `ns-pm-e2e-test-generator` → `ns-pm-e2e-test-task-generator` (2026-07-25)
 

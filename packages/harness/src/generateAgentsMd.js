@@ -19,7 +19,7 @@ const SDD_PLANNING = [
   'ns-sdd-analyze-consistency',
   'ns-sdd-version-partitioner',
   'ns-sdd-task-generator',
-  'ns-execution-handoff-generator',
+  'ns-sdd-execution-handoff-generator',
   'ns-pm-unit-test-task-generator',
   'ns-pm-e2e-test-task-generator',
 ];

@@ -13,7 +13,7 @@ depends:
   - ns-sdd-analyze-consistency
   - ns-sdd-version-partitioner
   - ns-sdd-task-generator
-  - ns-execution-handoff-generator
+  - ns-sdd-execution-handoff-generator
   - ns-code-coder
   - ns-code-autonomous
   - ns-execution-orchestrator
@@ -81,7 +81,7 @@ flowchart LR
 | Specify | Always for Medium+ | `ns-sdd-requirements-generator` |
 | Consistency | Before tasks (Large+) | `ns-sdd-analyze-consistency` |
 | Partition | Multi-slice versions | `ns-sdd-version-partitioner` |
-| Tasks | Medium+ formal tasks | `ns-sdd-task-generator` + `ns-execution-handoff-generator` |
+| Tasks | Medium+ formal tasks | `ns-sdd-task-generator` + `ns-sdd-execution-handoff-generator` |
 | Execute | Always | See execute routing below |
 | Close | After delivery | `ns-code-reviewer` → `ns-sdd-living-spec-consolidator` |
 | Quick | ≤3 files, one-sentence scope | `ns-code-coder` only |
@@ -119,7 +119,7 @@ Details: `references/auto-sizing.md`, `references/router.md`.
 | Context | Worker |
 | ------- | ------ |
 | Ad-hoc / quick / single task | `ns-code-coder` |
-| Version with `execution-handoff.md` | `ns-execution-handoff-generator` run-implementation + `ns-code-coder` or `ns-code-autonomous` |
+| Version with `execution-handoff.md` | `ns-sdd-execution-handoff-generator` run-implementation + `ns-code-coder` or `ns-code-autonomous` |
 | Partitioned version (subversions) | `ns-execution-orchestrator` |
 | GitLab issue URL + MCP available | `ns-execution-gitlab-issue` (soft — prefer when GitLab present) |
 | Autonomous multi-step local plan | `ns-code-autonomous` |
@@ -162,7 +162,7 @@ When a version or quick fix closes, report:
 - List Prepare as an SDD phase.
 - Hard-require complement skills.
 - Generate requirements/tasks yourself without delegating to PM workers.
-- Skip `ns-execution-handoff-generator` when formal tasks exist for a version.
+- Skip `ns-sdd-execution-handoff-generator` when formal tasks exist for a version.
 
 ## Invocation examples
 

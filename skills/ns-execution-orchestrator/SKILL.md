@@ -95,7 +95,7 @@ For each slice whose roadmap `status` is `planned` or `in_progress`:
      instead of proceeding by assumption
 4. **Validate** the subagent result:
    - Every slice task marked `completed` or `waived` (waiver noted in the handoff)
-   - Slice handoff updated per `ns-execution-handoff-generator` (time block + task rows)
+   - Slice handoff updated per `ns-sdd-execution-handoff-generator` (time block + task rows)
    - Roadmap row updated by the worker (or update it yourself)
 5. **Commit** (parent only): one Conventional Commit per slice.
 6. **Mark** the roadmap row → `completed` (if the worker did not).
@@ -113,7 +113,7 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 4. Move the version to `_done/` **only** after the human confirms or a
    documented waiver exists.
 5. If a version `execution-handoff.md` exists, close its final delivery block
-   and recompute total process seconds per `ns-execution-handoff-generator`.
+   and recompute total process seconds per `ns-sdd-execution-handoff-generator`.
 
 ## Stop conditions (only reasons to pause)
 
@@ -157,7 +157,7 @@ Orchestrate the partitioned implementation of apps/my-product 3.8.0.
 | Stage                                     | Skill                        |
 | ----------------------------------------- | ---------------------------- |
 | Partition version → roadmap + subversions | `ns-sdd-version-partitioner`        |
-| Handoff generation and updates            | `ns-execution-handoff-generator` |
+| Handoff generation and updates            | `ns-sdd-execution-handoff-generator` |
 | Slice worker (per-slice implementation)   | `ns-code-coder`                 |
 | End-of-version review gate                | `ns-code-reviewer`              |
 | Living specs consolidation                | `ns-sdd-living-spec-consolidator`   |

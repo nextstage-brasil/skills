@@ -38,7 +38,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code
 | `ns-sdd-analyze-consistency`      | Validate requirements before task generation                                |
 | `ns-sdd-version-partitioner`      | Split large versions into subversions + roadmap                             |
 | `ns-sdd-task-generator`           | Backend/frontend/infra implementation task files                            |
-| `ns-execution-handoff-generator` | Generate and update `execution-handoff.md` (task order + time tracking) |
+| `ns-sdd-execution-handoff-generator` | Generate and update `execution-handoff.md` (task order + time tracking) |
 | `ns-pm-unit-test-task-generator` | Backend PHPUnit/integration test tasks                                      |
 | `ns-pm-e2e-test-task-generator`  | Cypress E2E planning tasks                                                  |
 | `ns-sdd-living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs                     |

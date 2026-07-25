@@ -13,7 +13,7 @@ Progress is tracked on disk — not in chat history.
 ## Handoff fields to read
 
 1. Current task id and status table.
-2. `Total process time (s)` — preserve and update per `ns-execution-handoff-generator`.
+2. `Total process time (s)` — preserve and update per `ns-sdd-execution-handoff-generator`.
 3. Blockers or notes from last session.
 
 ## Resume workflow

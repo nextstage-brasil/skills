@@ -11,7 +11,7 @@
       "ns-sdd-analyze-consistency",
       "ns-sdd-version-partitioner",
       "ns-sdd-task-generator",
-      "ns-execution-handoff-generator",
+      "ns-sdd-execution-handoff-generator",
       "ns-code-coder",
       "ns-code-autonomous",
       "ns-execution-orchestrator",
@@ -37,7 +37,7 @@
     "ns-sdd-analyze-consistency": ["ns-harness"],
     "ns-sdd-version-partitioner": ["ns-harness"],
     "ns-sdd-task-generator": ["ns-harness"],
-    "ns-execution-handoff-generator": ["ns-harness"],
+    "ns-sdd-execution-handoff-generator": ["ns-harness"],
     "ns-pm-unit-test-task-generator": [],
     "ns-pm-e2e-test-task-generator": [],
     "ns-sdd-living-spec-consolidator": ["ns-harness"],
@@ -129,6 +129,7 @@
         "ns-sdd-analyze-consistency",
         "ns-sdd-version-partitioner",
         "ns-sdd-task-generator",
+        "ns-sdd-execution-handoff-generator",
         "ns-pm-unit-test-task-generator",
         "ns-pm-e2e-test-task-generator",
         "ns-sdd-living-spec-consolidator"
@@ -150,7 +151,7 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["ns-code-coder", "ns-code-autonomous", "ns-code-frontend-design", "ns-code-docs-writer", "ns-code-best-practices", "ns-execution-orchestrator", "ns-execution-handoff-generator", "ns-execution-gitlab-issue", "ns-code-investigator", "ns-code-reviewer", "ns-code-e2e-tests", "ns-code-backend-tests"]
+      "skills": ["ns-code-coder", "ns-code-autonomous", "ns-code-frontend-design", "ns-code-docs-writer", "ns-code-best-practices", "ns-execution-orchestrator", "ns-execution-gitlab-issue", "ns-code-investigator", "ns-code-reviewer", "ns-code-e2e-tests", "ns-code-backend-tests"]
     },
     "brownfield": {
       "label": "Brownfield",

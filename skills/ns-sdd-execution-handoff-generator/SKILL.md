@@ -1,5 +1,5 @@
 ---
-name: ns-execution-handoff-generator
+name: ns-sdd-execution-handoff-generator
 description: (NS) Generate and update execution-handoff.md for planned SDD versions — operational prompt, per-task status table, and time tracking in seconds. Use at the end of planning after all task-NNN-*.md files exist, when tasks exist but handoff is missing, or when updating task status during version implementation. Do NOT use for ad-hoc coding without a version lifecycle, version partitioning (ns-sdd-version-partitioner), or GitLab-only issue execution (ns-execution-gitlab-issue).
 license: Apache-2.0
 metadata:

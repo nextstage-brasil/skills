@@ -86,7 +86,7 @@ See `ns-sdd-version-partitioner` skill and `core-subversions` rule when present 
 - Must include **Time tracking (seconds)** with `Total process time (s)`
   (planning → final delivery).
 - Update timestamps and totals during execution, review, living specs, and closure.
-- Generate and maintain via `ns-execution-handoff-generator` skill.
+- Generate and maintain via `ns-sdd-execution-handoff-generator` skill.
 
 Slice handoff (partitioned versions):
 

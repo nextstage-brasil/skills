@@ -7,7 +7,7 @@
     },
     {
       "prompt": "docs/versions/1.0.0/ already has tasks and execution-handoff.md. Implement the next pending task.",
-      "expected": "Invokes ns-spec-driven resume path: reads execution-handoff.md, skips planning phases, delegates execute via ns-execution-handoff-generator run-implementation and ns-code-coder or ns-code-autonomous. No new requirements.md."
+      "expected": "Invokes ns-spec-driven resume path: reads execution-handoff.md, skips planning phases, delegates execute via ns-sdd-execution-handoff-generator run-implementation and ns-code-coder or ns-code-autonomous. No new requirements.md."
     },
     {
       "prompt": "Quick fix: add a maxlength attribute to the profile name input — one file.",

@@ -38,7 +38,7 @@ Report back:
 - [ ] Every slice task is `completed` or `waived` (waiver reason captured)
 - [ ] No task left `in_progress` or silently skipped
 - [ ] Changes are confined to `{product_root}/**`
-- [ ] Slice handoff updated per `ns-execution-handoff-generator` (task rows + time block)
+- [ ] Slice handoff updated per `ns-sdd-execution-handoff-generator` (task rows + time block)
 - [ ] Roadmap row reflects the real state
 
 ## Commit (parent only)
