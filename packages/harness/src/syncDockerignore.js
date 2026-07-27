@@ -18,12 +18,14 @@ export function patchDockerignoreContent(existingContent) {
 }
 
 /**
- * Merge harness-generated paths into the project .dockerignore when present.
+ * Ensure harness ignore paths are in `.dockerignore`.
+ * Creates the file when missing; otherwise merges the managed block.
  */
 export function syncDockerignore(projectRoot) {
   const dockerignorePath = join(projectRoot, '.dockerignore');
   if (!existsSync(dockerignorePath)) {
-    return { written: [], skipped: [dockerignorePath] };
+    writeFileSync(dockerignorePath, buildDockerignoreBlock(), 'utf8');
+    return { written: [dockerignorePath], skipped: [] };
   }
 
   const existing = readFileSync(dockerignorePath, 'utf8');

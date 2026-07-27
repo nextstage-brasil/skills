@@ -7,8 +7,11 @@ export const AGENTS_HOME = '.agents';
 export const HARNESS_ROOT = '.nextstage-harness';
 export const HARNESS_RULES_DIR = join(HARNESS_ROOT, 'rules');
 
-export const AGENTS_LAYOUT_DIRS = [
-  join(AGENTS_HOME, 'docs'),
+/** SDD artifact dirs at project root (created by scaffold). */
+export const DOCS_LAYOUT_DIRS = [
+  'docs/context',
+  'docs/specs',
+  'docs/versions',
 ];
 
 export const AGENTS_SKILLS_DIR = join(AGENTS_HOME, 'skills');

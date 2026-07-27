@@ -18,8 +18,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
   .claude/rules/*.md                # GENERATED — Claude Code rule adapters
   .agents/skills/                   # Installed skills (Skills CLI canonical; Cursor reads here)
   .claude/skills/ → symlink          # Claude Code skill adapters (harness sync)
-  .agents/docs/                     # Optional agent-oriented notes
-  docs/context|specs|versions/      # SDD artifacts
+  docs/context|specs|versions/      # SDD artifacts (.gitkeep in each)
 ```
 
 **Rules:** edit `.nextstage-harness/rules/` → `harness sync` → `.cursor/rules/`, `.claude/rules/`. Prefer `harness add-rule <name>` for new rules (creates stub, updates `manifest.json`, syncs). See `.nextstage-harness/README.md`.
@@ -33,7 +32,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 | `npx @nextstage-brasil/harness` | Interactive init (default) |
 | `harness init [options]` | Install skills + scaffold + sync |
 | `harness prepare` | Print full brownfield prepare instructions (`/ns-harness-prepare`) |
-| `harness sync` | Regenerate rule and skill adapters from canonical |
+| `harness sync` | Regenerate adapters + ensure `.dockerignore` harness ignore block (create if missing) |
 | `harness add-rule <name>` | Create canonical rule + manifest entry + sync |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |

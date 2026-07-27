@@ -2,7 +2,7 @@ import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  AGENTS_LAYOUT_DIRS,
+  DOCS_LAYOUT_DIRS,
   HARNESS_ROOT,
   HARNESS_RULES_DIR,
 } from './agentsLayout.js';
@@ -22,7 +22,7 @@ export function scaffoldProject(projectRoot, options = {}) {
   }
 
   if (docs) {
-    for (const dir of AGENTS_LAYOUT_DIRS) {
+    for (const dir of DOCS_LAYOUT_DIRS) {
       const target = join(projectRoot, dir);
       if (existsSync(target)) {
         skipped.push(`${dir}/`);
@@ -30,22 +30,12 @@ export function scaffoldProject(projectRoot, options = {}) {
         mkdirSync(target, { recursive: true });
         created.push(`${dir}/`);
       }
-    }
 
-    for (const dir of ['docs/context', 'docs/specs', 'docs/versions']) {
-      const target = join(projectRoot, dir);
-      if (existsSync(target)) {
-        skipped.push(`${dir}/`);
-      } else {
-        mkdirSync(target, { recursive: true });
-        created.push(`${dir}/`);
+      const gitkeep = join(target, '.gitkeep');
+      if (!existsSync(gitkeep)) {
+        writeUtf8(gitkeep, '');
+        created.push(`${dir}/.gitkeep`);
       }
-    }
-
-    const gitkeep = join(projectRoot, 'docs', 'versions', '.gitkeep');
-    if (!existsSync(gitkeep)) {
-      writeUtf8(gitkeep, '');
-      created.push('docs/versions/.gitkeep');
     }
   }
 

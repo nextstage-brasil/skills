@@ -173,7 +173,7 @@ export async function runInit(argv = {}) {
     try {
       const dockerignoreResult = syncDockerignore(detection.projectRoot);
       if (dockerignoreResult.written.length > 0) {
-        p.log.success('Updated .dockerignore with harness ignore paths');
+        p.log.success('Ensured .dockerignore has harness ignore paths');
       }
     } catch (error) {
       p.log.warn(error instanceof Error ? error.message : String(error));

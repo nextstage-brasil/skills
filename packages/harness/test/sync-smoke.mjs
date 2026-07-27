@@ -65,6 +65,14 @@ try {
     readFileSync(join(tempDir, '.nextstage-harness', 'README.md'), 'utf8').includes('add-rule'),
     'harness README should mention add-rule',
   );
+  for (const dir of ['docs/context', 'docs/specs', 'docs/versions']) {
+    assert(existsSync(join(tempDir, ...dir.split('/'))), `scaffold should create ${dir}`);
+    assert(
+      existsSync(join(tempDir, ...dir.split('/'), '.gitkeep')),
+      `scaffold should create ${dir}/.gitkeep`,
+    );
+  }
+  assert(!existsSync(join(tempDir, '.agents', 'docs')), 'scaffold must not create .agents/docs');
 
   writeFileSync(join(tempDir, '.nextstage-harness', 'README.md'), '# stale guide\n', 'utf8');
   const readmeResync = scaffoldProject(tempDir, { agents: true, docs: false });
@@ -234,13 +242,28 @@ try {
   );
   assert(!frontendEntry.cursor.alwaysApply, 'globs mode should not set alwaysApply');
 
-  // 9. syncDockerignore patches existing .dockerignore
+  // 9. syncDockerignore creates missing .dockerignore, then patches existing
+  const dockerignoreCreateDir = join(tempDir, 'dockerignore-create');
+  mkdirSync(dockerignoreCreateDir, { recursive: true });
+  const createdDockerignore = syncDockerignore(dockerignoreCreateDir);
+  const createdDockerignorePath = join(dockerignoreCreateDir, '.dockerignore');
+  assert(createdDockerignore.written.length === 1, 'syncDockerignore should create .dockerignore when missing');
+  assert(existsSync(createdDockerignorePath), 'syncDockerignore should write .dockerignore file');
+  const createdDockerignoreContent = readFileSync(createdDockerignorePath, 'utf8');
+  for (const entry of ['/docs', '/.agents', '/.cursor', '/.claude', '/AGENTS.md', '/CLAUDE.md']) {
+    assert(createdDockerignoreContent.includes(entry), `created dockerignore should include ${entry}`);
+  }
+
   const dockerignorePath = join(tempDir, '.dockerignore');
   writeFileSync(dockerignorePath, 'node_modules\n', 'utf8');
   const dockerignoreSync = syncDockerignore(tempDir);
   assert(dockerignoreSync.written.length === 1, 'syncDockerignore should update .dockerignore');
   const dockerignoreContent = readFileSync(dockerignorePath, 'utf8');
   assert(dockerignoreContent.startsWith('node_modules\n'), 'syncDockerignore should preserve existing entries');
+  assert(dockerignoreContent.includes('/docs'), 'dockerignore should include /docs');
+  assert(dockerignoreContent.includes('/.agents'), 'dockerignore should include /.agents');
+  assert(dockerignoreContent.includes('/.cursor'), 'dockerignore should include /.cursor');
+  assert(dockerignoreContent.includes('/.claude'), 'dockerignore should include /.claude');
   assert(dockerignoreContent.includes('/AGENTS.md'), 'dockerignore should include AGENTS.md');
   assert(dockerignoreContent.includes('/AGENTS.local.md'), 'dockerignore should include AGENTS.local.md');
   assert(dockerignoreContent.includes('/.worktrees/'), 'dockerignore should include .worktrees');
