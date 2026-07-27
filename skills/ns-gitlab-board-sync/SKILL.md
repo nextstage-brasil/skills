@@ -1,12 +1,12 @@
 ---
 name: ns-gitlab-board-sync
-description: (NS) Sync existing GitLab issues with local planning and execution — milestone, RF labels, status transitions, assignee, estimates, spent time. Use during implementation when tasks link to GitLab issues or after plan-version-from-gitlab sync — not for creating new issues (use ns-mcp-gitlab-usage). Always use atomic set_issue_labels and three-step status cycle. Read ns-mcp-gitlab-usage for tool contracts.
+description: (NS) Sync existing GitLab issues with local planning and execution — milestone, RF labels, status transitions, assignee, estimates, spent time. Use during implementation when tasks link to GitLab issues or after plan-version-from-gitlab sync — not for creating new issues (use mcp-gitlab-usage). Always use atomic set_issue_labels and three-step status cycle. Read mcp-gitlab-usage for tool contracts.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
   version: "1.0"
 depends:
-  - ns-mcp-gitlab-usage
+  - mcp-gitlab-usage
 ---
 
 # GitLab Board Sync
@@ -15,7 +15,7 @@ Mirror local SDD planning/execution state onto **existing** GitLab issues. Does 
 
 ## Prerequisites
 
-1. GitLab MCP available — follow `ns-mcp-gitlab-usage` for all tool calls
+1. GitLab MCP available — follow `mcp-gitlab-usage` for all tool calls
 2. If multiple GitLab MCP servers: ask human which to use
 3. `{product_root}/docs/context/gitlab-sync-config.md` validated
 4. For post-planning batch: `gitlab-issue-feature-map.md` exists
@@ -87,4 +87,4 @@ add_issue_comment (internal=true)
 | File                                        | When                   |
 | ------------------------------------------- | ---------------------- |
 | `references/gitlab-sync-config.template.md` | Bootstrap config       |
-| `ns-mcp-gitlab-usage`                          | Tool schemas and gates |
+| `mcp-gitlab-usage`                          | Tool schemas and gates |

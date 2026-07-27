@@ -1,13 +1,13 @@
 ---
 name: ns-execution-gitlab-issue
-description: (NS) Execute a GitLab issue end-to-end — first-act status, branch-reuse and source-branch gates, single-worktree isolation, atomic delivery, MR lifecycle, mandatory code review gate with bounded fix loop. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly — not for local-only ad-hoc coding (use ns-code-coder) or non-GitLab autonomous runs (use ns-code-autonomous standalone). Delegates actual coding to the ns-code-autonomous engine. Requires ns-mcp-gitlab-usage for MCP and ns-code-reviewer for the review gate.
+description: (NS) Execute a GitLab issue end-to-end — first-act status, branch-reuse and source-branch gates, single-worktree isolation, atomic delivery, MR lifecycle, mandatory code review gate with bounded fix loop. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly — not for local-only ad-hoc coding (use ns-code-coder) or non-GitLab autonomous runs (use ns-code-autonomous standalone). Delegates actual coding to the ns-code-autonomous engine. Requires mcp-gitlab-usage for MCP and ns-code-reviewer for the review gate.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
   version: "1.0"
 depends:
   - ns-harness
-  - ns-mcp-gitlab-usage
+  - mcp-gitlab-usage
   - ns-code-reviewer
   - ns-code-autonomous
 ---
@@ -18,7 +18,7 @@ Owns GitLab issue state end to end — status, branch/worktree lifecycle, MR, co
 
 ## Harness discovery
 
-See `../ns-harness/references/harness-discovery.md`. Read `ns-mcp-gitlab-usage` before MCP calls.
+See `../ns-harness/references/harness-discovery.md`. Read `mcp-gitlab-usage` before MCP calls.
 
 ## Inputs
 
@@ -112,19 +112,19 @@ Create `WORKTREE_ROOT` per `references/worktree-setup.md` — always `{product_r
 | Worktree conflict (same issue, another run)               | Stop unless explicit resume                       |
 | Ambiguous or conflicting acceptance criteria              | Stop — ask once                                   |
 | MCP unavailable or auth failure                           | Stop — state blocker                              |
-| `project_id` trio not confirmed                           | Stop per `ns-mcp-gitlab-usage`                       |
+| `project_id` trio not confirmed                           | Stop per `mcp-gitlab-usage`                       |
 | Work on protected/base branch per `gitlab-sync-config.md` | Stop                                              |
 | Destructive ops (issue delete, force-push main/master)    | Stop — require explicit human                     |
 | Product decision not stated in the issue                  | Stop — ask once                                   |
 | Engine reports a destructive doubt                        | Pause/resume per Phase 2 step 4 — not a hard stop |
 
-See `ns-mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
+See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 
 ## Related skills
 
 | Skill               | Role                             |
 | ------------------- | -------------------------------- |
-| `ns-mcp-gitlab-usage`  | All GitLab tools                 |
+| `mcp-gitlab-usage`  | All GitLab tools                 |
 | `ns-gitlab-board-sync` | Status label semantics           |
 | `ns-code-reviewer`     | Phase 4 gate                     |
 | `ns-code-autonomous`   | Phase 2 execution engine         |

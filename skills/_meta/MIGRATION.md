@@ -52,11 +52,11 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | SDD consumers (`ns-sdd-clarify-requirements`, `ns-sdd-requirements-generator`, `ns-sdd-analyze-consistency`, `ns-sdd-task-generator`, `ns-sdd-execution-handoff-generator`, `ns-sdd-version-partitioner`, `ns-harness-bootstrap-brownfield`, `ns-sdd-living-spec-consolidator`, `ns-code-coder`, `ns-code-investigator`) | `ns-harness` |
 | `ns-harness-architecture-rules` | `ns-harness` |
 | `ns-harness-agents-md` | `ns-harness` |
-| `ns-mcp-gitlab-usage` | `ns-harness` |
-| `ns-code-reviewer` | `ns-harness`, `ns-mcp-gitlab-usage` |
-| `ns-execution-gitlab-issue` | `ns-harness`, `ns-mcp-gitlab-usage`, `ns-code-reviewer`, `ns-code-autonomous` (calls it internally for Phase 2) |
+| `mcp-gitlab-usage` | `ns-harness` |
+| `ns-code-reviewer` | `ns-harness`, `mcp-gitlab-usage` |
+| `ns-execution-gitlab-issue` | `ns-harness`, `mcp-gitlab-usage`, `ns-code-reviewer`, `ns-code-autonomous` (calls it internally for Phase 2) |
 | `ns-code-autonomous` | `ns-harness`, `ns-code-reviewer` |
-| `ns-gitlab-board-sync` | `ns-mcp-gitlab-usage` |
+| `ns-gitlab-board-sync` | `mcp-gitlab-usage` |
 
 SDD workflow ordering (`ns-sdd-clarify-requirements` → `ns-sdd-requirements-generator` → …) and planning/execution pairs (`ns-pm-e2e-test-task-generator` ↔ `ns-code-e2e-tests`) stay as "Related skills" text only — separate install phases.
 
@@ -92,6 +92,10 @@ All catalog skills were renamed with a global `ns-` prefix. Six SDD planning wor
 **Consumer action:** reinstall via `npx @nextstage-brasil/harness` or `npx skills add nextstage-brasil/skills@<new-name>`. After install, `harness init` / `harness update` removes retired directories when the replacement skill is present (`packages/harness/templates/retired-skills.json`). Preview: `npx @nextstage-brasil/harness prune-retired-skills --dry-run`.
 
 New preset: `--preset project-manager` (`ns-project-manager`, `ns-requirements-enricher`).
+
+## Rename — `ns-mcp-gitlab-usage` → `mcp-gitlab-usage` (2026-07-27)
+
+GitLab MCP usage skill drops the `ns-` prefix (exception to the global `ns-` catalog convention). Retired in `packages/harness/templates/retired-skills.json`.
 
 ## Rename — `ns-execution-handoff-generator` → `ns-sdd-execution-handoff-generator` (2026-07-25)
 

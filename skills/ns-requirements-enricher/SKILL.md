@@ -17,7 +17,7 @@ metadata:
   version: "1.0"
 depends:
   - ns-harness
-  - ns-mcp-gitlab-usage
+  - mcp-gitlab-usage
 ---
 
 # Requirements Enricher
@@ -37,7 +37,7 @@ Both modes share Phases 2–3 (investigation + grill-me). Phase 1 (MCP load) app
 
 See `../ns-harness/references/harness-discovery.md` and `../ns-harness/references/artifact-layout.md`. Resolve `{product_root}` before codebase investigation.
 
-Read `../ns-mcp-gitlab-usage/SKILL.md` before MCP calls (`get_mcp_gitlab_skill` version check on first access).
+Read `../mcp-gitlab-usage/SKILL.md` before MCP calls (`get_mcp_gitlab_skill` version check on first access).
 
 ## Objective
 
@@ -69,7 +69,7 @@ Do **not** implement, commit, change issue status, create files, or ask question
 
 1. Read `{product_root}/AGENTS.md` — Docker/runtime context if investigation touches tests or services.
 2. Read `{product_root}/agents.local.md` when present — use **only** the GitLab MCP server named there.
-3. Follow `../ns-mcp-gitlab-usage/SKILL.md` for tool contracts.
+3. Follow `../mcp-gitlab-usage/SKILL.md` for tool contracts.
 
 ## Inputs
 
@@ -282,7 +282,7 @@ Do **not** create files, post to GitLab, or write version artifacts (`requiremen
 | ------------------------ | ------------------------------------------------------------------- |
 | `ns-execution-gitlab-issue`   | After requirements are clear; implements the issue                  |
 | `ns-code-reviewer`          | After code exists; reviews diffs                                    |
-| `ns-mcp-gitlab-usage`       | All MCP calls, version check, `add_issue_comment` contract          |
+| `mcp-gitlab-usage`       | All MCP calls, version check, `add_issue_comment` contract          |
 | `ns-sdd-clarify-requirements`   | Version-scope clarification in chat before `ns-sdd-requirements-generator` |
 | `ns-sdd-requirements-generator` | Produces `requirements.md` for a version — not per-issue enrichment |
 

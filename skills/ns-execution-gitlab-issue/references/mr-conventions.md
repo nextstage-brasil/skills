@@ -22,4 +22,4 @@ If `REUSE_MODE = true`, reuse the existing MR — never open a second one. Recor
 
 ## project_id
 
-Resolve per `ns-mcp-gitlab-usage`; confirm the trio with the human before creating or reusing the MR.
+Resolve per `mcp-gitlab-usage`; confirm the trio with the human before creating or reusing the MR.

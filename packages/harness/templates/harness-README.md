@@ -24,7 +24,7 @@ npx @nextstage-brasil/harness <command>
 | Spec-driven delivery | `/ns-spec-driven` |
 | Optional complements (UI, docs, security) | `npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y` |
 
-**In your AI agent:** open `AGENTS.md` at the project root, then invoke skills via the menu or slash (e.g. `/ns-code-coder`, `/ns-mcp-gitlab-usage`).
+**In your AI agent:** open `AGENTS.md` at the project root, then invoke skills via the menu or slash (e.g. `/ns-code-coder`, `/mcp-gitlab-usage`).
 
 ---
 
@@ -204,7 +204,7 @@ Optional complements (UI, docs, security hygiene) — install per skill:
 npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y
 ```
 
-GitLab execution: preset `spec-driven-gitlab` or skills like `ns-mcp-gitlab-usage`, `ns-execution-gitlab-issue`, `ns-gitlab-board-sync`.
+GitLab execution: preset `spec-driven-gitlab` or skills like `mcp-gitlab-usage`, `ns-execution-gitlab-issue`, `ns-gitlab-board-sync`.
 
 ---
 

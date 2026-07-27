@@ -26,4 +26,4 @@ Human confirmation gates for spec-driven workflows.
 
 - Never generate tasks without passing required gates.
 - When a step asks for explicit confirmation, do not proceed without it.
-- GitLab MCP flows have additional gates — see `ns-mcp-gitlab-usage` (`requirements_confirmed`, `projects_confirmed`, `issues_creation_confirmed`).
+- GitLab MCP flows have additional gates — see `mcp-gitlab-usage` (`requirements_confirmed`, `projects_confirmed`, `issues_creation_confirmed`).

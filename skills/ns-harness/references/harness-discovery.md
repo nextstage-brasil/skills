@@ -45,4 +45,4 @@ If none of the resolution steps above match (no `{harness_root}/`, no `.cursor/r
 
 ## MCP GitLab
 
-When GitLab MCP is available, follow the `ns-mcp-gitlab-usage` skill for tool contracts. Server-specific skill sync via `get_mcp_gitlab_skill` applies to MCP servers that expose it — not to this repository's copy of `ns-mcp-gitlab-usage`.
+When GitLab MCP is available, follow the `mcp-gitlab-usage` skill for tool contracts. Server-specific skill sync via `get_mcp_gitlab_skill` applies to MCP servers that expose it — not to this repository's copy of `mcp-gitlab-usage`.

@@ -42,7 +42,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code
 | `ns-pm-unit-test-task-generator` | Backend PHPUnit/integration test tasks                                      |
 | `ns-pm-e2e-test-task-generator`  | Cypress E2E planning tasks                                                  |
 | `ns-sdd-living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs                     |
-| `ns-mcp-gitlab-usage`         | GitLab MCP tool contracts, gates, and flows                                 |
+| `mcp-gitlab-usage`         | GitLab MCP tool contracts, gates, and flows                                 |
 | `ns-gitlab-board-sync`        | Sync existing issues (labels, milestone, time)                              |
 | `ns-gitlab-ci-generator`      | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                               |
 | `ns-execution-gitlab-issue`     | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `ns-code-autonomous` |
@@ -105,21 +105,21 @@ Consumer skills declare `depends` in frontmatter. Once the CLI supports it ([ver
 
 ```bash
 npx skills add nextstage-brasil/skills@ns-execution-gitlab-issue --full-depth -y
-# resolves: ns-harness → ns-mcp-gitlab-usage → ns-code-reviewer → ns-execution-gitlab-issue
+# resolves: ns-harness → mcp-gitlab-usage → ns-code-reviewer → ns-execution-gitlab-issue
 ```
 
 **Interim (until PR #861 merges):** `depends` is ignored by `skills@1.5.14`. Install peers manually:
 
 ```bash
 npx skills add nextstage-brasil/skills --full-depth -y \
-  --skill ns-harness --skill ns-mcp-gitlab-usage --skill ns-code-reviewer --skill ns-execution-gitlab-issue
+  --skill ns-harness --skill mcp-gitlab-usage --skill ns-code-reviewer --skill ns-execution-gitlab-issue
 ```
 
 **Single skill (project):**
 
 ```bash
 npx skills add nextstage-brasil/skills@ns-harness-codebase-reverse-spec --full-depth -y
-npx skills add nextstage-brasil/skills@ns-mcp-gitlab-usage --full-depth -y
+npx skills add nextstage-brasil/skills@mcp-gitlab-usage --full-depth -y
 npx skills add nextstage-brasil/skills@ns-sdd-requirements-generator --full-depth -y
 ```
 

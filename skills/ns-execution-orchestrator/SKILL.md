@@ -58,7 +58,7 @@ products in a monorepo. See the scope-isolation rule when present in the harness
 4. Load the `core-subversions` rule from the harness when present.
 5. If `{product_root}/docs/context/gitlab-sync-config.md` exists: ensure the
    work branch is created and checked out **before** the first slice subagent
-   runs (see `ns-mcp-gitlab-usage`). Never implement on a protected branch.
+   runs (see `mcp-gitlab-usage`). Never implement on a protected branch.
 
 ## Orchestration mandate
 
@@ -161,7 +161,7 @@ Orchestrate the partitioned implementation of apps/my-product 3.8.0.
 | Slice worker (per-slice implementation)   | `ns-code-coder`                 |
 | End-of-version review gate                | `ns-code-reviewer`              |
 | Living specs consolidation                | `ns-sdd-living-spec-consolidator`   |
-| Work branch / GitLab sync                 | `ns-mcp-gitlab-usage`           |
+| Work branch / GitLab sync                 | `mcp-gitlab-usage`           |
 
 ## References
 

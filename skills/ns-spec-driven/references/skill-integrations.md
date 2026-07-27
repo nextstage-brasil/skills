@@ -11,7 +11,7 @@ List `.agents/skills/` for:
 | `ns-code-frontend-design` | UI pages, components, design-brief, avoiding generic AI UI |
 | `ns-code-docs-writer` | README, `docs/` guides, human-facing markdown (not code comments) |
 | `ns-code-best-practices` | Security headers/CSP, compatibility, modernize pass (not full MR review) |
-| `ns-mcp-gitlab-usage` | GitLab MCP configured |
+| `mcp-gitlab-usage` | GitLab MCP configured |
 | `ns-execution-gitlab-issue` | User provides issue URL |
 
 ## If complement installed
@@ -47,8 +47,8 @@ npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-do
 
 | Installed | Behavior |
 | --------- | -------- |
-| `ns-mcp-gitlab-usage` + `ns-execution-gitlab-issue` | Prefer issue execution when `ISSUE_URL` present |
-| MCP only | Use MCP tools per `ns-mcp-gitlab-usage`; coding via `ns-code-autonomous` or `ns-code-coder` |
+| `mcp-gitlab-usage` + `ns-execution-gitlab-issue` | Prefer issue execution when `ISSUE_URL` present |
+| MCP only | Use MCP tools per `mcp-gitlab-usage`; coding via `ns-code-autonomous` or `ns-code-coder` |
 | Neither | Local execute only; mention `--preset spec-driven-gitlab` once if user references GitLab |
 
 ## ns-project-manager

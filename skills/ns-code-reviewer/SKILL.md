@@ -7,7 +7,7 @@ metadata:
   version: "1.0"
 depends:
   - ns-harness
-  - ns-mcp-gitlab-usage
+  - mcp-gitlab-usage
 ---
 
 # Code Reviewer
@@ -39,7 +39,7 @@ When invoker passes `ISSUE_URL` (or `project_id` + `issue_iid`):
 2. Diff `origin/<target>...origin/<source>` from synthesis — never review wrong branch.
 3. **Requirement proof gate:** every AC needs behavioral evidence; producer-only code without consumer is Critical.
 4. **Verdict (exactly one):** `Approved` | `Rejected` | `Blocked`
-5. Post internal GitLab comment via `ns-mcp-gitlab-usage` — first line: `Code Review | YYYY-MM-DD HH:MM (UTC) | Verdict: {Approved|Rejected|Blocked}`
+5. Post internal GitLab comment via `mcp-gitlab-usage` — first line: `Code Review | YYYY-MM-DD HH:MM (UTC) | Verdict: {Approved|Rejected|Blocked}`
 6. Last line of response to parent: `Code Review: {Approved|Rejected|Blocked}`
 
 ## Review priorities
@@ -96,4 +96,4 @@ Include only when user requests concrete fixes.
 | ---------------------------------------------------- | -------------------------------- |
 | `references/review-report.template.md`               | Version closure report           |
 | `../ns-harness/references/artifact-layout.md` | Report path                      |
-| `ns-mcp-gitlab-usage`                                   | Posting internal review comments |
+| `mcp-gitlab-usage`                                   | Posting internal review comments |

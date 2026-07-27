@@ -1,5 +1,5 @@
 ---
-name: ns-mcp-gitlab-usage
+name: mcp-gitlab-usage
 description: (NS) Guides correct usage of GitLab MCP tools for planning, milestones, issues, merge requests, delivery reports, and board sync. Use whenever the user mentions GitLab, MCP GitLab, create issues, start planning in GitLab, delivery report, issue comments, set_issue_labels, merge requests, or execution sync — even if they do not name this skill. Do NOT hand-craft issue payloads or skip confirmation gates. Do NOT use for non-GitLab project management.
 license: Apache-2.0
 metadata:
