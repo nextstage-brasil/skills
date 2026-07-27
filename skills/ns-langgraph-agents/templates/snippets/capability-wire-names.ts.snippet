@@ -1,0 +1,27 @@
+// Snippet: capability-wire-names.ts
+const WIRE_RE = /^[a-zA-Z0-9_-]{1,128}$/;
+
+export function assertWireName(name: string): void {
+  if (!WIRE_RE.test(name)) {
+    throw new Error(`Invalid tool wire name: ${name}`);
+  }
+}
+
+export function mcpWireName(serverId: string, toolName: string): string {
+  const name = `mcp__${serverId}__${toolName}`;
+  assertWireName(name);
+  return name;
+}
+
+export function skillWireName(skillId: string): string {
+  const name = `use_skill__${skillId}`;
+  assertWireName(name);
+  return name;
+}
+
+export type ToolClassification = "read" | "write" | "destructive" | "admin";
+
+export type CapabilityId =
+  | `local:${string}`
+  | `mcp:${string}:${string}`
+  | `skill:${string}`;

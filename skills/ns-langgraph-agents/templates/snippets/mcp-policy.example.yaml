@@ -1,0 +1,33 @@
+# MCP policy example — declarative server/tool governance
+# Load into registry; never bind tools not listed here.
+
+servers:
+  gitlab:
+    transport: http
+    url_env: MCP_GITLAB_URL
+    bearer_env: MCP_GITLAB_TOKEN
+    default_classification: read
+    allow_tools:
+      - list_issues
+      - read_issue
+      - list_merge_requests
+    classification_overrides:
+      create_issue: write
+      delete_issue: destructive
+    rate_limit_per_minute: 60
+
+  postgres_readonly:
+    transport: http
+    url_env: MCP_POSTGRES_URL
+    default_classification: read
+    allow_tools:
+      - query
+    rate_limit_per_minute: 30
+
+global:
+  deny_classes:
+    - admin
+  max_tool_calls_per_turn: 8
+  sensitive_tools:
+    - mcp__gitlab__delete_issue
+  tool_output_max_chars: 4000

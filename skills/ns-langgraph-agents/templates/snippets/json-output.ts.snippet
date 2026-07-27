@@ -1,0 +1,19 @@
+// Snippet: json-output.ts — structured LLM without withStructuredOutput
+import type { z } from "zod";
+
+export async function invokeJsonSchema<T>(params: {
+  model: { invoke: (msgs: unknown[], opts?: unknown) => Promise<{ content: unknown }> };
+  messages: unknown[];
+  schema: z.ZodType<T>;
+}): Promise<T> {
+  const withJson = await params.model.invoke(params.messages, {
+    response_format: { type: "json_object" },
+  });
+  const text =
+    typeof withJson.content === "string"
+      ? withJson.content
+      : JSON.stringify(withJson.content);
+  return params.schema.parse(JSON.parse(text));
+}
+
+// Fallback: on provider error, retry once without response_format

@@ -1,0 +1,25 @@
+// Snippet: sse-envelope.ts
+export type AgentStreamStatus =
+  | "thinking"
+  | "accessing_data"
+  | "tool_started"
+  | "tool_finished"
+  | "response_streaming"
+  | "completed"
+  | "failed"
+  | "cancelled";
+
+export type AgentStreamEnvelope = {
+  status: AgentStreamStatus;
+  thread_id: string;
+  text?: string;
+  tool?: { name: string; args?: unknown };
+  error?: string;
+};
+
+export function writeSse(res: import("node:http").ServerResponse, env: AgentStreamEnvelope): void {
+  res.write(`data: ${JSON.stringify(env)}\n\n`);
+}
+
+// response_streaming: send cumulative markdown in `text` each tick
+// completed | failed | cancelled: must be last event

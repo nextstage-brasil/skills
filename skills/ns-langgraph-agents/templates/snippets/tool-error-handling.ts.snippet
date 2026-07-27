@@ -1,0 +1,22 @@
+// Snippet: tool-error-handling.ts
+import { ToolMessage } from "@langchain/core/messages";
+import { truncateToolOutput } from "../memory/context-window.js";
+
+export function toToolMessage(params: {
+  callId: string;
+  name: string;
+  raw: string;
+  isError: boolean;
+  maxChars: number;
+}): ToolMessage {
+  const content = truncateToolOutput(params.raw, params.maxChars);
+  return new ToolMessage({
+    content,
+    tool_call_id: params.callId,
+    name: params.name,
+    status: params.isError ? "error" : "success",
+  });
+}
+
+// MCP: isError from CallToolResult → recoverable ToolMessage
+// Transport throw → log + optional HTTP failed; may not append ToolMessage

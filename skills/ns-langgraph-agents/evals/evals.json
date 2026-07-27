@@ -1,0 +1,23 @@
+{
+  "skill_name": "ns-langgraph-agents",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our agent-api is a mess — graph in memory/, tests in src/, MCP tools hardcoded, tokens exploding every turn. Node 24 TypeScript LangGraph. Diagnose and give a phased recovery plan before any code.",
+      "expected_output": "Agent runs orphan checklist, posts gap report (layout, context window, MCP, observability), ordered fix phases, references specific docs; does not jump to coding.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Add GitLab + Postgres + Slack MCP servers to our LangGraph agent. ~40 tools total. Need allowlist, rate limits, and safe wire names for OpenAI. agent-api already exists.",
+      "expected_output": "Agent cites capability governance and mcp-complex-access references, proposes discovery filter, local classification, mcp__server__tool naming, singleton client, truncate tool output; handoff task for ns-code-coder.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Agent node sends full state.messages to GPT with reasoning models. Summarizer runs every turn but history still grows. Fix approach?",
+      "expected_output": "Agent explains checkpointer vs context window, trimMessagesForLlm, persisted RemoveMessage compaction after summarize, truncateToolOutput; points to context-window reference and snippets.",
+      "files": []
+    }
+  ]
+}

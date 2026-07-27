@@ -55,6 +55,7 @@
     "ns-code-e2e-tests": [],
     "ns-code-backend-tests": [],
     "ns-multi-agent-architect": [],
+    "ns-langgraph-agents": ["ns-harness"],
     "ns-skill-creator": ["ns-harness"]
   },
   "presets": {
@@ -107,7 +108,8 @@
         "ns-code-best-practices",
         "ns-project-manager",
         "ns-skill-creator",
-        "ns-multi-agent-architect"
+        "ns-multi-agent-architect",
+        "ns-langgraph-agents"
       ]
     }
   },
@@ -151,7 +153,7 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["ns-code-coder", "ns-code-autonomous", "ns-code-frontend-design", "ns-code-docs-writer", "ns-code-best-practices", "ns-execution-orchestrator", "ns-execution-gitlab-issue", "ns-code-investigator", "ns-code-reviewer", "ns-code-e2e-tests", "ns-code-backend-tests"]
+      "skills": ["ns-code-coder", "ns-code-autonomous", "ns-code-frontend-design", "ns-code-docs-writer", "ns-code-best-practices", "ns-execution-orchestrator", "ns-execution-gitlab-issue", "ns-code-investigator", "ns-code-reviewer", "ns-code-e2e-tests", "ns-code-backend-tests", "ns-langgraph-agents"]
     },
     "brownfield": {
       "label": "Brownfield",

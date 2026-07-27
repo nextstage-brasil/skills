@@ -1,0 +1,23 @@
+// Snippet: graph-compile.ts
+import { StateGraph, START, END } from "@langchain/langgraph";
+import { AgentState } from "../state.js";
+import { getCheckpointer } from "../memory/checkpointer.js";
+
+let compiled: ReturnType<StateGraph<typeof AgentState>["compile"]> | null = null;
+
+export async function getGraph() {
+  if (compiled) return compiled;
+  const checkpointer = await getCheckpointer();
+  const g = new StateGraph(AgentState)
+    .addNode("agent", agentNode)
+    .addNode("tools", toolNode)
+    .addEdge(START, "agent")
+    .addConditionalEdges("agent", routeTools, { tools: "tools", end: END })
+    .addEdge("tools", "agent");
+  compiled = g.compile({ checkpointer });
+  return compiled;
+}
+
+export function resetGraphForTests(): void {
+  compiled = null;
+}

@@ -156,6 +156,12 @@ External + NextStage skills for agent-service work:
 npx @nextstage-brasil/harness --preset agents-api --yes
 ```
 
+Focused LangGraph implementation (coder + runtime doctrine, fewer externals):
+
+```bash
+npx @nextstage-brasil/harness --preset coder-langgraph --yes
+```
+
 ### Init into another directory
 
 ```bash
@@ -203,6 +209,7 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 | `brownfield` | Harness + `/ns-harness-prepare` chain on existing code |
 | `full` | Every skill in the catalog |
 | `agents-api` | LangChain / LangGraph / MCP external skills + NS base |
+| `coder-langgraph` | `ns-langgraph-agents` + coder/reviewer + core LangChain/MCP/Vitest externals |
 
 ```bash
 npx @nextstage-brasil/harness --preset <name> --yes

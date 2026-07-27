@@ -1,0 +1,22 @@
+// Snippet: mcp-client-lifecycle.ts — singleton multi-server client
+import { MultiServerMCPClient } from "@langchain/mcp-adapters";
+
+let client: MultiServerMCPClient | null = null;
+
+export async function getMcpClient(): Promise<MultiServerMCPClient> {
+  if (client) return client;
+  client = new MultiServerMCPClient({
+  // Example — load from registry module in real code
+    gitlab: {
+      url: process.env.MCP_GITLAB_URL!,
+      transport: "http",
+      headers: {
+        Authorization: `Bearer ${process.env.MCP_GITLAB_TOKEN ?? ""}`,
+      },
+    },
+  });
+  return client;
+}
+
+// Call once on HTTP startup; reuse for all requests.
+// Do NOT create per-request stdio subprocesses in production.

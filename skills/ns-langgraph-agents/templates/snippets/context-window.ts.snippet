@@ -1,0 +1,51 @@
+// Snippet: context-window.ts — trim and truncate helpers
+import { trimMessages, type BaseMessage } from "@langchain/core/messages";
+import type { BaseLanguageModel } from "@langchain/core/language_models/base";
+
+export type ContextConfig = {
+  maxTokens: number;
+  summarizeMultiplier: number;
+  toolOutputMaxChars: number;
+};
+
+export function resolveContextConfig(): ContextConfig {
+  const n = (key: string, fallback: number) => {
+    const v = Number(process.env[key]);
+    return Number.isFinite(v) && v > 0 ? v : fallback;
+  };
+  return {
+    maxTokens: n("CONTEXT_MAX_TOKENS", 12000),
+    summarizeMultiplier: n("CONTEXT_SUMMARIZE_MULTIPLIER", 2),
+    toolOutputMaxChars: n("CONTEXT_TOOL_OUTPUT_MAX_CHARS", 4000),
+  };
+}
+
+export async function trimMessagesForLlm(
+  messages: BaseMessage[],
+  maxTokens: number,
+  model: BaseLanguageModel,
+): Promise<BaseMessage[]> {
+  const trimmed = await trimMessages(messages, {
+    maxTokens,
+    tokenCounter: model,
+    strategy: "last",
+    startOn: "human",
+    includeSystem: true,
+  });
+  if (trimmed.some((m) => m._getType() === "human")) return trimmed;
+  const lastHuman = messages.map((m) => m._getType()).lastIndexOf("human");
+  return lastHuman === -1 ? trimmed : messages.slice(lastHuman);
+}
+
+export function truncateToolOutput(output: string, maxChars: number): string {
+  if (output.length <= maxChars) return output;
+  return `${output.slice(0, maxChars)}\n…[truncated ${output.length - maxChars} chars]`;
+}
+
+export function shouldSummarize(
+  totalTokens: number,
+  maxTokens: number,
+  multiplier: number,
+): boolean {
+  return totalTokens > maxTokens * multiplier;
+}

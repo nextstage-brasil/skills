@@ -445,6 +445,7 @@ export function printList() {
       '  npx @nextstage-brasil/harness --preset spec-driven --yes',
       '  npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes',
       '  npx @nextstage-brasil/harness --preset agents-api --yes',
+      '  npx @nextstage-brasil/harness --preset coder-langgraph --yes',
       '',
       'Install one skill only (no scaffold):',
       '  npx @nextstage-brasil/harness --skill ns-gitlab-board-sync --no-scaffold -y',

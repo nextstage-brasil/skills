@@ -341,6 +341,19 @@ try {
   assert(agentsApiPreset?.skills.includes('langgraph-persistence'), 'agents-api preset should include langgraph skill');
   assert(agentsApiPreset?.skills.includes('postgresql-table-design'), 'agents-api preset should include postgresql skill');
   assert(agentsApiPreset?.nsSkills.includes('ns-multi-agent-architect'), 'agents-api preset should include NS architect skill');
+  assert(agentsApiPreset?.nsSkills.includes('ns-langgraph-agents'), 'agents-api preset should include ns-langgraph-agents');
+
+  const coderLanggraphPreset = getExternalPreset('coder-langgraph');
+  assert(coderLanggraphPreset?.nsSkills.includes('ns-langgraph-agents'), 'coder-langgraph preset should include ns-langgraph-agents');
+  assert(coderLanggraphPreset?.nsSkills.includes('ns-code-coder'), 'coder-langgraph preset should include ns-code-coder');
+  assert(coderLanggraphPreset?.skills.length === 4, 'coder-langgraph preset should include four external skills');
+
+  const coderLanggraphDryRun = runCli(['--dry-run', '--yes', '--preset', 'coder-langgraph', '--dir', tempDir], harnessRoot);
+  assert(coderLanggraphDryRun.status === 0, `coder-langgraph preset dry-run should pass: ${coderLanggraphDryRun.stderr}${coderLanggraphDryRun.stdout}`);
+  assert(
+    coderLanggraphDryRun.stdout.includes('ns-langgraph-agents') && coderLanggraphDryRun.stdout.includes('langgraph-persistence'),
+    'coder-langgraph dry-run should list NS and external langgraph skills',
+  );
 
   const agentsApiDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents-api', '--dir', tempDir], harnessRoot);
   assert(agentsApiDryRun.status === 0, `agents-api preset dry-run should pass: ${agentsApiDryRun.stderr}${agentsApiDryRun.stdout}`);

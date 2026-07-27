@@ -1,0 +1,38 @@
+// Snippet: agent-node-context.ts — trim + optional persist summary
+import { RemoveMessage } from "@langchain/core/messages";
+import { REMOVE_ALL_MESSAGES } from "@langchain/langgraph";
+import {
+  resolveContextConfig,
+  trimMessagesForLlm,
+  countMessagesTokens,
+  shouldSummarize,
+} from "../memory/context-window.js";
+import { summarizeOlderMessages } from "../memory/summarizer.js";
+
+export async function buildLlmMessages(state, model) {
+  const cfg = resolveContextConfig();
+  const total = await countMessagesTokens(state.messages, model);
+  let working = state.messages;
+
+  let summary = null;
+  if (shouldSummarize(total, cfg.maxTokens, cfg.summarizeMultiplier)) {
+    const trimmed = await trimMessagesForLlm(working, cfg.maxTokens, model);
+    summary = await summarizeOlderMessages(working, trimmed, model);
+    if (summary) working = [summary, ...trimmed];
+  }
+
+  const forLlm = await trimMessagesForLlm(working, cfg.maxTokens, model);
+  return { forLlm, summary, tailAfterSummary: summary ? forLlm.slice(1) : null };
+}
+
+export function persistAfterResponse({ summary, tailAfterSummary, response }) {
+  if (!summary) return { messages: [response] };
+  return {
+    messages: [
+      new RemoveMessage({ id: REMOVE_ALL_MESSAGES }),
+      summary,
+      ...(tailAfterSummary ?? []),
+      response,
+    ],
+  };
+}

@@ -45,7 +45,8 @@
         "ns-harness",
         "ns-multi-agent-architect",
         "ns-code-coder",
-        "ns-code-reviewer"
+        "ns-code-reviewer",
+        "ns-langgraph-agents"
       ],
       "skills": [
         "langchain-fundamentals",
@@ -54,6 +55,22 @@
         "vitest",
         "llm-evaluation",
         "postgresql-table-design"
+      ]
+    },
+    "coder-langgraph": {
+      "label": "Coder + LangGraph",
+      "description": "LangGraph agent runtime doctrine with ad-hoc coding and review — MCP, persistence, and Vitest externals",
+      "nsSkills": [
+        "ns-harness",
+        "ns-code-coder",
+        "ns-code-reviewer",
+        "ns-langgraph-agents"
+      ],
+      "skills": [
+        "langchain-fundamentals",
+        "langgraph-persistence",
+        "mcp-builder",
+        "vitest"
       ]
     }
   }
