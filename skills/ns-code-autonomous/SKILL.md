@@ -42,7 +42,7 @@ Inputs (already resolved by the caller — this skill never creates them): issue
 3. **Multi-agent dispatch** — parse work units (or the single unit) and dispatch `ns-code-coder` subagents, parallel only across units with no DAG edge and disjoint file scopes, sequential otherwise. Every subagent works inside `WORKTREE_ROOT`, never the main checkout. See `references/multi-agent-dispatch.md`.
 4. **Checkpoint commits** — one commit per completed sequential unit or per completed parallel batch, inside the worktree; the caller squashes at delivery.
 5. **Fix-loop entry point** — when re-invoked after a `Rejected` verdict, treat the reviewer findings as a new work unit (or units) and repeat step 3 for those only.
-6. **Return to caller**: unit statuses, files changed, any open destructive doubt, and (first invocation only) a plan-based time estimate for `set_issue_estimate`.
+6. **Return to caller**: unit statuses, files changed, any open destructive doubt, and (first invocation only) a plan-based `estimate_seconds` hint — the caller applies `set_issue_estimate` only when the issue estimate is empty and the value is ≥ 60 (see `../ns-execution-gitlab-issue/references/time-tracking.md`).
 
 ## Standalone pipeline (non-GitLab origin)
 

@@ -18,6 +18,12 @@
       "prompt": "Mark GitLab issue done for completed task — skip in progress, it's faster.",
       "expected_output": "Agent refuses anti-pattern; requires in_progress step and spent time comment.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Flow A sync — linked task says Estimate 3600 but GitLab issue already has a 4h estimate.",
+      "expected_output": "Agent skips set_issue_estimate; preserves existing time_stats.time_estimate.",
+      "files": []
     }
   ]
 }

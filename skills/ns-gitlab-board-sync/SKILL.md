@@ -4,7 +4,7 @@ description: (NS) Sync existing GitLab issues with local planning and execution 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - mcp-gitlab-usage
 ---
@@ -46,7 +46,7 @@ Per issue in map (excluding `exclude_issues`):
 2. `update_issue` with `milestone_id`
 3. **One** `set_issue_labels` — `remove_labels` + `add_labels` atomically (RF, Status, Equipe)
 4. `assign_issue`
-5. `set_issue_estimate` from linked task header (seconds)
+5. `set_issue_estimate` from linked task header (seconds) **only if** `time_stats.time_estimate` is empty — never overwrite; skip values < 60
 
 ## Flow B — Per-task execution sync
 
@@ -57,7 +57,7 @@ remove: status_backlog
 add: status_in_progress
 ```
 
-Record start time for `add_issue_spent_time`.
+Record `START_TIME` / `START_EPOCH` when coding starts (for wall-clock `add_issue_spent_time` — see `../ns-execution-gitlab-issue/references/time-tracking.md`).
 
 ### Task complete (after validation)
 
@@ -79,7 +79,9 @@ add_issue_comment (internal=true)
 | `assignee` on `update_issue`        | `assign_issue`                   |
 | Two label calls for one transition  | Single atomic `set_issue_labels` |
 | Manual `Milestone:` label           | `milestone_id` on `update_issue` |
-| `set_issue_estimate` for time spent | `add_issue_spent_time`           |
+| `set_issue_estimate` for time spent | `add_issue_spent_time` with wall-clock duration |
+| `set_issue_estimate` when estimate already set | Skip — preserve existing |
+| Plan/`estimate_seconds` as spent `duration` | Epoch delta only (`time-tracking.md`) |
 | Public comment for internal notes   | `internal: true`                 |
 
 ## References

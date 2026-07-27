@@ -33,6 +33,8 @@ Read the MCP tool descriptor before calling. Examples use placeholders — use t
 
 Call **after** `create_issue` — GitLab does not accept estimate at creation.
 
+On **existing** issues (execution / board sync): call only when `time_stats.time_estimate` is empty (`0` / missing). Never overwrite a human or planning estimate. Never pass values under 60 seconds (invalid as an estimate — skip instead). See `../ns-execution-gitlab-issue/references/time-tracking.md`.
+
 ## set_issue_labels
 
 **Required:** `project_id`, `issue_iid`, plus `add_labels`/`remove_labels` **or** `action` + `labels`
@@ -50,7 +52,7 @@ Use `internal: true` for delivery reports and implementation summaries.
 
 ## add_issue_spent_time
 
-`duration` in integer seconds — use at task completion, not `set_issue_estimate`.
+`duration` in integer seconds — wall-clock active work only (`ELAPSED_SECONDS` from `../ns-execution-gitlab-issue/references/time-tracking.md`). Use at task completion, **not** `set_issue_estimate`. Never pass a plan/`estimate_seconds` value as `duration`.
 
 ## delete_issue
 

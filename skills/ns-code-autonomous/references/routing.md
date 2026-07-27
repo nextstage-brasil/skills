@@ -31,7 +31,7 @@ A structured result the caller can act on without re-deriving anything:
 
 - `units`: list of `{ id, status: done|blocked, files_changed, commit_sha? }`.
 - `doubt`: `null`, or `{ questions, options, recommended_default, blocked_unit_ids }` when a destructive doubt paused dispatch.
-- `estimate_seconds`: only on the first invocation for a given issue — the caller forwards this to `set_issue_estimate` and does not ask again on fix-loop re-invocations.
+- `estimate_seconds`: only on the first invocation for a given issue — a plan-based hint. The caller may call `set_issue_estimate` **only if** the issue estimate is empty and the value is ≥ 60; it must not ask again on fix-loop re-invocations. This value must **never** be used as `add_issue_spent_time` duration.
 
 If `doubt` is non-null, treat the invocation as partially complete — whatever units didn't depend on the doubt still finish and report `done`.
 

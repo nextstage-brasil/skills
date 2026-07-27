@@ -4,7 +4,7 @@ description: (NS) Guides correct usage of GitLab MCP tools for planning, milesto
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
 ---

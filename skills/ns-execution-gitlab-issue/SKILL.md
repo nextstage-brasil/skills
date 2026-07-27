@@ -4,7 +4,7 @@ description: (NS) Execute a GitLab issue end-to-end — first-act status, branch
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -71,36 +71,40 @@ Create `WORKTREE_ROOT` per `references/worktree-setup.md` — always `{product_r
 ### MCP setup
 
 - `due_date` if empty: current date + 5 business days.
-- `START_TIME` = ISO 8601 UTC timestamp.
-- `set_issue_estimate` once the `ns-code-autonomous` engine returns a plan-based estimate (Phase 2, step 2).
+- Do **not** set `START_TIME` here — wall-clock for spent time starts at Phase 2 (see `references/time-tracking.md`).
 
 ## Phase 2 — Execution (delegated)
 
-1. Read the full issue payload via MCP (title, description, comments, attachments).
-2. Invoke the `ns-code-autonomous` skill in **Engine mode**, passing: issue payload, `{product_root}`, `WORKTREE_ROOT`, `WORK_BRANCH`, `SOURCE_BRANCH`. The engine self-decides planning depth, runs its doubt protocol, and dispatches implementation (single- or multi-agent) inside `WORKTREE_ROOT` — see `ns-code-autonomous`'s `references/routing.md` for what "Engine mode" means and what it returns.
-3. Call `set_issue_estimate` with the estimate the engine returns on its first invocation.
-4. **Doubt escalation contract** — the engine never mutates GitLab state itself. When it returns a destructive-doubt event instead of (or alongside) unit results:
+1. Read the full issue payload via MCP (title, description, comments, attachments). Note `time_stats.time_estimate` for the estimate gate below.
+2. Set `START_TIME` / `START_EPOCH` **now** (UTC + Unix epoch) — immediately before the first Engine invoke. See `references/time-tracking.md`.
+3. Invoke the `ns-code-autonomous` skill in **Engine mode**, passing: issue payload, `{product_root}`, `WORKTREE_ROOT`, `WORK_BRANCH`, `SOURCE_BRANCH`. The engine self-decides planning depth, runs its doubt protocol, and dispatches implementation (single- or multi-agent) inside `WORKTREE_ROOT` — see `ns-code-autonomous`'s `references/routing.md` for what "Engine mode" means and what it returns.
+4. **Estimate (first invocation only):** call `set_issue_estimate` **only if** `time_stats.time_estimate` is empty (`0` / missing) **and** the engine returned `estimate_seconds` ≥ 60. If an estimate already exists, or the engine value is < 60 — **skip**; never overwrite, never write a 1-second estimate. Full rules: `references/time-tracking.md`.
+5. **Doubt escalation contract** — the engine never mutates GitLab state itself. When it returns a destructive-doubt event instead of (or alongside) unit results:
+   - Record `PAUSE_START` epoch (exclude wait from spent time).
    - Apply `status_blocked` (Em Impedimento).
    - Post a comment **mentioning the issue author** (`@{author.username}` from `read_issue`) with the questions, options, and recommended default.
    - Mirror the same question in the interactive chat and wait.
-   - On answer (chat and/or issue comment): record it, set status back to `status_in_progress` (Em andamento), and re-invoke the engine with the resolved doubt appended to its context.
-5. No intermediate confirmations otherwise — this loop is the only pause point until Phase 4's review gate.
+   - On answer (chat and/or issue comment): add pause duration to `PAUSED_SECONDS`, set status back to `status_in_progress` (Em andamento), and re-invoke the engine with the resolved doubt appended to its context.
+6. No intermediate confirmations otherwise — this loop is the only pause point until Phase 4's review gate.
 
 ## Phase 3 — Delivery
 
 1. **Squash to one Conventional Commit** before push (`<type>(#{ISSUE_ID}): <imperative description in English>`, types: feat/fix/refactor/test/docs/chore). The engine may leave internal checkpoint commits per work unit in the worktree during Phase 2 — squash them here to preserve one-commit-per-delivery atomicity. See `../ns-harness/references/agent-git-identity.md` for attribution.
 2. Push `WORK_BRANCH`.
-3. `add_issue_spent_time` (`ELAPSED_SECONDS = max(1, ceil(END_TIME - START_TIME))`).
-4. Status → `status_done` (Dev 100%) only after Phase 4 returns `Approved` — never before.
-5. Internal delivery comment (`internal: true`) using `references/delivery-report.template.md`.
+3. Run Phase 4 (review gate). Do **not** set `END_TIME`, spent time, or Dev 100% until Phase 4 returns `Approved`.
+4. **On `Approved` only — close the clock and board** (same instant):
+   - Set `END_TIME` / `END_EPOCH` **now**.
+   - `add_issue_spent_time` with `duration = ELAPSED_SECONDS` from `references/time-tracking.md` (epoch delta minus `PAUSED_SECONDS`). **Never** use `estimate_seconds` or any plan estimate as `duration`.
+   - Status → `status_done` (Dev 100%).
+   - Internal delivery comment (`internal: true`) using `references/delivery-report.template.md`.
 
 ## Phase 4 — Review gate (blocking, bounded fix loop)
 
 1. Invoke `ns-code-reviewer` in **Issue review mode** (`ISSUE_URL`) — read-only, official gate, posts the internal GitLab comment.
 2. Loop, max **3** rounds:
-   - `Approved` → proceed to Phase 3's status/comment closure (Dev 100%).
-   - `Rejected` with rounds remaining → re-invoke `ns-code-autonomous` (same worktree/branch) with the findings as a fix work unit, then re-review.
-   - `Blocked`, or rounds exhausted → `status_blocked` (Em Impedimento), post the findings, stop. Do **not** reach Dev 100%.
+   - `Approved` → return to Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
+   - `Rejected` with rounds remaining → re-invoke `ns-code-autonomous` (same worktree/branch) with the findings as a fix work unit, then re-review. Keep the original `START_TIME`; do not call spent/Dev 100% yet.
+   - `Blocked`, or rounds exhausted → `status_blocked` (Em Impedimento), post the findings, stop. Do **not** set `END_TIME`, spent time, or Dev 100%.
 3. Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` — exactly the verdict string `ns-code-reviewer` returned.
 
 ## Stop and ask the human
@@ -138,3 +142,4 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 | `references/worktree-setup.md`           | `ISSUE_ID` → `run_id` override (canonical mechanics in `ns-harness`) |
 | `references/mr-conventions.md`           | MR title, draft, linking, reuse note                                        |
 | `references/delivery-report.template.md` | Phase 3 internal delivery comment                                           |
+| `references/time-tracking.md`            | Estimate fill-if-empty; spent-time wall-clock + pause rules                 |

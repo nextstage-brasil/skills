@@ -14,7 +14,7 @@
 
 1. `generate_issue_payload`(description)
 2. `create_issue` with labels from JSON + fixed labels (Equipe, Group, Milestone, Origem, RF, Status, Priority, etc.)
-3. `set_issue_estimate` with seconds from payload
+3. `set_issue_estimate` with seconds from payload (new issue — estimate is empty)
 
 ## Execution sync (per task)
 
@@ -26,7 +26,7 @@ set_issue_labels:
   add_labels: "<status_in_progress>"
 ```
 
-Record start timestamp for `add_issue_spent_time`.
+Record `START_TIME` / `START_EPOCH` for `add_issue_spent_time` **when coding actually starts** (not during prep gates). See `../ns-execution-gitlab-issue/references/time-tracking.md`.
 
 **Base branch:** when starting implementation via `ns-execution-gitlab-issue`, resolve `SOURCE_BRANCH` per `../ns-execution-gitlab-issue/references/source-branch-resolution.md` (milestone/version → `develop_*` / `develop-*` on remote, else mandatory `develop` only — never another base without human confirmation).
 
@@ -39,11 +39,13 @@ set_issue_labels:
   remove_labels: "<status_in_progress>"
   add_labels: "<status_done>,RF: NNN"
 
-add_issue_spent_time: duration seconds
+add_issue_spent_time: duration = wall-clock ELAPSED_SECONDS (never estimate)
 add_issue_comment: internal summary
 ```
 
 **Anti-pattern:** jumping from backlog directly to done.
+
+**Estimate on existing issues:** `set_issue_estimate` only when `time_stats.time_estimate` is empty; never overwrite; never < 60s.
 
 ## Delivery report flow
 
