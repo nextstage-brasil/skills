@@ -48,7 +48,17 @@
     "ns-execution-gitlab-issue": ["ns-harness", "mcp-gitlab-usage", "ns-code-reviewer", "ns-code-autonomous"],
     "ns-requirements-enricher": ["ns-harness", "mcp-gitlab-usage"],
     "ns-code-autonomous": ["ns-harness", "ns-code-reviewer"],
-    "ns-code-coder": ["ns-harness"],
+    "ns-code-coder": [
+      "ns-harness",
+      "ns-code-investigator",
+      "ns-code-frontend-design",
+      "ns-code-best-practices",
+      "ns-code-backend-tests",
+      "ns-code-e2e-tests",
+      "ns-code-docs-writer",
+      "ns-code-reviewer",
+      "ns-code-autonomous"
+    ],
     "ns-execution-orchestrator": ["ns-harness"],
     "ns-code-reviewer": ["ns-harness", "mcp-gitlab-usage"],
     "ns-code-investigator": ["ns-harness"],

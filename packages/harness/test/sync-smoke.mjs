@@ -346,6 +346,7 @@ try {
   const coderLanggraphPreset = getExternalPreset('coder-langgraph');
   assert(coderLanggraphPreset?.nsSkills.includes('ns-langgraph-agents'), 'coder-langgraph preset should include ns-langgraph-agents');
   assert(coderLanggraphPreset?.nsSkills.includes('ns-code-coder'), 'coder-langgraph preset should include ns-code-coder');
+  assert(coderLanggraphPreset?.nsSkills.includes('ns-code-investigator'), 'coder-langgraph preset should include ns-code-investigator');
   assert(coderLanggraphPreset?.skills.length === 4, 'coder-langgraph preset should include four external skills');
 
   const coderLanggraphDryRun = runCli(['--dry-run', '--yes', '--preset', 'coder-langgraph', '--dir', tempDir], harnessRoot);

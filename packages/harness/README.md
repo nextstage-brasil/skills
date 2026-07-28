@@ -146,7 +146,7 @@ Install individually (or use `--preset full`):
 npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y
 ```
 
-Investigator / test execution skills (`ns-code-investigator`, `ns-code-e2e-tests`, `ns-code-backend-tests`) likewise via `--skill` or `--preset full`.
+`ns-code-coder` pulls the full `ns-code-*` suite (investigator, frontend-design, best-practices, backend-tests, e2e-tests, docs-writer, reviewer, autonomous).
 
 ### Agents API / LangChain stack
 
@@ -209,7 +209,7 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 | `brownfield` | Harness + `/ns-harness-prepare` chain on existing code |
 | `full` | Every skill in the catalog |
 | `agents-api` | LangChain / LangGraph / MCP external skills + NS base |
-| `coder-langgraph` | `ns-langgraph-agents` + coder/reviewer + core LangChain/MCP/Vitest externals |
+| `coder-langgraph` | `ns-langgraph-agents` + coder/investigator/reviewer + core LangChain/MCP/Vitest externals |
 
 ```bash
 npx @nextstage-brasil/harness --preset <name> --yes

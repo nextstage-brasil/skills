@@ -59,10 +59,11 @@
     },
     "coder-langgraph": {
       "label": "Coder + LangGraph",
-      "description": "LangGraph agent runtime doctrine with ad-hoc coding and review — MCP, persistence, and Vitest externals",
+      "description": "LangGraph agent runtime doctrine with ad-hoc coding, investigation, and review — MCP, persistence, and Vitest externals",
       "nsSkills": [
         "ns-harness",
         "ns-code-coder",
+        "ns-code-investigator",
         "ns-code-reviewer",
         "ns-langgraph-agents"
       ],

@@ -7,6 +7,14 @@ metadata:
   version: "1.0"
 depends:
   - ns-harness
+  - ns-code-investigator
+  - ns-code-frontend-design
+  - ns-code-best-practices
+  - ns-code-backend-tests
+  - ns-code-e2e-tests
+  - ns-code-docs-writer
+  - ns-code-reviewer
+  - ns-code-autonomous
 ---
 
 # Code Coder
