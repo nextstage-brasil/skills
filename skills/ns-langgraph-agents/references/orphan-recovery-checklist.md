@@ -10,14 +10,21 @@ Score each item: ✅ pass | ⚠️ partial | ❌ fail
 - [ ] `src/state.ts` defines `AgentState` with `messages` reducer
 - [ ] No `*.test.ts` under `src/` — tests in `tests/` with `setup.ts`
 - [ ] No legacy folders: `fixtures/`, `qualify/`, `rag/`, `cql/`
-- [ ] `llm/` has infra only — conversation prompts in `conversation/`
-- [ ] One `*.node.ts` per graph node
+- [ ] `llm/` has infra only — conversation prompts in `conversation/prompts/`
+- [ ] One thin `*.node.ts` per graph node
+- [ ] Locale/humanize under `conversation/locale/` — not under `graph/`
+- [ ] Presentation under `conversation/presentation/` — not under `graph/` or `llm/`
+- [ ] No orphan `src/prompts/` or dead `* copy.md` prompt duplicates
+- [ ] `src/skills/` is loader/registry only — no domain heuristics
+- [ ] `src/mcp/` has no hardcoded vertical/vendor policy tables
 
 ## Spec artifacts
 
-- [ ] `graph-spec.md` exists and matches compiled nodes/edges
+- [ ] `graph-spec.md` exists and matches compiled nodes/edges/capabilities/wire names
+- [ ] Spec includes domain ownership, prompt composition, bind/inject table, `recursion_limit`
 - [ ] Locked header: `framework`, `tenant_model`, `architecture`, `interaction_mode`
 - [ ] Postman collection matches HTTP routes
+- [ ] Spec Sync Gate understood: stale archive ≠ force-fit code
 
 ## Persistence
 
@@ -30,19 +37,23 @@ Score each item: ✅ pass | ⚠️ partial | ❌ fail
 
 - [ ] Agent node calls `trimMessagesForLlm` — never raw `state.messages`
 - [ ] Tool nodes call `truncateToolOutput` before `ToolMessage`
+- [ ] `CONTEXT_SKILL_BODY_MAX_CHARS` separate from `CONTEXT_TOOL_OUTPUT_MAX_CHARS`
 - [ ] Summarization persists via `RemoveMessage(REMOVE_ALL_MESSAGES)` rewrite
 
-## Capabilities
+## Capabilities / inject
 
 - [ ] `capability/` module: allowlist, classification, rate limit
-- [ ] MCP wire names use `mcp__server__tool`
-- [ ] Skills use `use_skill__id`
-- [ ] Secrets not in graph state or checkpointer
+- [ ] MCP wire names use `mcp__server__tool` (no `:` in new wire names)
+- [ ] Skills use `use_skill__id` **or** auto-inject — not both per id without decision
+- [ ] Bind parity: every tools-node-dispatchable tool is in `bindTools` (or unbound + test)
+- [ ] System prompt compose uses ordered layers; session overlay ≠ canonical body
+- [ ] Nudges live in system prompt — not fake `HumanMessage`
+- [ ] Secrets / system prompts not in graph state or checkpointer
 
 ## MCP
 
 - [ ] Client reused per process (not per request stdio spawn)
-- [ ] Discovery filtered before `bind_tools`
+- [ ] Discovery filtered before `bindTools`
 - [ ] Local classification on every tool
 - [ ] Transport appropriate for deployment (HTTP in prod)
 
@@ -60,15 +71,16 @@ Score each item: ✅ pass | ⚠️ partial | ❌ fail
 
 ## Recovery order (when multiple ❌)
 
-1. Structure alignment (tree + graph location)
-2. State + checkpointer + tests setup
-3. Context window (stops token bleed)
-4. Capability governance + MCP filter
-5. Observability migrations
-6. HTTP/Postman + SSE/HITL if required
-7. Evals
+1. Structure + placement alignment (tree, locale/prompts out of graph)
+2. Spec sync (graph-spec matches intended runtime)
+3. State + checkpointer + tests setup
+4. Context window + skill-body cap (stops token/doctrine bleed)
+5. Inject/bind parity + capability governance + MCP filter
+6. Observability migrations
+7. HTTP/Postman + SSE/HITL if required
+8. Evals
 
-Post gap report with ❌ items grouped by phase. Implement one phase per PR via `ns-code-coder`.
+Post gap report with ❌ items grouped by phase. Implement one phase per PR via `ns-code-coder` with `target_paths` / `do_not_create_under` / `injection_notes`.
 
 ## Smoke commands
 

@@ -1,0 +1,26 @@
+[
+  {
+    "query": "let's build the notifications feature as a full version with requirements",
+    "should_trigger": true
+  },
+  {
+    "query": "resume SDD work on version 2026-08 \u2014 generate remaining tasks",
+    "should_trigger": true
+  },
+  {
+    "query": "quick fix typo in README, no version planning",
+    "should_trigger": false
+  },
+  {
+    "query": "run harness prepare on this brownfield repo",
+    "should_trigger": false
+  },
+  {
+    "query": "just add a column to the migration, ad-hoc",
+    "should_trigger": false
+  },
+  {
+    "query": "diagnose failing phpunit without implementing",
+    "should_trigger": false
+  }
+]

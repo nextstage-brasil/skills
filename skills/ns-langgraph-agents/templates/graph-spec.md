@@ -1,6 +1,7 @@
 # Graph specification — {{PRODUCT_NAME}}
 
 > Canonical source for LangGraph runtime. Implementation must match this document.
+> When topology, state, capabilities, wire names, or `recursion_limit` change, update this file in the **same** delivery (Spec Sync Gate). Stale archive ≠ source of truth.
 
 ## Locked header
 
@@ -10,10 +11,41 @@
 | `tenant_model` | simple \| vertical |
 | `architecture` | react \| plan_execute \| reflection \| supervisor \| rag_qa |
 | `interaction_mode` | sync_json \| streaming_sse |
+| `recursion_limit` | {{number}} |
 
 ## Objective
 
 {{One paragraph: what the agent does and for whom.}}
+
+## Domain ownership
+
+| Concern | Owns | Must not live in |
+| ------- | ---- | ---------------- |
+| Control flow / nodes | `src/graph/` | — |
+| System prompts | `src/conversation/prompts/` | `graph/`, `llm/`, `src/prompts/` |
+| Locale / humanize | `src/conversation/locale/` | `graph/` |
+| Presentation | `src/conversation/presentation/` | `graph/`, `llm/` |
+| Versioned domain / verticals | `config/tenants/`, `config/verticals/` | new `src/` modules for verticals |
+| Local tools | `src/tools/` | — |
+| MCP client | `src/mcp/` (generic) | hardcoded vertical/vendor policy |
+| Skill procedures | `skills/*.md` | — |
+| Skill runtime | `src/skills/` (loader only) | domain heuristics |
+
+`tenant_model: vertical`: new vertical = **only** `config/verticals/{id}/`, zero new `src/`.
+
+## Prompt composition
+
+Ordered layers (see `references/prompt-and-capability-injection.md`):
+
+1. Canonical body — path: `src/conversation/prompts/{{file}}`
+2. Opacity / safety fixed rules — {{yes/no}}
+3. Data-plane truth — {{how connected capabilities are stated}}
+4. Session context overlay — `configurable.{{field}}` (overlay ≠ replace body; not in state)
+5. Scope anchors — {{helpers}}
+6. Skill auto-inject — {{skill ids or none}}
+7. Ephemeral runtime nudge — system section only (never fake HumanMessage)
+
+Compose helper: `{{module path}}` (outside god-node).
 
 ## State schema
 
@@ -58,15 +90,19 @@ flowchart TD
 | ----- | --------- |
 | Short | LangGraph checkpointer (`postgres` prod, `memory` tests) |
 | Long | {{none \| store namespace \| RAG}} |
-| Context window | trim + optional summarize — see context-window reference |
+| Context window | trim + optional summarize — tool cap vs skill-body cap |
 
-## Capabilities
+## Capabilities — bind / inject
+
+| Primitive | Wire name | Bind? | Inject mode | Class |
+| --------- | --------- | ----- | ----------- | ----- |
+| {{local\|mcp\|skill}} | {{wire}} | yes/no | execute / ToolMessage / body-only / auto-inject | read/write/… |
 
 ### Local tools
 
-| Name | Class | Purpose |
-| ---- | ----- | ------- |
-| {{name}} | read/write/destructive | |
+| Name | Class | Purpose | Bound |
+| ---- | ----- | ------- | ----- |
+| {{name}} | read/write/destructive | | yes \| unbound+test |
 
 ### MCP servers
 
@@ -76,14 +112,16 @@ flowchart TD
 
 ### Skills
 
-| Skill id | Trigger |
-| -------- | ------- |
-| {{id}} | {{when}} |
+| Skill id | Mode (bind XOR auto-inject) | Cap |
+| -------- | --------------------------- | --- |
+| {{id}} | use_skill \| auto-inject | CONTEXT_SKILL_BODY_MAX_CHARS |
+
+**Bind parity:** every tool the tools node can dispatch appears in `bindTools`, or is listed here as intentional unbound with a test.
 
 ## HTTP routes
 
 | Method | Path | Mode |
-| ------ | ---- | ---- |
+| ---- | ---- | ---- |
 | POST | /threads | create |
 | POST | /threads/:id/message | {{sync_json\|streaming_sse}} |
 | POST | /threads/:id/resume | HITL |
@@ -100,6 +138,7 @@ flowchart TD
 1. {{happy path}}
 2. {{tool confusion case}}
 3. {{HITL interrupt case}}
+4. {{bind parity / inject exclusivity case}}
 
 ## Out of scope
 

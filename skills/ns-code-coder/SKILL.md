@@ -1,6 +1,6 @@
 ---
 name: ns-code-coder
-description: (NS) Central execution worker for ad-hoc coding — bug fixes, isolated components, small refactors, scripts, migrations — without full SDD planning. Entry priority 5 (default): use when the user says "just implement this", "quick fix", "add a field to the form", or gives a concrete coding task without execution-handoff — even without naming an agent. Also runs as C2 subagent under ns-code-autonomous work units. NOT the front door — do NOT use for GitLab ISSUE_URL (ns-execution-gitlab-issue), multi-day or version scope (ns-spec-driven), root-cause-only diagnosis without implement request (ns-code-investigator), or when execution-handoff.md exists (ns-sdd-execution-handoff-generator run-implementation). Do NOT generate requirements.md, task files, or execution-handoff.
+description: (NS) Ad-hoc coding worker — bug fixes, small refactors, scripts, migrations — without full SDD. Entry priority 5: use for "just implement this", "quick fix", or concrete coding without execution-handoff (also C2 under ns-code-autonomous). Do NOT use for GitLab ISSUE_URL (ns-execution-gitlab-issue), multi-day/version scope (ns-spec-driven), diagnosis-only (ns-code-investigator), or when execution-handoff.md exists. Do NOT generate requirements/tasks/handoff.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

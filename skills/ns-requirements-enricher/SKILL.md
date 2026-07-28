@@ -1,7 +1,6 @@
 ---
 name: ns-requirements-enricher
-description:
-  (NS) Enrich requirements before autonomous execution — GitLab issue or chat context.
+description: (NS) Enrich requirements before autonomous execution from a GitLab issue or chat context. Use when the user asks to enrich/expand requirements, flesh out acceptance criteria, or prepare issue context for coding agents. Do NOT replace ns-sdd-requirements-generator for full version requirements.md.
   **Issue mode:** given ISSUE_URL, read issue and comments via MCP, investigate codebase,
   run grill-me gap analysis, post one internal comment with numbered questions for the
   issue author. **Chat mode:** when the user pastes or describes requirements/scope in

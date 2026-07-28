@@ -1,6 +1,6 @@
 ---
 name: ns-harness-agents-md
-description: (NS) Scan a project with NextStage harness installed and generate or refresh a project-specific AGENTS.md entry point plus a minimal CLAUDE.md that points to it. Use whenever the user asks to generate AGENTS.md, create project agents doc, bootstrap agent entry point, replace harness AGENTS stub, set up Claude/Cursor project rules pointer, or onboard agents after harness init — even if they say "write AGENTS.md for this repo" or "configure agents for this project". Do NOT copy the harness package template verbatim. Do NOT use for technical constitution (ns-harness-architecture-rules), business specs (ns-harness-codebase-reverse-spec), or brownfield stack maps (ns-harness-bootstrap-brownfield).
+description: (NS) Generate or refresh project AGENTS.md plus minimal CLAUDE.md pointer after harness install. Use for "write AGENTS.md", bootstrap agent entry point, replace harness stub, or configure Cursor/Claude project rules. Do NOT copy the harness template verbatim. Do NOT use for architecture-rules, reverse business specs, or brownfield maps.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

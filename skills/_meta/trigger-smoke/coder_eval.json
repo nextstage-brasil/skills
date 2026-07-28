@@ -1,0 +1,26 @@
+[
+  {
+    "query": "quick fix: add nullable phone to users and update the form, no SDD",
+    "should_trigger": true
+  },
+  {
+    "query": "just implement this small refactor on AuthService \u2014 no GitLab issue",
+    "should_trigger": true
+  },
+  {
+    "query": "implement GitLab issue https://gitlab.example.com/x/y/-/issues/12 end to end",
+    "should_trigger": false
+  },
+  {
+    "query": "why is this stack trace happening? diagnose only, don't fix yet",
+    "should_trigger": false
+  },
+  {
+    "query": "let's build the whole billing v2 version with requirements and tasks",
+    "should_trigger": false
+  },
+  {
+    "query": "review this PR for SOLID before merge",
+    "should_trigger": false
+  }
+]

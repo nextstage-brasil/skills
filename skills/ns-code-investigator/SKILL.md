@@ -1,6 +1,6 @@
 ---
 name: ns-code-investigator
-description: (NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, CI failures, or obscure bugs — entry priority 4 when the user wants diagnosis WITHOUT an implement request ("why does X break?", paste stack trace, CI fail). Use proactively when tests fail or pipelines break if cause is unclear AND the user has not asked to implement the fix yet. Do NOT use when the user asks to implement or fix code directly (ns-code-coder, priority 5), for multi-day or version scope (ns-spec-driven, priority 2), for GitLab ISSUE_URL execution (ns-execution-gitlab-issue), or for pre-merge code review (ns-code-reviewer).
+description: (NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, or CI — entry priority 4 when the user wants diagnosis WITHOUT implement ("why does X break?"). Use proactively on unclear test/CI failures if they have not asked to fix yet. Do NOT use for implement/fix (ns-code-coder), version scope (ns-spec-driven), GitLab ISSUE_URL execution, or pre-merge review (ns-code-reviewer).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

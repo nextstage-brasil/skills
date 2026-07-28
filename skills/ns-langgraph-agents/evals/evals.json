@@ -3,21 +3,92 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Our agent-api is a mess — graph in memory/, tests in src/, MCP tools hardcoded, tokens exploding every turn. Node 24 TypeScript LangGraph. Diagnose and give a phased recovery plan before any code.",
-      "expected_output": "Agent runs orphan checklist, posts gap report (layout, context window, MCP, observability), ordered fix phases, references specific docs; does not jump to coding.",
-      "files": []
+      "prompt": "Our agent-api is a mess \u2014 graph in memory/, tests in src/, MCP tools hardcoded, tokens exploding every turn. Node 24 TypeScript LangGraph. Diagnose and give a phased recovery plan before any code.",
+      "expected_output": "Agent runs orphan checklist, posts gap report (layout, placement, context window, MCP, observability), ordered fix phases, references specific docs; does not jump to coding.",
+      "files": [],
+      "assertions": [
+        "Posts a gap report or scored checklist covering structure/layout problems",
+        "Mentions context window / trim / token issues as a recovery phase",
+        "Mentions MCP governance or allowlist as a recovery phase",
+        "Provides ordered fix phases rather than jumping to implementing code",
+        "References orphan-recovery-checklist or runtime-layout skill docs"
+      ]
     },
     {
       "id": 2,
       "prompt": "Add GitLab + Postgres + Slack MCP servers to our LangGraph agent. ~40 tools total. Need allowlist, rate limits, and safe wire names for OpenAI. agent-api already exists.",
-      "expected_output": "Agent cites capability governance and mcp-complex-access references, proposes discovery filter, local classification, mcp__server__tool naming, singleton client, truncate tool output; handoff task for ns-code-coder.",
-      "files": []
+      "expected_output": "Agent cites capability governance and mcp-complex-access references, proposes discovery filter, local classification, mcp__server__tool naming, singleton client, truncate tool output; handoff task for ns-code-coder with target_paths.",
+      "files": [],
+      "assertions": [
+        "Proposes discovery-time allowlist / filter before bind",
+        "Requires local classification (not trusting remote read-only)",
+        "Specifies mcp__server__tool wire naming (no colons in wire names)",
+        "Mentions singleton / reused MCP client (not per-request stdio spawn)",
+        "Includes truncate/tool-output cap guidance",
+        "Provides handoff suitable for ns-code-coder (or equivalent implementation task)"
+      ]
     },
     {
       "id": 3,
       "prompt": "Agent node sends full state.messages to GPT with reasoning models. Summarizer runs every turn but history still grows. Fix approach?",
       "expected_output": "Agent explains checkpointer vs context window, trimMessagesForLlm, persisted RemoveMessage compaction after summarize, truncateToolOutput; points to context-window reference and snippets.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Distinguishes checkpointer full state from LLM context window",
+        "Requires trimMessagesForLlm (or equivalent) before LLM call",
+        "Requires persisted summarization compaction (RemoveMessage / rewrite)",
+        "Mentions truncateToolOutput for tool/MCP messages",
+        "Points to context-window reference or snippets"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Add Portuguese month labels and translation helpers for agent replies in our LangGraph agent-api. Someone started a translations.ts under graph/nodes \u2014 is that OK?",
+      "expected_output": "Agent refuses graph/ for locale; Placement Decision Block points to src/conversation/locale/; do_not_create_under includes graph/; cites placement-and-domains.md.",
+      "files": [],
+      "assertions": [
+        "Explicitly refuses or rejects placing locale/translations under graph/",
+        "Points target path to conversation/locale (or equivalent conversation layer)",
+        "Emits a Placement Decision Block (or equivalent structured placement decision)",
+        "Lists graph/ (or graph/nodes) under do_not_create_under / forbidden paths",
+        "Cites placement-and-domains.md or equivalent placement doctrine"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "After MCP returns chart data we want to auto-inject a formatting skill into the system prompt. We also have use_skill for the same skill id. Design the inject plan.",
+      "expected_output": "Prompt/Capability plan: exclusive bind XOR auto-inject for same id; ordered compose layers; CONTEXT_SKILL_BODY_MAX_CHARS separate from tool cap; compose outside god-node; cites prompt-and-capability-injection.md.",
+      "files": [],
+      "assertions": [
+        "States skill auto-inject and use_skill bind are mutually exclusive for same id (XOR)",
+        "Lists ordered system prompt composition layers",
+        "Separates skill-body truncate cap from tool/MCP output cap",
+        "Recommends compose helper outside the god-node",
+        "Emits Prompt/Capability plan (or equivalent structured inject plan)"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "We have a local StructuredTool in src/tools that the tools node can execute, but the model never calls it. Graph looks fine. What's wrong?",
+      "expected_output": "Bind parity diagnosis: dispatchable tool missing from bindTools; fix is bind or explicit unbound + test; cites anti-patterns / prompt-and-capability-injection.",
+      "files": [],
+      "assertions": [
+        "Diagnoses missing bindTools / bind parity as the likely root cause",
+        "States fix: add tool to bindTools OR document intentional unbound with test",
+        "Cites bind parity doctrine / anti-patterns / prompt-and-capability-injection"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "graph-spec.md says recursion_limit 5 and tool wires with colons. Live graph uses recursion_limit 25 and mcp__server__tool names. Should we change the code back to match the spec?",
+      "expected_output": "Spec Sync Gate: stale archive is not SoT; do not force-fit code to archive; update graph-spec to intended runtime (or decide intentional revert); flags colon wires as Critical for new names.",
+      "files": [],
+      "assertions": [
+        "Rejects blindly reverting live code to match a stale archived graph-spec",
+        "Applies Spec Sync Gate: update spec to intended runtime (or decide intentional revert)",
+        "Flags colon characters in wire names as invalid/Critical for new wires",
+        "Treats recursion_limit mismatch as a sync decision, not automatic code downgrade"
+      ]
     }
   ]
 }

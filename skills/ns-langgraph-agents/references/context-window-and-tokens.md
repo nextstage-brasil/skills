@@ -9,7 +9,10 @@ The checkpointer stores **full** graph state. Context management decides **what 
 | `CONTEXT_MAX_TOKENS` | 12000 | Sliding window budget for LLM input |
 | `CONTEXT_SUMMARIZE_MULTIPLIER` | 2 | Summarize when history tokens > max × multiplier |
 | `CONTEXT_TOOL_OUTPUT_MAX_CHARS` | 4000 | Cap tool/MCP text before `ToolMessage` |
+| `CONTEXT_SKILL_BODY_MAX_CHARS` | 12000 | Cap skill procedure bodies (auto-inject and `use_skill`) — **not** the tool cap |
 | `LLM_LIGHT_*` | falls back to main | Cheaper model for summarization |
+
+Do not reuse `CONTEXT_TOOL_OUTPUT_MAX_CHARS` for skill doctrine — that silently truncates procedures. Auto-inject and `use_skill` share the same skill-body cap and truncation fidelity. See `references/prompt-and-capability-injection.md`.
 
 ## Pipeline (agent node)
 
@@ -43,6 +46,10 @@ const safe = truncateToolOutput(raw, config.toolOutputMaxChars);
 ```
 
 Audit logs may store a separate truncated copy — do not rely on messages for audit.
+
+## Skill body truncation
+
+When injecting or returning skill markdown, truncate with `CONTEXT_SKILL_BODY_MAX_CHARS` (or `config.skillBodyMaxChars`). Keep enough of the procedure that the model can follow steps — prefer head+tail preservation over naive head-only cut when the body is long.
 
 ## Summarization persistence (critical)
 

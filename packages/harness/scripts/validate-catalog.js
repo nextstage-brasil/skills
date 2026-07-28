@@ -23,12 +23,15 @@ for (const skill of catalog.alwaysInstall ?? []) {
 }
 
 const skillDirs = readdirSync(skillsDir).filter((entry) => {
+  if (entry === '_meta' || entry.endsWith('-workspace') || entry.startsWith('.')) {
+    return false;
+  }
   const path = join(skillsDir, entry);
-  return (
-    entry !== '_meta' &&
-    statSync(path).isDirectory() &&
-    statSync(join(path, 'SKILL.md')).isFile()
-  );
+  try {
+    return statSync(path).isDirectory() && statSync(join(path, 'SKILL.md')).isFile();
+  } catch {
+    return false;
+  }
 });
 
 const errors = [];

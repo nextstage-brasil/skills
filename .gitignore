@@ -3,4 +3,6 @@ __pycache__/
 .idea/
 .vscode/
 node_modules/
-/docs/
+/docs/skills/*-workspace/
+skills/*-workspace/
+.skill-workspaces/

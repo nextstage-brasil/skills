@@ -1,6 +1,6 @@
 ---
 name: ns-spec-driven
-description: (NS) Spec-driven delivery face — clarify scope, write requirements, generate tasks, implement a version, or resume paused SDD work. Entry priority 2: use when the user wants to specify a feature, start or continue a version, implement from tasks, or says "let's build X" with multi-day or version scope — even without naming individual PM/code skills. Auto-sizes Small/Medium/Large and delegates to worker skills. For bare quick fixes without SDD context, prefer ns-code-coder (entry priority 5). Do NOT use for brownfield onboarding, codebase mapping, architecture rules, or full project prepare (use /ns-harness-prepare manually). Do NOT auto-run ns-harness-prepare or list Prepare in the pipeline.
+description: (NS) Spec-driven delivery face — clarify, requirements, tasks, implement or resume a version. Entry priority 2: use for feature specs, version work, or "let's build X" with multi-day scope; auto-sizes and delegates to workers. Prefer ns-code-coder for bare quick fixes. Do NOT use for brownfield onboarding, architecture rules, or /ns-harness-prepare (manual only; never auto-run Prepare).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

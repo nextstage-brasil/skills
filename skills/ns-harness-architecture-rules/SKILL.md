@@ -1,6 +1,6 @@
 ---
 name: ns-harness-architecture-rules
-description: (NS) Scan a codebase and generate or refresh a lean architecture-rules.md constitution for AI agents — stack, layout, patterns, constraints, and pointers to deeper rules. Use whenever the user asks to generate architecture rules, create .nextstage-harness/rules/architecture-rules.md, bootstrap agent context, codify project conventions, document stack and module layout for agents, or set up always-on project rules — even if they say "document how this repo works for the AI" or "create rules the agent reads every session". Do NOT use for business/functional specs (ns-harness-codebase-reverse-spec), SDD brownfield maps (ns-harness-bootstrap-brownfield), or ad-hoc single-topic Cursor rules without a full architecture pass.
+description: (NS) Generate or refresh lean architecture-rules.md for AI agents — stack, layout, patterns, constraints. Use when the user asks for architecture rules, .nextstage-harness/rules/architecture-rules.md, agent conventions, or "document how this repo works for the AI". Do NOT use for business specs (ns-harness-codebase-reverse-spec), brownfield maps (ns-harness-bootstrap-brownfield), or one-off Cursor rules without a full architecture pass.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

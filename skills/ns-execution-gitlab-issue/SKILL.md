@@ -1,6 +1,6 @@
 ---
 name: ns-execution-gitlab-issue
-description: (NS) Execute a GitLab issue end-to-end — first-act status, branch-reuse and source-branch gates, single-worktree isolation, atomic delivery, MR lifecycle, mandatory code review gate with bounded fix loop. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly — not for local-only ad-hoc coding (use ns-code-coder) or non-GitLab autonomous runs (use ns-code-autonomous standalone). Delegates actual coding to the ns-code-autonomous engine. Requires mcp-gitlab-usage for MCP and ns-code-reviewer for the review gate.
+description: (NS) Execute a GitLab issue end-to-end — status gates, worktree isolation, atomic delivery, MR, mandatory review+fix loop. Use for ISSUE_URL or "implement this GitLab issue". Not for local ad-hoc coding (ns-code-coder) or non-GitLab autonomous runs (ns-code-autonomous). Delegates coding to ns-code-autonomous; needs mcp-gitlab-usage + ns-code-reviewer.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

@@ -1,6 +1,6 @@
 ---
 name: ns-project-manager
-description: "(NS) Gated PM: clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk/status/meeting/OKR. Use on transcripts, backlog, timeline, delivery date, status — even if PM unnamed."
+description: (NS) Gated PM workflow — clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk, status, meeting, OKR. Use on transcripts, backlog, timeline, delivery date, or status requests — even if PM is unnamed. Do NOT use for coding, SDD requirements generation, or GitLab issue execution.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

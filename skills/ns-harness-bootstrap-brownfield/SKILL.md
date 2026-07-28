@@ -1,6 +1,6 @@
 ---
 name: ns-harness-bootstrap-brownfield
-description: (NS) Onboard an existing codebase into spec-driven planning — map stack, modules, rule adherence, and gaps without modifying code. Use when the user says analyze existing project, brownfield bootstrap, or before first requirements on a repo with code but no requirements. Outputs brownfield-map.md for ns-sdd-requirements-generator. Read-only on source code.
+description: (NS) Onboard an existing codebase into spec-driven planning — map stack, modules, rule adherence, and gaps without modifying code. Use when the user says analyze existing project, brownfield bootstrap, or before first requirements on a repo with code but no requirements. Outputs brownfield-map.md for ns-sdd-requirements-generator. Read-only on source code. Do NOT use for greenfield with no app code, architecture-rules generation, or writing requirements.md.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

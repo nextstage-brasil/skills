@@ -1,12 +1,17 @@
 {
   "evals": [
     {
-      "prompt": "Write a contributor guide for local development — Docker-based tests, env setup. Put it under docs/.",
-      "expected": "Invokes ns-code-docs-writer: discovers project layout from AGENTS.md/architecture-rules, writes docs/ guide with runnable commands, does not assume packages/ monorepo layout."
+      "prompt": "Write a contributor guide for local development \u2014 Docker-based tests, env setup. Put it under docs/.",
+      "id": 1,
+      "expected_output": "Invokes ns-code-docs-writer: discovers project layout from AGENTS.md/architecture-rules, writes docs/ guide with runnable commands, does not assume packages/ monorepo layout.",
+      "files": []
     },
     {
       "prompt": "Update the root README with the new harness sync workflow.",
-      "expected": "Updates README with accurate harness sync steps, links to .nextstage-harness/README.md, follows style guide."
+      "id": 2,
+      "expected_output": "Updates README with accurate harness sync steps, links to .nextstage-harness/README.md, follows style guide.",
+      "files": []
     }
-  ]
+  ],
+  "skill_name": "ns-code-docs-writer"
 }

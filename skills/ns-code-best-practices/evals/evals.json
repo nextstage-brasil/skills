@@ -1,12 +1,17 @@
 {
   "evals": [
     {
-      "prompt": "Audit security headers for our Express API — we have no CSP yet.",
-      "expected": "Invokes ns-code-best-practices: scans Express config/middleware, reports CSP and related headers using checklist, suggests minimal safe additions."
+      "prompt": "Audit security headers for our Express API \u2014 we have no CSP yet.",
+      "id": 1,
+      "expected_output": "Invokes ns-code-best-practices: scans Express config/middleware, reports CSP and related headers using checklist, suggests minimal safe additions.",
+      "files": []
     },
     {
       "prompt": "Review this merge request for SOLID violations.",
-      "expected": "Does not use ns-code-best-practices as primary; should route to ns-code-reviewer instead."
+      "id": 2,
+      "expected_output": "Does not use ns-code-best-practices as primary; should route to ns-code-reviewer instead.",
+      "files": []
     }
-  ]
+  ],
+  "skill_name": "ns-code-best-practices"
 }

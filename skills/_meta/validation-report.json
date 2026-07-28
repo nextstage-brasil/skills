@@ -1,0 +1,20 @@
+{
+  "errors": [],
+  "warnings": [
+    "ns-code-best-practices: eval None no expected_output/assertions",
+    "ns-code-best-practices: eval None no expected_output/assertions",
+    "ns-code-docs-writer: eval None no expected_output/assertions",
+    "ns-code-docs-writer: eval None no expected_output/assertions",
+    "ns-code-frontend-design: eval None no expected_output/assertions",
+    "ns-code-frontend-design: eval None no expected_output/assertions",
+    "ns-execution-orchestrator: eval None no expected_output/assertions",
+    "ns-execution-orchestrator: eval None no expected_output/assertions",
+    "ns-execution-orchestrator: eval None no expected_output/assertions",
+    "ns-harness-prepare: eval None no expected_output/assertions",
+    "ns-harness-prepare: eval None no expected_output/assertions",
+    "ns-harness-prepare: eval None no expected_output/assertions",
+    "ns-spec-driven: eval None no expected_output/assertions",
+    "ns-spec-driven: eval None no expected_output/assertions",
+    "ns-spec-driven: eval None no expected_output/assertions"
+  ]
+}

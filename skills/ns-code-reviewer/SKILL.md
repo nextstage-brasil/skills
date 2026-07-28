@@ -50,6 +50,8 @@ Within each section, order by severity:
 2. Warning (should fix)
 3. Suggestion (consider)
 
+When the diff touches `agent-api` (or LangGraph runtime paths), load `../ns-langgraph-agents/references/anti-patterns.md` and treat Placement, Prompt inject, Bind parity, Spec drift, and colon wire names as Critical if violated.
+
 ### SOLID and clean code
 
 - SRP, OCP, LSP, ISP, DIP

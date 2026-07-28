@@ -1,6 +1,6 @@
 ---
 name: ns-sdd-clarify-requirements
-description: (NS) Resolve ambiguities, gaps, and unstated assumptions in a scope description before generating requirements. On brownfield repos, runs ns-harness-bootstrap-brownfield when brownfield-map.md is missing; when a map exists, mandatory human gate to refresh or keep it (shows last map date). Use when the user gives a vague or incomplete scope, mentions "dashboard", "notifications", "integration with X" without detail, or before requirements generation when terms are ambiguous — even if they do not ask to "clarify". Do NOT generate requirements.md in this skill; output enriched context only.
+description: (NS) Resolve ambiguities and gaps in a vague scope before requirements. On brownfield, runs bootstrap when brownfield-map.md is missing; if map exists, human gate to refresh or keep. Use for incomplete scopes ("dashboard", "notifications", "integration with X") or before requirements when terms are unclear. Do NOT generate requirements.md — enriched context only.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

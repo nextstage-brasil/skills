@@ -1,6 +1,6 @@
 ---
 name: ns-harness
-description: (NS) Harness discovery, artifact layout, and SDD planning gates for NextStage skills. Installed automatically as a dependency — use when resolving AGENTS.md, .nextstage-harness/rules, docs/versions paths, or confirmation gates.
+description: (NS) Harness discovery, artifact layout, and SDD planning gates for NextStage skills. Installed automatically as a dependency — use when resolving AGENTS.md, .nextstage-harness/rules, docs/versions paths, or confirmation gates. Do NOT use as a standalone feature workflow; pair with domain skills for coding, SDD, or GitLab execution.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

@@ -1,6 +1,6 @@
 ---
 name: ns-sdd-living-spec-consolidator
-description: (NS) Consolidate delivered version deltas into living domain specs under docs/specs/ — INDEX.md and per-domain markdown. Use after version delivery when requirements, code-review-report, and execution-handoff exist — typically at version closure. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval.
+description: (NS) Consolidate delivered version deltas into living domain specs under docs/specs/ — INDEX.md and per-domain markdown. Use whenever the user asks to update living specs, consolidate a delivered version, or close a version into docs/specs/ when requirements, code-review-report, and execution-handoff exist. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

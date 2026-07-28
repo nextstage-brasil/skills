@@ -1,6 +1,6 @@
 ---
 name: ns-code-autonomous
-description: (NS) Harness-aware autonomous execution engine — self-decides planning depth, resolves doubts against docs/context and docs/specs before escalating, dispatches multi-agent implementation in an isolated worktree. Use as the standalone entry point for a local plan file, a pasted execution plan, or an ad-hoc "run this autonomously" request with no GitLab issue involved. Also acts as the Phase 2 execution engine when invoked by ns-execution-gitlab-issue — do not run the standalone pipeline in that case. Not for simple single-step edits (use ns-code-coder) and not for GitLab issues directly (use ns-execution-gitlab-issue, which calls this skill internally).
+description: (NS) Autonomous execution engine — plans depth, resolves doubts from docs/specs, multi-agent work in an isolated worktree. Use for a local/pasted plan or "run this autonomously" without GitLab. Also Phase 2 under ns-execution-gitlab-issue (do not run standalone then). Not for single-step edits (ns-code-coder) or GitLab issues directly (ns-execution-gitlab-issue).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

@@ -1,10 +1,10 @@
 ---
 name: ns-langgraph-agents
-description: (NS) Build, maintain, and recover production LangGraph.js agent runtimes — TypeScript StateGraph, MCP multi-server tools, capability governance, content blocks (reasoning/tool_call/error), context-window token management, checkpointers, HITL interrupts, streaming SSE, and observability. Use whenever the user works on agent-api, LangGraph graphs, MCP tool integration, agent checkpointers, trim/summarize message history, ToolMessage errors, or says their agent project is lost or has no structure — even if they only say "fix my LangGraph agent" or "wire MCP tools". Pair with ns-code-coder for code changes and ns-multi-agent-architect for LangGraph vs CrewAI choice only. Do NOT use for CrewAI crews, generic web apps without an agent runtime, or SDD requirements without implementation intent.
+description: (NS) LangGraph.js agent-api — StateGraph, MCP tools, skill bind/inject, checkpointers, context-window trim, HITL/SSE, prompt/locale placement. Use for agent-api, LangGraph graphs, MCP wiring, orphan layout, system-prompt compose, bind parity, graph-spec sync, or "fix my LangGraph agent" / "wire MCP tools" / "translations in the graph". Code via ns-code-coder; LangGraph vs CrewAI via ns-multi-agent-architect. Do NOT use for CrewAI crews, generic web apps, or SDD-only requirements.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
 ---
@@ -13,7 +13,7 @@ depends:
 
 Senior agent-runtime engineer. Guide construction and maintenance of **production-grade LangGraph.js** systems (Node 24+, TypeScript strict, `@langchain/langgraph`).
 
-This skill owns **runtime doctrine and coordination**. Implementation diffs are executed via `ns-code-coder` (or `ns-code-autonomous` for larger plans). Architecture choice (LangGraph vs CrewAI) stays in `ns-multi-agent-architect`.
+This skill owns **runtime doctrine and coordination** — including **placement**, **prompt/capability injection**, and **graph-spec sync**. Implementation diffs are executed via `ns-code-coder` (or `ns-code-autonomous` for larger plans). Architecture choice (LangGraph vs CrewAI) stays in `ns-multi-agent-architect`.
 
 ## Harness discovery
 
@@ -25,6 +25,9 @@ See `../ns-harness/references/harness-discovery.md`. Read project `AGENTS.md` an
 | --------- | ------ |
 | Greenfield agent-api | Follow **Build workflow**; produce `graph-spec.md` first |
 | Brownfield / orphaned runtime | Run **Orphan recovery** (`references/orphan-recovery-checklist.md`) before features |
+| New file / unclear folder | **Placement Decision Block** + `references/placement-and-domains.md` |
+| System prompt / skill inject / bind | **Prompt/Capability plan** + `references/prompt-and-capability-injection.md` |
+| Topology / state / capabilities change | **Spec Sync Gate** — update `graph-spec.md` in the same delivery |
 | MCP with many servers/tools | Read `references/mcp-complex-access.md` + `references/capability-governance.md` |
 | Token blow-up / slow turns | Read `references/context-window-and-tokens.md` |
 | Provider message/reasoning quirks | Read `references/message-content-blocks.md` |
@@ -43,7 +46,45 @@ Three capability kinds bind to the model:
 | MCP tool | `mcp__{server}__{tool}` | `mcp:{server}:{tool}` |
 | Skill procedure | `use_skill__{id}` | `skill:{id}` |
 
-Wire names must match `^[a-zA-Z0-9_-]{1,128}$` (use `__` separators; colons only in internal ids).
+Wire names must match `^[a-zA-Z0-9_-]{1,128}$` (use `__` separators; colons only in internal ids). Colon in a **new** wire name is Critical on review.
+
+## Pre-change gates
+
+Before any new file or inject/bind change, complete all three. Skip coding until they are posted.
+
+### 1. Placement Decision Block
+
+```markdown
+### Placement Decision Block
+- Artifact: …
+- Type: …
+- Target path: …
+- Layer: …
+- Refs: placement-and-domains.md
+- do_not_create_under: […]
+```
+
+Full matrix: `references/placement-and-domains.md`. `tenant_model: simple` still requires the matrix; `vertical` adds verticals as **config-only** (`config/verticals/`, zero new `src/`).
+
+### 2. Prompt / Capability plan
+
+```markdown
+### Prompt / Capability plan
+- System layers touched: […]
+- Canonical prompt path: …
+- Session overlay: yes/no
+- Bind list: […]
+- Auto-inject skills: […] (exclusive of bind for same id)
+- Truncate caps: tool vs skill body
+- Bind parity: …
+- Spec paths to sync: […]
+```
+
+Full doctrine: `references/prompt-and-capability-injection.md`.
+
+### 3. Spec Sync Gate
+
+If **nodes, edges, state, capabilities, recursion_limit, or wire names** change → update `graph-spec.md` in the **same** delivery. An archived or stale spec is **not** source of truth — do not "fix code to match archive" when the live graph is intentional; sync the spec to the intended runtime instead.
 
 ## Reference map
 
@@ -53,8 +94,10 @@ Load on demand — do not memorize entire files into the conversation.
 | --------- | --------- |
 | `references/orphan-recovery-checklist.md` | Project structure unclear or agent "lost" |
 | `references/runtime-layout.md` | Scaffolding, refactors, layer violations |
+| `references/placement-and-domains.md` | Where to put files; domain vs graph vs config |
+| `references/prompt-and-capability-injection.md` | System prompt layers, bind vs inject, bind parity |
 | `references/message-content-blocks.md` | AIMessage/HumanMessage/ToolMessage across providers |
-| `references/context-window-and-tokens.md` | trim, summarize, tool output caps |
+| `references/context-window-and-tokens.md` | trim, summarize, tool vs skill body caps |
 | `references/mcp-complex-access.md` | Multi-server MCP, discovery, transport, lifecycle |
 | `references/capability-governance.md` | Allowlist, classification, rate limits, secrets |
 | `references/error-and-reliability.md` | Tool errors, circuit breaker, retries |
@@ -79,7 +122,7 @@ Templates (copy snippets, not full scaffolds): `templates/graph-spec.md`, `templ
 When the runtime is disorganized or the team is blocked:
 
 1. Read `references/orphan-recovery-checklist.md` and score the project.
-2. Post a short gap report: structure, context window, MCP governance, observability, HTTP contract.
+2. Post a short gap report: structure, placement, context window, inject/bind parity, MCP governance, observability, HTTP contract, spec sync.
 3. Propose a **ordered fix plan** (one phase per message if large).
 4. Only then implement via `ns-code-coder`.
 
@@ -89,13 +132,13 @@ Do not add graph nodes or MCP servers until layout and governance baselines pass
 
 ### Phase 0 — Spec gate
 
-If `graph-spec.md` is missing, create it from `templates/graph-spec.md`. Minimum sections: locked header (`framework`, `tenant_model`, `architecture`, `interaction_mode`), state schema, nodes table, edges, interrupts, memory, capabilities, HTTP routes.
+If `graph-spec.md` is missing, create it from `templates/graph-spec.md`. Minimum sections: locked header (`framework`, `tenant_model`, `architecture`, `interaction_mode`), domain ownership, prompt composition, state schema, nodes table, edges, interrupts, memory, capability bind/inject table, recursion_limit, HTTP routes.
 
 If the user has no architecture decision yet, stop and invoke `ns-multi-agent-architect` first.
 
 ### Phase 1 — Skeleton
 
-Align tree per `references/runtime-layout.md`. Production code under `src/` only; tests under `tests/`. Graph compiles in `src/graph/graph.ts`; checkpointer in `src/memory/`.
+Align tree per `references/runtime-layout.md` and `references/placement-and-domains.md`. Production code under `src/` only; tests under `tests/`. Graph compiles in `src/graph/graph.ts`; checkpointer in `src/memory/`. Conversation owns `prompts/`, `locale/`, `presentation/`.
 
 Use snippets from `templates/snippets/` — do not paste a monolithic scaffold.
 
@@ -117,6 +160,7 @@ Implement per `references/context-window-and-tokens.md`:
 
 - `trimMessagesForLlm` before every LLM call.
 - `truncateToolOutput` before `ToolMessage` enters state.
+- Separate `CONTEXT_SKILL_BODY_MAX_CHARS` for skill bodies.
 - Optional `summarizeOlderMessages` with **persisted compaction** (`RemoveMessage` + rewrite) in the same agent-node return.
 
 Never pass raw `state.messages` to the model.
@@ -125,9 +169,9 @@ Never pass raw `state.messages` to the model.
 
 1. Local `StructuredTool`s in `src/tools/`.
 2. MCP: governed client — discovery → local allowlist → wire names → singleton client lifecycle (`references/mcp-complex-access.md`).
-3. Skills: `skills/*.md` auto-discovered → `use_skill__{id}` tools.
+3. Skills: `skills/*.md` auto-discovered → `use_skill__{id}` **or** auto-inject (exclusive per id).
 
-Apply `references/capability-governance.md` before `bind_tools`.
+Apply `references/capability-governance.md` and `references/prompt-and-capability-injection.md` before `bindTools`. Enforce **bind parity**.
 
 ### Phase 6 — HTTP and interaction mode
 
@@ -147,18 +191,19 @@ Wire `references/observability.md`: `initDb`, `runStorage`, `logLlmCall`, `logTo
 
 - Add suites per `references/evals-and-gates.md`.
 - Run `npm run build && npm test` in `{agent_api_root}`.
-- Invoke `ns-code-reviewer` on the diff.
+- Invoke `ns-code-reviewer` on the diff; ask it to verify placement, inject, wire-name, and bind-parity anti-patterns when the diff touches `agent-api`.
 
 ## Maintenance workflow
 
 For ongoing work (not greenfield):
 
-1. Confirm `graph-spec.md` matches compiled graph.
-2. Identify layer: graph node, conversation domain, MCP, memory, HTTP.
-3. Read the matching reference section before editing.
-4. Implement minimal diff via `ns-code-coder`.
-5. Update Postman when HTTP routes change.
-6. Re-run orphan checklist items touched by the change.
+1. Run the three **Pre-change gates**.
+2. Confirm `graph-spec.md` will match the intended compiled graph after the change.
+3. Identify layer: graph node, conversation domain, MCP, memory, HTTP.
+4. Read the matching reference section before editing.
+5. Implement minimal diff via `ns-code-coder` with placement/inject handoff fields.
+6. Update Postman when HTTP routes change.
+7. Re-run orphan checklist items touched by the change.
 
 ## MCP complex access (quick rules)
 
@@ -182,35 +227,51 @@ When implementation is approved, delegate with:
 - Root: {agent_api_root}
 - Spec: path/to/graph-spec.md
 - Phase: [number and name from this skill]
+- target_paths: […]
+- layer: […]
+- do_not_create_under: […]
+- injection_notes: [layers / bind vs auto-inject / caps]
+- spec_paths_to_sync: […]
 - References to apply: [list]
-- Acceptance: build + test pass; orphan checklist items [n] resolved
-- Review: ns-code-reviewer after tests
+- Acceptance: build + test pass; orphan checklist items [n] resolved; placement + inject + bind parity verified
+- Review: ns-code-reviewer after tests — must check placement, inject, wire names (`:`), bind parity (load ns-langgraph-agents anti-patterns when diff touches agent-api)
 ```
 
-Stay in this skill for diagnosis, spec updates, and governance design; switch to coder for the diff.
+Stay in this skill for diagnosis, spec updates, placement, and governance design; switch to coder for the diff.
 
 ## Stop conditions
 
 | Condition | Action |
 | --------- | ------ |
 | No `graph-spec.md` and user wants code now | Create spec or invoke architect |
+| Path outside placement matrix / inventing folders | Stop; propose legal path |
+| Domain / locale / copy landing in `graph/` or `llm/` | Stop; reroute to conversation/config |
+| Bind without parity (dispatchable but unbound) | Stop; fix bind or document unbound + test |
+| `:` in a new wire name | Stop; use `__` separators |
+| Skill auto-inject + bind same id without explicit decision | Stop; choose one mode |
 | CrewAI requested | Redirect to appropriate skill |
 | Change spans >3 layers without plan | One-line phased plan, wait for approval |
 | Critical security gap (secrets in state, ungoverned MCP) | Block feature work; fix governance first |
 
-## Related skills
+## Related skills (ownership)
 
-- `ns-code-coder` — apply code diffs from this skill's plan
-- `ns-code-reviewer` — mandatory after implementation
-- `ns-multi-agent-architect` — framework and topology before `graph-spec.md`
-- `ns-code-investigator` — deep debugging when runtime behavior is unclear
+| Skill | Owns |
+| ----- | ---- |
+| `ns-langgraph-agents` | Doctrine, placement, inject plan, graph-spec |
+| `ns-code-coder` | Diff + review loop |
+| `ns-code-reviewer` | Verdict; when diff touches `agent-api`, apply placement + inject + wire-name + bind-parity anti-patterns from this skill |
+| `ns-multi-agent-architect` | Framework choice only |
+| `ns-code-investigator` | Runtime debug |
 
 ## Forbidden
 
 - Storing secrets, API keys, or system prompts in graph state or checkpointer
 - Passing unbounded tool/MCP output into `state.messages`
+- Applying tool/MCP truncate caps to skill bodies (use `CONTEXT_SKILL_BODY_MAX_CHARS`)
 - Trusting MCP tool metadata for security classification
 - Spawning stdio MCP subprocesses per HTTP request in production
 - `memory/` compiling `StateGraph`
 - Domain qualify/conversation prompts in `src/llm/`
+- Locale/presentation under `graph/`
+- Nudge as fake `HumanMessage`
 - Tests under `src/`

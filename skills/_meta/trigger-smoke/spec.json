@@ -1,0 +1,59 @@
+{
+  "skill_name": "ns-spec-driven",
+  "description": "(NS) Spec-driven delivery face \u2014 clarify, requirements, tasks, implement or resume a version. Entry priority 2: use for feature specs, version work, or \"let's build X\" with multi-day scope; auto-sizes and delegates to workers. Prefer ns-code-coder for bare quick fixes. Do NOT use for brownfield onboarding, architecture rules, or /ns-harness-prepare (manual only; never auto-run Prepare).",
+  "results": [
+    {
+      "query": "diagnose failing phpunit without implementing",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 1,
+      "pass": true
+    },
+    {
+      "query": "quick fix typo in README, no version planning",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 1,
+      "pass": true
+    },
+    {
+      "query": "just add a column to the migration, ad-hoc",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 1,
+      "pass": true
+    },
+    {
+      "query": "run harness prepare on this brownfield repo",
+      "should_trigger": false,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 1,
+      "pass": true
+    },
+    {
+      "query": "let's build the notifications feature as a full version with requirements",
+      "should_trigger": true,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 1,
+      "pass": false
+    },
+    {
+      "query": "resume SDD work on version 2026-08 \u2014 generate remaining tasks",
+      "should_trigger": true,
+      "trigger_rate": 0.0,
+      "triggers": 0,
+      "runs": 1,
+      "pass": false
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "passed": 4,
+    "failed": 2
+  }
+}
