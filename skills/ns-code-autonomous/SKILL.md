@@ -4,7 +4,7 @@ description: (NS) Harness-aware autonomous execution engine — self-decides pla
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
   - ns-code-reviewer
@@ -28,10 +28,12 @@ See `../ns-harness/references/harness-discovery.md`.
 
 ## Routing (read first)
 
-1. **Origin is a GitLab issue** (`ISSUE_URL` or issue reference) → follow `ns-execution-gitlab-issue` end to end; this skill only runs as its Phase 2 engine (**Engine mode** below). Do not run the standalone pipeline, do not touch GitLab state, do not create a worktree.
-2. **Otherwise** (local plan file, pasted text/plan, ad-hoc autonomous request without an issue) → run the **standalone pipeline**: own worktree, own state, own review loop.
+Entry priority table: `../ns-harness/references/code-skill-routing.md`. Standalone triggers: `references/entry-triggers.md`.
 
-See `references/routing.md` for the full decision detail and the Engine-mode input/output contract.
+1. **Origin is a GitLab issue** (`ISSUE_URL` or issue reference) → entry priority **1** — follow `ns-execution-gitlab-issue` end to end; this skill only runs as its Phase 2 engine (**Engine mode** below). Do not run the standalone pipeline, do not touch GitLab state, do not create a worktree.
+2. **Standalone autonomous** (local plan file, pasted text/plan, ad-hoc "implement this autonomously" without an issue) → entry priority **3** — run the **standalone pipeline**: own worktree, own state, own review loop.
+
+See `references/routing.md` for Engine-mode I/O and anti-cycle rules with `ns-execution-gitlab-issue`.
 
 ## Engine mode (invoked by `ns-execution-gitlab-issue`)
 
@@ -84,7 +86,8 @@ See `references/standalone-pipeline.md` for the full flow.
 
 | File                                | When                                                                |
 | ------------------------------------ | --------------------------------------------------------------------- |
-| `references/routing.md`              | Issue vs. standalone decision; Engine-mode I/O contract with `ns-execution-gitlab-issue` |
+| `references/routing.md`              | Issue vs. standalone; Engine-mode I/O and anti-cycle with `ns-execution-gitlab-issue` |
+| `references/entry-triggers.md`       | Priority 3 standalone entry phrases |
 | `references/planning-decision.md`    | Self-evaluation heuristic: single unit vs. requirements+tasks+plan  |
 | `references/doubt-resolution.md`     | Self-ask, docs-first lookup, destructive criteria, escalation shape |
 | `references/multi-agent-dispatch.md` | DAG + disjoint-scope parallel rule, subagent prompt, checkpoint commits |

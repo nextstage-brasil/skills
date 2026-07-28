@@ -1,10 +1,10 @@
 ---
 name: ns-spec-driven
-description: (NS) Spec-driven delivery face — clarify scope, write requirements, generate tasks, implement a version, quick fix, or resume paused work. Use whenever the user wants to specify a feature, start or continue a version, implement from tasks, ship a quick fix, resume SDD, or says "let's build X" without naming individual PM/code skills — even if they skip formal planning words. Auto-sizes Small/Medium/Large and delegates to worker skills. Do NOT use for brownfield onboarding, codebase mapping, architecture rules, or full project prepare (use /ns-harness-prepare manually). Do NOT auto-run ns-harness-prepare or list Prepare in the pipeline.
+description: (NS) Spec-driven delivery face — clarify scope, write requirements, generate tasks, implement a version, or resume paused SDD work. Entry priority 2: use when the user wants to specify a feature, start or continue a version, implement from tasks, or says "let's build X" with multi-day or version scope — even without naming individual PM/code skills. Auto-sizes Small/Medium/Large and delegates to worker skills. For bare quick fixes without SDD context, prefer ns-code-coder (entry priority 5). Do NOT use for brownfield onboarding, codebase mapping, architecture rules, or full project prepare (use /ns-harness-prepare manually). Do NOT auto-run ns-harness-prepare or list Prepare in the pipeline.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
   - ns-harness-prepare
@@ -26,6 +26,16 @@ depends:
 **Delivery face** for the spec-driven journey: clarify → specify → (consistency / partition) → tasks → execute → close.
 
 You **orchestrate** — you do **not** replace worker skills. Read each worker `SKILL.md` at delegation time. State lives on **disk** (`docs/versions/`, `docs/context/`, handoff files), not chat history.
+
+Entry priority **2** (feature / version / SDD / multi-day). Harness table: `../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`. Bare quick fixes without SDD context → redirect to `ns-code-coder` (priority 5) unless the user explicitly invoked this skill.
+
+## Routing (read first)
+
+| Handoff | Target |
+| ------- | ------ |
+| Small / quick inside SDD | `ns-code-coder` |
+| Version + handoff | `ns-sdd-execution-handoff-generator` → `ns-code-coder` or `ns-code-autonomous` |
+| Bare quick fix, no SDD context | Redirect to `ns-code-coder` (priority 5) |
 
 ## Harness discovery
 

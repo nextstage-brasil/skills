@@ -4,7 +4,7 @@ description: (NS) Execute a GitLab issue end-to-end — first-act status, branch
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -14,7 +14,20 @@ depends:
 
 # Execute GitLab Issue
 
-Owns GitLab issue state end to end — status, branch/worktree lifecycle, MR, comments, delivery, review gate. Delegates actual coding to the `ns-code-autonomous` engine (Phase 2).
+Entry priority **1** for GitLab `ISSUE_URL`. Owns GitLab issue state end to end — status, branch/worktree lifecycle, MR, comments, delivery, review gate. Delegates actual coding to the `ns-code-autonomous` engine (Phase 2). Full routing: `../ns-harness/references/code-skill-routing.md`.
+
+## Routing (read first)
+
+Entry priority **1**. Harness table: `../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
+
+| Handoff | Target |
+| ------- | ------ |
+| Phase 2 execution | `ns-code-autonomous` (Engine mode) |
+| MR / status / time / comments | `mcp-gitlab-usage` |
+| Phase 4 review gate | `ns-code-reviewer` |
+| Rejected fix loop | `ns-code-autonomous` → `C2` subagents (same worktree; no re-entry to this skill from `A`/`C2`) |
+
+`G` remains the single GitLab lifecycle owner until delivery completes. Work units under `A` must not re-open this skill.
 
 ## Harness discovery
 

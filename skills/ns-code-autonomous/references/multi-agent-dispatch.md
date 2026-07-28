@@ -19,6 +19,7 @@ Each unit — parallel or sequential — is a `ns-code-coder` subagent (or equiv
 - Follows `ns-code-coder`'s own implementation rules (diff-first, read before write, no unrelated refactors).
 - Escalates any *new* destructive doubt it hits back up through the doubt protocol instead of guessing — it does not resolve destructive doubts on its own.
 - Must not "unblock" a failed worktree by editing files on the product main checkout. Failure to isolate = unit status `blocked`, not a soft continue.
+- In **Engine mode** (invoked by `ns-execution-gitlab-issue`): do **not** route to `ns-execution-gitlab-issue` if an `ISSUE_URL` appears in scope — report through the doubt protocol to the caller instead.
 
 ### Subagent prompt template
 

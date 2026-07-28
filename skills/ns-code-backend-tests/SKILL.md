@@ -5,6 +5,8 @@ license: Apache-2.0
 metadata:
   author: nextstage-brasil
   version: "1.0"
+depends:
+  - ns-harness
 ---
 
 # Create Backend Tests

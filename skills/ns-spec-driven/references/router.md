@@ -68,6 +68,7 @@ See `quick-mode.md` — skip PM chain.
 
 | Trigger | Redirect |
 | ------- | -------- |
+| Bare "quick fix" / "just change X" without SDD context | `ns-code-coder` (entry priority 5) |
 | "prepare project", "bootstrap", "brownfield map" | `/ns-harness-prepare` (manual) |
 | "forecast", "RICE", project manager | `ns-project-manager` |
 | "review this MR" only | `ns-code-reviewer` |

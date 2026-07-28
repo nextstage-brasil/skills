@@ -19,6 +19,7 @@ All artifacts in this repository must be written in English:
 
 ```
 skills/<name>/          # Canonical skill source (SKILL.md + references/, scripts/, evals/)
+.cursor/skills/         # Maintainer-only project skills (not in harness catalog)
 packages/harness/       # @nextstage-brasil/harness CLI (install wizard, catalog, templates)
 ```
 
@@ -68,3 +69,7 @@ CI (`.github/workflows/validate-skills.yml`) runs on changes under `skills/` and
 - Harness CLI smoke tests
 
 Run the catalog validator locally before pushing when adding or renaming skills.
+
+## Maintainer-only project skills
+
+Skills under `.cursor/skills/` guide work **in this repository** only. They are **not** listed in `catalog.json` and are **not** installed by harness. Example: `code-routing-diagram` — update the code routing Mermaid after changing routing in catalog skills.

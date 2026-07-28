@@ -1,21 +1,37 @@
 ---
 name: ns-code-investigator
-description: (NS) Senior technical investigation, debugging, and root cause analysis from errors, logs, stack traces, failing tests, CI failures, or unexpected behavior. Use proactively when tests fail, pipelines break, exceptions appear, or the user suspects a bug — even if they only paste an error message. Do NOT use for pre-merge code review (use ns-code-reviewer) or scope clarification (use ns-sdd-clarify-requirements).
+description: (NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, CI failures, or obscure bugs — entry priority 4 when the user wants diagnosis WITHOUT an implement request ("why does X break?", paste stack trace, CI fail). Use proactively when tests fail or pipelines break if cause is unclear AND the user has not asked to implement the fix yet. Do NOT use when the user asks to implement or fix code directly (ns-code-coder, priority 5), for multi-day or version scope (ns-spec-driven, priority 2), for GitLab ISSUE_URL execution (ns-execution-gitlab-issue), or for pre-merge code review (ns-code-reviewer).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.2"
 depends:
   - ns-harness
 ---
 
 # Code Investigator
 
-Find root cause, explain failure clearly, propose minimal safe fix with validation steps.
+Root-cause diagnosis and minimal fix **proposal** — not implementation. Entry priority **4**. Full routing: `../ns-harness/references/code-skill-routing.md`.
 
 ## Harness discovery
 
 See `../ns-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent.
+
+## Routing (read first)
+
+### Entry (priority 4)
+
+Trigger phrases: `references/entry-triggers.md`. Harness priority table: `../ns-harness/references/code-skill-routing.md`.
+
+Use when the user wants diagnosis only — stack trace, CI fail, obscure bug, "why does X break?" — **without** asking to implement the fix.
+
+Do **not** enter when the user asks to implement or fix code → `ns-code-coder` (priority 5). Do **not** enter for GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` (priority 1). Do **not** enter for multi-day / version scope → `ns-spec-driven` (priority 2).
+
+### Handoff out
+
+End with root cause + fix proposal to the **user**. Do **not** auto-dispatch implementation.
+
+When the user asks to implement the proposed fix, stop — they re-enter through the host entry router (usually priority 5 → `ns-code-coder`). There is no direct `I → C` skill handoff; the human gate sits between diagnosis and diff.
 
 ## Mission
 
@@ -94,7 +110,8 @@ Regression test, dependency pin, guard, logging, documentation.
 | File                         | When                             |
 | ---------------------------- | -------------------------------- |
 | `references/rca-template.md` | Optional structured RCA document |
-| `ns-code-reviewer`              | After fix, before merge          |
+| `references/entry-triggers.md` | Priority 4 entry phrases vs coder |
+| `../ns-harness/references/code-skill-routing.md` | Entry priority and investigator handoff |
 
 ## Constraints
 

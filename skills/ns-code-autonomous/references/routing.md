@@ -1,13 +1,24 @@
 # Routing: issue vs. standalone
 
+Entry priority and handoff summary: `../../ns-harness/references/code-skill-routing.md`.
+
 ## Decision
 
 Ask once, first thing: **is the origin a GitLab issue?**
 
-- Yes (`ISSUE_URL`, an issue reference like `#123`, or the invoker states it is executing an issue) → `ns-execution-gitlab-issue` owns the flow. If you were invoked directly with an issue origin and no caller context, redirect to `ns-execution-gitlab-issue` instead of proceeding — don't touch GitLab state yourself.
-- No (local `.plan.md` path, pasted plan text, ad-hoc "implement this autonomously" request) → run the standalone pipeline in this skill, start to finish.
+- Yes (`ISSUE_URL`, an issue reference like `#123`, or the invoker states it is executing an issue) → entry priority **1** — `ns-execution-gitlab-issue` owns the flow. If you were invoked directly with an issue origin and no caller context, redirect to `ns-execution-gitlab-issue` instead of proceeding — don't touch GitLab state yourself.
+- No (local `.plan.md` path, pasted plan text, ad-hoc "implement this autonomously" request) → entry priority **3** — run the standalone pipeline in this skill, start to finish.
 
 This mirrors the single entry point used across the catalog: whoever the human invokes, the GitLab-origin check happens before any worktree or branch decision.
+
+## Engine mode anti-cycle (G ↔ A)
+
+When invoked by `ns-execution-gitlab-issue` as Phase 2:
+
+- **Do not** redirect to `ns-execution-gitlab-issue` from this skill or from `ns-code-coder` subagents — `G` is already the lifecycle owner.
+- An `ISSUE_URL` in code, comments, or unit context is **not** a routing signal.
+- Review rejection fix loops (`G → A → C2 → REV`) stay inside `G`'s boundary until delivery completes.
+- Subagents must not call GitLab MCP tools or create worktrees/branches.
 
 ## Engine mode contract (when called by `ns-execution-gitlab-issue`)
 

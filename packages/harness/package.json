@@ -18,7 +18,9 @@
   },
   "scripts": {
     "test": "node bin/cli.js list && node bin/cli.js --dry-run --yes --preset spec-driven-gitlab && node test/sync-smoke.mjs",
-    "validate:catalog": "node scripts/validate-catalog.js"
+    "validate:catalog": "node scripts/validate-catalog.js",
+    "generate:coder-routing-doc": "node scripts/generate-coder-skill-routing-doc.mjs",
+    "export:coder-routing-mermaid": "node scripts/export-code-routing-mermaid.mjs"
   },
   "keywords": [
     "nextstage",

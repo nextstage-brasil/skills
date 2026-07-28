@@ -63,7 +63,7 @@
     "ns-code-reviewer": ["ns-harness", "mcp-gitlab-usage"],
     "ns-code-investigator": ["ns-harness"],
     "ns-code-e2e-tests": [],
-    "ns-code-backend-tests": [],
+    "ns-code-backend-tests": ["ns-harness"],
     "ns-multi-agent-architect": [],
     "ns-langgraph-agents": ["ns-harness"],
     "ns-skill-creator": ["ns-harness"]

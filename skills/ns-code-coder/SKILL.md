@@ -1,10 +1,10 @@
 ---
 name: ns-code-coder
-description: (NS) Ad-hoc coding agent for focused implementation without full SDD planning — bug fixes, isolated components, small refactors, scripts, migrations. Use when the user says "just implement this", "quick fix", "add a field to the form", or gives a concrete coding task without execution-handoff — even without naming an agent. When a planned version has execution-handoff.md, follow ns-sdd-execution-handoff-generator run-implementation workflow instead of this skill's ad-hoc cycle. Redirect large multi-day features to planning. Do NOT generate requirements.md, task files, or execution-handoff.
+description: (NS) Central execution worker for ad-hoc coding — bug fixes, isolated components, small refactors, scripts, migrations — without full SDD planning. Entry priority 5 (default): use when the user says "just implement this", "quick fix", "add a field to the form", or gives a concrete coding task without execution-handoff — even without naming an agent. Also runs as C2 subagent under ns-code-autonomous work units. NOT the front door — do NOT use for GitLab ISSUE_URL (ns-execution-gitlab-issue), multi-day or version scope (ns-spec-driven), root-cause-only diagnosis without implement request (ns-code-investigator), or when execution-handoff.md exists (ns-sdd-execution-handoff-generator run-implementation). Do NOT generate requirements.md, task files, or execution-handoff.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.2"
 depends:
   - ns-harness
   - ns-code-investigator
@@ -19,13 +19,26 @@ depends:
 
 # Code Coder
 
-Implement ad-hoc coding tasks with minimal diff while respecting project rules.
+Central **execution worker** for ad-hoc diffs (and as `C2` subagent under `ns-code-autonomous`). **Not the front door** — the host agent picks entry per `../ns-harness/references/code-skill-routing.md`.
 
 ## Harness discovery
 
 See `../ns-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent.
 
-## When to use
+## Routing (read first)
+
+Entry priority **5** (default). Harness table: `../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
+
+### Escalation out
+
+| Signal | Redirect |
+| ------ | -------- |
+| GitLab `ISSUE_URL` detected | `ns-execution-gitlab-issue` |
+| Multi-day / version / SDD scope | `ns-spec-driven` |
+| Obscure bug, root cause unclear | `ns-code-investigator` |
+| Ad-hoc diff ready | `ns-code-reviewer` (review loop below) |
+
+### When to use (entry)
 
 - Bug fixes and hotfixes outside a planned version
 - Isolated component, hook, service, or utility
@@ -33,12 +46,14 @@ See `../ns-harness/references/harness-discovery.md`. Load rules from `{harness_r
 - Scripts, migrations, seeds outside version lifecycle
 - "Just implement this" without `execution-handoff.md`
 
+### When invoked as C2 (engine mode)
+
+When `ns-code-autonomous` dispatches this skill as a work-unit subagent inside an existing worktree: follow the unit scope only. Do **not** re-route to `ns-execution-gitlab-issue` if an `ISSUE_URL` appears in code or comments — that is context, not a routing signal. Escalate new destructive doubts to the caller (`A`), not to GitLab skills.
+
 For full planned versions with `execution-handoff.md`, follow
 `../ns-sdd-execution-handoff-generator/references/run-implementation.md` and update the
 handoff per `../ns-sdd-execution-handoff-generator/SKILL.md` — not this skill's ad-hoc
 cycle below.
-
-If the request includes a GitLab **issue URL** (`ISSUE_URL`), use `ns-execution-gitlab-issue` instead — not this skill.
 
 ## Session inputs
 
@@ -100,7 +115,7 @@ After tests pass (step 6), run an internal review loop before reporting done.
 | `{product_root}` unclear with multiple products | Ask once             |
 | Large change gate                               | Plan + wait          |
 | Public contract or cross-product boundary       | Stop, explain, ask   |
-| Task needs multi-day SDD planning               | Redirect to planning |
+| Task needs multi-day SDD planning               | Redirect to `ns-spec-driven` |
 
 ## Related skills
 
