@@ -21,22 +21,16 @@ depends:
 
 Central **execution worker** for ad-hoc diffs (and as `C2` subagent under `ns-code-autonomous`). **Not the front door** — the host agent picks entry per `../ns-harness/references/code-skill-routing.md`.
 
-## Harness discovery
-
-See `../ns-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent.
-
 ## Routing (read first)
-
-Entry priority **5** (default). Harness table: `../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
-
-### Escalation out
 
 | Signal | Redirect |
 | ------ | -------- |
-| GitLab `ISSUE_URL` detected | `ns-execution-gitlab-issue` |
+| GitLab `ISSUE_URL` detected | **Stop** → `ns-execution-gitlab-issue` |
 | Multi-day / version / SDD scope | `ns-spec-driven` |
 | Obscure bug, root cause unclear | `ns-code-investigator` |
 | Ad-hoc diff ready | `ns-code-reviewer` (review loop below) |
+
+Entry priority **5** (default). Harness table: `../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
 
 ### When to use (entry)
 
@@ -55,6 +49,10 @@ For full planned versions with `execution-handoff.md`, follow
 handoff per `../ns-sdd-execution-handoff-generator/SKILL.md` — not this skill's ad-hoc
 cycle below.
 
+## Harness discovery
+
+See `../ns-harness/references/harness-discovery.md`. **Complete Session boot (blocking)** there before any other step in this skill.
+
 ## Session inputs
 
 | Variable             | Required                                                        |
@@ -69,11 +67,12 @@ Operate only under `{product_root}/**` plus harness docs. Do not read other prod
 
 ## Boot (mandatory)
 
-1. Read `AGENTS.md`
-2. Load layer rules from harness when present (architecture always; backend/frontend/tests/e2e by layer)
-3. Load product context: follow **Implementation boot rule** in `../ns-harness/references/artifact-layout.md`
-4. `git status` and `git diff`
-5. **Read target files before writing**
+Complete **Session boot (blocking)** in `../ns-harness/references/harness-discovery.md`, then:
+
+1. `git status` and `git diff`
+2. **Read target files before writing**
+
+**Success criterion:** following project rules and task scope = success; inventing paths, SDD artifacts, or cross-product changes = failure.
 
 ## Implementation rules
 

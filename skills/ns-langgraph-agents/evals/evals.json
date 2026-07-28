@@ -89,6 +89,19 @@
         "Flags colon characters in wire names as invalid/Critical for new wires",
         "Treats recursion_limit mismatch as a sync decision, not automatic code downgrade"
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "Add a new streaming SSE endpoint to our agent-api LangGraph service. Here's the route shape I want — just implement it.",
+      "expected_output": "Agent runs Boot first (AGENTS.md, architecture-rules, agent_api_root/graph-spec) before any code; refuses to jump straight to implementation; cites placement or handoff to ns-code-coder after gates.",
+      "files": [],
+      "assertions": [
+        "Reads or requires AGENTS.md before proposing code changes",
+        "Does not jump directly to writing implementation code without boot and pre-change gates",
+        "Mentions architecture-rules or harness rules as a boot step",
+        "Confirms agent-api root or graph-spec when touching runtime",
+        "Either posts placement/inject gates or hands off to ns-code-coder rather than writing app code directly"
+      ]
     }
   ]
 }

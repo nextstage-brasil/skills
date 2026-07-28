@@ -31,7 +31,7 @@ Entry priority **1**. Harness table: `../ns-harness/references/code-skill-routin
 
 ## Harness discovery
 
-See `../ns-harness/references/harness-discovery.md`. Read `mcp-gitlab-usage` before MCP calls.
+See `../ns-harness/references/harness-discovery.md`. **Complete Session boot (blocking)** there before any MCP call. Read `mcp-gitlab-usage` after Session boot.
 
 ## Inputs
 
@@ -46,11 +46,12 @@ Single worktree, single branch, single MR, single commit per issue (monorepo mod
 - `WORKTREE_ROOT = {product_root}/.worktrees/{ISSUE_ID}`
 - `WORK_BRANCH = work/{ISSUE_ID}-{ISSUE_SLUG}`
 
-## Phase 0 — Context
+## Phase 0 — Context (boot before MCP)
 
-1. Resolve `{product_root}` (factory: `apps/{slug}/`; standalone: repo root).
-2. Load product context: follow **Implementation boot rule** in `../ns-harness/references/artifact-layout.md`.
+1. **Session boot (blocking)** — complete `../ns-harness/references/harness-discovery.md` before any MCP call.
+2. Resolve `{product_root}` (factory: `apps/{slug}/`; standalone: repo root).
 3. Ensure `.worktrees/` is gitignored (see `references/worktree-setup.md`).
+4. Read `mcp-gitlab-usage` before the first MCP call.
 
 ## Phase 1 — Prepare
 

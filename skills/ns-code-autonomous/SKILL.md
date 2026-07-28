@@ -24,7 +24,12 @@ This skill **never** writes application code on the main product checkout, and *
 
 ## Harness discovery
 
-See `../ns-harness/references/harness-discovery.md`.
+See `../ns-harness/references/harness-discovery.md`. **Complete Session boot (blocking)** there before any other step in this skill.
+
+### After session boot — Engine and Standalone
+
+**Engine mode:** caller may have already completed Session boot in Phase 0 — re-read `harness-discovery.md` only if context is missing.
+**Standalone:** you own Session boot before step 1 of the standalone pipeline.
 
 ## Routing (read first)
 

@@ -15,9 +15,24 @@ Senior agent-runtime engineer. Guide construction and maintenance of **productio
 
 This skill owns **runtime doctrine and coordination** — including **placement**, **prompt/capability injection**, and **graph-spec sync**. Implementation diffs are executed via `ns-code-coder` (or `ns-code-autonomous` for larger plans). Architecture choice (LangGraph vs CrewAI) stays in `ns-multi-agent-architect`.
 
-## Harness discovery
+## Routing (read first)
 
-See `../ns-harness/references/harness-discovery.md`. Read project `AGENTS.md` and harness rules before changing runtime code.
+| Signal | Action |
+| ------ | ------ |
+| No framework lock / CrewAI requested | **Stop** → `ns-multi-agent-architect` |
+| Orphan / lost structure / layout unclear | Run orphan checklist **before** features (`references/orphan-recovery-checklist.md`) |
+| GitLab `ISSUE_URL` or SDD version scope | **Defer** to harness `../ns-harness/references/code-skill-routing.md` — do not absorb |
+| Approved placement/inject plan ready for diff | Hand off to `ns-code-coder` for implementation only — this skill does **not** write app code |
+
+## Boot (mandatory)
+
+See `../ns-harness/references/harness-discovery.md` — **complete Session boot (blocking)** there, then:
+
+1. Confirm `{agent_api_root}` and `graph-spec.md` when touching runtime
+2. Load placement/inject refs before path decisions (`references/placement-and-domains.md`, `references/prompt-and-capability-injection.md`)
+3. Continue this skill
+
+**Success criterion:** following placement + inject doctrine + project rules = success; inventing folders or external frameworks = failure.
 
 ## When to use
 

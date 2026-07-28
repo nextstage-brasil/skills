@@ -23,7 +23,7 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 
 `ns-code-coder` `depends` installs the full `ns-code-*` suite at install time. That does **not** make coder the runtime router.
 
-## Entry priority (host agent)
+## Entry priority (host agent) {#entry-priority}
 
 **Rule:** scan priorities **1 → 5**; the **first row whose signal matches wins**. Lower number always beats higher when multiple signals appear in one message — e.g. `ISSUE_URL` + multi-day feature → priority **1** (`G`), not priority 2 (`S`).
 
@@ -35,7 +35,7 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | 4 | Root-cause only — **without** an implement request | `ns-code-investigator` | `../../ns-code-investigator/references/entry-triggers.md` |
 | 5 | Default — quick fix, "implement X", small ad-hoc diff | `ns-code-coder` | `../../ns-code-coder/references/entry-triggers.md` |
 
-### Multi-signal examples (first match wins)
+### Multi-signal examples (first match wins) {#multi-signal-examples}
 
 | User message (signals present) | Winner | Why |
 | ------------------------------ | ------ | --- |
@@ -46,7 +46,7 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | Paste stack trace, no implement words | Priority **4** → `I` | Diagnosis-only |
 | "Fix this NullPointerException" | Priority **5** → `C` | Implement intent → coder, not investigator |
 
-### Tie-breakers (same priority band or ambiguous scope)
+### Tie-breakers (same priority band or ambiguous scope) {#tie-breakers}
 
 Apply only when the priority table alone does not decide:
 
@@ -54,7 +54,7 @@ Apply only when the priority table alone does not decide:
 - Bug + quick fix, **cause unclear** → priority **4** (`ns-code-investigator`).
 - Bug + quick fix, **cause obvious** from the message → priority **5** (`ns-code-coder`).
 
-### Priority 4 vs 5
+### Priority 4 vs 5 {#priority-4-vs-5}
 
 Owned by entry skills — see `../../ns-code-investigator/references/entry-triggers.md` and `../../ns-code-coder/references/entry-triggers.md`. **Heuristic:** code change requested → **5**; understanding only → **4**. One clarifying question when ambiguous; default **5** if still unclear.
 
@@ -64,7 +64,7 @@ No qualifier matches → priority **5** (`ns-code-coder`). If scope is still unc
 
 Mid-run coder escalations (`C → G`, `C → S`, `C → I`) use the same signals as the table above.
 
-## Handoff edges (summary)
+## Handoff edges (summary) {#handoff-edges}
 
 Per-skill detail lives in each `SKILL.md` routing section.
 
@@ -84,13 +84,13 @@ Per-skill detail lives in each `SKILL.md` routing section.
 | `I` | diagnosis complete | User (no auto-dispatch to `C`) |
 | User | implement proposed fix | Re-enter entry router (usually `C`) |
 
-## Engine anti-cycle (G ↔ A)
+## Engine anti-cycle (G ↔ A) {#engine-anti-cycle}
 
 When `G` invokes `A` in Engine mode, work units run as `C2` inside the existing worktree and branch. `A` and `C2` must not re-open `G`: no standalone routing, no GitLab MCP mutations, no new worktree. An `ISSUE_URL` in code or comments is context, not a routing signal — `G` remains the single lifecycle owner until delivery completes. Review rejection loops (`G → A → C2 → REV`) stay inside that boundary.
 
 See `../../ns-code-autonomous/references/routing.md`.
 
-## Investigator handoff
+## Investigator handoff {#investigator-handoff}
 
 `I` ends with root cause + fix proposal to the user. It does **not** auto-dispatch implementation. When the user asks to implement the fix, they re-enter through the entry router (usually priority 5 → `C`). There is no direct `I → C` skill handoff — the human gate sits between diagnosis and diff.
 

@@ -16,16 +16,13 @@ Deep, constructive review of code changes against project rules and acceptance c
 
 ## Harness discovery
 
-See `../ns-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent. Load layer-specific rules (backend, frontend, tests, e2e) based on changed files.
-
-Do not assume Grogoo/Laravel/React unless detected in project rules or stack context.
+See `../ns-harness/references/harness-discovery.md`. **Complete Session boot (blocking)** there before any other step in this skill.
 
 ## Workflow
 
-1. Load applicable project rules.
-2. Run `git diff` (and `git status` if needed).
-3. Focus on modified files and surrounding context.
-4. Start immediately — do not ask permission to begin.
+1. Run `git diff` (and `git status` if needed).
+2. Focus on modified files and surrounding context.
+3. Start immediately — do not ask permission to begin.
 
 ### Version closure
 

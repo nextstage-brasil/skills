@@ -14,9 +14,9 @@
       "files": []
     },
     {
-      "id": 3,
-      "prompt": "Generate AGENTS.md for apps/billing-api/ in this monorepo. Only the billing-api folder uses NextStage harness.",
-      "expected_output": "Agent resolves product_root as apps/billing-api/, lists skills and paths relative to that folder, writes AGENTS.md and CLAUDE.md there.",
+      "id": 4,
+      "prompt": "Regenerate AGENTS.md for our repo. Make sure it has routing, hard stops, and the first-action boot sequence.",
+      "expected_output": "Agent writes AGENTS.md with First action (AGENTS.md → agents.local.md → GitLab MCP), How to start table, Implementation routing priority table, Hard stops/FORBIDDEN, and Ownership line.",
       "files": []
     }
   ]

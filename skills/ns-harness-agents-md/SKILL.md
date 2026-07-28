@@ -20,7 +20,7 @@ Then write `{product_root}/CLAUDE.md` containing **only** a pointer to `AGENTS.m
 1. **Evidence-based** — list only skills, paths, and workflows that exist in the project. Mark `inferred` when guessing.
 2. **Entry pointer, not constitution** — stack, layout, and constraints belong in `architecture-rules.md` (`ns-harness-architecture-rules`). `AGENTS.md` routes agents to the right files and skills.
 3. **No harness template copy-paste** — do not dump `packages/harness/templates/AGENTS.md` into the project. Use `references/agents-md.template.md` as a skeleton and fill from reconnaissance.
-4. **Lean** — target **60–120 lines**. Link to `docs/context/` and harness references instead of inlining.
+4. **Lean** — target **~100–160 lines**. Link to `docs/context/` and harness references instead of inlining.
 5. **Refresh-safe** — on update, preserve stable hand-edited sections (language exceptions, GitLab server name, team conventions) unless recon proves them wrong.
 
 ## Harness discovery
@@ -77,6 +77,11 @@ Use `references/agents-md.template.md` as skeleton.
 
 Writing rules:
 
+- **First action** — mandatory section: read `AGENTS.md`, then `agents.local.md` when present (case-insensitive), then note GitLab MCP server from project notes.
+- **How to start** — mandatory table: Planning / Implementation / Ad-hoc with skill entry points.
+- **Implementation routing** — mandatory priority table (1–5) from `code-skill-routing.md`; link to installed `ns-harness` for full handoffs.
+- **Hard stops / FORBIDDEN** — mandatory section: no invented personas, no skip architecture-rules, ISSUE_URL → gitlab-issue skill, no speculative version folders.
+- **Ownership** — one line: this file routes; stack/constraints live in `architecture-rules.md`.
 - **Product anchor** — `{product_root}` = `.` (relative to this `AGENTS.md`). Never write an absolute local path.
 - **Local overrides** — include: when `agents.local.md` exists at `{product_root}` (case-insensitive), agents must read it after `AGENTS.md`. Add a layout row marking present/not present; never inline `agents.local.md` content.
 - **Installed skills** — exact names from `.agents/skills/`, **grouped by role** in a compact table (Foundation / SDD / GitLab / Implementation / Brownfield / Other). Do not dump a flat bullet list of every skill. Build the SDD chain only from skills that are installed. Invoke via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code-reviewer`).
@@ -117,6 +122,11 @@ When updating existing `AGENTS.md`:
 
 ## Quality bar (self-check before save)
 
+- [ ] First action section present (AGENTS.md → agents.local.md → GitLab MCP server)
+- [ ] How to start table present (Planning / Implementation / Ad-hoc)
+- [ ] Implementation routing table present (priority 1–5)
+- [ ] Hard stops / FORBIDDEN section present
+- [ ] Ownership line present (routes vs architecture-rules)
 - [ ] Local overrides rule present (`agents.local.md`, case-insensitive)
 - [ ] Not a verbatim copy of harness `templates/AGENTS.md`
 - [ ] Every listed skill exists under `.agents/skills/`
@@ -127,7 +137,7 @@ When updating existing `AGENTS.md`:
 - [ ] SDD chain uses only installed skills
 - [ ] `CLAUDE.md` is exactly `@AGENTS.md` (single pointer)
 - [ ] No stack/module deep-dive (belongs in `architecture-rules.md`)
-- [ ] Line count ≤ 150
+- [ ] Line count ≤ 180
 
 ## Related skills
 

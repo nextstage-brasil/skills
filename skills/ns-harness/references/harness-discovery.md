@@ -2,13 +2,28 @@
 
 Use this pattern in every skill that needs project rules, artifact paths, or harness-relative references.
 
+## Session boot (blocking)
+
+**Before any other step** in a consumer skill — MCP calls, file edits, planning, or review — complete this sequence. Do not skip by reading only the skill body. Do not put this sequence in skill frontmatter `description` (descriptions are for triggering only).
+
+1. Read `{product_root}/AGENTS.md` (project entry router).
+2. If `agents.local.md` exists at `{product_root}` (case-insensitive filename), read it **after** `AGENTS.md`.
+3. Read `{harness_root}/rules/architecture-rules.md` (constitution) when `{harness_root}/` exists.
+4. Load layer rules from `{harness_root}/rules/` matching the files you will change (backend, frontend, tests, e2e).
+5. **Legacy fallback:** if `{harness_root}/` is missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note.
+6. When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code.
+
+**GitLab MCP:** after steps 1–6, use **only** the MCP server named in `agents.local.md` when that file exists. If missing, follow `AGENTS.md` First action / GitLab MCP section or stop and ask the human.
+
+Then continue the active skill workflow.
+
 ## Resolution order
 
 1. **Product anchor** — If the repo has `AGENTS.md` at `{product_root}`, treat `{product_root}` as the harness anchor.
-2. **Canonical rules** — Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first (constitution).
-3. **Layer rules** — Load additional rules from `{harness_root}/rules/` matching changed files (backend, frontend, tests, e2e).
+2. **Canonical rules** — Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first (constitution) — covered by Session boot step 3.
+3. **Layer rules** — Load additional rules from `{harness_root}/rules/` matching changed files — covered by Session boot step 4.
 4. **Legacy fallback** — If `{harness_root}/` is missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note. Prefer migrating with `npx @nextstage-brasil/harness migrate-rules`.
-5. **Product context (implementation)** — When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code.
+5. **Product context (implementation)** — When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code — covered by Session boot step 6.
 
 ## Variables
 
@@ -23,14 +38,6 @@ Use this pattern in every skill that needs project rules, artifact paths, or har
 | `{version_san}` | Sanitized version (e.g. `1.0.0`) |
 
 **Legacy alias:** `{harness}` → `{product_root}` (deprecated in new docs; prefer `{harness_root}` for rules paths).
-
-## Rules loading order (all consumer skills)
-
-1. Read `AGENTS.md`
-2. If `agents.local.md` exists at `{product_root}` (case-insensitive filename), read it after `AGENTS.md`
-3. Read `{harness_root}/rules/architecture-rules.md` (constitution)
-4. Load layer rules from `{harness_root}/rules/` matching changed files
-5. **Legacy fallback:** if `{harness_root}/` missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note
 
 Adapter generation: see `rules-sync.md`. Skills: canonical `.agents/skills/`; `harness sync` symlinks to `.claude/skills/` for Claude Code only (Cursor reads canonical directly).
 

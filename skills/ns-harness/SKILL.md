@@ -11,11 +11,13 @@ metadata:
 
 Shared reference documents for NextStage skills. Consumer skills point here for path resolution and planning gates — workflow logic stays in those skills.
 
+**Consumer skill convention:** point to `references/harness-discovery.md` and require **Session boot (blocking)** before other steps. Do not duplicate the boot sequence in skill bodies or frontmatter `description`; keep only skill-specific steps after boot (e.g. `git diff`, domain refs).
+
 ## References
 
 | File                              | When to read                                                                      |
 | --------------------------------- | --------------------------------------------------------------------------------- |
-| `references/harness-discovery.md` | Resolving `{product_root}`, `{harness_root}`, rules paths, or MCP GitLab pointers |
+| `references/harness-discovery.md` | Session boot (blocking), `{product_root}`, rules paths, MCP GitLab pointers |
 | `references/rules-sync.md`        | Canonical rules layout, manifest schema, `harness sync`                           |
 | `references/artifact-layout.md`   | SDD artifact paths under `docs/versions/`, living specs, handoff rules            |
 | `references/gates.md`             | Human confirmation gates before requirements, scope, or task generation           |
