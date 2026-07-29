@@ -164,4 +164,4 @@ Typical delivery: `/ns-spec-driven` (auto-sizes and delegates). Manual brownfiel
 
 [Apache License 2.0](LICENSE)
 
-pull && push --staged --fix && sleep 10 && pull
+pull && push --staged --fix && sleep 30 && pull
