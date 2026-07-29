@@ -392,9 +392,12 @@ try {
 
   mkdirSync(join(tempDir, '.claude', 'skills', 'ns-harness'), { recursive: true });
   writeFileSync(join(tempDir, '.claude', 'skills', 'ns-harness', 'SKILL.md'), '# claude\n', 'utf8');
+  writeFileSync(join(tempDir, 'CLAUDE.md'), '@AGENTS.md\n', 'utf8');
   const prunedAgents = pruneExcludedAgentAdapters(tempDir, ['cursor']);
   assert(prunedAgents.removed.some((path) => path.endsWith('.claude')), 'cursor-only should remove .claude adapters');
   assert(!existsSync(join(tempDir, '.claude')), '.claude should be removed after cursor-only prune');
+  assert(prunedAgents.removed.some((path) => path.endsWith('CLAUDE.md')), 'cursor-only should remove CLAUDE.md');
+  assert(!existsSync(join(tempDir, 'CLAUDE.md')), 'CLAUDE.md should be removed after cursor-only prune');
 
   const agentsOnlyDir = mkdtempSync(join(tmpdir(), 'harness-agents-manifest-'));
   try {

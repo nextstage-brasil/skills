@@ -52,7 +52,7 @@ Active agents are stored in `manifest.json` under `"agents"`.
 # Show current agents and where the setting comes from
 npx @nextstage-brasil/harness agents
 
-# Cursor only — persists, syncs, removes .claude/
+# Cursor only — persists, syncs, removes .claude/ and CLAUDE.md
 npx @nextstage-brasil/harness agents set --agent cursor
 
 # Both agents

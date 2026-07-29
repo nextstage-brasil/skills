@@ -49,6 +49,11 @@ export function pruneExcludedAgentAdapters(projectRoot, agents, options = {}) {
         if (!dryRun) removePath(claudeRoot);
         removed.push(claudeRoot);
       }
+      const claudeMd = join(projectRoot, 'CLAUDE.md');
+      if (existsSync(claudeMd)) {
+        if (!dryRun) removePath(claudeMd);
+        removed.push(claudeMd);
+      }
       continue;
     }
 
