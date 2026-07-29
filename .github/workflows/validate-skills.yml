@@ -74,6 +74,17 @@ jobs:
       - name: Catalog sync with skills
         run: node packages/harness/scripts/validate-catalog.js
 
+      - name: Skills CLI can parse all SKILL.md frontmatter
+        run: |
+          set -euo pipefail
+          out=$(npx --yes skills add . --list --full-depth 2>&1)
+          if echo "$out" | rg -q 'Skipped .*YAML parse error'; then
+            echo 'ERROR: skills CLI skipped skill(s) due to invalid YAML frontmatter'
+            echo "$out" | rg 'Skipped .*YAML parse error' || true
+            exit 1
+          fi
+          echo 'OK: no YAML parse skips from skills CLI'
+
       - name: Harness CLI smoke test
         working-directory: packages/harness
         run: |

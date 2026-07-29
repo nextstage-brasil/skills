@@ -24,43 +24,43 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code
 
 ## Skill catalog
 
-| Skill                      | Purpose                                                                     |
-| -------------------------- | --------------------------------------------------------------------------- |
-| `ns-harness`        | Harness discovery, SDD gates, artifact layout (dependency — auto-installed) |
-| `ns-spec-driven`            | Delivery face — clarify → spec → tasks → implement → close (auto-size)      |
-| `ns-harness-prepare`          | Orchestrate full brownfield onboarding chain after harness init (manual)    |
-| `ns-harness-agents-md`      | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer           |
-| `ns-harness-codebase-reverse-spec`    | Reverse-engineer legacy code into technology-agnostic business specs        |
-| `ns-harness-architecture-rules` | Scan codebase and generate lean `architecture-rules.md` for agents      |
-| `ns-harness-bootstrap-brownfield`     | Map existing codebase stack/modules before first SDD version                |
-| `ns-sdd-clarify-requirements`     | Resolve scope ambiguities before requirements generation                    |
-| `ns-sdd-requirements-generator`   | Produce structured `requirements.md` for a version                          |
-| `ns-sdd-analyze-consistency`      | Validate requirements before task generation                                |
-| `ns-sdd-version-partitioner`      | Split large versions into subversions + roadmap                             |
-| `ns-sdd-task-generator`           | Backend/frontend/infra implementation task files                            |
-| `ns-sdd-execution-handoff-generator` | Generate and update `execution-handoff.md` (task order + time tracking) |
-| `ns-pm-unit-test-task-generator` | Backend PHPUnit/integration test tasks                                      |
-| `ns-pm-e2e-test-task-generator`  | Cypress E2E planning tasks                                                  |
-| `ns-sdd-living-spec-consolidator` | Merge delivered versions into `docs/specs/` living docs                     |
-| `mcp-gitlab-usage`         | GitLab MCP tool contracts, gates, and flows                                 |
-| `ns-gitlab-board-sync`        | Sync existing issues (labels, milestone, time)                              |
-| `ns-gitlab-ci-generator`      | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                               |
-| `ns-execution-gitlab-issue`     | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `ns-code-autonomous` |
-| `ns-code-coder`               | Ad-hoc implementation without full SDD cycle                                |
-| `ns-code-autonomous`          | Harness-aware autonomous execution engine — planning-depth self-decision, doubt resolution, multi-agent dispatch (issue engine or standalone) |
-| `ns-execution-orchestrator`   | Drive a partitioned version slice-by-slice (subagent + commit per slice)    |
-| `ns-code-reviewer`            | SOLID/security/maintainability review + issue gate                          |
-| `ns-code-investigator`        | Root-cause analysis and minimal fixes                                       |
-| `ns-code-e2e-tests`         | Implement/refactor Cypress specs (execution phase)                          |
-| `ns-code-backend-tests`     | Implement/refactor PHPUnit tests in Docker (execution phase)                |
-| `ns-code-frontend-design`          | Distinctive production UI; anti–generic AI aesthetics (optional complement) |
-| `ns-code-docs-writer`              | README and `docs/` guides for humans (optional complement)                  |
-| `ns-code-best-practices`           | Security headers, compatibility, modernization pass (optional complement)    |
-| `ns-requirements-enricher`    | Grill-me gap analysis for GitLab issues or chat context                     |
-| `ns-project-manager`  | End-to-end PM workflow — clarification through delivery forecast            |
-| `ns-multi-agent-architect` | Interview for LangGraph vs CrewAI and multi-agent architecture |
-| `ns-langgraph-agents`       | LangGraph.js runtime — MCP governance, context window, HITL, evals |
-| `ns-skill-creator`            | Create project-local skills in `.agents/skills/` + `harness sync`           |
+| Skill                                | Purpose                                                                                                                                       |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ns-harness`                         | Harness discovery, SDD gates, artifact layout (dependency — auto-installed)                                                                   |
+| `ns-spec-driven`                     | Delivery face — clarify → spec → tasks → implement → close (auto-size)                                                                        |
+| `ns-harness-prepare`                 | Orchestrate full brownfield onboarding chain after harness init (manual)                                                                      |
+| `ns-harness-agents-md`               | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer                                                                           |
+| `ns-harness-codebase-reverse-spec`   | Reverse-engineer legacy code into technology-agnostic business specs                                                                          |
+| `ns-harness-architecture-rules`      | Scan codebase and generate lean `architecture-rules.md` for agents                                                                            |
+| `ns-harness-bootstrap-brownfield`    | Map existing codebase stack/modules before first SDD version                                                                                  |
+| `ns-sdd-clarify-requirements`        | Resolve scope ambiguities before requirements generation                                                                                      |
+| `ns-sdd-requirements-generator`      | Produce structured `requirements.md` for a version                                                                                            |
+| `ns-sdd-analyze-consistency`         | Validate requirements before task generation                                                                                                  |
+| `ns-sdd-version-partitioner`         | Split large versions into subversions + roadmap                                                                                               |
+| `ns-sdd-task-generator`              | Backend/frontend/infra implementation task files                                                                                              |
+| `ns-sdd-execution-handoff-generator` | Generate and update `execution-handoff.md` (task order + time tracking)                                                                       |
+| `ns-pm-unit-test-task-generator`     | Backend PHPUnit/integration test tasks                                                                                                        |
+| `ns-pm-e2e-test-task-generator`      | Cypress E2E planning tasks                                                                                                                    |
+| `ns-sdd-living-spec-consolidator`    | Merge delivered versions into `docs/specs/` living docs                                                                                       |
+| `mcp-gitlab-usage`                   | GitLab MCP tool contracts, gates, and flows                                                                                                   |
+| `ns-gitlab-board-sync`               | Sync existing issues (labels, milestone, time)                                                                                                |
+| `ns-gitlab-ci-generator`             | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                                                                                                 |
+| `ns-execution-gitlab-issue`          | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `ns-code-autonomous`                                              |
+| `ns-code-coder`                      | Ad-hoc implementation without full SDD cycle                                                                                                  |
+| `ns-code-autonomous`                 | Harness-aware autonomous execution engine — planning-depth self-decision, doubt resolution, multi-agent dispatch (issue engine or standalone) |
+| `ns-execution-orchestrator`          | Drive a partitioned version slice-by-slice (subagent + commit per slice)                                                                      |
+| `ns-code-reviewer`                   | SOLID/security/maintainability review + issue gate                                                                                            |
+| `ns-code-investigator`               | Root-cause analysis and minimal fixes                                                                                                         |
+| `ns-code-e2e-tests`                  | Implement/refactor Cypress specs (execution phase)                                                                                            |
+| `ns-code-backend-tests`              | Implement/refactor PHPUnit tests in Docker (execution phase)                                                                                  |
+| `ns-code-frontend-design`            | Distinctive production UI; anti–generic AI aesthetics (optional complement)                                                                   |
+| `ns-code-docs-writer`                | README and `docs/` guides for humans (optional complement)                                                                                    |
+| `ns-code-best-practices`             | Security headers, compatibility, modernization pass (optional complement)                                                                     |
+| `ns-requirements-enricher`           | Grill-me gap analysis for GitLab issues or chat context                                                                                       |
+| `ns-project-manager`                 | End-to-end PM workflow — clarification through delivery forecast                                                                              |
+| `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
+| `ns-langgraph-agents`                | LangGraph.js runtime — MCP governance, context window, HITL, evals                                                                            |
+| `ns-skill-creator`                   | Create project-local skills in `.agents/skills/` + `harness sync`                                                                             |
 
 Migration notes: `skills/_meta/MIGRATION.md`.
 
@@ -144,10 +144,10 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 | Layer                  | Location                                                                    |
 | ---------------------- | --------------------------------------------------------------------------- |
 | **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness` or `npx skills add` |
-| **Project rules**      | `AGENTS.md` at repo root; canonical rules in `.nextstage-harness/rules/`  |
+| **Project rules**      | `AGENTS.md` at repo root; canonical rules in `.nextstage-harness/rules/`    |
 | **Generated adapters** | `.cursor/rules/*.mdc`, `.claude/rules/*.md` (via `harness sync`)            |
-| **Installed skills**   | `.agents/skills/` (Cursor); `.claude/skills/` symlink for Claude Code |
-| **SDD artifacts**      | `docs/context/`, `docs/specs/`, `docs/versions/` (project root)              |
+| **Installed skills**   | `.agents/skills/` (Cursor); `.claude/skills/` symlink for Claude Code       |
+| **SDD artifacts**      | `docs/context/`, `docs/specs/`, `docs/versions/` (project root)             |
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
@@ -163,3 +163,5 @@ Typical delivery: `/ns-spec-driven` (auto-sizes and delegates). Manual brownfiel
 ## License
 
 [Apache License 2.0](LICENSE)
+
+pull && push --staged --fix && sleep 10 && pull

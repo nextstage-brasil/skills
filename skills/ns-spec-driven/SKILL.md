@@ -1,6 +1,6 @@
 ---
 name: ns-spec-driven
-description: (NS) Spec-driven delivery face — clarify, requirements, tasks, implement or resume a version. Entry priority 2: use for feature specs, version work, or "let's build X" with multi-day scope; auto-sizes and delegates to workers. Prefer ns-code-coder for bare quick fixes. Do NOT use for brownfield onboarding, architecture rules, or /ns-harness-prepare (manual only; never auto-run Prepare).
+description: "(NS) Spec-driven delivery face — clarify, requirements, tasks, implement or resume a version. Entry priority 2: use for feature specs, version work, or \"let's build X\" with multi-day scope; auto-sizes and delegates to workers. Prefer ns-code-coder for bare quick fixes. Do NOT use for brownfield onboarding, architecture rules, or /ns-harness-prepare (manual only; never auto-run Prepare)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
