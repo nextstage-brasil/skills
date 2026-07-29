@@ -31,4 +31,4 @@ Internal GitLab comment (`internal: true`) posted in Phase 3, step 5.
 - {Suggestions left unaddressed + technical justification. If everything was resolved, write "None".}
 ```
 
-Fill `{LLM_PROVIDER}` / `{LLM_MODEL}` with the exact model identifier executing the issue (e.g. `Anthropic / claude-opus-4-8`). If it cannot be determined with certainty, write `Undetermined`.
+Fill `{LLM_PROVIDER}` / `{LLM_MODEL}` with the exact model identifier executing the issue. If it cannot be determined with certainty, write `Undetermined`.
