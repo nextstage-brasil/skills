@@ -4,19 +4,19 @@
     {
       "id": 1,
       "prompt": "Preciso de um orçamento comercial para uma API de consulta criminal (ORCRIM): autenticação, busca por documento, histórico de consultas e exportação CSV. Versão orcamento-api-orcrim. Pode gravar em docs.",
-      "expected_output": "Clarifies with ≤5 questions including team experience when hours will be estimated (or marks assumption). Loads docs/context reverse-spec/brownfield when present. Produces PT-BR commercial-budget.md with Features (Feature 00N, precedence + acceptance; not RF labeling), FP + COSMIC E/R/W/X + hours previstas sized as delta when context exists. No Investimento / R$ section. No tasks/, no requirements.md, no GitLab issues. Stops after persist + next-step offer.",
+      "expected_output": "Clarifies with ≤5 questions including team experience when needed. Loads docs/context when present. Writes docs/versions/.../commercial-budget.md with header Sequência + Gerado em (date/time), Features, FP, COSMIC, hours + margin, macro table, risks. No invented R$. No timestamped filenames. No tasks/SDD. Stops after persist.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "quick mode: portal do cliente B2B — login, listar pedidos, detalhe do pedido, PDF da nota. Time sênior, 2 anos no produto, core maintainers. Produtividade 8h/PF. Gere o orçamento.",
-      "expected_output": "Skips full clarification; marks remaining assumptions. Client doc in PT-BR with ≤10 Features, FP, COSMIC rollup, hours using 8h/PF grounded in stated team experience. No Investimento / R$. No gold-plated dashboards. No SDD task generation.",
+      "prompt": "quick mode: portal do cliente B2B — login, listar pedidos, detalhe do pedido, PDF da nota. Time sênior, 2 anos no produto, core maintainers. Produtividade 8h/PF. Taxa R$ 180/h. Gere o orçamento.",
+      "expected_output": "Skips full clarification; marks assumptions. ≤10 Features, FP, COSMIC, hours via 8h/PF, macro table with Custo filled from R$ 180/h, risks and safety margin %. Includes RE/design/impl/tests/homolog/deploy rows. No SDD tasks.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Monta proposta comercial em inglês for a small inventory API: SKU CRUD + stock adjust. Chat only, don't write files.",
-      "expected_output": "Deliverable in English because explicitly requested. Chat-only (no docs/versions write). FP + COSMIC + hours present; no monetary pricing. May ask or assume team experience for hours. No task list. Does not invoke ns-project-manager forecast or SDD workers.",
+      "expected_output": "English deliverable, chat-only. FP + COSMIC + hours + macro table + risk margins. Custo — without rates. No task list. No ns-project-manager / SDD workers.",
       "files": []
     }
   ]

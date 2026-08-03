@@ -1,7 +1,8 @@
 # Orçamento comercial — {product_display_name}
 
+**Sequência:** `{seq}`  
+**Gerado em:** `{generated_at}`  
 **Versão / referência:** `{version_san}`  
-**Data:** `{issue_date}`  
 **Idioma:** PT-BR
 
 ---
@@ -69,18 +70,51 @@
 
 ### Horas previstas
 
-| Total (h) | Produtividade / premissa |
-|-----------|--------------------------|
-| {n} | {Ground in team experience (seniority, tenure, involvement), reverse-spec/brownfield reuse vs greenfield, and/or h/PF or h/CFP if given. Mark [ASSUMPTION] when experience was not clarified. Tests included.} |
+| Base (h) | Margem de segurança | Total com margem (h) | Produtividade / premissa |
+|----------|---------------------|----------------------|--------------------------|
+| {n} | {s}% | {n} | {Team experience + reverse-spec/brownfield; h/PF or h/CFP if given. Lifecycle envelope via macro table. [ASSUMPTION] when needed.} |
 
-<!-- Do NOT include Investimento (R$), rates, or commercial price. Stop at FP + COSMIC + hours. -->
+---
+
+## Macroatividades do projeto
+
+<!-- Hours in this table = with safety margin. See references/macro-activities.md. Fixed 7 rows — do not drop. -->
+
+| Macroatividade | Esforço (h) | PF | Custo (R$) |
+|----------------|-------------|-----|------------|
+| Engenharia de requisitos | | | {n or —} |
+| Design / Arquitetura | | | |
+| Implementação | | | |
+| Testes de implementação (unitário e e2e) | | | |
+| Testes de homologação | | | |
+| Homologação | | | |
+| Implantação | | | |
+| **Σ** | **{n}** | **{Total FP}** | **{n or —}** |
+
+**Notas:**  
+- Base: {h} h · Margem de segurança: {s}% · Total com margem: {h} h  
+- Mix %: {cite default or adjusted mix}  
+- Custo: preencher só com R$/h e/ou R$/PF informados; senão `—` e `_pending rates_`
+
+---
+
+## Riscos e margem de segurança
+
+| Risco | Impacto na estimativa | Mitigação / premissa |
+|-------|----------------------|----------------------|
+| {risk} | {impact} | {mitigation or lacuna} |
+
+- **Margem de erro estimada:** {p}%  
+- **Margem de segurança aplicada:** {s}%  
+- **Racional:** {link risks → chosen percentages}
 
 ---
 
 ## Premissas e ressalvas
 
-- {assumptions — include team knowledge used for hours, which docs/context files were read (paths), out-of-scope, open lacunas, architecture decisions}
-- Este artefato **não** contém lista de tarefas de implementação (`tasks/`), issues GitLab, handoff SDD nem precificação em R$.
+- {assumptions — team knowledge, docs/context paths read, macro mix, margins, out-of-scope, lacunas, architecture decisions}
+- Este artefato **não** contém lista de tarefas de implementação (`tasks/`), issues GitLab nem handoff SDD.
+- Custo em R$ só aparece quando taxas foram fornecidas; margem de segurança é contingência de estimativa, não markup comercial.
 
 ---
 
@@ -94,4 +128,4 @@
 
 ## Próximos passos (informativo)
 
-Após aprovação do escopo e das estimativas (FP, COSMIC, horas): detalhamento SDD (`requirements.md` / tarefas) e/ou forecast de entrega PM, se necessário — **fora do escopo desta skill**.
+Após aprovação do escopo e das estimativas (FP, COSMIC, horas com margem, macroatividades): detalhamento SDD (`requirements.md` / tarefas) e/ou forecast de entrega PM, se necessário — **fora do escopo desta skill**.

@@ -95,7 +95,7 @@ New preset: `--preset project-manager` (`ns-project-manager`, `ns-requirements-e
 
 ## New skill — `ns-commercial-budget` (2026-08-03)
 
-Client-facing commercial budget (Features + FP + COSMIC CFP + hours previstas; **no** Investimento / R$). Clarification asks team experience (seniority, tenure, involvement) to calibrate hours. When present, loads `docs/context/system-reverse-spec.agent.md` (prefer) / `.md` and `brownfield-map.md` to size **delta** on the known product. Scoped items use `Feature 00N` — not legacy `RF` / “Requisitos Funcionais”. Added to preset/category `project-manager` and preset `full`. Depends on `ns-harness`. Not an SDD or PM pipeline phase.
+Client-facing commercial budget (Features + FP + COSMIC CFP + hours; macro-activity table; risk-based error + safety margin %). Same path `commercial-budget.md`; header **Sequência** + **Gerado em** (date/time) on each regenerate. Custo (R$) only with human rates. Loads reverse-spec/brownfield when present. Presets `project-manager` and `full`. Depends on `ns-harness`.
 
 ## Rename — `ns-mcp-gitlab-usage` → `mcp-gitlab-usage` (2026-07-27)
 
