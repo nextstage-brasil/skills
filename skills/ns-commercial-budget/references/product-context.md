@@ -42,4 +42,4 @@ Cross the human’s scope against the reverse-spec / map:
 
 ## Citations in the deliverable
 
-In **Premissas / ressalvas**, list which context files were read (paths only). Do not paste large excerpts from the reverse-spec into the commercial budget.
+In **Premissas / ressalvas**, say that product context was consulted — do **not** dump file paths or technical excerpts for the client. Translate reverse-spec facts into **product language** (`references/product-voice.md`). Keep full paths for the maintainer chat summary only if useful.

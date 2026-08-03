@@ -15,7 +15,7 @@ Every Feature, RNF, estimate premise, macro-row figure, and margin % must trace 
 9. **Contradict reverse-spec silently** — If chat scope conflicts with documented behavior, surface it; do not overwrite the reverse-spec in the budget.
 10. **Macro table shortcuts** — Do not drop/rename the seven mandatory macro rows; do not put all hours only in “Implementação”.
 11. **Naked margin** — Do not apply a safety % without a risks section and short rationale.
-12. **Sales markup as safety** — Safety margin is estimate contingency, not commercial profit.
+13. **Technical voice in the deliverable** — No class/field/schema/endpoint/framework narrative in Features, RNFs, acceptance, risks, or premissas (see `product-voice.md`). Translate code-derived facts into product language.
 
 ## Lacunas
 

@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Preciso de um orçamento comercial para uma API de consulta criminal (ORCRIM): autenticação, busca por documento, histórico de consultas e exportação CSV. Versão orcamento-api-orcrim. Pode gravar em docs.",
-      "expected_output": "Clarifies with ≤5 questions including team experience when needed. Loads docs/context when present. Writes docs/versions/.../commercial-budget.md with header Sequência + Gerado em (date/time), Features, FP, COSMIC, hours + margin, macro table, risks. No invented R$. No timestamped filenames. No tasks/SDD. Stops after persist.",
+      "expected_output": "Clarifies with ≤5 questions including team experience when needed. Loads docs/context when present. Writes commercial-budget.md with header Sequência + Gerado em, product-voice Features (no fields/classes), FP, COSMIC, hours + margin, macro table, risks. No invented R$. No tasks/SDD. Stops after persist.",
       "files": []
     },
     {

@@ -15,18 +15,18 @@
 
 ## Agrupamento de objetivos (Features)
 
-<!-- Up to 10 Features. Order by technical/business dependency. No task list. Do not label as RF / Requisitos Funcionais. -->
+<!-- Up to 10 Features. Product voice only (PM/client). No fields, classes, schemas. Order by business dependency. No task list. Do not label as RF / Requisitos Funcionais. -->
 
 ### Feature 001 — {TÍTULO}
 
 **Precedência:** Nenhuma  
 **Descrição detalhada:**  
-{Generous description: business flows, actors, integrations, expected use. Not a one-liner.}
+{Product language: who benefits, what the product allows/blocks, business rules. Not a one-liner. No tech implementation.}
 
 #### Critérios de aceite
 
-- [ ] {testable criterion}
-- [ ] {testable criterion}
+- [ ] {product-verifiable criterion — “o administrador consegue…”, “o parceiro recebe…”}
+- [ ] {product-verifiable criterion}
 
 ### Feature 002 — {TÍTULO}
 

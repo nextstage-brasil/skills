@@ -95,7 +95,7 @@ New preset: `--preset project-manager` (`ns-project-manager`, `ns-requirements-e
 
 ## New skill — `ns-commercial-budget` (2026-08-03)
 
-Client-facing commercial budget (Features + FP + COSMIC CFP + hours; macro-activity table; risk-based error + safety margin %). Same path `commercial-budget.md`; header **Sequência** + **Gerado em** (date/time) on each regenerate. Custo (R$) only with human rates. Loads reverse-spec/brownfield when present. Presets `project-manager` and `full`. Depends on `ns-harness`.
+Client-facing commercial budget in **product voice** (PM/client — no fields/classes). Features + FP + COSMIC + hours; macro-activity table; risk margins. Same path `commercial-budget.md`; header Sequência + Gerado em. Custo (R$) only with rates. Loads reverse-spec/brownfield when present. Presets `project-manager` and `full`. Depends on `ns-harness`.
 
 ## Rename — `ns-mcp-gitlab-usage` → `mcp-gitlab-usage` (2026-07-27)
 

@@ -58,7 +58,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code
 | `ns-code-best-practices`             | Security headers, compatibility, modernization pass (optional complement)                                                                     |
 | `ns-requirements-enricher`           | Grill-me gap analysis for GitLab issues or chat context                                                                                       |
 | `ns-project-manager`                 | End-to-end PM workflow — clarification through delivery forecast                                                                              |
-| `ns-commercial-budget`               | Commercial budget — Features, FP, COSMIC, hours, macro activities, risk/safety margin % (R$ only with rates)                                |
+| `ns-commercial-budget`               | Commercial budget (product voice) — Features, FP, COSMIC, hours, macro activities, risk margin %                                           |
 | `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
 | `ns-langgraph-agents`                | LangGraph.js runtime — MCP governance, context window, HITL, evals                                                                            |
 | `ns-skill-creator`                   | Create project-local skills in `.agents/skills/` + `harness sync`                                                                             |

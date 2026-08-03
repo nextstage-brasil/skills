@@ -18,7 +18,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.6"
+  version: "1.7"
 depends:
   - ns-harness
 ---
@@ -26,6 +26,8 @@ depends:
 # Commercial Budget
 
 Produce a **client-facing commercial budget** from a free-form description: scoped **Features**, estimates (**FP + COSMIC CFP + hours**), a **macro-activity table** (lifecycle effort), and **risk-based safety / error margins**. The artifact path is fixed; **Sequência** + **Gerado em** (date and time) version the content in the header on each regenerate.
+
+**Audience:** product manager or client — **product voice only** in the deliverable (see `references/product-voice.md`). No field names, classes, schemas, or implementation jargon.
 
 When product context exists, **align Features and hours to the known system** (reverse business spec + brownfield map) so the budget sizes the **delta**, not a blank-slate rewrite.
 
@@ -43,6 +45,7 @@ If no harness is found: use repo root as `{product_root}`. Ask once for `{versio
 
 - Skill instructions: English (this file + `references/`).
 - **Deliverable:** Portuguese (Brazil) by default. English only when the human explicitly asks.
+- **Product voice (mandatory):** read `references/product-voice.md` before writing Features / RNFs / acceptance / risks / premissas. Size methods (FP, COSMIC) stay in Estimativas; the narrative stays business/product.
 
 ## Workflow
 
@@ -67,20 +70,21 @@ Read `references/clarification.md`.
 ### 3. Generate
 
 1. Read `assets/commercial-budget.template.md`.
-2. Read `references/cosmic-sizing.md` before sizing CFP.
-3. Read `references/macro-activities.md` and `references/risk-margin.md` before the lifecycle table and margin section.
-4. Read `references/document-versioning.md` before persist — bump header **Sequência** + **Gerado em**.
-5. Fill the template using **chat scope + product context**:
+2. Read `references/product-voice.md` before drafting any client-facing section.
+3. Read `references/cosmic-sizing.md` before sizing CFP.
+4. Read `references/macro-activities.md` and `references/risk-margin.md` before the lifecycle table and margin section.
+5. Read `references/document-versioning.md` before persist — bump header **Sequência** + **Gerado em**.
+6. Fill the template using **chat scope + product context** (product language only):
 
 | Section | Rules |
 |---------|--------|
-| Objetivo principal | Executive summary of the version/scope |
-| Features (≤10) | IDs `Feature 001`…; dependency order; Precedência; generous description; acceptance criteria. Do **not** use `RF` / “Requisitos Funcionais”. Prefer delta-on-existing over inventing parallel capabilities already in reverse-spec |
-| RNFs | Only if identified from scope/clarification — no gold plating |
+| Objetivo principal | Executive product summary — impact and intent, no tech stack |
+| Features (≤10) | IDs `Feature 001`…; dependency order; Precedência; generous **product** description; acceptance criteria a PM can verify. Do **not** use `RF` / “Requisitos Funcionais”. Prefer delta-on-existing. No fields/classes/APIs as schema |
+| RNFs | Only if identified — product/quality language, no invented SLAs |
 | Estimativas | FP total + rationale; COSMIC per Feature (E/R/W/X) + ΣCFP; **horas base** + **horas com margem de segurança** |
 | Macroatividades | Mandatory 7-row table: esforço (h), PF, Custo (R$ or `—`); see `macro-activities.md` |
-| Riscos e margem | Risks table + margem de erro `%` + margem de segurança `%`; see `risk-margin.md` |
-| Premissas / ressalvas | Assumptions (team knowledge, context files read, mix %, margins), out-of-scope, lacunas |
+| Riscos e margem | Risks in product/delivery language + margem de erro `%` + margem de segurança `%` |
+| Premissas / ressalvas | Assumptions (team knowledge, context consulted, mix %, margins), out-of-scope, lacunas — still product-readable |
 | Tasks | **Never** include a task list |
 
 **Hours:** calibrate from team experience and reverse-spec/map signals. If house productivity (h/PF or h/CFP) was given, use it and cite it. Otherwise mark `[ASSUMPTION: …]` / `[LACUNA: …]`. Base hours cover the full macro lifecycle (not “coding only”). Then apply safety margin from risks.
@@ -122,6 +126,7 @@ After the document:
 | File | When |
 |------|------|
 | `references/product-context.md` | After `{product_root}` — reverse-spec / brownfield boot |
+| `references/product-voice.md` | Before drafting — product/client language |
 | `references/clarification.md` | Before generating — intake questions |
 | `references/cosmic-sizing.md` | Before COSMIC E/R/W/X counts |
 | `references/macro-activities.md` | Before lifecycle allocation table |
