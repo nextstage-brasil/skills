@@ -1,6 +1,6 @@
 ---
 name: ns-project-manager
-description: (NS) Gated PM workflow — clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk, status, meeting, OKR. Use on transcripts, backlog, timeline, delivery date, or status requests — even if PM is unnamed. Do NOT use for coding, SDD requirements generation, or GitLab issue execution.
+description: (NS) Gated PM workflow — clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk, status, meeting, OKR. Use on transcripts, backlog, timeline, delivery date, or status requests — even if PM is unnamed. Do NOT use for coding, SDD requirements generation, GitLab issue execution, or client commercial quotes / Function Points / COSMIC / orçamento comercial (use ns-commercial-budget).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -26,8 +26,11 @@ Unified project-management skill with a **gated phase pipeline** (Phases 0–5) 
 | "Deploy checklist", "compliance", "before we ship" | **9** Compliance | `references/08-compliance-checklist.md` |
 | Informal Slack/email message → task/ticket | **10** NL to Workflow | `references/09-nl-to-workflow.md` |
 | "Validate OKRs", backlog×strategy alignment, portfolio scorecard | **11** OKR Aligner | `references/10-okr-aligner.md` |
+| Commercial budget, orçamento, proposta comercial, Function Points, COSMIC, CFP, cotação em R$ | **→ `ns-commercial-budget`** (not a PM phase) | sibling skill |
 
 **On-demand modes (6+) skip the pipeline** — they run directly when triggered, reusing context from earlier phases when available.
+
+**Commercial FP / client quote:** route to `ns-commercial-budget`. This skill stays delivery forecast (RICE / sprint / PERT) — not client COSMIC commercial sizing (FP / CFP / hours).
 
 ## Phase 0 — Intake
 
