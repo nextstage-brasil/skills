@@ -42,6 +42,7 @@
     "ns-pm-e2e-test-task-generator": [],
     "ns-sdd-living-spec-consolidator": ["ns-harness"],
     "ns-project-manager": [],
+    "ns-commercial-budget": ["ns-harness"],
     "mcp-gitlab-usage": ["ns-harness"],
     "ns-gitlab-board-sync": ["mcp-gitlab-usage"],
     "ns-gitlab-ci-generator": [],
@@ -91,8 +92,8 @@
     },
     "project-manager": {
       "label": "Project Manager toolkit",
-      "description": "Human PM workflow — clarify, prioritize, forecast, status, risk — no code execution",
-      "skills": ["ns-project-manager", "ns-requirements-enricher"]
+      "description": "Human PM workflow — clarify, prioritize, forecast, status, risk — plus commercial budget / function-point quoting — no code execution",
+      "skills": ["ns-project-manager", "ns-requirements-enricher", "ns-commercial-budget"]
     },
     "brownfield": {
       "label": "Brownfield onboarding",
@@ -101,7 +102,7 @@
     },
     "full": {
       "label": "Full optional stack",
-      "description": "Every skill in the catalog: spec-driven, GitLab, quality add-ons, PM, skill-creator, multi-agent-architect",
+      "description": "Every skill in the catalog: spec-driven, GitLab, quality add-ons, PM, commercial budget, skill-creator, multi-agent-architect",
       "skills": [
         "ns-spec-driven",
         "ns-pm-unit-test-task-generator",
@@ -117,6 +118,7 @@
         "ns-code-docs-writer",
         "ns-code-best-practices",
         "ns-project-manager",
+        "ns-commercial-budget",
         "ns-skill-creator",
         "ns-multi-agent-architect",
         "ns-langgraph-agents"
@@ -149,7 +151,7 @@
     },
     "project-manager": {
       "label": "Project Manager",
-      "skills": ["ns-project-manager", "ns-requirements-enricher"]
+      "skills": ["ns-project-manager", "ns-requirements-enricher", "ns-commercial-budget"]
     },
     "gitlab": {
       "label": "GitLab",
