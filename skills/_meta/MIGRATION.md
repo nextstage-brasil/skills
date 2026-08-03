@@ -93,6 +93,10 @@ All catalog skills were renamed with a global `ns-` prefix. Six SDD planning wor
 
 New preset: `--preset project-manager` (`ns-project-manager`, `ns-requirements-enricher`).
 
+## New skill — `ns-commercial-budget` (2026-08-03)
+
+Client-facing commercial budget (Features + FP + COSMIC CFP + hours previstas; **no** Investimento / R$). Clarification asks team experience (seniority, tenure, involvement) to calibrate hours. When present, loads `docs/context/system-reverse-spec.agent.md` (prefer) / `.md` and `brownfield-map.md` to size **delta** on the known product. Scoped items use `Feature 00N` — not legacy `RF` / “Requisitos Funcionais”. Added to preset/category `project-manager` and preset `full`. Depends on `ns-harness`. Not an SDD or PM pipeline phase.
+
 ## Rename — `ns-mcp-gitlab-usage` → `mcp-gitlab-usage` (2026-07-27)
 
 GitLab MCP usage skill drops the `ns-` prefix (exception to the global `ns-` catalog convention). Retired in `packages/harness/templates/retired-skills.json`.

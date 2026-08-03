@@ -33,7 +33,7 @@ Canonical paths for spec-driven planning and delivery artifacts.
 | Tasks | `{product_root}/docs/versions/{version_san}/tasks/task-NNN-*.md` |
 | Consistency report | `{product_root}/docs/versions/{version_san}/consistency-report.md` |
 | Code review report | `{product_root}/docs/versions/{version_san}/code-review-report.md` |
-| Execution handoff | `{product_root}/docs/versions/{version_san}/execution-handoff.md` |
+| Commercial budget | `{product_root}/docs/versions/{version_san}/commercial-budget.md` |
 | Living spec index | `{specs_root}/INDEX.md` |
 | Domain spec | `{specs_root}/{domain}.md` |
 
