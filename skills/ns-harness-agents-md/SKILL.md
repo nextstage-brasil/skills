@@ -4,7 +4,7 @@ description: (NS) Generate or refresh project AGENTS.md plus minimal CLAUDE.md p
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
 ---
@@ -20,8 +20,9 @@ Then write `{product_root}/CLAUDE.md` containing **only** a pointer to `AGENTS.m
 1. **Evidence-based** — list only skills, paths, and workflows that exist in the project. Mark `inferred` when guessing.
 2. **Entry pointer, not constitution** — stack, layout, and constraints belong in `architecture-rules.md` (`ns-harness-architecture-rules`). `AGENTS.md` routes agents to the right files and skills.
 3. **No harness template copy-paste** — do not dump `packages/harness/templates/AGENTS.md` into the project. Use `references/agents-md.template.md` as a skeleton and fill from reconnaissance.
-4. **Lean** — target **~100–160 lines**. Link to `docs/context/` and harness references instead of inlining.
-5. **Refresh-safe** — on update, preserve stable hand-edited sections (language exceptions, GitLab server name, team conventions) unless recon proves them wrong.
+4. **Lean** — target **~95–110 lines** (hard max **130**). Link to `docs/context/` and harness references instead of inlining.
+5. **Agent-first** — saved file is for agents, not humans. Pre-save compress via `../ns-harness/references/agent-artifact-compress.md`.
+6. **Refresh-safe** — on update, preserve stable hand-edited sections (language exceptions, GitLab server name, team conventions) unless recon proves them wrong.
 
 ## Harness discovery
 
@@ -81,20 +82,23 @@ Writing rules:
 - **How to start** — mandatory table: Planning / Implementation / Ad-hoc with skill entry points.
 - **Implementation routing** — mandatory priority table (1–5) from `code-skill-routing.md`; link to installed `ns-harness` for full handoffs.
 - **Hard stops / FORBIDDEN** — mandatory section: no invented personas, no skip architecture-rules, ISSUE_URL → gitlab-issue skill, no speculative version folders.
-- **Ownership** — one line: this file routes; stack/constraints live in `architecture-rules.md`.
 - **Product anchor** — `{product_root}` = `.` (relative to this `AGENTS.md`). Never write an absolute local path.
-- **Local overrides** — include: when `agents.local.md` exists at `{product_root}` (case-insensitive), agents must read it after `AGENTS.md`. Add a layout row marking present/not present; never inline `agents.local.md` content.
-- **Installed skills** — exact names from `.agents/skills/`, **grouped by role** in a compact table (Foundation / SDD / GitLab / Implementation / Brownfield / Other). Do not dump a flat bullet list of every skill. Build the SDD chain only from skills that are installed. Invoke via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code-reviewer`).
-- **No persona section** — do not add "Agent personas", "subagents", or `.agents/agents/` rows. Skills are the only entry points.
-- **Docker and testing** — include `../ns-harness/references/docker-and-testing.md` verbatim in every `AGENTS.md`. Add project-specific container name or wrapper script only when recon finds evidence.
-- **Layout table** — include rows only for paths that exist; omit or mark "not present" for missing scaffold. Omit persona/agent-wrapper paths.
-- **Preserve** `<!-- harness-sync-managed: ... -->` block if present (update timestamp only if user asked).
-- **Do not** inline full architecture rules — one line pointing to `architecture-rules.md`.
+- **Local overrides** — when `agents.local.md` exists (case-insensitive), agents read it after `AGENTS.md`. Mark present/not present in Layout; never inline its content.
+- **Installed skills** — exact names from `.agents/skills/`, **grouped by role** in a compact table. Build the SDD chain only from installed skills.
+- **No persona section** — skills only; no "Agent personas" / subagents.
+- **Layout** — one compact present/absent line or tiny table: rules, skills, local, docs/context|specs|versions. No almost-obvious multi-row essay.
+- **No Workflows → Implementation** section — routing table already covers it. Keep SDD chain + brownfield/context links only.
+- **Ownership + Language + Project notes** — single short block (≤5 bullets): routes vs architecture-rules; language; GitLab MCP / quirks.
+- **Docker and testing** — always keep MUST NOT compose / restart without ask. Add host vs container test evidence from recon only (e.g. Vitest on host). Include full PHPUnit block from `../ns-harness/references/docker-and-testing.md` **only** when PHP/PHPUnit is evidenced; otherwise omit PHPUnit subsection.
+- **Preserve** `<!-- harness-sync-managed: ... -->` if present.
+- **Do not** inline architecture rules — one pointer line.
 - English only in `AGENTS.md`.
+
+**Pre-save (mandatory):** apply `../ns-harness/references/agent-artifact-compress.md` (caveman ultra). Target ~95–110 lines; hard max 130. Write only the compressed file.
 
 ### Step 4 — Write AGENTS.md
 
-1. Write `{product_root}/AGENTS.md`.
+1. Write `{product_root}/AGENTS.md` (post-compress).
 2. Do **not** modify application source unless explicitly asked.
 3. If `architecture-rules.md` is still the harness stub, add a note to run `ns-harness-architecture-rules` next.
 
@@ -122,22 +126,24 @@ When updating existing `AGENTS.md`:
 
 ## Quality bar (self-check before save)
 
+- [ ] `agent-artifact-compress.md` applied (caveman ultra)
 - [ ] First action section present (AGENTS.md → agents.local.md → GitLab MCP server)
 - [ ] How to start table present (Planning / Implementation / Ad-hoc)
 - [ ] Implementation routing table present (priority 1–5)
 - [ ] Hard stops / FORBIDDEN section present
-- [ ] Ownership line present (routes vs architecture-rules)
+- [ ] Ownership/language/notes collapsed into one short block
+- [ ] No separate "Workflows → Implementation" echo of the routing table
 - [ ] Local overrides rule present (`agents.local.md`, case-insensitive)
 - [ ] Not a verbatim copy of harness `templates/AGENTS.md`
 - [ ] Every listed skill exists under `.agents/skills/`
 - [ ] Skills are grouped by role (not a flat dump of all names)
 - [ ] No "Agent personas" / subagents section
 - [ ] `{product_root}` is relative (`.` or a monorepo-relative path — never an absolute machine path)
-- [ ] Docker and testing section present (from template)
+- [ ] Docker MUST NOT present; PHPUnit only if PHP evidenced
 - [ ] SDD chain uses only installed skills
-- [ ] `CLAUDE.md` is exactly `@AGENTS.md` (single pointer)
+- [ ] `CLAUDE.md` is exactly `@AGENTS.md` (single pointer) — no compress
 - [ ] No stack/module deep-dive (belongs in `architecture-rules.md`)
-- [ ] Line count ≤ 180
+- [ ] Line count ≤ 130 (ideally 95–110)
 
 ## Related skills
 

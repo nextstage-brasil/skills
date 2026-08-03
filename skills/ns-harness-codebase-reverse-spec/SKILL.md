@@ -4,7 +4,9 @@ description: (NS) Reverse-engineer a brownfield/legacy codebase into a technolog
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
+depends:
+  - ns-harness
 ---
 
 # Codebase Reverse System Description
@@ -126,6 +128,8 @@ Use `references/spec_template.md` for the **human-readable** body. Adapt title/e
 
 Agent index rules: tables and one-liners only; no paragraph prose; agents load the index first when both exist.
 
+**Pre-save on agent index only:** before writing `system-reverse-spec.agent.md`, apply `../ns-harness/references/agent-artifact-compress.md` (caveman ultra). Do **not** caveman-rewrite the human body `system-reverse-spec.md`.
+
 Before delivery, run the sanity pass:
 
 1. Walk `references/anti_leakage_checklist.md` — remove or rewrite any technical leakage.
@@ -174,6 +178,7 @@ When the repo exceeds what fits comfortably in one pass:
 | --------------------------------------- | ----------------------------------------- |
 | `references/spec_template.md`           | Phase 4 — human-readable final document   |
 | `references/agent_index.template.md`    | Phase 4 — agent-dense companion index     |
+| `../ns-harness/references/agent-artifact-compress.md` | Pre-save — **agent index only** |
 | `references/extraction_log_template.md` | Phase 2 — working notes during extraction |
 | `references/coverage_matrix.md`         | Phases 1 and 4 — completeness check       |
 | `references/anti_leakage_checklist.md`  | Phase 4 — pre-delivery sanity pass        |

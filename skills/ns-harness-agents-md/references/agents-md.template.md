@@ -8,7 +8,7 @@
 
 1. Read this file (`AGENTS.md`) in full.
 2. If `agents.local.md` exists at `{product_root}` (case-insensitive filename), read it **next** — local overrides apply after this file.
-3. Note the **GitLab MCP server** named in Project-specific notes (or in `agents.local.md`) — use only that server for GitLab tools.
+3. Note the **GitLab MCP server** named in Project notes (or in `agents.local.md`) — use only that server for GitLab tools.
 
 **Before implementation**, read `{harness_root}/rules/architecture-rules.md` when it exists. If missing or still the harness stub, run `ns-harness-architecture-rules` first.
 
@@ -27,25 +27,25 @@
 | `{product_root}` | `.` |
 | `{harness_root}` | {resolved_harness_root_or_absent} |
 
-`{product_root}` is always relative to this file (`.`). Never write an absolute machine path.
+`{product_root}` relative to this file (`.`). Never absolute machine path.
 
 ## Layout
 
-{layout_table_rows — only paths that exist or are scaffolded; mark missing as "not present". Do not list `.agents/agents/` or persona wrappers.}
+Present: {rules path or absent}, `.agents/skills/`, `agents.local.md` {present|not present}, `docs/context|specs|versions` {present paths only}.
 
 ## Installed skills
 
-Group by role (Foundation / SDD planning / GitLab / Implementation / Brownfield / Other). Compact table — one row per role that has at least one installed skill. Exact names from `.agents/skills/`.
+Group by role. Exact names from `.agents/skills/`.
 
 | Role | Skills |
 | ---- | ------ |
 {role_rows}
 
-Invoke via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code-reviewer`). **Skills are the entry points** — do not invent or document a separate "Agent personas / subagents" section.
+Invoke via Skills menu / slash. Skills = entry points — no persona/subagent section.
 
 ## Implementation routing
 
-Priority scan **1 → 5**; first matching signal wins. Full handoffs: installed `ns-harness` skill → `references/code-skill-routing.md`.
+Priority scan **1 → 5**; first match wins. Full handoffs: installed `ns-harness` → `references/code-skill-routing.md`.
 
 | Priority | Signal | Skill |
 | -------- | ------ | ----- |
@@ -60,10 +60,6 @@ Priority scan **1 → 5**; first matching signal wins. Full handoffs: installed 
 ### SDD planning chain
 
 {sdd_chain_tailored_to_installed_skills}
-
-### Implementation
-
-{implementation_path — ns-code-coder vs ns-code-autonomous vs ns-execution-gitlab-issue vs ns-execution-orchestrator based on installed skills}
 
 ### Brownfield / context (when applicable)
 
@@ -82,27 +78,22 @@ Priority scan **1 → 5**; first matching signal wins. Full handoffs: installed 
 - GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` — never ad-hoc coder on the main checkout.
 - Do not fabricate `{version_san}` or `docs/versions/` unless the active skill's workflow requires it.
 
-## Ownership
-
-This file **routes** agents to skills and project rules. Stack, modules, and technical constraints belong in `architecture-rules.md` — not here.
-
 ## Rules and sync
 
 - Canonical rules: `{harness_root}/rules/*.md` — edit here
 - Regenerate adapters: `npx @nextstage-brasil/harness sync`
 - Skills: `.agents/skills/` (canonical; Cursor reads here) — `.claude/skills/` symlinked for Claude Code
 
-See installed `ns-harness` skill (`harness-discovery.md`, `rules-sync.md`).
+See installed `ns-harness` (`harness-discovery.md`, `rules-sync.md`).
 
 ## Docker and testing
 
-Include verbatim from `../ns-harness/references/docker-and-testing.md` (keep in sync with `packages/harness/templates/snippets/docker-and-testing.md`).
-{optional_project_specific_test_notes — only when evidenced: exact compose service name, phpunit wrapper script, etc.}
+- **MUST NOT** restart/stop/recreate or `docker compose up`/`down` without asking the user first.
+- {test_evidence — only when recon finds it: e.g. Vitest on host; or test container name + command}
+- {phpunit_block — include verbatim PHPUnit subsection from `../ns-harness/references/docker-and-testing.md` ONLY if PHP/PHPUnit evidenced; otherwise omit}
 
-## Language
+## Project notes
 
-{language_policy — default English for code/docs unless repo states otherwise}
-
-## Project-specific notes
-
-{evidence_based_bullets — GitLab MCP server name, protected branches, monorepo quirks, completion style; mark inferred}
+- Routes agents to skills/rules; stack/constraints → `architecture-rules.md`.
+- {language_policy — default English for code/docs unless repo states otherwise}
+- {evidence_based_bullets — GitLab MCP server name, protected branches, monorepo quirks; mark inferred}

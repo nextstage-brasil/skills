@@ -2,6 +2,8 @@
 
 `architecture-rules.md` is **hot memory** — loaded every session. Every line competes with the user's task context.
 
+**Always first:** `../ns-harness/references/agent-artifact-compress.md` (shared pre-save / caveman ultra). This file adds constitution-specific tactics after that pass.
+
 ## Target
 
 | Metric | Target |

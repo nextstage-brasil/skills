@@ -23,7 +23,7 @@ This is **not** a business spec (`ns-harness-codebase-reverse-spec`) or an SDD p
 4. **Load-bearing** — agents trust this absolutely. Stale rules cause silent failures; prefer omission over guesswork.
 5. **Separation** — universal architecture here; file-type or domain detail in sibling rules (`backend-rules.md`, `frontend-rules.md`, etc.).
 
-See `references/compression-guide.md` when the draft exceeds the line budget.
+See `../ns-harness/references/agent-artifact-compress.md` before every save, then `references/compression-guide.md` when the draft still exceeds the line budget.
 
 ## Harness discovery
 
@@ -99,11 +99,11 @@ Writing rules:
 - End with **Key references** — table mapping topic → file path (specs, sibling rules, `AGENTS.md`).
 - English only in the output file.
 
-Run the compression pass (`references/compression-guide.md`) before writing.
+**Pre-save (mandatory):** apply `../ns-harness/references/agent-artifact-compress.md` (caveman ultra), then `references/compression-guide.md` if still over budget. Write only the compressed draft.
 
 ### Step 5 — Write, sync, and report
 
-1. Write `{harness_root}/rules/architecture-rules.md` (or `{product_root}/.nextstage-harness/rules/...`).
+1. Write `{harness_root}/rules/architecture-rules.md` (or `{product_root}/.nextstage-harness/rules/...`) — compressed agent hot memory only.
 2. Ensure `architecture-rules` exists in `.nextstage-harness/manifest.json` with `cursor.alwaysApply: true` and `claude.paths: null`.
 3. Run `npx @nextstage-brasil/harness sync` (or instruct the user to run it) to regenerate adapters.
 4. Do **not** modify application source unless the user explicitly asked.
@@ -121,6 +121,7 @@ When updating an existing file:
 
 ## Quality bar (self-check before save)
 
+- [ ] `agent-artifact-compress.md` applied (caveman ultra; no essay prose)
 - [ ] Canonical file has no YAML frontmatter
 - [ ] `manifest.json` has `architecture-rules` with `alwaysApply: true`
 - [ ] Line count ≤ 250 (ideally ≤ 200)

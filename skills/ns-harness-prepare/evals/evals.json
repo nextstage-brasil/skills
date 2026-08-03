@@ -3,7 +3,7 @@
     {
       "prompt": "I just ran harness init with the brownfield preset on apps/billing. Run full prepare \u2014 all brownfield steps in one session.",
       "id": 1,
-      "expected_output": "Invokes ns-harness-prepare: shows boot scope summary when checks pass and proceeds immediately (no confirmation gate); runs ns-harness-architecture-rules, harness sync, ns-harness-bootstrap-brownfield, ns-harness-codebase-reverse-spec, and ns-harness-agents-md in that order without asking between steps. Stops with a failure report only if a boot check fails.",
+      "expected_output": "Invokes ns-harness-prepare: shows boot scope summary when checks pass and proceeds immediately (no confirmation gate); runs ns-harness-architecture-rules, harness sync, ns-harness-bootstrap-brownfield, ns-harness-codebase-reverse-spec, and ns-harness-agents-md in that order without asking between steps; applies agent-artifact-compress before saving agent-facing files. Stops with a failure report only if a boot check fails.",
       "files": []
     },
     {

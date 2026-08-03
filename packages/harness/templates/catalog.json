@@ -21,7 +21,7 @@
     "ns-code-frontend-design": ["ns-harness"],
     "ns-code-docs-writer": ["ns-harness"],
     "ns-code-best-practices": ["ns-harness"],
-    "ns-harness-codebase-reverse-spec": [],
+    "ns-harness-codebase-reverse-spec": ["ns-harness"],
     "ns-harness-architecture-rules": ["ns-harness"],
     "ns-harness-agents-md": ["ns-harness"],
     "ns-harness-bootstrap-brownfield": ["ns-harness"],

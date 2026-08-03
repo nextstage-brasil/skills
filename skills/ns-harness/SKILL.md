@@ -4,7 +4,7 @@ description: (NS) Harness discovery, artifact layout, and SDD planning gates for
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 ---
 
 # NextStage Harness
@@ -22,5 +22,6 @@ Shared reference documents for NextStage skills. Consumer skills point here for 
 | `references/artifact-layout.md`   | SDD artifact paths under `docs/versions/`, living specs, handoff rules            |
 | `references/gates.md`             | Human confirmation gates before requirements, scope, or task generation           |
 | `references/code-skill-routing.md`  | Entry priority and handoffs between `ns-code-*`, `ns-spec-driven`, and GitLab execution skills |
+| `references/agent-artifact-compress.md` | **Pre-save** on agent-facing prepare/worker drafts (caveman ultra; not for humans) |
 
 Read only the file(s) the active consumer skill names. Do not assume monorepo layout or stack unless discovery resolves it.

@@ -4,7 +4,7 @@ description: (NS) Full post-harness-init bootstrap in one session — architectu
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
   - ns-harness-architecture-rules
@@ -77,6 +77,23 @@ npx @nextstage-brasil/harness --preset spec-driven --yes
 - **Do not** skip `ns-harness-codebase-reverse-spec` — full prepare includes it.
 - After step 1, run `npx @nextstage-brasil/harness sync` (shell) before step 2.
 
+## Pre-save compress (mandatory)
+
+Agent-facing outputs are **not for humans**. Before every `Write` of an agent artifact, read and apply:
+
+`../ns-harness/references/agent-artifact-compress.md`
+
+| Write | Compress |
+| ----- | -------- |
+| `architecture-rules.md` | Yes |
+| `brownfield-map.md` | Yes |
+| `system-reverse-spec.agent.md` | Yes |
+| `AGENTS.md` | Yes |
+| `system-reverse-spec.md` | No (human body) |
+| `CLAUDE.md` | No (pointer only) |
+
+Workers own the pass; prepare **rejects** advancing if a yes-row file looks essay-bloated vs the soft targets in that reference.
+
 ## Step sequence
 
 ### Step 1 — Architecture rules
@@ -91,6 +108,7 @@ npx @nextstage-brasil/harness --preset spec-driven --yes
 Scan {product_root} and generate or refresh architecture-rules.md.
 Evidence-based only; mark inferred items. Target 80–200 lines.
 Telegraphic tables/bullets — agent hot memory, not prose.
+Before Write: apply ../ns-harness/references/agent-artifact-compress.md (caveman ultra).
 ```
 
 Follow the worker skill workflow completely. Read-only on application code.
@@ -116,6 +134,7 @@ Do not proceed to step 2 until sync succeeds.
 ```
 Bootstrap brownfield analysis for {product_root}.
 Agent-dense brownfield-map.md (tables only). Link architecture-rules.md for stack — do not duplicate.
+Before Write: apply ../ns-harness/references/agent-artifact-compress.md (caveman ultra).
 ```
 
 Follow the worker skill workflow. Read-only on application code.
@@ -132,6 +151,7 @@ Follow the worker skill workflow. Read-only on application code.
 Reverse-engineer {product_root} into a technology-agnostic system description.
 Executive depth (default). Save human body to docs/context/system-reverse-spec.md
 and agent-dense index to docs/context/system-reverse-spec.agent.md.
+Compress only the agent index before Write (agent-artifact-compress.md). Leave human body readable.
 Autonomous run: use boot defaults for scope and language; skip recon checkpoint unless a blocker.
 ```
 
@@ -149,6 +169,7 @@ Follow the worker skill workflow. Technology-agnostic output only.
 Refresh AGENTS.md for {product_root} from installed skills and artifacts produced in this session.
 Link to architecture-rules.md, brownfield-map.md, system-reverse-spec.md, and system-reverse-spec.agent.md — do not duplicate their bodies.
 Preserve hand-edited sections unless recon proves them wrong.
+Before Write: apply ../ns-harness/references/agent-artifact-compress.md — target ~95–110 lines.
 ```
 
 Run **last** so links point to artifacts from steps 1–3.
@@ -190,6 +211,8 @@ When all steps succeed, report:
 - Do not reorder steps (especially `ns-harness-agents-md` before constitution and context artifacts).
 - Do not skip `harness sync` after architecture rules.
 - Do not skip `ns-harness-codebase-reverse-spec` in full prepare.
+- Do not skip pre-save compress on agent-facing files (`agent-artifact-compress.md`).
+- Do not caveman-rewrite the human reverse-spec body or `CLAUDE.md`.
 - Do not edit `.cursor/` or `.claude/` directly — canonical only.
 - Do not modify application source code during prepare.
 

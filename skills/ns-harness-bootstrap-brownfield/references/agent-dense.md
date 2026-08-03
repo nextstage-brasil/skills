@@ -2,6 +2,8 @@
 
 `brownfield-map.md` is **cold context for agents**, not a human essay.
 
+Before Write, also run `../ns-harness/references/agent-artifact-compress.md`.
+
 ## Rules
 
 1. **Tables and one-liners only** — no overview paragraphs, no narrative recommendations.

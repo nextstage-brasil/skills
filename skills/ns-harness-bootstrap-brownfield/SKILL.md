@@ -13,7 +13,7 @@ depends:
 
 Architectural discovery for existing products before SDD planning.
 
-Output is **agent-dense** (tables, counts, gap list) — not a human essay. See `references/agent-dense.md`.
+Output is **agent-dense** (tables, counts, gap list) — not a human essay. See `references/agent-dense.md` and **pre-save** `../ns-harness/references/agent-artifact-compress.md`.
 
 ## Harness discovery
 
@@ -52,13 +52,15 @@ Use stack-agnostic checks when no harness rules.
 
 ### Step 4 — Report
 
-Create or update `{product_root}/docs/context/brownfield-map.md` from `references/brownfield-map.template.md` and `references/agent-dense.md`.
+Draft `{product_root}/docs/context/brownfield-map.md` from `references/brownfield-map.template.md` and `references/agent-dense.md`.
 
 Writing rules:
 
 - Tables / one-liners only — no overview paragraphs.
 - Stack = pointer to `architecture-rules.md` (+ optional one-line delta).
 - Gaps = priority table; Next planning ≤3 bullets.
+
+**Pre-save (mandatory):** apply `../ns-harness/references/agent-artifact-compress.md` (caveman ultra), then write the compressed file.
 
 ### Step 5 — Present
 
@@ -85,3 +87,4 @@ Chat summary only (3–5 bullets: date, critical gaps, next skill). Do not paste
 | ---- | ---- |
 | `references/brownfield-map.template.md` | Step 4 skeleton |
 | `references/agent-dense.md` | Writing constraints |
+| `../ns-harness/references/agent-artifact-compress.md` | Pre-save compress (mandatory) |
