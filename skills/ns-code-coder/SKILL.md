@@ -100,12 +100,12 @@ Complete **Session boot (blocking)** in `../ns-harness/references/harness-discov
 After tests pass (step 6), run an internal review loop before reporting done.
 
 - Invoke `ns-code-reviewer` on the working-tree diff (`git diff`) — no `ISSUE_URL`, no version-closure path. Just the ad-hoc diff.
-- **Max 3 rounds.** After each review:
-  - **No Critical Issues** (satisfactory score) → proceed to report.
-  - **Critical Issues** with rounds left → apply the minimal diff that resolves each Critical (`ns-code-reviewer` is read-only, so this skill applies the fixes), re-run tests if in scope, then re-review.
-  - **Rounds exhausted** with Criticals still open → **stop and report as blocked**. List the unresolved Criticals. Do not report success.
-- Keep fixes within the original task scope. If a Critical finding requires changes outside scope (public contract, cross-product, multi-day work), stop and escalate per **Stop conditions** instead of expanding the diff.
-- Warnings and Suggestions do not block: carry them into the final report as follow-ups.
+- **Max 3 rounds.** After each review (score gate from `ns-code-reviewer`: pass ≥**9**/10, ideal **10**/10):
+  - **Pass:** zero Critical Issues **and** overall score ≥ **9**/10 → proceed to report.
+  - **Fail** (Criticals **or** score ≤ **8**) with rounds left → apply the minimal diff that clears Criticals and lifts quality to ≥9 (`ns-code-reviewer` is read-only, so this skill applies the fixes), re-run tests if in scope, then re-review.
+  - **Rounds exhausted** still failing the gate → **stop and report as blocked**. List unresolved Criticals and/or the last score. Do not report success.
+- Keep fixes within the original task scope. If a Critical (or score-blocking Warning) requires changes outside scope (public contract, cross-product, multi-day work), stop and escalate per **Stop conditions** instead of expanding the diff.
+- Suggestions (P2) alone do not block when score is already ≥9: carry them into the final report as follow-ups.
 
 ## Stop conditions
 

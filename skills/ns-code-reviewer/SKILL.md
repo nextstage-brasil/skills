@@ -26,7 +26,7 @@ See `../ns-harness/references/harness-discovery.md`. **Complete Session boot (bl
 
 ### Version closure
 
-When invoked at version closure, save output to `{product_root}/docs/versions/{version_san}/code-review-report.md` using `references/review-report.template.md`.
+When invoked at version closure, save output to `{product_root}/docs/versions/{version_san}/code-review-report.md` using `references/review-report.template.md`. Apply **Score gate**; end the chat response with `Code Review: {Approved|Rejected|Blocked}` so callers can parse the verdict.
 
 ### Issue review mode
 
@@ -35,9 +35,29 @@ When invoker passes `ISSUE_URL` (or `project_id` + `issue_iid`):
 1. Delegate issue context to `ns-execution-gitlab-issue` context flow or `gitlab-issue-context-agent` — do not call `read_issue` yourself if a synthesis block is provided.
 2. Diff `origin/<target>...origin/<source>` from synthesis — never review wrong branch.
 3. **Requirement proof gate:** every AC needs behavioral evidence; producer-only code without consumer is Critical.
-4. **Verdict (exactly one):** `Approved` | `Rejected` | `Blocked`
+4. **Verdict (exactly one):** `Approved` | `Rejected` | `Blocked` — apply **Score gate** below.
 5. Post internal GitLab comment via `mcp-gitlab-usage` — first line: `Code Review | YYYY-MM-DD HH:MM (UTC) | Verdict: {Approved|Rejected|Blocked}`
 6. Last line of response to parent: `Code Review: {Approved|Rejected|Blocked}`
+
+## Score gate (all modes)
+
+Every review **must** include an overall score **1–10**. Callers treat this as a hard pass bar.
+
+| Score | Meaning | Verdict impact |
+|-------|---------|----------------|
+| **10** | Ideal — ship as-is | Eligible for `Approved` |
+| **9** | Minimum pass | Eligible for `Approved` |
+| **≤8** | Below bar | **Must** be `Rejected` (even with zero Criticals) |
+
+**`Approved` only when all are true:**
+
+1. Zero Critical findings
+2. Overall score **≥ 9**/10 (target **10**/10)
+3. In Issue review mode: every AC is PASS with behavioral evidence
+
+**`Rejected` when:** any Critical, **or** score ≤ 8, **or** (Issue mode) any AC fails behavioral proof.
+
+Do not inflate scores to clear the gate. A clean but mediocre diff scores 7–8 and is Rejected until quality rises.
 
 ## Review priorities
 
@@ -66,7 +86,7 @@ Structure every review as:
 
 ### Executive Summary
 
-- Score 1–10
+- Score 1–10 (see **Score gate** — pass bar ≥9, ideal 10)
 - Two-line overall assessment
 
 ### Critical Issues

@@ -57,9 +57,10 @@ Identical logic to Engine mode:
 ## 5. Internal review loop
 
 - Invoke `ns-code-reviewer` in **version-closure mode**, pointing at `{product_root}/docs/versions/{version_san}/` when it exists, or at the worktree diff directly for a single-unit run.
+- Enforce the reviewer **Score gate**: `Approved` only with zero Criticals **and** overall score ≥ **9**/10 (ideal **10**/10). Score ≤8 is `Rejected` even without Criticals.
 - Max 3 rounds:
   - `Approved` → proceed to closure.
-  - `Rejected` with rounds left → re-run dispatch (`multi-agent-dispatch.md`'s fix-loop re-dispatch) for the findings, then re-review.
+  - `Rejected` with rounds left → re-run dispatch (`multi-agent-dispatch.md`'s fix-loop re-dispatch) for the findings (Criticals first, then score-lifting fixes), then re-review.
   - `Blocked`, or rounds exhausted → stop, report as blocked. Do not report success.
 
 ## 6. Report

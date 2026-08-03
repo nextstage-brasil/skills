@@ -59,7 +59,7 @@ Same internals as Engine mode, but this skill owns the whole run:
 2. Infer `change_kind` (fix/feat), allocate `{version_san}`, create `docs/versions/{version_san}/`.
 3. **Create its own worktree**: `{product_root}/.worktrees/{version_san}/` + branch `work/{version_san}` from the resolved base branch, following `../ns-harness/references/worktree-setup.md`. Path is under the **product root**, never under `.cursor/`. On failure → abort (do not fall back to the main checkout) — see `references/standalone-pipeline.md`.
 4. Planning-depth self-decision, doubt protocol (destructive doubt → chat-only gate, no GitLab actions available), multi-agent dispatch — identical logic to Engine mode.
-5. **Internal review loop** — invoke `ns-code-reviewer` (version-closure mode), max 3 rounds: fix units on `Rejected`, stop on `Blocked` or rounds exhausted.
+5. **Internal review loop** — invoke `ns-code-reviewer` (version-closure mode), max 3 rounds: `Approved` requires score ≥9/10 (ideal 10); fix units on `Rejected` (Criticals or score ≤8), stop on `Blocked` or rounds exhausted.
 6. Report `{version_san}`, worktree path, commit(s), review verdict, and any follow-ups. No GitLab board, no MR — unless `docs/context/gitlab-sync-config.md` exists and the human explicitly asked for one (out of scope for v1; standalone stays local-only otherwise).
 
 See `references/standalone-pipeline.md` for the full flow.

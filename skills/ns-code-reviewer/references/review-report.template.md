@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-- **Overall score:** {N}/10
+- **Overall score:** {N}/10 (pass bar ≥9; ideal 10 — score ≤8 → Rejected)
 - {Two lines: what is solid and main risk.}
 
 **Additional context:** {Ignored tasks, waivers, partial scope — if applicable.}
