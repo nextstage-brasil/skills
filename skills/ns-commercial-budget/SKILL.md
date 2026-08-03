@@ -7,8 +7,9 @@ description: >
   impl tests, homologation tests, assisted homologation, deployment) with
   effort/PF/optional R$ cost, plus risk-based safety/error margin %. Header
   carries generation sequence + date/time (same file path on regenerate). When
-  docs/context exists, reads system-reverse-spec (prefer .agent.md) and
-  brownfield-map to size the delta. Never invent R$ without human rates. Use
+  docs/context exists, must read reverse-spec and brownfield-map in full,
+  build a reuse inventory, and size the delta (not greenfield). Never invent
+  R$ without human rates. Use
   whenever the user asks for orçamento, proposta comercial, cotação, budget
   proposal, ponto-função, Function Points, COSMIC, CFP, precificar escopo, or
   a commercial quote from a product description — even if they do not name
@@ -18,7 +19,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.7"
+  version: "1.8"
 depends:
   - ns-harness
 ---
@@ -29,7 +30,7 @@ Produce a **client-facing commercial budget** from a free-form description: scop
 
 **Audience:** product manager or client — **product voice only** in the deliverable (see `references/product-voice.md`). No field names, classes, schemas, or implementation jargon.
 
-When product context exists, **align Features and hours to the known system** (reverse business spec + brownfield map) so the budget sizes the **delta**, not a blank-slate rewrite.
+When product context exists, **read artifacts in full**, build a **reuse inventory** (`references/product-context.md`), then align Features and hours to the known system so the budget sizes the **delta**, not a blank-slate rewrite. Sizing without reuse inventory when context files exist is **blocked**.
 
 **Pricing:** fill **Custo (R$)** in the macro table **only** when the human supplies R$/h and/or R$/PF. Never invent rates or a silent Investimento total outside that table.
 
@@ -53,7 +54,7 @@ If no harness is found: use repo root as `{product_root}`. Ask once for `{versio
 
 1. Capture the free-form scope description (and any productivity / team-experience / rates hints already given).
 2. Resolve `{product_root}` and `{version_san}` (ask if missing; placeholder ok).
-3. **Product context boot** — read `references/product-context.md` and load `{context_root}` artifacts when present (`system-reverse-spec.agent.md` preferred over `system-reverse-spec.md`, plus `brownfield-map.md`).
+3. **Product context boot + reuse gate** — read `references/product-context.md`; when `{context_root}/` exists, **mandatory full read** of reverse-spec (`.agent.md` then `.md` as applicable) and `brownfield-map.md`, then build the **reuse inventory** before clarification or sizing.
 4. Confirm whether to persist under `docs/versions/` or chat-only (default: persist).
 
 ### 2. Clarify (actionable, not staircase)
@@ -74,7 +75,8 @@ Read `references/clarification.md`.
 3. Read `references/cosmic-sizing.md` before sizing CFP.
 4. Read `references/macro-activities.md` and `references/risk-margin.md` before the lifecycle table and margin section.
 5. Read `references/document-versioning.md` before persist — bump header **Sequência** + **Gerado em**.
-6. Fill the template using **chat scope + product context** (product language only):
+6. **Reuse inventory applied** — confirm each scope piece is classified `reuse` / `extend` / `net-new` with reverse-spec/map signals; discount reuse in Features and estimates. Do not size until this step is done when context files existed.
+7. Fill the template using **chat scope + product context + reuse inventory** (product language only):
 
 | Section | Rules |
 |---------|--------|
@@ -84,7 +86,7 @@ Read `references/clarification.md`.
 | Estimativas | FP total + rationale; COSMIC per Feature (E/R/W/X) + ΣCFP; **horas base** + **horas com margem de segurança** |
 | Macroatividades | Mandatory 7-row table: esforço (h), PF, Custo (R$ or `—`); see `macro-activities.md` |
 | Riscos e margem | Risks in product/delivery language + margem de erro `%` + margem de segurança `%` |
-| Premissas / ressalvas | Assumptions (team knowledge, context consulted, mix %, margins), out-of-scope, lacunas — still product-readable |
+| Premissas / ressalvas | Assumptions (team knowledge, delta-on-known-product with reuse applied, mix %, margins), out-of-scope, lacunas — still product-readable |
 | Tasks | **Never** include a task list |
 
 **Hours:** calibrate from team experience and reverse-spec/map signals. If house productivity (h/PF or h/CFP) was given, use it and cite it. Otherwise mark `[ASSUMPTION: …]` / `[LACUNA: …]`. Base hours cover the full macro lifecycle (not “coding only”). Then apply safety margin from risks.
@@ -125,7 +127,7 @@ After the document:
 
 | File | When |
 |------|------|
-| `references/product-context.md` | After `{product_root}` — reverse-spec / brownfield boot |
+| `references/product-context.md` | After `{product_root}` — mandatory read + reuse inventory gate |
 | `references/product-voice.md` | Before drafting — product/client language |
 | `references/clarification.md` | Before generating — intake questions |
 | `references/cosmic-sizing.md` | Before COSMIC E/R/W/X counts |

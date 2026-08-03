@@ -18,6 +18,12 @@
       "prompt": "Monta proposta comercial em inglês for a small inventory API: SKU CRUD + stock adjust. Chat only, don't write files.",
       "expected_output": "English deliverable, chat-only. FP + COSMIC + hours + macro table + risk margins. Custo — without rates. No task list. No ns-project-manager / SDD workers.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Orçamento comercial: adicionar exportação PDF no módulo de relatórios e notificação por e-mail quando relatório ficar pronto. Versão orcamento-relatorios-v2. docs/context tem system-reverse-spec.agent.md e brownfield-map.md com relatórios, usuários e integração SMTP já documentados.",
+      "expected_output": "Full read of docs/context artifacts (not grep/skim). Reuse inventory classifies relatórios/export as extend, SMTP as reuse/extend — not greenfield. Features and FP/CFP/hours sized as delta with reuse discount. Premissas state delta-on-known-product, not empty 'contexto consultado'. No sizing before reuse inventory.",
+      "files": []
     }
   ]
 }

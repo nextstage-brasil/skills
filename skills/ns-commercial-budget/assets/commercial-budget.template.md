@@ -112,7 +112,7 @@
 
 ## Premissas e ressalvas
 
-- {assumptions — team knowledge, docs/context paths read, macro mix, margins, out-of-scope, lacunas, architecture decisions}
+- {assumptions — team knowledge, delta-on-known-product (reuse/extend applied to documented capabilities), macro mix, margins, out-of-scope, lacunas, architecture decisions}
 - Este artefato **não** contém lista de tarefas de implementação (`tasks/`), issues GitLab nem handoff SDD.
 - Custo em R$ só aparece quando taxas foram fornecidas; margem de segurança é contingência de estimativa, não markup comercial.
 

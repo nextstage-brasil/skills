@@ -8,15 +8,31 @@ Produced by `ns-harness-prepare` / `ns-harness-codebase-reverse-spec` / `ns-harn
 
 Always after resolving `{product_root}` and **before** clarification questions (or before generate in quick mode). Skip only if `{product_root}/docs/context/` does not exist.
 
-## Read order
+## Read order (mandatory when files exist)
+
+**Existence = mandatory read.** Do not grep headers, skim, or skip body when an artifact is present. Skip this boot only when `{context_root}/` does not exist.
 
 1. **List** `{context_root}/` (`{product_root}/docs/context/`), including one level of subfolders.
-2. **Prefer** `{context_root}/system-reverse-spec.agent.md` when present — agent-dense index (entities, use cases, rules, access, integrations).
-3. Else read `{context_root}/system-reverse-spec.md` (human body) — skim entities, use cases, business rules, access, integrations relevant to the requested scope.
-4. Read `{context_root}/brownfield-map.md` when present — modules/gaps that affect brownfield effort (do not duplicate stack prose).
-5. Optionally skim `{context_root}/stack-confirmed.md` only if hours or assumptions need stack constraints already confirmed — do not turn stack into Features.
+2. If `{context_root}/system-reverse-spec.agent.md` **exists** → read it **in full** (entities, use cases, rules, access, integrations).
+3. If `{context_root}/system-reverse-spec.md` **exists** → read sections relevant to the requested scope (entities, use cases, business rules, access, integrations touched by the ask). When **only** the `.md` exists (no `.agent.md`), it is the complete source — read accordingly.
+4. If `{context_root}/brownfield-map.md` **exists** → read it **in full** — modules/gaps that affect brownfield effort (do not duplicate stack prose).
+5. Optionally read `{context_root}/stack-confirmed.md` only if hours or assumptions need stack constraints already confirmed — do not turn stack into Features.
 
 Do **not** invent missing reverse-spec content. Do **not** run `ns-harness-codebase-reverse-spec` from this skill unless the human explicitly asks.
+
+## Reuse inventory gate (before sizing)
+
+When any context artifact from the read order above exists, build a **reuse inventory** (internal / maintainer chat — not a client-facing dump) **before** Features, FP, COSMIC CFP, or hours:
+
+| Scope piece | Classification | Signal from reverse-spec / map |
+|-------------|----------------|--------------------------------|
+| {capability, entity, flow, integration…} | `reuse` \| `extend` \| `net-new` | {what the doc already covers} |
+
+Rules:
+
+- **Features:** prefer delta (`extend` / `reuse`); do not recreate documented capability as greenfield.
+- **FP / CFP / hours:** discount documented reuse; hours premise must cite these signals.
+- **Blocked:** do not advance to sizing without this inventory when context files were present.
 
 ## How to use for a sharper budget
 
@@ -42,4 +58,4 @@ Cross the human’s scope against the reverse-spec / map:
 
 ## Citations in the deliverable
 
-In **Premissas / ressalvas**, say that product context was consulted — do **not** dump file paths or technical excerpts for the client. Translate reverse-spec facts into **product language** (`references/product-voice.md`). Keep full paths for the maintainer chat summary only if useful.
+In **Premissas / ressalvas**, state that the budget sizes **delta on a known product** (reuse applied) — not merely that context was "consulted". Do **not** dump file paths or technical excerpts for the client. Translate reverse-spec facts into **product language** (`references/product-voice.md`). Keep full paths and the reuse inventory table for the maintainer chat summary only if useful.
