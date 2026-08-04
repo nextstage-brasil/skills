@@ -56,20 +56,21 @@ Identical logic to Engine mode:
 
 ## 5. Internal review loop
 
-- Invoke `ns-code-reviewer` in **version-closure mode**, pointing at `{product_root}/docs/versions/{version_san}/` when it exists, or at the worktree diff directly for a single-unit run.
+Follow `../../ns-harness/references/review-gate-workflow.md` exactly.
+
+- Invoke **`ns-code-reviewer`** in **version-closure mode** only (read its `SKILL.md`) — point at `{product_root}/docs/versions/{version_san}/` when it exists, or at the worktree diff directly for a single-unit run.
 - Enforce the reviewer **Score gate**: `Approved` only with zero Criticals **and** overall score ≥ **9**/10 (ideal **10**/10). Score ≤8 is `Rejected` even without Criticals.
 - Max 3 rounds:
   - `Approved` → proceed to closure.
-  - `Rejected` with rounds left → re-run dispatch (`multi-agent-dispatch.md`'s fix-loop re-dispatch) for the findings (Criticals first, then score-lifting fixes), then re-review.
+  - `Rejected` with rounds left → re-run dispatch (`multi-agent-dispatch.md`'s fix-loop re-dispatch) for the findings (Criticals first, then score-lifting fixes), re-run pre-review tests if in scope, then **mandatory re-review** via `ns-code-reviewer`.
   - `Blocked`, or rounds exhausted → stop, report as blocked. Do not report success.
 
 ## 6. Report
 
-To the human, report:
+To the human, include all **Final report** fields from `review-gate-workflow.md`, plus:
 
 - `{version_san}` and worktree path.
 - Commit(s) made (checkpoint commits, or a squashed one if the run chose to squash).
-- Review verdict.
 - Any follow-ups or unresolved suggestions from the review.
 
 No GitLab board update, no MR — this pipeline is local-only for v1. The only exception: `docs/context/gitlab-sync-config.md` exists **and** the human explicitly asked for a merge request at closure; even then, this skill does not manage issue status or labels, only opens the MR.

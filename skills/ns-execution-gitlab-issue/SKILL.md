@@ -4,7 +4,7 @@ description: (NS) Execute a GitLab issue end-to-end — status gates, worktree i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -114,10 +114,12 @@ Create `WORKTREE_ROOT` per `references/worktree-setup.md` — always `{product_r
 
 ## Phase 4 — Review gate (blocking, bounded fix loop)
 
-1. Invoke `ns-code-reviewer` in **Issue review mode** (`ISSUE_URL`) — read-only, official gate, posts the internal GitLab comment.
+Canonical rules: `../ns-harness/references/review-gate-workflow.md`.
+
+1. Invoke **`ns-code-reviewer`** in **Issue review mode** (`ISSUE_URL`) only — read its `SKILL.md`. Read-only official gate; posts the internal GitLab comment. **Forbidden:** Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or any substitute unless the human explicitly requests it for this run.
 2. Loop, max **3** rounds:
    - `Approved` → return to Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
-   - `Rejected` with rounds remaining → re-invoke `ns-code-autonomous` (same worktree/branch) with the findings as a fix work unit, then re-review. Keep the original `START_TIME`; do not call spent/Dev 100% yet.
+   - `Rejected` with rounds remaining → re-invoke `ns-code-autonomous` (same worktree/branch) with the findings as a fix work unit, then **mandatory re-review** via `ns-code-reviewer`. Keep the original `START_TIME`; do not call spent/Dev 100% yet.
    - `Blocked`, or rounds exhausted → `status_blocked` (Em Impedimento), post the findings, stop. Do **not** set `END_TIME`, spent time, or Dev 100%.
 3. Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` — exactly the verdict string `ns-code-reviewer` returned.
 

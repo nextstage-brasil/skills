@@ -4,7 +4,7 @@ description: "(NS) Ad-hoc coding worker — bug fixes, small refactors, scripts,
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 depends:
   - ns-harness
   - ns-code-investigator
@@ -20,6 +20,12 @@ depends:
 # Code Coder
 
 Central **execution worker** for ad-hoc diffs (and as `C2` subagent under `ns-code-autonomous`). **Not the front door** — the host agent picks entry per `../ns-harness/references/code-skill-routing.md`.
+
+## Workflow mode (mandatory)
+
+This skill is a **fixed workflow**, not a loose checklist. Steps run in order; handoffs use **named skills only**. Do not substitute platform subagents, personas, or improvised review.
+
+Canonical review gate: `../ns-harness/references/review-gate-workflow.md` — follow exactly for steps 7–8. Review **only** via `ns-code-reviewer`; max **3** rounds; after any Critical fix, **re-review** is mandatory; never report success without a passing verdict or an explicit **blocked** state.
 
 ## Routing (read first)
 
@@ -91,21 +97,42 @@ Complete **Session boot (blocking)** in `../ns-harness/references/harness-discov
 3. Explore relevant files
 4. Identify minimal diff
 5. Apply (or present plan if large-change gate)
-6. Run tests if in scope
-7. **Review loop** — invoke `ns-code-reviewer` and iterate on findings (see below)
-8. Report what changed, final review verdict, and follow-ups
+6. Run tests if in scope (see **Pre-review** below)
+7. **Review loop** — invoke `ns-code-reviewer` only; iterate per `../ns-harness/references/review-gate-workflow.md`
+8. **Final report** — mandatory fields per **Final report** below; never skip verdict or round count
+
+### Pre-review (before step 7)
+
+- Run tests covering changed files per `AGENTS.md` and `../ns-harness/references/docker-and-testing.md`.
+- If the diff removes exports, constants, env flags, or public symbols: search the repo for remaining call sites and resolve before review.
 
 ## Review loop (mandatory)
 
-After tests pass (step 6), run an internal review loop before reporting done.
+After pre-review (step 6), run the gate in `../ns-harness/references/review-gate-workflow.md` before reporting done.
 
-- Invoke `ns-code-reviewer` on the working-tree diff (`git diff`) — no `ISSUE_URL`, no version-closure path. Just the ad-hoc diff.
-- **Max 3 rounds.** After each review (score gate from `ns-code-reviewer`: pass ≥**9**/10, ideal **10**/10):
-  - **Pass:** zero Critical Issues **and** overall score ≥ **9**/10 → proceed to report.
-  - **Fail** (Criticals **or** score ≤ **8**) with rounds left → apply the minimal diff that clears Criticals and lifts quality to ≥9 (`ns-code-reviewer` is read-only, so this skill applies the fixes), re-run tests if in scope, then re-review.
+- Invoke **`ns-code-reviewer`** on the working-tree diff (`git diff`) — read its `SKILL.md`; no `ISSUE_URL`, no version-closure path. Just the ad-hoc diff.
+- **Max 3 rounds.** Score gate from `ns-code-reviewer`: pass ≥**9**/10, ideal **10**/10.
+  - **Pass:** zero Critical Issues **and** overall score ≥ **9**/10 → proceed to step 8.
+  - **Fail** (Criticals **or** score ≤ **8**) with rounds left → apply the minimal diff that clears Criticals and lifts quality to ≥9 (`ns-code-reviewer` is read-only, so this skill applies the fixes), re-run tests if in scope, then **mandatory re-review** via `ns-code-reviewer`.
   - **Rounds exhausted** still failing the gate → **stop and report as blocked**. List unresolved Criticals and/or the last score. Do not report success.
 - Keep fixes within the original task scope. If a Critical (or score-blocking Warning) requires changes outside scope (public contract, cross-product, multi-day work), stop and escalate per **Stop conditions** instead of expanding the diff.
 - Suggestions (P2) alone do not block when score is already ≥9: carry them into the final report as follow-ups.
+
+## Final report (step 8)
+
+Do not use "done", "concluído", or success language until the review gate passes or the run is explicitly **blocked** (see `review-gate-workflow.md`).
+
+Every closure response **must** include:
+
+| Field | Value |
+| ----- | ----- |
+| Active skill | `ns-code-coder` |
+| Reviewer skill | `ns-code-reviewer` |
+| Review round | Last round executed: `1`, `2`, or `3` |
+| Score | Last overall score from reviewer |
+| Verdict | Exact line: `Code Review: {Approved\|Rejected\|Blocked}` |
+
+Then: what changed, follow-ups, and blocked Criticals if applicable.
 
 ## Stop conditions
 
@@ -128,3 +155,6 @@ After tests pass (step 6), run an internal review loop before reporting done.
 - Cross-product access without scope
 - Commits without explicit request
 - Refactors outside task scope
+- **Review substitutes** — Cursor Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or any review not executed by reading and following `ns-code-reviewer` / `SKILL.md`
+- **Skipping re-review** — reporting success after a fix when the previous `ns-code-reviewer` verdict was `Rejected` or score < 9 without a new passing round
+- **Success without verdict** — closure without the mandatory **Final report** fields and a parseable `Code Review:` line

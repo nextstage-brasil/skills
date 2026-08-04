@@ -4,7 +4,7 @@ description: (NS) Senior Tech Lead code review on SOLID, clean code, performance
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -13,6 +13,14 @@ depends:
 # Code Reviewer
 
 Deep, constructive review of code changes against project rules and acceptance criteria.
+
+## Caller contract (workflow callers)
+
+When invoked by `ns-code-coder`, `ns-code-autonomous`, or `ns-execution-gitlab-issue`:
+
+- The caller **must** read this `SKILL.md` and run this skill — not a Cursor Task subagent (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or improvised review.
+- Gate rules for callers: `../ns-harness/references/review-gate-workflow.md`.
+- Every response to a workflow caller **must** end with the exact parseable line: `Code Review: {Approved|Rejected|Blocked}` and include the overall score in **Executive Summary**.
 
 ## Harness discovery
 
@@ -23,6 +31,14 @@ See `../ns-harness/references/harness-discovery.md`. **Complete Session boot (bl
 1. Run `git diff` (and `git status` if needed).
 2. Focus on modified files and surrounding context.
 3. Start immediately — do not ask permission to begin.
+
+### Ad-hoc diff mode (from `ns-code-coder`)
+
+When the invoker passes a working-tree diff only (no `ISSUE_URL`, no version-closure path):
+
+1. Review `git diff` on the working tree.
+2. Apply **Score gate** and severity rules below.
+3. Last line of response to parent: `Code Review: {Approved|Rejected|Blocked}`
 
 ### Version closure
 
@@ -104,6 +120,7 @@ Include only when user requests concrete fixes.
 ## Constraints
 
 - **Read-only.** Do not edit, create, or delete files — output is a review report, not a fix
+- **Not substitutable.** Workflow callers must invoke this skill by name; platform review subagents are not equivalent unless the human explicitly requests them for this run
 - Direct and constructive; no personal criticism
 - Do not rewrite unrelated code
 - Base findings on actual diff and rules read

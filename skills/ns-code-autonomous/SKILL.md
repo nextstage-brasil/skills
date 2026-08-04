@@ -4,7 +4,7 @@ description: (NS) Autonomous execution engine — plans depth, resolves doubts f
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
   - ns-code-reviewer
@@ -13,6 +13,10 @@ depends:
 # Code Autonomous
 
 Harness-aware execution engine: decides planning depth, resolves doubts, dispatches multi-agent work, and closes the loop with a review gate — either as a standalone pipeline or as another skill's execution engine.
+
+## Workflow mode (mandatory)
+
+Fixed workflow — named skill handoffs only. Review gate: `../ns-harness/references/review-gate-workflow.md`. **Only** `ns-code-reviewer`; no Task subagent substitutes. `C2` (`ns-code-coder`) must complete its full per-task cycle including the same review gate before a unit is considered done.
 
 ## Isolation invariant (non-negotiable)
 
@@ -59,8 +63,8 @@ Same internals as Engine mode, but this skill owns the whole run:
 2. Infer `change_kind` (fix/feat), allocate `{version_san}`, create `docs/versions/{version_san}/`.
 3. **Create its own worktree**: `{product_root}/.worktrees/{version_san}/` + branch `work/{version_san}` from the resolved base branch, following `../ns-harness/references/worktree-setup.md`. Path is under the **product root**, never under `.cursor/`. On failure → abort (do not fall back to the main checkout) — see `references/standalone-pipeline.md`.
 4. Planning-depth self-decision, doubt protocol (destructive doubt → chat-only gate, no GitLab actions available), multi-agent dispatch — identical logic to Engine mode.
-5. **Internal review loop** — invoke `ns-code-reviewer` (version-closure mode), max 3 rounds: `Approved` requires score ≥9/10 (ideal 10); fix units on `Rejected` (Criticals or score ≤8), stop on `Blocked` or rounds exhausted.
-6. Report `{version_san}`, worktree path, commit(s), review verdict, and any follow-ups. No GitLab board, no MR — unless `docs/context/gitlab-sync-config.md` exists and the human explicitly asked for one (out of scope for v1; standalone stays local-only otherwise).
+5. **Internal review loop** — `../ns-harness/references/review-gate-workflow.md`: invoke **`ns-code-reviewer`** (version-closure mode) only; max 3 rounds; `Approved` requires score ≥9/10 (ideal 10); fix units on `Rejected` (Criticals or score ≤8), then **mandatory re-review**; stop on `Blocked` or rounds exhausted.
+6. Report per `review-gate-workflow.md` **Final report** fields plus `{version_san}`, worktree path, commit(s), and follow-ups. No GitLab board, no MR — unless `docs/context/gitlab-sync-config.md` exists and the human explicitly asked for one (out of scope for v1; standalone stays local-only otherwise).
 
 See `references/standalone-pipeline.md` for the full flow.
 
@@ -97,3 +101,9 @@ See `references/standalone-pipeline.md` for the full flow.
 | `references/doubt-resolution.md`     | Self-ask, docs-first lookup, destructive criteria, escalation shape |
 | `references/multi-agent-dispatch.md` | DAG + disjoint-scope parallel rule, subagent prompt, checkpoint commits |
 | `references/standalone-pipeline.md`  | Full non-GitLab flow: version alloc, own worktree, review loop      |
+
+## Forbidden
+
+- Review substitutes (`senior-tech-lead-reviewer`, `bugbot`, `security-review`, or any non-`ns-code-reviewer` gate) — see `../ns-harness/references/review-gate-workflow.md`
+- Reporting success without a passing `ns-code-reviewer` verdict or explicit **blocked** state
+- Skipping re-review after a `Rejected` fix before closure

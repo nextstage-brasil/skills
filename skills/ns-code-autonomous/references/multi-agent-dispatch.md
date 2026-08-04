@@ -17,6 +17,7 @@ Each unit — parallel or sequential — is a `ns-code-coder` subagent (or equiv
 - Works exclusively inside `WORKTREE_ROOT` (or `{product_root}/.worktrees/{version_san}/` in standalone) — never the main checkout, never `main`/`master`/`SOURCE_BRANCH`.
 - Receives: the unit's scope/acceptance criteria, any resolved Q&A relevant to it, the file scope boundary (so it doesn't drift into another unit's files), and applicable harness rules.
 - Follows `ns-code-coder`'s own implementation rules (diff-first, read before write, no unrelated refactors).
+- Completes `ns-code-coder`'s full per-task cycle including the **review gate** (`../../ns-harness/references/review-gate-workflow.md`) — **`ns-code-reviewer` only**; report unit `blocked` if review rounds exhaust without `Approved`.
 - Escalates any *new* destructive doubt it hits back up through the doubt protocol instead of guessing — it does not resolve destructive doubts on its own.
 - Must not "unblock" a failed worktree by editing files on the product main checkout. Failure to isolate = unit status `blocked`, not a soft continue.
 - In **Engine mode** (invoked by `ns-execution-gitlab-issue`): do **not** route to `ns-execution-gitlab-issue` if an `ISSUE_URL` appears in scope — report through the doubt protocol to the caller instead.
@@ -31,7 +32,8 @@ Scope: {unit description / acceptance criteria}
 File boundary: {files or directories this unit owns — do not touch files outside this boundary}
 Resolved context: {relevant Q&A from the doubt protocol, or "none"}
 Harness rules: {paths to applicable rule files}
-Report: files changed, summary of the diff, any new destructive doubt (do not guess on it).
+Review gate: after implementation, follow ns-code-coder + review-gate-workflow.md — ns-code-reviewer only, max 3 rounds, mandatory re-review after Critical fixes.
+Report: files changed, summary of the diff, review round (1/2/3), score, exact Code Review: verdict line, any new destructive doubt (do not guess on it).
 ```
 
 ## Checkpoint commits

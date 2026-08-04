@@ -73,12 +73,12 @@ Per-skill detail lives in each `SKILL.md` routing section.
 | `C` | `ISSUE_URL` detected | `G` |
 | `C` | too large / multi-day SDD | `S` |
 | `C` | obscure bug | `I` |
-| `C` | ad-hoc diff | `REV` (`ns-code-reviewer`) |
+| `C` | ad-hoc diff | `REV` (`ns-code-reviewer` only — see `review-gate-workflow.md`) |
 | `G` | Phase 2 | `A` (engine mode) |
 | `G` | MR / status / time | `mcp-gitlab-usage` |
-| `G` | review gate | `REV` |
+| `G` | review gate | `REV` (`ns-code-reviewer` only — `review-gate-workflow.md`) |
 | `A` | dispatch work units | `C2` (`ns-code-coder` subagent) |
-| `C2` | review | `REV` |
+| `C2` | review | `REV` (`ns-code-reviewer` only — `review-gate-workflow.md`) |
 | `S` | small / quick | `C` |
 | `S` | version + handoff | `H` → `C` or `A` |
 | `I` | diagnosis complete | User (no auto-dispatch to `C`) |
