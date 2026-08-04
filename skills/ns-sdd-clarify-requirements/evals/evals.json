@@ -10,7 +10,7 @@
     {
       "id": 2,
       "prompt": "I answered your clarification questions — here's my reply: admins configure webhooks, users only receive in-app alerts, single-tenant for now.",
-      "expected_output": "Agent summarizes confirmed scope, asks to proceed, compiles enriched context for ns-sdd-requirements-generator.",
+      "expected_output": "Agent summarizes confirmed scope in natural language, asks whether to write the requirements document (not 'go for Specify'), compiles enriched context for ns-sdd-requirements-generator.",
       "files": []
     },
     {
@@ -28,7 +28,7 @@
     {
       "id": 5,
       "prompt": "Clarify scope for version 2.3.0 — brownfield-map.md exists with Date 2025-11-01.",
-      "expected_output": "Agent stops at Step 0.4 gate, shows last map date 2025-11-01, asks refresh or keep, waits for human before scope questions.",
+      "expected_output": "Agent stops at Step 0.4 gate, shows last map date 2025-11-01 in natural chat (not Reply:/Premise: telegrams), asks refresh or keep, waits for human before scope questions.",
       "files": []
     }
   ]

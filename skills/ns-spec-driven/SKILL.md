@@ -104,7 +104,15 @@ Details: `references/auto-sizing.md`, `references/router.md`.
 2. Classify request → **Small / Medium / Large** (see `references/auto-sizing.md`).
 3. Check for **resume** signals (`execution-handoff.md`, partial version) → `references/session-continuity.md`.
 4. Scan installed complements (soft) → `references/skill-integrations.md`.
-5. Confirm **once** when needed: `{product_root}`, target version id, and language for markdown artifacts.
+5. Confirm **once** when needed: `{product_root}`, target version id, and language for markdown artifacts — in **natural chat** (see `references/human-communication.md`). Never open with a telegraphic status dump or phase jargon.
+
+## Human communication
+
+Chat with the human in short, natural language. **Read `references/human-communication.md` before any human gate or boot confirm.**
+
+- Name the next **deliverable** ("requirements document", "task files") — not internal phases ("Specify", "Clarify").
+- Never use `Reply:`, `Premise:`, or "go for Specify".
+- Caveman / artifact-compress applies to **files only** — never to chat.
 
 ## Orchestration mandate
 
@@ -173,6 +181,7 @@ When a version or quick fix closes, report:
 - Hard-require complement skills.
 - Generate requirements/tasks yourself without delegating to PM workers.
 - Skip `ns-sdd-execution-handoff-generator` when formal tasks exist for a version.
+- Address the human with internal phase names ("Specify", "Clarify") or bot chrome (`Reply:`, `Premise:`).
 
 ## Invocation examples
 

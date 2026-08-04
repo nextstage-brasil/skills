@@ -50,18 +50,16 @@ Stack and architecture questions belong to stack detection — not this skill.
 
 1. Read `{product_root}/docs/context/brownfield-map.md`.
 2. Extract the map date from the `**Date:**` line in the file header. If absent, state `date unknown`.
-3. Present the gate to the human:
+3. Present the gate to the human in **natural chat** (match conversation language; English template below). Do **not** use phase jargon, `Reply:`, or telegraphic status dumps. See `../ns-spec-driven/references/human-communication.md`.
 
 ```
-Brownfield map found: docs/context/brownfield-map.md
-Last updated: {date from file, or "date unknown"}
+There's already a codebase map at docs/context/brownfield-map.md
+(last updated {date from file, or "date unknown"}).
 
-Before clarifying this version's scope, do you want to refresh the brownfield map
-(re-scan codebase with ns-harness-bootstrap-brownfield) or keep the existing map?
+Want me to re-scan the repo and update it, or keep this one and move on to scope questions?
 
-Reply with one of:
-- refresh — update brownfield-map.md, then continue clarification
-- keep — use the existing map as-is and continue clarification
+- refresh — re-scan and update the map
+- keep — use the map as-is
 ```
 
 4. **Wait for an explicit reply.** Valid answers: `refresh` / `keep` (or clear equivalent in natural language).
@@ -99,18 +97,19 @@ Use the brownfield map for **what exists** — ask the user only for **what the 
 - Maximum **5 questions per round**
 - Prioritize blockers for correct feature generation
 - Group related questions when possible
-- Plain language, numbered, self-contained
+- Plain language, numbered, self-contained — **conversational**, not a form (`Reply:`, `Premise:`, skill names)
+- Never say "before Clarify/Specify" — name the next deliverable in plain words
 
-Present:
+Present (adapt language to the conversation):
 
 ```
-Before generating requirements, I need to clarify a few points:
+A few open points before I draft the requirements document:
 
 1. [actor question]
 2. [data scope]
 ...
 
-Reply in free form. I will proceed with requirements once I have these answers.
+Answer in your own words — no special format needed.
 ```
 
 ### Step 3 — Consolidate answers
@@ -118,7 +117,8 @@ Reply in free form. I will proceed with requirements once I have these answers.
 After responses:
 
 1. Confirm understanding in a short summary (3–5 bullets)
-2. Ask: "Shall I proceed with requirements generation?"
+2. Ask in plain language: "Want me to write the requirements document next?"
+   — **Forbidden:** "go for Specify", "proceed to Specify", phase-name commands
 3. Wait for yes or correction
 4. **Maximum one clarification round** — if still unclear, document reasonable assumptions as "Assumed premises"
 
@@ -153,6 +153,7 @@ Pass this document as input to `ns-sdd-requirements-generator`. Do **not** write
 
 - **Brownfield without map:** run `ns-harness-bootstrap-brownfield` first — never skip by grepping the codebase instead
 - **Brownfield with map:** Step 0.4 gate is **mandatory** — show last map date; wait for explicit `refresh` or `keep`; never assume
+- **Human chat:** natural language; name deliverables ("requirements document"), not phases ("Specify"); never caveman-compress chat
 - **One round of questions max** — then assume conservatively and document premises
 - **No requirements document** in this workflow
 - **No stack/architecture questions** — defer to stack profiles / project rules and brownfield map

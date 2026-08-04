@@ -20,8 +20,8 @@ Shared reference documents for NextStage skills. Consumer skills point here for 
 | `references/harness-discovery.md` | Session boot (blocking), `{product_root}`, rules paths, MCP GitLab pointers |
 | `references/rules-sync.md`        | Canonical rules layout, manifest schema, `harness sync`                           |
 | `references/artifact-layout.md`   | SDD artifact paths under `docs/versions/`, living specs, handoff rules            |
-| `references/gates.md`             | Human confirmation gates before requirements, scope, or task generation           |
+| `references/gates.md`             | Human confirmation gates — natural-language asks; before requirements, scope, or tasks |
 | `references/code-skill-routing.md`  | Entry priority and handoffs between `ns-code-*`, `ns-spec-driven`, and GitLab execution skills |
-| `references/agent-artifact-compress.md` | **Pre-save** on agent-facing prepare/worker drafts (caveman ultra; not for humans) |
+| `references/agent-artifact-compress.md` | **Pre-save** on agent-facing drafts only (caveman ultra; never chat) |
 
 Read only the file(s) the active consumer skill names. Do not assume monorepo layout or stack unless discovery resolves it.
