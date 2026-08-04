@@ -9,7 +9,8 @@
 
 ## Executive Summary
 
-- **Overall score:** {N}/10 (pass bar ≥9; ideal 10 — score ≤8 → Rejected)
+- **Overall score:** {N}/10 (pass bar ≥9; ideal 10 — score ≤8 → Rejected; score = touched module after diff, not the hunk alone — see Score caps in SKILL.md)
+- {One sentence justifying score against the rubric caps.}
 - {Two lines: what is solid and main risk.}
 
 **Additional context:** {Ignored tasks, waivers, partial scope — if applicable.}

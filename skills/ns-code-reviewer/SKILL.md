@@ -4,7 +4,7 @@ description: (NS) Senior Tech Lead code review on SOLID, clean code, performance
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -73,7 +73,31 @@ Every review **must** include an overall score **1–10**. Callers treat this as
 
 **`Rejected` when:** any Critical, **or** score ≤ 8, **or** (Issue mode) any AC fails behavioral proof.
 
-Do not inflate scores to clear the gate. A clean but mediocre diff scores 7–8 and is Rejected until quality rises.
+### Scoring unit
+
+Score the **quality of the touched module/file after the diff**, not whether the hunk alone is correct. A minimal patch that leaves or worsens SSoT/DRY/OCP in that file **cannot** score 9–10.
+
+### Score caps (apply the lowest that fits)
+
+| Condition in the touched module | Max score |
+|---------------------------------|-----------|
+| New/changed behavior with config/lookup **split across 2+ places** (SSoT) | **7** |
+| Same resolution block copied in **2+ functions** in the diff scope (DRY) | **7** |
+| Predictable extension requires editing **3+ points** in the same file (weak OCP, e.g. provider) | **7** |
+| Diff correct, zero Critical, but mediocre / inconsistent pattern in the file | **7–8** |
+
+**9:** zero Critical **and** the smells above are absent or resolved in the touched module; predictable extension has one source of truth.
+
+**10:** same as 9 **plus** no obvious fallback/redundancy; uniform pattern across the file.
+
+### Anti-inflation
+
+- **Forbidden:** “minimal diff / tests pass / AC ok ⇒ 10”
+- **Required** in Executive Summary: one sentence justifying the score against this rubric (e.g. “cap 7 — apiKey outside preset”)
+
+### Smell severity (SSoT / DRY / weak OCP)
+
+Split SSoT or duplicated resolution in the touched module is at least a **Warning** (not Suggestion only). Prefer **Warning + score cap** over auto-Critical for these architectural smells. Keep **Critical** for bugs, security, and AC failures. Score ≤ 8 already forces `Rejected`.
 
 ## Review priorities
 
@@ -103,11 +127,12 @@ Structure every review as:
 ### Executive Summary
 
 - Score 1–10 (see **Score gate** — pass bar ≥9, ideal 10)
+- One sentence justifying the score against the score-cap rubric
 - Two-line overall assessment
 
 ### Critical Issues
 
-Omit only if none. Logic bugs, security, severe SOLID or architecture violations.
+Omit only if none. Logic bugs, security, and AC / behavioral-proof failures. Do **not** list SSoT/DRY/weak-OCP smells here — those are **Warning** under Architecture and Clean Code, enforced by the score cap (see **Smell severity**).
 
 ### Architecture and Clean Code Improvements
 
