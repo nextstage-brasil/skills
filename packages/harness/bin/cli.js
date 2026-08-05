@@ -8,6 +8,7 @@ import { syncDockerignore } from '../src/syncDockerignore.js';
 import { syncGitignore } from '../src/syncGitignore.js';
 import { migrateRules } from '../src/migrateRules.js';
 import { addRule } from '../src/addRule.js';
+import { addSubagent } from '../src/addSubagent.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { runPrepare } from '../src/prepare.js';
 import { pruneRetiredSkills, formatPruneReport } from '../src/pruneRetiredSkills.js';
@@ -25,6 +26,7 @@ Usage:
   harness prepare          Print full brownfield prepare instructions (/ns-harness-prepare)
   harness sync [options]   Regenerate rule, skill, and subagent adapters from canonical sources
   harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
+  harness add-subagent <name>  Create a canonical subagent bridge, update manifest, and sync
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
   harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
   harness prune-retired-skills  Remove renamed skill dirs after replacement is installed
@@ -46,8 +48,8 @@ Options:
   --no-scaffold          Skip AGENTS.md and docs/ scaffolding
   --keep-agents-md       With uninstall: keep AGENTS.md and CLAUDE.md
   --check                With sync: verify adapters match canonical (CI mode)
-  --force                Overwrite existing files (migrate-rules, agents-md, add-rule)
-  --description <text>   With add-rule: short purpose for the rule
+  --force                Overwrite existing files (migrate-rules, agents-md, add-rule, add-subagent)
+  --description <text>   With add-rule / add-subagent: short purpose text
   --globs <patterns>     With add-rule: comma-separated globs (skips alwaysApply)
   --dry-run              Show resolved skills without installing
   --help, -h             Show this help
@@ -62,6 +64,7 @@ Examples:
   npx @nextstage-brasil/harness sync --check
   npx @nextstage-brasil/harness add-rule api-conventions --description "API conventions"
   npx @nextstage-brasil/harness add-rule frontend --globs "apps/web/**"
+  npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-code-investigator --description "Investigation bridge"
   npx @nextstage-brasil/harness agents-md
   npx @nextstage-brasil/harness agents-md --force
   npx @nextstage-brasil/harness prepare
@@ -113,6 +116,7 @@ function parseArgs(argv) {
     'prune-retired-skills',
     'agents-md',
     'add-rule',
+    'add-subagent',
     'prepare',
     'update',
     'uninstall',
@@ -216,6 +220,11 @@ function parseArgs(argv) {
     }
 
     if (result.command === 'add-rule' && !arg.startsWith('-') && !result.name) {
+      result.name = arg;
+      continue;
+    }
+
+    if (result.command === 'add-subagent' && !arg.startsWith('-') && !result.name) {
       result.name = arg;
       continue;
     }
@@ -349,6 +358,39 @@ async function runAgentsMd(parsed) {
   console.log(`Skills (${result.skills.length}): ${result.skills.join(', ')}`);
 }
 
+async function runAddSubagent(parsed) {
+  if (!parsed.name) {
+    console.error(
+      'Usage: harness add-subagent <name> --skill <skill-id> [--description <text>]',
+    );
+    process.exit(1);
+  }
+  if (parsed.skill.length !== 1) {
+    console.error('add-subagent requires exactly one --skill <skill-id>');
+    process.exit(1);
+  }
+
+  const projectRoot = resolveProjectDir(parsed.dir);
+  const agents = resolveAgents(projectRoot, parsed.agent);
+  const result = addSubagent(projectRoot, {
+    name: parsed.name,
+    skill: parsed.skill[0],
+    description: parsed.description,
+    force: parsed.force,
+    agents,
+  });
+
+  const action = result.overwritten ? 'Overwrote' : 'Created';
+  console.log(`${action}: ${result.canonical}`);
+  console.log(`Updated: ${HARNESS_ROOT}/manifest.json`);
+  console.log(`Synced ${result.syncResult.written.length} adapter file(s)`);
+
+  const prunedAdapters = pruneExcludedAgentAdapters(projectRoot, agents);
+  if (prunedAdapters.removed.length > 0) {
+    console.log(`Removed ${prunedAdapters.removed.length} adapter path(s) for excluded agents`);
+  }
+}
+
 async function runAddRule(parsed) {
   if (!parsed.name) {
     console.error('Usage: harness add-rule <name> [--description <text>] [--globs <patterns>]');
@@ -451,6 +493,16 @@ async function main() {
   if (parsed.command === 'prune-retired-skills') {
     try {
       await runPruneRetiredSkills(parsed);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (parsed.command === 'add-subagent') {
+    try {
+      await runAddSubagent(parsed);
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
       process.exit(1);

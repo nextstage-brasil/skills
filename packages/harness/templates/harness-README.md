@@ -33,6 +33,7 @@ npx @nextstage-brasil/harness <command>
 | Path | Role | Edit? |
 |------|------|-------|
 | `rules/*.md` | Canonical rule bodies | **Yes** |
+| `agents/*.md` | Canonical subagent bodies | **Yes** |
 | `manifest.json` | Rule registry + project `agents` + `subagents` (models) | When adding rules/agents or changing subagent models |
 | `.agents/skills/<name>/` | Installed skills (Skills CLI) | Via `harness init` / `update` / `skills add` |
 | `AGENTS.md` | Project entry for agents | CLI baseline; refine with `/ns-harness-agents-md` |
@@ -74,7 +75,7 @@ Cursor reads skills from `.agents/skills/` directly. Claude Code uses symlinks i
 
 ## Project subagents (model bridges)
 
-Thin bridges in `manifest.json` → `"subagents"`. Seeded when matching skills are installed (aligned with presets that pull `ns-code-coder`, `ns-code-reviewer`, `ns-sdd-task-generator`):
+Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readonly) in `manifest.json` → `"subagents"`. Seeded when matching skills are installed (aligned with presets that pull `ns-code-coder`, `ns-code-reviewer`, `ns-sdd-task-generator`):
 
 | Agent file | Skill | Default model (cursor / claude) | `readonly` |
 |------------|-------|----------------------------------|------------|
@@ -88,6 +89,7 @@ Thin bridges in `manifest.json` → `"subagents"`. Seeded when matching skills a
 "subagents": [
   {
     "name": "reviewer-agent",
+    "canonical": "agents/reviewer-agent.md",
     "skill": "ns-code-reviewer",
     "description": "(NS) Thin bridge…",
     "model": { "cursor": "grok-4.5[effort=medium,fast=false]", "claude": "opus" },
@@ -95,6 +97,22 @@ Thin bridges in `manifest.json` → `"subagents"`. Seeded when matching skills a
   }
 ]
 ```
+
+### Add a subagent
+
+```bash
+npx @nextstage-brasil/harness add-subagent investigator-agent \
+  --skill ns-code-investigator \
+  --description "Investigation bridge"
+```
+
+Creates `agents/<name>.md`, updates `manifest.json`, and runs sync.
+
+### Edit a subagent
+
+1. Edit `agents/<name>.md` (body).
+2. Change `manifest.json` only for `skill`, `model`, `description`, or `readonly`.
+3. Run `harness sync`.
 
 Generated adapters: `.cursor/agents/{name}.md` and `.claude/agents/{name}.md`. Each bridge reads `AGENTS.md` then the mapped skill.
 
@@ -278,6 +296,7 @@ Brownfield refinement: **`/ns-harness-agents-md`** in your agent.
 | `harness agents` | Show project agents |
 | `harness agents set` | Persist agents in manifest |
 | `harness add-rule <name>` | New rule + sync |
+| `harness add-subagent <name>` | New subagent + sync (`--skill` required) |
 | `harness agents-md` | Generate AGENTS.md |
 | `harness prepare` | Brownfield prepare instructions |
 | `harness migrate-rules` | Import legacy Cursor rules |

@@ -11,11 +11,14 @@ Canonical project rules live under `{harness_root}/rules/*.md`. Adapters for Cur
   rules/
     architecture-rules.md   # constitution (always loaded)
     backend-rules.md        # optional layer rules
+  agents/
+    coder-agent.md          # canonical subagent body (edit here)
+    reviewer-agent.md
 
 .cursor/rules/*.mdc         # generated — Cursor rule adapter
 .claude/rules/*.md          # generated — Claude Code rule adapter
-.cursor/agents/*.md         # generated — Cursor subagent bridges
-.claude/agents/*.md         # generated — Claude Code subagent bridges
+.cursor/agents/*.md         # generated — Cursor subagent adapters
+.claude/agents/*.md         # generated — Claude Code subagent adapters
 
 .agents/skills/             # canonical — Skills CLI (Cursor reads here directly)
 .claude/skills/             # symlinked — harness sync (Claude Code only)
@@ -71,6 +74,7 @@ Cursor subagents spawned during a session use the same project skill catalog as 
 | `cursor.description` | Cursor rule description (required when `alwaysApply`) |
 | `claude.paths` | Claude path scope array; `null` = global (omit `paths:` frontmatter) |
 | `subagents[].name` | Adapter basename → `.cursor/agents/{name}.md`, `.claude/agents/{name}.md` |
+| `subagents[].canonical` | Path relative to `{harness_root}/` (default `agents/{name}.md`) |
 | `subagents[].skill` | Installed skill the bridge loads |
 | `subagents[].model` | **Project-owned** — `harness update` never overwrites |
 | `subagents[].readonly` | No write tools when `true` (reviewer default); filled from catalog if missing |
@@ -102,7 +106,7 @@ That creates the stub, updates the manifest, and syncs adapters in one step.
 3. Writes `.claude/rules/{name}.md` with Claude `paths:` frontmatter when configured + same marker + body.
 4. Embeds `<!-- harness-sync:sha256=<hash> -->` in each adapter for drift detection.
 5. Symlinks `.agents/skills/{name}/` → `.claude/skills/{name}/` when Claude Code is a target agent. Cursor uses `.agents/skills/` directly — legacy `.cursor/skills/` harness symlinks are removed on sync.
-6. Seeds `manifest.subagents` for installed default skills (preserving existing `model`) and writes `.cursor/agents/{name}.md` + `.claude/agents/{name}.md`.
+6. Seeds `manifest.subagents` for installed default skills (preserving existing `model`), ensures `agents/{name}.md` canonical bodies exist, and writes `.cursor/agents/{name}.md` + `.claude/agents/{name}.md`.
 
 Generation marker (first line of body):
 
@@ -115,6 +119,7 @@ Generation marker (first line of body):
 | Command | Behavior |
 |---------|----------|
 | `harness add-rule <name>` | Create stub + manifest entry + sync (`--description`, `--globs`, `--force`) |
+| `harness add-subagent <name>` | Create canonical `agents/{name}.md` + manifest entry + sync (`--skill`, `--description`, `--force`) |
 | `harness sync` | Regenerate rule adapters + Claude skill symlinks + subagent bridges |
 | `harness sync --check` | CI mode — compare hashes, no writes; exit 1 on drift |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` → canonical + manifest update + sync |
@@ -124,7 +129,7 @@ Generation marker (first line of body):
 
 Commit canonical sources only:
 
-- `.nextstage-harness/` (`rules/`, `manifest.json` including `subagents`)
+- `.nextstage-harness/` (`rules/`, `agents/`, `manifest.json` including `subagents`)
 - `.agents/skills/` and `skills-lock.json`
 - `AGENTS.md`, `CLAUDE.md` (when present)
 

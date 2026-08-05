@@ -23,6 +23,8 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 
 **Rules:** edit `.nextstage-harness/rules/` → `harness sync` → `.cursor/rules/`, `.claude/rules/`. Prefer `harness add-rule <name>` for new rules (creates stub, updates `manifest.json`, syncs). See `.nextstage-harness/README.md`.
 
+**Subagents:** edit `.nextstage-harness/agents/` → `harness sync` → `.cursor/agents/`, `.claude/agents/`. Prefer `harness add-subagent <name> --skill <id>` for new bridges. Example: `npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-code-investigator --description "Investigation bridge"`.
+
 **Skills:** canonical in `.agents/skills/` (Skills CLI). **Cursor** (including subagents) discovers skills there directly. **Claude Code** reads `.claude/skills/` — `harness sync` symlinks from canonical when Claude is a target agent. Invoke via the Skills menu / slash (e.g. `/ns-code-coder`).
 
 ## 2. Commands
@@ -34,6 +36,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 | `harness prepare` | Print full brownfield prepare instructions (`/ns-harness-prepare`) |
 | `harness sync` | Regenerate adapters + ensure `.dockerignore` / `.gitignore` harness blocks (create if missing) |
 | `harness add-rule <name>` | Create canonical rule + manifest entry + sync |
+| `harness add-subagent <name>` | Create canonical subagent + manifest entry + sync (`--skill` required) |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |
 | `harness sync --check` | Local mode — exit 1 if adapters on disk drift from canonical |
@@ -54,9 +57,10 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 | `--keep-agents-md` | With `uninstall`: keep `AGENTS.md` / `CLAUDE.md` |
 | `--dir <path>` | Target project directory |
 | `--source <path>` | Skills source override |
-| `--description <text>` | With `add-rule`: short purpose |
+| `--description <text>` | With `add-rule` / `add-subagent`: short purpose |
 | `--globs <patterns>` | With `add-rule`: comma-separated globs (not always-apply) |
-| `--force` | Overwrite existing (`migrate-rules`, `agents-md`, `add-rule`) |
+| `--skill <id>` | With `add-subagent`: installed skill id (required; one per command) |
+| `--force` | Overwrite existing (`migrate-rules`, `agents-md`, `add-rule`, `add-subagent`) |
 | `--dry-run` | Show resolved plan without installing |
 
 ## 3. Install scenarios

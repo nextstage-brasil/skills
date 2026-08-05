@@ -35,6 +35,7 @@ const LAYOUT_PATHS = [
   { path: 'AGENTS.md', purpose: 'Project rules entry point' },
   { path: HARNESS_RULES_DIR, purpose: 'Canonical project rules' },
   { path: join(HARNESS_ROOT, 'README.md'), purpose: 'How to add/edit rules' },
+  { path: join(HARNESS_ROOT, 'agents/'), purpose: 'Canonical subagent bodies (edit here)' },
   { path: join(HARNESS_ROOT, 'manifest.json'), purpose: 'Adapter config for harness sync (rules + subagents)' },
   { path: '.cursor/rules/', purpose: 'Generated Cursor rule adapters' },
   { path: '.claude/rules/', purpose: 'Generated Claude rule adapters' },

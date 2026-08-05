@@ -185,6 +185,7 @@ npx @nextstage-brasil/harness init \
 | Update installed skills | `npx @nextstage-brasil/harness update` |
 | Regenerate `AGENTS.md` | `npx @nextstage-brasil/harness agents-md --force` |
 | Add a project rule | `npx @nextstage-brasil/harness add-rule api-conventions --description "REST conventions"` |
+| Add a project subagent | `npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-code-investigator --description "Investigation bridge"` |
 | Import legacy `.cursor/rules/*.mdc` | `npx @nextstage-brasil/harness migrate-rules --force` |
 | Brownfield instructions | `npx @nextstage-brasil/harness prepare` |
 | Show / set agents | `npx @nextstage-brasil/harness agents` · `agents set --agent cursor` |
@@ -247,6 +248,7 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 | `harness update` | Update skills already in `.agents/skills/` |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` (use `--force` to overwrite) |
 | `harness add-rule <name>` | New rule under `.nextstage-harness/rules/` + sync |
+| `harness add-subagent <name>` | New subagent under `.nextstage-harness/agents/` + sync (`--skill` required) |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` |
 | `harness prune-retired-skills` | Remove renamed skill dirs after replacement |
 | `harness uninstall` | Remove skills, adapters, `.nextstage-harness/`, lock, ignore blocks (`docs/` kept) |
@@ -269,9 +271,19 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 | `--keep-agents-md` | With `uninstall`: keep `AGENTS.md` / `CLAUDE.md` |
 | `--yes` / `-y` | Non-interactive |
 | `--dry-run` | Print plan, write nothing |
-| `--force` | Overwrite (`agents-md`, `migrate-rules`, `add-rule`) |
+| `--force` | Overwrite (`agents-md`, `migrate-rules`, `add-rule`, `add-subagent`) |
 
 `add-rule` extras: `--description`, `--globs` (comma-separated; scoped rule, not always-apply).
+
+`add-subagent` extras: `--skill <id>` (required), `--description`.
+
+Example:
+
+```bash
+npx @nextstage-brasil/harness add-subagent investigator-agent \
+  --skill ns-code-investigator \
+  --description "Investigation bridge"
+```
 
 ### Full `init` example
 

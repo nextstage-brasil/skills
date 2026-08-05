@@ -1,7 +1,13 @@
 import { existsSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { listInstalledSkillNames } from './prepare.js';
 import { loadManifest, manifestPath } from './manifest.js';
 import { DEFAULT_SUBAGENTS } from './subagentsCatalog.js';
+import {
+  ensureSubagentCanonicalFiles,
+  normalizeSubagentCanonical,
+} from './subagentCanonical.js';
+import { HARNESS_ROOT } from './agentsLayout.js';
 
 function normalizeModel(model, fallback) {
   const base = {
@@ -18,13 +24,13 @@ function normalizeModel(model, fallback) {
 }
 
 function cloneEntry(def) {
-  return {
+  return normalizeSubagentCanonical({
     name: def.name,
     skill: def.skill,
     description: def.description,
     model: { ...def.model },
     readonly: Boolean(def.readonly),
-  };
+  });
 }
 
 function normalizeReadonly(value, fallback) {
@@ -41,12 +47,12 @@ export function ensureSubagents(projectRoot, options = {}) {
   const { write = true } = options;
   const path = manifestPath(projectRoot);
   if (!existsSync(path)) {
-    return { seeded: [], subagents: [], written: false };
+    return { seeded: [], subagents: [], written: false, canonicalCreated: [] };
   }
 
   const manifest = loadManifest(projectRoot);
   if (!manifest) {
-    return { seeded: [], subagents: [], written: false };
+    return { seeded: [], subagents: [], written: false, canonicalCreated: [] };
   }
 
   const before = JSON.stringify(manifest);
@@ -69,6 +75,7 @@ export function ensureSubagents(projectRoot, options = {}) {
       continue;
     }
 
+    normalizeSubagentCanonical(current);
     current.skill = def.skill;
     if (!current.description) {
       current.description = def.description;
@@ -77,7 +84,17 @@ export function ensureSubagents(projectRoot, options = {}) {
     current.readonly = normalizeReadonly(current.readonly, def.readonly);
   }
 
+  for (const entry of existing) {
+    normalizeSubagentCanonical(entry);
+  }
+
   manifest.subagents = existing;
+
+  const harnessRoot = join(projectRoot, HARNESS_ROOT);
+  const { created: canonicalCreated } = ensureSubagentCanonicalFiles(
+    harnessRoot,
+    existing.filter((entry) => entry?.skill && installed.has(entry.skill)),
+  );
 
   const after = JSON.stringify(manifest);
   let written = false;
@@ -90,6 +107,7 @@ export function ensureSubagents(projectRoot, options = {}) {
     seeded,
     subagents: existing,
     written,
+    canonicalCreated,
     installed: [...installed],
   };
 }

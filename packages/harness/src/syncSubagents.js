@@ -7,22 +7,15 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { join } from 'node:path';
-import { GENERATION_MARKER, HASH_PATTERN, hashBody } from './syncRules.js';
+import {
+  GENERATION_MARKER,
+  HASH_PATTERN,
+  hashBody,
+  stripFrontmatter,
+} from './syncRules.js';
 import { ensureSubagents, resolvableSubagents } from './ensureSubagents.js';
 import { HARNESS_ROOT } from './agentsLayout.js';
-
-export function buildSubagentBody(entry) {
-  const skillPath = `.agents/skills/${entry.skill}/SKILL.md`;
-  return `# ${entry.name}
-
-Thin skill bridge — do not invent a separate workflow. The skill below is the source of truth.
-
-1. Read \`AGENTS.md\` at the product root in full (and \`agents.local.md\` if present).
-2. Read \`.nextstage-harness/rules/architecture-rules.md\` when that file exists.
-3. Read and follow \`${skillPath}\` in full — run that skill's workflow exactly.
-4. Honor every gate, handoff, and review contract defined in the skill. Do not substitute platform Task personas for named skill steps.
-`;
-}
+import { readSubagentCanonicalBody, subagentCanonicalRel } from './subagentCanonical.js';
 
 function yamlQuote(value) {
   const text = String(value ?? '');
@@ -106,7 +99,7 @@ function pruneStaleAdapters(dir, expectedNames, check) {
 }
 
 /**
- * Generate Cursor/Claude project subagent adapters from manifest.subagents.
+ * Generate Cursor/Claude project subagent adapters from canonical agents/*.md + manifest metadata.
  * Seeds missing default entries first; never resets project-owned model values.
  */
 export function syncSubagents(projectRoot, options = {}) {
@@ -137,7 +130,8 @@ export function syncSubagents(projectRoot, options = {}) {
   const removed = [];
 
   for (const entry of active) {
-    const body = buildSubagentBody(entry);
+    const raw = readSubagentCanonicalBody(harnessRoot, entry);
+    const body = stripFrontmatter(raw);
     const hash = hashBody(body);
 
     if (agents.includes('cursor')) {
@@ -145,8 +139,14 @@ export function syncSubagents(projectRoot, options = {}) {
       const adapterPath = join(dir, `${entry.name}.md`);
       const expected = buildCursorSubagentAdapter(entry, body, hash);
       if (check) {
-        if (!existsSync(adapterPath) || readFileSync(adapterPath, 'utf8') !== expected) {
+        if (!existsSync(adapterPath)) {
           drifts.push(adapterPath);
+        } else {
+          const current = readFileSync(adapterPath, 'utf8');
+          const currentHash = current.match(HASH_PATTERN)?.[1];
+          if (currentHash !== hash) {
+            drifts.push(adapterPath);
+          }
         }
       } else {
         mkdirSync(dir, { recursive: true });
@@ -160,8 +160,14 @@ export function syncSubagents(projectRoot, options = {}) {
       const adapterPath = join(dir, `${entry.name}.md`);
       const expected = buildClaudeSubagentAdapter(entry, body, hash);
       if (check) {
-        if (!existsSync(adapterPath) || readFileSync(adapterPath, 'utf8') !== expected) {
+        if (!existsSync(adapterPath)) {
           drifts.push(adapterPath);
+        } else {
+          const current = readFileSync(adapterPath, 'utf8');
+          const currentHash = current.match(HASH_PATTERN)?.[1];
+          if (currentHash !== hash) {
+            drifts.push(adapterPath);
+          }
         }
       } else {
         mkdirSync(dir, { recursive: true });
@@ -192,6 +198,9 @@ export function syncSubagents(projectRoot, options = {}) {
     written,
     removed,
     seeded: ensureResult.seeded,
+    canonicalCreated: ensureResult.canonicalCreated,
     check,
   };
 }
+
+export { subagentCanonicalRel };

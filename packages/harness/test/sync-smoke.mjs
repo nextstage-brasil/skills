@@ -16,7 +16,8 @@ import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js
 import { listSkillsToUpdate } from '../src/update.js';
 import { resolveAgentsConfig } from '../src/agentsLayout.js';
 import { writeManifestAgents } from '../src/manifest.js';
-import { syncSubagents, buildSubagentBody } from '../src/syncSubagents.js';
+import { syncSubagents } from '../src/syncSubagents.js';
+import { buildSubagentBody } from '../src/subagentCanonical.js';
 import { ensureSubagents } from '../src/ensureSubagents.js';
 import { runUninstall, assessUninstall } from '../src/uninstall.js';
 import { stripIgnoreContent } from '../src/patchIgnoreContent.js';
@@ -447,6 +448,10 @@ try {
     assert(firstSync.seeded.includes('reviewer-agent'), 'should seed reviewer-agent');
     assert(firstSync.seeded.includes('task-writer-agent'), 'should seed task-writer-agent');
     assert(
+      existsSync(join(subagentsDir, '.nextstage-harness', 'agents', 'coder-agent.md')),
+      'should create canonical coder-agent.md',
+    );
+    assert(
       existsSync(join(subagentsDir, '.cursor', 'agents', 'coder-agent.md')),
       'should write cursor coder-agent.md',
     );
@@ -493,6 +498,23 @@ try {
 
     const manifestPath = join(subagentsDir, '.nextstage-harness', 'manifest.json');
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    const coderManifest = manifest.subagents.find((entry) => entry.name === 'coder-agent');
+    assert(coderManifest?.canonical === 'agents/coder-agent.md', 'manifest should reference canonical path');
+
+    writeFileSync(
+      join(subagentsDir, '.nextstage-harness', 'agents', 'task-writer-agent.md'),
+      '# Custom task writer body\n\nFollow the skill exactly.\n',
+      'utf8',
+    );
+    const resyncCustom = syncSubagents(subagentsDir, { agents: ['cursor', 'claude-code'] });
+    assert(resyncCustom.ok, 'sync after canonical edit should succeed');
+    assert(
+      readFileSync(join(subagentsDir, '.cursor', 'agents', 'task-writer-agent.md'), 'utf8').includes(
+        'Custom task writer body',
+      ),
+      'adapter should reflect canonical body edits',
+    );
+
     const taskEntry = manifest.subagents.find((entry) => entry.name === 'task-writer-agent');
     taskEntry.model.claude = 'sonnet';
     taskEntry.model.cursor = 'composer-2';
