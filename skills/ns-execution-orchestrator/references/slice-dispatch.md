@@ -16,6 +16,8 @@ Subversion:  {subversion_san}
 Active path: {product_root}/docs/versions/{version_san}/subversions/{subversion_san}/
 
 Before coding:
+- Read {product_root}/AGENTS.md in full (and agents.local.md if present); follow
+  Session boot / orders there, including any mandatory product skills named.
 - Load product context from {product_root}/docs/context/ per the Implementation
   boot rule in ns-harness artifact-layout.md (list folder, read layer-relevant files).
 
@@ -23,9 +25,9 @@ Mandate:
 - Implement ALL tasks in this slice, in order, with no confirmation between tasks.
 - Do NOT commit — the orchestrator commits once per slice.
 - Do NOT run backend or frontend tests — implement only.
-- Obey AGENTS.md and the harness rules strictly. If any instruction conflicts
-  with the rules or the confirmed scope, STOP and report a blocker instead of
-  proceeding by assumption.
+- Obey AGENTS.md, agents.local.md (if present), and harness rules strictly. If
+  any instruction conflicts with the rules or the confirmed scope, STOP and
+  report a blocker instead of proceeding by assumption.
 
 Report back:
 - Per-task status: done / waived (with reason) / blocked (with reason).

@@ -25,12 +25,13 @@ before coding.
 ## Bootstrap (step 1)
 
 1. Read `execution-handoff.md` **in full**
-2. Validate **Time tracking (seconds)** section exists; add from template if missing
-3. Read `requirements.md` (overview — do not replan)
-4. Load product context: follow **Implementation boot rule** in `../../ns-harness/references/artifact-layout.md`
-5. Identify **Next task** (first `pending`, or resume `in_progress`)
-6. Load harness rules for the task layer
-7. If `Implementation — start` is empty, fill with current ISO local timestamp
+2. Re-read `{product_root}/AGENTS.md` (and `agents.local.md` if present); complete Session boot from the harness; obey any mandatory product skills named there
+3. Validate **Time tracking (seconds)** section exists; add from template if missing
+4. Read `requirements.md` (overview — do not replan)
+5. Load product context: follow **Implementation boot rule** in `../../ns-harness/references/artifact-layout.md`
+6. Identify **Next task** (first `pending`, or resume `in_progress`)
+7. Load harness rules for the task layer
+8. If `Implementation — start` is empty, fill with current ISO local timestamp
 
 ### Work branch (step 1.5 — GitLab)
 
@@ -48,18 +49,19 @@ For each task until scope is done or all tasks complete:
 1. **Update handoff — start:** `Status` → `in_progress`; `Started at` → now; `Updated at` → now
    - **GitLab:** if sync config exists, run `ns-gitlab-board-sync` (task start: backlog → in_progress) **before** coding
 2. **Read** `tasks/task-NNN-*.md` in full
-3. **Implement** per validation criteria (minimal diff, task scope only)
-4. **Validate** per project rules (Docker tests, i18n, multitenancy, etc.)
-5. **Update handoff — complete:** `Status` → `completed` (or `blocked` + Notes)
+3. **Before coding:** re-read `AGENTS.md` (and `agents.local.md` if present); follow Session boot / mandatory product skills for this task
+4. **Implement** per validation criteria (minimal diff, task scope only) — prefer `ns-code-coder` as the coding worker when dispatching a subagent
+5. **Validate** per project rules (Docker tests, i18n, multitenancy, etc.)
+6. **Update handoff — complete:** `Status` → `completed` (or `blocked` + Notes)
    - **GitLab:** sync in_progress → done + spent time after validation
-6. **Recalculate (required):**
+7. **Recalculate (required):**
    - Row `Time (s)` = `Finished at − Started at`
    - `Total task time (s)` = sum of column
    - `Implementation — total (s)` = `Implementation — end − Implementation — start`
    - `Total process time (s)` per handoff formula
    - `Last recalculated` = now
    - **Progress** and **Next task**
-7. Advance to next `pending` task
+8. Advance to next `pending` task
 
 See `../SKILL.md` for status-update rules and version
 status transitions.
@@ -106,6 +108,7 @@ After human confirms (or documented waiver):
 ## Critical rules
 
 - **Always** update `execution-handoff.md` when task status changes
+- **AGENTS first** — Session boot / re-read `AGENTS.md` (+ `agents.local.md`) before coding; do not rely on memory from earlier in the session
 - **Numeric task order** unless explicit dependency in the task file says otherwise
 - **Minimal diff** — current task scope only
 - **No commits** unless human explicitly asks

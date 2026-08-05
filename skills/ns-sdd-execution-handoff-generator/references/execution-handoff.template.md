@@ -21,6 +21,8 @@ Planning is complete — **execute, do not replan**.
 
 | Artifact | Path |
 |----------|------|
+| AGENTS | `{product_root}/AGENTS.md` |
+| Local agent orders *(if present)* | `{product_root}/agents.local.md` |
 | Requirements | `{product_root}/docs/versions/{version_san}/requirements.md` |
 | Tasks | `{product_root}/docs/versions/{version_san}/tasks/task-NNN-*.md` |
 | Design | `{product_root}/docs/context/design-brief.md` |
@@ -34,15 +36,16 @@ Planning is complete — **execute, do not replan**.
 ### Execution rules
 
 1. Start with the **first `pending` task** in the table below (numeric order).
-2. Read the full `task-NNN-*.md` before coding.
-3. Implement **only** under `{product_root}/` (code) and harness rules (read-only).
-4. Validate all **validation criteria** before marking `completed`.
-5. **Update this file** when starting (`in_progress`), completing (`completed`), or blocking (`blocked`) each task.
-6. Update **Version status** and **Progress** after each task.
-7. When **all** tasks are `completed` or `waived`: run post-implementation review (`ns-code-reviewer`) before declaring the version ready.
-8. **GitLab:** implement only on the registered `work_branch`; MR target per config.
-9. **GitLab status:** per task, sync `backlog` → `in_progress` → `done` — never skip `in_progress` (`ns-gitlab-board-sync`).
-10. Do not stop to replan unless a real blocker is documented in **Notes**.
+2. Before coding each task: re-read `AGENTS.md` (and `agents.local.md` if present); complete Session boot from the harness.
+3. Read the full `task-NNN-*.md` before coding.
+4. Implement **only** under `{product_root}/` (code) and harness rules (read-only).
+5. Validate all **validation criteria** before marking `completed`.
+6. **Update this file** when starting (`in_progress`), completing (`completed`), or blocking (`blocked`) each task.
+7. Update **Version status** and **Progress** after each task.
+8. When **all** tasks are `completed` or `waived`: run post-implementation review (`ns-code-reviewer`) before declaring the version ready.
+9. **GitLab:** implement only on the registered `work_branch`; MR target per config.
+10. **GitLab status:** per task, sync `backlog` → `in_progress` → `done` — never skip `in_progress` (`ns-gitlab-board-sync`).
+11. Do not stop to replan unless a real blocker is documented in **Notes**.
 
 **`waived` tasks:** only with explicit human waiver in row **Notes**.
 
