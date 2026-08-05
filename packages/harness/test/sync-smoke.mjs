@@ -455,6 +455,7 @@ try {
     const cursorCoder = readFileSync(join(subagentsDir, '.cursor', 'agents', 'coder-agent.md'), 'utf8');
     assert(cursorCoder.includes('name: coder-agent'), 'cursor adapter should have name');
     assert(cursorCoder.includes('readonly: false'), 'coder-agent should not be readonly');
+    assert(cursorCoder.includes('composer-2.5[fast=false]'), 'coder-agent default cursor model');
     assert(cursorCoder.includes('Read `AGENTS.md`'), 'adapter body should require AGENTS.md');
     assert(cursorCoder.includes('.agents/skills/ns-code-coder/SKILL.md'), 'adapter should point at skill');
 
@@ -463,6 +464,10 @@ try {
       'utf8',
     );
     assert(cursorReviewer.includes('readonly: true'), 'reviewer-agent must be readonly');
+    assert(
+      cursorReviewer.includes('grok-4.5[effort=medium,fast=false]'),
+      'reviewer-agent default cursor model',
+    );
 
     const claudeTask = readFileSync(
       join(subagentsDir, '.claude', 'agents', 'task-writer-agent.md'),
@@ -470,6 +475,18 @@ try {
     );
     assert(claudeTask.includes('model: haiku'), 'task-writer default claude model is haiku');
     assert(claudeTask.includes('readonly: false'), 'task-writer-agent should not be readonly');
+    assert(
+      readFileSync(join(subagentsDir, '.claude', 'agents', 'coder-agent.md'), 'utf8').includes(
+        'model: sonnet',
+      ),
+      'coder-agent default claude model is sonnet',
+    );
+    assert(
+      readFileSync(join(subagentsDir, '.claude', 'agents', 'reviewer-agent.md'), 'utf8').includes(
+        'model: opus',
+      ),
+      'reviewer-agent default claude model is opus',
+    );
 
     const manifestPath = join(subagentsDir, '.nextstage-harness', 'manifest.json');
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));

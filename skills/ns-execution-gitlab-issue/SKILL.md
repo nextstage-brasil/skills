@@ -24,7 +24,7 @@ Entry priority **1**. Harness table: `../ns-harness/references/code-skill-routin
 | ------- | ------ |
 | Phase 2 execution | `ns-code-autonomous` (Engine mode) |
 | MR / status / time / comments | `mcp-gitlab-usage` |
-| Phase 4 review gate | `ns-code-reviewer` |
+| Phase 4 review gate | `reviewer-agent` → `ns-code-reviewer` |
 | Rejected fix loop | `ns-code-autonomous` → `C2` subagents (same worktree; no re-entry to this skill from `A`/`C2`) |
 
 `G` remains the single GitLab lifecycle owner until delivery completes. Work units under `A` must not re-open this skill.
@@ -116,10 +116,10 @@ Create `WORKTREE_ROOT` per `references/worktree-setup.md` — always `{product_r
 
 Canonical rules: `../ns-harness/references/review-gate-workflow.md`.
 
-1. Invoke **`ns-code-reviewer`** in **Issue review mode** (`ISSUE_URL`) only — read its `SKILL.md`. Read-only official gate; posts the internal GitLab comment. **Forbidden:** Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or any substitute unless the human explicitly requests it for this run.
+1. Invoke **`reviewer-agent`** when available (else **`ns-code-reviewer`**) in **Issue review mode** (`ISSUE_URL`) only — bridge/skill loads `AGENTS.md` then reviewer workflow. Read-only official gate; posts the internal GitLab comment. **Forbidden:** Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or any substitute unless the human explicitly requests it for this run. **Allowed:** harness `reviewer-agent`.
 2. Loop, max **3** rounds:
    - `Approved` → return to Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
-   - `Rejected` with rounds remaining → re-invoke `ns-code-autonomous` (same worktree/branch) with the findings as a fix work unit, then **mandatory re-review** via `ns-code-reviewer`. Keep the original `START_TIME`; do not call spent/Dev 100% yet.
+   - `Rejected` with rounds remaining → re-invoke `ns-code-autonomous` (same worktree/branch) with the findings as a fix work unit, then **mandatory re-review** via `reviewer-agent` / `ns-code-reviewer`. Keep the original `START_TIME`; do not call spent/Dev 100% yet.
    - `Blocked`, or rounds exhausted → `status_blocked` (Em Impedimento), post the findings, stop. Do **not** set `END_TIME`, spent time, or Dev 100%.
 3. Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` — exactly the verdict string `ns-code-reviewer` returned.
 
@@ -146,7 +146,7 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 | ------------------- | -------------------------------- |
 | `mcp-gitlab-usage`  | All GitLab tools                 |
 | `ns-gitlab-board-sync` | Status label semantics           |
-| `ns-code-reviewer`     | Phase 4 gate                     |
+| `ns-code-reviewer`     | Phase 4 gate (prefer `reviewer-agent`) |
 | `ns-code-autonomous`   | Phase 2 execution engine         |
 | `ns-code-coder`        | Non-GitLab ad-hoc implementation |
 

@@ -42,7 +42,7 @@ Planning is complete — **execute, do not replan**.
 5. Validate all **validation criteria** before marking `completed`.
 6. **Update this file** when starting (`in_progress`), completing (`completed`), or blocking (`blocked`) each task.
 7. Update **Version status** and **Progress** after each task.
-8. When **all** tasks are `completed` or `waived`: run post-implementation review (`ns-code-reviewer`) before declaring the version ready.
+8. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-code-reviewer`) before declaring the version ready.
 9. **GitLab:** implement only on the registered `work_branch`; MR target per config.
 10. **GitLab status:** per task, sync `backlog` → `in_progress` → `done` — never skip `in_progress` (`ns-gitlab-board-sync`).
 11. Do not stop to replan unless a real blocker is documented in **Notes**.

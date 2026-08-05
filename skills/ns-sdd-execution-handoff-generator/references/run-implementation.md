@@ -50,7 +50,7 @@ For each task until scope is done or all tasks complete:
    - **GitLab:** if sync config exists, run `ns-gitlab-board-sync` (task start: backlog → in_progress) **before** coding
 2. **Read** `tasks/task-NNN-*.md` in full
 3. **Before coding:** re-read `AGENTS.md` (and `agents.local.md` if present); follow Session boot / mandatory product skills for this task
-4. **Implement** per validation criteria (minimal diff, task scope only) — prefer `ns-code-coder` as the coding worker when dispatching a subagent
+4. **Implement** per validation criteria (minimal diff, task scope only) — dispatch **`coder-agent`** when available (loads `ns-code-coder`); else follow `ns-code-coder` directly. See `../../ns-harness/references/subagent-dispatch.md`.
 5. **Validate** per project rules (Docker tests, i18n, multitenancy, etc.)
 6. **Update handoff — complete:** `Status` → `completed` (or `blocked` + Notes)
    - **GitLab:** sync in_progress → done + spent time after validation
@@ -85,7 +85,7 @@ When the product has frontend navigation changes, present grouping proposals and
 
 ### Step 5 — Code review (required)
 
-1. Invoke `ns-code-reviewer` at version closure → `code-review-report.md`
+1. Invoke `reviewer-agent` when available (else `ns-code-reviewer`) at version closure → `code-review-report.md`. See `../../ns-harness/references/subagent-dispatch.md`.
 2. Update handoff:
    - **Version status:** `completed` | `completed_with_caveats` | `blocked_delivery`
    - `Post-implementation review — end` + recalculate **Total process time (s)**

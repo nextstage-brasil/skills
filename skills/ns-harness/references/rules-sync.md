@@ -55,7 +55,7 @@ Cursor subagents spawned during a session use the same project skill catalog as 
       "name": "coder-agent",
       "skill": "ns-code-coder",
       "description": "(NS) Thin bridge to ns-code-coder…",
-      "model": { "cursor": "inherit", "claude": "inherit" },
+      "model": { "cursor": "composer-2.5[fast=false]", "claude": "sonnet" },
       "readonly": false
     }
   ]
@@ -79,9 +79,9 @@ Cursor subagents spawned during a session use the same project skill catalog as 
 
 | Name | Skill | Default model (cursor / claude) | `readonly` |
 |------|-------|----------------------------------|------------|
-| `coder-agent` | `ns-code-coder` | `inherit` / `inherit` | `false` |
-| `reviewer-agent` | `ns-code-reviewer` | `inherit` / `inherit` | `true` |
-| `task-writer-agent` | `ns-sdd-task-generator` | `fast` / `haiku` | `false` |
+| `coder-agent` | `ns-code-coder` | `composer-2.5[fast=false]` / `sonnet` | `false` |
+| `reviewer-agent` | `ns-code-reviewer` | `grok-4.5[effort=medium,fast=false]` / `opus` | `true` |
+| `task-writer-agent` | `ns-sdd-task-generator` | `composer-2.5[fast=false]` / `haiku` | `false` |
 
 Presets that install those skills get matching bridges on `init` / `sync` / `update`. Each bridge body: read `AGENTS.md` → architecture rules → follow the skill.
 

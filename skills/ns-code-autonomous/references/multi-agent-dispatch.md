@@ -12,12 +12,12 @@ From the single implicit unit, or from `execution-plan.md`'s DAG (see `planning-
 
 **Gate before edit:** the dispatching shell / subagent must be operating inside `WORKTREE_ROOT` on `WORK_BRANCH`. If not, refuse the unit — do not silently write into the main checkout.
 
-Each unit — parallel or sequential — is a `ns-code-coder` subagent (or equivalent focused implementation call) that:
+Each unit — parallel or sequential — prefers harness **`coder-agent`** when available (`../../ns-harness/references/subagent-dispatch.md`); else a `ns-code-coder` focused call that:
 
 - Works exclusively inside `WORKTREE_ROOT` (or `{product_root}/.worktrees/{version_san}/` in standalone) — never the main checkout, never `main`/`master`/`SOURCE_BRANCH`.
 - Receives: the unit's scope/acceptance criteria, any resolved Q&A relevant to it, the file scope boundary (so it doesn't drift into another unit's files), and applicable harness rules.
 - Follows `ns-code-coder`'s own implementation rules (diff-first, read before write, no unrelated refactors).
-- Completes `ns-code-coder`'s full per-task cycle including the **review gate** (`../../ns-harness/references/review-gate-workflow.md`) — **`ns-code-reviewer` only**; report unit `blocked` if review rounds exhaust without `Approved`.
+- Completes `ns-code-coder`'s full per-task cycle including the **review gate** (`../../ns-harness/references/review-gate-workflow.md`) — **`reviewer-agent` / `ns-code-reviewer` only**; report unit `blocked` if review rounds exhaust without `Approved`.
 - Escalates any *new* destructive doubt it hits back up through the doubt protocol instead of guessing — it does not resolve destructive doubts on its own.
 - Must not "unblock" a failed worktree by editing files on the product main checkout. Failure to isolate = unit status `blocked`, not a soft continue.
 - In **Engine mode** (invoked by `ns-execution-gitlab-issue`): do **not** route to `ns-execution-gitlab-issue` if an `ISSUE_URL` appears in scope — report through the doubt protocol to the caller instead.
@@ -26,13 +26,14 @@ Each unit — parallel or sequential — is a `ns-code-coder` subagent (or equiv
 
 ```
 Implement work unit {unit_id} inside {WORKTREE_ROOT} on branch {WORK_BRANCH}.
+Prefer coder-agent when available; else follow ns-code-coder skill.
 Preflight: confirm pwd and git branch match WORKTREE_ROOT / WORK_BRANCH before any edit.
 If you are on main/master/base branch or outside WORKTREE_ROOT: stop and report blocked — do not implement.
 Scope: {unit description / acceptance criteria}
 File boundary: {files or directories this unit owns — do not touch files outside this boundary}
 Resolved context: {relevant Q&A from the doubt protocol, or "none"}
 Harness rules: {paths to applicable rule files}
-Review gate: after implementation, follow ns-code-coder + review-gate-workflow.md — ns-code-reviewer only, max 3 rounds, mandatory re-review after Critical fixes.
+Review gate: after implementation, follow ns-code-coder + review-gate-workflow.md — reviewer-agent / ns-code-reviewer only, max 3 rounds, mandatory re-review after Critical fixes.
 Report: files changed, summary of the diff, review round (1/2/3), score, exact Code Review: verdict line, any new destructive doubt (do not guess on it).
 ```
 

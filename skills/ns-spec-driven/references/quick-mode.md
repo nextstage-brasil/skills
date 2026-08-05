@@ -14,8 +14,8 @@ Bypass the PM planning chain for **tight, local changes**.
 1. Resolve `{product_root}` and read `architecture-rules.md`.
 2. Load `docs/context/` files relevant to the layer (UI → `design-brief.md` if present).
 3. Soft-check complements (`skill-integrations.md`) — UI/docs/security signals only.
-4. Delegate to **`ns-code-coder`** with explicit `{task_description}`.
-5. Optional: user asks for review → `ns-code-reviewer` (not automatic).
+4. Delegate to **`coder-agent`** when available (loads `ns-code-coder`); else read and follow **`ns-code-coder`** with explicit `{task_description}`. See `../../ns-harness/references/subagent-dispatch.md`.
+5. Optional: user asks for review → `reviewer-agent` / `ns-code-reviewer` (not automatic).
 
 ## Do not
 

@@ -1,14 +1,18 @@
 # Slice dispatch — subagent prompt and validation
 
 The orchestrator dispatches exactly one **synchronous (blocking)** subagent per
-slice. Keep its context small: pass only what the slice needs, never the whole
-roadmap or master requirements.
+slice. Prefer harness **`coder-agent`** when available
+(`../ns-harness/references/subagent-dispatch.md`); else a generic subagent whose
+prompt follows `ns-code-coder`. Keep context small: pass only what the slice
+needs, never the whole roadmap or master requirements.
 
 ## Prompt template
 
+Use when dispatching `coder-agent` or a fallback that must load `ns-code-coder`:
+
 ```
 Follow the `ns-code-coder` skill as a slice worker, invoked by the execution
-orchestrator.
+orchestrator. (If you are coder-agent: load AGENTS.md then that skill.)
 
 Product:     {product_root}
 Version:     {version_san}

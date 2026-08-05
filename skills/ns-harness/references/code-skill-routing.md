@@ -13,11 +13,12 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | Role | Skill | Notes |
 | ---- | ----- | ----- |
 | Front door (entry router) | Host agent + skill descriptions + this file | Fixed priority below — not a dedicated skill |
-| Central execution worker | `ns-code-coder` / `C2` subagent | G, A, and S converge here for diffs + review |
+| Central execution worker | `ns-code-coder` / `C2` via `coder-agent` when present | G, A, and S converge here for diffs + review — `subagent-dispatch.md` |
 | GitLab lifecycle | `ns-execution-gitlab-issue` | Delegates coding to A in Phase 2 |
 | Multi-unit engine | `ns-code-autonomous` | Standalone entry or engine under G |
-| Spec / version planning | `ns-spec-driven` | May hand off to C or A |
+| Spec / version planning | `ns-spec-driven` | May hand off to C or A (prefer `coder-agent` when dispatching) |
 | Root-cause debugging | `ns-code-investigator` | Diagnosis; implementation is a separate user step |
+| Review gate | `ns-code-reviewer` via `reviewer-agent` when present | Only allowed review path — `review-gate-workflow.md` |
 
 ## Install vs runtime
 
@@ -73,14 +74,14 @@ Per-skill detail lives in each `SKILL.md` routing section.
 | `C` | `ISSUE_URL` detected | `G` |
 | `C` | too large / multi-day SDD | `S` |
 | `C` | obscure bug | `I` |
-| `C` | ad-hoc diff | `REV` (`ns-code-reviewer` only — see `review-gate-workflow.md`) |
+| `C` | ad-hoc diff | `REV` (`reviewer-agent` → `ns-code-reviewer` — `review-gate-workflow.md` + `subagent-dispatch.md`) |
 | `G` | Phase 2 | `A` (engine mode) |
 | `G` | MR / status / time | `mcp-gitlab-usage` |
-| `G` | review gate | `REV` (`ns-code-reviewer` only — `review-gate-workflow.md`) |
-| `A` | dispatch work units | `C2` (`ns-code-coder` subagent) |
-| `C2` | review | `REV` (`ns-code-reviewer` only — `review-gate-workflow.md`) |
-| `S` | small / quick | `C` |
-| `S` | version + handoff | `H` → `C` or `A` |
+| `G` | review gate | `REV` (`reviewer-agent` / `ns-code-reviewer` only) |
+| `A` | dispatch work units | `C2` (`coder-agent` → `ns-code-coder` when present) |
+| `C2` | review | `REV` (`reviewer-agent` / `ns-code-reviewer` only) |
+| `S` | small / quick | `C` via `coder-agent` when present |
+| `S` | version + handoff | `H` → `C` or `A` (prefer `coder-agent` for coding workers) |
 | `I` | diagnosis complete | User (no auto-dispatch to `C`) |
 | User | implement proposed fix | Re-enter entry router (usually `C`) |
 
@@ -112,13 +113,13 @@ flowchart TD
   C -->|too large / multi-day| S
   C -->|obscure bug| I
   C -->|ad-hoc diff| IMPL[Implement + review loop]
-  IMPL --> REV[ns-code-reviewer]
+  IMPL --> REV[reviewer-agent / ns-code-reviewer]
 
   G -->|Phase 2 engine| A
   G -->|MR / status / time| GL[mcp-gitlab-usage]
   G -->|review gate| REV
 
-  A -->|dispatch work units| C2[ns-code-coder subagent]
+  A -->|dispatch work units| C2[coder-agent / ns-code-coder]
   C2 --> REV
 
   S -->|small / quick| C

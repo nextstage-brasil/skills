@@ -37,17 +37,17 @@ Map natural-language triggers to **phase** and **worker skill path** (under `.ag
 
 | Trigger phrases | Worker | Order |
 | --------------- | ------ | ----- |
-| "generate tasks", "task breakdown", Medium+ execute prep | `ns-sdd-task-generator` | After requirements (+ consistency if Large) |
+| "generate tasks", "task breakdown", Medium+ execute prep | `task-writer-agent` → `ns-sdd-task-generator` | After requirements (+ consistency if Large) |
 | after tasks exist | `ns-sdd-execution-handoff-generator` | Creates/updates `execution-handoff.md` |
 
 ## Execute
 
 | Trigger phrases | Worker |
 | --------------- | ------ |
-| "implement", "build it", "run tasks" | See parent SKILL.md execute routing |
+| "implement", "build it", "run tasks" | See parent SKILL.md execute routing + `../../ns-harness/references/subagent-dispatch.md` |
 | GitLab issue URL | `ns-execution-gitlab-issue` (if installed + MCP) |
 | subversion / slice | `ns-execution-orchestrator` |
-| handoff present | `ns-sdd-execution-handoff-generator` references + `ns-code-coder` / `ns-code-autonomous` |
+| handoff present | `ns-sdd-execution-handoff-generator` + `coder-agent` / `ns-code-coder` / `ns-code-autonomous` |
 
 ## Close
 

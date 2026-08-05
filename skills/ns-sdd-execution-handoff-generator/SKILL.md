@@ -126,9 +126,9 @@ existing statuses by task ID.
 | Stage                      | Skill / reference                                           |
 | -------------------------- | ----------------------------------------------------------- |
 | After task generation      | This skill (generate handoff)                               |
-| Classic implementation     | `references/run-implementation.md` + `ns-code-coder` |
+| Classic implementation     | `references/run-implementation.md` + `coder-agent` / `ns-code-coder` |
 | Partitioned implementation | `ns-execution-orchestrator` (slice handoffs + master closure)  |
-| End-of-version review      | `ns-code-reviewer`                                             |
+| End-of-version review      | `reviewer-agent` / `ns-code-reviewer`                          |
 | Living specs               | `ns-sdd-living-spec-consolidator`                                  |
 | GitLab board sync          | `ns-gitlab-board-sync` (when config exists)                    |
 

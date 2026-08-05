@@ -8,7 +8,10 @@ export const DEFAULT_SUBAGENTS = [
     skill: 'ns-code-coder',
     description:
       '(NS) Thin bridge to ns-code-coder. Invoke for ad-hoc coding — loads AGENTS.md then the skill workflow.',
-    model: { cursor: 'inherit', claude: 'inherit' },
+    model: {
+      cursor: 'composer-2.5[fast=false]',
+      claude: 'sonnet',
+    },
     readonly: false,
   },
   {
@@ -16,7 +19,10 @@ export const DEFAULT_SUBAGENTS = [
     skill: 'ns-code-reviewer',
     description:
       '(NS) Thin bridge to ns-code-reviewer. Invoke for the review gate — loads AGENTS.md then the skill workflow.',
-    model: { cursor: 'inherit', claude: 'inherit' },
+    model: {
+      cursor: 'grok-4.5[effort=medium,fast=false]',
+      claude: 'opus',
+    },
     readonly: true,
   },
   {
@@ -24,7 +30,10 @@ export const DEFAULT_SUBAGENTS = [
     skill: 'ns-sdd-task-generator',
     description:
       '(NS) Thin bridge to ns-sdd-task-generator. Invoke to write SDD task files — prefer a cheaper model than planning.',
-    model: { cursor: 'fast', claude: 'haiku' },
+    model: {
+      cursor: 'composer-2.5[fast=false]',
+      claude: 'haiku',
+    },
     readonly: false,
   },
 ];

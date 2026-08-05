@@ -16,9 +16,9 @@ Deep, constructive review of code changes against project rules and acceptance c
 
 ## Caller contract (workflow callers)
 
-When invoked by `ns-code-coder`, `ns-code-autonomous`, or `ns-execution-gitlab-issue`:
+When invoked by `ns-code-coder`, `ns-code-autonomous`, or `ns-execution-gitlab-issue` (directly or via harness **`reviewer-agent`**):
 
-- The caller **must** read this `SKILL.md` and run this skill — not a Cursor Task subagent (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or improvised review.
+- The caller **must** run this skill — prefer dispatching `reviewer-agent` when available (`../ns-harness/references/subagent-dispatch.md`); else read this `SKILL.md` in-session. Do not use Cursor Task personas (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or improvised review.
 - Gate rules for callers: `../ns-harness/references/review-gate-workflow.md`.
 - Every response to a workflow caller **must** end with the exact parseable line: `Code Review: {Approved|Rejected|Blocked}` and include the overall score in **Executive Summary**.
 

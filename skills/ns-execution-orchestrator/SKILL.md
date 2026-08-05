@@ -77,11 +77,13 @@ For each slice whose roadmap `status` is `planned` or `in_progress`:
 
 1. **Select** the next `{subversion_san}` per roadmap DAG order.
 2. **Mark** the roadmap row → `in_progress`.
-3. **Dispatch** one subagent (**blocking / synchronous**, not backgrounded)
-   whose prompt contains **only**:
+3. **Dispatch** one subagent (**blocking / synchronous**, not backgrounded):
+   prefer harness **`coder-agent`** when available (see
+   `../ns-harness/references/subagent-dispatch.md`); else a generic subagent
+   whose prompt follows `ns-code-coder`. Prompt contains **only**:
    - `{product_root}`, `{version_san}`, `{subversion_san}`
    - Instruction to follow the `ns-code-coder` skill as the slice worker, invoked by
-     the execution orchestrator
+     the execution orchestrator (bridge already points at the skill when using `coder-agent`)
    - Paths limited to
      `{product_root}/docs/versions/{version_san}/subversions/{subversion_san}/`
      for slice tasks; also load `{product_root}/docs/context/` per
@@ -107,8 +109,9 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 
 1. Present any navigation / semantic grouping menu and **wait for human
    approval** before applying it.
-2. Run the post-implementation review: invoke the `ns-code-reviewer` skill
-   (read-only) over the version diff; it writes `code-review-report.md`.
+2. Run the post-implementation review: prefer **`reviewer-agent`** when available
+   (else `ns-code-reviewer`, read-only) over the version diff; it writes
+   `code-review-report.md`. See `../ns-harness/references/subagent-dispatch.md`.
 3. Consolidate living specs when the version status allows — `ns-sdd-living-spec-consolidator`.
 4. Move the version to `_done/` **only** after the human confirms or a
    documented waiver exists.
@@ -158,8 +161,8 @@ Orchestrate the partitioned implementation of apps/my-product 3.8.0.
 | ----------------------------------------- | ---------------------------- |
 | Partition version → roadmap + subversions | `ns-sdd-version-partitioner`        |
 | Handoff generation and updates            | `ns-sdd-execution-handoff-generator` |
-| Slice worker (per-slice implementation)   | `ns-code-coder`                 |
-| End-of-version review gate                | `ns-code-reviewer`              |
+| Slice worker (per-slice implementation)   | `coder-agent` → `ns-code-coder` |
+| End-of-version review gate                | `reviewer-agent` → `ns-code-reviewer` |
 | Living specs consolidation                | `ns-sdd-living-spec-consolidator`   |
 | Work branch / GitLab sync                 | `mcp-gitlab-usage`           |
 

@@ -10,7 +10,7 @@
     {
       "prompt": "docs/versions/1.0.0/ already has tasks and execution-handoff.md. Implement the next pending task.",
       "id": 2,
-      "expected_output": "Invokes ns-spec-driven resume path: reads execution-handoff.md, skips planning phases, delegates execute via ns-sdd-execution-handoff-generator run-implementation and ns-code-coder or ns-code-autonomous. No new requirements.md.",
+      "expected_output": "Invokes ns-spec-driven resume path: reads execution-handoff.md, skips planning phases, delegates execute via ns-sdd-execution-handoff-generator run-implementation and coder-agent (or ns-code-coder / ns-code-autonomous). No new requirements.md.",
       "files": []
     },
     {

@@ -33,9 +33,10 @@ Entry priority **2** (feature / version / SDD / multi-day). Harness table: `../n
 
 | Handoff | Target |
 | ------- | ------ |
-| Small / quick inside SDD | `ns-code-coder` |
-| Version + handoff | `ns-sdd-execution-handoff-generator` → `ns-code-coder` or `ns-code-autonomous` |
-| Bare quick fix, no SDD context | Redirect to `ns-code-coder` (priority 5) |
+| Small / quick inside SDD | `coder-agent` → `ns-code-coder` (see `../ns-harness/references/subagent-dispatch.md`) |
+| Version + handoff | `ns-sdd-execution-handoff-generator` → `coder-agent` / `ns-code-coder` or `ns-code-autonomous` |
+| Task file generation | `task-writer-agent` → `ns-sdd-task-generator` when present |
+| Bare quick fix, no SDD context | Redirect to `ns-code-coder` (priority 5) — or `coder-agent` if spawning a worker |
 
 ## Harness discovery
 
@@ -126,19 +127,21 @@ Chat with the human in short, natural language. **Read `references/human-communi
 
 | Size | Pipeline |
 | ---- | -------- |
-| **Small** | `ns-code-coder` (quick mode — `references/quick-mode.md`) |
-| **Medium** | Clarify (if needed) → Specify → Tasks + handoff → Execute → Close |
+| **Small** | `coder-agent` → `ns-code-coder` (quick mode — `references/quick-mode.md`) |
+| **Medium** | Clarify (if needed) → Specify → Tasks (`task-writer-agent` when present) + handoff → Execute → Close |
 | **Large** | Full chain including Consistency and/or Partition when scope warrants |
 
 **Safety valve:** if inline steps exceed ~3 files or scope explodes mid-session → stop and formalize via Medium+ pipeline (requirements + tasks).
 
 ## Execute routing
 
+Worker dispatch: prefer harness project agents per `../ns-harness/references/subagent-dispatch.md`.
+
 | Context | Worker |
 | ------- | ------ |
-| Ad-hoc / quick / single task | `ns-code-coder` |
-| Version with `execution-handoff.md` | `ns-sdd-execution-handoff-generator` run-implementation + `ns-code-coder` or `ns-code-autonomous` |
-| Partitioned version (subversions) | `ns-execution-orchestrator` |
+| Ad-hoc / quick / single task | `coder-agent` → `ns-code-coder` |
+| Version with `execution-handoff.md` | `ns-sdd-execution-handoff-generator` run-implementation + `coder-agent` / `ns-code-coder` or `ns-code-autonomous` |
+| Partitioned version (subversions) | `ns-execution-orchestrator` (slice workers via `coder-agent`) |
 | GitLab issue URL + MCP available | `ns-execution-gitlab-issue` (soft — prefer when GitLab present) |
 | Autonomous multi-step local plan | `ns-code-autonomous` |
 

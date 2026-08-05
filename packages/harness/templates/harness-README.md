@@ -76,9 +76,9 @@ Thin bridges in `manifest.json` → `"subagents"`. Seeded when matching skills a
 
 | Agent file | Skill | Default model (cursor / claude) | `readonly` |
 |------------|-------|----------------------------------|------------|
-| `coder-agent.md` | `ns-code-coder` | `inherit` / `inherit` | `false` |
-| `reviewer-agent.md` | `ns-code-reviewer` | `inherit` / `inherit` | `true` |
-| `task-writer-agent.md` | `ns-sdd-task-generator` | `fast` / `haiku` | `false` |
+| `coder-agent.md` | `ns-code-coder` | `composer-2.5[fast=false]` / `sonnet` | `false` |
+| `reviewer-agent.md` | `ns-code-reviewer` | `grok-4.5[effort=medium,fast=false]` / `opus` | `true` |
+| `task-writer-agent.md` | `ns-sdd-task-generator` | `composer-2.5[fast=false]` / `haiku` | `false` |
 
 **Project owns `model`.** Edit `manifest.json`, then `harness sync`. `harness update` refreshes adapter bodies but **never** resets your model values.
 
@@ -88,7 +88,7 @@ Thin bridges in `manifest.json` → `"subagents"`. Seeded when matching skills a
     "name": "reviewer-agent",
     "skill": "ns-code-reviewer",
     "description": "(NS) Thin bridge…",
-    "model": { "cursor": "inherit", "claude": "inherit" },
+    "model": { "cursor": "grok-4.5[effort=medium,fast=false]", "claude": "opus" },
     "readonly": true
   }
 ]

@@ -69,7 +69,7 @@ function buildSubagentsSection(projectRoot, installed) {
     return '_No harness subagent bridges (install coder/reviewer/task skills via a preset)._';
   }
 
-  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`). Each bridge loads this \`AGENTS.md\` then the mapped skill — skills remain the workflow source of truth. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
+  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`, \`/reviewer-agent\`, \`/task-writer-agent\`). Orchestrators (\`ns-spec-driven\`, handoff, autonomous) **prefer these bridges** when spawning workers — see installed \`ns-harness\` → \`references/subagent-dispatch.md\`. Each bridge loads this \`AGENTS.md\` then the mapped skill. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
 
 | Agent | Skill | Model (cursor / claude) |
 | ----- | ----- | ----------------------- |
