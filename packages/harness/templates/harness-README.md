@@ -36,13 +36,15 @@ npx @nextstage-brasil/harness <command>
 | `manifest.json` | Rule registry + project `agents` + `subagents` (models) | When adding rules/agents or changing subagent models |
 | `.agents/skills/<name>/` | Installed skills (Skills CLI) | Via `harness init` / `update` / `skills add` |
 | `AGENTS.md` | Project entry for agents | CLI baseline; refine with `/ns-harness-agents-md` |
-| `.cursor/rules/*.mdc` | Cursor rule adapters | **No** — generated |
-| `.claude/rules/*.md` | Claude rule adapters | **No** — generated |
-| `.cursor/agents/*.md` | Cursor subagent bridges | **No** — generated; set `model` in manifest |
-| `.claude/agents/*.md` | Claude subagent bridges | **No** — generated; set `model` in manifest |
-| `.claude/skills/` | Claude skill symlinks | **No** — generated when `claude-code` is active |
+| `.cursor/rules/*.mdc` | Cursor rule adapters | **No** — generated; gitignored |
+| `.claude/rules/*.md` | Claude rule adapters | **No** — generated; gitignored |
+| `.cursor/agents/*.md` | Cursor subagent bridges | **No** — generated; set `model` in manifest; gitignored |
+| `.claude/agents/*.md` | Claude subagent bridges | **No** — generated; set `model` in manifest; gitignored |
+| `.claude/skills/` | Claude skill symlinks | **No** — generated when `claude-code` is active; gitignored |
 
-**Mental model:** truth = `.nextstage-harness/` + `.agents/skills/` · mirrors = `.cursor/` + `.claude/`.
+**Mental model:** truth = `.nextstage-harness/` + `.agents/skills/` · mirrors = `.cursor/` + `.claude/` (regenerated via `harness sync`; gitignored).
+
+**After clone:** `npx @nextstage-brasil/harness sync`
 
 ---
 
@@ -193,11 +195,13 @@ npx @nextstage-brasil/harness sync
 npx @nextstage-brasil/harness sync --agent cursor   # one-off override
 ```
 
-**CI — fail if someone edited generated files:**
+**CI — smoke test after checkout:**
 
 ```bash
-npx @nextstage-brasil/harness sync --check
+npx @nextstage-brasil/harness sync
 ```
+
+Locally, `harness sync --check` verifies adapters on disk match canonical (use after editing `rules/` or `manifest.json`).
 
 ---
 
@@ -255,10 +259,10 @@ Brownfield refinement: **`/ns-harness-agents-md`** in your agent.
 
 | Problem | Fix |
 |---------|-----|
-| `.cursor/rules/` out of date | Edit `rules/*.md` here → `harness sync` |
+| Adapters missing after clone | `npx @nextstage-brasil/harness sync` |
+| `sync --check` fails locally | Edit `rules/*.md` here → `harness sync` → commit `.nextstage-harness/` only |
 | `.claude/` appeared but I only use Cursor | `harness agents set --agent cursor` |
 | New skill version available | `harness update` |
-| `sync --check` fails in CI | Run `harness sync` locally and commit adapters |
 | Legacy `.cursor/rules/*.mdc` only | `npx @nextstage-brasil/harness migrate-rules --force` |
 
 ---

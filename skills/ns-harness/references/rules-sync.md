@@ -122,7 +122,21 @@ Generation marker (first line of body):
 
 ## Git policy
 
-Commit **both** canonical (`.nextstage-harness/rules/`, `manifest.json` including `subagents`) and generated adapters (`.cursor/rules/`, `.claude/rules/`, `.cursor/agents/`, `.claude/agents/`). CI should run `harness sync --check` to catch manual adapter edits.
+Commit canonical sources only:
+
+- `.nextstage-harness/` (`rules/`, `manifest.json` including `subagents`)
+- `.agents/skills/` and `skills-lock.json`
+- `AGENTS.md`, `CLAUDE.md` (when present)
+
+Generated adapters under `.cursor/rules/`, `.cursor/agents/`, and `.claude/` are **gitignored** — `harness sync` adds them to `.gitignore` on init/update. Regenerate after clone:
+
+```bash
+npx @nextstage-brasil/harness sync
+```
+
+Do not hand-edit adapter files. Custom rules belong in `.nextstage-harness/rules/` (or `harness add-rule`).
+
+**CI:** run `harness sync` as a smoke test that canonical rules and manifest are valid. Use `harness sync --check` locally after editing canonical to verify adapters on disk match before committing harness changes.
 
 ## AGENTS.md sync marker
 

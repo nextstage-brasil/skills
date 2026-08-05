@@ -32,11 +32,11 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 | `npx @nextstage-brasil/harness` | Interactive init (default) |
 | `harness init [options]` | Install skills + scaffold + sync |
 | `harness prepare` | Print full brownfield prepare instructions (`/ns-harness-prepare`) |
-| `harness sync` | Regenerate adapters + ensure `.dockerignore` harness ignore block (create if missing) |
+| `harness sync` | Regenerate adapters + ensure `.dockerignore` / `.gitignore` harness blocks (create if missing) |
 | `harness add-rule <name>` | Create canonical rule + manifest entry + sync |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |
-| `harness sync --check` | CI mode — exit 1 on adapter drift |
+| `harness sync --check` | Local mode — exit 1 if adapters on disk drift from canonical |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` |
 | `harness migrate-rules --force` | Overwrite existing canonical |
 | `harness uninstall` | Remove harness install (skills, adapters, scaffold; keeps `docs/`) |
@@ -89,8 +89,8 @@ Skills install under `.agents/skills/` with agent symlinks. No `.nextstage-harne
 
 ```bash
 npx @nextstage-brasil/harness sync
-git add .nextstage-harness/ .cursor/rules/ .claude/rules/
-git commit -m "chore: sync agent rule adapters"
+git add .nextstage-harness/
+git commit -m "chore: update project rules"
 ```
 
 ## 4. The three paths explained
@@ -124,21 +124,26 @@ Both read the same canonical rule bodies from `.nextstage-harness/rules/`. Skill
 Commit:
 
 - `.nextstage-harness/` (canonical rules + manifest)
-- `.cursor/rules/`, `.claude/rules/` (generated rule adapters)
 - `.agents/skills/` and `skills-lock.json` (Skills CLI)
 - `AGENTS.md`, `CLAUDE.md` (if present)
 
-Do not commit adapter-only edits without updating canonical and re-running `sync`.
+Do **not** commit generated adapters — `harness sync` manages a block in `.gitignore`:
+
+- `/.cursor/rules/`, `/.cursor/agents/`, `/.claude/`
+
+After clone, run `npx @nextstage-brasil/harness sync` to regenerate adapters locally.
+
+Custom Cursor rules or hooks outside harness belong under other `.cursor/` paths (not gitignored by default).
 
 ## 7. CI
 
 Add to your pipeline when harness is installed:
 
 ```bash
-npx @nextstage-brasil/harness sync --check
+npx @nextstage-brasil/harness sync
 ```
 
-Fails if someone edited `.cursor/rules/` or `.claude/rules/` without syncing from canonical.
+Smoke test: validates manifest and canonical rules; writes adapters (gitignored). For local drift checks before committing harness changes, use `harness sync --check`.
 
 ## 8. Migration from legacy `.cursor/rules/`
 
@@ -146,8 +151,8 @@ For projects with existing `.cursor/rules/*.mdc` and no `.nextstage-harness/`:
 
 ```bash
 npx @nextstage-brasil/harness migrate-rules
-npx @nextstage-brasil/harness sync --check
-git add .nextstage-harness/ .cursor/rules/ .claude/rules/
+npx @nextstage-brasil/harness sync
+git add .nextstage-harness/ .gitignore
 ```
 
 `migrate-rules` extracts bodies, infers manifest entries from Cursor frontmatter, and runs sync. Existing canonical files are skipped unless `--force`.
@@ -156,7 +161,8 @@ git add .nextstage-harness/ .cursor/rules/ .claude/rules/
 
 | Problem | Fix |
 |---------|-----|
-| `sync --check` fails in CI | Edit canonical under `.nextstage-harness/rules/`, run `sync`, commit adapters |
+| Adapters missing after clone | Run `npx @nextstage-brasil/harness sync` |
+| `sync --check` fails locally | Edit canonical under `.nextstage-harness/rules/`, run `sync`, commit harness + `.gitignore` only |
 | Adapters missing after init | Run `harness sync` manually |
 | Windows symlink issues | Use `harness init --copy` or Skills CLI `--copy` |
 | Monorepo product folder | Set `--dir` to product root; `{product_root}` = that folder |

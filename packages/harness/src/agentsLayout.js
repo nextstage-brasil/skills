@@ -61,4 +61,7 @@ export const GITIGNORE_BLOCK_HEADER = '# Nextstage-harness ignore files';
 export const GITIGNORE_ENTRIES = [
   '/AGENTS.local.md',
   '/.worktrees/',
+  '/.cursor/rules/',
+  '/.cursor/agents/',
+  '/.claude/',
 ];

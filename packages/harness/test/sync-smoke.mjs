@@ -289,6 +289,9 @@ try {
   assert(gitignoreContent.startsWith('vendor/\n'), 'syncGitignore should preserve existing entries');
   assert(gitignoreContent.includes('/AGENTS.local.md'), 'gitignore should include AGENTS.local.md');
   assert(gitignoreContent.includes('/.worktrees/'), 'gitignore should include .worktrees');
+  assert(gitignoreContent.includes('/.cursor/rules/'), 'gitignore should include .cursor/rules');
+  assert(gitignoreContent.includes('/.cursor/agents/'), 'gitignore should include .cursor/agents');
+  assert(gitignoreContent.includes('/.claude/'), 'gitignore should include .claude');
   assert(
     gitignoreContent.includes(buildGitignoreBlock().trim()),
     'gitignore should contain full managed block',

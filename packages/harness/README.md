@@ -181,7 +181,7 @@ npx @nextstage-brasil/harness init \
 | Install / re-run wizard | `npx @nextstage-brasil/harness` |
 | See catalog & presets | `npx @nextstage-brasil/harness list` |
 | After editing rules in `.nextstage-harness/` | `npx @nextstage-brasil/harness sync` |
-| CI: fail if adapters drifted | `npx @nextstage-brasil/harness sync --check` |
+| CI: validate harness + regenerate adapters | `npx @nextstage-brasil/harness sync` |
 | Update installed skills | `npx @nextstage-brasil/harness update` |
 | Regenerate `AGENTS.md` | `npx @nextstage-brasil/harness agents-md --force` |
 | Add a project rule | `npx @nextstage-brasil/harness add-rule api-conventions --description "REST conventions"` |
@@ -243,7 +243,7 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 | `harness list` | Presets and skill catalog |
 | `harness prepare` | Print brownfield prepare instructions (`/ns-harness-prepare`) |
 | `harness sync` | Regenerate rule + skill adapters |
-| `harness sync --check` | CI — exit 1 if adapters drift |
+| `harness sync --check` | Local — exit 1 if adapters on disk drift from canonical |
 | `harness update` | Update skills already in `.agents/skills/` |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` (use `--force` to overwrite) |
 | `harness add-rule <name>` | New rule under `.nextstage-harness/rules/` + sync |

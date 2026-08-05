@@ -74,7 +74,7 @@ npx @nextstage-brasil/harness sync
 
 This regenerates Claude skill symlinks (`.claude/skills/`) so Claude Code discovers the new skill. Cursor reads `.agents/skills/` directly.
 
-Use `npx @nextstage-brasil/harness sync --check` in CI when verifying adapters are up to date.
+Use `npx @nextstage-brasil/harness sync --check` locally after editing canonical rules to verify adapters on disk match before committing `.nextstage-harness/` changes.
 
 Report sync results to the user. Do not claim the skill is discoverable until sync completes successfully.
 
