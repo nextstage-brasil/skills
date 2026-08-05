@@ -33,7 +33,8 @@ Canonical paths for spec-driven planning and delivery artifacts.
 | Tasks | `{product_root}/docs/versions/{version_san}/tasks/task-NNN-*.md` |
 | Consistency report | `{product_root}/docs/versions/{version_san}/consistency-report.md` |
 | Code review report | `{product_root}/docs/versions/{version_san}/code-review-report.md` |
-| Commercial budget | `{product_root}/docs/versions/{version_san}/commercial-budget.md` (header: Sequência + Gerado em) |
+| Commercial budget (internal) | `{product_root}/docs/versions/{version_san}/commercial-budget-internal.md` (header: Sequência + Gerado em) |
+| Commercial budget (client) | `{product_root}/docs/versions/{version_san}/commercial-budget-costumer.md` (optional; header: `{version_san}-costumer`) |
 | Living spec index | `{specs_root}/INDEX.md` |
 | Domain spec | `{specs_root}/{domain}.md` |
 

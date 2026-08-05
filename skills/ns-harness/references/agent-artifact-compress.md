@@ -13,7 +13,7 @@ Apply **caveman ultra** compression to every **agent-facing** prepare/worker out
 | `docs/context/system-reverse-spec.agent.md` | **Yes** |
 | `AGENTS.md` | **Yes** |
 | `docs/context/system-reverse-spec.md` | **No** — human body |
-| `CLAUDE.md` | **No** — pointer only (`@AGENTS.md`) |
+| `CLAUDE.md` | **No** — AGENTS.md + `.claude/agents` pointers only |
 
 ## Mandate
 

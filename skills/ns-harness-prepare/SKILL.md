@@ -90,7 +90,7 @@ Agent-facing outputs are **not for humans**. Before every `Write` of an agent ar
 | `system-reverse-spec.agent.md` | Yes |
 | `AGENTS.md` | Yes |
 | `system-reverse-spec.md` | No (human body) |
-| `CLAUDE.md` | No (pointer only) |
+| `CLAUDE.md` | No (AGENTS.md + `.claude/agents` pointers) |
 
 Workers own the pass; prepare **rejects** advancing if a yes-row file looks essay-bloated vs the soft targets in that reference.
 

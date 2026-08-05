@@ -30,7 +30,7 @@ Use PT-BR markers in the deliverable (default language):
 
 Surface open lacunas in **Premissas / ressalvas**. A budget with open lacunas is still deliverable, but call them out in the chat summary.
 
-Bump header **Sequência** and **Gerado em** on every regenerate; keep the same `commercial-budget.md` path (`references/document-versioning.md`). Do not create timestamped filenames.
+Bump header **Sequência** and **Gerado em** on every regenerate; keep the same `commercial-budget-internal.md` path (`references/document-versioning.md`). Do not create timestamped filenames.
 
 ## Estimates honesty
 

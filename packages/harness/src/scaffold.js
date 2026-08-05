@@ -2,6 +2,7 @@ import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  CLAUDE_MD_CONTENT,
   DOCS_LAYOUT_DIRS,
   HARNESS_ROOT,
   HARNESS_RULES_DIR,
@@ -84,7 +85,7 @@ function scaffoldClaudeStub(projectRoot, { created, skipped }) {
     skipped.push('CLAUDE.md');
     return;
   }
-  writeUtf8(claudePath, '@AGENTS.md\n');
+  writeUtf8(claudePath, CLAUDE_MD_CONTENT);
   created.push('CLAUDE.md');
 }
 

@@ -17,6 +17,17 @@ export const DOCS_LAYOUT_DIRS = [
 
 export const AGENTS_SKILLS_DIR = join(AGENTS_HOME, 'skills');
 
+/**
+ * Claude Code project entry (`CLAUDE.md`). Points at AGENTS.md and project subagents.
+ * Written by scaffold and `harness agents-md`.
+ */
+export const CLAUDE_MD_CONTENT = `\
+- Read: @AGENTS.md
+- Project-configured subagents: @.claude/agents
+
+Attention: they may or may not define their own model. When invoking, use them.
+`;
+
 export { DEFAULT_AGENTS };
 
 /**

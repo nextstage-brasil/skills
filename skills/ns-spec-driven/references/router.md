@@ -37,30 +37,30 @@ Map natural-language triggers to **phase** and **worker skill path** (under `.ag
 
 | Trigger phrases | Worker | Order |
 | --------------- | ------ | ----- |
-| "generate tasks", "task breakdown", Medium+ execute prep | `task-writer-agent` → `ns-sdd-task-generator` | After requirements (+ consistency if Large) |
+| "generate tasks", "task breakdown", Medium+ execute prep | `task-writer-agent` → `ns-sdd-task-generator` (**MUST** bridge when available — `../../ns-harness/references/subagent-dispatch.md`) | After requirements (+ consistency if Large) |
 | after tasks exist | `ns-sdd-execution-handoff-generator` | Creates/updates `execution-handoff.md` |
 
 ## Execute
 
 | Trigger phrases | Worker |
 | --------------- | ------ |
-| "implement", "build it", "run tasks" | See parent SKILL.md execute routing + `../../ns-harness/references/subagent-dispatch.md` |
+| "implement", "build it", "run tasks" | See parent SKILL.md execute routing + `../../ns-harness/references/subagent-dispatch.md` (**MUST** `coder-agent` when available) |
 | GitLab issue URL | `ns-execution-gitlab-issue` (if installed + MCP) |
 | subversion / slice | `ns-execution-orchestrator` |
-| handoff present | `ns-sdd-execution-handoff-generator` + `coder-agent` / `ns-code-coder` / `ns-code-autonomous` |
+| handoff present | `ns-sdd-execution-handoff-generator` + `coder-agent` (**MUST** when available) / `ns-code-coder` / `ns-code-autonomous` |
 
 ## Close
 
 | Trigger phrases | Worker | Order |
 | --------------- | ------ | ----- |
-| "review", "close version", post-implementation | `ns-code-reviewer` | First |
+| "review", "close version", post-implementation | `reviewer-agent` → `ns-code-reviewer` (**MUST** bridge when available) | First |
 | "update living spec", "consolidate" | `ns-sdd-living-spec-consolidator` | After review passes |
 
 ## Quick (Small)
 
 | Trigger phrases | Worker |
 | --------------- | ------ |
-| "quick fix", "just change", "hotfix", ≤3 files | `ns-code-coder` |
+| "quick fix", "just change", "hotfix", ≤3 files | `coder-agent` → `ns-code-coder` (**MUST** bridge when available) |
 
 See `quick-mode.md` — skip PM chain.
 

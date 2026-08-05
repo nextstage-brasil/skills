@@ -84,7 +84,7 @@ Turn evidence into agent-actionable rules:
 | **Dev & test** | Docker services, **test container name**, copy-pasteable test commands (behavioral rules stay in `AGENTS.md`) |
 | **Discipline** | Language for code/docs vs user chat, minimal diff, completion style — only if present in repo rules or `AGENTS.md`   |
 
-For large subsystems, **do not inline** — add one line pointing to a dedicated layer rule and offer to generate that sibling in a follow-up.
+For large subsystems, **do not inline** — add one line pointing to a dedicated layer rule and offer to generate that sibling in a follow-up. Sibling creation: `npx @nextstage-brasil/harness add-rule <name> --description "…"` (default `alwaysApply: false`). Never hand-write `.cursor/rules/*.mdc` or omit `cursor.description` / apply mode in `manifest.json` — see `../ns-harness/references/rules-sync.md`.
 
 ### Step 4 — Draft the constitution
 

@@ -78,7 +78,7 @@ For each slice whose roadmap `status` is `planned` or `in_progress`:
 1. **Select** the next `{subversion_san}` per roadmap DAG order.
 2. **Mark** the roadmap row → `in_progress`.
 3. **Dispatch** one subagent (**blocking / synchronous**, not backgrounded):
-   prefer harness **`coder-agent`** when available (see
+   **MUST** use harness **`coder-agent`** when available (see
    `../ns-harness/references/subagent-dispatch.md`); else a generic subagent
    whose prompt follows `ns-code-coder`. Prompt contains **only**:
    - `{product_root}`, `{version_san}`, `{subversion_san}`
@@ -109,7 +109,7 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 
 1. Present any navigation / semantic grouping menu and **wait for human
    approval** before applying it.
-2. Run the post-implementation review: prefer **`reviewer-agent`** when available
+2. Run the post-implementation review: **MUST** dispatch **`reviewer-agent`** when available
    (else `ns-code-reviewer`, read-only) over the version diff; it writes
    `code-review-report.md`. See `../ns-harness/references/subagent-dispatch.md`.
 3. Consolidate living specs when the version status allows — `ns-sdd-living-spec-consolidator`.

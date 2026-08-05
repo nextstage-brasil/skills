@@ -146,7 +146,10 @@ try {
   const agentsMd = generateAgentsMd(tempDir, { force: true });
   assert(!agentsMd.skipped, 'agents-md should write files');
   assert(exists(join(tempDir, 'AGENTS.md')), 'AGENTS.md missing');
-  assert(readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8').trim() === '@AGENTS.md', 'CLAUDE.md must point to AGENTS.md');
+  const claudeMd = readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8');
+  assert(claudeMd.includes('@AGENTS.md'), 'CLAUDE.md must point to AGENTS.md');
+  assert(claudeMd.includes('@.claude/agents'), 'CLAUDE.md must point to project subagents');
+  assert(claudeMd.includes('own model'), 'CLAUDE.md must note subagent model overrides');
   assert(readFileSync(join(tempDir, 'AGENTS.md'), 'utf8').includes('ns-harness'), 'AGENTS.md should list installed skill');
 
   // 7. sync absorbs orphan .cursor/rules/*.mdc into canonical + manifest
@@ -231,10 +234,10 @@ Default description expected.
     const absorbResult = syncRules(absorbDir, { agents: ['cursor', 'claude-code'] });
     assert(
       absorbResult.absorbed.includes('always-on-extra')
-        && absorbResult.absorbed.includes('scoped-frontend')
-        && absorbResult.absorbed.includes('backend-rules')
-        && absorbResult.absorbed.includes('conflict-rule')
-        && absorbResult.absorbed.includes('no-desc-rule'),
+      && absorbResult.absorbed.includes('scoped-frontend')
+      && absorbResult.absorbed.includes('backend-rules')
+      && absorbResult.absorbed.includes('conflict-rule')
+      && absorbResult.absorbed.includes('no-desc-rule'),
       `sync should absorb orphans: ${absorbResult.absorbed.join(',')}`,
     );
 
@@ -758,8 +761,8 @@ Should not land in canonical.
     assert(agentsContent.includes('Project subagents'), 'AGENTS.md should have subagents section');
     assert(
       agentsContent.includes('**MUST** use these bridges when available') &&
-        agentsContent.includes('Inline mapped skill while bridge present = forbidden') &&
-        agentsContent.includes('subagent-dispatch.md'),
+      agentsContent.includes('Inline mapped skill while bridge present = forbidden') &&
+      agentsContent.includes('subagent-dispatch.md'),
       'AGENTS.md subagents section should MUST-dispatch bridges and forbid inline while present',
     );
 
@@ -860,7 +863,7 @@ Should not land in canonical.
   assert(emptyUninstall.status === 0, `second uninstall should succeed: ${emptyUninstall.stderr}${emptyUninstall.stdout}`);
   assert(
     emptyUninstall.stdout.includes('Nothing to uninstall')
-      || emptyUninstall.stdout.includes('no harness install'),
+    || emptyUninstall.stdout.includes('no harness install'),
     'second uninstall should report nothing left',
   );
 

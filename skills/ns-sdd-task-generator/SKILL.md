@@ -13,6 +13,8 @@ depends:
 
 Convert one atomic slice of a Feature into a detailed `task-NNN-slug.md` for engineers or coding agents.
 
+Orchestrators (**MUST** spawn `task-writer-agent` when that bridge exists — `../ns-harness/references/subagent-dispatch.md`). This file = worker body, not invite to inline from `ns-spec-driven`.
+
 ## Harness discovery
 
 See `../ns-harness/references/harness-discovery.md`. Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `{harness_root}` is absent. Read `requirements.md` strictly — do not invent tables or endpoints.

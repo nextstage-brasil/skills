@@ -1,6 +1,6 @@
 ---
 name: ns-harness-agents-md
-description: (NS) Generate or refresh project AGENTS.md plus minimal CLAUDE.md pointer after harness install. Use for "write AGENTS.md", bootstrap agent entry point, replace harness stub, or configure Cursor/Claude project rules. Do NOT copy the harness template verbatim. Do NOT use for architecture-rules, reverse business specs, or brownfield maps.
+description: (NS) Generate or refresh project AGENTS.md plus CLAUDE.md (AGENTS.md + .claude/agents pointers) after harness install. Use for "write AGENTS.md", bootstrap agent entry point, replace harness stub, or configure Cursor/Claude project rules. Do NOT copy the harness template verbatim. Do NOT use for architecture-rules, reverse business specs, or brownfield maps.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -13,7 +13,7 @@ depends:
 
 Produce the **project entry document** for coding agents: `{product_root}/AGENTS.md` tailored to what is actually installed and detected in the repo — not the generic harness scaffold template.
 
-Then write `{product_root}/CLAUDE.md` containing **only** a pointer to `AGENTS.md` (see Step 5).
+Then write `{product_root}/CLAUDE.md` pointing at `AGENTS.md` and project subagents (see Step 5).
 
 ## Design principles
 
@@ -107,7 +107,10 @@ Writing rules:
 Write `{product_root}/CLAUDE.md` with **exactly**:
 
 ```markdown
-@AGENTS.md
+- Read: @AGENTS.md
+- Project-configured subagents: @.claude/agents
+
+Attention: they may or may not define their own model. When invoking, use them.
 ```
 
 No other content. If the file had extra content, replace entirely unless the user asked to preserve something specific.
@@ -122,7 +125,7 @@ When updating existing `AGENTS.md`:
 
 1. Preserve **Project-specific notes**, language policy, and GitLab/MCP names if still accurate.
 2. Replace installed-skills, layout, and workflow sections from current evidence.
-3. Re-write `CLAUDE.md` to `@AGENTS.md` only if it drifted.
+3. Re-write `CLAUDE.md` to the Step 5 template if it drifted.
 
 ## Quality bar (self-check before save)
 
@@ -141,7 +144,7 @@ When updating existing `AGENTS.md`:
 - [ ] `{product_root}` is relative (`.` or a monorepo-relative path — never an absolute machine path)
 - [ ] Docker MUST NOT present; PHPUnit only if PHP evidenced
 - [ ] SDD chain uses only installed skills
-- [ ] `CLAUDE.md` is exactly `@AGENTS.md` (single pointer) — no compress
+- [ ] `CLAUDE.md` matches Step 5 (AGENTS.md + `.claude/agents` pointers) — no compress
 - [ ] No stack/module deep-dive (belongs in `architecture-rules.md`)
 - [ ] Line count ≤ 130 (ideally 95–110)
 

@@ -9,7 +9,7 @@ Use manifests and folder names to classify the stack. **Never assume** a profile
 | `artisan`, `composer.json` with `laravel/framework` | Laravel |
 | `app/Modules/`, `app/Generated/`, `.build.config.json` | Grogoo-style modular Laravel |
 | `library/SistemaLibrary`, `src/controller/*Controller.class.php` | Legacy PHP + builder |
-| `vendor/nextstage-brasil/ns-util` or `NsUtil\` imports | NsUtil consumer — link `nsutil-architecture-rules.mdc`, do not inline |
+| `vendor/nextstage-brasil/ns-util` or `NsUtil\` imports | NsUtil consumer — link `nsutil-architecture-rules.md`, do not inline |
 | `public/api/swoole.php` | Swoole runtime — note FPM vs Swoole split |
 
 ## JavaScript / TypeScript
@@ -44,13 +44,28 @@ Document inconsistency if `AGENTS.md` points to a different root than manifests.
 
 ## When to suggest sibling rules
 
-| Detection | Suggested sibling `.mdc` |
-| --------- | ------------------------ |
-| Grogoo (`Generated/`, `.build.config.json`) | `grogoo-instructions.mdc` |
-| NsUtil dependency | `nsutil-architecture-rules.mdc` |
-| Laravel backend conventions | `backend-rules.mdc` |
-| React/Tailwind frontend | `frontend-rules.mdc` |
-| Pest/PHPUnit patterns | `backend-tests-rules.mdc` or `test-pest-rules.mdc` |
-| Cypress | `e2e-tests-rules.mdc` |
+Canonical: `{harness_root}/rules/<name>.md`. Cursor/Claude adapters are **generated** — never author `.cursor/rules/*.mdc`.
+
+| Detection | Suggested sibling |
+| --------- | ----------------- |
+| Grogoo (`Generated/`, `.build.config.json`) | `grogoo-instructions` |
+| NsUtil dependency | `nsutil-architecture-rules` |
+| Laravel backend conventions | `backend-rules` |
+| React/Tailwind frontend | `frontend-rules` |
+| Pest/PHPUnit patterns | `backend-tests-rules` or `test-pest-rules` |
+| Cypress | `e2e-tests-rules` |
+
+Create siblings **only** via `add-rule` (sets `cursor.description` + `alwaysApply: false` by default):
+
+```bash
+npx @nextstage-brasil/harness add-rule nsutil-architecture-rules \
+  --description "NsUtil consumer constraints — when editing code that depends on nextstage-brasil/ns-util"
+```
+
+Use `--always-apply` only when the sibling must load every session (rare; constitution stays `architecture-rules` with `alwaysApply: true`).
+
+Then fill `{harness_root}/rules/<name>.md` body (no YAML frontmatter). Sync already ran from `add-rule`.
+
+**Broken:** write `.md` / `.mdc` only, or put `alwaysApply` in the markdown header — sync strips canonical frontmatter; Cursor adapter ends up with no "when to apply" and no always-apply.
 
 Offer to generate siblings only when user asks — this skill focuses on the root constitution.

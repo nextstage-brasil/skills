@@ -72,6 +72,8 @@ flowchart TD
 ## Agrupamento de objetivos (Features)
 
 <!-- ≤10 Features. Client-first product language. No Precedência. No RF label. No task list. -->
+<!-- Internal doc: may include `engenharia` and `qualidade` (0 FP) Features for delivery traceability. -->
+<!-- Client export: use assets/commercial-budget-costumer.template.md — `negócio` only. See references/engineering-split.md. -->
 
 ### Feature 001 — {TÍTULO}
 

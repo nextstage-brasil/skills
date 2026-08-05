@@ -1,3 +1,5 @@
+<!-- harness-rule: body only — edit cursor.alwaysApply and cursor.description in .nextstage-harness/manifest.json; run harness sync after. Do not put YAML apply metadata in this file. -->
+
 # Architecture Rules — {project_name}
 
 Technical constitution for AI agents. Business behavior lives in `{specs_or_docs_path}`.

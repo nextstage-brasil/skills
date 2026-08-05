@@ -26,7 +26,7 @@ Central **execution worker** for ad-hoc diffs (and as `C2` subagent under `ns-co
 
 This skill is a **fixed workflow**, not a loose checklist. Steps run in order; handoffs use **named skills** or harness project bridges (`coder-agent` / `reviewer-agent` per `../ns-harness/references/subagent-dispatch.md`). Do not substitute platform Task personas or improvised review.
 
-Canonical review gate: `../ns-harness/references/review-gate-workflow.md` — follow exactly for steps 7–9. Review **only** via `reviewer-agent` → `ns-code-reviewer` (or the skill directly if the bridge is missing); max **3** rounds; after any Critical fix, **re-review** is mandatory; never report success without a passing verdict or an explicit **blocked** state. After **Approved**, run **Living specs** (step 8) when conditions match, then **Final report** (step 9).
+Canonical review gate: `../ns-harness/references/review-gate-workflow.md` — follow exactly for steps 7–9. Review **only** via `reviewer-agent` → `ns-code-reviewer` (**MUST** bridge when available; else skill directly if bridge missing); max **3** rounds; after any Critical fix, **re-review** is mandatory; never report success without a passing verdict or an explicit **blocked** state. After **Approved**, run **Living specs** (step 8) when conditions match, then **Final report** (step 9).
 
 ## Routing (read first)
 
@@ -100,7 +100,7 @@ Complete **Session boot (blocking)** in `../ns-harness/references/harness-discov
 4. Identify minimal diff
 5. Apply (or present plan if large-change gate)
 6. Run tests if in scope (see **Pre-review** below)
-7. **Review loop** — invoke `reviewer-agent` when available (else `ns-code-reviewer`); iterate per `../ns-harness/references/review-gate-workflow.md`
+7. **Review loop** — **MUST** invoke `reviewer-agent` when available (else `ns-code-reviewer`); iterate per `../ns-harness/references/review-gate-workflow.md`
 8. **Living specs (conditional)** — see **Living specs** below
 9. **Final report** — mandatory fields per **Final report** below; never skip verdict or round count
 
@@ -113,10 +113,10 @@ Complete **Session boot (blocking)** in `../ns-harness/references/harness-discov
 
 After pre-review (step 6), run the gate in `../ns-harness/references/review-gate-workflow.md` before reporting done.
 
-- Invoke **`reviewer-agent`** when available (else **`ns-code-reviewer`**) on the working-tree diff (`git diff`) — bridge/skill loads `AGENTS.md` then reviewer workflow; no `ISSUE_URL`, no version-closure path. Just the ad-hoc diff.
+- **MUST** invoke **`reviewer-agent`** when available (else **`ns-code-reviewer`**) on the working-tree diff (`git diff`) — bridge/skill loads `AGENTS.md` then reviewer workflow; no `ISSUE_URL`, no version-closure path. Just the ad-hoc diff.
 - **Max 3 rounds.** Score gate from `ns-code-reviewer`: pass ≥**9**/10, ideal **10**/10.
   - **Pass:** zero Critical Issues **and** overall score ≥ **9**/10 → proceed to step 8.
-  - **Fail** (Criticals **or** score ≤ **8**) with rounds left → apply the minimal diff that clears Criticals and lifts quality to ≥9 (`reviewer-agent` / `ns-code-reviewer` is read-only, so this skill applies the fixes), re-run tests if in scope, then **mandatory re-review** via `reviewer-agent` when available (else `ns-code-reviewer`).
+  - **Fail** (Criticals **or** score ≤ **8**) with rounds left → apply the minimal diff that clears Criticals and lifts quality to ≥9 (`reviewer-agent` / `ns-code-reviewer` is read-only, so this skill applies the fixes), re-run tests if in scope, then **mandatory re-review** via `reviewer-agent` (**MUST** when available; else `ns-code-reviewer`).
   - **Rounds exhausted** still failing the gate → **stop and report as blocked**. List unresolved Criticals and/or the last score. Do not report success. Skip step 8 (living specs).
 - Keep fixes within the original task scope. If a Critical (or score-blocking Warning) requires changes outside scope (public contract, cross-product, multi-day work), stop and escalate per **Stop conditions** instead of expanding the diff.
 - Suggestions (P2) alone do not block when score is already ≥9: carry them into the final report as follow-ups.

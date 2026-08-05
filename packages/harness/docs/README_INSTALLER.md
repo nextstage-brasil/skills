@@ -7,7 +7,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 ```
 {product_root}/
   AGENTS.md                         # entry pointer (human-edited)
-  CLAUDE.md                         # stub @AGENTS.md (if missing)
+  CLAUDE.md                         # stub: AGENTS.md + .claude/agents pointers (if missing)
   .nextstage-harness/               # CANONICAL — edit rules here
     README.md                       # Human guide (add/edit rules)
     manifest.json
@@ -208,7 +208,7 @@ npx @nextstage-brasil/harness agents-md
 npx @nextstage-brasil/harness agents-md --force   # overwrite hand-edited file
 ```
 
-**Output:** `AGENTS.md`, `CLAUDE.md` (`@AGENTS.md` only)
+**Output:** `AGENTS.md`, `CLAUDE.md` (AGENTS.md + `.claude/agents` pointers)
 
 Step 5 of `/ns-harness-prepare` refines this with project context.
 

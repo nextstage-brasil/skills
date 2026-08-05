@@ -58,7 +58,7 @@ Identical logic to Engine mode:
 
 Follow `../../ns-harness/references/review-gate-workflow.md` exactly.
 
-- Invoke **`reviewer-agent`** when available (else **`ns-code-reviewer`**) in **version-closure mode** only — bridge/skill loads `AGENTS.md` then reviewer workflow — point at `{product_root}/docs/versions/{version_san}/` when it exists, or at the worktree diff directly for a single-unit run.
+- **MUST** invoke **`reviewer-agent`** when available (else **`ns-code-reviewer`**) in **version-closure mode** only — bridge/skill loads `AGENTS.md` then reviewer workflow — point at `{product_root}/docs/versions/{version_san}/` when it exists, or at the worktree diff directly for a single-unit run.
 - Enforce the reviewer **Score gate**: `Approved` only with zero Criticals **and** overall score ≥ **9**/10 (ideal **10**/10). Score ≤8 is `Rejected` even without Criticals.
 - Max 3 rounds:
   - `Approved` → proceed to closure.

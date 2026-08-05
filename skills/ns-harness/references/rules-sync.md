@@ -28,10 +28,10 @@ Canonical project rules: `{harness_root}/rules/*.md`. Adapters generated — pre
 
 **Agent skill discovery**
 
-| Agent | Reads skills from | Harness sync |
-|-------|-------------------|--------------|
-| Cursor (incl. subagents) | `.agents/skills/` at project root | None — canonical path is enough |
-| Claude Code | `.claude/skills/` (not `.agents/skills/` natively) | Symlink `.agents/skills/{name}/` → `.claude/skills/{name}/` |
+| Agent                    | Reads skills from                                  | Harness sync                                                |
+| ------------------------ | -------------------------------------------------- | ----------------------------------------------------------- |
+| Cursor (incl. subagents) | `.agents/skills/` at project root                  | None — canonical path is enough                             |
+| Claude Code              | `.claude/skills/` (not `.agents/skills/` natively) | Symlink `.agents/skills/{name}/` → `.claude/skills/{name}/` |
 
 Cursor subagents spawned during a session use the same project skill catalog as the parent agent — no separate `.cursor/skills/` copy required.
 
@@ -45,7 +45,10 @@ Cursor subagents spawned during a session use the same project skill catalog as 
     {
       "name": "architecture-rules",
       "canonical": "rules/architecture-rules.md",
-      "cursor": { "alwaysApply": true, "description": "Technical constitution for AI agents" },
+      "cursor": {
+        "alwaysApply": true,
+        "description": "Technical constitution for AI agents"
+      },
       "claude": { "paths": null }
     },
     {
@@ -67,27 +70,27 @@ Cursor subagents spawned during a session use the same project skill catalog as 
 }
 ```
 
-| Field | Meaning |
-|-------|---------|
-| `name` | Base filename for adapters (`{name}.mdc` / `{name}.md`) |
-| `canonical` | Path relative to `{harness_root}/` |
-| `cursor.alwaysApply` | Cursor always-on when `true`; default for `add-rule` is `false` (agent-requested via description). Mutually exclusive with `globs` when `true` |
-| `cursor.globs` | Cursor glob scope (path-scoped; do not combine with `alwaysApply: true`) |
-| `cursor.description` | **Required** — Cursor "when to apply" header; sync fails if missing |
-| `claude.paths` | Claude path scope array; `null` = global (omit `paths:` frontmatter) |
-| `subagents[].name` | Adapter basename → `.cursor/agents/{name}.md`, `.claude/agents/{name}.md` |
-| `subagents[].canonical` | Path relative to `{harness_root}/` (default `agents/{name}.md`) |
-| `subagents[].skill` | Installed skill the bridge loads |
-| `subagents[].model` | **Project-owned** — `harness update` never overwrites |
-| `subagents[].readonly` | No write tools when `true` (reviewer default); filled from catalog if missing |
+| Field                   | Meaning                                                                                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                  | Base filename for adapters (`{name}.mdc` / `{name}.md`)                                                                                        |
+| `canonical`             | Path relative to `{harness_root}/`                                                                                                             |
+| `cursor.alwaysApply`    | Cursor always-on when `true`; default for `add-rule` is `false` (agent-requested via description). Mutually exclusive with `globs` when `true` |
+| `cursor.globs`          | Cursor glob scope (path-scoped; do not combine with `alwaysApply: true`)                                                                       |
+| `cursor.description`    | **Required** — Cursor "when to apply" header; sync fails if missing                                                                            |
+| `claude.paths`          | Claude path scope array; `null` = global (omit `paths:` frontmatter)                                                                           |
+| `subagents[].name`      | Adapter basename → `.cursor/agents/{name}.md`, `.claude/agents/{name}.md`                                                                      |
+| `subagents[].canonical` | Path relative to `{harness_root}/` (default `agents/{name}.md`)                                                                                |
+| `subagents[].skill`     | Installed skill the bridge loads                                                                                                               |
+| `subagents[].model`     | **Project-owned** — `harness update` never overwrites                                                                                          |
+| `subagents[].readonly`  | No write tools when `true` (reviewer default); filled from catalog if missing                                                                  |
 
 ### Default subagents (seeded when skill is installed)
 
-| Name | Skill | Default model (cursor / claude) | `readonly` |
-|------|-------|----------------------------------|------------|
-| `coder-agent` | `ns-code-coder` | `composer-2.5[fast=false]` / `sonnet` | `false` |
-| `reviewer-agent` | `ns-code-reviewer` | `grok-4.5[effort=medium,fast=false]` / `opus` | `true` |
-| `task-writer-agent` | `ns-sdd-task-generator` | `composer-2.5[fast=false]` / `haiku` | `false` |
+| Name                | Skill                   | Default model (cursor / claude)               | `readonly` |
+| ------------------- | ----------------------- | --------------------------------------------- | ---------- |
+| `coder-agent`       | `ns-code-coder`         | `composer-2.5[fast=false]` / `sonnet`         | `false`    |
+| `reviewer-agent`    | `ns-code-reviewer`      | `grok-4.5[effort=medium,fast=false]` / `opus` | `true`     |
+| `task-writer-agent` | `ns-sdd-task-generator` | `composer-2.5[fast=false]` / `haiku`          | `false`    |
 
 Presets that install those skills get matching bridges on `init` / `sync` / `update`. Each bridge body: read `AGENTS.md` → architecture rules → follow the skill. Seeded bridges = **required** dispatch targets when present — see `subagent-dispatch.md`.
 
@@ -126,12 +129,12 @@ Generation marker (first line of body):
 
 ## Commands
 
-| Command | Behavior |
-|---------|----------|
-| `harness add-rule <name>` | Create stub + manifest entry + sync (`--description`, `--globs`, `--force`) |
+| Command                       | Behavior                                                                                            |
+| ----------------------------- | --------------------------------------------------------------------------------------------------- |
+| `harness add-rule <name>`     | Create stub + manifest entry + sync (`--description`, `--globs`, `--force`)                         |
 | `harness add-subagent <name>` | Create canonical `agents/{name}.md` + manifest entry + sync (`--skill`, `--description`, `--force`) |
-| `harness sync` | Absorb orphan `.mdc` → regenerate rule adapters + Claude skill symlinks + subagent bridges |
-| `harness sync --check` | CI mode — no writes; exit 1 on adapter drift **or** orphan `.mdc` not in manifest |
+| `harness sync`                | Absorb orphan `.mdc` → regenerate rule adapters + Claude skill symlinks + subagent bridges          |
+| `harness sync --check`        | CI mode — no writes; exit 1 on adapter drift **or** orphan `.mdc` not in manifest                   |
 
 ## Git policy
 

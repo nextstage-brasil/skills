@@ -33,10 +33,10 @@ Entry priority **2** (feature / version / SDD / multi-day). Harness table: `../n
 
 | Handoff | Target |
 | ------- | ------ |
-| Small / quick inside SDD | `coder-agent` → `ns-code-coder` (see `../ns-harness/references/subagent-dispatch.md`) |
-| Version + handoff | `ns-sdd-execution-handoff-generator` → `coder-agent` / `ns-code-coder` or `ns-code-autonomous` |
-| Task file generation | `task-writer-agent` → `ns-sdd-task-generator` when present |
-| Bare quick fix, no SDD context | Redirect to `ns-code-coder` (priority 5) — or `coder-agent` if spawning a worker |
+| Small / quick inside SDD | `coder-agent` → `ns-code-coder` (**MUST** bridge when available — `../ns-harness/references/subagent-dispatch.md`) |
+| Version + handoff | `ns-sdd-execution-handoff-generator` → `coder-agent` (**MUST** when available) / `ns-code-coder` or `ns-code-autonomous` |
+| Task file generation | `task-writer-agent` → `ns-sdd-task-generator` (**MUST** bridge when available) |
+| Bare quick fix, no SDD context | Redirect to `ns-code-coder` (priority 5) — if spawning worker: **MUST** `coder-agent` when available |
 
 ## Harness discovery
 
@@ -88,14 +88,14 @@ flowchart LR
 
 | Phase | When | Worker |
 | ----- | ---- | ------ |
-| Clarify | Ambiguity / gray areas | `ns-sdd-clarify-requirements` |
-| Specify | Always for Medium+ | `ns-sdd-requirements-generator` |
-| Consistency | Before tasks (Large+) | `ns-sdd-analyze-consistency` |
-| Partition | Multi-slice versions | `ns-sdd-version-partitioner` |
-| Tasks | Medium+ formal tasks | `ns-sdd-task-generator` + `ns-sdd-execution-handoff-generator` |
+| Clarify | Ambiguity / gray areas | `ns-sdd-clarify-requirements` (in-session — no v1 bridge) |
+| Specify | Always for Medium+ | `ns-sdd-requirements-generator` (in-session — no v1 bridge) |
+| Consistency | Before tasks (Large+) | `ns-sdd-analyze-consistency` (in-session — no v1 bridge) |
+| Partition | Multi-slice versions | `ns-sdd-version-partitioner` (in-session — no v1 bridge) |
+| Tasks | Medium+ formal tasks | `task-writer-agent` → `ns-sdd-task-generator` (**MUST** when available) + `ns-sdd-execution-handoff-generator` |
 | Execute | Always | See execute routing below |
-| Close | After delivery | `ns-code-reviewer` → `ns-sdd-living-spec-consolidator` |
-| Quick | ≤3 files, one-sentence scope | `ns-code-coder` only |
+| Close | After delivery | `reviewer-agent` → `ns-code-reviewer` (**MUST** when available) → `ns-sdd-living-spec-consolidator` |
+| Quick | ≤3 files, one-sentence scope | `coder-agent` → `ns-code-coder` (**MUST** when available) |
 
 Details: `references/auto-sizing.md`, `references/router.md`.
 
@@ -117,8 +117,8 @@ Chat with the human in short, natural language. **Read `references/human-communi
 
 ## Orchestration mandate
 
-- **Delegate** — follow the worker skill workflow; do not reimplement it inline.
-- **Do not** ask "continue to next phase?" between phases in the same sized pipeline.
+- **Delegate** = spawn bridge when available (else fall back to worker `SKILL.md`). Not "load worker skill in parent session" while bridge present. See `../ns-harness/references/subagent-dispatch.md`.
+- **Do not** ask "continue to next phase?" between phases in same sized pipeline.
 - **Do not** invoke `ns-harness-prepare` or any brownfield prepare worker.
 - **Do not** load multiple version specs into context — see `references/context-budget.md`.
 - After each phase, verify expected artifact paths exist before advancing.
@@ -128,20 +128,20 @@ Chat with the human in short, natural language. **Read `references/human-communi
 | Size | Pipeline |
 | ---- | -------- |
 | **Small** | `coder-agent` → `ns-code-coder` (quick mode — `references/quick-mode.md`) |
-| **Medium** | Clarify (if needed) → Specify → Tasks (`task-writer-agent` when present) + handoff → Execute → Close |
+| **Medium** | Clarify (if needed) → Specify → Tasks (**MUST** `task-writer-agent` when available) + handoff → Execute → Close |
 | **Large** | Full chain including Consistency and/or Partition when scope warrants |
 
-**Safety valve:** if inline steps exceed ~3 files or scope explodes mid-session → stop and formalize via Medium+ pipeline (requirements + tasks).
+**Safety valve:** if scope exceeds ~3 files or explodes mid-session → stop and formalize via Medium+ pipeline (requirements + tasks).
 
 ## Execute routing
 
-Worker dispatch: prefer harness project agents per `../ns-harness/references/subagent-dispatch.md`.
+Worker dispatch: **MUST** use harness project agents when available — `../ns-harness/references/subagent-dispatch.md`. Inline mapped skill while bridge present = forbidden.
 
 | Context | Worker |
 | ------- | ------ |
-| Ad-hoc / quick / single task | `coder-agent` → `ns-code-coder` |
-| Version with `execution-handoff.md` | `ns-sdd-execution-handoff-generator` run-implementation + `coder-agent` / `ns-code-coder` or `ns-code-autonomous` |
-| Partitioned version (subversions) | `ns-execution-orchestrator` (slice workers via `coder-agent`) |
+| Ad-hoc / quick / single task | `coder-agent` → `ns-code-coder` (**MUST** bridge when available) |
+| Version with `execution-handoff.md` | `ns-sdd-execution-handoff-generator` run-implementation + `coder-agent` (**MUST** when available) / `ns-code-coder` or `ns-code-autonomous` |
+| Partitioned version (subversions) | `ns-execution-orchestrator` (slice workers via `coder-agent` — **MUST** when available) |
 | GitLab issue URL + MCP available | `ns-execution-gitlab-issue` (soft — prefer when GitLab present) |
 | Autonomous multi-step local plan | `ns-code-autonomous` |
 

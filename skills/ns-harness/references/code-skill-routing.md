@@ -13,12 +13,12 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | Role | Skill | Notes |
 | ---- | ----- | ----- |
 | Front door (entry router) | Host agent + skill descriptions + this file | Fixed priority below — not a dedicated skill |
-| Central execution worker | `ns-code-coder` / `C2` via `coder-agent` when present | G, A, and S converge here for diffs + review — `subagent-dispatch.md` |
+| Central execution worker | `ns-code-coder` / `C2` via `coder-agent` (**MUST** when available) | G, A, and S converge here for diffs + review — `subagent-dispatch.md` |
 | GitLab lifecycle | `ns-execution-gitlab-issue` | Delegates coding to A in Phase 2 |
 | Multi-unit engine | `ns-code-autonomous` | Standalone entry or engine under G |
-| Spec / version planning | `ns-spec-driven` | May hand off to C or A (prefer `coder-agent` when dispatching) |
+| Spec / version planning | `ns-spec-driven` | Hand off to C or A (**MUST** `coder-agent` when available) |
 | Root-cause debugging | `ns-code-investigator` | Diagnosis; implementation is a separate user step |
-| Review gate | `ns-code-reviewer` via `reviewer-agent` when present | Only allowed review path — `review-gate-workflow.md` |
+| Review gate | `ns-code-reviewer` via `reviewer-agent` (**MUST** when available) | Only allowed review path — `review-gate-workflow.md` |
 
 ## Install vs runtime
 
@@ -78,10 +78,10 @@ Per-skill detail lives in each `SKILL.md` routing section.
 | `G` | Phase 2 | `A` (engine mode) |
 | `G` | MR / status / time | `mcp-gitlab-usage` |
 | `G` | review gate | `REV` (`reviewer-agent` / `ns-code-reviewer` only) |
-| `A` | dispatch work units | `C2` (`coder-agent` → `ns-code-coder` when present) |
+| `A` | dispatch work units | `C2` (`coder-agent` → `ns-code-coder` — **MUST** bridge when available) |
 | `C2` | review | `REV` (`reviewer-agent` / `ns-code-reviewer` only) |
-| `S` | small / quick | `C` via `coder-agent` when present |
-| `S` | version + handoff | `H` → `C` or `A` (prefer `coder-agent` for coding workers) |
+| `S` | small / quick | `C` via `coder-agent` (**MUST** when available) |
+| `S` | version + handoff | `H` → `C` or `A` (**MUST** `coder-agent` for coding workers when available) |
 | `I` | diagnosis complete | User (no auto-dispatch to `C`) |
 | User | implement proposed fix | Re-enter entry router (usually `C`) |
 

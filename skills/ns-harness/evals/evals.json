@@ -12,6 +12,12 @@
       "prompt": "Can I generate tasks now? We have requirements.md but no explicit confirmation yet.",
       "expected_output": "Agent cites gates.md; identifies missing requirements_confirmed or scope_confirmed; does not generate tasks.",
       "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Under /ns-spec-driven I need to generate tasks. task-writer-agent exists in .cursor/agents/. Can I just Skill(ns-sdd-task-generator) in this session?",
+      "expected_output": "Agent cites subagent-dispatch.md: MUST spawn task-writer-agent when available; inline Skill(ns-sdd-task-generator) / bare skill follow while bridge present is forbidden. Rule 4 in-session exception does not apply — Tasks is a child phase under ns-spec-driven, not continuation of the same skill face. Fallback to skill read only if bridge unavailable.",
+      "files": []
     }
   ]
 }

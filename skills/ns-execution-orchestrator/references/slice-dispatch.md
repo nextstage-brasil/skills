@@ -1,7 +1,7 @@
 # Slice dispatch — subagent prompt and validation
 
 The orchestrator dispatches exactly one **synchronous (blocking)** subagent per
-slice. Prefer harness **`coder-agent`** when available
+slice. **MUST** use harness **`coder-agent`** when available
 (`../ns-harness/references/subagent-dispatch.md`); else a generic subagent whose
 prompt follows `ns-code-coder`. Keep context small: pass only what the slice
 needs, never the whole roadmap or master requirements.

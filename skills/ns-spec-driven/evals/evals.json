@@ -2,7 +2,7 @@
   "skill_name": "ns-spec-driven",
   "evals": [
     {
-      "prompt": "Specify user notification preferences for version 2.1 \u2014 email and in-app toggles.",
+      "prompt": "Specify user notification preferences for version 2.1 — email and in-app toggles.",
       "id": 1,
       "expected_output": "Invokes ns-spec-driven: auto-sizes Medium+, delegates to ns-sdd-clarify-requirements if ambiguous then ns-sdd-requirements-generator for docs/versions/2.1/requirements.md. Does not run ns-harness-prepare.",
       "files": []
@@ -10,13 +10,19 @@
     {
       "prompt": "docs/versions/1.0.0/ already has tasks and execution-handoff.md. Implement the next pending task.",
       "id": 2,
-      "expected_output": "Invokes ns-spec-driven resume path: reads execution-handoff.md, skips planning phases, delegates execute via ns-sdd-execution-handoff-generator run-implementation and coder-agent (or ns-code-coder / ns-code-autonomous). No new requirements.md.",
+      "expected_output": "Invokes ns-spec-driven resume path: reads execution-handoff.md, skips planning phases, MUST dispatch execute via ns-sdd-execution-handoff-generator run-implementation and coder-agent when available (else ns-code-coder / ns-code-autonomous). No new requirements.md. Must not implement by reading ns-code-coder inline while coder-agent bridge is present.",
       "files": []
     },
     {
-      "prompt": "Quick fix: add a maxlength attribute to the profile name input \u2014 one file.",
+      "prompt": "Quick fix: add a maxlength attribute to the profile name input — one file.",
       "id": 3,
-      "expected_output": "Invokes ns-spec-driven quick mode: routes to ns-code-coder only, skips PM chain and ns-harness-prepare. May mention installing ns-code-frontend-design once if UI polish implied; does not require it installed.",
+      "expected_output": "Invokes ns-spec-driven quick mode: MUST dispatch coder-agent when available (else ns-code-coder), skips PM chain and ns-harness-prepare. Must not Skill(ns-code-coder) inline while coder-agent present. May mention installing ns-code-frontend-design once if UI polish implied; does not require it installed.",
+      "files": []
+    },
+    {
+      "prompt": "requirements.md for version 2.1 is approved. Generate the task files now.",
+      "id": 4,
+      "expected_output": "Invokes ns-spec-driven Tasks phase: MUST spawn task-writer-agent when that bridge is available (loads ns-sdd-task-generator). Must NOT invoke Skill(ns-sdd-task-generator) or follow that skill bare in the parent ns-spec-driven session while task-writer-agent is present. Fallback to reading ns-sdd-task-generator SKILL.md only if the bridge is unavailable. Cites subagent-dispatch.md child-phase rule.",
       "files": []
     }
   ]

@@ -12,7 +12,7 @@ From the single implicit unit, or from `execution-plan.md`'s DAG (see `planning-
 
 **Gate before edit:** the dispatching shell / subagent must be operating inside `WORKTREE_ROOT` on `WORK_BRANCH`. If not, refuse the unit — do not silently write into the main checkout.
 
-Each unit — parallel or sequential — prefers harness **`coder-agent`** when available (`../../ns-harness/references/subagent-dispatch.md`); else a `ns-code-coder` focused call that:
+Each unit — parallel or sequential — **MUST** use harness **`coder-agent`** when available (`../../ns-harness/references/subagent-dispatch.md`); else a `ns-code-coder` focused call that:
 
 - Works exclusively inside `WORKTREE_ROOT` (or `{product_root}/.worktrees/{version_san}/` in standalone) — never the main checkout, never `main`/`master`/`SOURCE_BRANCH`.
 - Receives: the unit's scope/acceptance criteria, any resolved Q&A relevant to it, the file scope boundary (so it doesn't drift into another unit's files), and applicable harness rules.
@@ -26,14 +26,14 @@ Each unit — parallel or sequential — prefers harness **`coder-agent`** when 
 
 ```
 Implement work unit {unit_id} inside {WORKTREE_ROOT} on branch {WORK_BRANCH}.
-Prefer coder-agent when available; else follow ns-code-coder skill.
+MUST dispatch coder-agent when available; else follow ns-code-coder skill.
 Preflight: confirm pwd and git branch match WORKTREE_ROOT / WORK_BRANCH before any edit.
 If you are on main/master/base branch or outside WORKTREE_ROOT: stop and report blocked — do not implement.
 Scope: {unit description / acceptance criteria}
 File boundary: {files or directories this unit owns — do not touch files outside this boundary}
 Resolved context: {relevant Q&A from the doubt protocol, or "none"}
 Harness rules: {paths to applicable rule files}
-Review gate: after implementation, follow ns-code-coder + review-gate-workflow.md — reviewer-agent / ns-code-reviewer only, max 3 rounds, mandatory re-review after Critical fixes.
+Review gate: after implementation, follow ns-code-coder + review-gate-workflow.md — MUST reviewer-agent when available (else ns-code-reviewer), max 3 rounds, mandatory re-review after Critical fixes.
 Report: files changed, summary of the diff, review round (1/2/3), score, exact Code Review: verdict line, any new destructive doubt (do not guess on it).
 ```
 

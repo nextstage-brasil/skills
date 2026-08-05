@@ -1,84 +1,106 @@
 # Dual-audience voice (commercial budget)
 
-Client first. Delivery team second. Client signs scope. Team keeps sizing detail.
+Deliverable serves **client first**, also **delivery team**. Client must confirm scope understanding; team must not lose sizing-critical detail.
 
 ## Audience test
 
-| Section | Client | Team |
-|---------|--------|------|
-| Objetivo, Features, fluxos, RNFs, riscos | Product/commercial plain | Every committed capability covered |
-| Critérios de aceite | Stakeholder verifiable | Each maps scoped behavior, no gap |
-| Estimativas | Totals + per-Feature FP readable | FP origem traceable; COSMIC table full; horas = formula |
-| Macroatividades | Lifecycle split | Unchanged |
+| Section | Client reads | Team needs |
+|---------|--------------|------------|
+| Objetivo, Features, fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Same text must cover every committed capability |
+| Critérios de aceite | Verifiable by stakeholder | Each criterion maps to a scoped behavior — no hidden gap |
+| Estimativas (FP, COSMIC, horas) | Totals + per-Feature FP justification readable | FP origins traceable; COSMIC table complete; hours = formula only |
+| Macroatividades | Lifecycle effort split | Unchanged |
 
-**Both pass:** client would sign? engineering finds no missing boundary?
+**Rule:** _Would the client sign this knowing what they buy?_ AND _Would engineering find a missing boundary?_ Both must pass.
 
-## Client-facing
+When scope mixes business capabilities with operational/architectural consequences, apply `references/engineering-split.md`: internal doc keeps full traceability; client export (`commercial-budget-costumer.md`) shows `negócio` Features only, with `engenharia` outcomes merged into parent acceptance criteria and FP rolled into **Engenharia de consistência do produto**.
 
-Capabilities, journeys, roles, outcomes, constraints. Brief menu/screen labels OK. Delivery risk in product terms (homologação, contrato parceiro, escopo aberto).
+## Item classification (before Features)
 
-## Detail placement
+| Class | Client Feature? | Where acceptance lives |
+|-------|-----------------|------------------------|
+| `negócio` | Yes | Own Feature |
+| `engenharia` | No (client doc) | Merged into parent `negócio` criteria |
+| `qualidade` | Never | RNF on quality; 0 FP |
 
-| Need | Here | Not here |
-|------|------|----------|
-| Scope | Features + aceite + Mermaid | Classes, schemas, endpoints |
-| FP trace | Estimativas origem + per-Feature FP | Feature narrative |
-| COSMIC | CFP table | E/R/W/X prose |
-| Hours math | Estimativas cálculo | Narrative in horas row |
+See `engineering-split.md` for triggers, templates, and anti-patterns.
 
-## Forbidden (narrative)
+## Client-facing (default)
 
-Class/service/module/file. DB/ORM/migrations. API fields, HTTP codes, OpenAPI story. Framework/infra unless human set commercial constraint (one line). Code, `/api/...` paths. Internal paths (`docs/context/...`) — say "contexto de produto consultado".
+- Business capabilities, journeys, roles, outcomes, constraints
+- Stakeholder menu/screen labels from the brief
+- Delivery uncertainty in product terms (homologação, contrato parceiro, escopo aberto)
 
-## Rewrite
+## Technical detail — where it lives
 
-| Leak | Fix |
-|------|-----|
-| `tipo_pessoa = ORCRIM` | Só cadastros organização criminosa |
-| Persist `api_key` hash | Admin atualiza chave integração |
-| EO/EQ IFPUG ILF | FP origem in Estimativas; Feature = capability |
-| GET paginated | Consulta paginada cadastros elegíveis |
+| Need | Put it here | Not here |
+|------|-------------|----------|
+| Scope completeness | Features + critérios de aceite + fluxos Mermaid | Class names, schemas, endpoints |
+| Sizing traceability | Estimativas → FP origem do cálculo + per-Feature FP | Feature narrative |
+| COSMIC counts | Estimativas → CFP table only | Per-Feature E/R/W/X prose |
+| Productivity math | Estimativas → Horas (cálculo) | Narrative justification in horas row |
+
+## Forbidden in narrative sections
+
+- Class, service, module, file names
+- DB tables/columns, ORM, migrations
+- API field lists, HTTP codes, OpenAPI as story
+- Frameworks/infra unless human made them a **commercial** constraint — one plain line max
+- Code snippets, `/api/...` paths as Feature story
+- Internal paths (`docs/context/...`) — say "contexto de produto consultado" if needed
+
+## Rewrite patterns
+
+| Leak | Rewrite |
+|------|---------|
+| Filter `tipo_pessoa = restrito` | Só cadastros da categoria elegível ao parceiro |
+| Persist `api_key` hash | Admin atualiza chave de acesso da integração |
+| EO/EQ IFPUG ILF | FP origem table in Estimativas; Feature = capability |
+| GET paginated | Consulta paginada dos cadastros elegíveis |
 
 ## Acceptance criteria
 
-Who does what, what shows, what must not. "O administrador consegue…" / "O parceiro recebe…". Not "controller retorna 401".
+Product checks: who does what, what appears, what must not happen. "O administrador consegue…" / "O parceiro recebe…" — not "controller retorna 401".
 
 ## Fluxos Mermaid
 
-1–3 max. PT-BR labels (English doc only if human asks). Roles + business actions. Client validates; team spots gaps. No technical node names.
+1–3 diagrams max. Labels = roles + business actions (Portuguese in deliverable; English only when human asks for English doc). Purpose: client validates understanding; team spots missing steps. No technical node names.
 
-Subtitle: `### Fluxo N — {title}`.
+Subtitle each diagram: `### Fluxo N — {readable title}`.
 
-### Layout
+### Layout (mandatory)
 
-- Default `flowchart TD`. `LR` only short linear (≤3 nodes).
-- Short labels (~5 words). Long text: `<br/>` in `["…"]`.
-- Always quoted nodes `["…"]` / `{"…"}`.
-- One journey or decision chain per diagram. Split at ~12 nodes.
-- Cross-ref ok: `Validações de acesso<br/>(fluxo 3)`.
+- Prefer **`flowchart TD`** (top-down). Use `LR` only for very short linear flows (≤3 nodes).
+- **Short labels** — max ~5 words per line; break long text with `<br/>` inside quoted nodes: `A["Short label<br/>continuation"]`.
+- **Quoted node text** — always use `["…"]` or `{"…"}` so special characters render safely.
+- One diagram = one journey or one decision chain; split validation gates into a dedicated diagram when the main flow would exceed ~12 nodes.
+- Cross-reference between diagrams when useful (e.g. `Validações de acesso<br/>(fluxo 3)`).
 
-### Styling (mandatory)
+### Readability — nodes (mandatory)
 
-Default theme unreadable in preview/PDF. Every diagram: init block + `classDef` + `linkStyle`.
+Default Mermaid theme alone is often unreadable in Markdown preview / PDF. Every diagram **must** include the init block and `classDef` styling.
 
-**Init (journey — copy):**
+**Init block (copy verbatim):**
 
 ```
 %%{init: {'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial', 'background': '#ffffff', 'mainBkg': '#ffffff', 'secondBkg': '#ffffff', 'clusterBkg': '#ffffff', 'lineColor': '#1a5490', 'primaryBorderColor': '#1a5490', 'edgeLabelBackground': '#ffffff', 'primaryTextColor': '#111'}}}%%
 ```
 
-Validation/rejection diagrams: `'lineColor': '#2e7d32'`.
+For **validation / rejection** diagrams, set `'lineColor': '#2e7d32'` in init (green default arrows).
 
-**Palette A — journey:**
+**Palette A — journey / process flows:**
 
 ```
 classDef passo fill:#e8f4fc,stroke:#1a5490,color:#111
 classDef decisao fill:#fff8e6,stroke:#b8860b,color:#111
 ```
 
-`passo` = actions/outcomes/start/end. `decisao` = diamonds.
+| classDef | Use for |
+|----------|---------|
+| `passo` | Actions, outcomes, start/end nodes |
+| `decisao` | Diamond decision nodes `{…?}` |
 
-**Palette B — validation chain:**
+**Palette B — validation / rejection chain (dedicated “Fluxo N — Rejeições…” diagram):**
 
 ```
 classDef inicio fill:#ffffff,stroke:#333,color:#111
@@ -87,19 +109,50 @@ classDef recusa fill:#fde8e8,stroke:#c62828,color:#111
 classDef sucesso fill:#e8f5e9,stroke:#2e7d32,color:#111
 ```
 
-Rejections stack right: `R1 ~~~ R2`.
+| classDef | Use for |
+|----------|---------|
+| `inicio` | Entry node (user/partner request) |
+| `decisao` | Diamond gates |
+| `recusa` | Rejection terminals |
+| `sucesso` | Success terminal after all gates pass |
 
-### linkStyle (mandatory after class)
+Stack rejection nodes on the right with invisible links: `R1 ~~~ R2` / `R2 ~~~ R3`.
 
-Palette A: `linkStyle default stroke:#1a5490,stroke-width:2.5px`
+### Readability — edges and arrows (mandatory)
 
-Palette B: success `linkStyle default stroke:#2e7d32,stroke-width:2.5px`; rejections `linkStyle {indices} stroke:#c62828,stroke-width:2.5px` (0-based edge order).
+After `class` lines, **always** add `linkStyle`.
 
-Example indices: `A-->B` = 0, `B-->|Não|R1` = 1 (red), `B-->|Sim|C` = 2 (green default).
+**Palette A (journey):**
 
-### Skeleton — validation chain
+| Rule | Syntax |
+|------|--------|
+| All edges | `linkStyle default stroke:#1a5490,stroke-width:2.5px` |
 
-Optional filter: both Sim/Não may hit success (no rejection for omitted optional filter).
+**Palette B (validation chain):**
+
+| Rule | Syntax |
+|------|--------|
+| Success / continuation (`\|Sim\|`, default forward) | `linkStyle default stroke:#2e7d32,stroke-width:2.5px` |
+| Rejection (`\|Não\|` → Recusa) | `linkStyle {indices} stroke:#c62828,stroke-width:2.5px` |
+
+**`linkStyle` indices** = order of edge declaration, **0-based** (count every `-->`).
+
+Example (validation chain):
+
+```
+0  A --> B
+1  B -->|Não| R1    ← rejection (red)
+2  B -->|Sim| C     ← success (green via default)
+3  C -->|Não| R2    ← rejection
+```
+
+→ `linkStyle default stroke:#2e7d32,stroke-width:2.5px` + `linkStyle 1,3 stroke:#c62828,stroke-width:2.5px`
+
+Init `lineColor`, `primaryBorderColor`, `edgeLabelBackground`, and white `background` / `mainBkg` keep arrows, labels, and canvas legible in preview/PDF.
+
+### Canonical skeleton — validation / rejection chain
+
+Agnostic pattern — adapt labels to the product; keep structure. Optional filter: both `Sim` and `Não` may converge on success (no rejection for omitted optional filter).
 
 ```mermaid
 %%{init: {'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial', 'background': '#ffffff', 'mainBkg': '#ffffff', 'secondBkg': '#ffffff', 'clusterBkg': '#ffffff', 'lineColor': '#2e7d32', 'primaryBorderColor': '#1a5490', 'edgeLabelBackground': '#ffffff', 'primaryTextColor': '#111'}}}%%
@@ -130,7 +183,7 @@ flowchart TD
   linkStyle 1,3,5 stroke:#c62828,stroke-width:2.5px
 ```
 
-### Skeleton — journey
+### Canonical skeleton — journey flow
 
 ```mermaid
 %%{init: {'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial', 'background': '#ffffff', 'mainBkg': '#ffffff', 'secondBkg': '#ffffff', 'clusterBkg': '#ffffff', 'lineColor': '#1a5490', 'primaryBorderColor': '#1a5490', 'edgeLabelBackground': '#ffffff', 'primaryTextColor': '#111'}}}%%
@@ -152,8 +205,14 @@ flowchart TD
 
 ### Anti-patterns
 
-`LR` + long labels. Theme only, no white bg. No `linkStyle`. Rejection same color as success on validation chain. Mandatory rejection on optional filter. Technical labels (class, table, HTTP). >3 diagrams or >12 nodes without split.
+- `flowchart LR` with long sentence labels crammed into one node.
+- Default theme only — low contrast; missing white canvas background.
+- Missing `linkStyle` — thin grey arrows.
+- Rejection paths same colour as success on validation-chain diagrams.
+- Mandatory rejection for an **optional** filter parameter — converge on success instead.
+- Technical visible labels (class names, table names, HTTP paths).
+- More than 3 diagrams or >12 nodes without splitting.
 
 ## Risks and premissas
 
-Product/delivery language. **Responsável** per risk: Cliente / Empresa / Ambos.
+Product/delivery language. Name **Responsável** (Cliente / Empresa / Ambos) per risk in the table.

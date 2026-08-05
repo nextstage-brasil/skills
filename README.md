@@ -29,7 +29,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code
 | `ns-harness`                         | Harness discovery, SDD gates, artifact layout (dependency — auto-installed)                                                                   |
 | `ns-spec-driven`                     | Delivery face — clarify → spec → tasks → implement → close (auto-size)                                                                        |
 | `ns-harness-prepare`                 | Orchestrate full brownfield onboarding chain after harness init (manual)                                                                      |
-| `ns-harness-agents-md`               | Generate project-specific `AGENTS.md` + minimal `CLAUDE.md` pointer                                                                           |
+| `ns-harness-agents-md`               | Generate project-specific `AGENTS.md` + `CLAUDE.md` (AGENTS.md + `.claude/agents` pointers)                                                   |
 | `ns-harness-codebase-reverse-spec`   | Reverse-engineer legacy code into technology-agnostic business specs                                                                          |
 | `ns-harness-architecture-rules`      | Scan codebase and generate lean `architecture-rules.md` for agents                                                                            |
 | `ns-harness-bootstrap-brownfield`    | Map existing codebase stack/modules before first SDD version                                                                                  |
@@ -61,6 +61,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code
 | `ns-commercial-budget`               | Commercial budget (product voice) — Features, FP, COSMIC, hours, macro activities, risk margin %                                           |
 | `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
 | `ns-langgraph-agents`                | LangGraph.js runtime — MCP governance, context window, HITL, evals                                                                            |
+| `nsutil-mcp`                         | Build/extend NsUtil MCP servers (Tool, Prompt, Server, JSON-RPC, Docker PHPUnit)                                                              |
 | `ns-skill-creator`                   | Create project-local skills in `.agents/skills/` + `harness sync`                                                                             |
 
 Migration notes: `skills/_meta/MIGRATION.md`.

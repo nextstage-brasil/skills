@@ -2,7 +2,9 @@
 
 FP sizes the version. Client sees **per-Feature FP + justification** and **origem do cálculo**. Team verifies nothing was skipped.
 
-## Per-Feature (mandatory in Estimativas)
+## Internal doc (`commercial-budget-internal.md`)
+
+### Per-Feature (mandatory in Estimativas)
 
 | Feature | FP | Justificativa |
 |---------|-----|---------------|
@@ -18,7 +20,7 @@ Show traceable arithmetic. Pick one stated method; do not mix silently.
 
 | Elemento | Tipo | Qtd | FP/u | Subtotal | Fonte |
 |----------|------|-----|------|----------|-------|
-| Cadastro ORCRIM | ILF | 1 | 10 | 10 | Feature 001 — novo grupo de dados |
+| Cadastro de parceiros | ILF | 1 | 10 | 10 | Feature 001 — novo grupo de dados |
 | Consulta por documento | EQ | 1 | 4 | 4 | Feature 002 |
 | … | | | | | |
 | **Total** | | | | **{n}** | |
@@ -28,6 +30,21 @@ Show traceable arithmetic. Pick one stated method; do not mix silently.
 - `[ASSUMPTION: …]` on complexity weights when not negotiated.
 
 **House simplified count:** table still required — list what was counted and multiplier.
+
+## Client export (`commercial-budget-costumer.md`)
+
+When `engineering-split.md` applies:
+
+| Row type | Content |
+|----------|---------|
+| Per `negócio` Feature | FP + product-language justificativa |
+| **Subtotal negócio** | Σ `negócio` FP |
+| **Engenharia de consistência do produto** | Σ `engenharia` FP — plain-language rollup, no internal Feature numbers |
+| **Total** | Same as internal — `subtotal + engenharia` |
+
+- `qualidade` items: **0 FP** — never a client Feature row.
+- **Origem do cálculo:** summary by capability (Elemento | FP | Vinculado a); footer points to internal doc for ILF/EQ detail.
+- Do **not** reduce Total FP or hours vs internal doc.
 
 ## Consistency
 

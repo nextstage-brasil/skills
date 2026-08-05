@@ -1,14 +1,14 @@
 # Review gate workflow (mandatory)
 
-Fixed workflow for implementation skills that close with a code review. **Not** "run any review" — only the named skill `ns-code-reviewer` (preferably via the harness bridge `reviewer-agent`).
+Fixed workflow for implementation skills that close with a code review. **Not** "run any review" — only the named skill `ns-code-reviewer` (**MUST** via harness bridge `reviewer-agent` when available — `subagent-dispatch.md`).
 
 Callers: `ns-code-coder`, `ns-code-autonomous` (standalone closure), `ns-execution-gitlab-issue` (Phase 4). Subagents dispatched as `C2` inherit the same gate from `ns-code-coder`.
 
 ## Invocation (only allowed path)
 
-1. **Prefer** harness project agent `reviewer-agent` when available — see `subagent-dispatch.md`. That bridge loads `AGENTS.md` then `ns-code-reviewer`.
-2. **Else** read `../ns-code-reviewer/SKILL.md` and follow its workflow for the active mode (ad-hoc diff, version closure, or Issue review).
-3. The reviewer run is this skill (via bridge or direct) — not a paraphrase, not a platform persona that "acts like" the reviewer.
+1. **MUST** dispatch harness project agent `reviewer-agent` when available — see `subagent-dispatch.md`. Bridge loads `AGENTS.md` then `ns-code-reviewer`. Inline `Skill(ns-code-reviewer)` while bridge present = forbidden.
+2. **Else** (bridge missing) read `../ns-code-reviewer/SKILL.md` and follow its workflow for the active mode (ad-hoc diff, version closure, or Issue review).
+3. Reviewer run = this skill (via bridge or direct) — not paraphrase, not platform persona that "acts like" reviewer.
 
 **Forbidden substitutes** (unless the human explicitly requests that substitute for this run):
 
@@ -27,7 +27,7 @@ Substituting with forbidden personas breaks the contract: score gate, verdict li
 | Fail | Criticals **or** score ≤ **8**, rounds left | Minimal fix in scope → re-run tests if in scope → **mandatory re-review** via `reviewer-agent` / `ns-code-reviewer` |
 | Stop | `Blocked`, or 3 rounds exhausted still failing | Report **blocked** — never fabricate success |
 
-**After fixing a Critical:** a new `ns-code-reviewer` round is **required** (prefer `reviewer-agent`). A fix alone does not clear the gate.
+**After fixing a Critical:** new `ns-code-reviewer` round **required** (**MUST** `reviewer-agent` when available). Fix alone does not clear gate.
 
 ## Pre-review (callers with implementation)
 

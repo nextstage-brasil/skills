@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { AGENTS_HOME, HARNESS_ROOT, HARNESS_RULES_DIR } from './agentsLayout.js';
+import { AGENTS_HOME, CLAUDE_MD_CONTENT, HARNESS_ROOT, HARNESS_RULES_DIR } from './agentsLayout.js';
 import { listCategories } from './catalog.js';
 import { loadManifest } from './manifest.js';
 import { DEFAULT_SUBAGENTS } from './subagentsCatalog.js';
@@ -372,7 +372,7 @@ Project code comments and documentation: English unless the team defines otherwi
 `;
 
   writeFileSync(agentsPath, content, 'utf8');
-  writeFileSync(claudePath, '@AGENTS.md\n', 'utf8');
+  writeFileSync(claudePath, CLAUDE_MD_CONTENT, 'utf8');
 
   return {
     skipped: false,
