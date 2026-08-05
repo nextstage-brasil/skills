@@ -72,12 +72,14 @@ Review before marking agent work done. When the diff touches `agent-api`, treat 
 
 ## Graph structure
 
-| Anti-pattern | Fix |
-| ------------ | --- |
-| Graph in `memory/` | `graph/graph.ts` |
-| Domain prompts in `llm/` | `conversation/` |
-| Monolithic nodes file | Split thin `*.node.ts` |
-| Architecture `if (name === "react")` in runtime | Respond to contract signals |
+| Anti-pattern | Why it hurts | Fix |
+| ------------ | ------------ | --- |
+| `addNode` id equals `AgentState` channel key | LangGraph compile/runtime error | Different node id — e.g. `intent_classify` writes `intent` channel |
+| Topology doc uses channel name as node id | Agents copy wrong `addNode` name | Diagrams + graph-spec Nodes table use node ids; map channels in Outputs |
+| Graph in `memory/` | — | `graph/graph.ts` |
+| Domain prompts in `llm/` | — | `conversation/` |
+| Monolithic nodes file | — | Split thin `*.node.ts` |
+| Architecture `if (name === "react")` in runtime | — | Respond to contract signals |
 
 ## MCP and tools
 

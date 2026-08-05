@@ -130,7 +130,7 @@ Load on demand — do not memorize entire files into the conversation.
 | `templates/snippets/prepare-llm-messages.ts.snippet` | `context_compact` helper (optional pre-intent) |
 | `references/error-and-reliability.md` | Tool errors, circuit breaker, retries |
 | `references/observability.md` | Postgres audit, LangSmith, OTel, run context |
-| `references/architectures.md` | ReAct, react_bounded, plan-execute, reflection, supervisor |
+| `references/architectures.md` | ReAct, react_bounded, plan-execute; **node id ≠ state channel** |
 | `references/streaming-and-hitl.md` | SSE envelopes, `interrupt()`, `Command` resume |
 | `references/evals-and-gates.md` | Architecture, tool-selection, memory evals |
 | `references/anti-patterns.md` | Review gate before marking done |

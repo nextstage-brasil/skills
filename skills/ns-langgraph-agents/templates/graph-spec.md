@@ -74,11 +74,23 @@ Compose helper: `{{module path}}` (outside god-node).
 
 **Sole writer:** exactly one node (`composer`) emits user-facing Markdown. Gather may emit tool calls only.
 
+### Node id vs state channel
+
+LangGraph: **node id** (`addNode`) cannot equal a **state channel** key on `AgentState`. Diagrams and the Nodes table use node ids. State schema lists channel keys.
+
+| Node id (graph) | Writes channel | Example return |
+| --------------- | -------------- | -------------- |
+| `intent_classify` | `intent` | `{ intent: { speechAct, needsData } }` |
+| `gather` | `messages`, `dataBundle`, … | `{ messages: [...], dataBundle: … }` |
+| `composer` | `messages` | `{ messages: [AIMessage] }` |
+
+Wrong: `addNode("intent", …)` when `intent` is already on `AgentState`.
+
 ## Nodes
 
-| Node id | Type | Inputs | Outputs | Tools bound |
-| ------- | ---- | ------ | ------- | ----------- |
-| {{node}} | {{llm\|tool\|router}} | | | |
+| Node id | Type | State channels written | Tools bound |
+| ------- | ---- | ------------------------ | ----------- |
+| {{node}} | {{llm\|tool\|router}} | {{channels}} | |
 
 ## Edges
 

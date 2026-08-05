@@ -2,6 +2,18 @@
 
 Pick architecture in `graph-spec.md` **before** coding. Runtime responds to **signals**, not architecture names.
 
+## Node id vs state channel (LangGraph)
+
+Every `AgentState` key is a **state channel**. `addNode("…", fn)` registers a **node id**. LangGraph forbids the same string for both — compile/runtime error: *state attribute cannot also be used as a node name*.
+
+| Rule | Example |
+| ---- | ------- |
+| Node id ≠ channel key when both exist | Node `intent_classify` → `return { intent: { speechAct, needsData } }` |
+| Topology diagrams use **node ids** | `intent_classify`, not channel name `intent` |
+| `graph-spec.md` Nodes table = node ids | State schema lists channel keys; map writer node in Outputs column |
+
+`messages` is special (reducer channel) — still avoid a node named `messages`. Plan-execute: if state holds `plan`, node id must be `plan_node` or `planner`, not `plan`.
+
 ## ReAct (default loop)
 
 ```
@@ -17,8 +29,10 @@ agent → tools? → agent → … → END
 ## Bounded ReAct (`react_bounded`)
 
 ```
-guard → context_compact → intent → (gather | bypass | composer) → composer → respond → END
+guard → context_compact → intent_classify → (gather | bypass | composer) → composer → respond → END
 ```
+
+Node ids above — not state channel names. `intent_classify` writes channel `intent`; do not `addNode("intent", …)` when `intent` is on `AgentState`.
 
 **Signals:** MCP or external tools with open query space; `needsData` routing; composer sole-writer; optional deterministic bypass for catalog/list lookups.
 
@@ -28,7 +42,7 @@ guard → context_compact → intent → (gather | bypass | composer) → compos
 
 - **Gather** strips terminal `content`/`reasoning` without `tool_calls` — never user-facing Markdown
 - **Composer** is the only node that emits final user text
-- **Intent** (light LLM) routes chitchat/clarify vs data fetch — post-process only calendar/locale; no domain vocabulary in `src/`
+- **Intent classify** node (e.g. `intent_classify`) — light LLM; writes `intent` channel; routes chitchat/clarify vs data fetch — post-process only calendar/locale; no domain vocabulary in `src/`
 - **Bypass** (optional): zero-LLM path for closed catalog question classes
 - Wire budgets from `tool-budget.ts.snippet`; evidence channels in state — see `templates/graph-spec.md`
 
