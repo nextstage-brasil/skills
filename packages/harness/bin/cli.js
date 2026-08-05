@@ -3,6 +3,7 @@
 import { runInit, printList } from '../src/init.js';
 import { syncRules } from '../src/syncRules.js';
 import { syncSkills } from '../src/syncSkills.js';
+import { syncSubagents } from '../src/syncSubagents.js';
 import { syncDockerignore } from '../src/syncDockerignore.js';
 import { syncGitignore } from '../src/syncGitignore.js';
 import { migrateRules } from '../src/migrateRules.js';
@@ -22,7 +23,7 @@ const HELP = `
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
   harness prepare          Print full brownfield prepare instructions (/ns-harness-prepare)
-  harness sync [options]   Regenerate rule and skill adapters from canonical sources
+  harness sync [options]   Regenerate rule, skill, and subagent adapters from canonical sources
   harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
   harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
@@ -242,13 +243,18 @@ async function runSync(parsed) {
   const agents = resolveAgents(projectRoot, parsed.agent);
   const rulesResult = syncRules(projectRoot, { agents, check: parsed.check });
   const skillsResult = syncSkills(projectRoot, { agents, check: parsed.check, copy: parsed.copy });
+  const subagentsResult = syncSubagents(projectRoot, { agents, check: parsed.check });
   const dockerignoreResult = parsed.check
     ? { written: [], skipped: [] }
     : syncDockerignore(projectRoot);
   const gitignoreResult = parsed.check
     ? { written: [], skipped: [] }
     : syncGitignore(projectRoot);
-  const drifts = [...rulesResult.drifts, ...skillsResult.drifts];
+  const drifts = [
+    ...rulesResult.drifts,
+    ...skillsResult.drifts,
+    ...subagentsResult.drifts,
+  ];
 
   if (parsed.check) {
     if (drifts.length > 0) {
@@ -258,19 +264,26 @@ async function runSync(parsed) {
       }
       process.exit(1);
     }
-    console.log('OK: rule and skill adapters match canonical sources');
+    console.log('OK: rule, skill, and subagent adapters match canonical sources');
     return;
   }
 
   const totalWritten =
     rulesResult.written.length
     + skillsResult.written.length
+    + subagentsResult.written.length
     + dockerignoreResult.written.length
     + gitignoreResult.written.length;
   if (totalWritten > 0) {
     console.log(`Synced ${totalWritten} adapter(s)`);
     if (skillsResult.written.length > 0) {
       console.log(`  Skills → ${skillsResult.written.length} path(s)`);
+    }
+    if (subagentsResult.written.length > 0) {
+      console.log(`  Subagents → ${subagentsResult.written.length} path(s)`);
+    }
+    if (subagentsResult.seeded?.length > 0) {
+      console.log(`  Subagents seeded in manifest: ${subagentsResult.seeded.join(', ')}`);
     }
     if (dockerignoreResult.written.length > 0) {
       console.log('  .dockerignore → harness ignore block');

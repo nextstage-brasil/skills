@@ -6,6 +6,7 @@ import { installSkills, updateInstalledSkills } from './installer.js';
 import { pruneRetiredSkills } from './pruneRetiredSkills.js';
 import { syncSkills } from './syncSkills.js';
 import { syncRules } from './syncRules.js';
+import { syncSubagents } from './syncSubagents.js';
 import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
 import { HARNESS_ROOT, resolveAgents } from './agentsLayout.js';
 import { logResolvedAgents } from './logResolvedAgents.js';
@@ -85,6 +86,13 @@ export async function runUpdate(argv = {}) {
     const rulesSync = syncRules(projectRoot, { agents });
     if (rulesSync.written.length > 0) {
       details.push(`Rule adapters synced: ${rulesSync.written.length}`);
+    }
+    const subagentsSync = syncSubagents(projectRoot, { agents });
+    if (subagentsSync.seeded.length > 0) {
+      details.push(`Subagents seeded: ${subagentsSync.seeded.join(', ')}`);
+    }
+    if (subagentsSync.written.length > 0) {
+      details.push(`Subagent adapters synced: ${subagentsSync.written.length}`);
     }
   }
 

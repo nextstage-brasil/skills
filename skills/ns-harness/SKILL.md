@@ -4,7 +4,7 @@ description: (NS) Harness discovery, artifact layout, and SDD planning gates for
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 ---
 
 # NextStage Harness

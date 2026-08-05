@@ -17,7 +17,7 @@ npx @nextstage-brasil/harness <command>
 |------|---------|
 | See installed skills & presets | `npx @nextstage-brasil/harness list` |
 | See which agents this project uses | `npx @nextstage-brasil/harness agents` |
-| Refresh rules + skill adapters | `npx @nextstage-brasil/harness sync` |
+| Refresh rules + skill + subagent adapters | `npx @nextstage-brasil/harness sync` |
 | Update skills already installed | `npx @nextstage-brasil/harness update` |
 | Brownfield onboarding (manual) | `/ns-harness-prepare` |
 | Brownfield instructions (terminal) | `npx @nextstage-brasil/harness prepare` |
@@ -33,11 +33,13 @@ npx @nextstage-brasil/harness <command>
 | Path | Role | Edit? |
 |------|------|-------|
 | `rules/*.md` | Canonical rule bodies | **Yes** |
-| `manifest.json` | Rule registry + project `agents` | When adding rules or changing agents |
+| `manifest.json` | Rule registry + project `agents` + `subagents` (models) | When adding rules/agents or changing subagent models |
 | `.agents/skills/<name>/` | Installed skills (Skills CLI) | Via `harness init` / `update` / `skills add` |
 | `AGENTS.md` | Project entry for agents | CLI baseline; refine with `/ns-harness-agents-md` |
 | `.cursor/rules/*.mdc` | Cursor rule adapters | **No** — generated |
 | `.claude/rules/*.md` | Claude rule adapters | **No** — generated |
+| `.cursor/agents/*.md` | Cursor subagent bridges | **No** — generated; set `model` in manifest |
+| `.claude/agents/*.md` | Claude subagent bridges | **No** — generated; set `model` in manifest |
 | `.claude/skills/` | Claude skill symlinks | **No** — generated when `claude-code` is active |
 
 **Mental model:** truth = `.nextstage-harness/` + `.agents/skills/` · mirrors = `.cursor/` + `.claude/`.
@@ -65,6 +67,34 @@ npx @nextstage-brasil/harness agents set claude cursor
 `sync` and `update` use `manifest.agents` when you omit `--agent`.
 
 Cursor reads skills from `.agents/skills/` directly. Claude Code uses symlinks in `.claude/skills/` when enabled.
+
+---
+
+## Project subagents (model bridges)
+
+Thin bridges in `manifest.json` → `"subagents"`. Seeded when matching skills are installed (aligned with presets that pull `ns-code-coder`, `ns-code-reviewer`, `ns-sdd-task-generator`):
+
+| Agent file | Skill | Default model (cursor / claude) | `readonly` |
+|------------|-------|----------------------------------|------------|
+| `coder-agent.md` | `ns-code-coder` | `inherit` / `inherit` | `false` |
+| `reviewer-agent.md` | `ns-code-reviewer` | `inherit` / `inherit` | `true` |
+| `task-writer-agent.md` | `ns-sdd-task-generator` | `fast` / `haiku` | `false` |
+
+**Project owns `model`.** Edit `manifest.json`, then `harness sync`. `harness update` refreshes adapter bodies but **never** resets your model values.
+
+```json
+"subagents": [
+  {
+    "name": "reviewer-agent",
+    "skill": "ns-code-reviewer",
+    "description": "(NS) Thin bridge…",
+    "model": { "cursor": "inherit", "claude": "inherit" },
+    "readonly": true
+  }
+]
+```
+
+Generated adapters: `.cursor/agents/{name}.md` and `.claude/agents/{name}.md`. Each bridge reads `AGENTS.md` then the mapped skill.
 
 ---
 

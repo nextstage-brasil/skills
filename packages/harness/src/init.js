@@ -20,6 +20,7 @@ import { scaffoldProject } from './scaffold.js';
 import { resolveSource } from './source.js';
 import { syncRules } from './syncRules.js';
 import { syncSkills } from './syncSkills.js';
+import { syncSubagents } from './syncSubagents.js';
 import { syncDockerignore } from './syncDockerignore.js';
 import { syncGitignore } from './syncGitignore.js';
 import { generateAgentsMd } from './generateAgentsMd.js';
@@ -162,7 +163,21 @@ export async function runInit(argv = {}) {
     try {
       const syncResult = syncRules(detection.projectRoot, { agents });
       if (syncResult.written.length > 0) {
-        p.log.success(`Synced adapters: ${syncResult.written.length} file(s)`);
+        p.log.success(`Synced rule adapters: ${syncResult.written.length} file(s)`);
+      }
+    } catch (error) {
+      p.log.warn(
+        error instanceof Error ? error.message : String(error),
+      );
+    }
+
+    try {
+      const subagentsResult = syncSubagents(detection.projectRoot, { agents });
+      if (subagentsResult.seeded.length > 0) {
+        p.log.success(`Seeded subagents: ${subagentsResult.seeded.join(', ')}`);
+      }
+      if (subagentsResult.written.length > 0) {
+        p.log.success(`Synced subagent adapters: ${subagentsResult.written.length} file(s)`);
       }
     } catch (error) {
       p.log.warn(

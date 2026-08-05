@@ -7,13 +7,15 @@ Canonical project rules live under `{harness_root}/rules/*.md`. Adapters for Cur
 ```
 .nextstage-harness/
   README.md              # human guide — where to edit, how to add rules
-  manifest.json          # adapter config (v1 schema)
+  manifest.json          # adapter config (v1 schema) — rules + agents + subagents
   rules/
     architecture-rules.md   # constitution (always loaded)
     backend-rules.md        # optional layer rules
 
 .cursor/rules/*.mdc         # generated — Cursor rule adapter
 .claude/rules/*.md          # generated — Claude Code rule adapter
+.cursor/agents/*.md         # generated — Cursor subagent bridges
+.claude/agents/*.md         # generated — Claude Code subagent bridges
 
 .agents/skills/             # canonical — Skills CLI (Cursor reads here directly)
 .claude/skills/             # symlinked — harness sync (Claude Code only)
@@ -33,6 +35,7 @@ Cursor subagents spawned during a session use the same project skill catalog as 
 ```json
 {
   "version": 1,
+  "agents": ["cursor", "claude-code"],
   "rules": [
     {
       "name": "architecture-rules",
@@ -46,6 +49,15 @@ Cursor subagents spawned during a session use the same project skill catalog as 
       "cursor": { "globs": "backend/**" },
       "claude": { "paths": ["backend/**"] }
     }
+  ],
+  "subagents": [
+    {
+      "name": "coder-agent",
+      "skill": "ns-code-coder",
+      "description": "(NS) Thin bridge to ns-code-coder…",
+      "model": { "cursor": "inherit", "claude": "inherit" },
+      "readonly": false
+    }
   ]
 }
 ```
@@ -58,6 +70,20 @@ Cursor subagents spawned during a session use the same project skill catalog as 
 | `cursor.globs` | Cursor glob scope |
 | `cursor.description` | Cursor rule description (required when `alwaysApply`) |
 | `claude.paths` | Claude path scope array; `null` = global (omit `paths:` frontmatter) |
+| `subagents[].name` | Adapter basename → `.cursor/agents/{name}.md`, `.claude/agents/{name}.md` |
+| `subagents[].skill` | Installed skill the bridge loads |
+| `subagents[].model` | **Project-owned** — `harness update` never overwrites |
+| `subagents[].readonly` | No write tools when `true` (reviewer default); filled from catalog if missing |
+
+### Default subagents (seeded when skill is installed)
+
+| Name | Skill | Default model (cursor / claude) | `readonly` |
+|------|-------|----------------------------------|------------|
+| `coder-agent` | `ns-code-coder` | `inherit` / `inherit` | `false` |
+| `reviewer-agent` | `ns-code-reviewer` | `inherit` / `inherit` | `true` |
+| `task-writer-agent` | `ns-sdd-task-generator` | `fast` / `haiku` | `false` |
+
+Presets that install those skills get matching bridges on `init` / `sync` / `update`. Each bridge body: read `AGENTS.md` → architecture rules → follow the skill.
 
 After adding a new canonical rule file, add a matching entry to `manifest.json`, then run `sync`. Prefer:
 
@@ -76,6 +102,7 @@ That creates the stub, updates the manifest, and syncs adapters in one step.
 3. Writes `.claude/rules/{name}.md` with Claude `paths:` frontmatter when configured + same marker + body.
 4. Embeds `<!-- harness-sync:sha256=<hash> -->` in each adapter for drift detection.
 5. Symlinks `.agents/skills/{name}/` → `.claude/skills/{name}/` when Claude Code is a target agent. Cursor uses `.agents/skills/` directly — legacy `.cursor/skills/` harness symlinks are removed on sync.
+6. Seeds `manifest.subagents` for installed default skills (preserving existing `model`) and writes `.cursor/agents/{name}.md` + `.claude/agents/{name}.md`.
 
 Generation marker (first line of body):
 
@@ -88,14 +115,14 @@ Generation marker (first line of body):
 | Command | Behavior |
 |---------|----------|
 | `harness add-rule <name>` | Create stub + manifest entry + sync (`--description`, `--globs`, `--force`) |
-| `harness sync` | Regenerate rule adapters + Claude skill symlinks |
+| `harness sync` | Regenerate rule adapters + Claude skill symlinks + subagent bridges |
 | `harness sync --check` | CI mode — compare hashes, no writes; exit 1 on drift |
 | `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` → canonical + manifest update + sync |
 | `harness migrate-rules --force` | Overwrite existing canonical files |
 
 ## Git policy
 
-Commit **both** canonical (`.nextstage-harness/rules/`) and generated adapters (`.cursor/rules/`, `.claude/rules/`). CI should run `harness sync --check` to catch manual adapter edits.
+Commit **both** canonical (`.nextstage-harness/rules/`, `manifest.json` including `subagents`) and generated adapters (`.cursor/rules/`, `.claude/rules/`, `.cursor/agents/`, `.claude/agents/`). CI should run `harness sync --check` to catch manual adapter edits.
 
 ## AGENTS.md sync marker
 

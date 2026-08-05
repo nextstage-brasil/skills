@@ -15,6 +15,7 @@ import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
 import { syncRules } from './syncRules.js';
 import { syncSkills } from './syncSkills.js';
+import { syncSubagents } from './syncSubagents.js';
 
 export function formatAgentsSource(source) {
   if (source === 'cli') return 'CLI --agent';
@@ -74,12 +75,15 @@ export function runAgentsSet(projectRoot, agentIds, options = {}) {
 
   let rulesWritten = 0;
   let skillsWritten = 0;
+  let subagentsWritten = 0;
 
   if (!options.skipSync) {
     const rulesSync = syncRules(projectRoot, { agents });
     rulesWritten = rulesSync.written.length;
     const skillsSync = syncSkills(projectRoot, { agents, copy: Boolean(options.copy) });
     skillsWritten = skillsSync.written.length;
+    const subagentsSync = syncSubagents(projectRoot, { agents });
+    subagentsWritten = subagentsSync.written.length;
   }
 
   console.log(`Saved agents: ${agents.join(', ')} → ${HARNESS_ROOT}/manifest.json`);
@@ -93,11 +97,14 @@ export function runAgentsSet(projectRoot, agentIds, options = {}) {
   if (skillsWritten > 0) {
     console.log(`Synced ${skillsWritten} skill adapter(s)`);
   }
+  if (subagentsWritten > 0) {
+    console.log(`Synced ${subagentsWritten} subagent adapter(s)`);
+  }
 
   const readmeResult = refreshHarnessReadme(projectRoot);
   if (readmeResult.updated) {
     console.log(`Updated: ${HARNESS_ROOT}/README.md`);
   }
 
-  return { agents, pruned, rulesWritten, skillsWritten };
+  return { agents, pruned, rulesWritten, skillsWritten, subagentsWritten };
 }

@@ -3,6 +3,8 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AGENTS_HOME, HARNESS_ROOT, HARNESS_RULES_DIR } from './agentsLayout.js';
 import { listCategories } from './catalog.js';
+import { loadManifest } from './manifest.js';
+import { DEFAULT_SUBAGENTS } from './subagentsCatalog.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DOCKER_TESTING_SECTION = readFileSync(
@@ -33,9 +35,11 @@ const LAYOUT_PATHS = [
   { path: 'AGENTS.md', purpose: 'Project rules entry point' },
   { path: HARNESS_RULES_DIR, purpose: 'Canonical project rules' },
   { path: join(HARNESS_ROOT, 'README.md'), purpose: 'How to add/edit rules' },
-  { path: join(HARNESS_ROOT, 'manifest.json'), purpose: 'Adapter config for harness sync' },
+  { path: join(HARNESS_ROOT, 'manifest.json'), purpose: 'Adapter config for harness sync (rules + subagents)' },
   { path: '.cursor/rules/', purpose: 'Generated Cursor rule adapters' },
   { path: '.claude/rules/', purpose: 'Generated Claude rule adapters' },
+  { path: '.cursor/agents/', purpose: 'Generated Cursor subagent bridges (model + skill)' },
+  { path: '.claude/agents/', purpose: 'Generated Claude Code subagent bridges (model + skill)' },
   { path: join(AGENTS_HOME, 'skills/'), purpose: 'Installed skills (Skills CLI; Cursor reads here)' },
   { path: '.claude/skills/', purpose: 'Symlinked Claude Code skills (harness sync)' },
   { path: join(AGENTS_HOME, 'docs/'), purpose: 'Agent-oriented project docs' },
@@ -43,6 +47,34 @@ const LAYOUT_PATHS = [
   { path: 'docs/versions/', purpose: 'SDD version artifacts' },
   { path: 'docs/specs/', purpose: 'Living domain specs' },
 ];
+
+function buildSubagentsSection(projectRoot, installed) {
+  const installedSet = new Set(installed);
+  const manifest = loadManifest(projectRoot);
+  const fromManifest = Array.isArray(manifest?.subagents) ? manifest.subagents : [];
+  const byName = new Map(fromManifest.filter((e) => e?.name).map((e) => [e.name, e]));
+
+  const rows = [];
+  for (const def of DEFAULT_SUBAGENTS) {
+    if (!installedSet.has(def.skill)) continue;
+    const entry = byName.get(def.name) ?? def;
+    const cursorModel = entry.model?.cursor ?? def.model.cursor;
+    const claudeModel = entry.model?.claude ?? def.model.claude;
+    rows.push(
+      `| \`${entry.name}\` | \`${entry.skill}\` | \`${cursorModel}\` / \`${claudeModel}\` |`,
+    );
+  }
+
+  if (rows.length === 0) {
+    return '_No harness subagent bridges (install coder/reviewer/task skills via a preset)._';
+  }
+
+  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`). Each bridge loads this \`AGENTS.md\` then the mapped skill — skills remain the workflow source of truth. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
+
+| Agent | Skill | Model (cursor / claude) |
+| ----- | ----- | ----------------------- |
+${rows.join('\n')}`;
+}
 
 function listSkillDirs(projectRoot) {
   const skillsDir = join(projectRoot, AGENTS_HOME, 'skills');
@@ -268,7 +300,11 @@ ${layoutRows.join('\n')}
 
 ${buildInstalledSkillsSection(installed)}
 
-Invoke via the Skills menu / slash (e.g. \`/ns-code-coder\`, \`/ns-code-reviewer\`). Skills are the entry points — do not invent separate agent personas.
+Invoke via the Skills menu / slash (e.g. \`/ns-code-coder\`, \`/ns-code-reviewer\`), **or** via harness project subagents below. Skills are the workflow source of truth — subagents are thin bridges that bind a model and load \`AGENTS.md\` + the skill.
+
+## Project subagents
+
+${buildSubagentsSection(root, installed)}
 
 ## Implementation routing
 
@@ -306,7 +342,7 @@ ${buildComplementsNote(installed)}
 
 ## Hard stops / FORBIDDEN
 
-- Do not invent folders, skills, or agent personas not listed here.
+- Do not invent folders, skills, or agent personas not listed here (harness \`*-agent\` bridges in Project subagents are allowed).
 - Do not skip \`architecture-rules.md\` before implementation.
 - Do not commit, push, or mutate GitLab state unless the active skill explicitly allows it for this run.
 - GitLab \`ISSUE_URL\` → \`ns-execution-gitlab-issue\` — never ad-hoc coder on the main checkout.
@@ -319,6 +355,7 @@ This file **routes** agents to skills and project rules. Stack, modules, and tec
 ## Rules and sync
 
 - Canonical rules: \`.nextstage-harness/rules/*.md\`
+- Subagent model bindings: \`.nextstage-harness/manifest.json\` → \`subagents\` (project-owned; update does not reset)
 - Regenerate adapters: \`npx @nextstage-brasil/harness sync\`
 - Refresh this file: \`npx @nextstage-brasil/harness agents-md\`
 - Skills: \`.agents/skills/\` (canonical; Cursor reads here) — \`.claude/skills/\` symlinked for Claude Code when harness sync runs

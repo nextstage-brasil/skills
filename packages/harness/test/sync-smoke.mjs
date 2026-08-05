@@ -16,9 +16,12 @@ import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js
 import { listSkillsToUpdate } from '../src/update.js';
 import { resolveAgentsConfig } from '../src/agentsLayout.js';
 import { writeManifestAgents } from '../src/manifest.js';
+import { syncSubagents, buildSubagentBody } from '../src/syncSubagents.js';
+import { ensureSubagents } from '../src/ensureSubagents.js';
 import { runUninstall, assessUninstall } from '../src/uninstall.js';
 import { stripIgnoreContent } from '../src/patchIgnoreContent.js';
 import {
+  AGENTS_HOME,
   DOCKERIGNORE_BLOCK_HEADER,
   DOCKERIGNORE_ENTRIES,
   GITIGNORE_BLOCK_HEADER,
@@ -424,6 +427,94 @@ try {
     assert(agentsShow.stdout.includes('cursor'), 'agents show should list cursor');
   } finally {
     rmSync(agentsOnlyDir, { recursive: true, force: true });
+  }
+
+  // Subagents: seed from installed skills, preserve model on re-ensure, write adapters
+  const subagentsDir = mkdtempSync(join(tmpdir(), 'harness-subagents-'));
+  try {
+    scaffoldProject(subagentsDir, { agents: true, docs: false });
+    for (const skill of ['ns-code-coder', 'ns-code-reviewer', 'ns-sdd-task-generator']) {
+      const skillDir = join(subagentsDir, AGENTS_HOME, 'skills', skill);
+      mkdirSync(skillDir, { recursive: true });
+      writeFileSync(join(skillDir, 'SKILL.md'), `# ${skill}\n`, 'utf8');
+    }
+
+    const firstSync = syncSubagents(subagentsDir, { agents: ['cursor', 'claude-code'] });
+    assert(firstSync.seeded.includes('coder-agent'), 'should seed coder-agent');
+    assert(firstSync.seeded.includes('reviewer-agent'), 'should seed reviewer-agent');
+    assert(firstSync.seeded.includes('task-writer-agent'), 'should seed task-writer-agent');
+    assert(
+      existsSync(join(subagentsDir, '.cursor', 'agents', 'coder-agent.md')),
+      'should write cursor coder-agent.md',
+    );
+    assert(
+      existsSync(join(subagentsDir, '.claude', 'agents', 'task-writer-agent.md')),
+      'should write claude task-writer-agent.md',
+    );
+
+    const cursorCoder = readFileSync(join(subagentsDir, '.cursor', 'agents', 'coder-agent.md'), 'utf8');
+    assert(cursorCoder.includes('name: coder-agent'), 'cursor adapter should have name');
+    assert(cursorCoder.includes('readonly: false'), 'coder-agent should not be readonly');
+    assert(cursorCoder.includes('Read `AGENTS.md`'), 'adapter body should require AGENTS.md');
+    assert(cursorCoder.includes('.agents/skills/ns-code-coder/SKILL.md'), 'adapter should point at skill');
+
+    const cursorReviewer = readFileSync(
+      join(subagentsDir, '.cursor', 'agents', 'reviewer-agent.md'),
+      'utf8',
+    );
+    assert(cursorReviewer.includes('readonly: true'), 'reviewer-agent must be readonly');
+
+    const claudeTask = readFileSync(
+      join(subagentsDir, '.claude', 'agents', 'task-writer-agent.md'),
+      'utf8',
+    );
+    assert(claudeTask.includes('model: haiku'), 'task-writer default claude model is haiku');
+    assert(claudeTask.includes('readonly: false'), 'task-writer-agent should not be readonly');
+
+    const manifestPath = join(subagentsDir, '.nextstage-harness', 'manifest.json');
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    const taskEntry = manifest.subagents.find((entry) => entry.name === 'task-writer-agent');
+    taskEntry.model.claude = 'sonnet';
+    taskEntry.model.cursor = 'composer-2';
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+
+    const secondEnsure = ensureSubagents(subagentsDir, { write: true });
+    const taskAfter = secondEnsure.subagents.find((entry) => entry.name === 'task-writer-agent');
+    assert(taskAfter.model.claude === 'sonnet', 'ensure must preserve project claude model');
+    assert(taskAfter.model.cursor === 'composer-2', 'ensure must preserve project cursor model');
+    assert(secondEnsure.seeded.length === 0, 'second ensure should not re-seed');
+
+    const secondSync = syncSubagents(subagentsDir, { agents: ['cursor', 'claude-code'] });
+    assert(secondSync.ok, 'second sync should succeed');
+    const updatedClaude = readFileSync(
+      join(subagentsDir, '.claude', 'agents', 'task-writer-agent.md'),
+      'utf8',
+    );
+    assert(updatedClaude.includes('model: sonnet'), 'sync should apply preserved project model');
+
+    const checkOk = syncSubagents(subagentsDir, { agents: ['cursor', 'claude-code'], check: true });
+    assert(checkOk.ok, 'sync --check equivalent should pass after sync');
+
+    writeFileSync(
+      join(subagentsDir, '.cursor', 'agents', 'task-writer-agent.md'),
+      '# drift\n',
+      'utf8',
+    );
+    const checkDrift = syncSubagents(subagentsDir, { agents: ['cursor', 'claude-code'], check: true });
+    assert(!checkDrift.ok, 'drift should fail check');
+
+    const agentsMd = generateAgentsMd(subagentsDir, { force: true });
+    assert(agentsMd.written.includes('AGENTS.md'), 'agents-md should write');
+    const agentsContent = readFileSync(join(subagentsDir, 'AGENTS.md'), 'utf8');
+    assert(agentsContent.includes('coder-agent'), 'AGENTS.md should list coder-agent');
+    assert(agentsContent.includes('Project subagents'), 'AGENTS.md should have subagents section');
+
+    assert(
+      buildSubagentBody({ name: 'coder-agent', skill: 'ns-code-coder' }).includes('AGENTS.md'),
+      'buildSubagentBody should mention AGENTS.md',
+    );
+  } finally {
+    rmSync(subagentsDir, { recursive: true, force: true });
   }
 
   const listOut = runCli(['list'], harnessRoot);

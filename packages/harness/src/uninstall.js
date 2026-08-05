@@ -77,6 +77,26 @@ function collectManagedRuleAdapters(projectRoot) {
   return paths;
 }
 
+function collectManagedSubagentAdapters(projectRoot) {
+  const paths = [];
+  const agentDirs = [
+    join(projectRoot, '.cursor', 'agents'),
+    join(projectRoot, '.claude', 'agents'),
+  ];
+
+  for (const dir of agentDirs) {
+    if (!existsSync(dir)) continue;
+    for (const entry of readdirSync(dir)) {
+      const path = join(dir, entry);
+      if (isHarnessManagedRuleAdapter(path)) {
+        paths.push(path);
+      }
+    }
+  }
+
+  return paths;
+}
+
 function collectSkillAdapterPaths(projectRoot, skillNames) {
   const paths = [];
   const adapterRoots = [
@@ -98,9 +118,11 @@ function collectEmptyDirCandidates(projectRoot) {
   return [
     join(projectRoot, '.cursor', 'skills'),
     join(projectRoot, '.cursor', 'rules'),
+    join(projectRoot, '.cursor', 'agents'),
     join(projectRoot, '.cursor'),
     join(projectRoot, '.claude', 'skills'),
     join(projectRoot, '.claude', 'rules'),
+    join(projectRoot, '.claude', 'agents'),
     join(projectRoot, '.claude'),
     join(projectRoot, AGENTS_SKILLS_DIR),
     join(projectRoot, AGENTS_HOME, 'docs'),
@@ -170,6 +192,7 @@ export function assessUninstall(projectRoot, options = {}) {
 
   removable.push(...collectSkillAdapterPaths(projectRoot, skillNames));
   removable.push(...collectManagedRuleAdapters(projectRoot));
+  removable.push(...collectManagedSubagentAdapters(projectRoot));
 
   const lockPath = join(projectRoot, 'skills-lock.json');
   if (existsSync(lockPath)) {
