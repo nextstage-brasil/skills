@@ -6,6 +6,7 @@ export type ContextConfig = {
   maxTokens: number;
   summarizeMultiplier: number;
   toolOutputMaxChars: number;
+  skillBodyMaxChars: number;
 };
 
 export function resolveContextConfig(): ContextConfig {
@@ -17,7 +18,35 @@ export function resolveContextConfig(): ContextConfig {
     maxTokens: n("CONTEXT_MAX_TOKENS", 12000),
     summarizeMultiplier: n("CONTEXT_SUMMARIZE_MULTIPLIER", 2),
     toolOutputMaxChars: n("CONTEXT_TOOL_OUTPUT_MAX_CHARS", 4000),
+    skillBodyMaxChars: n("CONTEXT_SKILL_BODY_MAX_CHARS", 12000),
   };
+}
+
+/** Extract LLM-visible text from MCP wire shape before truncate — avoids double-stringify cuts. */
+export function normalizeMcpToolResult(raw: unknown): string {
+  if (typeof raw === "string") return raw;
+  if (raw && typeof raw === "object") {
+    const o = raw as Record<string, unknown>;
+    if (typeof o.content === "string") return o.content;
+    if (Array.isArray(o.content)) {
+      return o.content
+        .map((block) =>
+          block && typeof block === "object" && "text" in block
+            ? String((block as { text: unknown }).text)
+            : "",
+        )
+        .filter(Boolean)
+        .join("\n");
+    }
+    if (o.structuredContent != null) {
+      return JSON.stringify(o.structuredContent);
+    }
+  }
+  return JSON.stringify(raw);
+}
+
+export function truncateSkillBody(body: string, maxChars: number): string {
+  return truncateToolOutput(body, maxChars);
 }
 
 export async function trimMessagesForLlm(

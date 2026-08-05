@@ -70,6 +70,24 @@ cases:
 
 Block merge when thresholds in suite fail.
 
+## MCP contract gates (when MCP in scope)
+
+| Gate | Requirement |
+| ---- | ----------- |
+| Golden `tools/list` | Fixture in tests/mock declares real tool names + schema shape from live or pinned MCP |
+| Mock alignment | Mock server `items` match golden fixture — CI fails on drift |
+| Schema-derived Zod | Prefer codegen from golden `tools/list` over hand-transcribed prompt tables |
+
+## Browser / dev-chat gate (`streaming_sse`)
+
+When `interaction_mode: streaming_sse`:
+
+- **Greenfield MUST:** at least one Playwright (or equivalent) conversational suite against `GET /dev-chat` — same SSE contract as production
+- Brownfield: recommend before major prompt/topology change
+- Unit green ≠ agent answers — browser path catches stream sanitize, composer-only output, tool progress UX
+
+Do **not** conflate with Cypress `ns-code-e2e-tests` — agent-api browser evals live in project `agent-api/evals/` per this skill.
+
 ## LangSmith / external evals
 
 Optional: export datasets to LangSmith for regression. Postgres audit remains canonical for tenant data.
@@ -83,4 +101,6 @@ Structured planner JSON (see `templates/contracts/planner-contract.md`) enables 
 - [ ] At least one architecture benchmark suite green
 - [ ] Tool-selection suite if >10 tools
 - [ ] Memory suite if long-term memory enabled
+- [ ] Golden `tools/list` + mock alignment if MCP bound
+- [ ] Playwright/dev-chat suite if `streaming_sse` (greenfield MUST)
 - [ ] No eval relies on live secrets — use mocks or staging MCP

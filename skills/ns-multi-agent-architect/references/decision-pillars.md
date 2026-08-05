@@ -52,3 +52,11 @@ Skip branches already resolved by the user's prior answers.
 | Human gates | Native interrupt / resume patterns | Custom or lightweight checkpoints |
 | Time to MVP | Higher setup cost | Lower for sequential specialist flows |
 | Best fit | Regulated, cyclic, stateful workflows | Research, content, multi-specialist pipelines |
+
+## LangGraph + MCP probe
+
+When user locks **LangGraph** and scope includes **MCP or many external tools**:
+
+- Recommend **`react_bounded`** topology (intent → bounded gather → composer) in final report — not open ReAct as only path
+- Note greenfield MUST items from `ns-langgraph-agents`: dev-chat, tool budgets, evidence channels
+- Simple local-tools MVP may still use open ReAct — do not over-prescribe topology for trivial tool count

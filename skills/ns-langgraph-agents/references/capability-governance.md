@@ -59,8 +59,27 @@ Filter **before** `bind_tools`. Agent must not see denied tools in the manifest.
 Sliding window per `tenantId:capabilityId`:
 
 - Per-tool limits for expensive MCP calls
-- Per-agent turn budget (`max_tool_calls` in rules contract)
+- Per-agent turn budget (`max_tool_calls` / `max_mcp_calls` in rules contract)
 - Return structured error to model when exceeded — not HTTP 500
+
+## Per-turn budgets (MCP / tool-heavy)
+
+**Greenfield** and intentional MCP redesign: **MUST** wire budgets. **Brownfield:** **RECOMMENDED** — not a Critical blocker on orphan recovery.
+
+Wire `templates/snippets/tool-budget.ts.snippet` in gather/agent loop:
+
+| Limit | Default env | Purpose |
+| ----- | ----------- | ------- |
+| `max_tool_calls_per_turn` | `AGENT_MAX_TOOL_CALLS` (8) | All tool kinds combined |
+| `max_mcp_calls_per_turn` | `AGENT_MAX_MCP_CALLS` (6) | MCP subset of above |
+
+On exceed: stop tool loop; surface structured message to model or composer — never silent hang.
+
+### Arg fingerprint duplicate-skip
+
+Hash redacted `(toolName, args)` per turn. **Skip** repeat identical calls. If an entire gather round is duplicates **and** analytical evidence already sits in state, **break** loop — do not burn budget re-polling.
+
+Discovery-only calls (list/search) do **not** count as analytical evidence — see `references/evidence-and-fidelity.md`.
 
 ## Secrets
 

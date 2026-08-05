@@ -8,7 +8,9 @@ Operational limits for the agent loop.
 | ---- | ------- | ------------ |
 | `max_steps_per_turn` | 12 | `AGENT_MAX_STEPS` |
 | `max_tool_calls_per_turn` | 8 | `AGENT_MAX_TOOL_CALLS` |
+| `max_mcp_calls_per_turn` | 6 | `AGENT_MAX_MCP_CALLS` |
 | `max_duration_seconds` | 120 | `AGENT_MAX_DURATION` |
+| `turn_latency_budget_ms` | 60000 | `TURN_LATENCY_BUDGET_MS` |
 | `no_progress_repeat_limit` | 3 | — |
 
 ## Sensitive actions

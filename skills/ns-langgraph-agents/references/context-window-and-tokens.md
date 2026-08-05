@@ -14,6 +14,33 @@ The checkpointer stores **full** graph state. Context management decides **what 
 
 Do not reuse `CONTEXT_TOOL_OUTPUT_MAX_CHARS` for skill doctrine — that silently truncates procedures. Auto-inject and `use_skill` share the same skill-body cap and truncation fidelity. See `references/prompt-and-capability-injection.md`.
 
+## normalizeMcpToolResult (before truncate)
+
+MCP adapters often return `{ content, structuredContent }`. Stringifying the wrapper **before** extract cuts totals and breaks fidelity.
+
+```
+raw MCP result
+  → normalizeMcpToolResult(raw)   // extract LLM-visible text
+  → truncateToolOutput(text, CONTEXT_TOOL_OUTPUT_MAX_CHARS)
+  → ToolMessage
+```
+
+Snippet: `normalizeMcpToolResult` in `templates/snippets/context-window.ts.snippet`. Full wire patterns: `references/mcp-complex-access.md`.
+
+## context_compact (MCP-heavy graphs)
+
+Dedicated node or `prepareLlmMessages` helper **before** intent/gather:
+
+```
+state.messages
+  → prune stale tool noise
+  → compress intra-turn discovery ToolMessages (after analytical evidence exists)
+  → trimMessagesForLlm
+  → optional summarizeOlderMessages (SSE thinking only when summarize runs)
+```
+
+Snippet: `templates/snippets/prepare-llm-messages.ts.snippet`. Run once per turn early — not only inside gather loop.
+
 ## Pipeline (agent node)
 
 ```

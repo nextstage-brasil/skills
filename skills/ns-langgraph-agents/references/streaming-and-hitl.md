@@ -69,9 +69,21 @@ POST /threads              → create thread_id
 POST /threads/:id/message  → run graph (sync or SSE)
 POST /threads/:id/resume   → HITL resume with Command
 GET  /health
+GET  /dev-chat             → human train/test UI (greenfield streaming_sse MUST)
 ```
 
-Optional: `GET /dev-chat` gated by `DEV_CHAT_ENABLED` for internal QA.
+### Dev-chat (greenfield)
+
+| Context | Requirement |
+| ------- | ----------- |
+| Greenfield `streaming_sse` agent-api | **MUST** ship `GET /dev-chat` gated by `DEV_CHAT_ENABLED=true` (local-only; never prod without explicit product decision) |
+| Brownfield | **RECOMMENDED** if missing — same SSE contract as production routes |
+
+Dev-chat uses the same SSE envelope as `POST /threads/:id/message`. Without it, human iteration on tool/MCP behavior is impractical.
+
+### Turn latency budget
+
+Enforce `TURN_LATENCY_BUDGET_MS` (default 60000) at HTTP layer. On exceed: terminal SSE `failed` with `error_code: turn_latency_budget_exceeded` — distinct from client `cancelled`. See `references/error-and-reliability.md`.
 
 ## Postman
 

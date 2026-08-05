@@ -4,7 +4,7 @@ description: (NS) LangGraph.js agent-api — StateGraph, MCP tools, skill bind/i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
 ---
@@ -14,6 +14,16 @@ depends:
 Senior agent-runtime engineer. Guide construction and maintenance of **production-grade LangGraph.js** systems (Node 24+, TypeScript strict, `@langchain/langgraph`).
 
 This skill owns **runtime doctrine and coordination** — including **placement**, **prompt/capability injection**, and **graph-spec sync**. Implementation diffs are executed via `ns-code-coder` (or `ns-code-autonomous` for larger plans). Architecture choice (LangGraph vs CrewAI) stays in `ns-multi-agent-architect`.
+
+## Applicability
+
+| Context | Doctrine strength |
+| ------- | ----------------- |
+| **Greenfield** agent-api (new LangGraph runtime) | **MUST** follow build workflow gates — dev-chat, budgets, normalize-before-truncate, separate skill cap, `react_bounded` when MCP/tool-heavy |
+| **Brownfield** existing agent | **RECOMMENDED** migration toward same controls; orphan recovery does not Critical-fail missing topology |
+| **Intentional MCP redesign** | Sync `graph-spec.md` + refs in same delivery — treat greenfield MUST for topology/budget/evidence sections touched |
+
+Brownfield open ReAct stays valid until a deliberate topology change. Greenfield MUST language targets new agent-api and intentional MCP redesigns only.
 
 ## Routing (read first)
 
@@ -112,12 +122,15 @@ Load on demand — do not memorize entire files into the conversation.
 | `references/placement-and-domains.md` | Where to put files; domain vs graph vs config |
 | `references/prompt-and-capability-injection.md` | System prompt layers, bind vs inject, bind parity |
 | `references/message-content-blocks.md` | AIMessage/HumanMessage/ToolMessage across providers |
-| `references/context-window-and-tokens.md` | trim, summarize, tool vs skill body caps |
+| `references/context-window-and-tokens.md` | trim, summarize, tool vs skill body caps, `context_compact` |
 | `references/mcp-complex-access.md` | Multi-server MCP, discovery, transport, lifecycle |
-| `references/capability-governance.md` | Allowlist, classification, rate limits, secrets |
+| `references/capability-governance.md` | Allowlist, classification, rate limits, tool budgets |
+| `references/evidence-and-fidelity.md` | State-backed evidence, fidelity gate, external-error channel |
+| `templates/snippets/tool-budget.ts.snippet` | Per-turn tool/MCP caps, arg fingerprint duplicate-skip |
+| `templates/snippets/prepare-llm-messages.ts.snippet` | `context_compact` helper (optional pre-intent) |
 | `references/error-and-reliability.md` | Tool errors, circuit breaker, retries |
 | `references/observability.md` | Postgres audit, LangSmith, OTel, run context |
-| `references/architectures.md` | ReAct, plan-execute, reflection, supervisor |
+| `references/architectures.md` | ReAct, react_bounded, plan-execute, reflection, supervisor |
 | `references/streaming-and-hitl.md` | SSE envelopes, `interrupt()`, `Command` resume |
 | `references/evals-and-gates.md` | Architecture, tool-selection, memory evals |
 | `references/anti-patterns.md` | Review gate before marking done |
@@ -174,8 +187,8 @@ Use snippets from `templates/snippets/` — do not paste a monolithic scaffold.
 Implement per `references/context-window-and-tokens.md`:
 
 - `trimMessagesForLlm` before every LLM call.
-- `truncateToolOutput` before `ToolMessage` enters state.
-- Separate `CONTEXT_SKILL_BODY_MAX_CHARS` for skill bodies.
+- `normalizeMcpToolResult` then `truncateToolOutput` before `ToolMessage` enters state.
+- Separate `CONTEXT_SKILL_BODY_MAX_CHARS` for skill bodies (snippet `skillBodyMaxChars`).
 - Optional `summarizeOlderMessages` with **persisted compaction** (`RemoveMessage` + rewrite) in the same agent-node return.
 
 Never pass raw `state.messages` to the model.
@@ -186,17 +199,17 @@ Never pass raw `state.messages` to the model.
 2. MCP: governed client — discovery → local allowlist → wire names → singleton client lifecycle (`references/mcp-complex-access.md`).
 3. Skills: `skills/*.md` auto-discovered → `use_skill__{id}` **or** auto-inject (exclusive per id).
 
-Apply `references/capability-governance.md` and `references/prompt-and-capability-injection.md` before `bindTools`. Enforce **bind parity**.
+Apply `references/capability-governance.md` and `references/prompt-and-capability-injection.md` before `bindTools`. Enforce **bind parity**. Wire per-turn tool/MCP budgets from `templates/snippets/tool-budget.ts.snippet` when MCP or external tools are bound.
 
 ### Phase 6 — HTTP and interaction mode
 
 | Mode | Requirements |
 | ---- | ------------ |
 | `sync_json` | `POST /threads`, `POST /threads/:id/message` |
-| `streaming_sse` | SSE envelope per `references/streaming-and-hitl.md` |
+| `streaming_sse` | SSE envelope per `references/streaming-and-hitl.md`; **greenfield MUST** ship `GET /dev-chat` gated by `DEV_CHAT_ENABLED` (local-only) |
 | HITL | `interrupt()` + `POST /threads/:id/resume` with `Command({ resume })` |
 
-Keep Postman collection aligned with live routes.
+Brownfield missing dev-chat: recommend add — not a Critical blocker. Keep Postman collection aligned with live routes.
 
 ### Phase 7 — Observability
 

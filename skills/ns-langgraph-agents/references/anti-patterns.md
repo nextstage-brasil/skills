@@ -23,6 +23,19 @@ Review before marking agent work done. When the diff touches `agent-api`, treat 
 | Nudge as fake `HumanMessage` | Pollutes history and trim | System prompt `Runtime directive` section |
 | Skill auto-inject + `use_skill` same id | Double doctrine / inconsistent trunc | Choose one mode per id |
 | Tool/MCP char cap applied to skill body | Doctrine silently cut | `CONTEXT_SKILL_BODY_MAX_CHARS` |
+| Gather prompt includes deliver/formatting skill | Premature user-facing Markdown | Split gather vs deliver prompts — `prompt-and-capability-injection.md` |
+
+## Topology and evidence (MCP tool-heavy)
+
+| Anti-pattern | Why it hurts | Fix |
+| ------------ | ------------ | --- |
+| Open ReAct as **only** analytical path over open MCP catalog | Fixed-shape pipelines fail outside mold; token blow-up | Prefer `react_bounded` — `architectures.md` |
+| Gather emits final user-facing answer | SSE flicker; polluted history | Composer sole-writer |
+| Discovery-only tool calls counted as "has evidence" | False progress; duplicate-skip breaks | Analytical evidence channels — `evidence-and-fidelity.md` |
+| Silent `break` on LLM failure in gather | User sees empty or stale reply | Set `errorCode` on state; route to composer or `failed` |
+| Generic clarify when `externalError` already in state | Credential/MCP failure reads as "send me data" | Branch composer on `externalError` channel |
+| Greenfield agent-api without `/dev-chat` | No human train loop for MCP/SSE | `GET /dev-chat` + `DEV_CHAT_ENABLED` |
+| Numeric `null` from tools treated as `0` | Invented totals | Hydrate evidence bundle in code — `evidence-and-fidelity.md` |
 
 ## Bind parity
 

@@ -87,7 +87,7 @@ When two servers expose `search` or `read_file`:
 | Write/destructive tools | `destructive` class → HITL interrupt before execute |
 | Tenant-specific MCP URL | `url_source: payload` with validated allowlist of hosts |
 | Schema drift | Pin server version; re-discover on deploy, not every message |
-| Large JSON results | `truncateToolOutput` + offer "fetch by id" tools |
+| Large JSON results | `normalizeMcpToolResult` then `truncateToolOutput`; offer "fetch by id" tools |
 
 ## When NOT to use MCP
 
@@ -96,6 +96,34 @@ If the tool is a thin wrapper over an internal library in the same process, a lo
 - Tool is shared across agents/IDEs
 - Tool runs in another team's service
 - You need independent deploy and versioning
+
+## Normalize before truncate
+
+Always:
+
+```
+raw = await mcpClient.callTool(...)
+text = normalizeMcpToolResult(raw)
+safe = truncateToolOutput(text, CONTEXT_TOOL_OUTPUT_MAX_CHARS)
+```
+
+See `templates/snippets/context-window.ts.snippet`. Double-stringifying `{content, structuredContent}` before extract silently corrupts totals.
+
+## Structural and field-values cache (opt-in)
+
+For agents that rediscover the same catalog shape every turn:
+
+| Tier | Key shape | Caches |
+| ---- | --------- | ------ |
+| L1 structural | `tenantId` + resource + token fingerprint | `tools/list` or catalog tree shape |
+| L2 field-values | L1 key + field id | Enum/list values for known fields |
+
+Rules:
+
+- Write-through on cache miss; after cache hit replace bulky ToolMessage with short note
+- Flush on process boot when remote catalog version may have changed
+- **Never** cache confirmed absence of free-text search — negative discovery stays live
+- Opt-in only — agents without catalog rediscovery pain skip this
 
 ## Policy file
 

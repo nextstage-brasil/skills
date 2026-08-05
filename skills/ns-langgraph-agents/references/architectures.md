@@ -14,6 +14,26 @@ agent → tools? → agent → … → END
 
 **Graph:** `agent` node + `ToolNode` + conditional edge on `tool_calls`.
 
+## Bounded ReAct (`react_bounded`)
+
+```
+guard → context_compact → intent → (gather | bypass | composer) → composer → respond → END
+```
+
+**Signals:** MCP or external tools with open query space; `needsData` routing; composer sole-writer; optional deterministic bypass for catalog/list lookups.
+
+**When:** tool-heavy agents where unbounded ReAct blows tokens/latency or gather pollutes user stream. **Preferred default** for greenfield LangGraph + MCP — not a replacement for simple local-tool MVP.
+
+**Graph rules:**
+
+- **Gather** strips terminal `content`/`reasoning` without `tool_calls` — never user-facing Markdown
+- **Composer** is the only node that emits final user text
+- **Intent** (light LLM) routes chitchat/clarify vs data fetch — post-process only calendar/locale; no domain vocabulary in `src/`
+- **Bypass** (optional): zero-LLM path for closed catalog question classes
+- Wire budgets from `tool-budget.ts.snippet`; evidence channels in state — see `templates/graph-spec.md`
+
+**State channels (optional):** `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions` — commented placeholders in `templates/snippets/state.ts.snippet`.
+
 ## Plan-Execute
 
 ```
@@ -72,11 +92,12 @@ safeguard → agent → tools → END
 
 | Need | Start with |
 | ---- | ---------- |
-| MVP chat + tools | ReAct |
+| MVP chat + local tools only | ReAct |
+| MCP / external tools + open query space | **react_bounded** |
 | Fixed business workflow | Plan-Execute |
 | Quality gate | Reflection |
 | Many specialists | Supervisor (later) |
-| Untrusted input | Guardrails + ReAct |
+| Untrusted input | Guardrails + ReAct or react_bounded |
 
 ## graph-spec requirements per architecture
 

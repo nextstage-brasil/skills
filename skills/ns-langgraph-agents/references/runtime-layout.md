@@ -26,7 +26,7 @@ agent-api/
 │   │   ├── factory.ts      # LangGraph Studio export
 │   │   ├── guards.ts
 │   │   └── nodes/*.node.ts # thin orchestrators; one file per node
-│   ├── http/               # server, sse.ts, dev-chat (optional)
+│   ├── http/               # server, sse.ts, dev-chat (greenfield streaming_sse MUST)
 │   ├── db/                 # client, migrate, migrations/
 │   ├── llm/                # config, provider, json-output — infra only
 │   ├── memory/             # checkpointer, store, context-window, summarizer
@@ -92,7 +92,7 @@ mcp/skills → capability governance → tools bound in agent node
 5. Capability layer + local tools
 6. MCP client + governance
 7. Agent node with trim + tool loop (thin node; compose/bind helpers extracted)
-8. HTTP routes + Postman
+8. HTTP routes + Postman + **dev-chat** when `streaming_sse` (greenfield MUST; brownfield recommend)
 9. Observability migrations
 10. Eval suites
 

@@ -1,0 +1,40 @@
+// Snippet: prepare-llm-messages.ts — context_compact helper (optional node or pre-intent hook)
+import type { BaseMessage } from "@langchain/core/messages";
+import type { BaseLanguageModel } from "@langchain/core/language_models/base";
+import {
+  resolveContextConfig,
+  trimMessagesForLlm,
+  truncateToolOutput,
+} from "./context-window";
+
+/**
+ * context_compact pipeline: prune → compress discovery tools → trim → optional summarize.
+ * Placeholder: summarize branch not implemented — extend before production use.
+ * Run before intent/gather on MCP-heavy graphs. Emit SSE `thinking` only when summarize runs.
+ */
+export async function prepareLlmMessages(
+  messages: BaseMessage[],
+  model: BaseLanguageModel,
+  options?: { pruneDiscovery?: boolean },
+): Promise<BaseMessage[]> {
+  const config = resolveContextConfig();
+  const pruned = options?.pruneDiscovery
+    ? compressDiscoveryToolMessages(messages)
+    : messages;
+  const trimmed = await trimMessagesForLlm(
+    pruned,
+    config.maxTokens,
+    model,
+  );
+  return trimmed;
+}
+
+/** Replace bulky intra-turn discovery ToolMessages with short notes after analytical evidence exists. */
+export function compressDiscoveryToolMessages(
+  messages: BaseMessage[],
+): BaseMessage[] {
+  // Product-specific: mark discovery-only tools; keep last N analytical ToolMessages full.
+  return messages;
+}
+
+export { truncateToolOutput };

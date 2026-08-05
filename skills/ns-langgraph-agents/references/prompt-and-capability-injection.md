@@ -77,6 +77,19 @@ not both in the same bind/inject plan unless the product records an explicit dua
 
 Extract compose, bind list construction, and routing helpers from the agent node. A `*.node.ts` file orchestrates; it must not contain the entire doctrine (~hundreds of LOC of prompt assembly).
 
+## Gather vs deliver prompts (`react_bounded`)
+
+Split system prompts when topology uses gather + composer:
+
+| Phase | Prompt owns | Must not include |
+| ----- | ----------- | ---------------- |
+| **Gather** | Tool discipline, MCP wire hints, nudge to call tools on `needsData` | Deliver/formatting skills, final Markdown templates, chart prose |
+| **Composer** | Skill auto-inject, formatting, locale, user-facing tone | Tool-call authoring beyond evidence narration |
+
+Deliver skill in gather induces premature Markdown in the tool loop. Bind deliver skills only on composer turn (or auto-inject in composer compose path).
+
+Gather nudge: single `SystemMessage` section — never fake `HumanMessage`. Skip nudge when `discoveryBrief` already confirms catalog absence.
+
 ## Prompt / Capability plan (required shape)
 
 ```markdown

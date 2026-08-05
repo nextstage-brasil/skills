@@ -34,10 +34,23 @@ When the model must return JSON plans (actions, tool names):
 
 Enforce in `rules` contract (see `templates/contracts/rules-contract.md`):
 
-- `max_steps` / `max_tool_calls` per turn
+- `max_steps` / `max_tool_calls` / `max_mcp_calls` per turn
 - `max_duration_seconds`
+- `TURN_LATENCY_BUDGET_MS` — wall-clock cap at HTTP layer (distinct from tool budget)
 - No progress detection (same tool+args repeated)
 - Human denial on sensitive tools
+
+### Turn latency budget
+
+| Env | Default | On exceed |
+| --- | ------- | --------- |
+| `TURN_LATENCY_BUDGET_MS` | 60000 | SSE/HTTP `failed` with `error_code: turn_latency_budget_exceeded` |
+
+Tool budget OK but turn still slow → user must see explicit timeout — not silent stall or client-only `cancelled`.
+
+### Gather LLM failure
+
+Never silent `break` on gather `invoke` failure. Set `errorCode` (or `externalError`) on state; route to composer apology or terminal `failed`. See `references/anti-patterns.md`.
 
 ## Graceful degradation
 

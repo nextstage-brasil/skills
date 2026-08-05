@@ -9,7 +9,7 @@
 | ----- | ----- |
 | `framework` | langgraph |
 | `tenant_model` | simple \| vertical |
-| `architecture` | react \| plan_execute \| reflection \| supervisor \| rag_qa |
+| `architecture` | react \| react_bounded \| plan_execute \| reflection \| supervisor \| rag_qa |
 | `interaction_mode` | sync_json \| streaming_sse |
 | `recursion_limit` | {{number}} |
 
@@ -54,9 +54,25 @@ Compose helper: `{{module path}}` (outside god-node).
 {
   messages: BaseMessage[];
   // thread_id, tenant_id via configurable — not duplicated in state
+  // react_bounded evidence channels (optional — declare when architecture is react_bounded):
+  // dataBundle?: Record<string, unknown> | null;
+  // discoveryBrief?: { found: string[]; absent: string[] } | null;
+  // externalError?: { code: string; message: string } | null;
+  // turnDecisions?: Record<string, unknown>[];
   {{custom_fields}}
 }
 ```
+
+### Evidence channels (when `architecture: react_bounded`)
+
+| Channel | Writer | Composer reads |
+| ------- | ------ | -------------- |
+| `dataBundle` | Deterministic hydrate from tool payloads | Narrate only whitelisted numbers/facts |
+| `discoveryBrief` | Discovery tools | Branch on found/absent — no hallucinated entities |
+| `externalError` | MCP/auth/classified failures | Prefer over generic clarify |
+| `turnDecisions` | Router/gather audit | Observability + optional user transparency |
+
+**Sole writer:** exactly one node (`composer`) emits user-facing Markdown. Gather may emit tool calls only.
 
 ## Nodes
 

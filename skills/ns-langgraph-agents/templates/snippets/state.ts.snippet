@@ -8,6 +8,11 @@ export const AgentState = Annotation.Root({
     default: () => [],
   }),
   // Add domain fields here — keep scalars and refs, not large blobs
+  // Optional MCP / react_bounded channels (uncomment when graph-spec declares evidence topology):
+  // dataBundle: Annotation<Record<string, unknown> | null>({ default: () => null }),
+  // discoveryBrief: Annotation<{ found: string[]; absent: string[] } | null>({ default: () => null }),
+  // externalError: Annotation<{ code: string; message: string } | null>({ default: () => null }),
+  // turnDecisions: Annotation<Record<string, unknown>[]>({ default: () => [] }),
 });
 
 export type AgentStateType = typeof AgentState.State;

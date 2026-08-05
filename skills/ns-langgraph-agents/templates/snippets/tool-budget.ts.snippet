@@ -1,0 +1,59 @@
+// Snippet: tool-budget.ts — per-turn tool/MCP budgets and duplicate-skip
+import { createHash } from "node:crypto";
+
+export type ToolBudgetConfig = {
+  maxToolCallsPerTurn: number;
+  maxMcpCallsPerTurn: number;
+};
+
+export function resolveMaxToolCallsPerTurn(): number {
+  const v = Number(process.env.AGENT_MAX_TOOL_CALLS);
+  return Number.isFinite(v) && v > 0 ? v : 8;
+}
+
+export function resolveMaxMcpCallsPerTurn(): number {
+  const v = Number(process.env.AGENT_MAX_MCP_CALLS);
+  return Number.isFinite(v) && v > 0 ? v : 6;
+}
+
+export function resolveToolBudgetConfig(): ToolBudgetConfig {
+  return {
+    maxToolCallsPerTurn: resolveMaxToolCallsPerTurn(),
+    maxMcpCallsPerTurn: resolveMaxMcpCallsPerTurn(),
+  };
+}
+
+/** Stable fingerprint for duplicate detection — redact secrets before hashing. */
+export function toolArgFingerprint(toolName: string, args: unknown): string {
+  const payload = JSON.stringify({ toolName, args });
+  return createHash("sha256").update(payload).digest("hex").slice(0, 16);
+}
+
+/**
+ * Skip when same tool+args already ran this turn.
+ * Break gather loop when entire round is duplicates AND evidence already in state.
+ */
+export function shouldSkipDuplicateCall(
+  fingerprint: string,
+  seenThisTurn: Set<string>,
+): boolean {
+  return seenThisTurn.has(fingerprint);
+}
+
+export function recordCallFingerprint(
+  fingerprint: string,
+  seenThisTurn: Set<string>,
+): void {
+  seenThisTurn.add(fingerprint);
+}
+
+export function isBudgetExceeded(
+  toolCalls: number,
+  mcpCalls: number,
+  config: ToolBudgetConfig,
+): boolean {
+  return (
+    toolCalls >= config.maxToolCallsPerTurn ||
+    mcpCalls >= config.maxMcpCallsPerTurn
+  );
+}
