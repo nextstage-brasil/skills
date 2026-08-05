@@ -1,43 +1,34 @@
-# Soft skill integrations
+# Skill integrations
 
-Optional `code-*` complements — not in `alwaysInstall`. Never block delivery if missing.
+Agent-api / intelligent SaaS: mandatory `ns-langgraph-agents` — see `agent-runtime-integration.md`.
 
-## Check (once per session)
+## Soft complements
 
-List `.agents/skills/` for:
+Optional. Never block delivery if missing.
 
-| Skill | Prefer when |
-| ----- | ----------- |
-| `ns-code-frontend-design` | UI pages, components, design-brief, avoiding generic AI UI |
-| `ns-code-docs-writer` | README, `docs/` guides, human-facing markdown (not code comments) |
-| `ns-code-best-practices` | Security headers/CSP, compatibility, modernize pass (not full MR review) |
+### Check (once per session)
+
+| Skill | When |
+| ----- | ---- |
+| `ns-code-frontend-design` | UI, components, design-brief |
+| `ns-code-docs-writer` | README, `docs/` guides (not code comments) |
+| `ns-code-best-practices` | Security headers, CSP, modernize (not MR review) |
 | `mcp-gitlab-usage` | GitLab MCP configured |
-| `ns-execution-gitlab-issue` | User provides issue URL |
+| `ns-execution-gitlab-issue` | Issue URL |
 
-## If complement installed
+### Installed
 
-**Delegate** to the complement skill for that slice of work. The face skill stays orchestrator — do not duplicate complement workflows inline.
+Delegate slice to complement. Face skill stays orchestrator; no inline duplicate workflows.
 
-### ns-code-frontend-design
+| Skill | Rule |
+| ----- | ---- |
+| `ns-code-frontend-design` | Load `design-brief.md` when present |
+| `ns-code-docs-writer` | README / `docs/` after delivery or on request |
+| `ns-code-best-practices` | Security/compatibility pass; MR review stays `ns-code-reviewer` |
 
-- Load `{product_root}/docs/context/design-brief.md` when present.
-- Use for layout, tokens, component polish before or during UI tasks.
+### Missing
 
-### ns-code-docs-writer
-
-- Use for README and `docs/` authoring after feature delivery or when user asks for documentation.
-- Not for inline code comments or API docblocks in source.
-
-### ns-code-best-practices
-
-- Use for security/compatibility/modernize checklist passes.
-- **Not** a substitute for `ns-code-reviewer` SOLID/MR gate.
-- Route "review this MR" to `ns-code-reviewer`, not here.
-
-## If complement missing
-
-1. Continue with worker skills + project rules.
-2. **Recommend once per session** (do not repeat every message):
+Continue with workers + rules. Recommend once per session:
 
 ```bash
 npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y
@@ -47,10 +38,10 @@ npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-do
 
 | Installed | Behavior |
 | --------- | -------- |
-| `mcp-gitlab-usage` + `ns-execution-gitlab-issue` | Prefer issue execution when `ISSUE_URL` present |
-| MCP only | Use MCP tools per `mcp-gitlab-usage`; coding via `ns-code-autonomous` or `ns-code-coder` |
-| Neither | Local execute only; mention `--preset spec-driven-gitlab` once if user references GitLab |
+| `mcp-gitlab-usage` + `ns-execution-gitlab-issue` | Prefer issue execution on `ISSUE_URL` |
+| MCP only | MCP per `mcp-gitlab-usage`; code via `ns-code-autonomous` or `ns-code-coder` |
+| Neither | Local execute; mention `--preset spec-driven-gitlab` once if user cites GitLab |
 
 ## ns-project-manager
 
-Separate product (forecast/RICE). **Do not** route delivery requests there. Use only when user explicitly asks for copilot / forecast workflow.
+Forecast/RICE only. **Do not** route delivery. Use only on explicit copilot / forecast request.

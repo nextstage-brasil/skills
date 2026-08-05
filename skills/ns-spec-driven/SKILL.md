@@ -4,7 +4,7 @@ description: "(NS) Spec-driven delivery face — clarify, requirements, tasks, i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
   - ns-harness-prepare
@@ -19,6 +19,7 @@ depends:
   - ns-execution-orchestrator
   - ns-code-reviewer
   - ns-sdd-living-spec-consolidator
+  - ns-langgraph-agents
 ---
 
 # NextStage Spec-Driven
@@ -104,8 +105,9 @@ Details: `references/auto-sizing.md`, `references/router.md`.
 1. Resolve `{product_root}` and `{harness_root}`.
 2. Classify request → **Small / Medium / Large** (see `references/auto-sizing.md`).
 3. Check for **resume** signals (`execution-handoff.md`, partial version) → `references/session-continuity.md`.
-4. Scan installed complements (soft) → `references/skill-integrations.md`.
-5. Confirm **once** when needed: `{product_root}`, target version id, and language for markdown artifacts — in **natural chat** (see `references/human-communication.md`). Never open with a telegraphic status dump or phase jargon.
+4. **Agent runtime gate** — if agent-api / intelligent SaaS (see `references/agent-runtime-integration.md`): **MUST** load `ns-langgraph-agents` in session before any phase; **stop** if skill is not installed.
+5. Scan installed complements (soft) → `references/skill-integrations.md`.
+6. Confirm **once** when needed: `{product_root}`, target version id, and language for markdown artifacts — in **natural chat** (see `references/human-communication.md`). Never open with a telegraphic status dump or phase jargon.
 
 ## Human communication
 
@@ -157,11 +159,16 @@ Worker dispatch: **MUST** use harness project agents when available — `../ns-h
 | UI / design work | `references/skill-integrations.md` → `ns-code-frontend-design` |
 | README / docs | `references/skill-integrations.md` → `ns-code-docs-writer` |
 | security headers / modernize | `references/skill-integrations.md` → `ns-code-best-practices` |
+| agent-api / intelligent SaaS / LangGraph scope | `references/agent-runtime-integration.md` → `ns-langgraph-agents` (**mandatory**) |
 | MR / PR review | `ns-code-reviewer` directly (not this face) |
+
+## Agent runtime (mandatory when detected)
+
+Non-negotiable for agent-api and intelligent SaaS products. See `references/agent-runtime-integration.md`.
 
 ## Soft integrations
 
-Before relevant work, check `.agents/skills/` for complements. If present → **delegate**. If absent → continue with workers/rules and **recommend install once per session**:
+Before relevant work, check `.agents/skills/` for complements. If present → **delegate**. If absent → continue with workers/rules and **recommend install once per session** (agent runtime is **not** soft — see above):
 
 ```bash
 npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y
@@ -181,7 +188,8 @@ When a version or quick fix closes, report:
 
 - Auto-run or chain `ns-harness-prepare`.
 - List Prepare as an SDD phase.
-- Hard-require complement skills.
+- Hard-require soft complement skills (`ns-code-frontend-design`, etc.).
+- Plan or execute agent-api / intelligent SaaS work without loading `ns-langgraph-agents` when detection signals match.
 - Generate requirements/tasks yourself without delegating to PM workers.
 - Skip `ns-sdd-execution-handoff-generator` when formal tasks exist for a version.
 - Address the human with internal phase names ("Specify", "Clarify") or bot chrome (`Reply:`, `Premise:`).

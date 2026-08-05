@@ -16,7 +16,8 @@
       "ns-code-autonomous",
       "ns-execution-orchestrator",
       "ns-code-reviewer",
-      "ns-sdd-living-spec-consolidator"
+      "ns-sdd-living-spec-consolidator",
+      "ns-langgraph-agents"
     ],
     "ns-code-frontend-design": ["ns-harness"],
     "ns-code-docs-writer": ["ns-harness"],

@@ -14,6 +14,7 @@ Apply **caveman ultra** compression to every **agent-facing** prepare/worker out
 | `AGENTS.md` | **Yes** |
 | `docs/context/system-reverse-spec.md` | **No** — human body |
 | `CLAUDE.md` | **No** — AGENTS.md + `.claude/agents` pointers only |
+| `**/templates/**/*.md`, `**/*.template.md`, `**/*-template.md`, `**/*.stub.md` | **No** — copy-paste models; preserve placeholders and example prose |
 
 ## Mandate
 
@@ -68,3 +69,4 @@ If over hard max after one pass: delete lowest-value section, replace with a lin
 - [ ] No duplicate section that only echoes another table in the same file
 - [ ] Line count within hard max (or linked overflow)
 - [ ] Human-only files in the "No" table above were **not** caveman-rewritten
+- [ ] Template MDs (`templates/`, `*.template.md`, `*-template.md`, `*.stub.md`) left uncompressed

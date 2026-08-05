@@ -24,6 +24,12 @@
       "id": 4,
       "expected_output": "Invokes ns-spec-driven Tasks phase: MUST spawn task-writer-agent when that bridge is available (loads ns-sdd-task-generator). Must NOT invoke Skill(ns-sdd-task-generator) or follow that skill bare in the parent ns-spec-driven session while task-writer-agent is present. Fallback to reading ns-sdd-task-generator SKILL.md only if the bridge is unavailable. Cites subagent-dispatch.md child-phase rule.",
       "files": []
+    },
+    {
+      "prompt": "Plan version 3.0 for our intelligent SaaS — add Google Calendar MCP to agent-api. Monorepo has backend/, frontend/, agent-api/.",
+      "id": 5,
+      "expected_output": "Invokes ns-spec-driven boot agent-runtime gate: detects agent-api/intelligent SaaS, MUST load ns-langgraph-agents before Clarify/Specify; stops with harness install command if skill missing; cites agent-runtime-integration.md; delegates requirements with intelligent-saas stack profile.",
+      "files": []
     }
   ]
 }

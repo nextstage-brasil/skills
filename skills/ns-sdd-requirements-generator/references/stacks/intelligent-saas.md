@@ -35,3 +35,5 @@ Frontend → Backend → Agent-API (never direct browser → agent-api)
 ## References in harness
 
 When `{product_root}/docs/context/intelligent-saas/` exists, read for graph and networking details.
+
+`ns-spec-driven` parent: **MUST** load `ns-langgraph-agents` per `ns-spec-driven/references/agent-runtime-integration.md` before agent-api planning or execute.

@@ -29,7 +29,7 @@ Success = follow `AGENTS.md`, project rules, and task scope. Failure = invent co
 When creating or changing anything under `skills/`:
 
 1. **skill-creator** — read and follow `~/.agents/skills/skill-creator/SKILL.md` for anatomy, frontmatter, progressive disclosure, evals, and iteration.
-2. **caveman ultra** — read `~/.agents/skills/caveman/SKILL.md`. Apply **ultra** compression to skill **bodies and references** you write or revise. Goal: fewer tokens when skills load into context; keep full technical accuracy; never invent prose abbreviations (`cfg`/`impl`); never alter code/API/CLI strings.
+2. **caveman ultra** — read `~/.agents/skills/caveman/SKILL.md` and `skills/ns-harness/references/agent-artifact-compress.md`. Apply **ultra** to skill bodies, references, docs, agents, rules **before** save — **except template MDs** (see Caveman policy). Fewer tokens on load; full technical accuracy; no invented prose abbreviations; code/API/CLI strings unchanged.
 3. Save to `skills/<kebab-case-name>/`. Frontmatter `name` must match directory.
 4. Update `packages/harness/templates/catalog.json` `depends` (and presets if needed).
 5. Declare `depends: ns-harness` in frontmatter when the skill references `../ns-harness/`.
@@ -43,13 +43,27 @@ Work under `.cursor/skills/` stays out of `catalog.json` and harness install. Sa
 
 ## Caveman policy
 
+Default: every `.md` you author or revise **MUST** pass caveman **ultra** pre-clean (`caveman/SKILL.md` + `skills/ns-harness/references/agent-artifact-compress.md`) before save.
+
+**Exception — template MDs only.** Do **not** caveman-compress files that are copy-paste models for consumers or codegen. Preserve placeholders, example prose, section scaffolding, and instructional tone intact.
+
+| Exempt path / name | Examples |
+| ------------------ | -------- |
+| `**/templates/**/*.md` | `packages/harness/templates/`, `skills/*/templates/` |
+| `**/*.template.md` | `execution-handoff.template.md`, `agents-md.template.md` |
+| `**/*-template.md` | `report-template.md`, `rca-template.md` |
+| `**/*.stub.md` | `architecture-rules.stub.md` |
+
+Doctrine files (`SKILL.md`, `references/` outside `templates/`, `.cursor/agents/`, `docs/` plans) stay **ultra** mandatory.
+
 | Target | Style |
 | ------ | ----- |
-| `SKILL.md` / `references/` / checklists you author | caveman **ultra** (English) |
+| Non-template `.md` in this repo | caveman **ultra** pre-clean (English) |
+| Template `.md` (table above) | **No** caveman pass — edit for accuracy only |
 | Commits, PR bodies, code, scripts | normal technical English |
-| Chat with the human | English per `AGENTS.md` (agent responses). Caveman optional on style only if the user asks; never override English for deliverables |
+| Chat with the human | English per `AGENTS.md`. Caveman optional on style only if user asks |
 
-Why: catalog skills are loaded into agent context repeatedly — terse correct prose cuts tokens without losing gates or handoffs.
+Why: catalog skills and maintainer docs load into agent context repeatedly — terse prose cuts tokens. Templates are **sources** agents copy; compressing them breaks models.
 
 ## Scope map
 
@@ -90,7 +104,7 @@ Routing changes in `ns-code-*` → update diagram via `.cursor/skills/code-routi
 | Need | Skill / path |
 | ---- | ------------ |
 | Create/improve catalog skills | `~/.agents/skills/skill-creator/SKILL.md` |
-| Compress skill prose | `~/.agents/skills/caveman/SKILL.md` (ultra) |
+| Compress skill prose | `~/.agents/skills/caveman/SKILL.md` (ultra) + `skills/ns-harness/references/agent-artifact-compress.md` |
 | Code routing Mermaid | `.cursor/skills/code-routing-diagram/SKILL.md` |
 | Review score/severity rubric | `skills/ns-code-reviewer/SKILL.md` — **Score gate** section only (never consumer Session boot / issue mode) |
 | Naming exception | `.cursor/rules/mcp-gitlab-usage-naming.mdc` |
@@ -115,7 +129,9 @@ Do not claim success without `Code Review: Approved` or an explicit `Blocked` st
 - Harness-generated consumer bridges (`coder-agent`) as a substitute for this maintainer agent
 - Following `ns-skill-creator` consumer workflow (`.agents/skills/` writes)
 - Skipping skill-creator structure when authoring new catalog skills
-- Verbose skill prose when caveman ultra would keep the same gates with fewer tokens
+- Verbose non-template markdown when caveman ultra would keep same gates with fewer tokens
+- Shipping non-template `.md` without caveman ultra pre-clean pass
+- Caveman-compressing template MDs (`templates/`, `*.template.md`, `*-template.md`, `*.stub.md`)
 - Commits without explicit request
 - Declaring Approved without score ≥ 9 and zero Criticals
 - Skipping the closure review gate

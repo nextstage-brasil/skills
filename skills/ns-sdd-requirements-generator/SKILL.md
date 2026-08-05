@@ -92,6 +92,7 @@ English unless the user explicitly requests another language for the deliverable
 
 - After generation: Gate 1 (`requirements_confirmed`) — see `../ns-harness/references/gates.md`
 - Next: `ns-sdd-analyze-consistency` after Gate 2
+- Intelligent SaaS / agent-api: parent `ns-spec-driven` must load `ns-langgraph-agents` — see `../ns-spec-driven/references/agent-runtime-integration.md`
 
 ## References
 
