@@ -20,7 +20,7 @@ Substituting breaks the contract: score gate, verdict line, and (Issue mode) Git
 
 | After review | Condition | Next action |
 | ------------ | --------- | ----------- |
-| Pass | Zero Criticals **and** score ≥ **9**/10 | Caller may close (step 8 / delivery / `Fatto!`) |
+| Pass | Zero Criticals **and** score ≥ **9**/10 | Caller may close (`ns-code-coder`: living specs step if conditional, then final report; others: delivery / `Fatto!`) |
 | Fail | Criticals **or** score ≤ **8**, rounds left | Minimal fix in scope → re-run tests if in scope → **mandatory re-review** via `ns-code-reviewer` |
 | Stop | `Blocked`, or 3 rounds exhausted still failing | Report **blocked** — never fabricate success |
 
@@ -53,5 +53,6 @@ Every closure response **must** include:
 | Review round | Last round executed: `1`, `2`, or `3` |
 | Score | Last overall score from reviewer |
 | Verdict | Exact parseable line from reviewer: `Code Review: {Approved\|Rejected\|Blocked}` |
+| Living specs | When caller is `ns-code-coder`: `updated` \| `skipped: {reason}` \| `n/a` |
 
 Then: summary of changes, follow-ups, and blocked items if applicable.

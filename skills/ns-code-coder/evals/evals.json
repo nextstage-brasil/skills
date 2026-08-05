@@ -4,19 +4,19 @@
     {
       "id": 1,
       "prompt": "Product apps/billing-api/ — add nullable cancelled_at timestamp column to connects table via migration.",
-      "expected_output": "Agent re-reads AGENTS.md (and agents.local.md if present) and obeys its orders, reads existing migrations/models, creates minimal migration, no SDD artifacts, no commit unless asked, invokes ns-code-reviewer only (no Task review substitutes), runs mandatory review loop up to 3 rounds with re-review after Critical fixes, then reports with skill/reviewer/round/score and Code Review: verdict line.",
+      "expected_output": "Agent re-reads AGENTS.md (and agents.local.md if present) and obeys its orders, reads existing migrations/models, creates minimal migration, no SDD version artifacts, no commit unless asked, invokes ns-code-reviewer only (no Task review substitutes), runs mandatory review loop up to 3 rounds with re-review after Critical fixes; after Approved, conditionally invokes ns-sdd-living-spec-consolidator ad-hoc only if docs/specs/ exists and diff is behavioral; reports skill/reviewer/round/score, Code Review: verdict, and Living specs field.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "Fix N+1 on user list — relationship loaded inside loop in UserController.",
-      "expected_output": "Agent loads rules and file, applies eager loading fix with minimal diff, invokes ns-code-reviewer only, runs review loop (up to 3 rounds, pass ≥9/10, mandatory re-review after Critical fixes), final report includes round/score and Code Review: verdict.",
+      "expected_output": "Agent loads rules and file, applies eager loading fix with minimal diff, invokes ns-code-reviewer only, runs review loop (up to 3 rounds, pass ≥9/10, mandatory re-review after Critical fixes); after Approved may skip living specs if non-behavioral or docs/specs/ missing; final report includes round/score, Code Review: verdict, and Living specs field.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Add CPF mask to the registration form UserForm in the frontend module.",
-      "expected_output": "Agent reads UserForm and project frontend rules, implements mask with data-testid if conventions require, minimal scope, invokes ns-code-reviewer only, review loop up to 3 rounds (pass ≥9/10), final report with mandatory verdict fields.",
+      "expected_output": "Agent reads UserForm and project frontend rules, implements mask with data-testid if conventions require, minimal scope, invokes ns-code-reviewer only, review loop up to 3 rounds (pass ≥9/10); after Approved, conditionally runs ns-sdd-living-spec-consolidator ad-hoc if docs/specs/ exists; final report with mandatory verdict and Living specs fields.",
       "files": []
     }
   ]
