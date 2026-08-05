@@ -19,11 +19,13 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | ------------ | ------------ | --- |
 | God-node owns full system-prompt compose | Unreviewable; duplicates doctrine | `composeSystemPrompt` + thin `*.node.ts` |
 | Session overlay replaces canonical body | Loses versioned role/behavior | Overlay appends via `configurable`; body stays in prompts/ |
-| System prompt / secrets in graph state | Leak via checkpoint/logs | `configurable` + files only |
+| Composed system/persona prompt (`base_invariant + injected`) in checkpointer or durable `messages` | Leak + sticky persona in history | Rebuild per LLM invoke; state holds conversation only |
+| Secrets / system prompt text in graph state | Leak via checkpoint/logs | `configurable` + files; compose at invoke |
+| Motor rules only inside product persona file | Gather Markdown / dual-writer slips | Keep gather-no-Markdown + composer sole-writer in `base_invariant` |
 | Nudge as fake `HumanMessage` | Pollutes history and trim | System prompt `Runtime directive` section |
 | Skill auto-inject + `use_skill` same id | Double doctrine / inconsistent trunc | Choose one mode per id |
 | Tool/MCP char cap applied to skill body | Doctrine silently cut | `CONTEXT_SKILL_BODY_MAX_CHARS` |
-| Gather prompt includes deliver/formatting skill | Premature user-facing Markdown | Split gather vs deliver prompts — `prompt-and-capability-injection.md` |
+| Gather prompt includes deliver/formatting skill | Premature user-facing Markdown | Split gather vs deliver — `prompt-and-capability-injection.md` |
 
 ## Topology and evidence (MCP tool-heavy)
 
@@ -69,6 +71,7 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | Raw `state.messages` to LLM | Blows context window | `trimMessagesForLlm` |
 | Full tool JSON in messages | Same | `truncateToolOutput` |
 | Secrets in state/checkpointer | Leak via logs/resume | `configurable` only |
+| Full composed system/persona in `messages` | Sticky persona; checkpoint bloat | Invoke-only `base_invariant + injected` — `prompt-and-capability-injection.md` |
 
 ## Graph structure
 

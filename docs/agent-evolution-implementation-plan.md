@@ -105,7 +105,7 @@ Ship in **4 mergeable waves**. Each wave:
 | 2.4 | Pattern doc: `context_compact` pre-intent (prune → compress discovery → trim → summarize); optional small snippet **new file** `prepare-llm-messages.ts.snippet` if keeps SKILL thin | `context-window-and-tokens.md` (+ optional snippet) |
 | 2.5 | State snippet: **commented** evidence channels (`dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions`) — not required fields for non-MCP graphs | `state.ts.snippet` |
 | 2.6 | Turn latency budget + distinct error code | `error-and-reliability.md`, `streaming-and-hitl.md` |
-| 2.7 | Gather vs deliver prompt split | `prompt-and-capability-injection.md` |
+| 2.7 | Gather vs deliver prompt split; `base_invariant` + `injected` compose; no composed system in checkpointer | `prompt-and-capability-injection.md` |
 | 2.8 | `ns-multi-agent-architect`: one decision-pillar probe — if LangGraph + MCP/tools → recommend `react_bounded` topology in final report | `decision-pillars.md` and/or report template (minimal) |
 | 2.9 | Evals: append case for topology recommendation under MCP | `ns-langgraph-agents/evals/evals.json` |
 | 2.10 | Gate: catalog OK; ensure SKILL.md still &lt; 500 lines |

@@ -251,7 +251,7 @@ Extend `references/anti-patterns.md`:
 5. Domain vocabulary heuristics in the intent router inside `src/` (vertical/config only).  
 6. Fixed query-shape pipeline as **only** analytical path over open MCP.  
 7. Ship agent-api without `/dev-chat`.  
-8. Log secrets / full system prompt into checkpointer.  
+8. Log secrets / full system prompt into checkpointer (`base_invariant + injected` rebuild per invoke; never persist composed persona — `prompt-and-capability-injection.md`).  
 9. Silent `break` on LLM failure in gather.  
 10. Generic clarify when classified MCP/external error already sits in state.
 

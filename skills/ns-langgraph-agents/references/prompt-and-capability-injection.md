@@ -1,36 +1,56 @@
 # Prompt and capability injection
 
-How the model receives **system text** and **callable capabilities**. Mis-wiring here causes dual prompt paths, truncated doctrine, dead tools, and fake user turns.
+How model gets **system text** + **callable capabilities**. Mis-wire = dual prompt paths, truncated doctrine, dead tools, fake user turns.
 
-Read before changing system prompt composition, skill auto-inject, MCP bind, or local tool registration.
+Read before system-prompt compose, skill auto-inject, MCP bind, or local tool registration.
+
+## Non-negotiable — `base_invariant` + `injected`
+
+**Applicability:** greenfield **MUST** / intentional redesign **MUST** / brownfield **RECOMMENDED** (same as skill Applicability).
+
+| Piece | Name | Owns |
+| ----- | ---- | ---- |
+| Motor | `base_invariant` | Rigid factory rules — gather MUST NOT emit user-facing Markdown; composer sole-writer; tool discipline; bind/truncate doctrine |
+| Product | `injected` | Persona, tone, domain product prompt |
+
+**REQUIRED compose each LLM invoke:** `base_invariant + injected`. Rebuild for invoke. **FORBIDDEN** store composed system/persona text in graph state, checkpointer, or durable `messages` history.
+
+**Why:** (1) leak via checkpoint/logs/resume; (2) sticky persona glued into conversation history — later turns inherit stale system text.
+
+**vs summary `SystemMessage`:** persisted `SystemMessage` at index 0 for **summaries** OK — see `message-content-blocks.md`. That is **not** full composed system/persona prompt. Full system = rebuild `base_invariant + injected` at invoke only.
+
+Motor rules live in `base_invariant` (or shared motor fragment), **not** only inside product persona files.
 
 ## System prompt — mandatory layers (order)
 
-Compose once (prefer `composeSystemPrompt` outside the god-node). Order matters:
+Compose via helper outside god-node (`composeSystemPrompt`). Layers feed `base_invariant` and/or `injected`; final string = `base_invariant + injected` per turn. Order matters:
 
-| # | Layer | Source | Notes |
-| - | ----- | ------ | ----- |
-| 1 | Canonical body | File under `src/conversation/prompts/` | Single source of truth for role/behavior |
-| 2 | Opacity / safety fixed rules | Shared constants or prompt fragment | Only if product requires; keep short |
-| 3 | Data-plane truth | Runtime connection state | Connected vs absent capabilities — never claim tools the agent cannot call |
-| 4 | Session context overlay | `RunnableConfig.configurable` (e.g. session overlay fields) | **Overlay**, not replacement of canonical body; never persist into graph state |
-| 5 | Scope anchors | Computed helpers (period, app ids, tenant labels) | Deterministic strings from config/state refs |
-| 6 | Optional skill body auto-inject | Skill markdown body when product policy says so | Body-only; see exclusivity below |
-| 7 | Ephemeral runtime nudge | Extra section in system prompt (`Runtime directive`) | **Never** as a fake `HumanMessage` |
+| # | Layer | Source | Bucket | Notes |
+| - | ----- | ------ | ------ | ----- |
+| 1 | Canonical body | File under `src/conversation/prompts/` | Usually `injected` (persona/role) | Single source for product role/behavior |
+| 2 | Opacity / safety fixed rules | Shared constants or prompt fragment | Prefer `base_invariant` | Keep short |
+| 3 | Data-plane truth | Runtime connection state | Either; often `injected` overlay | Never claim tools agent cannot call |
+| 4 | Session context overlay | `RunnableConfig.configurable` | `injected` | **Overlay**, not body replace; never persist into graph state |
+| 5 | Scope anchors | Computed helpers (period, app ids, tenant labels) | `injected` | Deterministic strings from config/state refs |
+| 6 | Optional skill body auto-inject | Skill markdown when product policy says so | Phase-dependent | Body-only; exclusivity below |
+| 7 | Ephemeral runtime nudge | System section (`Runtime directive`) | Ephemeral `injected` / phase prompt | **Never** fake `HumanMessage` |
+
+Motor invariants (gather-no-Markdown, composer sole-writer, tool discipline) always in `base_invariant` for that phase — gather vs composer may use different motor fragments; still never persist composed result.
 
 ### Session overlay vs canonical body
 
 | Concept | Meaning |
 | ------- | ------- |
-| Canonical system body | Versioned markdown in `conversation/prompts/` — always the base |
-| Session context overlay | Per-request text from `configurable` — appends/augments; does not replace body |
-| Graph state | Must **not** store system prompts or secrets |
+| Canonical system body | Versioned markdown in `conversation/prompts/` — product/`injected` base |
+| Session context overlay | Per-request text from `configurable` — appends; does not replace body |
+| `base_invariant` | Motor rules rebuilt each invoke — not durable history |
+| Graph state / checkpointer / durable `messages` | **MUST NOT** store composed system/persona prompt or secrets |
 
-Docs and code must use these names so "required system prompt" is never confused with a session overlay.
+Names matter: "required system prompt" ≠ session overlay ≠ summary `SystemMessage`.
 
 ### Nudges
 
-Runtime nudges (force format, one-shot instructions) go in layer 7 of the system prompt. Injecting them as user turns pollutes history, confuses trim/summarize, and trains the model on fake dialogue.
+Runtime nudges (force format, one-shot) = layer 7 of composed system text. Fake user turns pollute history, break trim/summarize, train model on fake dialogue.
 
 ## Capability primitives
 
@@ -79,21 +99,24 @@ Extract compose, bind list construction, and routing helpers from the agent node
 
 ## Gather vs deliver prompts (`react_bounded`)
 
-Split system prompts for gather + composer:
+Split compose per phase. Motor pieces stay in `base_invariant`; product persona/tone in `injected`:
 
-| Phase | Prompt owns | Must not include |
-| ----- | ----------- | ---------------- |
-| **Gather** | Tool discipline, MCP wire hints, nudge tools on `needsData` | Deliver/formatting skills, final Markdown templates, chart prose |
-| **Composer** | Skill auto-inject, formatting, locale, user tone | Tool-call authoring beyond evidence narration |
+| Phase | `base_invariant` owns | `injected` owns | Must not include |
+| ----- | --------------------- | --------------- | ---------------- |
+| **Gather** | Tool discipline; gather MUST NOT emit user-facing Markdown; MCP wire hints | Optional short gather persona (no deliver templates) | Deliver/formatting skills, final Markdown, chart prose |
+| **Composer** | Composer sole-writer; evidence-narration discipline | Skill auto-inject, formatting, locale, user tone | Tool-call authoring beyond evidence narration |
 
 Deliver skill in gather = premature Markdown in tool loop. Bind deliver skills on composer turn only (or auto-inject in composer compose).
 
-Gather nudge: single `SystemMessage` section — no fake `HumanMessage`. Skip nudge when `discoveryBrief` confirms catalog absence.
+Gather nudge: system section in composed invoke payload — no fake `HumanMessage`; do not write nudge into durable `messages`. Skip nudge when `discoveryBrief` confirms catalog absence.
 
 ## Prompt / Capability plan (required shape)
 
 ```markdown
 ### Prompt / Capability plan
+- Compose: base_invariant + injected (rebuild per invoke; not in state/checkpointer/durable messages)
+- Motor (`base_invariant`): [gather-no-Markdown / sole-writer / tool discipline / …]
+- Product (`injected`): canonical path + persona/tone notes
 - System layers touched: [1–7 numbers]
 - Canonical prompt path: src/conversation/prompts/...
 - Session overlay: yes/no (configurable field names)
@@ -106,7 +129,8 @@ Gather nudge: single `SystemMessage` section — no fake `HumanMessage`. Skip nu
 
 ## Related
 
-- Placement of prompt files: `references/placement-and-domains.md`
+- Placement: `references/placement-and-domains.md`
 - Token pipeline: `references/context-window-and-tokens.md`
+- Summary `SystemMessage` vs full system: `references/message-content-blocks.md`
 - MCP governance: `references/capability-governance.md`
 - Review anti-patterns: `references/anti-patterns.md`

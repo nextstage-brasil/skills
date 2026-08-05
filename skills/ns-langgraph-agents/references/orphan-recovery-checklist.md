@@ -46,9 +46,9 @@ Score each item: ✅ pass | ⚠️ partial | ❌ fail
 - [ ] MCP wire names use `mcp__server__tool` (no `:` in new wire names)
 - [ ] Skills use `use_skill__id` **or** auto-inject — not both per id without decision
 - [ ] Bind parity: every tools-node-dispatchable tool is in `bindTools` (or unbound + test)
-- [ ] System prompt compose uses ordered layers; session overlay ≠ canonical body
-- [ ] Nudges live in system prompt — not fake `HumanMessage`
-- [ ] Secrets / system prompts not in graph state or checkpointer
+- [ ] Compose `base_invariant` (motor) + `injected` (product) per LLM invoke — ordered layers; session overlay ≠ canonical body
+- [ ] Nudges in composed system text — not fake `HumanMessage`
+- [ ] Composed system/persona prompt + secrets **not** in graph state, checkpointer, or durable `messages` (summary `SystemMessage` at index 0 OK)
 
 ## MCP
 

@@ -4,7 +4,7 @@ description: (NS) LangGraph.js agent-api — StateGraph, MCP tools, skill bind/i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 depends:
   - ns-harness
 ---
@@ -63,6 +63,8 @@ See `../ns-harness/references/harness-discovery.md` — **complete Session boot 
 
 LangGraph = control flow. MCP/local tools = capabilities under graph. Small graph state (refs, summaries). Checkpointer = full state; context window = LLM view — separate.
 
+**System prompt:** compose `base_invariant` (motor) + `injected` (product persona) **per LLM invoke**. Never persist composed system/persona text in graph state, checkpointer, or durable `messages`. Summary `SystemMessage` at index 0 ≠ full system — `references/prompt-and-capability-injection.md`, `references/message-content-blocks.md`.
+
 Three capability kinds bind to the model:
 
 | Kind | LLM wire name | Internal id |
@@ -95,6 +97,9 @@ Full matrix: `references/placement-and-domains.md`. `tenant_model: simple` still
 
 ```markdown
 ### Prompt / Capability plan
+- Compose: base_invariant + injected (rebuild per invoke; not in state/checkpointer/durable messages)
+- Motor (`base_invariant`): [gather-no-Markdown / sole-writer / tool discipline / …]
+- Product (`injected`): canonical path + persona/tone notes
 - System layers touched: […]
 - Canonical prompt path: …
 - Session overlay: yes/no
@@ -293,7 +298,7 @@ Stay here for diagnosis, spec, placement, governance design. `ns-code-coder` for
 
 ## Forbidden
 
-- Storing secrets, API keys, or system prompts in graph state or checkpointer
+- Persisting composed system/persona prompt (`base_invariant + injected`) — or secrets/API keys — in graph state, checkpointer, or durable `messages` (rebuild system text per invoke)
 - Passing unbounded tool/MCP output into `state.messages`
 - Applying tool/MCP truncate caps to skill bodies (use `CONTEXT_SKILL_BODY_MAX_CHARS`)
 - Trusting MCP tool metadata for security classification

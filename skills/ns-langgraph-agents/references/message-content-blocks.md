@@ -9,7 +9,9 @@ LangChain v1 standardizes provider-specific message shapes via **content blocks*
 | `HumanMessage` | User input | Yes |
 | `AIMessage` | Model output; may include `tool_calls`, reasoning blocks | Yes |
 | `ToolMessage` | Tool/MCP result; links via `tool_call_id` | Yes |
-| `SystemMessage` | Instructions, persisted summary | Yes (keep index 0 when summarizing) |
+| `SystemMessage` | **Summary** (or short hygiene text) at index 0 — **not** full composed system/persona | Yes (keep index 0 when summarizing) |
+
+Full motor+product system text (`base_invariant + injected`) is **invoke-only** — rebuild for LLM; do **not** write into durable `messages` / checkpointer. See `prompt-and-capability-injection.md`.
 
 ## Reading model output
 
@@ -84,7 +86,8 @@ return new ToolMessage({
 ## State hygiene
 
 - Do not store duplicate copies of large multimodal blobs in custom state fields — reference URLs or artifact ids.
-- When trimming history, use `includeSystem: true` so a persisted summary `SystemMessage` at index 0 survives `startOn: "human"`.
+- When trimming history, use `includeSystem: true` so a persisted **summary** `SystemMessage` at index 0 survives `startOn: "human"`.
+- That summary slot ≠ full composed system/persona (`base_invariant + injected`) — full system rebuilds per invoke; never durable in `messages`.
 - Strip provider-specific junk from custom reducers — keep `messages` reducer as the single chat history source.
 
 ## JSON structured turns
