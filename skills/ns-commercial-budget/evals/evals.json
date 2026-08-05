@@ -4,19 +4,19 @@
     {
       "id": 1,
       "prompt": "Preciso de um orçamento comercial para uma API de consulta criminal (ORCRIM): autenticação, busca por documento, histórico de consultas e exportação CSV. Versão orcamento-api-orcrim. Pode gravar em docs.",
-      "expected_output": "Clarifies with ≤5 questions including team experience when needed. Loads docs/context when present. Writes commercial-budget.md with Sequência + Gerado em, commercial Objetivo, Mermaid flows, Features without Precedência, per-Feature FP + origem do cálculo, COSMIC table (reference only), hours as formula, macro table, risks with Responsável. No invented R$. No tasks/SDD.",
+      "expected_output": "Clarifies with ≤5 questions including team experience when needed. Loads docs/context when present. Writes commercial-budget.md with Sequência + Gerado em, commercial Objetivo, Mermaid flows (TD, white init, classDef + linkStyle per product-voice.md), Features without Precedência, per-Feature FP + origem do cálculo, COSMIC table (reference only), hours as formula, macro table, risks with Responsável. No invented R$. No tasks/SDD.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "quick mode: portal do cliente B2B — login, listar pedidos, detalhe do pedido, PDF da nota. Time sênior, 2 anos no produto, core maintainers. Produtividade 8h/PF. Taxa R$ 180/h. Gere o orçamento.",
-      "expected_output": "Skips clarification; marks assumptions. ≤10 Features, Mermaid flow, per-Feature FP + origem, COSMIC table only, hours = FP × 8h/PF with margin, macro table with Custo from R$ 180/h, risks with Responsável. No Precedência. No SDD tasks.",
+      "expected_output": "Skips clarification; marks assumptions. ≤10 Features, Mermaid flow (TD, white init, classDef + linkStyle), per-Feature FP + origem, COSMIC table only, hours = FP × 8h/PF with margin, macro table with Custo from R$ 180/h, risks with Responsável. No Precedência. No SDD tasks.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Monta proposta comercial em inglês for a small inventory API: SKU CRUD + stock adjust. Chat only, don't write files.",
-      "expected_output": "English deliverable, chat-only. Mermaid flow, per-Feature FP + origins, COSMIC table, hours formula, macro table, risks with Responsável. Custo —. No tasks. No PM/SDD.",
+      "expected_output": "English deliverable, chat-only. Mermaid flow (TD, white init, classDef + linkStyle), per-Feature FP + origins, COSMIC table, hours formula, macro table, risks with Responsável. Custo —. No tasks. No PM/SDD.",
       "files": []
     },
     {

@@ -15,7 +15,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.9"
+  version: "1.10"
 depends:
   - ns-harness
 ---
@@ -74,7 +74,7 @@ Read `references/clarification.md`.
 | Section | Rules |
 |---------|--------|
 | Objetivo principal | Commercial/product — value, who benefits, product change. **Not** engineering-area framing |
-| Fluxos principais | 1–3 Mermaid diagrams. Client-readable labels. Validate shared understanding |
+| Fluxos principais | 1–3 Mermaid `flowchart TD`; white init + Palette A/B `classDef` + `linkStyle` edges (`product-voice.md`). Subtitle per diagram; validation chain optional; client-readable PT-BR labels |
 | Features (≤10) | `Feature 001`…; generous product description + acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema |
 | RNFs | Only if identified — product language |
 | Estimativas — FP | Per-Feature FP + justificativa; **origem do cálculo** table with traceable arithmetic (`fp-sizing.md`) |

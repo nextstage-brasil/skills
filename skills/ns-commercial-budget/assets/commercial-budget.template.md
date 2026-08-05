@@ -15,15 +15,57 @@
 
 ## Fluxos principais (validação de entendimento)
 
-<!-- 1–3 Mermaid diagrams. Client-readable labels (roles + business actions). Client validates scope; team spots gaps. -->
+### Fluxo 1 — {TÍTULO}
+
+<!-- Mandatory: flowchart TD, white init, classDef + linkStyle. See references/product-voice.md → Fluxos Mermaid. -->
 
 ```mermaid
-flowchart LR
-  A[{ator}] --> B[{ação de negócio}]
-  B --> C[{resultado esperado}]
+%%{init: {'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial', 'background': '#ffffff', 'mainBkg': '#ffffff', 'secondBkg': '#ffffff', 'clusterBkg': '#ffffff', 'lineColor': '#1a5490', 'primaryBorderColor': '#1a5490', 'edgeLabelBackground': '#ffffff', 'primaryTextColor': '#111'}}}%%
+flowchart TD
+  A["{ator}"] --> B{"{decisão de negócio?}"}
+  B -->|Sim| C["{resultado}"]
+  B -->|Não| R["Recusa"]
+
+  classDef passo fill:#e8f4fc,stroke:#1a5490,color:#111
+  classDef decisao fill:#fff8e6,stroke:#b8860b,color:#111
+  classDef recusa fill:#fde8e8,stroke:#c62828,color:#111
+  class A,C passo
+  class B decisao
+  class R recusa
+
+  linkStyle default stroke:#1a5490,stroke-width:2.5px
+  linkStyle 2 stroke:#c62828,stroke-width:2.5px
 ```
 
-<!-- Repeat only when multiple distinct flows matter. -->
+### Fluxo N — Rejeições antes da entrega de dados
+
+<!-- Optional dedicated validation chain. Palette B: green Sim arrows, red Não → Recusa, R1 ~~~ R2 stack. -->
+
+```mermaid
+%%{init: {'themeVariables': {'fontSize': '18px', 'fontFamily': 'arial', 'background': '#ffffff', 'mainBkg': '#ffffff', 'secondBkg': '#ffffff', 'clusterBkg': '#ffffff', 'lineColor': '#2e7d32', 'primaryBorderColor': '#1a5490', 'edgeLabelBackground': '#ffffff', 'primaryTextColor': '#111'}}}%%
+flowchart TD
+  A["Solicitação do usuário"] --> B{"Pré-requisito<br/>atendido?"}
+  B -->|Não| R1["Recusa"]
+  B -->|Sim| C{"Recurso<br/>habilitado?"}
+  C -->|Não| R2["Recusa"]
+  C -->|Sim| H["Prossegue com filtros<br/>e paginação"]
+
+  R1 ~~~ R2
+
+  classDef inicio fill:#ffffff,stroke:#333,color:#111
+  classDef decisao fill:#ffffff,stroke:#1a5490,color:#111
+  classDef recusa fill:#fde8e8,stroke:#c62828,color:#111
+  classDef sucesso fill:#e8f5e9,stroke:#2e7d32,color:#111
+  class A inicio
+  class B,C decisao
+  class R1,R2 recusa
+  class H sucesso
+
+  linkStyle default stroke:#2e7d32,stroke-width:2.5px
+  linkStyle 1,3 stroke:#c62828,stroke-width:2.5px
+```
+
+<!-- Repeat ### Fluxo … (≤3 total). Cross-reference validation diagram from journey flows when useful. -->
 
 ---
 
