@@ -11,9 +11,9 @@ depends:
 
 # LangGraph Agents
 
-Senior agent-runtime engineer. Guide construction and maintenance of **production-grade LangGraph.js** systems (Node 24+, TypeScript strict, `@langchain/langgraph`).
+Production-grade LangGraph.js (Node 24+, TypeScript strict, `@langchain/langgraph`).
 
-This skill owns **runtime doctrine and coordination** — including **placement**, **prompt/capability injection**, and **graph-spec sync**. Implementation diffs are executed via `ns-code-coder` (or `ns-code-autonomous` for larger plans). Architecture choice (LangGraph vs CrewAI) stays in `ns-multi-agent-architect`.
+Owns **runtime doctrine** — placement, prompt/capability injection, graph-spec sync. Diffs via `ns-code-coder` or `ns-code-autonomous`. Framework choice: `ns-multi-agent-architect`.
 
 ## Applicability
 
@@ -23,7 +23,7 @@ This skill owns **runtime doctrine and coordination** — including **placement*
 | **Brownfield** existing agent | **RECOMMENDED** migration toward same controls; orphan recovery does not Critical-fail missing topology |
 | **Intentional MCP redesign** | Sync `graph-spec.md` + refs in same delivery — treat greenfield MUST for topology/budget/evidence sections touched |
 
-Brownfield open ReAct stays valid until a deliberate topology change. Greenfield MUST language targets new agent-api and intentional MCP redesigns only.
+Brownfield open ReAct valid until deliberate topology change. Greenfield MUST = new agent-api + intentional MCP redesign only.
 
 ## Routing (read first)
 
@@ -42,7 +42,7 @@ See `../ns-harness/references/harness-discovery.md` — **complete Session boot 
 2. Load placement/inject refs before path decisions (`references/placement-and-domains.md`, `references/prompt-and-capability-injection.md`)
 3. Continue this skill
 
-**Success criterion:** following placement + inject doctrine + project rules = success; inventing folders or external frameworks = failure.
+**Success:** placement + inject doctrine + project rules. **Failure:** invented folders or external frameworks.
 
 ## When to use
 
@@ -61,7 +61,7 @@ See `../ns-harness/references/harness-discovery.md` — **complete Session boot 
 
 ## Core doctrine
 
-LangGraph orchestrates **control flow**; MCP and local tools are **capabilities** beneath the graph. Keep graph state small (references and summaries, not large payloads). The checkpointer persists full state; **context window management** decides what the LLM sees — these are separate concerns.
+LangGraph = control flow. MCP/local tools = capabilities under graph. Small graph state (refs, summaries). Checkpointer = full state; context window = LLM view — separate.
 
 Three capability kinds bind to the model:
 
@@ -75,7 +75,7 @@ Wire names must match `^[a-zA-Z0-9_-]{1,128}$` (use `__` separators; colons only
 
 ## Pre-change gates
 
-Before any new file or inject/bind change, complete all three. Skip coding until they are posted.
+Before new file or inject/bind change: complete all three. No code until posted.
 
 ### 1. Placement Decision Block
 
@@ -89,7 +89,7 @@ Before any new file or inject/bind change, complete all three. Skip coding until
 - do_not_create_under: […]
 ```
 
-Full matrix: `references/placement-and-domains.md`. `tenant_model: simple` still requires the matrix; `vertical` adds verticals as **config-only** (`config/verticals/`, zero new `src/`).
+Full matrix: `references/placement-and-domains.md`. `tenant_model: simple` still needs matrix; `vertical` = config-only (`config/verticals/`, zero new `src/`).
 
 ### 2. Prompt / Capability plan
 
@@ -109,11 +109,11 @@ Full doctrine: `references/prompt-and-capability-injection.md`.
 
 ### 3. Spec Sync Gate
 
-If **nodes, edges, state, capabilities, recursion_limit, or wire names** change → update `graph-spec.md` in the **same** delivery. An archived or stale spec is **not** source of truth — do not "fix code to match archive" when the live graph is intentional; sync the spec to the intended runtime instead.
+**Nodes, edges, state, capabilities, recursion_limit, or wire names** change: update `graph-spec.md` **same** delivery. Stale archive ≠ SoT — sync spec to intended runtime; do not force-fit live code to stale archive.
 
 ## Reference map
 
-Load on demand — do not memorize entire files into the conversation.
+Load on demand — do not memorize whole files.
 
 | Reference | Read when |
 | --------- | --------- |
@@ -147,14 +147,14 @@ Templates (copy snippets, not full scaffolds): `templates/graph-spec.md`, `templ
 
 ## Orphan recovery (brownfield first)
 
-When the runtime is disorganized or the team is blocked:
+Runtime disorganized or team blocked:
 
-1. Read `references/orphan-recovery-checklist.md` and score the project.
-2. Post a short gap report: structure, placement, context window, inject/bind parity, MCP governance, observability, HTTP contract, spec sync.
-3. Propose a **ordered fix plan** (one phase per message if large).
-4. Only then implement via `ns-code-coder`.
+1. Read `references/orphan-recovery-checklist.md`; score project.
+2. Gap report: structure, placement, context window, inject/bind parity, MCP governance, HTTP, spec sync.
+3. Ordered fix plan (one phase per message if large).
+4. Implement via `ns-code-coder`.
 
-Do not add graph nodes or MCP servers until layout and governance baselines pass.
+No new graph nodes or MCP servers until layout + governance baselines pass.
 
 ## Build workflow (greenfield or post-recovery)
 
@@ -209,7 +209,7 @@ Apply `references/capability-governance.md` and `references/prompt-and-capabilit
 | `streaming_sse` | SSE envelope per `references/streaming-and-hitl.md`; **greenfield MUST** ship `GET /dev-chat` gated by `DEV_CHAT_ENABLED` (local-only) |
 | HITL | `interrupt()` + `POST /threads/:id/resume` with `Command({ resume })` |
 
-Brownfield missing dev-chat: recommend add — not a Critical blocker. Keep Postman collection aligned with live routes.
+Brownfield missing dev-chat: recommend add — not Critical. Postman synced with live routes.
 
 ### Phase 7 — Observability
 
@@ -223,28 +223,28 @@ Wire `references/observability.md`: `initDb`, `runStorage`, `logLlmCall`, `logTo
 
 ## Maintenance workflow
 
-For ongoing work (not greenfield):
+Ongoing work (not greenfield):
 
-1. Run the three **Pre-change gates**.
-2. Confirm `graph-spec.md` will match the intended compiled graph after the change.
-3. Identify layer: graph node, conversation domain, MCP, memory, HTTP.
-4. Read the matching reference section before editing.
-5. Implement minimal diff via `ns-code-coder` with placement/inject handoff fields.
-6. Update Postman when HTTP routes change.
-7. Re-run orphan checklist items touched by the change.
+1. Three **Pre-change gates**
+2. `graph-spec.md` matches intended graph after change
+3. Layer: graph node, conversation, MCP, memory, HTTP
+4. Read matching reference before edit
+5. Minimal diff via `ns-code-coder` with placement/inject handoff
+6. Postman on HTTP route change
+7. Re-run orphan checklist items touched
 
 ## MCP complex access (quick rules)
 
-When multiple MCP servers expose overlapping or large tool catalogs:
+Multiple MCP servers, overlapping or large catalogs:
 
-- **Filter at discovery** — agent sees only allowlisted tools (`tools/list` filtered before bind).
-- **Classify locally** — `read | write | destructive | admin`; never trust server "read-only" flags.
-- **Reuse client** — one `MultiServerMCPClient` (or equivalent) per process; no per-request subprocess spawn in production.
-- **Transport** — Streamable HTTP for deployed services; stdio only for local single-user dev.
-- **Errors** — MCP execution errors (`isError: true`) become recoverable `ToolMessage` with `status: "error"`; protocol failures may abort the run with a structured HTTP/SSE `failed` envelope.
-- **Secrets** — env or `RunnableConfig.configurable` / request payload only; never graph state or checkpointer snapshots.
+- **Discovery filter** — allowlisted `tools/list` before bind
+- **Local classify** — `read | write | destructive | admin`; never trust server read-only flags
+- **Singleton client** — one `MultiServerMCPClient` per process; no per-request stdio in prod
+- **Transport** — Streamable HTTP deployed; stdio local single-user dev only
+- **Errors** — MCP `isError: true` = recoverable `ToolMessage` `status: "error"`; protocol fail may abort with HTTP/SSE `failed`
+- **Secrets** — env or `configurable` / request payload only; never state or checkpointer
 
-Full patterns: `references/mcp-complex-access.md`.
+Full: `references/mcp-complex-access.md`.
 
 ## Handoff to ns-code-coder
 
@@ -265,7 +265,7 @@ When implementation is approved, delegate with:
 - Review: ns-code-reviewer after tests — must check placement, inject, wire names (`:`), bind parity (load ns-langgraph-agents anti-patterns when diff touches agent-api)
 ```
 
-Stay in this skill for diagnosis, spec updates, placement, and governance design; switch to coder for the diff.
+Stay here for diagnosis, spec, placement, governance design. `ns-code-coder` for diff.
 
 ## Stop conditions
 

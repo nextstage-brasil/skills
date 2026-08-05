@@ -4,37 +4,37 @@
 
 | Mode | HTTP | Graph |
 | ---- | ---- | ----- |
-| `sync_json` | JSON response after `invoke` | standard |
+| `sync_json` | JSON after `invoke` | standard |
 | `streaming_sse` | `text/event-stream` | `stream` / `streamEvents` v3 |
 
-Lock mode in `graph-spec.md` header.
+Lock in `graph-spec.md` header.
 
 ## SSE envelope
 
-Statuses (in order of a typical turn):
+Typical turn order:
 
 | Status | Meaning |
 | ------ | ------- |
 | `thinking` | Model started |
-| `accessing_data` | Optional progress hint |
+| `accessing_data` | Optional progress |
 | `tool_started` | Tool name + args summary |
 | `tool_finished` | Truncated result summary |
-| `response_streaming` | Cumulative markdown text (replace prior) |
+| `response_streaming` | Cumulative markdown (replace prior) |
 | `completed` | Terminal success |
 | `failed` | Terminal error |
 | `cancelled` | Client abort |
 
 Rules:
 
-- Terminal status must be **last** event
-- `response_streaming` sends full cumulative text each tick (UI replaces)
-- Do not leak raw reasoning blocks in user stream
+- Terminal status **last** event
+- `response_streaming` full cumulative text each tick
+- No raw reasoning in user stream
 
-Snippet: `templates/snippets/sse-envelope.ts.snippet`.
+Snippet: `sse-envelope.ts.snippet`.
 
 ## HITL with interrupt()
 
-Preferred over static breakpoints:
+Prefer over static breakpoints:
 
 ```typescript
 import { interrupt } from "@langchain/langgraph";
@@ -49,18 +49,15 @@ const approval = interrupt({
 
 Requirements:
 
-- Compiled graph with **checkpointer**
+- Compiled graph + **checkpointer**
 - `thread_id` in config
 - Resume: `graph.stream(new Command({ resume: userInput }), config)`
 
 ## Detecting interrupts
 
-With `streamEvents` v3:
+`streamEvents` v3: `stream.interrupted`, `stream.interrupts` — resume until clear.
 
-- Check `stream.interrupted` and read `stream.interrupts`
-- Resume loop until not interrupted
-
-With `invoke`: call `graph.getState(config)` to read interrupt payload.
+`invoke`: `graph.getState(config)` for interrupt payload.
 
 ## HTTP routes (minimum)
 
@@ -76,21 +73,21 @@ GET  /dev-chat             → human train/test UI (greenfield streaming_sse MUS
 
 | Context | Requirement |
 | ------- | ----------- |
-| Greenfield `streaming_sse` agent-api | **MUST** ship `GET /dev-chat` gated by `DEV_CHAT_ENABLED=true` (local-only; never prod without explicit product decision) |
-| Brownfield | **RECOMMENDED** if missing — same SSE contract as production routes |
+| Greenfield `streaming_sse` agent-api | **MUST** `GET /dev-chat` + `DEV_CHAT_ENABLED=true` (local-only; prod only with explicit product decision) |
+| Brownfield | **RECOMMENDED** if missing — same SSE as production |
 
-Dev-chat uses the same SSE envelope as `POST /threads/:id/message`. Without it, human iteration on tool/MCP behavior is impractical.
+Dev-chat = same SSE envelope as `POST /threads/:id/message`. Without it, human MCP iteration impractical.
 
 ### Turn latency budget
 
-Enforce `TURN_LATENCY_BUDGET_MS` (default 60000) at HTTP layer. On exceed: terminal SSE `failed` with `error_code: turn_latency_budget_exceeded` — distinct from client `cancelled`. See `references/error-and-reliability.md`.
+`TURN_LATENCY_BUDGET_MS` (default 60000) at HTTP layer. Exceed: SSE `failed` + `error_code: turn_latency_budget_exceeded` — not client `cancelled`. `references/error-and-reliability.md`.
 
 ## Postman
 
-Keep collection in sync with routes — executable contract for integrators.
+Collection synced with routes — executable contract.
 
 ## UX notes
 
-- Show tool progress without dumping full JSON
-- On interrupt, render approval UI with editable args when safe
-- Preserve `thread_id` client-side for resume
+- Tool progress without full JSON dump
+- Interrupt UI: editable args when safe
+- Client keeps `thread_id` for resume

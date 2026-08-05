@@ -10,6 +10,7 @@ export const AgentState = Annotation.Root({
   // Add domain fields here — keep scalars and refs, not large blobs
   // Node id MUST differ from channel key — e.g. addNode("intent_classify") returns { intent: … }
   // intent: Annotation<{ speechAct: string; needsData: boolean } | null>({ default: () => null }),
+  //   ^ channel key — node id must differ (e.g. intent_classify.node.ts, addNode("intent_classify", …))
   // Optional MCP / react_bounded channels (uncomment when graph-spec declares evidence topology):
   // dataBundle: Annotation<Record<string, unknown> | null>({ default: () => null }),
   // discoveryBrief: Annotation<{ found: string[]; absent: string[] } | null>({ default: () => null }),

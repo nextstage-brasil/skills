@@ -1,9 +1,9 @@
 # Runtime layout — `agent-api/`
 
-Canonical tree for LangGraph.js production runtimes. Adapt folder names to the product; keep **layer rules** intact.
+Canonical LangGraph.js production tree. Adapt folder names; keep **layer rules**.
 
-**Placement authority:** `references/placement-and-domains.md` — emit a Placement Decision Block before new files.
-**Inject authority:** `references/prompt-and-capability-injection.md` — compose/bind before changing prompts or tools.
+**Placement:** `references/placement-and-domains.md` — Placement Decision Block before new files.
+**Inject:** `references/prompt-and-capability-injection.md` — compose/bind before prompt or tool changes.
 
 ## Target tree
 

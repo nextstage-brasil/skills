@@ -38,6 +38,9 @@ function assert(condition, message) {
   }
 }
 
+/** Expected absorb warnings (e.g. conflict-rule fixture) — not test failures. */
+const silentAbsorbWarn = () => {};
+
 function runCli(args, cwd) {
   const result = spawnSync(process.execPath, [cliPath, ...args], {
     cwd,
@@ -93,7 +96,7 @@ try {
   const edited = `${readFileSync(canonicalPath, 'utf8')}\n\n## Test marker\n\nSmoke test content.\n`;
   writeFileSync(canonicalPath, edited, 'utf8');
 
-  const syncResult = syncRules(tempDir, { agents: ['cursor', 'claude-code'] });
+  const syncResult = syncRules(tempDir, { agents: ['cursor', 'claude-code'], absorbWarn: silentAbsorbWarn });
   assert(syncResult.written.length >= 2, 'sync should write cursor and claude adapters');
 
   const cursorAdapter = join(tempDir, '.cursor', 'rules', 'architecture-rules.mdc');
@@ -118,7 +121,7 @@ try {
   assert(check.status === 1, 'sync --check should fail when canonical changed without re-sync');
 
   // Re-sync before absorb / add-rule sections need clean state
-  syncRules(tempDir, { agents: ['cursor', 'claude-code'] });
+  syncRules(tempDir, { agents: ['cursor', 'claude-code'], absorbWarn: silentAbsorbWarn });
   check = runCli(['sync', '--check', '--dir', tempDir], harnessRoot);
   assert(check.status === 0, `sync --check should pass after re-sync: ${check.stderr}${check.stdout}`);
 
@@ -220,6 +223,7 @@ Default description expected.
     const absorbCheck = syncRules(absorbDir, {
       agents: ['cursor', 'claude-code'],
       check: true,
+      absorbWarn: silentAbsorbWarn,
     });
     assert(!absorbCheck.ok, 'sync --check should report orphan .mdc as drift');
     assert(
@@ -231,7 +235,10 @@ Default description expected.
       'check mode must not absorb orphans',
     );
 
-    const absorbResult = syncRules(absorbDir, { agents: ['cursor', 'claude-code'] });
+    const absorbResult = syncRules(absorbDir, {
+      agents: ['cursor', 'claude-code'],
+      absorbWarn: silentAbsorbWarn,
+    });
     assert(
       absorbResult.absorbed.includes('always-on-extra')
       && absorbResult.absorbed.includes('scoped-frontend')
@@ -305,7 +312,7 @@ Should not land in canonical.
 `,
       'utf8',
     );
-    syncRules(absorbDir, { agents: ['cursor', 'claude-code'] });
+    syncRules(absorbDir, { agents: ['cursor', 'claude-code'], absorbWarn: silentAbsorbWarn });
     assert(
       readFileSync(archCanonical, 'utf8') === beforeArch,
       'sync must not reverse-overwrite registered canonical from .mdc',
@@ -446,7 +453,7 @@ Should not land in canonical.
   writeFileSync(badManifestPath, `${JSON.stringify(badManifest, null, 2)}\n`, 'utf8');
   let syncThrew = false;
   try {
-    syncRules(tempDir);
+    syncRules(tempDir, { absorbWarn: silentAbsorbWarn });
   } catch (err) {
     syncThrew = /cursor\.description required/.test(String(err.message));
   }
@@ -455,7 +462,7 @@ Should not land in canonical.
   writeFileSync(badManifestPath, `${JSON.stringify(badManifest, null, 2)}\n`, 'utf8');
   rmSync(join(tempDir, '.nextstage-harness', 'rules', 'broken-meta.md'), { force: true });
   // restore healthy sync baseline
-  syncRules(tempDir);
+  syncRules(tempDir, { absorbWarn: silentAbsorbWarn });
   const dockerignoreCreateDir = join(tempDir, 'dockerignore-create');
   mkdirSync(dockerignoreCreateDir, { recursive: true });
   const createdDockerignore = syncDockerignore(dockerignoreCreateDir);

@@ -99,7 +99,7 @@ Ship in **4 mergeable waves**. Each wave:
 
 | Step | Action | Files |
 | ---- | ------ | ----- |
-| 2.1 | Add section **Bounded ReAct / react_bounded** (intent → gather → composer; sole-writer; optional bypass) | `architectures.md` |
+| 2.1 | Add section **Bounded ReAct / react_bounded** (`intent_classify` node → `intent` channel; gather → composer; sole-writer; optional bypass) | `architectures.md` |
 | 2.2 | Update selection guide: MCP tool-heavy → `react_bounded`; simple local tools MVP → `react` still OK | `architectures.md` |
 | 2.3 | Template: architecture enum includes `react_bounded`; optional state channels documented as comments/placeholders | `templates/graph-spec.md` |
 | 2.4 | Pattern doc: `context_compact` pre-intent (prune → compress discovery → trim → summarize); optional small snippet **new file** `prepare-llm-messages.ts.snippet` if keeps SKILL thin | `context-window-and-tokens.md` (+ optional snippet) |

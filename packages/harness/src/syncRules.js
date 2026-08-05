@@ -128,6 +128,7 @@ export function syncRules(projectRoot, options = {}) {
     agents = ['cursor', 'claude-code'],
     check = false,
     updateAgentsMarker = !check,
+    absorbWarn = (msg) => console.warn(msg),
   } = options;
 
   const harnessRoot = join(projectRoot, HARNESS_ROOT);
@@ -152,6 +153,7 @@ export function syncRules(projectRoot, options = {}) {
   // check mode: do not write; treat orphans as drift so CI catches unsynced hand-rules.
   const absorbResult = absorbOrphanCursorRules(projectRoot, manifest, {
     write: !check,
+    warn: absorbWarn,
   });
   if (check) {
     for (const orphanPath of absorbResult.orphans) {

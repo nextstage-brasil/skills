@@ -1,21 +1,21 @@
 # Observability
 
-Production agents need **audit-grade** logs independent of optional tracing products.
+Production agents need **audit-grade** logs without optional tracing.
 
 ## Layers
 
 | Layer | Purpose | Default |
 | ----- | ------- | ------- |
-| Postgres audit | Threads, LLM calls, tool executions, checkpoints | Required in prod |
+| Postgres audit | Threads, LLM calls, tools, checkpoints | Required prod |
 | Run context | `threadId`, `tenantId`, `nodeName` via AsyncLocalStorage | Required |
-| LangSmith | Trace debugging, datasets | Opt-in `LANGSMITH_ENABLED=true` |
-| OpenTelemetry | GenAI spans to Tempo/Datadog | Opt-in `OTEL_ENABLED=true` |
+| LangSmith | Trace debug, datasets | Opt-in `LANGSMITH_ENABLED=true` |
+| OpenTelemetry | GenAI spans | Opt-in `OTEL_ENABLED=true` |
 
-Postgres remains source of truth when OTel/LangSmith are off.
+Postgres = SoT when OTel/LangSmith off.
 
 ## Run context
 
-Wrap every `graph.invoke` / `stream` in HTTP handlers:
+Wrap every `graph.invoke` / `stream`:
 
 ```typescript
 await runStorage.run({ threadId, tenantId }, async () => {
@@ -23,11 +23,11 @@ await runStorage.run({ threadId, tenantId }, async () => {
 });
 ```
 
-Instrument LLM and tools inside run context so logs auto-attach `thread_id`.
+LLM + tools inside run context — logs attach `thread_id`.
 
 ## buildRunConfig
 
-Always pass second argument to invoke:
+Second arg to invoke always:
 
 ```typescript
 {
@@ -37,7 +37,7 @@ Always pass second argument to invoke:
 }
 ```
 
-Required for checkpointer resume and LangSmith threading.
+Required for checkpointer resume + LangSmith threading.
 
 ## Postgres schema (minimum)
 
@@ -50,44 +50,44 @@ Required for checkpointer resume and LangSmith threading.
 | `tool_executions` | capability_id, fingerprint, status, duration |
 | `turn_decisions` | JSONB audit per checkpoint — route, bypass, budget exit (optional migration) |
 
-Run `initDb()` + migrations before `getGraph()` on HTTP startup.
+`initDb()` + migrations before `getGraph()` on HTTP startup.
 
 ### llm_logs.stage
 
-Tag every `logLlmCall` with pipeline stage:
+Every `logLlmCall` tagged:
 
 | Stage | Typical node |
-| ----- | ------------ |
+| ----- | -------------- |
 | `intent` | Light router |
-| `gather` / `analyst` | Bounded ReAct tool loop |
+| `gather` / `analyst` | Bounded ReAct loop |
 | `composer` | Sole user-facing writer |
 | `summarize` | Context compaction |
 
-Enables cost/latency breakdown without LangSmith.
+Cost/latency breakdown without LangSmith.
 
 ### turn_decisions
 
-Ephemeral state channel `turnDecisions[]` → persist to `turn_decisions` JSONB on checkpoint anchor (UPDATE on turn end). Fields: route taken, bypass reason, budget hit, error codes.
+Ephemeral `turnDecisions[]` → `turn_decisions` JSONB on checkpoint anchor (UPDATE turn end). Route, bypass reason, budget hit, error codes.
 
 ### Costs by thread
 
-View `view_costs_by_thread` (or equivalent):
+`view_costs_by_thread` (or equivalent):
 
 - Sum priced `llm_logs` per `thread_id`
-- `unpriced_calls` column — NULL model/pricing ≠ zero cost
-- Match ILIKE specific unpriced patterns before generic bucket
+- `unpriced_calls` — NULL pricing ≠ zero cost
+- ILIKE specific unpriced patterns before generic bucket
 
 ## LLM instrumentation
 
-Centralize in `llm/json-output.ts` (or equivalent):
+Centralize `llm/json-output.ts` (or equivalent):
 
-- Log before/after each call with **`stage`**
-- Record input/output token estimates
-- **`prompt_raw`**: log structured HumanMessage payload (truncated) — not only user question string
+- Log before/after with **`stage`**
+- Input/output token estimates
+- **`prompt_raw`**: structured HumanMessage payload (truncated) — not user question string only
 - Never log raw secrets from `configurable`
-- **SoT redaction**: redact secrets in Postgres `llm_logs` inputs — not only tracer/LangSmith
+- **SoT redaction**: secrets in Postgres `llm_logs` inputs — not only tracer/LangSmith
 
-Every LLM-calling node sets `llm_log_id` on tool executions it triggers — avoid orphan `tool_executions`.
+Every LLM node sets `llm_log_id` on triggered tool executions — no orphan `tool_executions`.
 
 ## Tool instrumentation
 
@@ -100,23 +100,23 @@ Every MCP/local/skill execution → `logToolExecution` with redacted args.
 | Checkpointer | `memory` | `postgres` |
 | DATABASE_URL | unset | required |
 | LLM | disabled/stub | live |
-| Tracing | off | optional on |
+| Tracing | off | optional |
 
 ## Dashboards
 
 Minimum KPIs:
 
-- Tokens per thread / tenant (`view_costs_by_thread`)
+- Tokens per thread/tenant (`view_costs_by_thread`)
 - Unpriced LLM calls per thread
 - Tool error rate by `capability_id`
-- P95 latency per node and per `llm_logs.stage`
+- P95 latency per node + per `llm_logs.stage`
 - Interrupt rate (HITL)
-- Fidelity alert rate (observability-only — see `evidence-and-fidelity.md`)
+- Fidelity alert rate (observability-only — `evidence-and-fidelity.md`)
 
-Use `trace.json`-style export for offline analysis when full APM is not wired.
+`trace.json` export when full APM missing.
 
 ## Privacy
 
-- Anonymize PII in logs when required
-- Truncate message bodies in `llm_logs`
-- Separate retention policy for checkpoints vs audit
+- Anonymize PII when required
+- Truncate bodies in `llm_logs`
+- Separate retention checkpoints vs audit

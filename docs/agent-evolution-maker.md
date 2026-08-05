@@ -105,7 +105,7 @@ Each item was paid in production (real threads, `_done` plans, living `graph-spe
 
 | Concept | Problem solved | Harness implication |
 | ------- | -------------- | ------------------- |
-| **Intent node (LLM light)** | Avoid expensive ReAct on chitchat/clarify; classify `speechAct` / `needsData` | Add architecture `react_bounded` (or equivalent name) to `architectures.md` + `graph-spec` template: `guard → context_compact → intent → (gather \| bypass \| composer) → composer → respond` |
+| **Intent classify node (LLM light)** | Avoid expensive ReAct on chitchat/clarify; classify `speechAct` / `needsData` | Add architecture `react_bounded` to `architectures.md` + `graph-spec` template: `guard → context_compact → intent_classify → (gather \| bypass \| composer) → composer → respond` — node id `intent_classify` writes state channel `intent` (never same string for both) |
 | **Bounded ReAct gather** | Unbounded ReAct blows tokens/latency; silent `break` on LLM failure | Doctrine: `MAX_ITERATIONS` + tool budgets; LLM invoke failure → `errorCode` on state, never silent exit |
 | **Composer sole-writer** | SSE flicker / “finished” mid-gather; polluted history | Gather strips terminal `content`/`reasoning` without `tool_calls`; only composer emits user-facing Markdown |
 | **Deterministic bypass** | Catalog/list-value questions do not need multi-round main model | Post-intent 3-way route; zero LLM on bypass; same brief contract gather would fill |

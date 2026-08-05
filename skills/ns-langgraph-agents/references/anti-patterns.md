@@ -1,6 +1,6 @@
 # Anti-patterns
 
-Review before marking agent work done. When the diff touches `agent-api`, treat Placement, Prompt inject, Bind parity, Spec drift, and Wire names as Critical if violated.
+Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind parity, Spec drift, Wire names = Critical if violated.
 
 ## Placement
 
@@ -74,7 +74,7 @@ Review before marking agent work done. When the diff touches `agent-api`, treat 
 
 | Anti-pattern | Why it hurts | Fix |
 | ------------ | ------------ | --- |
-| `addNode` id equals `AgentState` channel key | LangGraph compile/runtime error | Different node id — e.g. `intent_classify` writes `intent` channel |
+| `addNode` id equals `AgentState` channel key | LangGraph compile/runtime error | Different node id — e.g. `intent_classify` writes `intent`; `plan_node` writes `plan` |
 | Topology doc uses channel name as node id | Agents copy wrong `addNode` name | Diagrams + graph-spec Nodes table use node ids; map channels in Outputs |
 | Graph in `memory/` | — | `graph/graph.ts` |
 | Domain prompts in `llm/` | — | `conversation/` |
@@ -116,4 +116,4 @@ Review before marking agent work done. When the diff touches `agent-api`, treat 
 
 ## Agent without rules
 
-An agent without explicit limits (`max_tool_calls`, sensitive actions, stop conditions) will loop, overspend, or call destructive tools. Always ship `templates/contracts/rules-contract.md` alongside the graph.
+No explicit limits (`max_tool_calls`, sensitive actions, stop conditions) = loop, overspend, destructive calls. Ship `templates/contracts/rules-contract.md` with graph.

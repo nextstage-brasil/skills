@@ -1,6 +1,6 @@
 # MCP complex access
 
-Patterns for agents that connect to **multiple MCP servers** with large or overlapping tool catalogs.
+Multi MCP servers, large or overlapping tool catalogs.
 
 ## Architecture
 
@@ -12,17 +12,17 @@ Agent (LangGraph)
   → MCP Server A, B, C …
 ```
 
-LangGraph owns **orchestration**; MCP owns **tool protocol**. Do not replace the graph with MCP — complement it.
+LangGraph = orchestration. MCP = tool protocol. Complement graph — do not replace.
 
 ## Client lifecycle
 
 | Environment | Pattern |
 | ----------- | ------- |
-| Production HTTP service | One `MultiServerMCPClient` (or custom registry) created at process startup; reuse for all requests |
-| Local dev | stdio acceptable for single-user; still prefer one long-lived subprocess |
-| Serverless | Consider in-process tools instead of stdio MCP per invocation |
+| Production HTTP | One `MultiServerMCPClient` (or registry) at startup; reuse all requests |
+| Local dev | stdio OK single-user; prefer long-lived subprocess |
+| Serverless | In-process tools over stdio MCP per invocation |
 
-Per-request stdio spawn causes latency, zombie processes, and broken horizontal scaling.
+Per-request stdio spawn: latency, zombies, broken horizontal scale.
 
 ## Multi-server configuration
 
@@ -41,29 +41,29 @@ const client = new MultiServerMCPClient({
   },
 });
 
-const discovered = await client.getTools(); // then govern before bind
+const discovered = await client.getTools(); // govern before bind
 ```
 
-Bearer tokens come from request `configurable` or tenant context — not from graph state.
+Bearer tokens from `configurable` or tenant context — not graph state.
 
 ## Discovery → governance → bind
 
-1. **Discover** — `list_tools` per server (or adapter `getTools()`).
-2. **Filter** — intersect with server `allow_tools` in config.
-3. **Classify** — assign `read|write|destructive|admin` locally per tool.
-4. **Rename** — `mcp__{server}__{tool}` for OpenAI-compatible APIs.
-5. **Bind** — only governed tools reach `bind_tools`.
-6. **Audit** — log `capability_id`, fingerprint, latency, status.
+1. **Discover** — `list_tools` per server (or `getTools()`)
+2. **Filter** — intersect server `allow_tools` config
+3. **Classify** — `read|write|destructive|admin` locally
+4. **Rename** — `mcp__{server}__{tool}` for OpenAI APIs
+5. **Bind** — governed tools only to `bind_tools`
+6. **Audit** — `capability_id`, fingerprint, latency, status
 
-Never expose the full remote catalog to the model when the agent only needs 5–15 tools.
+Never expose full remote catalog when agent needs 5–15 tools.
 
 ## Overlapping tool names
 
-When two servers expose `search` or `read_file`:
+Two servers expose `search` or `read_file`:
 
-- Wire names **must** include server: `mcp__gitlab__search`, `mcp__drive__search`.
-- Internal ids: `mcp:gitlab:search`, `mcp:drive:search`.
-- Prompt hint: one line in system message mapping wire names to intent.
+- Wire names include server: `mcp__gitlab__search`, `mcp__drive__search`
+- Internal ids: `mcp:gitlab:search`, `mcp:drive:search`
+- System prompt one-line wire name map
 
 ## Transport selection
 
@@ -75,27 +75,27 @@ When two servers expose `search` or `read_file`:
 
 ## Timeouts and cancellation
 
-- Per-tool timeout (e.g. 30s read, 120s batch).
-- Propagate `AbortSignal` from HTTP request to MCP call when supported.
-- On timeout: `ToolMessage` with `status: "error"` and clear message — let model retry or escalate.
+- Per-tool timeout (e.g. 30s read, 120s batch)
+- Propagate `AbortSignal` from HTTP when supported
+- Timeout: `ToolMessage` `status: "error"` — model retry or escalate
 
 ## Complex servers (GitLab, DB, CRM)
 
 | Challenge | Mitigation |
 | --------- | ---------- |
-| 40+ tools | Strict allowlist per agent persona; dynamic bind by route/intent node |
-| Write/destructive tools | `destructive` class → HITL interrupt before execute |
-| Tenant-specific MCP URL | `url_source: payload` with validated allowlist of hosts |
+| 40+ tools | Strict allowlist per persona; dynamic bind by route/intent node |
+| Write/destructive | `destructive` class → HITL before execute |
+| Tenant MCP URL | `url_source: payload` + validated host allowlist |
 | Schema drift | Pin server version; re-discover on deploy, not every message |
-| Large JSON results | `normalizeMcpToolResult` then `truncateToolOutput`; offer "fetch by id" tools |
+| Large JSON | `normalizeMcpToolResult` then `truncateToolOutput`; "fetch by id" tools |
 
 ## When NOT to use MCP
 
-If the tool is a thin wrapper over an internal library in the same process, a local `StructuredTool` is simpler and faster. Use MCP when:
+Thin wrapper over in-process library: local `StructuredTool` simpler. MCP when:
 
-- Tool is shared across agents/IDEs
-- Tool runs in another team's service
-- You need independent deploy and versioning
+- Shared across agents/IDEs
+- Another team's service
+- Independent deploy + versioning
 
 ## Normalize before truncate
 
@@ -107,26 +107,26 @@ text = normalizeMcpToolResult(raw)
 safe = truncateToolOutput(text, CONTEXT_TOOL_OUTPUT_MAX_CHARS)
 ```
 
-See `templates/snippets/context-window.ts.snippet`. Double-stringifying `{content, structuredContent}` before extract silently corrupts totals.
+`context-window.ts.snippet`. Double-stringify `{content, structuredContent}` before extract corrupts totals.
 
 ## Structural and field-values cache (opt-in)
 
-For agents that rediscover the same catalog shape every turn:
+Agents rediscover same catalog shape every turn:
 
 | Tier | Key shape | Caches |
 | ---- | --------- | ------ |
-| L1 structural | `tenantId` + resource + token fingerprint | `tools/list` or catalog tree shape |
+| L1 structural | `tenantId` + resource + token fingerprint | `tools/list` or catalog tree |
 | L2 field-values | L1 key + field id | Enum/list values for known fields |
 
 Rules:
 
-- Write-through on cache miss; after cache hit replace bulky ToolMessage with short note
-- Flush on process boot when remote catalog version may have changed
-- **Never** cache confirmed absence of free-text search — negative discovery stays live
-- Opt-in only — agents without catalog rediscovery pain skip this
+- Write-through on miss; cache hit replaces bulky ToolMessage with short note
+- Flush on boot when remote catalog version may change
+- **Never** cache confirmed absence of free-text search
+- Opt-in — skip without catalog rediscovery pain
 
 ## Policy file
 
-See `templates/snippets/mcp-policy.example.yaml` for declarative server/tool policy.
+`mcp-policy.example.yaml` — declarative server/tool policy.
 
-Snippet: `templates/snippets/mcp-client-lifecycle.ts.snippet`.
+Snippet: `mcp-client-lifecycle.ts.snippet`.

@@ -1,6 +1,6 @@
 # Capability governance
 
-Unified policy for **local tools**, **MCP tools**, and **skill procedures**.
+Unified policy: **local tools**, **MCP tools**, **skill procedures**.
 
 ## Three primitives
 
@@ -13,10 +13,8 @@ Unified policy for **local tools**, **MCP tools**, and **skill procedures**.
 ## Wire name rules
 
 - Match `^[a-zA-Z0-9_-]{1,128}$`
-- Use `__` between segments for MCP and skills
-- **Never** use colons in wire names (OpenAI tool name restrictions)
-
-Helper:
+- `__` between MCP/skill segments
+- **Never** colons in wire names (OpenAI restriction)
 
 ```typescript
 export function mcpWireName(server: string, tool: string): string {
@@ -29,7 +27,7 @@ export function skillWireName(id: string): string {
 
 ## Classification
 
-Assign locally — **never** trust MCP server metadata alone.
+Assign locally — **never** trust MCP metadata alone.
 
 | Class | Typical ops | Default policy |
 | ----- | ----------- | -------------- |
@@ -52,34 +50,34 @@ const policy: AllowlistPolicy = {
 const bound = filterCapabilities(discovered, policy);
 ```
 
-Filter **before** `bind_tools`. Agent must not see denied tools in the manifest.
+Filter **before** `bind_tools`. Denied tools invisible in manifest.
 
 ## Rate limiting
 
 Sliding window per `tenantId:capabilityId`:
 
-- Per-tool limits for expensive MCP calls
-- Per-agent turn budget (`max_tool_calls` / `max_mcp_calls` in rules contract)
-- Return structured error to model when exceeded — not HTTP 500
+- Per-tool limits expensive MCP
+- Per-turn budget (`max_tool_calls` / `max_mcp_calls` in rules contract)
+- Structured error to model on exceed — not HTTP 500
 
 ## Per-turn budgets (MCP / tool-heavy)
 
-**Greenfield** and intentional MCP redesign: **MUST** wire budgets. **Brownfield:** **RECOMMENDED** — not a Critical blocker on orphan recovery.
+**Greenfield** + intentional MCP redesign: **MUST** wire budgets. **Brownfield:** **RECOMMENDED** — not Critical on orphan recovery.
 
-Wire `templates/snippets/tool-budget.ts.snippet` in gather/agent loop:
+`templates/snippets/tool-budget.ts.snippet` in gather/agent loop:
 
 | Limit | Default env | Purpose |
 | ----- | ----------- | ------- |
-| `max_tool_calls_per_turn` | `AGENT_MAX_TOOL_CALLS` (8) | All tool kinds combined |
-| `max_mcp_calls_per_turn` | `AGENT_MAX_MCP_CALLS` (6) | MCP subset of above |
+| `max_tool_calls_per_turn` | `AGENT_MAX_TOOL_CALLS` (8) | All tool kinds |
+| `max_mcp_calls_per_turn` | `AGENT_MAX_MCP_CALLS` (6) | MCP subset |
 
-On exceed: stop tool loop; surface structured message to model or composer — never silent hang.
+On exceed: stop loop; structured message to model or composer — no silent hang.
 
 ### Arg fingerprint duplicate-skip
 
-Hash redacted `(toolName, args)` per turn. **Skip** repeat identical calls. If an entire gather round is duplicates **and** analytical evidence already sits in state, **break** loop — do not burn budget re-polling.
+Hash redacted `(toolName, args)` per turn. **Skip** identical repeat. Entire gather round duplicates **and** analytical evidence in state: **break** loop.
 
-Discovery-only calls (list/search) do **not** count as analytical evidence — see `references/evidence-and-fidelity.md`.
+Discovery-only (list/search) ≠ analytical evidence — `references/evidence-and-fidelity.md`.
 
 ## Secrets
 
@@ -87,34 +85,34 @@ Discovery-only calls (list/search) do **not** count as analytical evidence — s
 | ------- | --------- |
 | `process.env` server URLs | API keys in `state` |
 | `configurable.bearer_token` per invoke | Tokens in checkpointer |
-| Request payload `mcp_auth` (validated) | Secrets in skill markdown bodies |
+| Request `mcp_auth` (validated) | Secrets in skill markdown bodies |
 
-Redact secrets in audit logs and fingerprints.
+Redact secrets in audit + fingerprints.
 
 ## Skills registry
 
-- Files: `agent-api/skills/*.md` with YAML frontmatter (`name`, `description`).
-- Loader scans on startup (`SKILLS_DIR` env).
-- New skill = new file — no code change.
-- Skill tool returns procedure text into the conversation; external actions still go through MCP/local tools.
+- `agent-api/skills/*.md` YAML frontmatter (`name`, `description`)
+- Loader on startup (`SKILLS_DIR`)
+- New skill = new file — no code change
+- Skill tool returns procedure text; external actions via MCP/local only
 
 ## Human-in-the-loop
 
-Tools with `classification: destructive` or listed in `sensitive_tools`:
+`classification: destructive` or `sensitive_tools`:
 
 1. Agent proposes tool call
-2. Graph hits `interrupt({ tool, args, reason })`
+2. `interrupt({ tool, args, reason })`
 3. UI approves/edits/rejects
-4. Resume with `Command({ resume: approval })`
+4. `Command({ resume: approval })`
 
 ## Audit
 
-Every execution → `tool_executions` row:
+Every execution → `tool_executions`:
 
 - `capability_id`, `tenant_id`, `thread_id`
-- `fingerprint` (hash of redacted args)
+- `fingerprint` (redacted args hash)
 - `duration_ms`, `status`, truncated `result`
 
-Postgres is source of truth; OTel/LangSmith are optional overlays.
+Postgres = SoT; OTel/LangSmith optional.
 
-Snippet: `templates/snippets/capability-wire-names.ts.snippet`, `templates/snippets/mcp-policy.example.yaml`.
+Snippet: `capability-wire-names.ts.snippet`, `mcp-policy.example.yaml`.

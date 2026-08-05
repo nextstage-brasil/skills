@@ -1,18 +1,20 @@
 # Cognitive architectures (LangGraph)
 
-Pick architecture in `graph-spec.md` **before** coding. Runtime responds to **signals**, not architecture names.
+Lock architecture in `graph-spec.md` before code. Runtime follows **signals**, not enum names.
 
-## Node id vs state channel (LangGraph)
+## Node id vs state channel
 
-Every `AgentState` key is a **state channel**. `addNode("…", fn)` registers a **node id**. LangGraph forbids the same string for both — compile/runtime error: *state attribute cannot also be used as a node name*.
+`AgentState` key = state channel. `addNode` string = node id. Same string forbidden — compile/runtime error (*state attribute cannot also be used as a node name*).
 
 | Rule | Example |
 | ---- | ------- |
-| Node id ≠ channel key when both exist | Node `intent_classify` → `return { intent: { speechAct, needsData } }` |
-| Topology diagrams use **node ids** | `intent_classify`, not channel name `intent` |
-| `graph-spec.md` Nodes table = node ids | State schema lists channel keys; map writer node in Outputs column |
+| Node id ≠ channel when both exist | `intent_classify` returns `{ intent: { speechAct, needsData } }` |
+| Diagrams use node ids | `intent_classify`, not channel `intent` |
+| `graph-spec.md` Nodes table = node ids | State schema = channel keys; map writer in Outputs |
 
-`messages` is special (reducer channel) — still avoid a node named `messages`. Plan-execute: if state holds `plan`, node id must be `plan_node` or `planner`, not `plan`.
+`messages` = reducer channel — still no node named `messages`. State has `plan` — node `plan_node` or `planner`, not `plan`. Any channel key: different node id (`intent` channel, `intent_classify` node).
+
+`context_compact` as node id only when state has **no** `context_compact` channel (typical: node rewrites `messages` only). Need compact metadata channel: use `compactMeta` or node `context_compact_node`.
 
 ## ReAct (default loop)
 
@@ -20,11 +22,11 @@ Every `AgentState` key is a **state channel**. `addNode("…", fn)` registers a 
 agent → tools? → agent → … → END
 ```
 
-**Signals:** standard tool loop; optional `raciocínio` / reasoning field in planner JSON for audit.
+**Signals:** tool loop; optional planner `raciocínio` / reasoning for audit.
 
 **When:** exploratory tasks, dynamic tool choice, moderate autonomy.
 
-**Graph:** `agent` node + `ToolNode` + conditional edge on `tool_calls`.
+**Graph:** `agent` + `ToolNode` + conditional on `tool_calls`.
 
 ## Bounded ReAct (`react_bounded`)
 
@@ -32,21 +34,21 @@ agent → tools? → agent → … → END
 guard → context_compact → intent_classify → (gather | bypass | composer) → composer → respond → END
 ```
 
-Node ids above — not state channel names. `intent_classify` writes channel `intent`; do not `addNode("intent", …)` when `intent` is on `AgentState`.
+Node ids above — not channel names. `intent_classify` writes `intent`. No `addNode("intent", …)` when `intent` on `AgentState`.
 
-**Signals:** MCP or external tools with open query space; `needsData` routing; composer sole-writer; optional deterministic bypass for catalog/list lookups.
+**Signals:** open MCP/external query space; `needsData` routing; composer sole-writer; optional catalog bypass.
 
-**When:** tool-heavy agents where unbounded ReAct blows tokens/latency or gather pollutes user stream. **Preferred default** for greenfield LangGraph + MCP — not a replacement for simple local-tool MVP.
+**When:** tool-heavy; unbounded ReAct blows tokens/latency or gather pollutes stream. **Preferred default** greenfield LangGraph + MCP. Simple local-tool MVP may stay open ReAct.
 
 **Graph rules:**
 
-- **Gather** strips terminal `content`/`reasoning` without `tool_calls` — never user-facing Markdown
-- **Composer** is the only node that emits final user text
-- **Intent classify** node (e.g. `intent_classify`) — light LLM; writes `intent` channel; routes chitchat/clarify vs data fetch — post-process only calendar/locale; no domain vocabulary in `src/`
-- **Bypass** (optional): zero-LLM path for closed catalog question classes
-- Wire budgets from `tool-budget.ts.snippet`; evidence channels in state — see `templates/graph-spec.md`
+- Gather strips terminal `content`/`reasoning` without `tool_calls` — no user Markdown
+- Composer only node with final user text
+- `intent_classify` — light LLM; writes `intent`; routes chitchat/clarify vs fetch; post-process calendar/locale only; no domain vocabulary in `src/`
+- Bypass (optional): zero-LLM closed catalog classes
+- Budgets: `tool-budget.ts.snippet`; evidence channels: `templates/graph-spec.md`
 
-**State channels (optional):** `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions` — commented placeholders in `templates/snippets/state.ts.snippet`.
+**State channels (optional):** `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions` — `templates/snippets/state.ts.snippet`.
 
 ## Plan-Execute
 
@@ -56,9 +58,9 @@ plan → execute_step → execute_step → … → synthesize → END
 
 **Signals:** `modo_execucao: plan_execute`, `plano_completo[]` on first LLM call only.
 
-**When:** predictable multi-step workflows, lower per-step token cost.
+**When:** predictable multi-step workflows; lower per-step token cost.
 
-**Graph:** separate `plan` node; executor reads current step index from state.
+**Graph:** `plan_node` or `planner` — not `plan` when `plan` on `AgentState`; executor reads step index from state.
 
 ## Reflection
 
@@ -66,11 +68,11 @@ plan → execute_step → execute_step → … → synthesize → END
 agent → tools → critic → (retry | END)
 ```
 
-**Signals:** `critic.md` contract with `aprovado`, `nota`, `max_reflexoes`.
+**Signals:** `critic.md` — `aprovado`, `nota`, `max_reflexoes`.
 
-**When:** quality-sensitive outputs (reports, code, customer-facing text).
+**When:** quality-sensitive outputs.
 
-**Graph:** critic node before END; conditional edge on approval threshold.
+**Graph:** critic before END; conditional on approval threshold.
 
 ## Supervisor / multi-agent (advanced)
 
@@ -78,9 +80,9 @@ agent → tools → critic → (retry | END)
 supervisor → worker_a | worker_b → supervisor → END
 ```
 
-**When:** distinct personas with separate tool sets; avoid premature complexity.
+**When:** distinct personas, separate tool sets. Avoid premature use.
 
-**Pattern:** subgraph per worker OR supervisor node routing via structured output.
+**Pattern:** subgraph per worker OR supervisor routes via structured output.
 
 ## RAG-augmented
 
@@ -88,9 +90,9 @@ supervisor → worker_a | worker_b → supervisor → END
 retrieve → agent → tools? → END
 ```
 
-**When:** knowledge-heavy Q&A with tenant-scoped corpora.
+**When:** knowledge-heavy Q&A; tenant-scoped corpora.
 
-**Rules:** always filter by `tenant_id`; store citations in state refs not full docs.
+**Rules:** filter `tenant_id`; citations as state refs, not full docs.
 
 ## Guardrails-first
 
@@ -98,9 +100,9 @@ retrieve → agent → tools? → END
 safeguard → agent → tools → END
 ```
 
-**When:** user-facing agents with injection risk.
+**When:** user-facing; injection risk.
 
-**Pattern:** lightweight classifier node **before** main LLM — do not rely on system prompt alone.
+**Pattern:** classifier node before main LLM — not system prompt alone.
 
 ## Selection guide
 
@@ -117,10 +119,10 @@ safeguard → agent → tools → END
 
 Document in `templates/graph-spec.md`:
 
-- Node list and responsibilities
+- Node list + responsibilities
 - State fields beyond `messages`
 - Interrupt points (HITL)
-- Which tools each node may bind
-- Eval scenarios that prove the architecture
+- Tools per node bind
+- Eval scenarios proving architecture
 
-For framework comparison (LangGraph vs CrewAI), use `ns-multi-agent-architect` — not this file.
+Framework comparison (LangGraph vs CrewAI): `ns-multi-agent-architect` — not this file.

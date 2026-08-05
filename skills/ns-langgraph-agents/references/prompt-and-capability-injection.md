@@ -79,16 +79,16 @@ Extract compose, bind list construction, and routing helpers from the agent node
 
 ## Gather vs deliver prompts (`react_bounded`)
 
-Split system prompts when topology uses gather + composer:
+Split system prompts for gather + composer:
 
 | Phase | Prompt owns | Must not include |
 | ----- | ----------- | ---------------- |
-| **Gather** | Tool discipline, MCP wire hints, nudge to call tools on `needsData` | Deliver/formatting skills, final Markdown templates, chart prose |
-| **Composer** | Skill auto-inject, formatting, locale, user-facing tone | Tool-call authoring beyond evidence narration |
+| **Gather** | Tool discipline, MCP wire hints, nudge tools on `needsData` | Deliver/formatting skills, final Markdown templates, chart prose |
+| **Composer** | Skill auto-inject, formatting, locale, user tone | Tool-call authoring beyond evidence narration |
 
-Deliver skill in gather induces premature Markdown in the tool loop. Bind deliver skills only on composer turn (or auto-inject in composer compose path).
+Deliver skill in gather = premature Markdown in tool loop. Bind deliver skills on composer turn only (or auto-inject in composer compose).
 
-Gather nudge: single `SystemMessage` section — never fake `HumanMessage`. Skip nudge when `discoveryBrief` already confirms catalog absence.
+Gather nudge: single `SystemMessage` section — no fake `HumanMessage`. Skip nudge when `discoveryBrief` confirms catalog absence.
 
 ## Prompt / Capability plan (required shape)
 

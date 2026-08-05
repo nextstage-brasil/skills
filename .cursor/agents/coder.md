@@ -47,33 +47,33 @@ Default: every `.md` you author or revise **MUST** pass caveman **ultra** pre-cl
 
 **Exception — template MDs only.** Do **not** caveman-compress files that are copy-paste models for consumers or codegen. Preserve placeholders, example prose, section scaffolding, and instructional tone intact.
 
-| Exempt path / name | Examples |
-| ------------------ | -------- |
-| `**/templates/**/*.md` | `packages/harness/templates/`, `skills/*/templates/` |
-| `**/*.template.md` | `execution-handoff.template.md`, `agents-md.template.md` |
-| `**/*-template.md` | `report-template.md`, `rca-template.md` |
-| `**/*.stub.md` | `architecture-rules.stub.md` |
+| Exempt path / name     | Examples                                                 |
+| ---------------------- | -------------------------------------------------------- |
+| `**/templates/**/*.md` | `packages/harness/templates/`, `skills/*/templates/`     |
+| `**/*.template.md`     | `execution-handoff.template.md`, `agents-md.template.md` |
+| `**/*-template.md`     | `report-template.md`, `rca-template.md`                  |
+| `**/*.stub.md`         | `architecture-rules.stub.md`                             |
 
 Doctrine files (`SKILL.md`, `references/` outside `templates/`, `.cursor/agents/`, `docs/` plans) stay **ultra** mandatory.
 
-| Target | Style |
-| ------ | ----- |
-| Non-template `.md` in this repo | caveman **ultra** pre-clean (English) |
-| Template `.md` (table above) | **No** caveman pass — edit for accuracy only |
-| Commits, PR bodies, code, scripts | normal technical English |
-| Chat with the human | English per `AGENTS.md`. Caveman optional on style only if user asks |
+| Target                            | Style                                                                |
+| --------------------------------- | -------------------------------------------------------------------- |
+| Non-template `.md` in this repo   | caveman **ultra** pre-clean (English)                                |
+| Template `.md` (table above)      | **No** caveman pass — edit for accuracy only                         |
+| Commits, PR bodies, code, scripts | normal technical English                                             |
+| Chat with the human               | English per `AGENTS.md`. Caveman optional on style only if user asks |
 
 Why: catalog skills and maintainer docs load into agent context repeatedly — terse prose cuts tokens. Templates are **sources** agents copy; compressing them breaks models.
 
 ## Scope map
 
-| Path | Role |
-| ---- | ---- |
-| `skills/` | Canonical catalog skills |
-| `packages/harness/` | `@nextstage-brasil/harness` CLI |
-| `.cursor/skills/` | Maintainer-only skills |
-| `.cursor/agents/` | Maintainer Cursor agents (this file) |
-| `.cursor/rules/` | Project rules (`.mdc`) |
+| Path                | Role                                 |
+| ------------------- | ------------------------------------ |
+| `skills/`           | Canonical catalog skills             |
+| `packages/harness/` | `@nextstage-brasil/harness` CLI      |
+| `.cursor/skills/`   | Maintainer-only skills               |
+| `.cursor/agents/`   | Maintainer Cursor agents (this file) |
+| `.cursor/rules/`    | Project rules (`.mdc`)               |
 
 Never copy consumer `AGENTS.md` patterns into this repo's root `AGENTS.md`.
 
@@ -101,14 +101,14 @@ Routing changes in `ns-code-*` → update diagram via `.cursor/skills/code-routi
 
 ## Available skills (load when relevant)
 
-| Need | Skill / path |
-| ---- | ------------ |
-| Create/improve catalog skills | `~/.agents/skills/skill-creator/SKILL.md` |
-| Compress skill prose | `~/.agents/skills/caveman/SKILL.md` (ultra) + `skills/ns-harness/references/agent-artifact-compress.md` |
-| Code routing Mermaid | `.cursor/skills/code-routing-diagram/SKILL.md` |
-| Review score/severity rubric | `skills/ns-code-reviewer/SKILL.md` — **Score gate** section only (never consumer Session boot / issue mode) |
-| Naming exception | `.cursor/rules/mcp-gitlab-usage-naming.mdc` |
-| Migration / path rules | `skills/_meta/MIGRATION.md` |
+| Need                          | Skill / path                                                                                                |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Create/improve catalog skills | `~/.agents/skills/skill-creator/SKILL.md`                                                                   |
+| Compress skill prose          | `~/.agents/skills/caveman/SKILL.md` (ultra) + `skills/ns-harness/references/agent-artifact-compress.md`     |
+| Code routing Mermaid          | `.cursor/skills/code-routing-diagram/SKILL.md`                                                              |
+| Review score/severity rubric  | `skills/ns-code-reviewer/SKILL.md` — **Score gate** section only (never consumer Session boot / issue mode) |
+| Naming exception              | `.cursor/rules/mcp-gitlab-usage-naming.mdc`                                                                 |
+| Migration / path rules        | `skills/_meta/MIGRATION.md`                                                                                 |
 
 ## Closure — code review (mandatory)
 
@@ -118,7 +118,7 @@ Before reporting done:
 2. Rubric: apply the **Score gate** from `skills/ns-code-reviewer/SKILL.md` (severity + overall 1–10). Do **not** run that skill's harness Session boot, issue mode, or GitLab posting — this is the catalog repo.
 3. **Approved** only when: zero Criticals **and** overall score **≥ 9**/10 (target 10). Score ≤ 8 → Rejected even with zero Criticals.
 4. On Rejected with rounds left: fix Criticals / score-blockers with minimal diffs; **mandatory re-review**. Max 3 rounds; then report Blocked if still failing.
-5. End with: what changed, validation run, overall score, and exact line `Code Review: {Approved|Rejected|Blocked}`.
+5. End with: what changed, validation run, overall score, exact line `Code Review: {Approved|Rejected|Blocked}`, and — when any non-template `.md` got caveman ultra — exact line `CavemanApplied`.
 
 Do not claim success without `Code Review: Approved` or an explicit `Blocked` state.
 
@@ -132,6 +132,7 @@ Do not claim success without `Code Review: Approved` or an explicit `Blocked` st
 - Verbose non-template markdown when caveman ultra would keep same gates with fewer tokens
 - Shipping non-template `.md` without caveman ultra pre-clean pass
 - Caveman-compressing template MDs (`templates/`, `*.template.md`, `*-template.md`, `*.stub.md`)
+- Omitting exact line `Caveman::Applied` after caveman ultra on any non-template `.md`
 - Commits without explicit request
 - Declaring Approved without score ≥ 9 and zero Criticals
 - Skipping the closure review gate

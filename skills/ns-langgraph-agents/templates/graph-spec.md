@@ -78,13 +78,16 @@ Compose helper: `{{module path}}` (outside god-node).
 
 LangGraph: **node id** (`addNode`) cannot equal a **state channel** key on `AgentState`. Diagrams and the Nodes table use node ids. State schema lists channel keys.
 
-| Node id (graph) | Writes channel | Example return |
-| --------------- | -------------- | -------------- |
-| `intent_classify` | `intent` | `{ intent: { speechAct, needsData } }` |
-| `gather` | `messages`, `dataBundle`, … | `{ messages: [...], dataBundle: … }` |
-| `composer` | `messages` | `{ messages: [AIMessage] }` |
+Wrong: `addNode("intent", …)` when `intent` is on `AgentState`. Same for any channel key — node id must differ.
 
-Wrong: `addNode("intent", …)` when `intent` is already on `AgentState`.
+Example `react_bounded` mapping (adjust if a channel key collides):
+
+| Node id | Writes channel(s) | Notes |
+| ------- | ----------------- | ----- |
+| `intent_classify` | `intent` | `{ intent: { speechAct, needsData } }` |
+| `context_compact` | `messages` | Node id OK only if state has no `context_compact` channel |
+| `gather` | `messages`, `dataBundle`, … | Or `analyst_agent` if `gather` is a channel |
+| `composer` | `messages` | Sole user-facing writer |
 
 ## Nodes
 

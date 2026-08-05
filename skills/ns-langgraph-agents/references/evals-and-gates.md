@@ -1,24 +1,24 @@
 # Evals and quality gates
 
-Ship three eval types before calling an agent production-ready.
+Three eval types before production-ready.
 
 ## 1. Architecture benchmark (full graph)
 
-**Measures:** end-to-end task completion on a fixed dataset.
+**Measures:** end-to-end task completion on fixed dataset.
 
 | Metric | Meaning |
 | ------ | ------- |
 | `completion_rate` | Tasks finished successfully |
-| `tool_coverage` | Required tools were invoked |
+| `tool_coverage` | Required tools invoked |
 | `avg_tokens` | Cost per run |
-| `planning_tokens` | Tokens in planner-heavy architectures |
+| `planning_tokens` | Planner-heavy architectures |
 | `p95_latency_ms` | Slow path |
 
-**When:** comparing ReAct vs plan-execute vs reflection.
+**When:** ReAct vs plan-execute vs reflection.
 
 ## 2. Tool-selection eval (planner-only)
 
-**Measures:** model picks correct tool + args **without** executing tools.
+**Measures:** correct tool + args **without** executing tools.
 
 | Metric | Meaning |
 | ------ | ------- |
@@ -27,13 +27,13 @@ Ship three eval types before calling an agent production-ready.
 | `unnecessary_calls_rate` | Extra tools proposed |
 | `wrong_tool_rate` | Similar tool confusion |
 
-**When:** many overlapping MCP tools (GitLab + Jira + internal APIs).
+**When:** overlapping MCP tools (GitLab + Jira + internal).
 
-Cheaper than full benchmark — run in CI on every prompt change.
+Cheaper than full benchmark — CI on every prompt change.
 
 ## 3. Memory impact eval
 
-**Measures:** A/B with memory on vs `MEMORY_DISABLED=1`.
+**Measures:** A/B memory on vs `MEMORY_DISABLED=1`.
 
 | Metric | Meaning |
 | ------ | ------- |
@@ -68,39 +68,39 @@ cases:
 | Build | `npm run build` |
 | Eval | `npm run eval` (project script) |
 
-Block merge when thresholds in suite fail.
+Block merge on threshold fail.
 
-## MCP contract gates (when MCP in scope)
+## MCP contract gates (MCP in scope)
 
 | Gate | Requirement |
 | ---- | ----------- |
-| Golden `tools/list` | Fixture in tests/mock declares real tool names + schema shape from live or pinned MCP |
-| Mock alignment | Mock server `items` match golden fixture — CI fails on drift |
-| Schema-derived Zod | Prefer codegen from golden `tools/list` over hand-transcribed prompt tables |
+| Golden `tools/list` | Test/mock fixture: real tool names + schema from live or pinned MCP |
+| Mock alignment | Mock `items` match golden — CI fails on drift |
+| Schema-derived Zod | Codegen from golden `tools/list` over hand-transcribed prompt tables |
 
 ## Browser / dev-chat gate (`streaming_sse`)
 
-When `interaction_mode: streaming_sse`:
+`interaction_mode: streaming_sse`:
 
-- **Greenfield MUST:** at least one Playwright (or equivalent) conversational suite against `GET /dev-chat` — same SSE contract as production
+- **Greenfield MUST:** Playwright (or equivalent) conversational suite on `GET /dev-chat` — same SSE as production
 - Brownfield: recommend before major prompt/topology change
-- Unit green ≠ agent answers — browser path catches stream sanitize, composer-only output, tool progress UX
+- Unit green ≠ agent answers — browser catches stream sanitize, composer-only output, tool progress UX
 
-Do **not** conflate with Cypress `ns-code-e2e-tests` — agent-api browser evals live in project `agent-api/evals/` per this skill.
+Not Cypress `ns-code-e2e-tests` — agent-api browser evals in project `agent-api/evals/` per this skill.
 
 ## LangSmith / external evals
 
-Optional: export datasets to LangSmith for regression. Postgres audit remains canonical for tenant data.
+Optional LangSmith datasets. Postgres audit canonical for tenant data.
 
 ## Contracts for eval-friendly agents
 
-Structured planner JSON (see `templates/contracts/planner-contract.md`) enables automatic grading without LLM-as-judge.
+Structured planner JSON (`templates/contracts/planner-contract.md`) — auto grade without LLM-as-judge.
 
 ## Pre-release checklist
 
-- [ ] At least one architecture benchmark suite green
-- [ ] Tool-selection suite if >10 tools
+- [ ] Architecture benchmark suite green
+- [ ] Tool-selection if >10 tools
 - [ ] Memory suite if long-term memory enabled
 - [ ] Golden `tools/list` + mock alignment if MCP bound
-- [ ] Playwright/dev-chat suite if `streaming_sse` (greenfield MUST)
-- [ ] No eval relies on live secrets — use mocks or staging MCP
+- [ ] Playwright/dev-chat if `streaming_sse` (greenfield MUST)
+- [ ] No eval uses live secrets — mocks or staging MCP
