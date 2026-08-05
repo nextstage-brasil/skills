@@ -126,17 +126,22 @@ Generated adapters: `.cursor/agents/{name}.md` and `.claude/agents/{name}.md`. E
 npx @nextstage-brasil/harness add-rule api-conventions \
   --description "REST API conventions for agents"
 
+# Always-on (opt-in)
+npx @nextstage-brasil/harness add-rule security-baseline \
+  --description "Security baseline — load every session" \
+  --always-apply
+
 # Scoped to paths (not always-on)
 npx @nextstage-brasil/harness add-rule frontend \
   --globs "apps/web/**,packages/ui/**" \
   --description "Frontend conventions"
 ```
 
-Creates `rules/<name>.md`, updates `manifest.json`, and runs sync.
+Creates `rules/<name>.md`, updates `manifest.json` with `cursor.description` + `alwaysApply: false` by default (or `globs` / `--always-apply`), and runs sync. **Required:** `--description` is the Cursor "when to apply" header — without it in the manifest, sync fails.
 
 ### Edit a rule
 
-1. Edit `rules/<name>.md`.
+1. Edit `rules/<name>.md` (body only — no YAML frontmatter; sync strips it).
 2. Change `manifest.json` only if description, globs, or alwaysApply change.
 3. Sync:
 

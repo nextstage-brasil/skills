@@ -203,8 +203,10 @@ try {
     readFileSync(join(tempDir, '.nextstage-harness', 'manifest.json'), 'utf8'),
   );
   assert(
-    manifest.rules.some((r) => r.name === 'api-conventions' && r.cursor?.alwaysApply === true),
-    'add-rule should register alwaysApply entry in manifest',
+    manifest.rules.some(
+      (r) => r.name === 'api-conventions' && r.cursor?.alwaysApply === false,
+    ),
+    'add-rule should register alwaysApply false by default',
   );
   assert(
     exists(join(tempDir, '.cursor', 'rules', 'api-conventions.mdc')),
@@ -213,6 +215,45 @@ try {
   assert(
     exists(join(tempDir, '.claude', 'rules', 'api-conventions.md')),
     'add-rule should sync claude adapter',
+  );
+  assert(
+    readFileSync(addedCanonical, 'utf8').includes('harness-rule: body only'),
+    'add-rule stub should include body-only manifest hint',
+  );
+  assert(
+    !readFileSync(join(tempDir, '.cursor', 'rules', 'api-conventions.mdc'), 'utf8').includes(
+      'harness-rule: body only',
+    ),
+    'cursor adapter must strip body-only hint',
+  );
+  assert(
+    readFileSync(join(tempDir, '.cursor', 'rules', 'api-conventions.mdc'), 'utf8').includes(
+      'alwaysApply: false',
+    ),
+    'cursor adapter should emit alwaysApply: false by default',
+  );
+
+  const alwaysOn = runCli(
+    [
+      'add-rule',
+      'constitution-extra',
+      '--description',
+      'Always-on extra constitution',
+      '--always-apply',
+      '--dir',
+      tempDir,
+    ],
+    harnessRoot,
+  );
+  assert(alwaysOn.status === 0, `add-rule --always-apply should succeed: ${alwaysOn.stderr}`);
+  const manifestAlways = JSON.parse(
+    readFileSync(join(tempDir, '.nextstage-harness', 'manifest.json'), 'utf8'),
+  );
+  assert(
+    manifestAlways.rules.some(
+      (r) => r.name === 'constitution-extra' && r.cursor?.alwaysApply === true,
+    ),
+    'add-rule --always-apply should set alwaysApply true',
   );
 
   const dup = runCli(['add-rule', 'api-conventions', '--dir', tempDir], harnessRoot);
@@ -246,7 +287,35 @@ try {
   );
   assert(!frontendEntry.cursor.alwaysApply, 'globs mode should not set alwaysApply');
 
-  // 9. syncDockerignore creates missing .dockerignore, then patches existing
+  const noDesc = runCli(['add-rule', 'orphan-rules', '--dir', tempDir], harnessRoot);
+  assert(noDesc.status === 1, 'add-rule without --description should fail');
+
+  const badManifestPath = join(tempDir, '.nextstage-harness', 'manifest.json');
+  const badManifest = JSON.parse(readFileSync(badManifestPath, 'utf8'));
+  badManifest.rules.push({
+    name: 'broken-meta',
+    canonical: 'rules/broken-meta.md',
+    cursor: {},
+    claude: { paths: null },
+  });
+  writeFileSync(
+    join(tempDir, '.nextstage-harness', 'rules', 'broken-meta.md'),
+    '# Broken\n',
+    'utf8',
+  );
+  writeFileSync(badManifestPath, `${JSON.stringify(badManifest, null, 2)}\n`, 'utf8');
+  let syncThrew = false;
+  try {
+    syncRules(tempDir);
+  } catch (err) {
+    syncThrew = /cursor\.description required/.test(String(err.message));
+  }
+  assert(syncThrew, 'sync should reject rules missing cursor.description');
+  badManifest.rules = badManifest.rules.filter((r) => r.name !== 'broken-meta');
+  writeFileSync(badManifestPath, `${JSON.stringify(badManifest, null, 2)}\n`, 'utf8');
+  rmSync(join(tempDir, '.nextstage-harness', 'rules', 'broken-meta.md'), { force: true });
+  // restore healthy sync baseline
+  syncRules(tempDir);
   const dockerignoreCreateDir = join(tempDir, 'dockerignore-create');
   mkdirSync(dockerignoreCreateDir, { recursive: true });
   const createdDockerignore = syncDockerignore(dockerignoreCreateDir);

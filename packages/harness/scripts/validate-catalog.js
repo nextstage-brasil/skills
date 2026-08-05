@@ -3,6 +3,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validateCommercialBudgetSkill } from './validate-commercial-budget-skill.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(__dirname, '..', '..', '..');
@@ -15,6 +16,8 @@ const catalog = JSON.parse(readFileSync(catalogPath, 'utf8'));
 const retiredSkills = JSON.parse(readFileSync(retiredPath, 'utf8'));
 const externalCatalog = JSON.parse(readFileSync(externalPath, 'utf8'));
 const catalogSkills = new Set(Object.keys(catalog.depends));
+
+const errors = [];
 
 for (const skill of catalog.alwaysInstall ?? []) {
   if (!catalogSkills.has(skill)) {
@@ -33,8 +36,6 @@ const skillDirs = readdirSync(skillsDir).filter((entry) => {
     return false;
   }
 });
-
-const errors = [];
 
 for (const skill of skillDirs) {
   if (!catalogSkills.has(skill)) {
@@ -117,6 +118,8 @@ for (const [presetId, preset] of Object.entries(externalCatalog.presets ?? {})) 
     }
   }
 }
+
+errors.push(...validateCommercialBudgetSkill(skillsDir));
 
 function parseDepends(frontmatter) {
   const match = frontmatter.match(/^depends:\s*\n((?:[ \t]+-\s+.+\n?)*)$/m);

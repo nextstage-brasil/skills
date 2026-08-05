@@ -1,3 +1,5 @@
+<!-- harness-rule: body only — edit cursor.alwaysApply and cursor.description in .nextstage-harness/manifest.json; run harness sync after. Do not put YAML apply metadata in this file. -->
+
 # Architecture Rules
 
 Technical constitution for AI agents. Replace this stub by running the `ns-harness-architecture-rules` skill, then `npx @nextstage-brasil/harness sync`.

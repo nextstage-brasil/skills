@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_AGENTS, HARNESS_ROOT, HARNESS_RULES_DIR } from './agentsLayout.js';
-import { syncRules } from './syncRules.js';
+import { ensureRuleBodyHint, syncRules } from './syncRules.js';
 
 const RULE_NAME_PATTERN = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 
@@ -35,7 +35,7 @@ function buildStub({ name, description }) {
   const descBlock = description
     ? `\n${description}\n`
     : '\nDescribe when this rule applies and what agents must follow.\n';
-  return `# ${title}
+  return ensureRuleBodyHint(`# ${title}
 ${descBlock}
 ## Requirements
 
@@ -44,10 +44,10 @@ ${descBlock}
 ## Examples
 
 - …
-`;
+`);
 }
 
-function buildManifestEntry({ name, description, globs }) {
+function buildManifestEntry({ name, description, globs, alwaysApply = false }) {
   const entry = {
     name,
     canonical: `rules/${name}.md`,
@@ -67,7 +67,7 @@ function buildManifestEntry({ name, description, globs }) {
       .filter(Boolean);
     entry.claude.paths = paths.length > 0 ? paths : null;
   } else {
-    entry.cursor.alwaysApply = true;
+    entry.cursor.alwaysApply = alwaysApply === true;
   }
 
   return entry;
@@ -76,13 +76,14 @@ function buildManifestEntry({ name, description, globs }) {
 /**
  * Create a canonical rule, register it in manifest.json, and sync adapters.
  * @param {string} projectRoot
- * @param {{ name: string, description?: string, globs?: string, force?: boolean, agents?: string[] }} options
+ * @param {{ name: string, description?: string, globs?: string, alwaysApply?: boolean, force?: boolean, agents?: string[] }} options
  */
 export function addRule(projectRoot, options) {
   const {
     name,
     description,
     globs,
+    alwaysApply = false,
     force = false,
     agents = DEFAULT_AGENTS,
   } = options;
@@ -93,6 +94,12 @@ export function addRule(projectRoot, options) {
   if (!RULE_NAME_PATTERN.test(name)) {
     throw new Error(
       `Invalid rule name "${name}" — use kebab-case (e.g. api-conventions)`,
+    );
+  }
+
+  if (!description || typeof description !== 'string' || !description.trim()) {
+    throw new Error(
+      'Rule --description is required (Cursor "when to apply" header). Example: --description "NsUtil constraints when editing ns-util-dependent code"',
     );
   }
 
@@ -116,10 +123,10 @@ export function addRule(projectRoot, options) {
     );
   }
 
-  const desc = description || `${titleFromName(name)} for AI agents`;
+  const desc = description.trim();
   writeFileSync(
     canonicalPath,
-    buildStub({ name, description: description || null }),
+    buildStub({ name, description: desc }),
     'utf8',
   );
 
@@ -132,6 +139,7 @@ export function addRule(projectRoot, options) {
     name,
     description: desc,
     globs: globs || undefined,
+    alwaysApply,
   });
 
   const existingIdx = manifest.rules.findIndex((r) => r.name === name);

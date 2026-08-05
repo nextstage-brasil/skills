@@ -68,7 +68,8 @@
     "ns-code-backend-tests": ["ns-harness"],
     "ns-multi-agent-architect": [],
     "ns-langgraph-agents": ["ns-harness"],
-    "ns-skill-creator": ["ns-harness"]
+    "ns-skill-creator": ["ns-harness"],
+    "nsutil-mcp": ["ns-harness"]
   },
   "presets": {
     "spec-driven": {

@@ -49,8 +49,9 @@ Options:
   --keep-agents-md       With uninstall: keep AGENTS.md and CLAUDE.md
   --check                With sync: verify adapters match canonical (CI mode)
   --force                Overwrite existing files (migrate-rules, agents-md, add-rule, add-subagent)
-  --description <text>   With add-rule / add-subagent: short purpose text
-  --globs <patterns>     With add-rule: comma-separated globs (skips alwaysApply)
+  --description <text>   With add-rule / add-subagent: short purpose text (add-rule: Cursor "when to apply")
+  --globs <patterns>     With add-rule: comma-separated globs (path-scoped; --description still required)
+  --always-apply         With add-rule: set alwaysApply true (default false — agent-requested)
   --dry-run              Show resolved skills without installing
   --help, -h             Show this help
 
@@ -99,6 +100,7 @@ function parseArgs(argv) {
     name: undefined,
     description: undefined,
     globs: undefined,
+    'always-apply': false,
     'keep-agents-md': false,
     subcommand: undefined,
     positional: [],
@@ -184,6 +186,11 @@ function parseArgs(argv) {
 
     if (arg === '--force') {
       result.force = true;
+      continue;
+    }
+
+    if (arg === '--always-apply') {
+      result['always-apply'] = true;
       continue;
     }
 
@@ -393,7 +400,15 @@ async function runAddSubagent(parsed) {
 
 async function runAddRule(parsed) {
   if (!parsed.name) {
-    console.error('Usage: harness add-rule <name> [--description <text>] [--globs <patterns>]');
+    console.error(
+      'Usage: harness add-rule <name> --description <text> [--globs <patterns>] [--always-apply]',
+    );
+    process.exit(1);
+  }
+  if (!parsed.description || !String(parsed.description).trim()) {
+    console.error(
+      'add-rule requires --description (Cursor "when to apply" header)',
+    );
     process.exit(1);
   }
 
@@ -403,6 +418,7 @@ async function runAddRule(parsed) {
     name: parsed.name,
     description: parsed.description,
     globs: parsed.globs,
+    alwaysApply: parsed['always-apply'] === true,
     force: parsed.force,
     agents,
   });

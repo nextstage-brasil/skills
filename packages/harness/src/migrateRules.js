@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, extname, join } from 'node:path';
 import { HARNESS_ROOT, HARNESS_RULES_DIR } from './agentsLayout.js';
-import { stripFrontmatter, syncRules } from './syncRules.js';
+import { ensureRuleBodyHint, stripFrontmatter, syncRules } from './syncRules.js';
 
 function parseFrontmatter(content) {
   if (!content.startsWith('---\n')) {
@@ -50,6 +50,8 @@ function buildManifestEntry(name, frontmatter) {
       .map((g) => g.trim())
       .filter(Boolean);
     entry.claude.paths = globs.length > 0 ? globs : null;
+  } else {
+    entry.cursor.alwaysApply = false;
   }
 
   if (frontmatter.description && !entry.cursor.description) {
@@ -103,12 +105,12 @@ export function migrateRules(projectRoot, options = {}) {
     const sourcePath = join(cursorRulesDir, file);
     const source = readFileSync(sourcePath, 'utf8');
     const { frontmatter, body } = parseFrontmatter(source);
-    const canonicalBody = stripFrontmatter(body).trimStart();
+    const canonicalBody = ensureRuleBodyHint(stripFrontmatter(body));
 
     if (existsSync(canonicalPath) && !force) {
       skipped.push(canonicalRel);
     } else {
-      writeFileSync(canonicalPath, `${canonicalBody}\n`, 'utf8');
+      writeFileSync(canonicalPath, canonicalBody.endsWith('\n') ? canonicalBody : `${canonicalBody}\n`, 'utf8');
       migrated.push(canonicalRel);
     }
 
