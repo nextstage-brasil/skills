@@ -186,7 +186,7 @@ npx @nextstage-brasil/harness init \
 | Regenerate `AGENTS.md` | `npx @nextstage-brasil/harness agents-md --force` |
 | Add a project rule | `npx @nextstage-brasil/harness add-rule api-conventions --description "REST conventions"` |
 | Add a project subagent | `npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-code-investigator --description "Investigation bridge"` |
-| Import legacy `.cursor/rules/*.mdc` | `npx @nextstage-brasil/harness migrate-rules --force` |
+| Absorb orphan `.cursor/rules/*.mdc` | `npx @nextstage-brasil/harness sync` |
 | Brownfield instructions | `npx @nextstage-brasil/harness prepare` |
 | Show / set agents | `npx @nextstage-brasil/harness agents` · `agents set --agent cursor` |
 | Uninstall harness | `npx @nextstage-brasil/harness uninstall --dry-run` then `--yes` |
@@ -243,13 +243,12 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 | `harness` / `harness init` | Install skills, scaffold, sync adapters, generate `AGENTS.md` |
 | `harness list` | Presets and skill catalog |
 | `harness prepare` | Print brownfield prepare instructions (`/ns-harness-prepare`) |
-| `harness sync` | Regenerate rule + skill adapters |
-| `harness sync --check` | Local — exit 1 if adapters on disk drift from canonical |
+| `harness sync` | Absorb orphan Cursor rules + regenerate rule/skill/subagent adapters |
+| `harness sync --check` | Local — exit 1 if adapters drift or orphan `.mdc` not in manifest |
 | `harness update` | Update skills already in `.agents/skills/` |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` (use `--force` to overwrite) |
 | `harness add-rule <name>` | New rule under `.nextstage-harness/rules/` + sync |
 | `harness add-subagent <name>` | New subagent under `.nextstage-harness/agents/` + sync (`--skill` required) |
-| `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` |
 | `harness prune-retired-skills` | Remove renamed skill dirs after replacement |
 | `harness uninstall` | Remove skills, adapters, `.nextstage-harness/`, lock, ignore blocks (`docs/` kept) |
 | `harness agents` | Show active agents from manifest |
@@ -271,7 +270,7 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 | `--keep-agents-md` | With `uninstall`: keep `AGENTS.md` / `CLAUDE.md` |
 | `--yes` / `-y` | Non-interactive |
 | `--dry-run` | Print plan, write nothing |
-| `--force` | Overwrite (`agents-md`, `migrate-rules`, `add-rule`, `add-subagent`) |
+| `--force` | Overwrite (`agents-md`, `add-rule`, `add-subagent`) |
 
 `add-rule` extras: `--description`, `--globs` (comma-separated; scoped rule, not always-apply).
 

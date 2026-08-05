@@ -34,14 +34,12 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 | `npx @nextstage-brasil/harness` | Interactive init (default) |
 | `harness init [options]` | Install skills + scaffold + sync |
 | `harness prepare` | Print full brownfield prepare instructions (`/ns-harness-prepare`) |
-| `harness sync` | Regenerate adapters + ensure `.dockerignore` / `.gitignore` harness blocks (create if missing) |
+| `harness sync` | Absorb orphan `.cursor/rules/*.mdc` + regenerate adapters + ensure ignore blocks |
 | `harness add-rule <name>` | Create canonical rule + manifest entry + sync |
 | `harness add-subagent <name>` | Create canonical subagent + manifest entry + sync (`--skill` required) |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |
-| `harness sync --check` | Local mode — exit 1 if adapters on disk drift from canonical |
-| `harness migrate-rules` | Import legacy `.cursor/rules/*.mdc` |
-| `harness migrate-rules --force` | Overwrite existing canonical |
+| `harness sync --check` | Local mode — exit 1 if adapters on disk drift from canonical (or orphan `.mdc`) |
 | `harness uninstall` | Remove harness install (skills, adapters, scaffold; keeps `docs/`) |
 | `harness uninstall --keep-agents-md` | Same, but keep `AGENTS.md` / `CLAUDE.md` |
 | `harness list` | Presets and skill catalog |
@@ -60,7 +58,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 | `--description <text>` | With `add-rule` / `add-subagent`: short purpose |
 | `--globs <patterns>` | With `add-rule`: comma-separated globs (not always-apply) |
 | `--skill <id>` | With `add-subagent`: installed skill id (required; one per command) |
-| `--force` | Overwrite existing (`migrate-rules`, `agents-md`, `add-rule`, `add-subagent`) |
+| `--force` | Overwrite existing (`agents-md`, `add-rule`, `add-subagent`) |
 | `--dry-run` | Show resolved plan without installing |
 
 ## 3. Install scenarios
@@ -149,17 +147,16 @@ npx @nextstage-brasil/harness sync
 
 Smoke test: validates manifest and canonical rules; writes adapters (gitignored). For local drift checks before committing harness changes, use `harness sync --check`.
 
-## 8. Migration from legacy `.cursor/rules/`
+## 8. Orphan / legacy `.cursor/rules/`
 
-For projects with existing `.cursor/rules/*.mdc` and no `.nextstage-harness/`:
+Projects with harness scaffold and hand-created `.cursor/rules/*.mdc` (Cursor UI) — or legacy adapters not yet in the manifest:
 
 ```bash
-npx @nextstage-brasil/harness migrate-rules
 npx @nextstage-brasil/harness sync
 git add .nextstage-harness/ .gitignore
 ```
 
-`migrate-rules` extracts bodies, infers manifest entries from Cursor frontmatter, and runs sync. Existing canonical files are skipped unless `--force`.
+`sync` absorbs orphan `.mdc` (basename not in `manifest.rules`): extracts body, maps Cursor frontmatter (`description` / `alwaysApply` / `globs`) into the manifest, writes canonical under `.nextstage-harness/rules/`, then regenerates adapters. Rules already in the manifest are not reverse-overwritten from `.mdc`. No harness yet? Run `harness init` first, then `sync`.
 
 ## 9. Troubleshooting
 
@@ -170,7 +167,7 @@ git add .nextstage-harness/ .gitignore
 | Adapters missing after init | Run `harness sync` manually |
 | Windows symlink issues | Use `harness init --copy` or Skills CLI `--copy` |
 | Monorepo product folder | Set `--dir` to product root; `{product_root}` = that folder |
-| Legacy skills reference `.cursor/rules/` | Run `migrate-rules`; skills use `{harness_root}` with legacy fallback |
+| Legacy skills reference `.cursor/rules/` | Run `harness sync` (absorbs orphans); skills use `{harness_root}` with legacy fallback |
 
 ## 10. Post-install agent prompts
 

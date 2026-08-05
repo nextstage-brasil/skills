@@ -286,7 +286,7 @@ Brownfield refinement: **`/ns-harness-agents-md`** in your agent.
 | `sync --check` fails locally | Edit `rules/*.md` here → `harness sync` → commit `.nextstage-harness/` only |
 | `.claude/` appeared but I only use Cursor | `harness agents set --agent cursor` |
 | New skill version available | `harness update` |
-| Legacy `.cursor/rules/*.mdc` only | `npx @nextstage-brasil/harness migrate-rules --force` |
+| Orphan / legacy `.cursor/rules/*.mdc` | `npx @nextstage-brasil/harness sync` (absorbs into canonical) |
 
 ---
 
@@ -296,7 +296,7 @@ Brownfield refinement: **`/ns-harness-agents-md`** in your agent.
 |---------|---------|
 | `harness` / `harness init` | Install skills, scaffold, sync |
 | `harness list` | Presets and skill catalog |
-| `harness sync` | Regenerate adapters |
+| `harness sync` | Absorb orphan Cursor rules + regenerate adapters |
 | `harness update` | Update installed skills only |
 | `harness agents` | Show project agents |
 | `harness agents set` | Persist agents in manifest |
@@ -304,7 +304,6 @@ Brownfield refinement: **`/ns-harness-agents-md`** in your agent.
 | `harness add-subagent <name>` | New subagent + sync (`--skill` required) |
 | `harness agents-md` | Generate AGENTS.md |
 | `harness prepare` | Brownfield prepare instructions |
-| `harness migrate-rules` | Import legacy Cursor rules |
 | `harness prune-retired-skills` | Remove renamed skill dirs |
 | `harness uninstall` | Remove harness install (keeps `docs/`) |
 

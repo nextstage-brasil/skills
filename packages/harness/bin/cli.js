@@ -6,7 +6,6 @@ import { syncSkills } from '../src/syncSkills.js';
 import { syncSubagents } from '../src/syncSubagents.js';
 import { syncDockerignore } from '../src/syncDockerignore.js';
 import { syncGitignore } from '../src/syncGitignore.js';
-import { migrateRules } from '../src/migrateRules.js';
 import { addRule } from '../src/addRule.js';
 import { addSubagent } from '../src/addSubagent.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
@@ -24,11 +23,10 @@ const HELP = `
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
   harness prepare          Print full brownfield prepare instructions (/ns-harness-prepare)
-  harness sync [options]   Regenerate rule, skill, and subagent adapters from canonical sources
+  harness sync [options]   Absorb orphan .cursor/rules/*.mdc, then regenerate adapters
   harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
   harness add-subagent <name>  Create a canonical subagent bridge, update manifest, and sync
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
-  harness migrate-rules    Import legacy .cursor/rules/*.mdc into .nextstage-harness/
   harness prune-retired-skills  Remove renamed skill dirs after replacement is installed
   harness update [options] Update installed skills only (does not install new ones)
   harness uninstall [options]  Remove harness install (skills, adapters, scaffold)
@@ -48,7 +46,7 @@ Options:
   --no-scaffold          Skip AGENTS.md and docs/ scaffolding
   --keep-agents-md       With uninstall: keep AGENTS.md and CLAUDE.md
   --check                With sync: verify adapters match canonical (CI mode)
-  --force                Overwrite existing files (migrate-rules, agents-md, add-rule, add-subagent)
+  --force                Overwrite existing files (agents-md, add-rule, add-subagent)
   --description <text>   With add-rule / add-subagent: short purpose text (add-rule: Cursor "when to apply")
   --globs <patterns>     With add-rule: comma-separated globs (path-scoped; --description still required)
   --always-apply         With add-rule: set alwaysApply true (default false — agent-requested)
@@ -114,7 +112,6 @@ function parseArgs(argv) {
     'init',
     'list',
     'sync',
-    'migrate-rules',
     'prune-retired-skills',
     'agents-md',
     'add-rule',
@@ -284,6 +281,12 @@ async function runSync(parsed) {
     return;
   }
 
+  if (rulesResult.absorbed?.length > 0) {
+    console.log(
+      `Absorbed ${rulesResult.absorbed.length} orphan Cursor rule(s): ${rulesResult.absorbed.join(', ')}`,
+    );
+  }
+
   const totalWritten =
     rulesResult.written.length
     + skillsResult.written.length
@@ -321,25 +324,6 @@ async function runSync(parsed) {
     if (readmeResult.updated) {
       console.log(`Updated: ${HARNESS_ROOT}/README.md`);
     }
-  }
-}
-
-async function runMigrateRules(parsed) {
-  const projectRoot = resolveProjectDir(parsed.dir);
-  const agents = resolveAgents(projectRoot, parsed.agent);
-  const result = migrateRules(projectRoot, { force: parsed.force, agents });
-
-  if (result.migrated.length > 0) {
-    console.log(`Migrated: ${result.migrated.join(', ')}`);
-  }
-  if (result.skipped.length > 0) {
-    console.log(`Skipped (already exist): ${result.skipped.join(', ')}`);
-  }
-  console.log(`Synced ${result.syncResult.written.length} adapter file(s)`);
-
-  const prunedAdapters = pruneExcludedAgentAdapters(projectRoot, agents);
-  if (prunedAdapters.removed.length > 0) {
-    console.log(`Removed ${prunedAdapters.removed.length} adapter path(s) for excluded agents`);
   }
 }
 
@@ -469,16 +453,6 @@ async function main() {
   if (parsed.command === 'sync') {
     try {
       await runSync(parsed);
-    } catch (error) {
-      console.error(error instanceof Error ? error.message : String(error));
-      process.exit(1);
-    }
-    return;
-  }
-
-  if (parsed.command === 'migrate-rules') {
-    try {
-      await runMigrateRules(parsed);
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
       process.exit(1);

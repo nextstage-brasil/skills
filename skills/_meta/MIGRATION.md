@@ -21,8 +21,8 @@ Migration notes for skills promoted into this repository as the canonical home f
 1. If repo has `AGENTS.md` → use repo root (or monorepo product folder) as `{product_root}`
 2. Load canonical rules from `{harness_root}/rules/*.md` (`.nextstage-harness/rules/`)
 3. Read `architecture-rules.md` first; layer rules by changed files
-4. **Legacy:** `.cursor/rules/*.mdc` only when `{harness_root}/` is absent — migrate with `npx @nextstage-brasil/harness migrate-rules`
-5. Regenerate adapters with `npx @nextstage-brasil/harness sync` after editing canonical rules
+4. **Legacy:** `.cursor/rules/*.mdc` only when `{harness_root}/` is absent — `harness init` then `npx @nextstage-brasil/harness sync` (absorbs orphans)
+5. Regenerate adapters with `npx @nextstage-brasil/harness sync` after editing canonical rules (also absorbs orphan `.cursor/rules/*.mdc`)
 
 See `skills/ns-harness/references/harness-discovery.md` and `rules-sync.md`.
 
@@ -53,6 +53,7 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | `ns-harness-architecture-rules` | `ns-harness` |
 | `ns-harness-agents-md` | `ns-harness` |
 | `mcp-gitlab-usage` | `ns-harness` |
+| `nsutil-mcp` | `ns-harness` |
 | `ns-code-reviewer` | `ns-harness`, `mcp-gitlab-usage` |
 | `ns-execution-gitlab-issue` | `ns-harness`, `mcp-gitlab-usage`, `ns-code-reviewer`, `ns-code-autonomous` (calls it internally for Phase 2) |
 | `ns-code-autonomous` | `ns-harness`, `ns-code-reviewer` |
@@ -95,7 +96,16 @@ New preset: `--preset project-manager` (`ns-project-manager`, `ns-requirements-e
 
 ## New skill — `ns-commercial-budget` (2026-08-03)
 
-Client-facing commercial budget in **product voice** (PM/client — no fields/classes). Features + FP + COSMIC + hours; macro-activity table; risk margins. Same path `commercial-budget.md`; header Sequência + Gerado em. Custo (R$) only with rates. Loads reverse-spec/brownfield when present. Presets `project-manager` and `full`. Depends on `ns-harness`.
+Client-facing commercial budget in **product voice** (PM/client — no fields/classes). Features + FP + COSMIC + hours; macro-activity table; risk margins. Paths `commercial-budget-internal.md` (delivery) and optional `commercial-budget-costumer.md` (client export); header Sequência + Gerado em. Custo (R$) only with rates. Loads reverse-spec/brownfield when present. Presets `project-manager` and `full`. Depends on `ns-harness`.
+
+## Commercial budget artifact rename (2026-08-05)
+
+| Old path | New path |
+| -------- | -------- |
+| `commercial-budget.md` | `commercial-budget-internal.md` |
+| `commercial-budget-cliente.md` | `commercial-budget-costumer.md` |
+
+Client header reference: `{version_san}-costumer`. Regenerate or rename existing version folders; do not use `commercial-budget-full-*` variants.
 
 ## Rename — `ns-mcp-gitlab-usage` → `mcp-gitlab-usage` (2026-07-27)
 

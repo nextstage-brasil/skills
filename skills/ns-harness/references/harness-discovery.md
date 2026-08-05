@@ -22,7 +22,7 @@ Then continue the active skill workflow.
 1. **Product anchor** — If the repo has `AGENTS.md` at `{product_root}`, treat `{product_root}` as the harness anchor.
 2. **Canonical rules** — Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first (constitution) — covered by Session boot step 3.
 3. **Layer rules** — Load additional rules from `{harness_root}/rules/` matching changed files — covered by Session boot step 4.
-4. **Legacy fallback** — If `{harness_root}/` is missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note. Prefer migrating with `npx @nextstage-brasil/harness migrate-rules`.
+4. **Legacy fallback** — If `{harness_root}/` is missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note. Prefer `harness init` then `npx @nextstage-brasil/harness sync` (absorbs orphans into canonical).
 5. **Product context (implementation)** — When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code — covered by Session boot step 6.
 
 ## Variables

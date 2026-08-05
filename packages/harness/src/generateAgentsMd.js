@@ -70,7 +70,7 @@ function buildSubagentsSection(projectRoot, installed) {
     return '_No harness subagent bridges (install coder/reviewer/task skills via a preset)._';
   }
 
-  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`, \`/reviewer-agent\`, \`/task-writer-agent\`). Orchestrators (\`ns-spec-driven\`, handoff, autonomous) **prefer these bridges** when spawning workers — see installed \`ns-harness\` → \`references/subagent-dispatch.md\`. Each bridge loads this \`AGENTS.md\` then the mapped skill. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
+  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`, \`/reviewer-agent\`, \`/task-writer-agent\`). Orchestrators (\`ns-spec-driven\`, handoff, autonomous) **MUST** use these bridges when available — see installed \`ns-harness\` → \`references/subagent-dispatch.md\`. Inline mapped skill while bridge present = forbidden. Each bridge loads this \`AGENTS.md\` then the mapped skill. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
 
 | Agent | Skill | Model (cursor / claude) |
 | ----- | ----- | ----------------------- |
@@ -259,7 +259,7 @@ export function generateAgentsMd(projectRoot, options = {}) {
   const hasSdd = installed.includes('ns-spec-driven');
   const archRulesNote = hasHarness
     ? `**Before implementation, read \`.nextstage-harness/rules/architecture-rules.md\`.** If still the harness stub, run \`/ns-harness-prepare\` or \`ns-harness-architecture-rules\` then \`npx @nextstage-brasil/harness sync\`.`
-    : '**Harness rules not scaffolded** — run `harness init` or `harness migrate-rules`.';
+    : '**Harness rules not scaffolded** — run `harness init` (then `harness sync` absorbs orphan `.cursor/rules/*.mdc`).';
 
   const content = `# Project agents — ${projectName}
 

@@ -9,7 +9,6 @@ import { syncSkills } from '../src/syncSkills.js';
 import { syncDockerignore, buildDockerignoreBlock } from '../src/syncDockerignore.js';
 import { syncGitignore, buildGitignoreBlock } from '../src/syncGitignore.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
-import { migrateRules } from '../src/migrateRules.js';
 import { pruneRetiredSkills, assessPruneRetiredSkills } from '../src/pruneRetiredSkills.js';
 import { groupExternalSkillsBySource, getExternalPreset } from '../src/externalSkills.js';
 import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js';
@@ -118,7 +117,7 @@ try {
   check = runCli(['sync', '--check', '--dir', tempDir], harnessRoot);
   assert(check.status === 1, 'sync --check should fail when canonical changed without re-sync');
 
-  // Re-sync before migrate test section needs clean state
+  // Re-sync before absorb / add-rule sections need clean state
   syncRules(tempDir, { agents: ['cursor', 'claude-code'] });
   check = runCli(['sync', '--check', '--dir', tempDir], harnessRoot);
   assert(check.status === 0, `sync --check should pass after re-sync: ${check.stderr}${check.stdout}`);
@@ -150,32 +149,170 @@ try {
   assert(readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8').trim() === '@AGENTS.md', 'CLAUDE.md must point to AGENTS.md');
   assert(readFileSync(join(tempDir, 'AGENTS.md'), 'utf8').includes('ns-harness'), 'AGENTS.md should list installed skill');
 
-  // 7. migrate-rules round-trip from fixture
-  const migrateDir = mkdtempSync(join(tmpdir(), 'harness-migrate-'));
+  // 7. sync absorbs orphan .cursor/rules/*.mdc into canonical + manifest
+  const absorbDir = mkdtempSync(join(tmpdir(), 'harness-absorb-'));
   try {
-    const legacyDir = join(migrateDir, '.cursor', 'rules');
-    mkdirSync(legacyDir, { recursive: true });
+    scaffoldProject(absorbDir, { agents: true, docs: false });
+    const orphanDir = join(absorbDir, '.cursor', 'rules');
+    mkdirSync(orphanDir, { recursive: true });
+
+    writeFileSync(
+      join(orphanDir, 'always-on-extra.mdc'),
+      `---
+description: Always-on orphan from Cursor UI
+alwaysApply: true
+---
+
+# Always On Extra
+
+Must load every session.
+`,
+      'utf8',
+    );
+    writeFileSync(
+      join(orphanDir, 'scoped-frontend.mdc'),
+      `---
+description: Scoped frontend orphan
+globs: apps/web/**,packages/ui/**
+---
+
+# Scoped Frontend
+
+Path-scoped conventions.
+`,
+      'utf8',
+    );
+    writeFileSync(
+      join(orphanDir, 'conflict-rule.mdc'),
+      `---
+description: Conflict alwaysApply wins
+alwaysApply: true
+globs: src/**
+---
+
+# Conflict Rule
+
+alwaysApply should win.
+`,
+      'utf8',
+    );
+    writeFileSync(
+      join(orphanDir, 'no-desc-rule.mdc'),
+      `---
+alwaysApply: false
+---
+
+# No Desc Rule
+
+Default description expected.
+`,
+      'utf8',
+    );
+    // fixture without harness bootstrap (legacy body)
     copyFileSync(
       join(__dirname, 'fixtures', 'legacy-rule.mdc'),
-      join(legacyDir, 'backend-rules.mdc'),
+      join(orphanDir, 'backend-rules.mdc'),
     );
 
-    const migrateResult = migrateRules(migrateDir, { force: true });
+    const absorbCheck = syncRules(absorbDir, {
+      agents: ['cursor', 'claude-code'],
+      check: true,
+    });
+    assert(!absorbCheck.ok, 'sync --check should report orphan .mdc as drift');
     assert(
-      migrateResult.migrated.includes('rules/backend-rules.md'),
-      'migrate should create canonical backend-rules.md',
+      absorbCheck.drifts.some((p) => p.endsWith('always-on-extra.mdc')),
+      'check drifts should include orphan always-on-extra.mdc',
     );
-
-    const migratedCanonical = join(migrateDir, '.nextstage-harness', 'rules', 'backend-rules.md');
     assert(
-      readFileSync(migratedCanonical, 'utf8').includes('repository pattern'),
-      'migrated canonical should contain rule body',
+      !existsSync(join(absorbDir, '.nextstage-harness', 'rules', 'always-on-extra.md')),
+      'check mode must not absorb orphans',
     );
 
-    const migratedCursor = join(migrateDir, '.cursor', 'rules', 'backend-rules.mdc');
-    assert(exists(migratedCursor), 'migrate should regenerate cursor adapter');
+    const absorbResult = syncRules(absorbDir, { agents: ['cursor', 'claude-code'] });
+    assert(
+      absorbResult.absorbed.includes('always-on-extra')
+        && absorbResult.absorbed.includes('scoped-frontend')
+        && absorbResult.absorbed.includes('backend-rules')
+        && absorbResult.absorbed.includes('conflict-rule')
+        && absorbResult.absorbed.includes('no-desc-rule'),
+      `sync should absorb orphans: ${absorbResult.absorbed.join(',')}`,
+    );
+
+    const absorbedManifest = JSON.parse(
+      readFileSync(join(absorbDir, '.nextstage-harness', 'manifest.json'), 'utf8'),
+    );
+    const alwaysEntry = absorbedManifest.rules.find((r) => r.name === 'always-on-extra');
+    assert(alwaysEntry?.cursor?.description === 'Always-on orphan from Cursor UI', 'always-on description');
+    assert(alwaysEntry?.cursor?.alwaysApply === true, 'always-on alwaysApply true');
+    assert(!alwaysEntry?.cursor?.globs, 'always-on must not keep globs');
+
+    const scopedEntry = absorbedManifest.rules.find((r) => r.name === 'scoped-frontend');
+    assert(scopedEntry?.cursor?.description === 'Scoped frontend orphan', 'scoped description');
+    assert(scopedEntry?.cursor?.globs === 'apps/web/**,packages/ui/**', 'scoped globs');
+    assert(
+      Array.isArray(scopedEntry?.claude?.paths) && scopedEntry.claude.paths.length === 2,
+      'scoped claude.paths from globs',
+    );
+    assert(!Object.prototype.hasOwnProperty.call(scopedEntry.cursor, 'alwaysApply')
+      || scopedEntry.cursor.alwaysApply !== true, 'scoped must not be alwaysApply true');
+
+    const backendEntry = absorbedManifest.rules.find((r) => r.name === 'backend-rules');
+    assert(backendEntry?.cursor?.globs === 'backend/**', 'backend globs from fixture');
+    assert(
+      readFileSync(join(absorbDir, '.nextstage-harness', 'rules', 'backend-rules.md'), 'utf8')
+        .includes('repository pattern'),
+      'absorbed canonical should contain rule body',
+    );
+
+    const conflictEntry = absorbedManifest.rules.find((r) => r.name === 'conflict-rule');
+    assert(conflictEntry?.cursor?.alwaysApply === true, 'conflict prefers alwaysApply');
+    assert(!conflictEntry?.cursor?.globs, 'conflict drops globs when alwaysApply true');
+    assert(conflictEntry?.claude?.paths == null, 'conflict claude.paths null');
+
+    const noDescEntry = absorbedManifest.rules.find((r) => r.name === 'no-desc-rule');
+    assert(
+      noDescEntry?.cursor?.description === 'Project rule: no-desc-rule',
+      'missing description gets default',
+    );
+    assert(noDescEntry?.cursor?.alwaysApply === false, 'no-desc alwaysApply false');
+    assert(
+      readFileSync(join(absorbDir, '.cursor', 'rules', 'always-on-extra.mdc'), 'utf8')
+        .includes('alwaysApply: true'),
+      'regenerated adapter should emit alwaysApply',
+    );
+    assert(
+      readFileSync(join(absorbDir, '.cursor', 'rules', 'always-on-extra.mdc'), 'utf8')
+        .includes('Always-on orphan from Cursor UI'),
+      'regenerated adapter should emit description',
+    );
+
+    // Registered rule: hand-edit orphan path must NOT reverse-overwrite canonical
+    const archCanonical = join(absorbDir, '.nextstage-harness', 'rules', 'architecture-rules.md');
+    const beforeArch = readFileSync(archCanonical, 'utf8');
+    writeFileSync(
+      join(orphanDir, 'architecture-rules.mdc'),
+      `---
+description: Hijack attempt
+alwaysApply: true
+---
+
+# Hijacked
+
+Should not land in canonical.
+`,
+      'utf8',
+    );
+    syncRules(absorbDir, { agents: ['cursor', 'claude-code'] });
+    assert(
+      readFileSync(archCanonical, 'utf8') === beforeArch,
+      'sync must not reverse-overwrite registered canonical from .mdc',
+    );
+    assert(
+      !readFileSync(archCanonical, 'utf8').includes('Hijacked'),
+      'registered canonical stays source of truth',
+    );
   } finally {
-    rmSync(migrateDir, { recursive: true, force: true });
+    rmSync(absorbDir, { recursive: true, force: true });
   }
 
   // 8. add-rule creates canonical + manifest + adapters
@@ -619,6 +756,12 @@ try {
     const agentsContent = readFileSync(join(subagentsDir, 'AGENTS.md'), 'utf8');
     assert(agentsContent.includes('coder-agent'), 'AGENTS.md should list coder-agent');
     assert(agentsContent.includes('Project subagents'), 'AGENTS.md should have subagents section');
+    assert(
+      agentsContent.includes('**MUST** use these bridges when available') &&
+        agentsContent.includes('Inline mapped skill while bridge present = forbidden') &&
+        agentsContent.includes('subagent-dispatch.md'),
+      'AGENTS.md subagents section should MUST-dispatch bridges and forbid inline while present',
+    );
 
     assert(
       buildSubagentBody({ name: 'coder-agent', skill: 'ns-code-coder' }).includes('AGENTS.md'),
