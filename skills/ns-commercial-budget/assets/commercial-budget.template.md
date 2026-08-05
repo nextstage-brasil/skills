@@ -9,28 +9,40 @@
 
 ## Objetivo principal da versão
 
-{executive summary — impact and functional intent}
+{Commercial/product summary — business value, who benefits, what changes in the product relationship. No tech stack or engineering area framing.}
+
+---
+
+## Fluxos principais (validação de entendimento)
+
+<!-- 1–3 Mermaid diagrams. Client-readable labels (roles + business actions). Client validates scope; team spots gaps. -->
+
+```mermaid
+flowchart LR
+  A[{ator}] --> B[{ação de negócio}]
+  B --> C[{resultado esperado}]
+```
+
+<!-- Repeat only when multiple distinct flows matter. -->
 
 ---
 
 ## Agrupamento de objetivos (Features)
 
-<!-- Up to 10 Features. Product voice only (PM/client). No fields, classes, schemas. Order by business dependency. No task list. Do not label as RF / Requisitos Funcionais. -->
+<!-- ≤10 Features. Client-first product language. No Precedência. No RF label. No task list. -->
 
 ### Feature 001 — {TÍTULO}
 
-**Precedência:** Nenhuma  
 **Descrição detalhada:**  
-{Product language: who benefits, what the product allows/blocks, business rules. Not a one-liner. No tech implementation.}
+{Who benefits, what the product allows/blocks, business rules — complete enough for client sign-off and team boundary check.}
 
 #### Critérios de aceite
 
-- [ ] {product-verifiable criterion — “o administrador consegue…”, “o parceiro recebe…”}
-- [ ] {product-verifiable criterion}
+- [ ] {product-verifiable — "o administrador consegue…", "o parceiro recebe…"}
+- [ ] {product-verifiable}
 
 ### Feature 002 — {TÍTULO}
 
-**Precedência:** Feature 001  
 **Descrição detalhada:**  
 {…}
 
@@ -38,15 +50,15 @@
 
 - [ ] {…}
 
-<!-- Repeat Feature 003…N as needed (≤10). -->
+<!-- Repeat Feature 003…N (≤10). -->
 
 ---
 
 ## Requisitos Não Funcionais (RNFs)
 
-<!-- Omit entire section if none identified. No invented SLAs. -->
+<!-- Omit if none. No invented SLAs. -->
 
-- {RNF only if traced to scope or clarification}
+- {RNF traced to scope or clarification}
 
 ---
 
@@ -54,9 +66,18 @@
 
 ### Pontos de Função (FP)
 
-| Total FP | Método / premissa |
-|----------|-------------------|
-| {n} | {rationale — what was counted and how} |
+| Feature | FP | Justificativa |
+|---------|-----|---------------|
+| Feature 001 | {n} | {product-language rationale} |
+| Feature 002 | {n} | {…} |
+| **Total** | **{n}** | |
+
+#### Origem do cálculo
+
+| Elemento | Tipo | Qtd | FP/u | Subtotal | Fonte |
+|----------|------|-----|------|----------|-------|
+| {…} | {ILF/EIF/EI/EO/EQ or house unit} | | | | Feature 00N / reuse |
+| **Total** | | | | **{n}** | |
 
 ### COSMIC (CFP)
 
@@ -66,19 +87,23 @@
 | Feature 002 | | | | | |
 | **Σ** | | | | | **{ΣCFP}** |
 
-**Racional COSMIC (resumo):** {how movements were derived; point to per-Feature notes if long}
+**Referência:** COSMIC FSM — contagens de movimentação de dados (E/R/W/X) por processo funcional.
 
-### Horas previstas
+### Horas previstas (cálculo)
 
-| Base (h) | Margem de segurança | Total com margem (h) | Produtividade / premissa |
-|----------|---------------------|----------------------|--------------------------|
-| {n} | {s}% | {n} | {Team experience + reverse-spec/brownfield; h/PF or h/CFP if given. Lifecycle envelope via macro table. [ASSUMPTION] when needed.} |
+| Item | Valor |
+|------|-------|
+| Total FP | {n} |
+| Produtividade | {h/PF from human or `[ASSUMPTION]`} |
+| Horas base | {n} FP × {h/PF} = **{n} h** |
+| Margem de segurança | {s}% |
+| **Total com margem** | **{n} h** |
 
 ---
 
 ## Macroatividades do projeto
 
-<!-- Hours in this table = with safety margin. See references/macro-activities.md. Fixed 7 rows — do not drop. -->
+<!-- Hours = with safety margin. Fixed 7 rows. See references/macro-activities.md. -->
 
 | Macroatividade | Esforço (h) | PF | Custo (R$) |
 |----------------|-------------|-----|------------|
@@ -93,34 +118,34 @@
 
 **Notas:**  
 - Base: {h} h · Margem de segurança: {s}% · Total com margem: {h} h  
-- Mix %: {cite default or adjusted mix}  
-- Custo: preencher só com R$/h e/ou R$/PF informados; senão `—` e `_pending rates_`
+- Mix %: {default or adjusted — cite in premissas}  
+- Custo: só com R$/h e/ou R$/PF informados; senão `—` e `_pending rates_`
 
 ---
 
 ## Riscos e margem de segurança
 
-| Risco | Impacto na estimativa | Mitigação / premissa |
-|-------|----------------------|----------------------|
-| {risk} | {impact} | {mitigation or lacuna} |
+| Risco | Impacto na estimativa | Mitigação / premissa | Responsável |
+|-------|----------------------|----------------------|-------------|
+| {risk} | {impact} | {mitigation or lacuna} | Cliente / Empresa / Ambos |
 
 - **Margem de erro estimada:** {p}%  
 - **Margem de segurança aplicada:** {s}%  
-- **Racional:** {link risks → chosen percentages}
+- **Racional:** {risks → percentages}
 
 ---
 
 ## Premissas e ressalvas
 
-- {assumptions — team knowledge, delta-on-known-product (reuse/extend applied to documented capabilities), macro mix, margins, out-of-scope, lacunas, architecture decisions}
-- Este artefato **não** contém lista de tarefas de implementação (`tasks/`), issues GitLab nem handoff SDD.
-- Custo em R$ só aparece quando taxas foram fornecidas; margem de segurança é contingência de estimativa, não markup comercial.
+- {assumptions — team knowledge, delta-on-known-product, macro mix, margins, out-of-scope, lacunas}
+- Este artefato **não** contém lista de tarefas (`tasks/`), issues GitLab nem handoff SDD.
+- Custo em R$ só com taxas fornecidas; margem de segurança = contingência de estimativa, não markup comercial.
 
 ---
 
 ## Sugestões fora de escopo (não implementar)
 
-<!-- Optional. Omit if empty. Never merge into Feature acceptance criteria. -->
+<!-- Optional. Omit if empty. -->
 
 - {idea} — fora do orçamento atual
 
@@ -128,4 +153,4 @@
 
 ## Próximos passos (informativo)
 
-Após aprovação do escopo e das estimativas (FP, COSMIC, horas com margem, macroatividades): detalhamento SDD (`requirements.md` / tarefas) e/ou forecast de entrega PM, se necessário — **fora do escopo desta skill**.
+Após aprovação do escopo e estimativas: detalhamento SDD e/ou forecast PM — **fora desta skill**.

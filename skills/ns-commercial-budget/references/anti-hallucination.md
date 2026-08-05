@@ -18,7 +18,7 @@ Every Feature, RNF, estimate premise, macro-row figure, and margin % must trace 
 9. **Contradict reverse-spec silently** — If chat scope conflicts with documented behavior, surface it; do not overwrite the reverse-spec in the budget.
 10. **Macro table shortcuts** — Do not drop/rename the seven mandatory macro rows; do not put all hours only in “Implementação”.
 11. **Naked margin** — Do not apply a safety % without a risks section and short rationale.
-12. **Technical voice in the deliverable** — No class/field/schema/endpoint/framework narrative in Features, RNFs, acceptance, risks, or premissas (see `product-voice.md`). Translate code-derived facts into product language.
+12. **Technical voice in narrative sections** — No class/field/schema/endpoint/framework in Objetivo, Features, fluxos, RNFs, acceptance, risks narrative, premissas (`product-voice.md`). FP origem table may use sizing notation.
 
 ## Lacunas
 
@@ -34,8 +34,8 @@ Bump header **Sequência** and **Gerado em** on every regenerate; keep the same 
 
 ## Estimates honesty
 
-- FP and CFP are judgment-based; always include short rationale.
-- Hours without clarified team experience or house productivity must declare `[ASSUMPTION: …]` or `[LACUNA: …]` and the productivity figure used.
+- FP: per-Feature justificativa + origem do cálculo table (`fp-sizing.md`). CFP: table + reference line only.
+- Hours = formula (FP × productivity); cite productivity source or `[ASSUMPTION]` / `[LACUNA]`.
 - When reverse-spec/map show reuse, hours premise should reflect brownfield delta — not full rebuild of documented behavior.
 - FP/CFP without documented reuse discount when context files existed = skill failure — fix the reuse inventory and re-size before persisting.
 - Show **base hours** and **hours with safety margin**; macro table uses hours with margin.

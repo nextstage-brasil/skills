@@ -1,51 +1,49 @@
 # COSMIC sizing (commercial budget)
 
-Size each Feature with COSMIC FSM data movements, then roll up to total CFP for the version.
+Agent sizes E/R/W/X per Feature internally. **Deliverable:** summary table + method reference only — no per-Feature rationale prose.
 
-## Data movements
+## Data movements (agent reference)
 
 | Symbol | Name | Count when |
 |--------|------|------------|
-| **E** | Entry | Data crosses the boundary **into** the software from a functional user (human or external system) |
-| **R** | Read | Data is retrieved from persistent storage inside the software |
-| **W** | Write | Data is persisted or deleted in storage inside the software |
-| **X** | Exit | Data crosses the boundary **out** of the software to a functional user |
+| **E** | Entry | Data in from functional user (human or external system) |
+| **R** | Read | Data read from persistent storage |
+| **W** | Write | Data persisted or deleted |
+| **X** | Exit | Data out to functional user |
 
-**CFP for one Feature** = E + R + W + X (integer counts of distinct data-group movements in that functional process).
+**CFP** = E + R + W + X per Feature. **ΣCFP** = sum across Features.
 
-**ΣCFP** = sum of CFP across all Features in the budget.
+## Rules of thumb (agent only)
 
-## Rules of thumb
+1. Size the functional process — not widgets or CRUD verbs alone.
+2. One movement = one data group per process — not per field or user.
+3. Duplicate read same group → one R unless distinct purpose.
+4. Validation on entered data only → no extra R.
+5. Outbound notification/API response → X.
+6. Integration: inbound → E; outbound → X; local cache → W (+ R when reused).
 
-1. Size the **functional process** the Feature describes — not UI widgets, screens, or CRUD verbs alone.
-2. One movement = one data group crossing or touching persistence once in that process. Do not multiply by “number of fields” or “number of users”.
-3. Same data group read twice for the same process → still **one** Read (unless clearly distinct functional purposes documented).
-4. Validation that only uses entered data (no persistence read) → no extra R.
-5. Notifications / emails / API responses that leave the system → Exit.
-6. Integrations: inbound payload → Entry; outbound call/payload → Exit; local cache of remote data → Write (+ Read when reused).
-
-## Per-Feature block (required in Estimates)
+## Deliverable (Estimativas)
 
 ```markdown
-### Feature 00N — {title}
-| E | R | W | X | CFP |
-|---|---|---|---|-----|
-| n | n | n | n | n |
+### COSMIC (CFP)
 
-Rationale: {one short paragraph tying movements to the Feature description}
+| Feature | E | R | W | X | CFP |
+|---------|---|---|---|---|-----|
+| … | | | | | |
+| **Σ** | | | | | **{ΣCFP}** |
+
+**Referência:** COSMIC FSM — contagens de movimentação de dados (E/R/W/X) por processo funcional.
 ```
 
-Then a version total table: ΣE, ΣR, ΣW, ΣX, **ΣCFP**.
+No **Racional COSMIC** paragraph. No per-Feature sub-blocks in the saved doc.
 
 ## Anti-patterns
 
-- Inflating CFP with speculative admin screens or reports not in scope.
-- Counting HTTP status codes, log lines, or framework boilerplate as movements.
-- Copying the same E/R/W/X template onto every Feature without reading the flow.
-- Using story points or t-shirt sizes labeled as “CFP”.
-- Omitting rationale when E/R/W/X look identical across unrelated Features.
-- Labeling Features as `RF` / “Requisito Funcional” (legacy naming — use `Feature 00N`).
+- Inflate CFP with out-of-scope screens.
+- Identical E/R/W/X on every Feature without reading flow.
+- Story points labeled CFP.
+- `RF` / Requisito Funcional labels — use `Feature 00N`.
 
-## Relation to Function Points
+## Relation to FP
 
-IFPUG/NESMA-style FP (or a simplified transactional FP count) may appear as a **separate** estimate with its own rationale. Do not treat FP ≡ CFP. Both can coexist; state methods clearly.
+Separate methods. Both may coexist. FP detail in `fp-sizing.md`.
