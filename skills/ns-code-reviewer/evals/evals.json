@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Review my uncommitted changes in the auth module before I open a PR.",
-      "expected_output": "Agent loads project rules, runs git diff, outputs Executive Summary, Critical Issues, and improvements with severity ordering.",
+      "expected_output": "Agent re-reads AGENTS.md (and agents.local.md if present) and judges against its orders, runs git diff, outputs Executive Summary, Critical Issues, and improvements with severity ordering.",
       "files": []
     },
     {

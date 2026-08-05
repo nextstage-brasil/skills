@@ -4,7 +4,7 @@ description: "(NS) Ad-hoc coding worker — bug fixes, small refactors, scripts,
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.3"
+  version: "1.4"
 depends:
   - ns-harness
   - ns-code-investigator
@@ -75,10 +75,11 @@ Operate only under `{product_root}/**` plus harness docs. Do not read other prod
 
 Complete **Session boot (blocking)** in `../ns-harness/references/harness-discovery.md`, then:
 
-1. `git status` and `git diff`
-2. **Read target files before writing**
+1. **Re-read `AGENTS.md` (mandatory)** — Read `{product_root}/AGENTS.md` in full again for this run (and `agents.local.md` if present). Obey every order there — do not rely on memory from earlier in the session or from a prior Session boot.
+2. `git status` and `git diff`
+3. **Read target files before writing**
 
-**Success criterion:** following project rules and task scope = success; inventing paths, SDD artifacts, or cross-product changes = failure.
+**Success criterion:** following `AGENTS.md` orders, project rules, and task scope = success; inventing paths, SDD artifacts, or cross-product changes = failure.
 
 ## Implementation rules
 
@@ -93,7 +94,7 @@ Complete **Session boot (blocking)** in `../ns-harness/references/harness-discov
 ## Per-task cycle
 
 1. Understand task
-2. Load rules
+2. Load rules — re-read `AGENTS.md` (+ `agents.local.md` if present) and follow its orders for this cycle
 3. Explore relevant files
 4. Identify minimal diff
 5. Apply (or present plan if large-change gate)

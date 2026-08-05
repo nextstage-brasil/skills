@@ -4,7 +4,7 @@ description: (NS) Senior Tech Lead code review on SOLID, clean code, performance
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -28,9 +28,10 @@ See `../ns-harness/references/harness-discovery.md`. **Complete Session boot (bl
 
 ## Workflow
 
-1. Run `git diff` (and `git status` if needed).
-2. Focus on modified files and surrounding context.
-3. Start immediately — do not ask permission to begin.
+1. **Re-read `AGENTS.md` (mandatory)** — Read `{product_root}/AGENTS.md` in full again for this review (and `agents.local.md` if present). Judge the diff against those orders and project rules — do not rely on memory from earlier in the session or from a prior Session boot.
+2. Run `git diff` (and `git status` if needed).
+3. Focus on modified files and surrounding context.
+4. Start immediately — do not ask permission to begin.
 
 ### Ad-hoc diff mode (from `ns-code-coder`)
 
