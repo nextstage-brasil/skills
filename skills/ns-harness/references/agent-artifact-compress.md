@@ -9,6 +9,7 @@ Apply **caveman ultra** compression to every **agent-facing** prepare/worker out
 | Artifact | Compress? |
 | -------- | --------- |
 | `{harness_root}/rules/architecture-rules.md` | **Yes** |
+| `{harness_root}/rules/project-rules.md` | **No** — human-edited project-local settings |
 | `docs/context/brownfield-map.md` | **Yes** |
 | `docs/context/system-reverse-spec.agent.md` | **Yes** |
 | `AGENTS.md` | **Yes** |

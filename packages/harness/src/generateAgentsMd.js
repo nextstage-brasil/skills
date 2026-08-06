@@ -258,7 +258,7 @@ export function generateAgentsMd(projectRoot, options = {}) {
   const hasPrepare = installed.includes('ns-harness-prepare');
   const hasSdd = installed.includes('ns-spec-driven');
   const archRulesNote = hasHarness
-    ? `**Before implementation, read \`.nextstage-harness/rules/architecture-rules.md\`.** If still the harness stub, run \`/ns-harness-prepare\` or \`ns-harness-architecture-rules\` then \`npx @nextstage-brasil/harness sync\`.`
+    ? `**Before implementation, read \`.nextstage-harness/rules/architecture-rules.md\` and \`.nextstage-harness/rules/project-rules.md\`.** If architecture-rules is still the harness stub, run \`/ns-harness-prepare\` or \`ns-harness-architecture-rules\` then \`npx @nextstage-brasil/harness sync\`. Edit \`project-rules.md\` manually for project-local settings (language, codes, MCP server, agent names).`
     : '**Harness rules not scaffolded** — run `harness init` (then `harness sync` absorbs orphan `.cursor/rules/*.mdc`).';
 
   const content = `# Project agents — ${projectName}
@@ -272,7 +272,8 @@ ${syncManaged}
 
 1. Read this file (\`AGENTS.md\`) in full.
 2. If \`agents.local.md\` exists at \`{product_root}\` (case-insensitive filename), read it **next** — local overrides apply after this file.
-3. Note the **GitLab MCP server** named in Project-specific notes (or in \`agents.local.md\`) — use only that server for GitLab tools.
+3. Read \`.nextstage-harness/rules/architecture-rules.md\` and \`.nextstage-harness/rules/project-rules.md\` when \`{harness_root}/\` exists.
+4. Note the **GitLab MCP server** named in \`project-rules.md\`, Project-specific notes, or \`agents.local.md\` — use only that server for GitLab tools. When \`agents.local.md\` and \`project-rules.md\` disagree, \`agents.local.md\` wins.
 
 ${archRulesNote}
 
@@ -323,6 +324,7 @@ ${hasPrepare ? '**Full onboarding:** `/ns-harness-prepare` (or `npx @nextstage-b
 | -------- | ---- | ----- |
 | Full prepare chain | (all rows below) | \`ns-harness-prepare\` |
 | Architecture constitution | \`.nextstage-harness/rules/architecture-rules.md\` | \`ns-harness-architecture-rules\` |
+| Project-local rules | \`.nextstage-harness/rules/project-rules.md\` | (manual edit) |
 | Brownfield map | \`docs/context/brownfield-map.md\` | \`ns-harness-bootstrap-brownfield\` |
 | Business reverse spec | \`docs/context/system-reverse-spec.md\` | \`ns-harness-codebase-reverse-spec\` |
 | Project agents entry | \`AGENTS.md\` | \`ns-harness-agents-md\` |
@@ -344,14 +346,14 @@ ${buildComplementsNote(installed)}
 ## Hard stops / FORBIDDEN
 
 - Do not invent folders, skills, or agent personas not listed here (harness \`*-agent\` bridges in Project subagents are allowed).
-- Do not skip \`architecture-rules.md\` before implementation.
+- Do not skip \`architecture-rules.md\` or \`project-rules.md\` before implementation.
 - Do not commit, push, or mutate GitLab state unless the active skill explicitly allows it for this run.
 - GitLab \`ISSUE_URL\` → \`ns-execution-gitlab-issue\` — never ad-hoc coder on the main checkout.
 - Do not fabricate \`{version_san}\` or \`docs/versions/\` unless the active skill's workflow requires it.
 
 ## Ownership
 
-This file **routes** agents to skills and project rules. Stack, modules, and technical constraints belong in \`architecture-rules.md\` — not here.
+This file **routes** agents to skills and project rules. Stack, modules, and technical constraints belong in \`architecture-rules.md\` — not here. Project codes, language, team context, and agent names belong in \`project-rules.md\`.
 
 ## Rules and sync
 

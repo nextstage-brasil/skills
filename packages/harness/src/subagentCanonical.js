@@ -20,8 +20,9 @@ Thin skill bridge — do not invent a separate workflow. The skill below is the 
 
 1. Read \`AGENTS.md\` at the product root in full (and \`agents.local.md\` if present).
 2. Read \`.nextstage-harness/rules/architecture-rules.md\` when that file exists.
-3. Read and follow \`${skillPath}\` in full — run that skill's workflow exactly.
-4. Honor every gate, handoff, and review contract defined in the skill. Do not substitute platform Task personas for named skill steps.
+3. Read \`.nextstage-harness/rules/project-rules.md\` when that file exists.
+4. Read and follow \`${skillPath}\` in full — run that skill's workflow exactly.
+5. Honor every gate, handoff, and review contract defined in the skill. Do not substitute platform Task personas for named skill steps.
 `;
 }
 

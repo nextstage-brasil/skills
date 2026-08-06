@@ -12,6 +12,7 @@ Canonical project rules: `{harness_root}/rules/*.md`. Adapters generated — pre
   manifest.json          # adapter config (v1 schema) — rules + agents + subagents
   rules/
     architecture-rules.md   # constitution (always loaded)
+    project-rules.md        # project-local settings (always loaded; human-edited)
     backend-rules.md        # optional layer rules
   agents/
     coder-agent.md          # canonical subagent body (edit here)
@@ -48,6 +49,15 @@ Cursor subagents spawned during a session use the same project skill catalog as 
       "cursor": {
         "alwaysApply": true,
         "description": "Technical constitution for AI agents"
+      },
+      "claude": { "paths": null }
+    },
+    {
+      "name": "project-rules",
+      "canonical": "rules/project-rules.md",
+      "cursor": {
+        "alwaysApply": true,
+        "description": "Project-local rules for AI agents"
       },
       "claude": { "paths": null }
     },
@@ -92,7 +102,7 @@ Cursor subagents spawned during a session use the same project skill catalog as 
 | `reviewer-agent`    | `ns-code-reviewer`      | `grok-4.5[effort=medium,fast=false]` / `opus` | `true`     |
 | `task-writer-agent` | `ns-sdd-task-generator` | `composer-2.5[fast=false]` / `haiku`          | `false`    |
 
-Presets that install those skills get matching bridges on `init` / `sync` / `update`. Each bridge body: read `AGENTS.md` → architecture rules → follow the skill. Seeded bridges = **required** dispatch targets when present — see `subagent-dispatch.md`.
+Presets that install those skills get matching bridges on `init` / `sync` / `update`. Each bridge body: read `AGENTS.md` → architecture rules → project rules → follow the skill. Seeded bridges = **required** dispatch targets when present — see `subagent-dispatch.md`.
 
 After adding a new canonical rule file, add a matching entry to `manifest.json`, then run `sync`. Prefer:
 

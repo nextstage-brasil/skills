@@ -9,21 +9,22 @@ Use this pattern in every skill that needs project rules, artifact paths, or har
 1. Read `{product_root}/AGENTS.md` (project entry router).
 2. If `agents.local.md` exists at `{product_root}` (case-insensitive filename), read it **after** `AGENTS.md`.
 3. Read `{harness_root}/rules/architecture-rules.md` (constitution) when `{harness_root}/` exists.
-4. Load layer rules from `{harness_root}/rules/` matching the files you will change (backend, frontend, tests, e2e).
-5. **Legacy fallback:** if `{harness_root}/` is missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note.
-6. When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code.
+4. Read `{harness_root}/rules/project-rules.md` (project-local settings — language, codes, MCP server, agent names) when that file exists.
+5. Load layer rules from `{harness_root}/rules/` matching the files you will change (backend, frontend, tests, e2e).
+6. **Legacy fallback:** if `{harness_root}/` is missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note.
+7. When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code.
 
-**GitLab MCP:** after steps 1–6, use **only** the MCP server named in `agents.local.md` when that file exists. If missing, follow `AGENTS.md` First action / GitLab MCP section or stop and ask the human.
+**GitLab MCP:** after steps 1–7, use **only** the MCP server named in `project-rules.md` or `agents.local.md` when those files exist (`agents.local.md` overrides `project-rules.md` when both name a server). If missing, follow `AGENTS.md` First action / GitLab MCP section or stop and ask the human.
 
 Then continue the active skill workflow.
 
 ## Resolution order
 
 1. **Product anchor** — If the repo has `AGENTS.md` at `{product_root}`, treat `{product_root}` as the harness anchor.
-2. **Canonical rules** — Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first (constitution) — covered by Session boot step 3.
-3. **Layer rules** — Load additional rules from `{harness_root}/rules/` matching changed files — covered by Session boot step 4.
+2. **Canonical rules** — Load rules from `{harness_root}/rules/*.md`. Read `architecture-rules.md` first (constitution), then `project-rules.md` (project-local) — covered by Session boot steps 3–4.
+3. **Layer rules** — Load additional rules from `{harness_root}/rules/` matching changed files — covered by Session boot step 5.
 4. **Legacy fallback** — If `{harness_root}/` is missing but `.cursor/rules/*.mdc` exists, read adapters with a one-time deprecation note. Prefer `harness init` then `npx @nextstage-brasil/harness sync` (absorbs orphans into canonical).
-5. **Product context (implementation)** — When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code — covered by Session boot step 6.
+5. **Product context (implementation)** — When `{product_root}/docs/context/` exists, follow the **Implementation boot rule** in `artifact-layout.md` before writing code — covered by Session boot step 7.
 
 ## Variables
 

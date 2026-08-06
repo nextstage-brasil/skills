@@ -64,6 +64,17 @@ try {
     'scaffold should create architecture-rules stub',
   );
   assert(
+    scaffoldResult.created.some((f) => f.includes('.nextstage-harness/rules/project-rules.md')),
+    'scaffold should create project-rules stub',
+  );
+  const scaffoldManifest = JSON.parse(
+    readFileSync(join(tempDir, '.nextstage-harness', 'manifest.json'), 'utf8'),
+  );
+  assert(
+    scaffoldManifest.rules.some((r) => r.name === 'project-rules' && r.cursor?.alwaysApply === true),
+    'scaffold manifest should include project-rules entry',
+  );
+  assert(
     scaffoldResult.created.some((f) => f.includes('.nextstage-harness/README.md')),
     'scaffold should create .nextstage-harness/README.md',
   );
@@ -91,16 +102,68 @@ try {
     'refreshed README should match current template',
   );
 
+  const legacyManifestDir = mkdtempSync(join(tmpdir(), 'harness-legacy-manifest-'));
+  const legacyManifestPath = join(legacyManifestDir, '.nextstage-harness', 'manifest.json');
+  const legacyRulesDir = join(legacyManifestDir, '.nextstage-harness', 'rules');
+  mkdirSync(legacyRulesDir, { recursive: true });
+  writeFileSync(
+    legacyManifestPath,
+    `${JSON.stringify(
+      {
+        version: 1,
+        agents: ['cursor', 'claude-code'],
+        rules: [
+          {
+            name: 'architecture-rules',
+            canonical: 'rules/architecture-rules.md',
+            cursor: {
+              alwaysApply: true,
+              description: 'Technical constitution for AI agents',
+            },
+            claude: { paths: null },
+          },
+        ],
+        subagents: [],
+      },
+      null,
+      2,
+    )}\n`,
+    'utf8',
+  );
+  copyFileSync(
+    join(harnessRoot, 'templates', 'rules', 'architecture-rules.stub.md'),
+    join(legacyRulesDir, 'architecture-rules.md'),
+  );
+  const legacyMigrate = scaffoldProject(legacyManifestDir, { agents: true, docs: false });
+  assert(
+    legacyMigrate.created.some((entry) => entry.includes('project-rules entry added')),
+    'scaffold should append project-rules to existing manifest',
+  );
+  assert(
+    existsSync(join(legacyRulesDir, 'project-rules.md')),
+    'scaffold should create missing project-rules on existing project',
+  );
+  const legacyManifest = JSON.parse(readFileSync(legacyManifestPath, 'utf8'));
+  assert(
+    legacyManifest.rules.some((r) => r.name === 'project-rules'),
+    'migrated manifest should include project-rules',
+  );
+  rmSync(legacyManifestDir, { recursive: true, force: true });
+
   // 2. sync generates adapters with matching hash
   const canonicalPath = join(tempDir, '.nextstage-harness', 'rules', 'architecture-rules.md');
   const edited = `${readFileSync(canonicalPath, 'utf8')}\n\n## Test marker\n\nSmoke test content.\n`;
   writeFileSync(canonicalPath, edited, 'utf8');
 
   const syncResult = syncRules(tempDir, { agents: ['cursor', 'claude-code'], absorbWarn: silentAbsorbWarn });
-  assert(syncResult.written.length >= 2, 'sync should write cursor and claude adapters');
+  assert(syncResult.written.length >= 4, 'sync should write cursor and claude adapters for both rules');
 
   const cursorAdapter = join(tempDir, '.cursor', 'rules', 'architecture-rules.mdc');
   const claudeAdapter = join(tempDir, '.claude', 'rules', 'architecture-rules.md');
+  const projectCursorAdapter = join(tempDir, '.cursor', 'rules', 'project-rules.mdc');
+  const projectClaudeAdapter = join(tempDir, '.claude', 'rules', 'project-rules.md');
+  assert(existsSync(projectCursorAdapter), 'sync should write project-rules cursor adapter');
+  assert(existsSync(projectClaudeAdapter), 'sync should write project-rules claude adapter');
   assert(readFileSync(cursorAdapter, 'utf8').includes('Smoke test content'), 'cursor adapter should contain body');
   assert(readFileSync(claudeAdapter, 'utf8').includes('Smoke test content'), 'claude adapter should contain body');
 

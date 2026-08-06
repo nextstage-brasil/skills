@@ -12,6 +12,17 @@
       "claude": {
         "paths": null
       }
+    },
+    {
+      "name": "project-rules",
+      "canonical": "rules/project-rules.md",
+      "cursor": {
+        "alwaysApply": true,
+        "description": "Project-local rules for AI agents — communication, team context, project codes, agent names"
+      },
+      "claude": {
+        "paths": null
+      }
     }
   ],
   "subagents": []

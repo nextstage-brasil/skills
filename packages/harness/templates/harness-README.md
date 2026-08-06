@@ -157,6 +157,16 @@ Replace the stub `rules/architecture-rules.md` by running **`/ns-harness-archite
 npx @nextstage-brasil/harness sync
 ```
 
+### Project rules (manual)
+
+Edit `rules/project-rules.md` for project-local settings (language, project codes, team context, GitLab MCP server name, agent names). Harness creates the stub once; never overwrites your edits. Then sync:
+
+```bash
+npx @nextstage-brasil/harness sync
+```
+
+Stack and architecture stay in `architecture-rules.md` — not here.
+
 ---
 
 ## Skills

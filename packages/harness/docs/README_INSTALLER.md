@@ -13,6 +13,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
     manifest.json
     rules/
       architecture-rules.md
+      project-rules.md
     docs/
   .cursor/rules/*.mdc               # GENERATED — Cursor rule adapters
   .claude/rules/*.md                # GENERATED — Claude Code rule adapters
@@ -69,7 +70,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 npx @nextstage-brasil/harness --preset spec-driven --yes
 ```
 
-Creates scaffold, stub `architecture-rules.md`, syncs adapters. Use `--preset spec-driven` for `ns-spec-driven` + workers (or `--preset brownfield` for prepare-only). Run `ns-harness-architecture-rules` in your agent when code exists.
+Creates scaffold, stub `architecture-rules.md` and `project-rules.md`, syncs adapters. Use `--preset spec-driven` for `ns-spec-driven` + workers (or `--preset brownfield` for prepare-only). Run `ns-harness-architecture-rules` in your agent when code exists; edit `project-rules.md` manually for project-local settings.
 
 ### Brownfield (existing codebase)
 
