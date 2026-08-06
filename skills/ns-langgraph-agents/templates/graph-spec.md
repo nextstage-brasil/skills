@@ -23,7 +23,7 @@
 | ------- | ---- | ---------------- |
 | Control flow / nodes | `src/graph/` | — |
 | System prompts | `src/conversation/prompts/` | `graph/`, `llm/`, `src/prompts/` |
-| Locale / humanize | `src/conversation/locale/` | `graph/` |
+| Locale / humanize | `src/conversation/locale/` (`resolveConversationLocale` + Intl formatters; conversation-observed, not bootstrap SoT) | `graph/` |
 | Presentation | `src/conversation/presentation/` | `graph/`, `llm/` |
 | Versioned domain / verticals | `config/tenants/`, `config/verticals/` | new `src/` modules for verticals |
 | Local tools | `src/tools/` | — |
@@ -45,7 +45,7 @@ Ordered layers (see `references/prompt-and-capability-injection.md`):
 6. Skill auto-inject — {{skill ids or none}}
 7. Ephemeral runtime nudge — system section only (never fake HumanMessage)
 
-**Compose invariant:** each LLM turn rebuilds system text as `base_invariant` (motor: gather MUST NOT emit user-facing Markdown; composer sole-writer; tool discipline) + `injected` (product persona/tone). Do **not** persist the composed system/persona string in graph state, checkpointer, or durable `messages`. A summary `SystemMessage` at index 0 is allowed and is **not** the full system prompt — see `references/message-content-blocks.md`.
+**Compose invariant:** each LLM turn rebuilds system text as `base_invariant` (motor: gather MUST NOT emit user-facing Markdown; composer sole-writer; tool discipline; format numbers/dates for the user's language this turn — conversation-observed locale) + `injected` (product persona/tone). Do **not** persist the composed system/persona string in graph state, checkpointer, or durable `messages`. A summary `SystemMessage` at index 0 is allowed and is **not** the full system prompt — see `references/message-content-blocks.md`. Reply locale/formatting is **not** the product `injected` string: resolve ephemeral `turnLocale` via `resolveConversationLocale` (see `references/evidence-and-fidelity.md`).
 
 Compose helper: `{{module path}}` (outside god-node).
 
@@ -63,6 +63,8 @@ Motor (`base_invariant`) source: `{{path or constant}}`. Product (`injected`) so
   // discoveryBrief?: { found: string[]; absent: string[] } | null;
   // externalError?: { code: string; message: string } | null;
   // turnDecisions?: Record<string, unknown>[];
+  // turnLocale?: string | null; // ephemeral — clear each turn; conversation-observed
+  // currencyHint?: string | null;
   {{custom_fields}}
 }
 ```

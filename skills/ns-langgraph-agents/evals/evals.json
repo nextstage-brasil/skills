@@ -44,14 +44,15 @@
     {
       "id": 4,
       "prompt": "Add Portuguese month labels and translation helpers for agent replies in our LangGraph agent-api. Someone started a translations.ts under graph/nodes \u2014 is that OK?",
-      "expected_output": "Agent refuses graph/ for locale; Placement Decision Block points to src/conversation/locale/; do_not_create_under includes graph/; cites placement-and-domains.md.",
+      "expected_output": "Agent refuses graph/ for locale; Placement Decision Block points to src/conversation/locale/; do_not_create_under includes graph/; cites placement-and-domains.md; notes conversation-observed turnLocale (not bootstrap/.env locale SoT) and Intl formatters.",
       "files": [],
       "assertions": [
         "Explicitly refuses or rejects placing locale/translations under graph/",
         "Points target path to conversation/locale (or equivalent conversation layer)",
         "Emits a Placement Decision Block (or equivalent structured placement decision)",
         "Lists graph/ (or graph/nodes) under do_not_create_under / forbidden paths",
-        "Cites placement-and-domains.md or equivalent placement doctrine"
+        "Cites placement-and-domains.md or equivalent placement doctrine",
+        "Mentions conversation-observed locale / turnLocale or rejects bootstrap/.env as primary locale SoT"
       ]
     },
     {

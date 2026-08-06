@@ -16,6 +16,9 @@ export const AgentState = Annotation.Root({
   // discoveryBrief: Annotation<{ found: string[]; absent: string[] } | null>({ default: () => null }),
   // externalError: Annotation<{ code: string; message: string } | null>({ default: () => null }),
   // turnDecisions: Annotation<Record<string, unknown>[]>({ default: () => [] }),
+  // Ephemeral per turn — clear in guard; NEVER sticky thread persona locale:
+  // turnLocale: Annotation<string | null>({ default: () => null }),
+  // currencyHint: Annotation<string | null>({ default: () => null }),
 });
 
 export type AgentStateType = typeof AgentState.State;

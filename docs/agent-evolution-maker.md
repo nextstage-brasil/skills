@@ -125,8 +125,9 @@ Each item was paid in production (real threads, `_done` plans, living `graph-spe
 | **Pending external-error in state** | Credential/MCP failure became “send me the data?” | Classified error channel above generic clarify |
 | **Structured artifact in state** | Markdown fence diverges from data | Artifact on `completed` envelope; Markdown is not chart SoT |
 | **Incomplete / partial multi-dim payload** | Partial treated as empty or full success | Bundle flags + soft warning; surviving evidence beats generic clarify |
+| **Conversation-observed locale** | App/`configurable.locale` lock or bootstrap `.env` as SoT; sticky thread locale | Detection-first `turnLocale` from recent human messages (± intent `locale`/`speechLanguage` slots); `configurable.locale` weak hint only; product default fallback when ambiguous; Intl formatters in code — not LLM-invented `1.234,56`; ephemeral turn field, not checkpointer persona |
 
-New harness reference candidate: `references/evidence-and-fidelity.md` (state-backed evidence doctrine).
+New harness reference: `references/evidence-and-fidelity.md` (evidence + conversation-observed locale). Snippet: `templates/snippets/conversation-locale.ts.snippet`.
 
 ### 3.3 Tokens, context, economy
 
@@ -160,7 +161,7 @@ Upgrade `context-window-and-tokens.md` and expand `context-window.ts.snippet` (~
 
 | Concept | Problem solved | Harness implication |
 | ------- | -------------- | ------------------- |
-| **LLM-first speechAct; zero domain vocabulary in code** | Regex heuristics become vertical debt | Post-process only calendar/locale + generic epistemic gates |
+| **LLM-first speechAct; zero domain vocabulary in code** | Regex heuristics become vertical debt | Post-process only calendar + generic epistemic gates; optional generic `locale`/`speechLanguage` slots (no domain vocab) |
 | **Parse failure → allow fetch** | Blind default clarify | Safe `needsData=true` on parse failure |
 | **Challenge ≠ non-data** | Challenge-with-fetch was blocked | Only `clarify`/`chitchat` force `needsData=false` |
 | **Slots = hints, not confirmed IDs** | False zero from case-sensitive names | Discovery-first before authoring |
@@ -204,6 +205,7 @@ Legend: ✅ doctrine/snippet adequate · ⚠️ partial · ❌ missing or produc
 | Tool budget + duplicate fingerprint skip | ⚠️ contract mention only | ✅ `capability/tool-budget.ts` + loop | Add snippet + governance MUST |
 | Intent + bounded gather + composer | ❌ architectures stop at open ReAct | ✅ living topology | Add `react_bounded` to architectures + graph-spec template |
 | Evidence channels / fidelity | ❌ | ✅ | New reference + anti-patterns |
+| Conversation-observed locale | ⚠️ placement only (`conversation/locale/`) | ✅ detection-first + Intl | Doctrine in evidence ref + locale snippet; not fixed/bootstrap locale as SoT (≠ product prompt piece `injected`) |
 | Turn latency budget | ❌ | ✅ | Streaming/error-reliability + HTTP checklist |
 | Turn decisions audit | ❌ | ✅ | Observability reference + migration note |
 | Cost view by thread | ⚠️ tenant views outline | ✅ thread + unpriced | Align observability ref |
@@ -253,7 +255,8 @@ Extend `references/anti-patterns.md`:
 7. Ship agent-api without `/dev-chat`.  
 8. Log secrets / full system prompt into checkpointer (`base_invariant + injected` rebuild per invoke; never persist composed persona — `prompt-and-capability-injection.md`).  
 9. Silent `break` on LLM failure in gather.  
-10. Generic clarify when classified MCP/external error already sits in state.
+10. Generic clarify when classified MCP/external error already sits in state.  
+11. Fix locale via bootstrap/`.env`/`configurable.locale` as primary SoT; persist locale as eternal thread truth; let composer invent number/date format without Intl (`evidence-and-fidelity.md` — conversation-observed locale).
 
 ---
 
@@ -273,6 +276,7 @@ Order to materialize this doc into skills/refs/snippets — **not executed by th
 | P2 | LLM stages + `llm_logs.stage` | `observability.md` |
 | P2 | Costs-by-thread + unpriced_calls | `observability.md` |
 | P2 | State-backed evidence & fidelity doctrine | **new** `references/evidence-and-fidelity.md` + anti-patterns |
+| P2 | Conversation-observed locale (`resolveConversationLocale` + Intl `format*`) | `evidence-and-fidelity.md`, `templates/snippets/conversation-locale.ts.snippet`, anti-patterns, architectures intent slots |
 | P2 | Evals: golden MCP `tools/list` + Playwright/dev-chat gate | `evals-and-gates.md`, hooks from `ns-code-e2e-tests` / PM e2e generators |
 | P3 | Structural/field cache pattern (opt-in) | `mcp-complex-access.md` subsection |
 | P3 | Fidelity-alert observability helper | `observability.md` or evidence ref |

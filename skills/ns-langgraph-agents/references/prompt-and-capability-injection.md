@@ -10,7 +10,7 @@ Read before system-prompt compose, skill auto-inject, MCP bind, or local tool re
 
 | Piece | Name | Owns |
 | ----- | ---- | ---- |
-| Motor | `base_invariant` | Rigid factory rules — gather MUST NOT emit user-facing Markdown; composer sole-writer; tool discipline; bind/truncate doctrine |
+| Motor | `base_invariant` | Rigid factory rules — gather MUST NOT emit user-facing Markdown; composer sole-writer; tool discipline; bind/truncate doctrine; format numbers/dates for user’s language **this turn** (conversation-observed locale, not fixed product locale) |
 | Product | `injected` | Persona, tone, domain product prompt |
 
 **REQUIRED compose each LLM invoke:** `base_invariant + injected`. Rebuild for invoke. **FORBIDDEN** store composed system/persona text in graph state, checkpointer, or durable `messages` history.
@@ -30,7 +30,7 @@ Compose via helper outside god-node (`composeSystemPrompt`). Layers feed `base_i
 | 1 | Canonical body | File under `src/conversation/prompts/` | Usually `injected` (persona/role) | Single source for product role/behavior |
 | 2 | Opacity / safety fixed rules | Shared constants or prompt fragment | Prefer `base_invariant` | Keep short |
 | 3 | Data-plane truth | Runtime connection state | Either; often `injected` overlay | Never claim tools agent cannot call |
-| 4 | Session context overlay | `RunnableConfig.configurable` | `injected` | **Overlay**, not body replace; never persist into graph state |
+| 4 | Session context overlay | `RunnableConfig.configurable` | `injected` | **Overlay**, not body replace; never persist into graph state. **Exception:** `configurable.locale` is a weak runtime hint for `resolveConversationLocale` only — **MUST NOT** copy into product `injected` as language/format SoT (`evidence-and-fidelity.md`) |
 | 5 | Scope anchors | Computed helpers (period, app ids, tenant labels) | `injected` | Deterministic strings from config/state refs |
 | 6 | Optional skill body auto-inject | Skill markdown when product policy says so | Phase-dependent | Body-only; exclusivity below |
 | 7 | Ephemeral runtime nudge | System section (`Runtime directive`) | Ephemeral `injected` / phase prompt | **Never** fake `HumanMessage` |
@@ -43,6 +43,7 @@ Motor invariants (gather-no-Markdown, composer sole-writer, tool discipline) alw
 | ------- | ------- |
 | Canonical system body | Versioned markdown in `conversation/prompts/` — product/`injected` base |
 | Session context overlay | Per-request text from `configurable` — appends; does not replace body |
+| `configurable.locale` | Weak hint for `resolveConversationLocale` only — **not** copied into `injected` as language/format SoT |
 | `base_invariant` | Motor rules rebuilt each invoke — not durable history |
 | Graph state / checkpointer / durable `messages` | **MUST NOT** store composed system/persona prompt or secrets |
 
@@ -104,9 +105,11 @@ Split compose per phase. Motor pieces stay in `base_invariant`; product persona/
 | Phase | `base_invariant` owns | `injected` owns | Must not include |
 | ----- | --------------------- | --------------- | ---------------- |
 | **Gather** | Tool discipline; gather MUST NOT emit user-facing Markdown; MCP wire hints | Optional short gather persona (no deliver templates) | Deliver/formatting skills, final Markdown, chart prose |
-| **Composer** | Composer sole-writer; evidence-narration discipline | Skill auto-inject, formatting, locale, user tone | Tool-call authoring beyond evidence narration |
+| **Composer** | Composer sole-writer; evidence-narration discipline; format via conversation-observed `turnLocale` (Intl in code) | Skill auto-inject, user tone | Tool-call authoring beyond evidence narration; inventing number/date separators |
 
 Deliver skill in gather = premature Markdown in tool loop. Bind deliver skills on composer turn only (or auto-inject in composer compose).
+
+**Locale ≠ product `injected`:** reply language/formatting = conversation-observed (`evidence-and-fidelity.md`). `configurable.locale` weak hint for `resolveConversationLocale` only — never paste into `injected` as SoT. Do not bake fixed product locale into `injected`.
 
 Gather nudge: system section in composed invoke payload — no fake `HumanMessage`; do not write nudge into durable `messages`. Skip nudge when `discoveryBrief` confirms catalog absence.
 
@@ -132,5 +135,6 @@ Gather nudge: system section in composed invoke payload — no fake `HumanMessag
 - Placement: `references/placement-and-domains.md`
 - Token pipeline: `references/context-window-and-tokens.md`
 - Summary `SystemMessage` vs full system: `references/message-content-blocks.md`
+- Conversation-observed locale: `references/evidence-and-fidelity.md`, `templates/snippets/conversation-locale.ts.snippet`
 - MCP governance: `references/capability-governance.md`
 - Review anti-patterns: `references/anti-patterns.md`

@@ -19,7 +19,7 @@ agent-api/
 │   ├── catalog/            # optional: search/summary helpers
 │   ├── conversation/       # domain: turns, schemas, contact flows
 │   │   ├── prompts/        # canonical system prompt markdown + scope helpers
-│   │   ├── locale/         # formatters, humanize, date/month labels
+│   │   ├── locale/         # resolveConversationLocale, Intl formatters, humanize (conversation-observed)
 │   │   └── presentation/   # charts, mermaid sanitize, display adapters
 │   ├── graph/              # wiring only — no locale/copy/domain heuristics
 │   │   ├── graph.ts        # StateGraph compile + getGraph

@@ -1,0 +1,68 @@
+// Snippet: conversation-locale.ts — conversation-observed locale (not fixed/bootstrap locale SoT)
+// Place under src/conversation/locale/. Wire resolve before composer format step.
+// Product prompt piece `injected` ≠ reply language — do not copy configurable.locale into injected.
+import type { BaseMessage } from "@langchain/core/messages";
+
+export type ConversationLocaleResult = {
+  turnLocale: string; // BCP 47, e.g. "pt-BR" | "en-US"
+  currencyHint?: string; // ISO 4217 when speech suggests currency without locking language
+  source: "messages" | "intent" | "hint" | "product_default";
+};
+
+const PRODUCT_DEFAULT_LOCALE = "pt-BR"; // override from RNF / product config
+
+/**
+ * Detection-first: recent human messages win; configurable.locale is a weak hint only.
+ * Optional intentSlots.locale / speechLanguage when heuristic is weak (generic slots).
+ */
+export function resolveConversationLocale(
+  messages: BaseMessage[],
+  opts?: {
+    hint?: string | null; // configurable.locale — loses to clear conversation evidence
+    intentSlots?: { locale?: string | null; speechLanguage?: string | null } | null;
+    productDefault?: string;
+  },
+): ConversationLocaleResult {
+  const productDefault = opts?.productDefault ?? PRODUCT_DEFAULT_LOCALE;
+  const fromMessages = detectLocaleFromHumanMessages(messages);
+  if (fromMessages) {
+    return {
+      turnLocale: fromMessages.locale,
+      currencyHint: fromMessages.currencyHint,
+      source: "messages",
+    };
+  }
+  const fromIntent = opts?.intentSlots?.locale ?? opts?.intentSlots?.speechLanguage;
+  if (fromIntent) {
+    return { turnLocale: normalizeLocaleTag(fromIntent), source: "intent" };
+  }
+  if (opts?.hint) {
+    return { turnLocale: normalizeLocaleTag(opts.hint), source: "hint" };
+  }
+  return { turnLocale: productDefault, source: "product_default" };
+}
+
+/** Format user-facing numbers/dates with Intl — never invent separators in the LLM. */
+export function formatUserFacing(
+  value: number | Date,
+  turnLocale: string,
+  style: Intl.NumberFormatOptions | Intl.DateTimeFormatOptions = {},
+): string {
+  if (value instanceof Date) {
+    return new Intl.DateTimeFormat(turnLocale, style as Intl.DateTimeFormatOptions).format(value);
+  }
+  return new Intl.NumberFormat(turnLocale, style as Intl.NumberFormatOptions).format(value);
+}
+
+// --- product fills these; keep heuristics domain-agnostic ---
+
+function detectLocaleFromHumanMessages(
+  _messages: BaseMessage[],
+): { locale: string; currencyHint?: string } | null {
+  // stub — product fills: last human text(s); script/tokens; optional currency words → currencyHint only
+  return null;
+}
+
+function normalizeLocaleTag(tag: string): string {
+  return tag.trim();
+}

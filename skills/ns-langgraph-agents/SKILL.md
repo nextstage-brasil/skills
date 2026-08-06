@@ -65,6 +65,8 @@ LangGraph = control flow. MCP/local tools = capabilities under graph. Small grap
 
 **System prompt:** compose `base_invariant` (motor) + `injected` (product persona) **per LLM invoke**. Never persist composed system/persona text in graph state, checkpointer, or durable `messages`. Summary `SystemMessage` at index 0 ≠ full system — `references/prompt-and-capability-injection.md`, `references/message-content-blocks.md`.
 
+**Locale:** conversation-observed `turnLocale` (detection-first from human messages ± intent slots); `configurable.locale` weak hint only; Intl formatters in code — not fixed bootstrap locale. `references/evidence-and-fidelity.md`, `templates/snippets/conversation-locale.ts.snippet`.
+
 Three capability kinds bind to the model:
 
 | Kind | LLM wire name | Internal id |
@@ -130,7 +132,8 @@ Load on demand — do not memorize whole files.
 | `references/context-window-and-tokens.md` | trim, summarize, tool vs skill body caps, `context_compact` |
 | `references/mcp-complex-access.md` | Multi-server MCP, discovery, transport, lifecycle |
 | `references/capability-governance.md` | Allowlist, classification, rate limits, tool budgets |
-| `references/evidence-and-fidelity.md` | State-backed evidence, fidelity gate, external-error channel |
+| `references/evidence-and-fidelity.md` | State-backed evidence, fidelity gate, conversation-observed locale |
+| `templates/snippets/conversation-locale.ts.snippet` | `resolveConversationLocale` + Intl `formatUserFacing` |
 | `templates/snippets/tool-budget.ts.snippet` | Per-turn tool/MCP caps, arg fingerprint duplicate-skip |
 | `templates/snippets/prepare-llm-messages.ts.snippet` | `context_compact` helper (optional pre-intent) |
 | `references/error-and-reliability.md` | Tool errors, circuit breaker, retries |
@@ -299,6 +302,7 @@ Stay here for diagnosis, spec, placement, governance design. `ns-code-coder` for
 ## Forbidden
 
 - Persisting composed system/persona prompt (`base_invariant + injected`) — or secrets/API keys — in graph state, checkpointer, or durable `messages` (rebuild system text per invoke)
+- Treating bootstrap / `.env` / `configurable.locale` as primary locale SoT, or persisting sticky thread locale (use conversation-observed `turnLocale` + Intl)
 - Passing unbounded tool/MCP output into `state.messages`
 - Applying tool/MCP truncate caps to skill bodies (use `CONTEXT_SKILL_BODY_MAX_CHARS`)
 - Trusting MCP tool metadata for security classification

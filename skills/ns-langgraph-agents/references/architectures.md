@@ -44,11 +44,12 @@ Node ids above — not channel names. `intent_classify` writes `intent`. No `add
 
 - Gather strips terminal `content`/`reasoning` without `tool_calls` — no user Markdown
 - Composer only node with final user text
-- `intent_classify` — light LLM; writes `intent`; routes chitchat/clarify vs fetch; post-process calendar/locale only; no domain vocabulary in `src/`
+- `intent_classify` — light LLM; writes `intent`; routes chitchat/clarify vs fetch; optional generic slots `locale` / `speechLanguage` when heuristic weak; post-process calendar + epistemic gates only; no domain vocabulary in `src/`
 - Bypass (optional): zero-LLM closed catalog classes
 - Budgets: `tool-budget.ts.snippet`; evidence channels: `templates/graph-spec.md`
+- Locale: `guard` clears `turnLocale`/`currencyHint`; after `intent_classify` (or pre-composer) call `resolveConversationLocale` and set ephemeral fields — conversation-observed, not fixed/bootstrap locale SoT (`evidence-and-fidelity.md`, `conversation-locale.ts.snippet`)
 
-**State channels (optional):** `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions` — `templates/snippets/state.ts.snippet`.
+**State channels (optional):** `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions`, ephemeral `turnLocale` / `currencyHint` — `templates/snippets/state.ts.snippet`.
 
 ## Plan-Execute
 

@@ -124,8 +124,9 @@ Ship in **4 mergeable waves**. Each wave:
 
 | Step | Action | Files |
 | ---- | ------ | ----- |
-| 3.1 | **New** `references/evidence-and-fidelity.md` (state-backed evidence, fidelity alert non-blocking, external-error channel) | new file |
-| 3.2 | Wire into SKILL reference map + anti-patterns cross-links | `SKILL.md`, `anti-patterns.md` |
+| 3.1 | **New** `references/evidence-and-fidelity.md` (state-backed evidence, fidelity alert non-blocking, external-error channel, **conversation-observed locale**) | new file |
+| 3.1b | Locale helpers: `resolveConversationLocale(messages, hint?)` + Intl `format*`; `turnLocale` ephemeral; `configurable.locale` weak hint only | `templates/snippets/conversation-locale.ts.snippet`, placement/architectures pointers |
+| 3.2 | Wire into SKILL reference map + anti-patterns (fixed/bootstrap locale SoT, sticky thread locale, LLM-invented formats) | `SKILL.md`, `anti-patterns.md` |
 | 3.3 | Observability: `llm_logs.stage`, `turn_decisions`, costs-by-thread / `unpriced_calls`, redaction on SoT | `observability.md` |
 | 3.4 | Evals gates: golden `tools/list` when MCP; Playwright (or equivalent) against `/dev-chat` when `streaming_sse` — as **project gate recommendation**, not Cypress rewrite | `evals-and-gates.md` |
 | 3.5 | Optional one-line cross-link from `ns-code-e2e-tests` or PM e2e generator: “agent-api browser evals → see ns-langgraph-agents evals-and-gates” | only if zero confusion with Cypress |
@@ -193,7 +194,7 @@ Each PR should be independently mergeable and reversible.
 
 ## 6. Success metrics (harness, not product SLAs)
 
-1. New greenfield LangGraph+MCP guidance from skills mentions: **dev-chat, budgets, normalize-before-truncate, gather/composer (or react_bounded), separate skill cap**.  
+1. New greenfield LangGraph+MCP guidance from skills mentions: **dev-chat, budgets, normalize-before-truncate, gather/composer (or react_bounded), separate skill cap, conversation-observed locale**.  
 2. Brownfield orphan recovery still runs without requiring full topology rewrite as Critical.  
 3. Catalog validator green; prior eval case intents still valid.  
 4. No harness installer regression (no CLI change in Waves 0–3).

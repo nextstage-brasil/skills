@@ -13,6 +13,7 @@ Score each item: ✅ pass | ⚠️ partial | ❌ fail
 - [ ] `llm/` has infra only — conversation prompts in `conversation/prompts/`
 - [ ] One thin `*.node.ts` per graph node
 - [ ] Locale/humanize under `conversation/locale/` — not under `graph/`
+- [ ] Locale = conversation-observed (`resolveConversationLocale` + ephemeral `turnLocale`); not bootstrap/`.env` SoT; Intl formatters in code
 - [ ] Presentation under `conversation/presentation/` — not under `graph/` or `llm/`
 - [ ] No orphan `src/prompts/` or dead `* copy.md` prompt duplicates
 - [ ] `src/skills/` is loader/registry only — no domain heuristics

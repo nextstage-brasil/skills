@@ -13,6 +13,7 @@ Read this before any new file under `{agent_api_root}`. Emit a **Placement Decis
 | System prompt markdown + scope helpers | `src/conversation/prompts/` | conversation |
 | Turn schemas, reply copy, contact flows | `src/conversation/` | conversation |
 | Locale formatters, humanize, month/date labels | `src/conversation/locale/` | conversation |
+| `resolveConversationLocale` / `formatUserFacing` (conversation-observed) | `src/conversation/locale/` | conversation |
 | Presentation (charts, mermaid sanitize, display adapters) | `src/conversation/presentation/` | conversation |
 | Versioned tenant / product domain data | `config/tenants/{id}/` | config |
 | Segment / vertical behavior as data | `config/verticals/{id}/` | config |
@@ -56,6 +57,7 @@ Condensed contract: **new vertical = only `config/`, zero new `src/`.**
 | Presentation / chart sanitize under `graph/` or `llm/` | `src/conversation/presentation/` |
 | Domain prompts under `src/llm/` or top-level `src/prompts/` | `src/conversation/prompts/` |
 | Frontend-style `locales/translation.json` inside agent-api | conversation locale helpers + config copy |
+| Bootstrap / `.env` locale as primary reply-format SoT | `resolveConversationLocale` + ephemeral `turnLocale` — `evidence-and-fidelity.md` |
 | Domain regex / vertical heuristics in `src/skills/*-auto-inject.ts` | `conversation/` or `config/` |
 | Vendor/vertical policy hardcoded in `src/mcp/` adapters | allowlist + `config/` + `capability/` |
 | Orphan `src/prompts/` plus dead `* copy.md` duplicates | Single canonical path; delete dead copies |

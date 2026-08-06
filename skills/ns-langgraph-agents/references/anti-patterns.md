@@ -38,6 +38,9 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | Generic clarify when `externalError` already in state | Credential/MCP failure reads as "send me data" | Branch composer on `externalError` channel |
 | Greenfield agent-api without `/dev-chat` | No human train loop for MCP/SSE | `GET /dev-chat` + `DEV_CHAT_ENABLED` |
 | Numeric `null` from tools treated as `0` | Invented totals | Hydrate evidence bundle in code — `evidence-and-fidelity.md` |
+| Bootstrap / `.env` / `configurable.locale` as primary locale SoT | Ignores turn language; sticky wrong format | Conversation-observed `turnLocale` — `evidence-and-fidelity.md` |
+| Persist locale as eternal thread truth in checkpointer | PT→EN mid-thread keeps old separators | Ephemeral `turnLocale` per turn; clear in guard |
+| Composer invents number/date format without Intl | Separator / fidelity bugs | `formatUserFacing(turnLocale)` in `conversation/locale/` |
 
 ## Bind parity
 
