@@ -1,10 +1,10 @@
 ---
 name: ns-sdd-analyze-consistency
-description: (NS) Verify internal consistency of requirements.md and adherence to project rules before task generation. Use whenever the user asks to analyze or validate requirements, after scope confirmation, or after manual edits to requirements — also automatically between Gate 2 and task generation. Produces consistency-report.md; does not modify requirements. Do NOT generate tasks.
+description: (NS) Verify internal consistency of requirements.md and adherence to project rules before task generation. Use whenever the user asks to analyze or validate requirements, after scope confirmation, or after manual edits to requirements — also automatically between Gate 2 and task generation. Appends Consistency status (Approved|Reproved) to requirements.md; on Reproved informs the user and stops. Do NOT generate tasks or consistency-report.md.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
 ---
@@ -26,7 +26,6 @@ See `../ns-harness/references/harness-discovery.md`. Load rules from `{harness_r
 ## Prerequisites
 
 - `{product_root}/docs/versions/{version_san}/requirements.md` exists
-- Create version directory if missing before writing report
 
 ## Workflow
 
@@ -79,54 +78,58 @@ Classify each as ✅ OK | ⚠️ Warning | ❌ Blocker:
 
 Apply stack-specific checks from harness rules when they exist (Laravel/React checks are optional).
 
-### Step 3 — Report
+### Step 3 — Write status into requirements.md
 
-Save to `{product_root}/docs/versions/{version_san}/consistency-report.md`:
+**Do not** create `consistency-report.md`.
+
+Append (or replace an existing trailing `## Consistency` block) at the end of
+`requirements.md`:
 
 ```markdown
-# Consistency Report — {version_san}
+## Consistency
 
+**Status:** Approved | Reproved
 **Date:** {date}
-**Analyzed:** `{path}`
 
-## Overall result
+## Warnings
 
-✅ 100% approved | ⚠️ Approved with reservations | ❌ Requires correction
-
-## Blockers (❌)
-
-...
-
-## Warnings (⚠️)
-
-...
-
-## Passed (✅)
-
-Count and summary
+{Omit this heading when there are no warnings.}
+- {warning}
 
 ## Recommendations
 
-Optional improvements
+{Omit this heading when there are no recommendations.}
+- {recommendation}
 ```
+
+Rules:
+
+- **Any ❌ Blocker** → `Status: Reproved`
+- **Zero blockers** → `Status: Approved` (warnings/recommendations still allowed)
+- Include **Warnings** only when at least one ⚠️ exists
+- Include **Recommendations** only when there is at least one optional improvement
+- On re-run, replace the previous `## Consistency` block — do not duplicate
 
 ### Step 4 — Proceed decision
 
-- **❌ Blockers:** Stop — ask user to fix requirements, then re-run
-- **⚠️ Only warnings:** Ask fix now or proceed; user decides
-- **100% ✅:** Inform auto-proceed to task generation; `execution_confirmed` implicit (skip Gate 3)
+- **Reproved:** Tell the user in chat (list blockers briefly), **stop** — do not
+  proceed to task generation. Ask them to fix requirements, then re-run.
+- **Approved with warnings:** Inform; ask fix now or proceed; user decides.
+- **Approved with no warnings:** Inform auto-proceed to task generation;
+  `execution_confirmed` implicit (skip Gate 3).
 
 ## Critical rules
 
-- **Do not edit** `requirements.md` — report issues only
+- Edit `requirements.md` **only** to update the trailing Consistency block
 - Blockers prevent task generation without fix or explicit waiver
 - If requirements missing → redirect to Gate 1 / `ns-sdd-requirements-generator`
+- Never write `consistency-report.md`
 
 ## Integration
 
 ```
-Gate 2 → ns-sdd-analyze-consistency → [100%] → ns-sdd-task-generator
-                            → [blockers] → fix requirements
+Gate 2 → ns-sdd-analyze-consistency → [Approved] → ns-sdd-task-generator
+                            → [Reproved] → stop; fix requirements
 ```
 
 Post-implementation: `ns-code-reviewer` validates requirements × code — complementary, not a substitute.

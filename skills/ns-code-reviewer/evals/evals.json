@@ -15,8 +15,8 @@
     },
     {
       "id": 3,
-      "prompt": "Save the post-implementation code review report for version 2.0.0 under docs/versions.",
-      "expected_output": "Agent writes code-review-report.md using review-report.template.md structure at version artifact path.",
+      "prompt": "Version closure review for 2.0.0 — report what fails.",
+      "expected_output": "Agent does not write code-review-report.md. On Rejected/Blocked emits minimal fix map for the next agent; ends with Code Review: verdict line.",
       "files": []
     },
     {

@@ -147,6 +147,13 @@ Worker dispatch: **MUST** use harness project agents when available — `../ns-h
 | GitLab issue URL + MCP available | `ns-execution-gitlab-issue` (soft — prefer when GitLab present) |
 | Autonomous multi-step local plan | `ns-code-autonomous` |
 
+**Face = orchestrator** (`ns-spec-driven`); it does not implement — it drives
+`run-implementation` (classic) or `ns-execution-orchestrator` (slices).
+
+**Tests while executing version tasks:** unit/integration only. **Forbidden** for
+agents to run E2E during the task loop; human runs E2E at version end (see
+`../ns-sdd-execution-handoff-generator/references/run-implementation.md`).
+
 ## Trigger → reference
 
 | User says | Read first |

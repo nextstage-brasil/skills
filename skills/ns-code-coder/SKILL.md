@@ -91,6 +91,7 @@ Complete **Session boot (blocking)** in `../ns-harness/references/harness-discov
 - **No SDD version artifacts** — no `task-NNN.md`, `requirements.md`, `execution-handoff.md`, or `docs/versions/` writes. Conditional living-spec updates under `docs/specs/` via `ns-sdd-living-spec-consolidator` are allowed (see **Living specs**).
 - **No gratuitous comments** unless requested
 - Run tests per `AGENTS.md` Docker and testing; project-specific container and commands live in `architecture-rules.md`
+- When executing under `execution-handoff.md` / `run-implementation`: **unit/integration only** — do **not** run E2E (human runs E2E at version end)
 
 ## Per-task cycle
 

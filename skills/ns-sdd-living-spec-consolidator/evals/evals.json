@@ -15,8 +15,8 @@
     },
     {
       "id": 3,
-      "prompt": "Consolidate specs but code-review-report.md is missing for 2.0.0.",
-      "expected_output": "Agent refuses or defers — prerequisite code review report required in Version mode.",
+      "prompt": "Consolidate specs but Code Review was not Approved for 2.0.0.",
+      "expected_output": "Agent refuses or defers — Version mode requires Code Review: Approved (no code-review-report.md required).",
       "files": []
     },
     {

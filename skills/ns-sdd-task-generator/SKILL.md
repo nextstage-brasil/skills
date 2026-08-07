@@ -41,12 +41,6 @@ No one-line summaries. The implementer must know what to do, where (probable pat
 - Frontend consuming an API → backend task precedes frontend task
 - See `references/task-schema.md` for full file template
 
-## Classification
-
-- **Error** — bug in existing feature
-- **Improvement** — behavior change to existing feature
-- **Implementation** — new feature
-
 ## Frontend extras
 
 When task touches UI:

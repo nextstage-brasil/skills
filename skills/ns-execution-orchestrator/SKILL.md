@@ -95,7 +95,8 @@ For each slice whose roadmap `status` is `planned` or `in_progress`:
    - Reinforcement (short): obey `AGENTS.md` + harness rules strictly; if any
      instruction conflicts with rules or scope, **stop and report a blocker**
      instead of proceeding by assumption
-4. **Validate** the subagent result:
+4. **Validate** the subagent result (unit/integration tests only — **never** run
+   E2E during slice execution; human runs E2E at version end):
    - Every slice task marked `completed` or `waived` (waiver noted in the handoff)
    - Slice handoff updated per `ns-sdd-execution-handoff-generator` (time block + task rows)
    - Roadmap row updated by the worker (or update it yourself)
@@ -110,9 +111,10 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 1. Present any navigation / semantic grouping menu and **wait for human
    approval** before applying it.
 2. Run the post-implementation review: **MUST** dispatch **`reviewer-agent`** when available
-   (else `ns-code-reviewer`, read-only) over the version diff; it writes
-   `code-review-report.md`. See `../ns-harness/references/subagent-dispatch.md`.
-3. Consolidate living specs when the version status allows — `ns-sdd-living-spec-consolidator`.
+   (else `ns-code-reviewer`, read-only) over the version diff. Do **not** expect
+   `code-review-report.md` — use the verdict line and minimal fix map on Rejected.
+   See `../ns-harness/references/subagent-dispatch.md`.
+3. Consolidate living specs when review is `Approved` — `ns-sdd-living-spec-consolidator`.
 4. Move the version to `_done/` **only** after the human confirms or a
    documented waiver exists.
 5. If a version `execution-handoff.md` exists, close its final delivery block
@@ -127,7 +129,7 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 | Real environment blocker (Docker/tests impossible)   | Stop; note in handoff                     |
 | Inter-slice dependency not satisfied                 | Stop; fix roadmap or the prior slice      |
 | Missing `{product_root}` / `{version_san}` / roadmap | Ask **once**, then proceed                |
-| P0 finding in `code-review-report.md` without waiver | Stop before `_done/` move                 |
+| `Code Review: Rejected`/`Blocked` without waiver     | Stop before `_done/` move; apply fix map  |
 | Human waiver needed (menu apply, `_done/` move)      | Stop for that item only                   |
 
 ## Forbidden

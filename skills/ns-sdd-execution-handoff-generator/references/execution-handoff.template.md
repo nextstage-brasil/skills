@@ -4,6 +4,7 @@
 **Product root:** `{product_root}/`
 **Version:** `{version_san}`
 **Version status:** `not_started`
+**Tokens (total):** 0
 **Base branch:** `{base_branch}` *(GitLab only)*
 **Work branch:** `{work_branch}` *(GitLab only)*
 
@@ -27,10 +28,8 @@ Planning is complete — **execute, do not replan**.
 | Tasks | `{product_root}/docs/versions/{version_san}/tasks/task-NNN-*.md` |
 | Design | `{product_root}/docs/context/design-brief.md` |
 | Stack | `{product_root}/docs/context/stack-confirmed.md` |
-| Consistency | `{product_root}/docs/versions/{version_san}/consistency-report.md` |
 | GitLab feature map *(if present)* | `{product_root}/docs/versions/{version_san}/gitlab-issue-feature-map.md` |
 | GitLab sync config *(if present)* | `{product_root}/docs/context/gitlab-sync-config.md` |
-| Code review report | `{product_root}/docs/versions/{version_san}/code-review-report.md` |
 | Harness rules | `{harness}/rules/` |
 
 ### Execution rules
@@ -40,14 +39,15 @@ Planning is complete — **execute, do not replan**.
 3. Read the full `task-NNN-*.md` before coding.
 4. Implement **only** under `{product_root}/` (code) and harness rules (read-only).
 5. Validate all **validation criteria** before marking `completed`.
-6. **Update this file** when starting (`in_progress`), completing (`completed`), or blocking (`blocked`) each task.
-7. Update **Version status** and **Progress** after each task.
-8. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-code-reviewer`) before declaring the version ready.
-9. **GitLab:** implement only on the registered `work_branch`; MR target per config.
-10. **GitLab status:** per task, sync `backlog` → `in_progress` → `done` — never skip `in_progress` (`ns-gitlab-board-sync`).
-11. Do not stop to replan unless a real blocker is documented in **Notes**.
+6. **Tests during task execution:** unit/integration only (e.g. PHPUnit). **Forbidden:** run any E2E suite (Cypress/`cypress:run`/`cypress:open`/equivalent). E2E runs are **human-only at version end** after all tasks complete.
+7. **Update this file** when starting (`in_progress`), completing (`completed`), or blocking (`blocked`) each task.
+8. Update **Version status**, **Progress**, and **Tokens (total)** after each task.
+9. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-code-reviewer`) before declaring the version ready; remind the human to run E2E.
+10. **GitLab:** implement only on the registered `work_branch`; MR target per config.
+11. **GitLab status:** per task, sync `backlog` → `in_progress` → `done` — never skip `in_progress` (`ns-gitlab-board-sync`).
+12. Do not stop to replan unless a real blocker is documented in the task's **Execution notes**.
 
-**`waived` tasks:** only with explicit human waiver in row **Notes**.
+**`waived` tasks:** only with explicit human waiver recorded in that task's **Execution notes**.
 
 ### Product-specific rules
 
@@ -99,26 +99,32 @@ inspect other products in a monorepo unless scope rules allow.
 
 Allowed values: `pending` | `in_progress` | `completed` | `blocked` | `waived`
 
-| ID | File | Feature | Layer | Model tier | Status | Started at | Finished at | Time (s) | Updated at | Notes |
-|----|------|---------|-------|------------|--------|------------|-------------|----------|------------|-------|
+| Task | Layer | Status | Started at | Finished at | Time (s) | Tokens | Updated at |
+|------|-------|--------|------------|-------------|----------|--------|------------|
 {task_rows}
+
+> **Task** = short id only (`task-001`), derived from `task-001-*.md`. Feature and
+> model tier live in the task file — not here. Important notes go in the task's
+> `## Execution notes` section (relevant items only).
 
 ---
 
 ## Session history
 
-| Date | Agent / session | Tasks completed | Notes |
-|------|-----------------|-----------------|-------|
-| {generated_at} | Planning | 0 | Handoff generated |
+| Date | Notes |
+|------|-------|
+| {generated_at} | Handoff generated |
+
+> Notes: ultra-short (a few words). No agent/session column.
 
 ---
 
 ## How to update this file
 
 1. **Task start:** `Status` → `in_progress`; fill `Started at` (ISO local); update `Updated at`; increment **In progress**; optionally append session history.
-2. **Task complete:** `Status` → `completed`; fill `Finished at`; `Time (s)` = `Finished at − Started at`; update **Progress** and **Next task**; sum **Total task time (s)**.
+2. **Task complete:** `Status` → `completed`; fill `Finished at`; `Time (s)` = `Finished at − Started at`; fill `Tokens` when known; update **Tokens (total)** = sum of `Tokens`; update **Progress** and **Next task**; sum **Total task time (s)**.
 3. **Recalculate aggregates (required):** `Implementation — total (s)`; **Total process time (s)** per formula; `Last recalculated`.
-4. **Blocked:** `Status` → `blocked`; reason in **Notes**; set version `blocked` if blocking.
+4. **Blocked:** `Status` → `blocked`; reason in the task file **Execution notes**; set version `blocked` if blocking.
 5. **Resume:** `blocked` → `in_progress` when resolved.
 6. **Version closure:** fill review / living specs / final delivery timestamps; recalculate **Total process time (s)**.
 

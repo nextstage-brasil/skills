@@ -4,11 +4,6 @@ Output path: `{product_root}/docs/versions/{version_san}/tasks/task-NNN-slug.md`
 
 ```markdown
 # {Imperative task title}
-**Type:** Error | Improvement | Implementation
-**Severity:** {1-4 per project convention}
-**Priority:** {1-4}
-**Difficulty:** low | medium | high
-**Suggested model tier:** {economy | balanced | reasoning}
 **Routing rationale:** {one line}
 **Estimate (seconds):** N
 **Related feature:** Feature NNN — {title}
@@ -34,11 +29,9 @@ Output path: `{product_root}/docs/versions/{version_san}/tasks/task-NNN-slug.md`
 - [ ] {testable criterion}
 - [ ] {testable criterion}
 
-### COSMIC function points (optional)
-- Entry: N
-- Read: N
-- Write: N
-- Exit: N
+### Execution notes
+
+{Omit until implementation. Append only relevant items: blockers, human waivers, branch notes.}
 ```
 
 ## Header fields
@@ -51,3 +44,9 @@ Output path: `{product_root}/docs/versions/{version_san}/tasks/task-NNN-slug.md`
 
 - File: `task-NNN-kebab-slug.md` — `NNN` zero-padded three digits
 - Slug from task title, ASCII, kebab-case
+- Handoff table uses short id only: `task-NNN`
+
+## Execution notes
+
+- Written during implementation — not at task generation
+- Relevant items only (blockers, waivers); never dump session chatter

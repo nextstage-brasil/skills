@@ -1,10 +1,10 @@
 ---
 name: ns-sdd-living-spec-consolidator
-description: (NS) Consolidate delivered deltas into living domain specs under docs/specs/ — INDEX.md and per-domain markdown. Use after version closure when requirements, code-review-report, and execution-handoff exist; or in ad-hoc mode when ns-code-coder (or the human) passes an Approved behavioral diff and docs/specs/ already exists. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval.
+description: (NS) Consolidate delivered deltas into living domain specs under docs/specs/ — INDEX.md and per-domain markdown. Use after version closure when requirements, Approved code review, and execution-handoff exist; or in ad-hoc mode when ns-code-coder (or the human) passes an Approved behavioral diff and docs/specs/ already exists. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
 ---
@@ -30,16 +30,16 @@ Detect **Ad-hoc** when the invoker passes mode `ad-hoc` (or equivalent: no `{ver
 
 ## When invoked
 
-- After version closure workflow (post code review) — **Version** mode
+- After version closure workflow (post `Code Review: Approved`) — **Version** mode
 - After ad-hoc coding with review **Approved** and existing `{specs_root}/` — **Ad-hoc** mode
-- **Not** before code review approval (version report or ad-hoc `Approved` verdict)
+- **Not** before code review approval (`Approved` verdict)
 
 ## Prerequisites
 
 ### Version mode
 
 - `{product_root}/docs/versions/{version_san}/requirements.md`
-- `{product_root}/docs/versions/{version_san}/code-review-report.md`
+- Invoker reports `Code Review: Approved` (score ≥ 9) — no `code-review-report.md` required
 - `{product_root}/docs/versions/{version_san}/execution-handoff.md` (tasks completed)
 
 ### Ad-hoc mode

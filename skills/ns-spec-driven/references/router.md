@@ -23,7 +23,7 @@ Map natural-language triggers to **phase** and **worker skill path** (under `.ag
 | --------------- | ------ | ---- |
 | "check requirements", "consistency", Large pipeline | `ns-sdd-analyze-consistency` | After requirements, before tasks |
 
-**Output:** `docs/versions/{version_san}/consistency-report.md`
+**Output:** Consistency status (`Approved` \| `Reproved`) appended to `requirements.md` — no `consistency-report.md`
 
 ## Partition
 

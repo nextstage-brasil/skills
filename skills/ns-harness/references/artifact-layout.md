@@ -29,10 +29,9 @@ Canonical paths for spec-driven planning and delivery artifacts.
 
 | Artifact | Path |
 |----------|------|
-| Requirements | `{product_root}/docs/versions/{version_san}/requirements.md` |
+| Requirements | `{product_root}/docs/versions/{version_san}/requirements.md` (trailing `## Consistency` status from `ns-sdd-analyze-consistency`) |
 | Tasks | `{product_root}/docs/versions/{version_san}/tasks/task-NNN-*.md` |
-| Consistency report | `{product_root}/docs/versions/{version_san}/consistency-report.md` |
-| Code review report | `{product_root}/docs/versions/{version_san}/code-review-report.md` |
+| Execution handoff | `{product_root}/docs/versions/{version_san}/execution-handoff.md` |
 | Commercial budget (internal) | `{product_root}/docs/versions/{version_san}/commercial-budget-internal.md` (header: Sequência + Gerado em) |
 | Commercial budget (client) | `{product_root}/docs/versions/{version_san}/commercial-budget-costumer.md` (optional; header: `{version_san}-costumer`) |
 | Living spec index | `{specs_root}/INDEX.md` |

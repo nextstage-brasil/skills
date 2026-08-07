@@ -104,6 +104,10 @@ Forbidden: specs directly under `cypress/e2e/` without `device/` prefix.
 
 From `{e2e_root}`: `npm run cypress:run` (or docker equivalent documented for the product). Report failures with `ns-code-investigator` if needed.
 
+**SDD version execution:** when called under `execution-handoff.md` /
+`run-implementation`, **write or refactor specs only** — do **not** run the E2E
+suite. The human runs E2E at version end.
+
 ## References
 
 | File                             | When                              |

@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Planning for apps/billing version 2.1.0 is done — eight tasks in docs/versions/2.1.0/tasks/. Generate the execution handoff.",
-      "expected_output": "Agent creates execution-handoff.md with task table (all pending), time tracking section, progress block, and implementer prompt. Does not generate new task files.",
+      "expected_output": "Agent creates execution-handoff.md with task table (short ids task-NNN, Tokens column, Tokens total header), time tracking section, progress block, and implementer prompt. Does not generate new task files.",
       "files": []
     },
     {

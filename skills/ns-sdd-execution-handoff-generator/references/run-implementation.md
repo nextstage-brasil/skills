@@ -27,7 +27,7 @@ before coding.
 1. Read `execution-handoff.md` **in full**
 2. Re-read `{product_root}/AGENTS.md` (and `agents.local.md` if present); complete Session boot from the harness; obey any mandatory product skills named there
 3. Validate **Time tracking (seconds)** section exists; add from template if missing
-4. Read `requirements.md` (overview — do not replan)
+4. Read `requirements.md` (overview — do not replan); confirm Consistency status is `Approved` when present
 5. Load product context: follow **Implementation boot rule** in `../../ns-harness/references/artifact-layout.md`
 6. Identify **Next task** (first `pending`, or resume `in_progress`)
 7. Load harness rules for the task layer
@@ -40,7 +40,7 @@ When `{product_root}/docs/context/gitlab-sync-config.md` exists:
 1. Read `base_branch`, `work_branch`, `protected_branches`
 2. Stop if branches are missing or current branch is protected
 3. Create or checkout `work_branch` once per version before first code task
-4. Record branches in handoff **Notes** when applicable
+4. Record branches in the task **Execution notes** when applicable
 
 ## Per-task loop (step 2)
 
@@ -51,11 +51,15 @@ For each task until scope is done or all tasks complete:
 2. **Read** `tasks/task-NNN-*.md` in full
 3. **Before coding:** re-read `AGENTS.md` (and `agents.local.md` if present); follow Session boot / mandatory product skills for this task
 4. **Implement** per validation criteria (minimal diff, task scope only) — **MUST** dispatch **`coder-agent`** when available (loads `ns-code-coder`); else follow `ns-code-coder` directly. See `../../ns-harness/references/subagent-dispatch.md`.
-5. **Validate** per project rules (Docker tests, i18n, multitenancy, etc.)
-6. **Update handoff — complete:** `Status` → `completed` (or `blocked` + Notes)
+5. **Validate** per project rules (Docker **unit/integration** tests, i18n, multitenancy, etc.)
+   - **Allowed:** unit/integration tests only (e.g. PHPUnit in the test container)
+   - **Forbidden:** run E2E (Cypress or equivalent) during any task — including `e2e`-layer tasks. Writing E2E specs is allowed; **running** them is not. Human runs E2E after all tasks complete.
+6. **Update handoff — complete:** `Status` → `completed` (or `blocked`); fill `Tokens` when known
+   - On `blocked` / waiver / important events: append to the task file `## Execution notes` (relevant only)
    - **GitLab:** sync in_progress → done + spent time after validation
 7. **Recalculate (required):**
    - Row `Time (s)` = `Finished at − Started at`
+   - **Tokens (total)** = sum of `Tokens`
    - `Total task time (s)` = sum of column
    - `Implementation — total (s)` = `Implementation — end − Implementation — start`
    - `Total process time (s)` per handoff formula
@@ -70,9 +74,9 @@ status transitions.
 
 When pausing mid-version:
 
-1. Ensure handoff reflects current progress and session history
+1. Ensure handoff reflects current progress and session history (ultra-short Notes)
 2. If implementation finished this session, fill `Implementation — end` and recalculate totals
-3. Report: tasks done this session, next task, blockers, accumulated seconds
+3. Report: tasks done this session, next task, blockers, accumulated seconds and tokens
 
 ## Closure (steps 4–6)
 
@@ -83,17 +87,24 @@ When all tasks are `completed` or `waived`:
 When the product has frontend navigation changes, present grouping proposals and
 **wait for human approval** before applying.
 
+### Step 4.5 — E2E (human only)
+
+Do **not** run E2E as the agent. Tell the human that E2E is their gate at version
+end (after tasks complete; before or alongside review as they prefer). Agents may
+have written E2E specs earlier — execution of those suites is human-owned.
+
 ### Step 5 — Code review (required)
 
-1. **MUST** invoke `reviewer-agent` when available (else `ns-code-reviewer`) at version closure → `code-review-report.md`. See `../../ns-harness/references/subagent-dispatch.md`.
-2. Update handoff:
+1. **MUST** invoke `reviewer-agent` when available (else `ns-code-reviewer`) at version closure. See `../../ns-harness/references/subagent-dispatch.md`.
+2. Do **not** require `code-review-report.md`. On `Rejected`/`Blocked`, use the reviewer's minimal fix map (agent-oriented) to correct and re-review.
+3. Update handoff:
    - **Version status:** `completed` | `completed_with_caveats` | `blocked_delivery`
    - `Post-implementation review — end` + recalculate **Total process time (s)**
-3. Do not move to `_done/` with unresolved P0 findings without waiver
+4. Do not move to `_done/` with unresolved Critical findings without waiver
 
 ### Step 5.5 — Living specs
 
-When status is `completed` or `completed_with_caveats`:
+When status is `completed` or `completed_with_caveats` and review is `Approved`:
 
 1. Invoke `ns-sdd-living-spec-consolidator`
 2. Note in handoff; fill `Living specs — end`; recalculate totals
@@ -112,7 +123,8 @@ After human confirms (or documented waiver):
 - **Numeric task order** unless explicit dependency in the task file says otherwise
 - **Minimal diff** — current task scope only
 - **No commits** unless human explicitly asks
-- On real blocker: `blocked` + Notes, stop
+- On real blocker: `blocked` + task **Execution notes**, stop
+- **No E2E runs** during task execution — unit/integration only; human runs E2E at the end
 
 ## References
 

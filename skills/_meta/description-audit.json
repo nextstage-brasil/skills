@@ -145,7 +145,7 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Generate and update execution-handoff.md for planned SDD versions \u2014 operational prompt, per-task status table, and time tracking in seconds. Use at the end of planning after all task-NNN-*.md files exist, when tasks exist but handoff is missing, or when updating task status during version implementation. Do NOT use for ad-hoc coding without a version lifecycle, version partitioning (ns-sdd-version-partitioner), or GitLab-only issue execution (ns-execution-gitlab-issue)."
+      "description": "(NS) Generate and update execution-handoff.md for planned SDD versions \u2014 operational prompt, per-task status table, token totals, and time tracking in seconds. Use at the end of planning after all task-NNN-*.md files exist, when tasks exist but handoff is missing, or when updating task status during version implementation. Do NOT use for ad-hoc coding without a version lifecycle, version partitioning (ns-sdd-version-partitioner), or GitLab-only issue execution (ns-execution-gitlab-issue)."
     },
     {
       "name": "ns-code-e2e-tests",
@@ -190,7 +190,7 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate \u2014 even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT use for root-cause debugging (use ns-code-investigator)."
+      "description": "(NS) Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate \u2014 even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT write code-review-report.md. Do NOT use for root-cause debugging (use ns-code-investigator)."
     },
     {
       "name": "ns-code-frontend-design",
@@ -235,7 +235,7 @@
       "has_use": false,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Verify internal consistency of requirements.md and adherence to project rules before task generation. Use after scope confirmation, when the user asks to analyze or validate requirements, or after manual edits to requirements \u2014 automatically between Gate 2 and task generation. Produces consistency-report.md; does not modify requirements. Do NOT generate tasks."
+      "description": "(NS) Verify internal consistency of requirements.md and adherence to project rules before task generation. Use whenever the user asks to analyze or validate requirements, after scope confirmation, or after manual edits to requirements \u2014 also automatically between Gate 2 and task generation. Appends Consistency status (Approved|Reproved) to requirements.md; on Reproved informs the user and stops. Do NOT generate tasks or consistency-report.md."
     },
     {
       "name": "ns-sdd-version-partitioner",
@@ -271,7 +271,7 @@
       "has_use": false,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Consolidate delivered version deltas into living domain specs under docs/specs/ \u2014 INDEX.md and per-domain markdown. Use after version delivery when requirements, code-review-report, and execution-handoff exist \u2014 typically at version closure. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval."
+      "description": "(NS) Consolidate delivered deltas into living domain specs under docs/specs/ \u2014 INDEX.md and per-domain markdown. Use after version closure when requirements, Approved code review, and execution-handoff exist; or in ad-hoc mode when ns-code-coder (or the human) passes an Approved behavioral diff and docs/specs/ already exists. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval."
     },
     {
       "name": "ns-pm-unit-test-task-generator",

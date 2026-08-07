@@ -1,10 +1,10 @@
 ---
 name: ns-code-reviewer
-description: (NS) Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate — even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT use for root-cause debugging (use ns-code-investigator).
+description: (NS) Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate — even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT write code-review-report.md. Do NOT use for root-cause debugging (use ns-code-investigator).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.3"
+  version: "1.4"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -43,7 +43,14 @@ When the invoker passes a working-tree diff only (no `ISSUE_URL`, no version-clo
 
 ### Version closure
 
-When invoked at version closure, save output to `{product_root}/docs/versions/{version_san}/code-review-report.md` using `references/review-report.template.md`. Apply **Score gate**; end the chat response with `Code Review: {Approved|Rejected|Blocked}` so callers can parse the verdict.
+When invoked at version closure:
+
+1. Apply **Score gate**; end the chat response with `Code Review: {Approved|Rejected|Blocked}`.
+2. **Do not** write `code-review-report.md` (or any persistent review report file).
+3. On `Rejected` or `Blocked`: include a **minimal fix map** in the response (see
+   `references/review-fix-map.template.md`) — only data another agent needs to
+   correct the issues. No prose for humans, no positive findings, no history.
+4. On `Approved`: Executive Summary + score + verdict line only (no fix map).
 
 ### Issue review mode
 
@@ -55,6 +62,7 @@ When invoker passes `ISSUE_URL` (or `project_id` + `issue_iid`):
 4. **Verdict (exactly one):** `Approved` | `Rejected` | `Blocked` — apply **Score gate** below.
 5. Post internal GitLab comment via `mcp-gitlab-usage` — first line: `Code Review | YYYY-MM-DD HH:MM (UTC) | Verdict: {Approved|Rejected|Blocked}`
 6. Last line of response to parent: `Code Review: {Approved|Rejected|Blocked}`
+7. On `Rejected`/`Blocked`, keep the GitLab comment to the same minimal fix-map facts.
 
 ## Score gate (all modes)
 
@@ -123,7 +131,7 @@ When the diff touches `agent-api` (or LangGraph runtime paths), load `../ns-lang
 
 ## Required output format
 
-Structure every review as:
+### Approved
 
 ### Executive Summary
 
@@ -131,31 +139,38 @@ Structure every review as:
 - One sentence justifying the score against the score-cap rubric
 - Two-line overall assessment
 
-### Critical Issues
+Then: `Code Review: Approved`
 
-Omit only if none. Logic bugs, security, and AC / behavioral-proof failures. Do **not** list SSoT/DRY/weak-OCP smells here — those are **Warning** under Architecture and Clean Code, enforced by the score cap (see **Smell severity**).
+### Rejected / Blocked
 
-### Architecture and Clean Code Improvements
+### Executive Summary
 
-Refactoring suggestions, component boundaries, patterns.
+- Score 1–10
+- One sentence justifying the score
+- Two-line overall assessment
 
-### Refactored Code
+### Fix map (agent)
 
-Include only when user requests concrete fixes.
+Follow `references/review-fix-map.template.md` — only actionable correction rows.
+Omit positive findings, suggestions-only noise, history, and long prose.
+
+Then: `Code Review: Rejected` or `Code Review: Blocked`
 
 ## Constraints
 
-- **Read-only.** Do not edit, create, or delete files — output is a review report, not a fix
+- **Read-only.** Do not edit, create, or delete product files — including
+  `code-review-report.md`
 - **Not substitutable.** Workflow callers must invoke this skill by name; platform review subagents are not equivalent unless the human explicitly requests them for this run
 - Direct and constructive; no personal criticism
 - Do not rewrite unrelated code
 - Base findings on actual diff and rules read
 - Match project conventions visible in codebase
+- Fix map audience is **another agent**, not a human
 
 ## References
 
 | File                                                 | When                             |
 | ---------------------------------------------------- | -------------------------------- |
-| `references/review-report.template.md`               | Version closure report           |
-| `../ns-harness/references/artifact-layout.md` | Report path                      |
+| `references/review-fix-map.template.md`             | Rejected/Blocked response body   |
+| `../ns-harness/references/artifact-layout.md` | Artifact paths                   |
 | `mcp-gitlab-usage`                                   | Posting internal review comments |
