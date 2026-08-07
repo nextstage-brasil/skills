@@ -87,12 +87,16 @@ All catalog skills were renamed with a global `ns-` prefix. Six SDD planning wor
 | PM face | `pm-requirements-copilot` → `ns-project-manager` |
 | Harness on-disk root | Unchanged: still `{product_root}/.nextstage-harness/` |
 | `alwaysInstall` | Only `ns-harness` — Spec-Driven / prepare come from presets (`spec-driven`, `brownfield`, …) |
-| `project-manager` preset | `ns-project-manager` + `ns-requirements-enricher` (no SDD/code workers) |
+| `project-manager` preset | `ns-project-manager` + `ns-pm-delivery-schedule` + `ns-requirements-enricher` + `ns-commercial-budget` (no SDD/code workers) |
 | `ns-skill-creator` | NextStage wrapper installs as `ns-skill-creator`; upstream anthropics bundle remains at `.agents/skills/skill-creator/` (not pruned) |
 
 **Consumer action:** reinstall via `npx @nextstage-brasil/harness` or `npx skills add nextstage-brasil/skills@<new-name>`. After install, `harness init` / `harness update` removes retired directories when the replacement skill is present (`packages/harness/templates/retired-skills.json`). Preview: `npx @nextstage-brasil/harness prune-retired-skills --dry-run`.
 
-New preset: `--preset project-manager` (`ns-project-manager`, `ns-requirements-enricher`).
+New preset: `--preset project-manager` (`ns-project-manager`, `ns-pm-delivery-schedule`, `ns-requirements-enricher`, `ns-commercial-budget`).
+
+## New skill — `ns-pm-delivery-schedule` (2026-08-07)
+
+Triple productivity delivery schedule: one markdown with PERT + Monte Carlo for productivity scenarios P100 (current h/FP), P85 (50% faster), P50 (85% faster). Section 0 commercial summary + calendar delivery dates. Persists under `docs/versions/{version_san}/pm/`. Reuses `ns-project-manager` `pert_montecarlo.py`. Presets `project-manager` and `full`. Depends on `ns-harness` + `ns-project-manager`.
 
 ## New skill — `ns-commercial-budget` (2026-08-03)
 

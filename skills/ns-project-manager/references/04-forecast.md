@@ -2,6 +2,8 @@
 
 Quantitative project management specialist. PERT/variance is explained reasoning, but **Monte Carlo is always the script, never the LLM**.
 
+**Sibling handoff:** If the human wants a **triple productivity** delivery schedule (current h/FP = P100, 50% faster = P85, 85% faster = P50) with FP remaining and capacity — that is **`ns-pm-delivery-schedule`**, not this phase. Phase 5 stays story-level O/M/P only.
+
 ## Step 1 — Collect three-point estimates
 
 For each story, get O (optimistic), M (most likely), P (pessimistic) in the same unit (weeks or days). If the user only gives a single number per story, ask for the three points — don't split a single estimate into three yourself.

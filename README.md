@@ -58,6 +58,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code
 | `ns-code-best-practices`             | Security headers, compatibility, modernization pass (optional complement)                                                                     |
 | `ns-requirements-enricher`           | Grill-me gap analysis for GitLab issues or chat context                                                                                       |
 | `ns-project-manager`                 | End-to-end PM workflow — clarification through delivery forecast                                                                              |
+| `ns-pm-delivery-schedule`            | Triple productivity delivery schedule (P100 / P85 / P50 h/FP) + Monte Carlo calendar P50/P85/P95                                             |
 | `ns-commercial-budget`               | Commercial budget (product voice) — Features, FP, COSMIC, hours, macro activities, risk margin %                                           |
 | `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
 | `ns-langgraph-agents`                | LangGraph.js runtime — MCP governance, context window, HITL, evals                                                                            |

@@ -19,7 +19,8 @@ Unified project-management skill with a **gated phase pipeline** (Phases 0–5) 
 | Clarification done / user confirms / "proceed with assumptions" | **2** Structuring | `references/01-structuring.md` |
 | "Prioritize", "rank backlog", RICE, WSJF, "what to build first" | **3** Prioritization | `references/02-prioritization.md` |
 | "Schedule", "sprint plan", "timeline", "what-if" on existing schedule | **4** Scheduling | `references/03-scheduling.md` |
-| "Forecast", "when do we deliver", P85/P95, Monte Carlo, three-point estimate | **5** Forecast | `references/04-forecast.md` |
+| "Forecast", "when do we deliver", P85/P95, Monte Carlo, three-point estimate (story-level, no FP productivity scenarios) | **5** Forecast | `references/04-forecast.md` |
+| Cronograma triplo, P100/P85/P50 **produtividade**, FP × h/FP, prazo comercial com três cenários de aceleração | **→ `ns-pm-delivery-schedule`** (not a PM phase) | sibling skill |
 | "Are we on track", risk monitor, sprint health, flow metrics | **6** Risk Monitor | `references/05-risk-monitor.md` |
 | "Status report", "write up for manager/board/leadership" | **7** Status Report | `references/06-status-report.md` |
 | Meeting transcript pasted mid-project, "meeting notes", "action items" | **8** Meeting Digest | `references/07-meeting-digest.md` |
@@ -31,6 +32,8 @@ Unified project-management skill with a **gated phase pipeline** (Phases 0–5) 
 **On-demand modes (6+) skip the pipeline** — they run directly when triggered, reusing context from earlier phases when available.
 
 **Commercial FP / client quote:** route to `ns-commercial-budget`. This skill stays delivery forecast (RICE / sprint / PERT) — not client COSMIC commercial sizing (FP / CFP / hours).
+
+**Triple productivity schedule (FP × h/FP, scenarios P100/P85/P50):** route to `ns-pm-delivery-schedule`. Phase 5 remains story-level PERT only.
 
 ## Phase 0 — Intake
 
