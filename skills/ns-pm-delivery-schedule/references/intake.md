@@ -1,54 +1,77 @@
 # Intake — mandatory inputs
 
-If any required field is missing, send this fill-in once and **stop**. Do not invent FP, productivity, capacity, or start date.
+Ask the human **only** for capacity and start date when missing. Infer the rest
+(ceiling, remaining phases, O/M/P bands). Do not invent FP, productivity, or
+start date / hours-per-day / business-days-per-week.
+
+Never dump a `[FILL IN]` / YAML / key-value form as the main reply.
+
+## Ask the human (only these)
+
+If missing, numbered questions in the human's language (pt_BR default):
+
+1. Quantas horas por dia você aloca neste trabalho? (ex.: 4)
+2. Quantos dias úteis por semana? (ex.: 5)
+3. Qual a data de início? (AAAA-MM-DD — primeiro dia útil de execução)
+
+Also ask once if missing from budget/context: `produtividade_atual_h_fp`,
+`fp_restante`, `version_san` (and `product_root` if ambiguous).
+
+Show a compact **already known** table, then **only** the unanswered questions
+above. Stop and wait.
+
+### Example shape (pt_BR — omit answered items)
 
 ```
-[FILL IN — triple delivery schedule]
+Já tenho do orçamento: version_san, produtividade, FP restante.
+Falta só capacidade e início.
 
-product_root: [path or "."]
-version_san: [e.g. demanda-395-api-mppb]
-persist_path: [default docs/versions/{version_san}/pm/]
+Já preenchido
+| Campo | Valor |
+|-------|-------|
+| … | … |
 
-# Productivity baseline (P100)
-produtividade_atual_h_fp: [e.g. 6.94]
-
-# Remaining work (FP)
-fp_restante: [number]
-# Optional: per-slice FP + what client gets per slice
-# fp_slices: | slice | FP | entregável |
-
-# Capacity
-horas_por_dia: [e.g. 4]
-dias_uteis_por_semana: [e.g. 5]
-data_inicio: [YYYY-MM-DD — first business day of execution]
-teto_dias_uteis: [optional integer or "none"]
-
-# Remaining scope phases (exclude work already done)
-# phase_id | phase_name | fp_or_hours_share | notes
-# e.g. SDD | Spec-driven remaining | … |
-#      IMP | Implementation | … |
-#      VAL | Human validation | … |
-#      DEP | Deploy | … |
-
-# Three-point bands (same relative O/M/P across scenarios; absolute hours scale with h/FP)
-# If omitted, ask — do not invent. Quick mode: mark [ASSUMPTION] with stated default bands.
-# phase_id | O_factor | M_factor | P_factor
-# (factors multiply the scenario's phase hours as O/M/P, or give absolute O/M/P hours for P100)
-
-# Optional experiential estimate (human lived harness — separate block, not a productivity scenario)
-estimativa_experiencial: [free text or "none"]
+Perguntas
+1. Quantas horas por dia você aloca? (ex.: 4)
+2. Quantos dias úteis por semana? (ex.: 5)
+3. Qual a data de início? (AAAA-MM-DD)
 ```
 
-## Quick mode
+## Infer (do not ask)
 
-On `quick mode` / `proceed with assumptions`:
+Mark inferred values `[ASSUMPTION]` in Premissas.
 
-- Still require: `produtividade_atual_h_fp`, `fp_restante`, capacity, `data_inicio`.
-- Phase split + O/M/P may be `[ASSUMPTION]` — state them in the doc Premissas.
-- Never invent R$ or commercial rates.
+| Field | How to infer |
+|-------|----------------|
+| `teto_dias_uteis` | Default `none` (no ceiling) unless human already stated one |
+| Remaining phases | From commercial budget macros / remaining scope — group into a short phase list (e.g. SDD, implementation+auto tests, UAT, deploy) with FP or % shares that sum to `fp_restante` |
+| O/M/P bands | Default factors **0.8 / 1.0 / 1.4** on each phase's P100 hours |
+| `persist_path` | `docs/versions/{version_san}/pm/` |
+| `estimativa_experiencial` | Omit — do not ask; include only if human volunteers it unprompted |
 
-## Optional inputs
+Never invent R$ or commercial rates. Never invent `produtividade_atual_h_fp`,
+`fp_restante`, `horas_por_dia`, `dias_uteis_por_semana`, or `data_inicio`.
 
-- Links to existing `commercial-budget-*.md` for Section 0 context (read if present; do not regenerate FP).
-- Human override of acceleration factors (default 50% / 85% faster only).
+## Required from human or budget (internal)
+
+| Field | Source |
+|-------|--------|
+| `product_root` | Ask once if unclear; often `.` |
+| `version_san` | Budget / ask once |
+| `produtividade_atual_h_fp` | Budget / ask once |
+| `fp_restante` | Budget / ask once |
+| `horas_por_dia` | **Ask** |
+| `dias_uteis_por_semana` | **Ask** |
+| `data_inicio` | **Ask** |
+
+## Optional inputs (never lead with these)
+
+- Human override of ceiling, phase split, O/M/P, or acceleration factors — only if they volunteer.
 - Explicit choice of official commitment scenario (default: calendar P85 of productivity P100).
+- Links to `commercial-budget-*.md` (read if present; do not regenerate FP).
+
+## Forbidden in the intake reply
+
+- Asking about teto, fases, O/M/P, or estimativa experiencial by default
+- Leading with a `[FILL IN — …]` code block
+- Presenting inferred capacity/start as facts without human answers

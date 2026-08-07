@@ -16,7 +16,7 @@
     {
       "id": 3,
       "prompt": "Preciso do prazo P50/P85/P95 e dos três cenários de produtividade pro restante da versão orcamento-relatorios-v2. Só tenho FP e produtividade — não quero orçamento em R$ nem forecast por user story.",
-      "expected_output": "Does not route to ns-commercial-budget for R$ and does not run story-only Phase 5. Sends intake fill-in for missing capacity/start/phases (or asks once). Does not invent FP/productivity/start. No R$.",
+      "expected_output": "Does not route to ns-commercial-budget for R$ and does not run story-only Phase 5. Asks only for missing hours/day, business days/week, and start date (numbered questions; no FILL IN; no teto/phases/O/M/P/experiential questions). Infers phases and O/M/P as [ASSUMPTION]. Does not invent FP/productivity/start. No R$.",
       "files": []
     }
   ]

@@ -14,7 +14,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.2"
 depends:
   - ns-harness
   - ns-project-manager
@@ -52,7 +52,14 @@ Resolve `{product_root}` via `../ns-harness/references/harness-discovery.md` + `
 
 ### 1. Intake
 
-Read `references/intake.md`. Collect mandatory inputs (fill-in template if any missing; stop — do not invent).
+Read `references/intake.md`.
+
+Ask the human **only** for missing capacity + start (`horas_por_dia`,
+`dias_uteis_por_semana`, `data_inicio`) — clear numbered questions, human
+language (pt_BR default). Infer ceiling, phases, and O/M/P (mark
+`[ASSUMPTION]`). Do not invent productivity, FP, or capacity/start. Do **not**
+use a `[FILL IN]` form. Do **not** ask for estimativa experiencial unless the
+human volunteers it.
 
 ### 2. Compute
 
