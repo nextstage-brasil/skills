@@ -4,7 +4,7 @@ description: (NS) Generate and update execution-handoff.md for planned SDD versi
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
 ---
@@ -87,29 +87,38 @@ start implementation via `references/run-implementation.md`.
 
 ## Status updates (during implementation)
 
-When a task starts, completes, blocks, or is waived:
+Task starts, completes, blocks, or waived:
 
-1. Locate the task row in **Task status**
+1. Locate task row in **Task status**
 2. Update `Status`, `Started at` (on `in_progress`), `Finished at` (on
-   `completed`), `Time (s)` (`Finished at − Started at`), `Tokens` (when known),
+   `completed`), `Time (s)` (`Finished at − Started at`), `Tokens`,
    `Updated at`
-3. Recalculate **Tokens (total)** = sum of `Tokens` column
-4. Recalculate **Progress** (`Next task` = first `pending` or `in_progress`)
-5. Recalculate **Time tracking (seconds)**:
+3. **`Tokens` required before `completed`.** Sources (priority):
+   1. Usage/tokens from Task result / UI of `coder-agent` + other subagents
+      for that task
+   2. Parent tokens for that task loop if platform surfaces them
+   3. Nothing exposed: ask human once; if declined, `~N` estimate + task
+      `## Execution notes` line `tokens: ~N (estimated)`
+   **Forbidden:** `0` on `completed` task that did LLM work
+4. Recalculate **Tokens (total)** = sum of `Tokens` column (integers; `~N`
+   counts as `N`)
+5. Recalculate **Progress** (`Next task` = first `pending` or `in_progress`)
+6. Recalculate **Time tracking (seconds)**:
    - `Implementation — start` = earliest filled `Started at`
    - `Implementation — end` = latest filled `Finished at` when present
    - `Implementation — total (s)` = end − start
    - `Total task time (s)` = sum of `Time (s)` column
    - `Total process time (s)` = `Planning — total (s)` + `Implementation — total (s)` + (`Final delivery — end` − `Implementation — end` when present)
    - `Last recalculated` = current timestamp
-6. Update **Version status** (see template)
-7. Optionally append **Session history** (Date + ultra-short Notes only)
-8. Important notes (blockers, waivers): append to the task file
-   `## Execution notes` — relevant items only; never a Notes column in handoff
+7. Update **Version status** (see template)
+8. Optionally append **Session history** (Date + ultra-short Notes only)
+9. Important notes (blockers, waivers): append to task file
+   `## Execution notes` — relevant only; never Notes column in handoff
 
-At version closure (review, living specs, `_done/` move), also fill:
-`Post-implementation review — end`, `Living specs — end` (when applicable),
-`Final delivery — end`, and recalculate `Total process time (s)`.
+Version closure (review, living specs, `_done/` move): fill
+`Post-implementation review — end`, `Review — tokens` (or Session history
+note — **not** last task `Tokens` column), `Living specs — end` (when
+applicable), `Final delivery — end`; recalculate `Total process time (s)`.
 
 ### Allowed task statuses
 

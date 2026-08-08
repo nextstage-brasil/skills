@@ -35,7 +35,7 @@ Planning is complete — **execute, do not replan**.
 ### Execution rules
 
 1. Start with the **first `pending` task** in the table below (numeric order).
-2. Session boot once at version start (`AGENTS.md` + harness). Re-read only if `agents.local.md` or harness rules change.
+2. Session boot once at version start (`AGENTS.md` + harness). No per-task re-read — only if `AGENTS.md`, `agents.local.md`, or harness rules change. Fresh `coder-agent` = own cold-start boot.
 3. Read the full `task-NNN-*.md` before coding.
 4. Implement **only** under `{product_root}/` (code) and harness rules (read-only). Dispatch `coder-agent` / `ns-code-coder` in **SDD handoff mode** (implement + unit/integration; **no** per-task review).
 5. Validate all **validation criteria** before marking `completed`.
@@ -73,6 +73,7 @@ inspect other products in a monorepo unless scope rules allow.
 | Implementation — total (s) | 0 |
 | Total task time (s) | 0 |
 | Post-implementation review — end | — |
+| Review — tokens | — |
 | Living specs — end | — |
 | Final delivery — end | — |
 | **Total process time (s)** | {planning_total_seconds} |
@@ -123,10 +124,10 @@ Allowed values: `pending` | `in_progress` | `completed` | `blocked` | `waived`
 ## How to update this file
 
 1. **Task start:** `Status` → `in_progress`; fill `Started at` (ISO local); update `Updated at`; increment **In progress**; optionally append session history.
-2. **Task complete:** `Status` → `completed`; fill `Finished at`; `Time (s)` = `Finished at − Started at`; fill `Tokens` when known; update **Tokens (total)** = sum of `Tokens`; update **Progress** and **Next task**; sum **Total task time (s)**.
+2. **Task complete:** Collect **Tokens** first (required before `completed`). Sources (priority): (1) usage/tokens from Task result / UI of `coder-agent` and any other subagents for that task; (2) parent tokens attributable to that task loop if the platform surfaces them; (3) if nothing exposed — ask human once; if human declines, write best estimate with `~` prefix and one line in task `## Execution notes`: `tokens: ~N (estimated)`. **Forbidden:** leave `0` on a `completed` task that did LLM work. Then: `Status` → `completed`; fill `Finished at`; `Time (s)` = `Finished at − Started at`; write `Tokens`; update **Tokens (total)** = sum of `Tokens` column (integers; treat `~N` as `N`); update **Progress** and **Next task**; sum **Total task time (s)**.
 3. **Recalculate aggregates (required):** `Implementation — total (s)`; **Total process time (s)** per formula; `Last recalculated`.
 4. **Blocked:** `Status` → `blocked`; reason in the task file **Execution notes**; set version `blocked` if blocking.
 5. **Resume:** `blocked` → `in_progress` when resolved.
-6. **Version closure:** fill review / living specs / final delivery timestamps; recalculate **Total process time (s)**.
+6. **Version closure:** fill review / living specs / final delivery timestamps; register **review tokens** in **Time tracking** (`Review — tokens`) or **Session history** (version-level note) — **do not** add them to the last task's `Tokens` column; recalculate **Total process time (s)**.
 
 **Version status values:** `not_started` | `in_progress` | `blocked` | `implementation_complete` | `blocked_delivery` | `completed_with_caveats` | `completed`

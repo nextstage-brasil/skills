@@ -10,7 +10,7 @@
     {
       "id": 2,
       "prompt": "Continue implementing apps/crm version 1.3.0 — task 003 just passed validation. Update the handoff.",
-      "expected_output": "Agent marks task 003 completed with timestamps, recalculates Progress and Total process time (s), sets Next task to 004.",
+      "expected_output": "Agent marks task 003 completed with timestamps and Tokens filled (forbidden 0 if LLM work), recalculates Progress, Tokens (total), and Total process time (s), sets Next task to 004.",
       "files": []
     },
     {
