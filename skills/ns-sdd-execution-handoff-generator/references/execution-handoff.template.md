@@ -35,17 +35,18 @@ Planning is complete — **execute, do not replan**.
 ### Execution rules
 
 1. Start with the **first `pending` task** in the table below (numeric order).
-2. Before coding each task: re-read `AGENTS.md` (and `agents.local.md` if present); complete Session boot from the harness.
+2. Session boot once at version start (`AGENTS.md` + harness). Re-read only if `agents.local.md` or harness rules change.
 3. Read the full `task-NNN-*.md` before coding.
-4. Implement **only** under `{product_root}/` (code) and harness rules (read-only).
+4. Implement **only** under `{product_root}/` (code) and harness rules (read-only). Dispatch `coder-agent` / `ns-code-coder` in **SDD handoff mode** (implement + unit/integration; **no** per-task review).
 5. Validate all **validation criteria** before marking `completed`.
-6. **Tests during task execution:** unit/integration only (e.g. PHPUnit). **Forbidden:** run any E2E suite (Cypress/`cypress:run`/`cypress:open`/equivalent). E2E runs are **human-only at version end** after all tasks complete.
-7. **Update this file** when starting (`in_progress`), completing (`completed`), or blocking (`blocked`) each task.
-8. Update **Version status**, **Progress**, and **Tokens (total)** after each task.
-9. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-code-reviewer`) before declaring the version ready; remind the human to run E2E.
-10. **GitLab:** implement only on the registered `work_branch`; MR target per config.
-11. **GitLab status:** per task, sync `backlog` → `in_progress` → `done` — never skip `in_progress` (`ns-gitlab-board-sync`).
-12. Do not stop to replan unless a real blocker is documented in the task's **Execution notes**.
+6. **Tests during task execution:** unit/integration only (e.g. PHPUnit). **Forbidden:** run any E2E suite (Cypress/`cypress:run`/`cypress:open`/equivalent). E2E is **human-only at version end** after all tasks complete.
+7. **Forbidden during tasks:** `reviewer-agent` / `ns-code-reviewer` — review **once** after all tasks (rule 10).
+8. **Update this file** when starting (`in_progress`), completing (`completed`), or blocking (`blocked`) each task.
+9. Update **Version status**, **Progress**, and **Tokens (total)** after each task.
+10. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-code-reviewer`) before declaring the version ready; remind the human to run E2E.
+11. **GitLab:** implement only on the registered `work_branch`; MR target per config.
+12. **GitLab status:** per task, sync `backlog` → `in_progress` → `done` — never skip `in_progress` (`ns-gitlab-board-sync`).
+13. Do not stop to replan unless a real blocker is documented in the task's **Execution notes**.
 
 **`waived` tasks:** only with explicit human waiver recorded in that task's **Execution notes**.
 

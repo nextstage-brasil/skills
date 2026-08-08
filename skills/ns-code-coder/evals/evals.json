@@ -18,6 +18,12 @@
       "prompt": "Add CPF mask to the registration form UserForm in the frontend module.",
       "expected_output": "Agent reads UserForm and project frontend rules, implements mask with data-testid if conventions require, minimal scope, invokes ns-code-reviewer only, review loop up to 3 rounds (pass ≥9/10); after Approved, conditionally runs ns-sdd-living-spec-consolidator ad-hoc if docs/specs/ exists; final report with mandatory verdict and Living specs fields.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "SDD handoff mode: implement docs/versions/2.8.2/tasks/task-007-*.md under execution-handoff — parent said implement only, review at version closure.",
+      "expected_output": "Implement task scope; unit/integration only; NO reviewer-agent / ns-code-reviewer; NO living-spec consolidator; report files/tests/blockers to parent; no Code Review: line.",
+      "files": []
     }
   ]
 }

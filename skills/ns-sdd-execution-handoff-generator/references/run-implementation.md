@@ -49,11 +49,13 @@ For each task until scope is done or all tasks complete:
 1. **Update handoff — start:** `Status` → `in_progress`; `Started at` → now; `Updated at` → now
    - **GitLab:** if sync config exists, run `ns-gitlab-board-sync` (task start: backlog → in_progress) **before** coding
 2. **Read** `tasks/task-NNN-*.md` in full
-3. **Before coding:** re-read `AGENTS.md` (and `agents.local.md` if present); follow Session boot / mandatory product skills for this task
-4. **Implement** per validation criteria (minimal diff, task scope only) — **MUST** dispatch **`coder-agent`** when available (loads `ns-code-coder`); else follow `ns-code-coder` directly. See `../../ns-harness/references/subagent-dispatch.md`.
+3. **Before coding:** Session boot from Bootstrap step 1 — re-read `AGENTS.md` / rules **only** if `agents.local.md` or harness rules changed
+4. **Implement** per validation criteria (minimal diff, task scope only) — **MUST** dispatch **`coder-agent`** when available (loads `ns-code-coder`); else `ns-code-coder` direct. See `../../ns-harness/references/subagent-dispatch.md`.
+   - **Dispatch must state SDD handoff mode:** this task only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-code-reviewer`; **do not** run living specs; review = **Step 5** only.
 5. **Validate** per project rules (Docker **unit/integration** tests, i18n, multitenancy, etc.)
-   - **Allowed:** unit/integration tests only (e.g. PHPUnit in the test container)
-   - **Forbidden:** run E2E (Cypress or equivalent) during any task — including `e2e`-layer tasks. Writing E2E specs is allowed; **running** them is not. Human runs E2E after all tasks complete.
+   - **Allowed:** unit/integration only (e.g. PHPUnit in test container)
+   - **Forbidden:** run E2E (Cypress or equivalent) during any task — including `e2e`-layer tasks. Writing E2E specs OK; **running** them not. Human runs E2E after all tasks complete.
+   - **Forbidden:** per-task / mid-version code review — wait for Step 5
 6. **Update handoff — complete:** `Status` → `completed` (or `blocked`); fill `Tokens` when known
    - On `blocked` / waiver / important events: append to the task file `## Execution notes` (relevant only)
    - **GitLab:** sync in_progress → done + spent time after validation
@@ -119,12 +121,13 @@ After human confirms (or documented waiver):
 ## Critical rules
 
 - **Always** update `execution-handoff.md` when task status changes
-- **AGENTS first** — Session boot / re-read `AGENTS.md` (+ `agents.local.md`) before coding; do not rely on memory from earlier in the session
+- **AGENTS first** — Session boot once in Bootstrap (step 1); no full `AGENTS.md` / rule re-read per task unless those files changed
 - **Numeric task order** unless explicit dependency in the task file says otherwise
 - **Minimal diff** — current task scope only
 - **No commits** unless human explicitly asks
 - On real blocker: `blocked` + task **Execution notes**, stop
-- **No E2E runs** during task execution — unit/integration only; human runs E2E at the end
+- **No E2E runs** during tasks — unit/integration only; human runs E2E at end
+- **No per-task review** — `coder-agent` / `ns-code-coder` must not call review gate; **only** Step 5 invokes `reviewer-agent` / `ns-code-reviewer`
 
 ## References
 

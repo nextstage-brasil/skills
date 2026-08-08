@@ -5,9 +5,11 @@ Keep the active window focused. Prefer **disk artifacts** over pasting large doc
 ## Base load (every SDD session)
 
 1. Parent `ns-spec-driven` SKILL.md (already loaded).
-2. Harness discovery + artifact-layout pointers.
+2. Harness discovery + artifact-layout — **once**/session (`AGENTS.md`, architecture/project rules).
 3. `{harness_root}/rules/architecture-rules.md` when implementing.
 4. **One** version folder: `docs/versions/{version_san}/` for the active version only.
+
+Do **not** re-load full rule corpus per task unless those files changed.
 
 ## On-demand load
 
@@ -19,16 +21,19 @@ Keep the active window focused. Prefer **disk artifacts** over pasting large doc
 | GitLab execution | `docs/context/gitlab-sync-config.md` |
 | Active task | Single `tasks/task-NNN-*.md` + `execution-handoff.md` |
 | Living domain rules | One `docs/specs/{domain}.md` relevant to the task |
+| Test fixtures | `grep` / `head` — no full fixture dumps |
 
 ## Never
 
 - Load **two or more** full `requirements.md` from different versions in one session.
 - Paste entire living spec corpus into context.
 - Re-read completed task files unless debugging.
+- Mid-version / per-task code review during `run-implementation` (version closure only).
 
 ## Worker delegation
 
-When delegating, pass **paths and phase goal** — let the worker skill load its own references.
+When delegating, pass **paths and phase goal** — worker skill loads its own references.
+For coding under handoff: state **SDD handoff mode** (implement only; parent owns review).
 
 ## Missing context docs
 

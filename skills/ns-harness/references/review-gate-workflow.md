@@ -2,7 +2,9 @@
 
 Fixed workflow for implementation skills that close with a code review. **Not** "run any review" — only the named skill `ns-code-reviewer` (**MUST** via harness bridge `reviewer-agent` when available — `subagent-dispatch.md`).
 
-Callers: `ns-code-coder`, `ns-code-autonomous` (standalone closure), `ns-execution-gitlab-issue` (Phase 4). Subagents dispatched as `C2` inherit the same gate from `ns-code-coder`.
+Callers: `ns-code-coder` (ad-hoc / C2), `ns-code-autonomous` (standalone closure), `ns-execution-gitlab-issue` (Phase 4), `run-implementation` Step 5 (SDD version closure). `C2` under `ns-code-autonomous` inherits gate from `ns-code-coder`.
+
+**Exception — SDD handoff tasks:** `ns-code-coder` under `execution-handoff` / `run-implementation` **must not** invoke this gate per task. Parent runs **once** at version closure (Step 5).
 
 ## Invocation (only allowed path)
 

@@ -82,6 +82,8 @@ Per-skill detail lives in each `SKILL.md` routing section.
 | `C2` | review | `REV` (`reviewer-agent` / `ns-code-reviewer` only) |
 | `S` | small / quick | `C` via `coder-agent` (**MUST** when available) |
 | `S` | version + handoff | `H` → `C` or `A` (**MUST** `coder-agent` for coding workers when available) |
+| `H` | per-task coding | `C` implement only — no per-task `REV` (SDD handoff) |
+| `H` | all tasks done | `REV` version closure (`run-implementation` Step 5) |
 | `I` | diagnosis complete | User (no auto-dispatch to `C`) |
 | User | implement proposed fix | Re-enter entry router (usually `C`) |
 
@@ -124,7 +126,9 @@ flowchart TD
 
   S -->|small / quick| C
   S -->|version + handoff| H[ns-sdd-execution-handoff-generator]
-  H --> C
+  H -->|per-task SDD| Cimpl[coder implement only]
+  Cimpl --> H
+  H -->|version closure| REV
   H --> A
 
   I -->|root cause + fix proposal| U2[User decision]
