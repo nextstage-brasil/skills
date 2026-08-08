@@ -114,6 +114,7 @@ Details: `references/auto-sizing.md`, `references/router.md`.
 Chat with the human in short, natural language. **Read `references/human-communication.md` before any human gate or boot confirm.**
 
 - Name the next **deliverable** ("requirements document", "task files") — not internal phases ("Specify", "Clarify").
+- Chat must stand alone: explain highlights in plain language; document IDs only after the meaning (see **Gate 1 highlights** in that file).
 - Never use `Reply:`, `Premise:`, or "go for Specify".
 - Caveman / artifact-compress applies to **files only** — never to chat.
 

@@ -1,6 +1,6 @@
 ---
 name: ns-harness-agents-md
-description: (NS) Generate or refresh project AGENTS.md plus CLAUDE.md (AGENTS.md + .claude/agents pointers) after harness install. Use for "write AGENTS.md", bootstrap agent entry point, replace harness stub, or configure Cursor/Claude project rules. Do NOT copy the harness template verbatim. Do NOT use for architecture-rules, reverse business specs, or brownfield maps.
+description: (NS) Generate or refresh project AGENTS.md plus CLAUDE.md (Rules boot + AGENTS.md + .claude/agents) after harness install. Use for "write AGENTS.md", bootstrap agent entry point, replace harness stub, or configure Cursor/Claude project rules. Do NOT copy the harness template verbatim. Do NOT use for architecture-rules, reverse business specs, or brownfield maps.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -13,7 +13,7 @@ depends:
 
 Produce the **project entry document** for coding agents: `{product_root}/AGENTS.md` tailored to what is actually installed and detected in the repo — not the generic harness scaffold template.
 
-Then write `{product_root}/CLAUDE.md` pointing at `AGENTS.md` and project subagents (see Step 5).
+Then write `{product_root}/CLAUDE.md` with the fixed Rules boot template (see Step 5).
 
 ## Design principles
 
@@ -107,10 +107,24 @@ Writing rules:
 Write `{product_root}/CLAUDE.md` with **exactly**:
 
 ```markdown
-- Read: @AGENTS.md
-- Project-configured subagents: @.claude/agents
+# Rules
 
-Attention: they may or may not define their own model. When invoking, use them.
+CRITICAL — NO EXCEPTIONS.
+
+Before any work: read `AGENTS.md` full → load every file it requires → follow its flow.
+
+Must load:
+- `AGENTS.local.md` (every session / every turn)
+- all `alwaysApply: true` rules (`.nextstage-harness/rules/`)
+- any NON-NEGOTIABLE / FIRST ACTION file for the task
+
+No skip. No defer. No memory-only. Missing file → stop, ask human.
+
+Then skills / subagents / task as AGENTS.md says.
+
+## Subagents
+
+`@.claude/agents` — use them; model optional per agent.
 ```
 
 No other content. If the file had extra content, replace entirely unless the user asked to preserve something specific.
@@ -144,7 +158,7 @@ When updating existing `AGENTS.md`:
 - [ ] `{product_root}` is relative (`.` or a monorepo-relative path — never an absolute machine path)
 - [ ] Docker MUST NOT present; PHPUnit only if PHP evidenced
 - [ ] SDD chain uses only installed skills
-- [ ] `CLAUDE.md` matches Step 5 (AGENTS.md + `.claude/agents` pointers) — no compress
+- [ ] `CLAUDE.md` matches Step 5 (Rules boot + AGENTS.md + `.claude/agents`) — no compress
 - [ ] No stack/module deep-dive (belongs in `architecture-rules.md`)
 - [ ] Line count ≤ 130 (ideally 95–110)
 

@@ -8,11 +8,13 @@ Human confirmation gates for spec-driven workflows.
 
 - If `requirements.md` does not exist: generate via `ns-sdd-requirements-generator` and **stop** until the human confirms.
 - If it exists but was not explicitly validated: **stop** and ask for confirmation (`yes` / explicit approval).
-- Example ask: "Requirements are at `{path}`. Confirm them so I can continue, or tell me what to change."
+- Chat must be self-contained: plain-language highlights and questions; document IDs only in parentheses after the meaning — see `../../ns-spec-driven/references/human-communication.md` (**Gate 1 highlights**).
+- Example ask shape: "Requirements are at `{path}`. [plain-language points / open decisions]. Confirm them, or tell me what to change."
 
 ## Gate 2 — Scope (`scope_confirmed`) {#gate-2-scope}
 
 - Present a summary of Features (with layer counts when applicable) and **stop** until the human confirms.
+- Use feature titles in words; do not lead with `Feature 00N` alone.
 - Example ask: "Here is the feature/scope summary. OK to proceed, or what should change?"
 
 ## Consistency analysis {#consistency-analysis}

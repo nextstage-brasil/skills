@@ -18,14 +18,28 @@ export const DOCS_LAYOUT_DIRS = [
 export const AGENTS_SKILLS_DIR = join(AGENTS_HOME, 'skills');
 
 /**
- * Claude Code project entry (`CLAUDE.md`). Points at AGENTS.md and project subagents.
+ * Claude Code project entry (`CLAUDE.md`). Boot rules + AGENTS.md + subagents.
  * Written by scaffold and `harness agents-md`.
  */
 export const CLAUDE_MD_CONTENT = `\
-- Read: @AGENTS.md
-- Project-configured subagents: @.claude/agents
+# Rules
 
-Attention: they may or may not define their own model. When invoking, use them.
+CRITICAL — NO EXCEPTIONS.
+
+Before any work: read \`AGENTS.md\` full → load every file it requires → follow its flow.
+
+Must load:
+- \`AGENTS.local.md\` (every session / every turn)
+- all \`alwaysApply: true\` rules (\`.nextstage-harness/rules/\`)
+- any NON-NEGOTIABLE / FIRST ACTION file for the task
+
+No skip. No defer. No memory-only. Missing file → stop, ask human.
+
+Then skills / subagents / task as AGENTS.md says.
+
+## Subagents
+
+\`@.claude/agents\` — use them; model optional per agent.
 `;
 
 export { DEFAULT_AGENTS };

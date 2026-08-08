@@ -213,9 +213,12 @@ try {
   assert(!agentsMd.skipped, 'agents-md should write files');
   assert(exists(join(tempDir, 'AGENTS.md')), 'AGENTS.md missing');
   const claudeMd = readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8');
-  assert(claudeMd.includes('@AGENTS.md'), 'CLAUDE.md must point to AGENTS.md');
+  assert(claudeMd.includes('# Rules'), 'CLAUDE.md must start with Rules section');
+  assert(claudeMd.includes('AGENTS.md'), 'CLAUDE.md must require AGENTS.md');
+  assert(claudeMd.includes('AGENTS.local.md'), 'CLAUDE.md must require AGENTS.local.md');
+  assert(claudeMd.includes('.nextstage-harness/rules/'), 'CLAUDE.md must require alwaysApply harness rules');
   assert(claudeMd.includes('@.claude/agents'), 'CLAUDE.md must point to project subagents');
-  assert(claudeMd.includes('own model'), 'CLAUDE.md must note subagent model overrides');
+  assert(claudeMd.includes('model optional'), 'CLAUDE.md must note subagent model is optional');
   assert(readFileSync(join(tempDir, 'AGENTS.md'), 'utf8').includes('ns-harness'), 'AGENTS.md should list installed skill');
 
   // 7. sync absorbs orphan .cursor/rules/*.mdc into canonical + manifest

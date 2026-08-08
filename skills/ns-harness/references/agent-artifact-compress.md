@@ -14,7 +14,7 @@ Apply **caveman ultra** compression to every **agent-facing** prepare/worker out
 | `docs/context/system-reverse-spec.agent.md` | **Yes** |
 | `AGENTS.md` | **Yes** |
 | `docs/context/system-reverse-spec.md` | **No** — human body |
-| `CLAUDE.md` | **No** — AGENTS.md + `.claude/agents` pointers only |
+| `CLAUDE.md` | **No** — fixed boot template (Rules + AGENTS.md + `.claude/agents`) |
 | `**/templates/**/*.md`, `**/*.template.md`, `**/*-template.md`, `**/*.stub.md` | **No** — copy-paste models; preserve placeholders and example prose |
 
 ## Mandate

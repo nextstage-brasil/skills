@@ -6,7 +6,7 @@ Read-only scan before drafting project `AGENTS.md`. Skip sections with no signal
 
 - [ ] Existing `AGENTS.md` — preserve hand-edited sections on refresh
 - [ ] `agents.local.md` at `{product_root}` (case-insensitive) — note present/absent for layout row; do not copy contents into `AGENTS.md`
-- [ ] Existing `CLAUDE.md` — will be replaced with AGENTS.md + `.claude/agents` pointers
+- [ ] Existing `CLAUDE.md` — will be replaced with Step 5 boot template (Rules + AGENTS.md + `.claude/agents`)
 - [ ] `README.md` — project name, summary, setup hints
 - [ ] Monorepo layout — `apps/`, `packages/`, which folder is `{product_root}`
 
