@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Review my uncommitted changes in the auth module before I open a PR.",
-      "expected_output": "Agent re-reads AGENTS.md (and agents.local.md if present) and judges against its orders, runs git diff, outputs Executive Summary, Critical Issues, and improvements with severity ordering.",
+      "expected_output": "Agent does Session boot once for this reviewer invocation (AGENTS.md + agents.local.md if present); if already booted same agent run and files unchanged, does not re-read; judges against AGENTS orders, runs git diff, outputs Executive Summary, Critical Issues, and improvements with severity ordering.",
       "files": []
     },
     {

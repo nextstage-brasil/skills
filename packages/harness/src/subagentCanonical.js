@@ -18,10 +18,10 @@ export function buildDefaultSubagentBody(entry) {
 
 Thin skill bridge — do not invent a separate workflow. The skill below is the source of truth.
 
-1. Read \`AGENTS.md\` at the product root in full (and \`agents.local.md\` if present).
+1. Begin Session boot at bridge start: Read \`AGENTS.md\` at the product root in full (and \`agents.local.md\` if present).
 2. Read \`.nextstage-harness/rules/architecture-rules.md\` when that file exists.
 3. Read \`.nextstage-harness/rules/project-rules.md\` when that file exists.
-4. Read and follow \`${skillPath}\` in full — run that skill's workflow exactly.
+4. Read and follow \`${skillPath}\` in full — run that skill's workflow exactly (skill completes remaining Session boot steps via harness-discovery when not yet done).
 5. Honor every gate, handoff, and review contract defined in the skill. Do not substitute platform Task personas for named skill steps.
 `;
 }

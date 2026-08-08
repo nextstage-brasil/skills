@@ -8,7 +8,7 @@ Callers: `ns-code-coder` (ad-hoc / C2), `ns-code-autonomous` (standalone closure
 
 ## Invocation (only allowed path)
 
-1. **MUST** dispatch harness project agent `reviewer-agent` when available — see `subagent-dispatch.md`. Bridge loads `AGENTS.md` then `ns-code-reviewer`. Inline `Skill(ns-code-reviewer)` while bridge present = forbidden.
+1. **MUST** dispatch harness project agent `reviewer-agent` when available — see `subagent-dispatch.md`. Bridge begins Session boot at cold start (`AGENTS.md` then `ns-code-reviewer`). Inline `Skill(ns-code-reviewer)` while bridge present = forbidden.
 2. **Else** (bridge missing) read `../ns-code-reviewer/SKILL.md` and follow its workflow for the active mode (ad-hoc diff, version closure, or Issue review).
 3. Reviewer run = this skill (via bridge or direct) — not paraphrase, not platform persona that "acts like" reviewer.
 

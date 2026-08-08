@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Product apps/billing-api/ — add nullable cancelled_at timestamp column to connects table via migration.",
-      "expected_output": "Agent re-reads AGENTS.md (and agents.local.md if present) and obeys its orders, reads existing migrations/models, creates minimal migration, no SDD version artifacts, no commit unless asked, invokes ns-code-reviewer only (no Task review substitutes), runs mandatory review loop up to 3 rounds with re-review after Critical fixes; after Approved, conditionally invokes ns-sdd-living-spec-consolidator ad-hoc only if docs/specs/ exists and diff is behavioral; reports skill/reviewer/round/score, Code Review: verdict, and Living specs field.",
+      "expected_output": "Agent does Session boot once (AGENTS.md + agents.local.md if present) on cold start and obeys orders; mid-session no full re-read unless those files changed; reads existing migrations/models, creates minimal migration, no SDD version artifacts, no commit unless asked, invokes ns-code-reviewer only (no Task review substitutes), runs mandatory review loop up to 3 rounds with re-review after Critical fixes; after Approved, conditionally invokes ns-sdd-living-spec-consolidator ad-hoc only if docs/specs/ exists and diff is behavioral; reports skill/reviewer/round/score, Code Review: verdict, and Living specs field.",
       "files": []
     },
     {

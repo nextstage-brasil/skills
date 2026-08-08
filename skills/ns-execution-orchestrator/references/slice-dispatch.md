@@ -12,7 +12,7 @@ Use when dispatching `coder-agent` or a fallback that must load `ns-code-coder`:
 
 ```
 Follow the `ns-code-coder` skill as a slice worker, invoked by the execution
-orchestrator. (If you are coder-agent: load AGENTS.md then that skill.)
+orchestrator. (If you are coder-agent: Session boot once at cold start, then that skill.)
 
 Product:     {product_root}
 Version:     {version_san}
@@ -20,8 +20,10 @@ Subversion:  {subversion_san}
 Active path: {product_root}/docs/versions/{version_san}/subversions/{subversion_san}/
 
 Before coding:
-- Read {product_root}/AGENTS.md in full (and agents.local.md if present); follow
-  Session boot / orders there, including any mandatory product skills named.
+- Session boot once at slice-worker start (AGENTS.md + agents.local.md if
+  present + harness rules; skill finishes remaining harness-discovery steps).
+  No per-task AGENTS re-read inside the slice unless those files changed.
+  Obey orders, including any mandatory product skills named.
 - Load product context from {product_root}/docs/context/ per the Implementation
   boot rule in ns-harness artifact-layout.md (list folder, read layer-relevant files).
 
