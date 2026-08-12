@@ -97,6 +97,16 @@ Human PM workflow only — `ns-project-manager` + requirements enricher. Does **
 npx @nextstage-brasil/harness --preset project-manager --yes
 ```
 
+### Frontend reverse prototyping
+
+Playwright capture → single `prototype/` tree (create or evolve; git versions history) → design + quality → living appearance specs → optional normative visual MDs. Not full SDD.
+
+```bash
+npx @nextstage-brasil/harness --preset frontend-prototype --yes
+```
+
+Then in your agent: `/ns-proto-creator` (or `/ns-proto-visual-guide` for appearance docs only).
+
 ### Only one skill (no scaffold)
 
 Install a skill + its catalog `depends`. Skips `.nextstage-harness/`, `AGENTS.md`, and `docs/`.
@@ -208,6 +218,7 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 | `spec-driven-gitlab` | Everything in `spec-driven`, plus GitLab issues, board sync, enricher, CI generator |
 | `project-manager` | Human PM toolkit — `ns-project-manager` + requirements enricher (**no** SDD/code workers) |
 | `brownfield` | Harness + `/ns-harness-prepare` chain on existing code |
+| `frontend-prototype` | Playwright reverse prototype (`ns-proto-creator`), visual guides, living appearance, design + quality |
 | `full` | Every skill in the catalog |
 | `agents-api` | LangChain / LangGraph / MCP external skills + NS base |
 | `coder-langgraph` | `ns-langgraph-agents` + coder/investigator/reviewer + core LangChain/MCP/Vitest externals |

@@ -317,11 +317,11 @@ async function resolveInstallPlanFromArgv(argv, detection) {
     message: 'What do you want to install?',
     initialValue: 'spec-driven',
     options: [
-      { value: 'spec-driven', label: 'Spec-Driven delivery', hint: 'face + workers + PHPUnit/Cypress task generators' },
-      { value: 'spec-driven-gitlab', label: 'Spec-Driven + GitLab', hint: 'adds issue execution, board sync, CI generator' },
-      { value: 'project-manager', label: 'Project Manager toolkit', hint: 'ns-project-manager + enricher — no code execution' },
-      { value: 'brownfield', label: 'Brownfield only', hint: 'harness + prepare — run /ns-harness-prepare after' },
-      { value: 'full', label: 'Full optional stack', hint: 'every skill in the catalog' },
+      ...listPresets().map((preset) => ({
+        value: preset.id,
+        label: preset.label,
+        hint: preset.description,
+      })),
       { value: 'all', label: 'All NextStage skills', hint: 'excludes Agents API external skills' },
       ...listExternalPresets().map((preset) => ({
         value: `external:${preset.id}`,
@@ -459,6 +459,7 @@ export function printList() {
       'Install a preset (skills + dependencies + scaffold):',
       '  npx @nextstage-brasil/harness --preset spec-driven --yes',
       '  npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes',
+      '  npx @nextstage-brasil/harness --preset frontend-prototype --yes',
       '  npx @nextstage-brasil/harness --preset agents-api --yes',
       '  npx @nextstage-brasil/harness --preset coder-langgraph --yes',
       '',

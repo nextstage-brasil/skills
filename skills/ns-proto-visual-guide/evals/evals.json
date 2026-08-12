@@ -1,0 +1,64 @@
+{
+  "skill_name": "ns-proto-visual-guide",
+  "evals": [
+    {
+      "id": 0,
+      "name": "canvas-card-guide",
+      "prompt": "Write a normative visual appearance guide for the Item card on the canvas. Prefer prototype/ components when present; otherwise use fixtures/src/components/canvas/. Save the guide as item-card-visual.md. Cross-link related panel/shell docs even if those files do not exist yet. Do not invent UI that the fixtures do not describe. English.",
+      "expected_output": "Markdown normative guide for canvas card with Does not cover, Element|How tables, ASCII block order, states, checklist; no form field deep-dive; no layout math; source-of-truth cites prototype/ or fixture paths (not vN/prototype/).",
+      "files": [
+        "fixtures/src/components/canvas/ItemCard.tsx",
+        "fixtures/src/components/canvas/NodeTypeIconFrame.tsx",
+        "fixtures/docs/README.md"
+      ],
+      "assertions": [
+        "Output file is markdown normative guide (not a code patch)",
+        "Contains an explicit Does not cover / Out of scope section",
+        "Contains at least one Element | How it should appear style table",
+        "Contains ASCII overview of block order",
+        "Documents empty or overflow states for members or title",
+        "Includes a quick visual checklist",
+        "Does not prescribe side-panel form field order as the main focus",
+        "Does not narrate React hooks or implementation details as the story"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "panel-shell-guide",
+      "prompt": "Write a normative visual guide for the side panel SHELL only (chrome: width, header, scroll, visibility). Source of truth: fixtures/src/components/panel/DetailPanel.tsx and PanelHeader.tsx. Save as panel-shell.md. Explicitly keep per-selection form fields out of scope. English.",
+      "expected_output": "Shell-only appearance guide; excludes Item form fields; documents 480px, visibility states, fixed header + scroll content.",
+      "files": [
+        "fixtures/src/components/panel/DetailPanel.tsx",
+        "fixtures/src/components/panel/PanelHeader.tsx",
+        "fixtures/src/components/panel/ItemForm.tsx",
+        "fixtures/docs/README.md"
+      ],
+      "assertions": [
+        "Output is a shell appearance guide, not a form field catalog",
+        "States fixed width 480px (or equivalent from fixture)",
+        "Documents visibility when no card is selected",
+        "Documents fixed header vs scrollable content",
+        "Has Does not cover pointing away from per-type form fields",
+        "Does not deep-document Identification/Members/Settings form blocks",
+        "Includes expected visual behavior table or equivalent",
+        "Includes quick visual checklist"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "layout-near-miss",
+      "prompt": "I need documentation for how the canvas layout grid is calculated (gaps, snap, resize formulas). There is fixtures/docs/layout-canvas.md. Produce the right kind of documentation for this request. If a normative visual appearance guide is the wrong artifact, say so and produce or extend a technical layout doc instead — do not force a card/form visual guide.",
+      "expected_output": "Technical layout documentation or explicit refusal to write a visual appearance guide as the primary artifact; must not pretend layout math is a card/panel visual normative guide.",
+      "files": [
+        "fixtures/docs/layout-canvas.md",
+        "fixtures/docs/README.md"
+      ],
+      "assertions": [
+        "Does not present a card/form normative visual guide as the primary deliverable",
+        "Acknowledges the request is technical layout (grid/gaps/snap) rather than surface appearance",
+        "Either extends/writes layout technical content or clearly redirects to layout doc type",
+        "Does not invent Element|How appearance tables for Item card chrome as the answer"
+      ]
+    }
+  ]
+}

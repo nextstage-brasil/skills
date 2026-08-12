@@ -1,0 +1,26 @@
+{
+  "skill_name": "ns-proto-creator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "create-when-absent",
+      "prompt": "Capture https://example.com/app login and dashboard with Playwright and build a runnable prototype. There is no prototype/ folder yet. Product root is the workspace root.",
+      "expected_output": "Boot asks URL/scope; detects missing prototype/ and states create mode; uses Playwright MCP; writes AS-IS under docs/; scaffolds and implements under prototype/ only (no v1/ folder); loads ns-code-frontend-design; later quality + appearance consolidator; may offer ns-proto-visual-guide.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "evolve-when-present",
+      "prompt": "Our prototype/ already exists. Add the settings page from https://staging.example.com/settings — evolve the current prototype, do not start a new version folder.",
+      "expected_output": "States evolve-in-place; does not scaffold vN/prototype/; updates docs AS-IS and prototype/ in place; reminds optionally to git commit; does not ask for version folder name.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "visual-md-near-miss",
+      "prompt": "I only need a descrição normativa / *-visual.md for the side panel shell from existing prototype components. Do not rebuild the prototype.",
+      "expected_output": "Redirects to ns-proto-visual-guide; does not run full capture/build orchestration as primary path.",
+      "files": []
+    }
+  ]
+}

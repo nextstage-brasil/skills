@@ -11,6 +11,12 @@
       "id": 2,
       "expected_output": "Does not use ns-code-best-practices as primary; should route to ns-code-reviewer instead.",
       "files": []
+    },
+    {
+      "prompt": "Review my UI against Web Interface Guidelines — focus on the prototype login and dashboard pages.",
+      "id": 3,
+      "expected_output": "Invokes ns-code-best-practices: WebFetches vercel-labs web-interface-guidelines command.md, reports findings with file:line, does not hand off to ns-code-frontend-design as the primary skill.",
+      "files": []
     }
   ],
   "skill_name": "ns-code-best-practices"

@@ -30,6 +30,18 @@
       "prompt": "Ad-hoc mode: Approved rename-only refactor, docs/specs/ present.",
       "expected_output": "Agent skips writes — non-behavioral diff; reports Living specs skipped.",
       "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Appearance mode from ns-proto-creator: prototype settings screen documents cancel subscription confirmation and role-gated fields. docs/specs/ may be missing. No code review.",
+      "expected_output": "Uses appearance mode without Code Review gate; may create docs/specs/ + INDEX; writes SHALL for visible behavior only; changelog appearance-YYYY-MM-DD; does not paste Element|How tables.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Appearance mode: only tightened card padding and swapped accent color — no behavior change.",
+      "expected_output": "Skips writes — chrome polish only; reports Living specs skipped with reason.",
+      "files": []
     }
   ]
 }

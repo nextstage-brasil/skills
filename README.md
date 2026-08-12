@@ -55,7 +55,9 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-code-coder`, `/ns-code
 | `ns-code-backend-tests`              | Implement/refactor PHPUnit tests in Docker (execution phase)                                                                                  |
 | `ns-code-frontend-design`            | Distinctive production UI; anti–generic AI aesthetics (optional complement)                                                                   |
 | `ns-code-docs-writer`                | README and `docs/` guides for humans (optional complement)                                                                                    |
-| `ns-code-best-practices`             | Security headers, compatibility, modernization pass (optional complement)                                                                     |
+| `ns-code-best-practices`             | Security headers, compatibility, modernization, and Web Interface Guidelines UI pass (optional complement)                                    |
+| `ns-proto-creator`                   | Playwright reverse prototyping face — create/evolve single `prototype/` tree (optional; `--preset frontend-prototype`)                        |
+| `ns-proto-visual-guide`              | Normative visual appearance guides (`*-visual.md`) for implementation handoff (optional)                                                      |
 | `ns-requirements-enricher`           | Grill-me gap analysis for GitLab issues or chat context                                                                                       |
 | `ns-project-manager`                 | End-to-end PM workflow — clarification through delivery forecast                                                                              |
 | `ns-pm-delivery-schedule`            | Triple productivity delivery schedule (P100 / P85 / P50 h/FP) + Monte Carlo calendar P50/P85/P95                                             |
@@ -95,6 +97,7 @@ Non-interactive:
 ```bash
 npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes
 npx @nextstage-brasil/harness --preset project-manager --yes
+npx @nextstage-brasil/harness --preset frontend-prototype --yes
 npx @nextstage-brasil/harness list
 ```
 

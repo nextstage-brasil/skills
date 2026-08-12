@@ -17,6 +17,7 @@
   "codebase-reverse-spec": "ns-harness-codebase-reverse-spec",
   "create-backend-tests": "ns-code-backend-tests",
   "create-e2e-tests": "ns-code-e2e-tests",
+  "descricao-normativa-visual": "ns-proto-visual-guide",
   "docs-writer": "ns-code-docs-writer",
   "e2e-test-generator": "ns-pm-e2e-test-task-generator",
   "execute-gitlab-issue": "ns-execution-gitlab-issue",

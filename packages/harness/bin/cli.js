@@ -35,7 +35,7 @@ Usage:
 
 Options:
   --dir <path>           Target project directory (default: current)
-  --preset <name>        Preset: spec-driven | spec-driven-gitlab | project-manager | brownfield | full | agents-api | coder-langgraph
+  --preset <name>        Preset: spec-driven | spec-driven-gitlab | project-manager | brownfield | frontend-prototype | full | agents-api | coder-langgraph
   --skill <name>         Install specific skill (repeatable)
   --all                  Install every skill in the catalog
   --global, -g           Install skills globally (passed to skills CLI)
@@ -57,6 +57,7 @@ Examples:
   npx @nextstage-brasil/harness
   npx @nextstage-brasil/harness --preset spec-driven --yes
   npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes
+  npx @nextstage-brasil/harness --preset frontend-prototype --yes
   npx @nextstage-brasil/harness --preset agents-api --yes
   npx @nextstage-brasil/harness --preset coder-langgraph --yes
   npx @nextstage-brasil/harness sync

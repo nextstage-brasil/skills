@@ -1,21 +1,28 @@
 ---
 name: ns-code-best-practices
-description: (NS) Security, compatibility, and modern web quality pass — headers, CSP, dependencies, accessibility baselines, and pragmatic modernization. Use when the user asks to harden security, fix CSP/CORS/headers, improve compatibility, or modernize stack quality — even without saying "best practices". Orthogonal to ns-code-reviewer SOLID/MR gate. Do NOT use for full MR review (use ns-code-reviewer) or feature implementation (use ns-code-coder / ns-spec-driven).
+description: >-
+  (NS) Security/compat/a11y hygiene + Vercel Web Interface Guidelines review
+  (headers, CSP, deps, accessibility). Use when hardening security, fixing
+  CSP/CORS/headers, reviewing UI / checking a11y / auditing UX, or applying
+  Web Interface Guidelines — even without saying "best practices"; also at
+  ns-proto-creator close-out. Do NOT use for MR/SOLID review
+  (ns-code-reviewer), visual redesign (ns-code-frontend-design), or feature
+  implementation (ns-code-coder / ns-spec-driven).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
 ---
 
 # Best Practices
 
-Focused **quality and security hygiene** pass — not a substitute for senior code review.
+Focused **quality + security hygiene** pass — not substitute for senior code review or visual design direction.
 
 ## Harness discovery
 
-See `../ns-harness/references/harness-discovery.md`. Read `architecture-rules.md` and security-related harness rules.
+See `../ns-harness/references/harness-discovery.md`. Read `architecture-rules.md` + security-related harness rules.
 
 ## When to use
 
@@ -25,26 +32,31 @@ See `../ns-harness/references/harness-discovery.md`. Read `architecture-rules.md
 | Dependency audit / known CVE sweep | Yes | — |
 | Browser compatibility baseline | Yes | — |
 | Accessibility quick pass (landmarks, alt, labels) | Yes | — |
+| "Review my UI" / Web Interface Guidelines / UX a11y audit | Yes (guidelines fetch) | — |
+| Distinctive visual redesign / anti-slop aesthetics | No | `ns-code-frontend-design` |
 | "Review this MR" / SOLID deep dive | No | `ns-code-reviewer` |
 | New feature implementation | No | `ns-code-coder` / `ns-spec-driven` |
 
 ## Workflow
 
-1. **Scope** — web app surface, API gateway, or static assets; confirm `{product_root}`.
-2. **Baseline** — read `references/checklist.md`; tick only applicable sections.
-3. **Scan** — configs (nginx, Vite, Next, Laravel middleware, etc.) without assuming stack.
-4. **Report** — findings table: severity, location, recommendation, effort.
-5. **Fix** — minimal safe diffs when user asked to implement; otherwise report only.
+1. **Scope** — web app surface, API gateway, static assets, or `{product_root}/prototype/`; confirm `{product_root}`.
+2. **Baseline** — read `references/checklist.md`; tick only applicable sections (offline security/compat/a11y).
+3. **Guidelines** — UI/a11y/UX audit **or** invoker is `ns-proto-creator` close-out: follow `references/ui-guidelines-review.md` (WebFetch required).
+4. **Scan** — configs (nginx, Vite, Next, Laravel middleware, etc.); no stack assume.
+5. **Report** — findings table: severity, location (`file:line` when possible), recommendation, effort.
+6. **Fix** — minimal safe diffs when user asked implement; else report only.
 
-## Overlap with ns-code-reviewer
+## Overlap with other skills
 
-- **This skill:** cross-cutting hygiene (headers, deps, compat checklist).
-- **ns-code-reviewer:** change-specific SOLID, tests, maintainability on a diff.
+- **This skill:** cross-cutting hygiene + Web Interface Guidelines compliance.
+- **ns-code-frontend-design:** distinctive look, typography, motion, anti–generic AI UI.
+- **ns-code-reviewer:** change-specific SOLID, tests, maintainability on diff.
 
-A delivery may use both sequentially — face skill routes explicitly.
+Delivery may use sequentially — face skills route explicit.
 
 ## Forbidden
 
-- Declaring production secure without evidence
-- Breaking existing integrations without calling out risk
-- Replacing threat modeling for high-risk domains (escalate to human)
+- Declare production secure without evidence
+- Break existing integrations without calling out risk
+- Replace threat modeling for high-risk domains (escalate to human)
+- Skip guidelines fetch on UI audit / proto close-out and claim full UI pass

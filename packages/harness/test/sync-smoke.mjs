@@ -652,6 +652,15 @@ Should not land in canonical.
     'agents-api dry-run should list all external skills',
   );
 
+  const frontendPrototypeDryRun = runCli(['--dry-run', '--yes', '--preset', 'frontend-prototype', '--dir', tempDir], harnessRoot);
+  assert(frontendPrototypeDryRun.status === 0, `frontend-prototype preset dry-run should pass: ${frontendPrototypeDryRun.stderr}${frontendPrototypeDryRun.stdout}`);
+  assert(
+    frontendPrototypeDryRun.stdout.includes('ns-proto-creator') &&
+      frontendPrototypeDryRun.stdout.includes('ns-proto-visual-guide') &&
+      frontendPrototypeDryRun.stdout.includes('ns-code-frontend-design'),
+    'frontend-prototype dry-run should list proto + design skills',
+  );
+
   // 13. update — only installed skills, dry-run
   const updateEmptyDir = mkdtempSync(join(tmpdir(), 'harness-update-empty-'));
   try {

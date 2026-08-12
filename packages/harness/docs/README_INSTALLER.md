@@ -49,7 +49,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 
 | Flag | Effect |
 |------|--------|
-| `--preset <name>` | `spec-driven` (default), `spec-driven-gitlab`, `project-manager`, `brownfield`, `full` |
+| `--preset <name>` | `spec-driven` (default), `spec-driven-gitlab`, `project-manager`, `brownfield`, `frontend-prototype`, `full` |
 | `--agent <name>` | Repeatable; default `cursor`, `claude-code` |
 | `--yes`, `-y` | Non-interactive |
 | `--no-scaffold` | Skills only — skip AGENTS.md and `.nextstage-harness/` |

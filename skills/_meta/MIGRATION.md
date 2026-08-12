@@ -94,6 +94,24 @@ All catalog skills were renamed with a global `ns-` prefix. Six SDD planning wor
 
 New preset: `--preset project-manager` (`ns-project-manager`, `ns-pm-delivery-schedule`, `ns-requirements-enricher`, `ns-commercial-budget`).
 
+## New preset — `frontend-prototype` (2026-08-11)
+
+Playwright-driven reverse prototyping without full SDD:
+
+| Skill | Role |
+| ----- | ---- |
+| `ns-proto-creator` | Face — capture live UI, create or evolve one `prototype/` tree (git history, not `vN/` folders) |
+| `ns-proto-visual-guide` | Normative appearance MDs (rename of `descricao-normativa-visual`) |
+| `ns-harness-codebase-reverse-spec` | Business reverse from code (complementary) |
+| `ns-sdd-living-spec-consolidator` | **Appearance** mode (no Code Review gate) |
+| `ns-code-frontend-design` / `ns-code-best-practices` | Design + quality (guidelines fetch fused into best-practices) |
+
+Install: `npx @nextstage-brasil/harness --preset frontend-prototype --yes`.
+
+## Rename — `descricao-normativa-visual` → `ns-proto-visual-guide` (2026-08-11)
+
+Normative visual appearance skill joins the `ns-proto-*` family. Retired in `packages/harness/templates/retired-skills.json`. Source-of-truth paths cite `prototype/` (single tree).
+
 ## New skill — `ns-pm-delivery-schedule` (2026-08-07)
 
 Triple productivity delivery schedule: one markdown with PERT + Monte Carlo for productivity scenarios P100 (current h/FP), P85 (50% faster), P50 (85% faster). Section 0 commercial summary + calendar delivery dates. Persists under `docs/versions/{version_san}/pm/`. Reuses `ns-project-manager` `pert_montecarlo.py`. Presets `project-manager` and `full`. Depends on `ns-harness` + `ns-project-manager`.
