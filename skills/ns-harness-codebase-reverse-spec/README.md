@@ -48,9 +48,9 @@ Concrete domain-by-domain delivery + synthesis pass. The original said "don't re
 
 Removed legacy factory-specific references. Replaced with generic monorepo/external-repo scope guidance. The skill now works standalone in any repo.
 
-### 7. Output language question — **medium impact**
+### 7. Output language — **English only (hard rule)**
 
-Added to Phase 0. Conversation language, skill language, and spec language are often different (e.g., PT-BR team, IT product UI, EN stakeholder).
+Reverse-spec deliverables are always English (human body + agent index). Conversation language does not change this — prevents mixed PT/EN specs from prepare runs.
 
 ### 8. State lifecycle guidance — **medium impact**
 
@@ -71,7 +71,7 @@ Rewritten to be more inclusive of trigger phrases (per ns-skill-creator guidance
 | Core 5-phase workflow | Already works; renaming phases would add churn without gain |
 | Confidence taxonomy (Confirmed/Inferred/Ambiguous) | Already correct |
 | Golden rule principle | Already the best anchor for the whole skill |
-| Language of SKILL.md body | Kept in English for portability; output language is now a Phase 0 question |
+| Language of SKILL.md body | Kept in English; reverse-spec output is always English (not a Phase 0 choice) |
 | Automated evals / subagent test harness | Out of scope for this delivery — user asked for skill evolution, not benchmark runs |
 | Separate references per stack (Java vs PHP vs serverless) | Would overfit; reconnaissance heuristics are already stack-agnostic |
 

@@ -51,7 +51,7 @@ Apply **caveman ultra** compression to every **agent-facing** prepare/worker out
 - Fragments OK.
 - Telegraphic bullets: `[thing] [constraint].`
 - Prefer tables over paragraphs.
-- English in saved artifacts unless the worker skill sets another output language (reverse-spec human body may follow conversation language; agent index stays dense either way).
+- English in saved artifacts unless the worker skill sets another output language. Exception: `system-reverse-spec.md` and `system-reverse-spec.agent.md` are **always English** (never conversation language).
 
 ## Per-artifact targets (soft → hard)
 

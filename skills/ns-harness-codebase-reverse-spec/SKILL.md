@@ -4,7 +4,7 @@ description: (NS) Reverse-engineer a brownfield/legacy codebase into a technolog
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
 ---
@@ -12,6 +12,15 @@ depends:
 # Codebase Reverse System Description
 
 Reconstruct, from an existing codebase, a **technology-agnostic** descriptive document of the implemented system: observed behavior, business rules, permissions, hierarchies, and external integrations relevant to product operation.
+
+## Output language (hard rule)
+
+**English only** for both deliverables:
+
+- `{product_root}/docs/context/system-reverse-spec.md` (human body)
+- `{product_root}/docs/context/system-reverse-spec.agent.md` (agent index)
+
+Do **not** mix languages. Section titles, labels, business-rule patterns (`When …, the system …`), glossary, use cases, and prose must all be English — even when the chat or product UI is another language. Translate domain terms into clear English; keep proper nouns / product names as-is.
 
 ## Central principle
 
@@ -51,9 +60,10 @@ Ask the user (one question at a time, or `AskQuestion` when appropriate):
 | ----------------------------------------------------------- | -------------------------------------------------------------- |
 | Whole system or a specific module/domain?                   | Prevents scope creep or missed areas                           |
 | Executive summary or exhaustive description? (default: **executive**) | Sets depth; prepare/autonomous always default executive |
-| Output language?                                            | Spec language may differ from skill/conversation language      |
 | Any critical/risky domain needing extra scrutiny?           | Prioritizes financial, fiscal, permission, or compliance logic |
 | Deliver incrementally (large codebases) or single document? | Large repos benefit from domain-by-domain drafts               |
+
+Do **not** ask for output language — it is always English (see hard rule above).
 
 If the repo is large, do **not** read everything at once. Do reconnaissance first (Phase 1) and prioritize by business impact, not file size.
 
@@ -117,7 +127,7 @@ Organize extracted material into:
 
 ### Phase 4 — Final spec writing
 
-Use `references/spec_template.md` for the **human-readable** body. Adapt title/emphasis to "description of the implemented system." Tone: declarative, present tense, observed product behavior.
+Use `references/spec_template.md` for the **human-readable** body. Adapt title/emphasis to "description of the implemented system." Tone: declarative, present tense, observed product behavior. Write the entire body in **English** (template labels stay English; fill every placeholder in English).
 
 **Depth (from Phase 0 / prepare boot):**
 
@@ -140,6 +150,7 @@ Before delivery, run the sanity pass:
 6. Confidence markers live in the appendix ("Areas to validate with the team"), not cluttering the main body.
 7. Apparent bugs are not disguised as business rules — they go to the appendix with a note that behavior may be unintentional.
 8. The document answers **what** and **why** (when inferable), never **how it was implemented**.
+9. Entire deliverable is English — no mixed PT/EN section titles, labels, or rule sentences.
 
 ### Phase 5 — Delivery and validation
 
@@ -163,6 +174,7 @@ When the repo exceeds what fits comfortably in one pass:
 
 ## Common mistakes to avoid
 
+- Writing the reverse-spec (or parts of it) in a non-English language or mixing languages with the English template.
 - Listing the tech stack "for context" instead of describing business behavior.
 - Confusing folder structure (technical artifact) with domain structure (business concept) — always translate.
 - Producing a normative future-requirements document instead of faithfully describing the **currently implemented** system.

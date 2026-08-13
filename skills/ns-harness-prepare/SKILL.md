@@ -59,6 +59,7 @@ npx @nextstage-brasil/harness --preset spec-driven --yes
 1. Resolve `{product_root}` and `{harness_root}` per harness discovery.
 2. Apply defaults (do **not** ask when checks pass):
    - Output language for markdown artifacts = user conversation language
+   - Reverse-spec (`system-reverse-spec.md` + `.agent.md`) = **English only** (overrides conversation language)
    - Reverse-spec scope = whole product; depth = executive
    - Mode = **create** or **refresh** from existing artifacts on disk
 3. Run boot checks:
@@ -151,8 +152,9 @@ Follow the worker skill workflow. Read-only on application code.
 Reverse-engineer {product_root} into a technology-agnostic system description.
 Executive depth (default). Save human body to docs/context/system-reverse-spec.md
 and agent-dense index to docs/context/system-reverse-spec.agent.md.
+Both files MUST be English only (titles, labels, prose, rules) — never mix with conversation language.
 Compress only the agent index before Write (agent-artifact-compress.md). Leave human body readable.
-Autonomous run: use boot defaults for scope and language; skip recon checkpoint unless a blocker.
+Autonomous run: use boot defaults for scope; English for reverse-spec; skip recon checkpoint unless a blocker.
 ```
 
 Follow the worker skill workflow. Technology-agnostic output only.

@@ -2,6 +2,7 @@
 
 **Paired with:** `system-reverse-spec.md` (human-readable executive body).
 **Audience:** agents only. Prefer this file over the prose body when planning or implementing.
+**Language:** English only (same hard rule as the human body).
 
 ## Entities
 

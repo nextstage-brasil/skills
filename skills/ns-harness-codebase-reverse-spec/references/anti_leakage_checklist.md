@@ -2,6 +2,12 @@
 
 Walk this list before delivering the final spec. For each hit, rewrite in business language or confirm the exception (external provider name, role name, business attribute name).
 
+## Document language
+
+- [ ] Entire human body and agent index are **English only**
+- [ ] No mixed-language sentences (e.g. Portuguese condition + English "the system …")
+- [ ] Section titles and template labels left in English; placeholders filled in English
+
 ## Programming languages and runtimes
 
 - [ ] No language names used as system description (Python, JavaScript, PHP, Java, Go, Rust, Ruby, C#, TypeScript, etc.)
