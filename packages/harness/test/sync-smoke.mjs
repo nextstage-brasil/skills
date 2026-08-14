@@ -744,6 +744,14 @@ Should not land in canonical.
   });
   assert(githubUpToDate.upToDate.includes('ns-harness'), 'matching GitHub tree SHA should skip');
 
+  mkdirSync(join(tempDir, '.agents', 'skills', 'langchain-fundamentals'), { recursive: true });
+  writeFileSync(join(tempDir, '.agents', 'skills', 'langchain-fundamentals', 'SKILL.md'), '# external\n', 'utf8');
+  const foreignPlan = await planSkillUpdates(tempDir, ['ns-harness', 'langchain-fundamentals'], {
+    source: join(tempDir, 'fake-source'),
+  });
+  assert(foreignPlan.upToDate.includes('langchain-fundamentals'), 'skill missing from local --source must not queue marketplace update');
+  assert(!foreignPlan.toUpdate.includes('langchain-fundamentals'), 'foreign skill should stay out of toUpdate');
+
   const updateDryRun = runCli(['update', '--dry-run', '--dir', tempDir, '--source', join(tempDir, 'fake-source')], harnessRoot);
   assert(updateDryRun.status === 0, `update --dry-run should pass: ${updateDryRun.stderr}${updateDryRun.stdout}`);
   assert(

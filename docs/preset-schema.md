@@ -46,9 +46,8 @@ Declarative preset format for `@nextstage-brasil/harness` **1.x**. Presets refer
 
 | Alias | Target |
 | ----- | ------ |
-| `project-manager` | `presets/business.json` |
+| `project-manager` | `presets/project-manager.json` |
 | `frontend-prototype` | `presets/frontend.json` |
-| `business` | `presets/business.json` |
 | `spec-driven-gitlab` | `presets/gitlab.json` |
 | `gitlab` | `presets/gitlab.json` |
 

@@ -2,6 +2,10 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Fold business skills into `ns-project-manager` (2026-08-14)
+
+`ns-commercial-budget`, `ns-delivery-schedule`, and `ns-requirements-enricher` are no longer catalog skills. They live under `skills/business/ns-project-manager/references/<id>/` (own `SKILL.md` + `references/` / `assets/`; no evals). Invoke `/ns-project-manager`. Retired aliases in `packages/harness/templates/retired-skills.json` redirect installs to `ns-project-manager`.
+
 ## Conventions
 
 | Item | Rule |

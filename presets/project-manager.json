@@ -1,0 +1,6 @@
+{
+  "name": "project-manager",
+  "requires_harness": ">=1.0.0",
+  "description": "Project Manager tools with commercial methodology",
+  "includes": ["skills/business/ns-project-manager"]
+}

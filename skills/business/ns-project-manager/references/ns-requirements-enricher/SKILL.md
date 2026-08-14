@@ -11,17 +11,13 @@ description: (NS) Enrich requirements before autonomous execution from a GitLab 
   (ns-execution-gitlab-issue), code review (ns-reviewer), version planning
   (start_execution_planning), or generating requirements.md (`/ns-spec-driven` Specify).
 license: Apache-2.0
-requires_harness: ">=1.0.0"
 provides:
   - gate:requirements-enrichment
 consumes:
   - artifact:gitlab-issue
 metadata:
   author: nextstage-brasil
-  version: "1.0"
-depends:
-  - ns-harness
-  - mcp-gitlab-usage
+  version: "1.1"
 ---
 
 # Requirements Enricher
@@ -39,9 +35,12 @@ Both modes share Phases 2–3 (investigation + grill-me). Phase 1 (MCP load) app
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md` and `../../ns-harness/references/artifact-layout.md`. Investigate the codebase after Session boot.
+Optional — skip any step whose path does not exist. Investigate the codebase after this boot when a repo is available.
 
-Read `../../gitlab/mcp-gitlab-usage/SKILL.md` before MCP calls (`get_mcp_gitlab_skill` version check on first access).
+1. If `agents.local.md` exists beside `AGENTS.md`, read it once. Never tool-Read `AGENTS.md`.
+2. If `.nextstage-harness/rules/` exists, read `architecture-rules.md` and `project-rules.md` when present.
+3. If `docs/context/` exists, list it and read reverse-spec / brownfield-map when present.
+4. If GitLab MCP is available, follow `mcp-gitlab-usage` when that skill is installed (`get_mcp_gitlab_skill` version check on first access). Otherwise stay in chat mode.
 
 ## Objective
 
@@ -71,9 +70,9 @@ Do **not** implement, commit, change issue status, create files, or ask question
 
 ## Prerequisites
 
-1. Obey `AGENTS.md` (already in context) — Docker/runtime context if investigation touches tests or services.
+1. Obey `AGENTS.md` when already in host context — Docker/runtime context if investigation touches tests or services. Never tool-Read it.
 2. Read `agents.local.md` when present — use **only** the GitLab MCP server named there.
-3. Follow `../../gitlab/mcp-gitlab-usage/SKILL.md` for tool contracts.
+3. Follow GitLab MCP tool contracts when MCP is available; if MCP is missing, stay in chat mode.
 
 ## Inputs
 

@@ -12,8 +12,9 @@ npx @nextstage-brasil/harness@1 --preset spec-driven --yes
 1. **Domain folders** — skills moved from flat `skills/<name>/` to `skills/<domain>/<name>/` (except `ns-harness` at root).
 2. **Renames** — category prefixes dropped where the domain folder communicates the category (e.g. `ns-code-coder` → `ns-coder` in `skills/code/`).
 3. **SDD pipeline consolidated** — seven internal workers plus unit/e2e test-task generators are now `references/` inside `ns-spec-driven`. Invoke only `/ns-spec-driven`.
-4. **Presets** — declarative JSON in `presets/`; harness reads `presets/index.json` at runtime.
-5. **`nsutil-mcp` removed** — not a catalog skill; generated in the application at use time.
+4. **Business face consolidated** — `ns-commercial-budget`, `ns-delivery-schedule`, and `ns-requirements-enricher` are nested under `ns-project-manager/references/`. Invoke only `/ns-project-manager`.
+5. **Presets** — declarative JSON in `presets/`; harness reads `presets/index.json` at runtime.
+6. **`nsutil-mcp` removed** — not a catalog skill; generated in the application at use time.
 
 ## Rename map (install by new name)
 
@@ -34,9 +35,9 @@ npx @nextstage-brasil/harness@1 --preset spec-driven --yes
 | `ns-harness-architecture-rules` | `ns-harness` |
 | `ns-harness-bootstrap-brownfield` | `ns-harness` |
 | `ns-prepare` | `ns-harness` |
-| `ns-pm-delivery-schedule` | `ns-delivery-schedule` |
+| `ns-pm-delivery-schedule` | `ns-project-manager` |
 
-Retired SDD workers redirect to `ns-spec-driven` via `retired-skills.json`.
+Retired SDD workers redirect to `ns-spec-driven` via `retired-skills.json`. Retired business skills redirect to `ns-project-manager`.
 
 ## Full history
 

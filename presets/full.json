@@ -2,7 +2,7 @@
   "name": "full",
   "requires_harness": ">=1.0.0",
   "description": "Full catalog",
-  "extends": ["gitlab", "frontend", "business", "agent-creator"],
+  "extends": ["gitlab", "frontend", "project-manager", "agent-creator"],
   "includes": [
     "skills/testing/ns-e2e-tests",
     "skills/testing/ns-backend-tests",

@@ -12,17 +12,13 @@ description: >
   RICE/sprint). Do NOT invent R$. Do NOT replace ns-commercial-budget.
   Do NOT use for story-only PERT without FP (that is ns-project-manager Phase 5).
 license: Apache-2.0
-requires_harness: ">=1.0.0"
 provides:
   - artifact:delivery-schedule
 consumes:
   - artifact:commercial-budget
 metadata:
   author: nextstage-brasil
-  version: "1.2"
-depends:
-  - ns-harness
-  - ns-project-manager
+  version: "1.3"
 ---
 
 # Delivery Schedule — triple productivity (P100 / P85 / P50)
@@ -44,9 +40,14 @@ P100 = reality. P85 and P50 productivity scenarios = **acceleration goals**, not
 
 Faster formula: `horas_novas = horas_atuais × (1 − X/100)` → 50% faster ⇒ ×0.50; 85% faster ⇒ ×0.15.
 
-## Harness
+## Session boot
 
-See `../../ns-harness/references/session-boot.md` + `artifact-layout.md`. Ask once for `{version_san}` if missing.
+Optional — skip any step whose path does not exist. Do not invent project layout.
+
+1. If `agents.local.md` exists beside `AGENTS.md`, read it once. Never tool-Read `AGENTS.md`.
+2. If `.nextstage-harness/rules/` exists, read `architecture-rules.md` and `project-rules.md` when present.
+3. If `docs/context/` exists, list it and read reverse-spec / brownfield-map when present.
+4. If none of the above exist, continue with chat + budget inputs only. Ask once for `{version_san}` if missing. Do not create `docs/versions/` until persist is agreed.
 
 ## Language
 
@@ -76,10 +77,8 @@ Read `references/calculations.md`.
 4. For **each** scenario, write `pert-config-p100.json` / `pert-config-p85.json` / `pert-config-p50.json` and run:
 
 ```bash
-python3 ../ns-project-manager/scripts/pert_montecarlo.py pert-config-pNNN.json
+python3 ../../scripts/pert_montecarlo.py pert-config-pNNN.json
 ```
-
-(Adjust path if skills live under `.agents/skills/` or Cursor skills dir — sibling of `ns-project-manager`.)
 
 5. Map MC effort-day percentiles to **business-day calendar** from start date. Never invent percentiles.
 
@@ -107,7 +106,7 @@ Chat-only only if human says so. Confirm path once if persistence not yet agreed
 
 | Signal | Skill |
 |--------|--------|
-| Orçamento / FP / COSMIC / R$ | `ns-commercial-budget` |
+| Orçamento / FP / COSMIC / R$ | `../ns-commercial-budget/SKILL.md` |
 | Story RICE / sprint / single PERT forecast | `ns-project-manager` Phase 3–5 |
 | FP + productivity → triple delivery schedule | **this skill** |
 
@@ -133,4 +132,4 @@ Chat-only only if human says so. Confirm path once if persistence not yet agreed
 | `references/intake.md` | Missing inputs |
 | `references/calculations.md` | Before MC / calendar math |
 | `references/document-structure.md` | Before writing markdown |
-| `../ns-project-manager/scripts/pert_montecarlo.py` | Every scenario MC run |
+| `../../scripts/pert_montecarlo.py` | Every scenario MC run |

@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { resolveSource } from './source.js';
-import { groupExternalSkillsBySource } from './externalSkills.js';
+import { groupExternalSkillsBySource, isExternalSkill } from './externalSkills.js';
 import { assertSkillsHarnessCompatible } from './skillManifest.js';
 
 export const SKILL_CREATOR_SOURCE = 'https://github.com/anthropics/skills';
@@ -108,23 +108,21 @@ export function updateInstalledSkills(skillNames, options = {}) {
     return;
   }
 
-  const { projectRoot = process.cwd(), global = false } = options;
-  const args = ['skills', 'update', ...skillNames, '-y'];
-
-  if (global) {
-    args.push('-g');
-  } else {
-    args.push('-p');
+  const nsSkills = [];
+  const externalSkills = [];
+  for (const name of skillNames) {
+    if (isExternalSkill(name)) {
+      externalSkills.push(name);
+    } else {
+      nsSkills.push(name);
+    }
   }
 
-  const result = runNpx(args, projectRoot);
-
-  if (result.error) {
-    throw result.error;
+  if (nsSkills.length > 0) {
+    installSkills(nsSkills, options);
   }
-
-  if (result.status !== 0) {
-    throw new Error(`skills update failed with exit code ${result.status}`);
+  if (externalSkills.length > 0) {
+    installExternalSkills(externalSkills, options);
   }
 }
 

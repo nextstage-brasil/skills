@@ -1,9 +1,6 @@
 {
   "ns-harness": "skills/ns-harness",
-  "ns-commercial-budget": "skills/business/ns-commercial-budget",
-  "ns-delivery-schedule": "skills/business/ns-delivery-schedule",
   "ns-project-manager": "skills/business/ns-project-manager",
-  "ns-requirements-enricher": "skills/business/ns-requirements-enricher",
   "ns-autonomous": "skills/code/ns-autonomous",
   "ns-coder": "skills/code/ns-coder",
   "ns-investigator": "skills/code/ns-investigator",

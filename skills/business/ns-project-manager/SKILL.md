@@ -1,15 +1,29 @@
 ---
 name: ns-project-manager
-description: (NS) Gated PM workflow — clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk, status, meeting, OKR. Use on transcripts, backlog, timeline, delivery date, or status requests — even if PM is unnamed. Do NOT use for coding, SDD requirements generation, GitLab issue execution, or client commercial quotes / Function Points / COSMIC / orçamento comercial (use ns-commercial-budget).
+description: >
+  (NS) Gated PM workflow — clarify, structure, RICE/WSJF, sprint plan, PERT/Monte
+  Carlo forecast; risk, status, meeting, OKR. Also commercial budget (orçamento,
+  Function Points, COSMIC, CFP, proposta comercial), triple productivity delivery
+  schedule (cronograma P100/P85/P50, prazo, when we deliver), and requirements
+  enricher / grill-me for GitLab issues or chat. Use on transcripts, backlog,
+  timeline, delivery date, status, orçamento, cotação, cronograma, enrich
+  requirements — even if PM is unnamed. Do NOT use for coding, SDD requirements
+  generation, or GitLab issue execution.
 license: Apache-2.0
 requires_harness: ">=1.0.0"
 provides:
   - gate:pm-clarification
   - artifact:pm/backlog
+  - artifact:commercial-budget
+  - artifact:delivery-schedule
+  - gate:requirements-enrichment
 consumes: []
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
+depends:
+  - ns-harness
+  - mcp-gitlab-usage
 ---
 
 # Project Manager
@@ -25,20 +39,23 @@ Unified project-management skill with a **gated phase pipeline** (Phases 0–5) 
 | "Prioritize", "rank backlog", RICE, WSJF, "what to build first" | **3** Prioritization | `references/02-prioritization.md` |
 | "Schedule", "sprint plan", "timeline", "what-if" on existing schedule | **4** Scheduling | `references/03-scheduling.md` |
 | "Forecast", "when do we deliver", P85/P95, Monte Carlo, three-point estimate (story-level, no FP productivity scenarios) | **5** Forecast | `references/04-forecast.md` |
-| Cronograma triplo, P100/P85/P50 **produtividade**, FP × h/FP, prazo comercial com três cenários de aceleração | **→ `ns-delivery-schedule`** (not a PM phase) | sibling skill |
+| Cronograma triplo, P100/P85/P50 **produtividade**, FP × h/FP, prazo comercial com três cenários de aceleração | **→ delivery-schedule** (not a PM phase) | Read `references/ns-delivery-schedule/SKILL.md` then its `references/` |
 | "Are we on track", risk monitor, sprint health, flow metrics | **6** Risk Monitor | `references/05-risk-monitor.md` |
 | "Status report", "write up for manager/board/leadership" | **7** Status Report | `references/06-status-report.md` |
 | Meeting transcript pasted mid-project, "meeting notes", "action items" | **8** Meeting Digest | `references/07-meeting-digest.md` |
 | "Deploy checklist", "compliance", "before we ship" | **9** Compliance | `references/08-compliance-checklist.md` |
 | Informal Slack/email message → task/ticket | **10** NL to Workflow | `references/09-nl-to-workflow.md` |
 | "Validate OKRs", backlog×strategy alignment, portfolio scorecard | **11** OKR Aligner | `references/10-okr-aligner.md` |
-| Commercial budget, orçamento, proposta comercial, Function Points, COSMIC, CFP, cotação em R$ | **→ `ns-commercial-budget`** (not a PM phase) | sibling skill |
+| Commercial budget, orçamento, proposta comercial, Function Points, COSMIC, CFP, cotação em R$ | **→ commercial-budget** (not a PM phase) | Read `references/ns-commercial-budget/SKILL.md` then its `references/` + `assets/` |
+| Enrich / grill-me / blocking questions on an issue or pasted scope | **→ requirements-enricher** (not a PM phase) | Read `references/ns-requirements-enricher/SKILL.md` then its `references/` |
 
 **On-demand modes (6+) skip the pipeline** — they run directly when triggered, reusing context from earlier phases when available.
 
-**Commercial FP / client quote:** route to `ns-commercial-budget`. This skill stays delivery forecast (RICE / sprint / PERT) — not client COSMIC commercial sizing (FP / CFP / hours).
+**Nested skills:** when the router points at `references/ns-*/SKILL.md`, read that file in full and follow it (including that skill's own `references/`, `assets/`, and `scripts/` as it instructs). Do not load evals.
 
-**Triple productivity schedule (FP × h/FP, scenarios P100/P85/P50):** route to `ns-delivery-schedule`. Phase 5 remains story-level PERT only.
+**Commercial FP / client quote:** read `references/ns-commercial-budget/SKILL.md`. This face's Phases 1–5 stay delivery forecast (RICE / sprint / PERT) — not client COSMIC commercial sizing (FP / CFP / hours).
+
+**Triple productivity schedule (FP × h/FP, scenarios P100/P85/P50):** read `references/ns-delivery-schedule/SKILL.md`. Phase 5 remains story-level PERT only.
 
 ## Phase 0 — Intake
 
@@ -159,3 +176,6 @@ Rules:
 | `scripts/flow_metrics.py` | 6 |
 | `scripts/okr_progress.py` | 11 |
 | `assets/dangerfile-gitlab-template.js` | 9 |
+| `references/ns-commercial-budget/SKILL.md` | commercial budget |
+| `references/ns-delivery-schedule/SKILL.md` | triple delivery schedule |
+| `references/ns-requirements-enricher/SKILL.md` | requirements enricher |

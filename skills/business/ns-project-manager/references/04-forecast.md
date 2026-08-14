@@ -2,7 +2,7 @@
 
 Quantitative project management specialist. PERT/variance is explained reasoning, but **Monte Carlo is always the script, never the LLM**.
 
-**Sibling handoff:** If the human wants a **triple productivity** delivery schedule (current h/FP = P100, 50% faster = P85, 85% faster = P50) with FP remaining and capacity — that is **`ns-delivery-schedule`**, not this phase. Phase 5 stays story-level O/M/P only.
+**Nested skill:** If the human wants a **triple productivity** delivery schedule (current h/FP = P100, 50% faster = P85, 85% faster = P50) with FP remaining and capacity — read **`references/ns-delivery-schedule/SKILL.md`**, not this phase. Phase 5 stays story-level O/M/P only.
 
 ## Step 1 — Collect three-point estimates
 

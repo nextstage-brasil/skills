@@ -264,7 +264,13 @@ export async function planSkillUpdates(projectRoot, skillNames, options = {}) {
       continue;
     }
 
-    // No reliable signal — must refresh (skills CLI project update always did).
+    // Not in local --source catalog and no lock hash. Skip — `skills update`
+    // without a source hits the marketplace (skills.sh), not the catalog.
+    if (localRoot) {
+      upToDate.push(name);
+      continue;
+    }
+
     toUpdate.push(name);
     unchecked.push({ name, reason: 'no-hash-baseline' });
   }

@@ -91,7 +91,7 @@ npx @nextstage-brasil/harness --preset gitlab --yes
 
 ### Project Manager (no code execution)
 
-Human PM workflow only — `ns-project-manager` + requirements enricher. Does **not** install SDD workers or coding skills.
+Human PM workflow only — `ns-project-manager` (budget, schedule, enricher nested). Does **not** install SDD workers or coding skills.
 
 ```bash
 npx @nextstage-brasil/harness --preset project-manager --yes
@@ -211,7 +211,7 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 | -------------------- | ----------------------------------------------------------------------------------------------------- |
 | `spec-driven`        | SDD face + coder, review, investigator, autonomous, living-spec                                      |
 | `gitlab`             | Everything in `spec-driven`, plus GitLab issues, board sync, CI generator (alias: `spec-driven-gitlab`) |
-| `project-manager`    | Human PM toolkit — `ns-project-manager` + requirements enricher (**no** SDD/code workers)             |
+| `project-manager`    | Human PM toolkit — `ns-project-manager` (**no** SDD/code workers)             |
 | `frontend-prototype` | Playwright reverse prototype (`ns-proto-creator`), visual guides, living appearance, design + quality |
 | `full`               | Every skill in the catalog                                                                            |
 | `agents-api`         | LangChain / LangGraph / MCP externals + NS coder/investigator/reviewer/architect                     |

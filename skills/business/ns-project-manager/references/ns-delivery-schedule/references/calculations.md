@@ -64,7 +64,7 @@ Use sequential phases in one track unless human specifies parallel tracks.
 Run:
 
 ```bash
-python3 ../../ns-project-manager/scripts/pert_montecarlo.py pert-config-p100.json
+python3 ../../../scripts/pert_montecarlo.py pert-config-p100.json
 ```
 
 Map `monte_carlo.p50` / `p85` / `p95` (effort days) → calendar dates from `data_inicio`.

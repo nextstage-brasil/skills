@@ -150,7 +150,7 @@ for (const skillId of Object.keys(skillPaths)) {
 const bundledPresetsDir = join(__dirname, '..', 'templates', 'presets');
 const repoPresetsDir = join(repoRoot, 'presets');
 if (existsSync(bundledPresetsDir) && existsSync(repoPresetsDir)) {
-  for (const file of ['index.json', 'spec-driven.json', 'gitlab.json', 'business.json', 'frontend.json', 'agent-creator.json', 'full.json']) {
+  for (const file of ['index.json', 'spec-driven.json', 'gitlab.json', 'project-manager.json', 'frontend.json', 'agent-creator.json', 'full.json']) {
     const bundled = join(bundledPresetsDir, file);
     const repo = join(repoPresetsDir, file);
     if (!existsSync(bundled) || !existsSync(repo)) continue;

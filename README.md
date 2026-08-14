@@ -16,7 +16,7 @@ skills/
 ├── testing/            # Cypress/PHPUnit execution skills
 ├── frontend/           # UI design + reverse prototyping
 ├── docs/               # Docs writer + best-practices
-├── business/           # PM, budget, delivery schedule
+├── business/           # PM face (budget, schedule, enricher nested in references/)
 └── labs/               # Multi-agent architecture experiments
 ```
 
@@ -44,10 +44,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-best-practices`             | Security headers, compatibility, modernization, and Web Interface Guidelines UI pass (optional complement)                                    |
 | `ns-proto-creator`                   | Playwright reverse prototyping face — create/evolve single `prototype/` tree (optional; `--preset frontend-prototype`)                        |
 | `ns-proto-visual-guide`              | Normative visual appearance guides (`*-visual.md`) for implementation handoff (optional)                                                      |
-| `ns-requirements-enricher`           | Grill-me gap analysis for GitLab issues or chat context                                                                                       |
-| `ns-project-manager`                 | End-to-end PM workflow — clarification through delivery forecast                                                                              |
-| `ns-delivery-schedule`            | Triple productivity delivery schedule (P100 / P85 / P50 h/FP) + Monte Carlo calendar P50/P85/P95                                             |
-| `ns-commercial-budget`               | Commercial budget (product voice) — Features, FP, COSMIC, hours, macro activities, risk margin %                                           |
+| `ns-project-manager`                 | PM face — gated pipeline, commercial budget, triple delivery schedule, requirements enricher (`references/ns-*/`) |
 | `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
 | `ns-langgraph-agents`                | LangGraph.js runtime — MCP governance, context window, HITL, evals                                                                            |
 
@@ -77,12 +74,12 @@ See `packages/harness/README.md` for all flags. Install and migration details: `
 | ------ | ------------ |
 | `spec-driven` | SDD face + coder, reviewer, investigator, autonomous, living-spec (clarify → spec → tasks → implement → close). |
 | `gitlab` | Extends `spec-driven`. Adds GitLab issue execution, board sync, CI generator, MCP usage. Alias: `spec-driven-gitlab`. |
-| `business` | Commercial pack only: PM, budget (FP/COSMIC), delivery schedule (Monte Carlo), requirements enricher. No code execution. |
+| `project-manager` | PM face only: budget (FP/COSMIC), delivery schedule (Monte Carlo), requirements enricher. No code execution. |
 | `frontend` | UI design, reverse prototyping, visual appearance guides. No SDD face. |
-| `full` | Entire NS catalog (gitlab + frontend + business + labs + testing + docs) + Anthropics skill-creator. |
+| `full` | Entire NS catalog (gitlab + frontend + project-manager + labs + testing + docs) + Anthropics skill-creator. |
 | `agents-api` | Agent API stack: NS coder/review/investigator/langgraph plus LangChain/MCP/Vitest/eval externals. |
 
-Aliases: `project-manager` → `business`, `frontend-prototype` → `frontend`, `spec-driven-gitlab` → `gitlab`.
+Aliases: `frontend-prototype` → `frontend`, `spec-driven-gitlab` → `gitlab`.
 
 There is **no** selective install of individual SDD phases — use `/ns-spec-driven` (internal phases live in `references/`).
 

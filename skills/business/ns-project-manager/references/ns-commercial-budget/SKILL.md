@@ -16,16 +16,13 @@ description: >
   NOT for SDD requirements.md/tasks/GitLab issues, RICE/sprint/PERT, factory
   token/USD cost.
 license: Apache-2.0
-requires_harness: ">=1.0.0"
 provides:
   - artifact:commercial-budget
 consumes:
   - artifact:docs/context/architecture-rules.md
-depends:
-  - ns-harness
 metadata:
   author: nextstage-brasil
-  version: "1.12"
+  version: "1.13"
 ---
 
 # Commercial Budget
@@ -40,9 +37,14 @@ Client-facing commercial budget from free-form scope: **Features**, **Mermaid fl
 
 Not SDD, not tasks/, not GitLab issues, not RICE/sprint/PERT.
 
-## Harness
+## Session boot
 
-See `../../ns-harness/references/session-boot.md` + `artifact-layout.md`. Ask once for `{version_san}` if missing.
+Optional — skip any step whose path does not exist. Do not invent project layout.
+
+1. If `agents.local.md` exists beside `AGENTS.md`, read it once. Never tool-Read `AGENTS.md`.
+2. If `.nextstage-harness/rules/` exists, read `architecture-rules.md` and `project-rules.md` when present.
+3. If `docs/context/` exists, follow `references/product-context.md` (full reverse-spec + brownfield-map) before clarifying.
+4. If none of the above exist, continue with chat scope only. Ask once for `{version_san}` when persist needs it. Do not create `docs/versions/` until persist is agreed.
 
 ## Language
 
@@ -121,7 +123,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 ## Out of scope
 
 - requirements.md, SDD generators
-- `/ns-harness` reverse-spec unless human asks
+- reverse-spec / brownfield mapping unless the human asks
 - Factory bands A/A′/B, token/USD cost
 - RICE, sprint, PERT (`ns-project-manager`)
 - Invented R$ / sales markup as safety margin

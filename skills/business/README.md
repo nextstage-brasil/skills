@@ -1,18 +1,15 @@
 # business/
 
-Commercial methodology skills: function-point / COSMIC budgeting, probabilistic delivery scheduling (Monte Carlo P50/P85/P95), project management, and requirements enrichment for commercial context.
-
-Standalone install:
+Single catalog skill: `ns-project-manager` (face). Commercial budget, delivery schedule, and requirements enricher live under `references/ns-*/` with their own `SKILL.md` + `references/` (no evals).
 
 ```bash
-npx @nextstage-brasil/harness --preset business --yes
+npx @nextstage-brasil/harness --preset project-manager --yes
 ```
 
-## Skills
+Standalone Claude (no harness):
 
-| Skill | Purpose |
-| ----- | ------- |
-| `ns-project-manager` | Clarify, prioritize, forecast, status, risk |
-| `ns-delivery-schedule` | Triple-productivity delivery schedule + Monte Carlo calendar |
-| `ns-commercial-budget` | Commercial budget — FP, COSMIC, hours, risk margin |
-| `ns-requirements-enricher` | Gap analysis for GitLab issues or chat context |
+```bash
+node packages/harness/scripts/build-external.mjs --preset project-manager
+```
+
+Output: `dist/external/ns-project-manager/` and `dist/external/ns-project-manager.zip`.

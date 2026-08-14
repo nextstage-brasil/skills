@@ -47,8 +47,6 @@ ns-execution-gitlab-issue ──┬── ns-harness
                               ├── mcp-gitlab-usage
                               ├── ns-reviewer
                               └── ns-autonomous
-ns-requirements-enricher ──┬── ns-harness
-                           └── mcp-gitlab-usage
 ```
 
 ## Frontend prototype
@@ -66,13 +64,11 @@ ns-proto-visual-guide ──┬── ns-harness
 ## Business (standalone preset)
 
 ```
-ns-project-manager
-ns-delivery-schedule ──┬── ns-harness
-                       └── ns-project-manager
-ns-commercial-budget ── ns-harness
-ns-requirements-enricher ──┬── ns-harness
-                           └── mcp-gitlab-usage
+ns-project-manager ──┬── ns-harness
+                     └── mcp-gitlab-usage
 ```
+
+Nested (not catalog skills): `references/ns-commercial-budget`, `references/ns-delivery-schedule`, `references/ns-requirements-enricher`.
 
 ## Labs
 

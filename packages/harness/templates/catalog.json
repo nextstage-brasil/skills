@@ -23,14 +23,11 @@
     ],
     "ns-proto-visual-guide": ["ns-harness", "ns-living-spec"],
     "ns-living-spec": ["ns-harness"],
-    "ns-project-manager": [],
-    "ns-delivery-schedule": ["ns-harness", "ns-project-manager"],
-    "ns-commercial-budget": ["ns-harness"],
+    "ns-project-manager": ["ns-harness", "mcp-gitlab-usage"],
     "mcp-gitlab-usage": ["ns-harness"],
     "ns-gitlab-board-sync": ["mcp-gitlab-usage"],
     "ns-gitlab-ci-generator": [],
     "ns-execution-gitlab-issue": ["ns-harness", "mcp-gitlab-usage", "ns-reviewer", "ns-autonomous"],
-    "ns-requirements-enricher": ["ns-harness", "mcp-gitlab-usage"],
     "ns-autonomous": ["ns-harness", "ns-reviewer"],
     "ns-coder": [
       "ns-harness",
@@ -79,13 +76,12 @@
     },
     "project-manager": {
       "label": "Project Manager",
-      "skills": ["ns-project-manager", "ns-delivery-schedule", "ns-requirements-enricher", "ns-commercial-budget"]
+      "skills": ["ns-project-manager"]
     },
     "gitlab": {
       "label": "GitLab",
       "skills": [
         "mcp-gitlab-usage",
-        "ns-requirements-enricher",
         "ns-gitlab-board-sync",
         "ns-gitlab-ci-generator",
         "ns-execution-gitlab-issue"

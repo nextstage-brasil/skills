@@ -56,10 +56,12 @@ function walkFiles(dir, out = []) {
  */
 export function validateCommercialBudgetSkill(skillsDir) {
   const errors = [];
-  const skillDir = resolveSkillDir(skillsDir, SKILL_ID);
+  const pmDir = resolveSkillDir(skillsDir, 'ns-project-manager');
+  const skillDir = pmDir ? join(pmDir, 'references', SKILL_ID) : null;
   const skillMdPath = skillDir ? join(skillDir, 'SKILL.md') : null;
 
   if (!skillMdPath || !existsSync(skillMdPath)) {
+    errors.push(`${SKILL_ID}: missing nested skill at ns-project-manager/references/${SKILL_ID}/SKILL.md`);
     return errors;
   }
 

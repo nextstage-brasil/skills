@@ -7,3 +7,4 @@ node_modules/
 skills/*-workspace/
 .skill-workspaces/
 local/
+dist/

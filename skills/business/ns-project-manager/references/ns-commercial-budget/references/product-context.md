@@ -2,7 +2,7 @@
 
 Before clarifying or generating Features, align the free-form scope with **what the product already does** when context artifacts exist under `docs/context/`.
 
-Produced by `/ns-harness prepare` (reverse-spec + brownfield map). See `../../../ns-harness/references/artifact-layout.md`.
+Produced by brownfield reverse-spec when that workflow has been run (reverse-spec + brownfield map).
 
 ## When to run
 
@@ -18,7 +18,7 @@ Always after Session boot and **before** clarification questions (or before gene
 4. If `docs/context/brownfield-map.md` **exists** → read it **in full** — modules/gaps that affect brownfield effort (do not duplicate stack prose).
 5. Optionally read `docs/context/stack-confirmed.md` only if hours or assumptions need stack constraints already confirmed — do not turn stack into Features.
 
-Do **not** invent missing reverse-spec content. Do **not** run `/ns-harness` reverse-spec from this skill unless the human explicitly asks.
+Do **not** invent missing reverse-spec content. Do **not** run reverse-spec from this skill unless the human explicitly asks.
 
 ## Reuse inventory gate (before sizing)
 

@@ -54,6 +54,24 @@
       "prompt": "Escreve um status report para a diretoria — sprint 4, 8 de 10 stories entregues, 3 bugs abertos 1 resolvido, velocity caiu 2 sprints seguidos, bloqueio de hardware no US-03 ainda aberto.",
       "expected_output": "Triggers Phase 7 Status Report. All three audience reports and the chat reply are in Portuguese (matching the human). Executive report has no story-points/velocity jargon. Managerial report shows Red. Does not reply in English.",
       "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Preciso de um orçamento comercial para uma API de consulta de cadastros: autenticação, busca por documento, histórico de consultas e exportação CSV. Versão orcamento-api-consulta-v1. Pode gravar em docs.",
+      "expected_output": "Reads references/ns-commercial-budget/SKILL.md. Clarifies with ≤5 questions. Writes commercial-budget-internal.md. No invented R$. No tasks/SDD.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Preciso do prazo P50/P85/P95 e dos três cenários de produtividade. Só tenho FP e produtividade — não quero orçamento em R$ nem forecast por user story.",
+      "expected_output": "Reads references/ns-delivery-schedule/SKILL.md. Asks only for missing hours/day, business days/week, and start date. Runs pert_montecarlo.py. No R$. Does not run story-only Phase 5.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Grill-me on this scope before we plan the version: users need a dashboard filter by club and role, show only active members, paginated list.",
+      "expected_output": "Reads references/ns-requirements-enricher/SKILL.md. Chat mode: inline verdict + numbered product questions; no GitLab comment, no files created.",
+      "files": []
     }
   ]
 }
