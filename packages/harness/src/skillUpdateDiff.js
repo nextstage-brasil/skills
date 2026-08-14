@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { AGENTS_SKILLS_DIR } from './agentsLayout.js';
+import { findSourceSkillDir } from './resolveSkillPath.js';
 import { resolveSource } from './source.js';
 
 const SKIP_DIRS = new Set(['.git', 'node_modules', 'dist', 'build', '__pycache__']);
@@ -107,25 +108,7 @@ function resolveLocalSourceRoot(entry, explicitSource, defaultSource) {
   return null;
 }
 
-export function findSourceSkillDir(sourceRoot, skillName, entry = {}) {
-  if (!sourceRoot) return null;
-
-  const fromPath = skillFolderFromSkillPath(entry.skillPath);
-  if (fromPath) {
-    const candidate = join(sourceRoot, fromPath);
-    if (existsSync(join(candidate, 'SKILL.md'))) return candidate;
-  }
-
-  const conventional = [
-    join(sourceRoot, 'skills', skillName),
-    join(sourceRoot, skillName),
-    join(sourceRoot, '.agents', 'skills', skillName),
-  ];
-  for (const candidate of conventional) {
-    if (existsSync(join(candidate, 'SKILL.md'))) return candidate;
-  }
-  return null;
-}
+export { findSourceSkillDir } from './resolveSkillPath.js';
 
 function normalizeGithubOwnerRepo(source) {
   if (!source || typeof source !== 'string') return null;

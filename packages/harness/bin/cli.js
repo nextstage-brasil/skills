@@ -18,11 +18,39 @@ import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js
 import { HARNESS_ROOT, resolveAgents } from '../src/agentsLayout.js';
 import { refreshHarnessReadme } from '../src/refreshHarnessReadme.js';
 import { runUninstallCommand } from '../src/uninstall.js';
+import { validateDependsGraph } from '../src/validateDepends.js';
+import { listPresetAliases } from '../src/presets.js';
+import { loadCatalog } from '../src/catalog.js';
+import { listExternalPresets } from '../src/externalSkills.js';
 
-const HELP = `
+function allPresetIds() {
+  const aliases = listPresetAliases().map((entry) => entry.id);
+  const seen = new Set(aliases);
+  const extra = [];
+  for (const id of Object.keys(loadCatalog().presets ?? {})) {
+    if (!seen.has(id)) {
+      seen.add(id);
+      extra.push(id);
+    }
+  }
+  for (const preset of listExternalPresets()) {
+    if (!seen.has(preset.id)) {
+      seen.add(preset.id);
+      extra.push(preset.id);
+    }
+  }
+  return [...aliases, ...extra];
+}
+
+function formatHelp() {
+  const presetExamples = allPresetIds()
+    .map((id) => `  npx @nextstage-brasil/harness --preset ${id} --yes`)
+    .join('\n');
+
+  return `
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
-  harness prepare          Print full brownfield prepare instructions (/ns-harness-prepare)
+  harness prepare          Print full brownfield prepare instructions (/ns-harness prepare)
   harness sync [options]   Absorb orphan .cursor/rules/*.mdc, then regenerate adapters
   harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
   harness add-subagent <name>  Create a canonical subagent bridge, update manifest, and sync
@@ -31,11 +59,12 @@ Usage:
   harness update [options] Update installed skills that changed (skips up-to-date)
   harness uninstall [options]  Remove harness install (skills, adapters, scaffold)
   harness agents [set]   Show or set project agents (.nextstage-harness/manifest.json)
-  harness list             List presets and available skills
+  harness list [--presets] [--skills] [--domain <name>]  List presets and/or skills
+  harness validate         Verify depends graph integrity
 
 Options:
   --dir <path>           Target project directory (default: current)
-  --preset <name>        Preset: spec-driven | spec-driven-gitlab | project-manager | brownfield | frontend-prototype | full | agents-api | coder-langgraph
+  --preset <name>        Preset from presets/index.json (+ legacy brownfield, external presets)
   --skill <name>         Install specific skill (repeatable)
   --all                  Install every skill in the catalog
   --global, -g           Install skills globally (passed to skills CLI)
@@ -55,16 +84,12 @@ Options:
 
 Examples:
   npx @nextstage-brasil/harness
-  npx @nextstage-brasil/harness --preset spec-driven --yes
-  npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes
-  npx @nextstage-brasil/harness --preset frontend-prototype --yes
-  npx @nextstage-brasil/harness --preset agents-api --yes
-  npx @nextstage-brasil/harness --preset coder-langgraph --yes
+${presetExamples}
   npx @nextstage-brasil/harness sync
   npx @nextstage-brasil/harness sync --check
   npx @nextstage-brasil/harness add-rule api-conventions --description "API conventions"
   npx @nextstage-brasil/harness add-rule frontend --globs "apps/web/**"
-  npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-code-investigator --description "Investigation bridge"
+  npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-investigator --description "Investigation bridge"
   npx @nextstage-brasil/harness agents-md
   npx @nextstage-brasil/harness agents-md --force
   npx @nextstage-brasil/harness prepare
@@ -78,6 +103,7 @@ Examples:
   npx @nextstage-brasil/harness agents set --agent cursor
   npx @nextstage-brasil/harness list
 `.trim();
+}
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -102,6 +128,9 @@ function parseArgs(argv) {
     globs: undefined,
     'always-apply': false,
     'keep-agents-md': false,
+    presets: false,
+    skills: false,
+    domain: undefined,
     subcommand: undefined,
     positional: [],
   };
@@ -113,6 +142,7 @@ function parseArgs(argv) {
   const knownCommands = [
     'init',
     'list',
+    'validate',
     'sync',
     'prune-retired-skills',
     'agents-md',
@@ -198,6 +228,16 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (arg === '--presets') {
+      result.presets = true;
+      continue;
+    }
+
+    if (arg === '--skills') {
+      result.skills = true;
+      continue;
+    }
+
     const valueFlags = [
       '--dir',
       '--preset',
@@ -206,6 +246,7 @@ function parseArgs(argv) {
       '--source',
       '--description',
       '--globs',
+      '--domain',
     ];
     if (valueFlags.includes(arg)) {
       const value = args[i + 1];
@@ -221,6 +262,7 @@ function parseArgs(argv) {
       if (arg === '--source') result.source = value;
       if (arg === '--description') result.description = value;
       if (arg === '--globs') result.globs = value;
+      if (arg === '--domain') result.domain = value;
       i += 1;
       continue;
     }
@@ -443,12 +485,36 @@ async function main() {
   const parsed = parseArgs(process.argv);
 
   if (parsed.help) {
-    console.log(HELP);
+    console.log(formatHelp());
     return;
   }
 
   if (parsed.command === 'list') {
-    printList();
+    printList({
+      presets: parsed.presets,
+      skills: parsed.skills,
+      domain: parsed.domain,
+    });
+    return;
+  }
+
+  if (parsed.command === 'validate') {
+    const result = validateDependsGraph();
+    if (!result.ok) {
+      console.error('Depends validation failed:\n');
+      for (const error of result.errors) {
+        console.error(`  - ${error}`);
+      }
+      process.exit(1);
+    }
+
+    try {
+      const aliases = listPresetAliases();
+      console.log(`OK: depends graph valid; ${aliases.length} preset alias(es) in presets/index.json`);
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
     return;
   }
 

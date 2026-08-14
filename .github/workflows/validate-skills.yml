@@ -32,6 +32,32 @@ jobs:
           fi
           echo 'OK: no legacy _shared paths'
 
+      - name: No retired product_root path variables
+        run: |
+          set -euo pipefail
+          # Fail on retired path tokens. MIGRATION changelog may mention old names.
+          if rg -n 'product_root|harness-discovery|specs_root|context_root|harness_root|product_slug|\{product-slug\}' \
+            skills/ packages/harness/templates/ packages/harness/docs/ packages/harness/src/ \
+            --glob '!**/node_modules/**' \
+            --glob '!skills/_meta/MIGRATION.md'; then
+            echo 'ERROR: Found retired product_root / harness-discovery path tokens'
+            exit 1
+          fi
+          echo 'OK: no retired product_root path variables'
+
+      - name: No forced tool-Read of AGENTS.md
+        run: |
+          set -euo pipefail
+          # AGENTS.md is host-injected; skills must not instruct a tool Read of it.
+          if rg -n 'Read this file \(`AGENTS\.md`\)|Read `AGENTS\.md` in full|Read `AGENTS\.md` first|Read AGENTS\.md at|Begin Session boot.*Read `AGENTS' \
+            skills/ packages/harness/templates/ packages/harness/src/ \
+            --glob '!**/node_modules/**' \
+            --glob '!skills/_meta/MIGRATION.md'; then
+            echo 'ERROR: Found instructions that force a tool-Read of AGENTS.md'
+            exit 1
+          fi
+          echo 'OK: no forced AGENTS.md tool-Read instructions'
+
       - name: No legacy harness-init package references
         run: |
           set -euo pipefail
@@ -55,10 +81,10 @@ jobs:
         run: |
           set -euo pipefail
           failed=0
-          for skill_md in skills/*/SKILL.md; do
+          for skill_md in skills/*/SKILL.md skills/*/*/SKILL.md; do
             [ -f "$skill_md" ] || continue
             body=$(awk 'BEGIN{fm=0} /^---$/{fm++; next} fm>=2{print}' "$skill_md")
-            if echo "$body" | rg -q '\.\./ns-harness/'; then
+            if echo "$body" | rg -q '\.\./.*ns-harness/'; then
               frontmatter=$(awk 'BEGIN{fm=0} /^---$/{fm++; next} fm==1{print}' "$skill_md")
               if ! echo "$frontmatter" | rg -q '^depends:' || ! echo "$frontmatter" | rg -q 'ns-harness'; then
                 echo "ERROR: $skill_md references ../ns-harness/ but frontmatter lacks depends: ns-harness"

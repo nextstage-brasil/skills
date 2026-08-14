@@ -1,0 +1,47 @@
+{
+  "skill_name": "ns-living-spec",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Version 1.3.0 delivered for apps/crm/ — consolidate living specs from requirements and completed handoff.",
+      "expected_output": "Agent uses Version mode, updates or creates domain specs under docs/specs/, updates INDEX.md, changelog entries with version_san per domain.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Feature 004 added billing endpoints — merge into existing billing.md without deleting old requirements.",
+      "expected_output": "Agent reads full billing.md, appends/updates requirements and endpoints, records changelog.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Consolidate specs but Code Review was not Approved for 2.0.0.",
+      "expected_output": "Agent refuses or defers — Version mode requires Code Review: Approved (no code-review-report.md required).",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Ad-hoc mode from ns-coder: Code Review Approved, docs/specs/ exists, task added cancelled_at to connects — update living specs from task + git diff.",
+      "expected_output": "Agent uses Ad-hoc mode, updates relevant domain spec and INDEX without docs/versions writes, changelog uses adhoc-YYYY-MM-DD, emits consolidation report with Mode: ad-hoc.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Ad-hoc mode: Approved rename-only refactor, docs/specs/ present.",
+      "expected_output": "Agent skips writes — non-behavioral diff; reports Living specs skipped.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Appearance mode from ns-proto-creator: prototype settings screen documents cancel subscription confirmation and role-gated fields. docs/specs/ may be missing. No code review.",
+      "expected_output": "Uses appearance mode without Code Review gate; may create docs/specs/ + INDEX; writes SHALL for visible behavior only; changelog appearance-YYYY-MM-DD; does not paste Element|How tables.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Appearance mode: only tightened card padding and swapped accent color — no behavior change.",
+      "expected_output": "Skips writes — chrome polish only; reports Living specs skipped with reason.",
+      "files": []
+    }
+  ]
+}

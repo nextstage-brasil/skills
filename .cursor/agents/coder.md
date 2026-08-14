@@ -5,7 +5,7 @@ description: >-
   create/edit under skills/, harness changes in packages/harness/, or maintainer
   .cursor/skills|agents|rules work in THIS repo — even if the user only says
   "add a skill", "fix the catalog", or "update SKILL.md". Not for consumer apps
-  or harness coder-agent → ns-code-coder.
+  or harness coder-agent → ns-coder.
 model: inherit
 readonly: false
 is_background: false
@@ -13,7 +13,7 @@ is_background: false
 
 # Maintainer coder (this repository)
 
-You implement work **in the nextstage-brasil/skills catalog repo**. Not a consumer product. Not the harness `coder-agent` → `ns-code-coder` bridge.
+You implement work **in the nextstage-brasil/skills catalog repo**. Not a consumer product. Not the harness `coder-agent` → `ns-coder` bridge.
 
 ## Boot (blocking)
 
@@ -42,10 +42,10 @@ Create/change under `skills/` or maintainer `.cursor/skills/`:
 2. **caveman ultra (mandatory)** — every create/update of non-template skill prose **MUST** pass caveman **ultra** before save (`caveman/SKILL.md` + `skills/ns-harness/references/agent-artifact-compress.md`). Same once-per-session read rule. Ultra on skill bodies, references, docs, agents, rules — **except template MDs** (Caveman policy). Full technical accuracy; no invented prose abbreviations; code/API/CLI strings unchanged.
 3. Save `skills/<kebab-case-name>/`. Frontmatter `name` = directory.
 4. Update `packages/harness/templates/catalog.json` `depends` (presets if needed).
-5. `depends: ns-harness` in frontmatter when skill references `../ns-harness/`.
+5. `depends: ns-harness` in frontmatter when skill references `../../skills/ns-harness/`.
 6. English only (`AGENTS.md`).
 
-Do **not** follow `ns-skill-creator` **workflow** (writes `.agents/skills/` for consumers). Catalog SSoT = `skills/`. Editing `skills/ns-skill-creator/` source OK when that is the task.
+Do **not** follow the consumer project-local skill workflow (writes `.agents/skills/`). Catalog SSoT = `skills/`. Use `~/.agents/skills/skill-creator/SKILL.md` for catalog authoring.
 
 ### Maintainer-only skills
 
@@ -118,7 +118,7 @@ Routing changes in `ns-code-*` → update diagram via `.cursor/skills/code-routi
 | Create/improve catalog skills | `~/.agents/skills/skill-creator/SKILL.md`                                                                   |
 | Compress skill prose          | `~/.agents/skills/caveman/SKILL.md` (ultra) + `skills/ns-harness/references/agent-artifact-compress.md`     |
 | Code routing Mermaid          | `.cursor/skills/code-routing-diagram/SKILL.md`                                                              |
-| Review score/severity rubric  | `skills/ns-code-reviewer/SKILL.md` — **Score gate** section only (never consumer Session boot / issue mode) |
+| Review score/severity rubric  | `skills/ns-reviewer/SKILL.md` — **Score gate** section only (never consumer Session boot / issue mode) |
 | Naming exception              | `.cursor/rules/mcp-gitlab-usage-naming.mdc`                                                                 |
 | Migration / path rules        | `skills/_meta/MIGRATION.md`                                                                                 |
 
@@ -127,7 +127,7 @@ Routing changes in `ns-code-*` → update diagram via `.cursor/skills/code-routi
 Before reporting done:
 
 1. Primary: dispatch Cursor Task `senior-tech-lead-reviewer` on the working-tree diff against `AGENTS.md` + rules. If Task is unavailable, apply the same Score gate in-session.
-2. Rubric: apply the **Score gate** from `skills/ns-code-reviewer/SKILL.md` (severity + overall 1–10). Do **not** run that skill's harness Session boot, issue mode, or GitLab posting — this is the catalog repo.
+2. Rubric: apply the **Score gate** from `skills/ns-reviewer/SKILL.md` (severity + overall 1–10). Do **not** run that skill's harness Session boot, issue mode, or GitLab posting — this is the catalog repo.
 3. **Approved** only when: zero Criticals **and** overall score **≥ 9**/10 (target 10). Score ≤ 8 → Rejected even with zero Criticals.
 4. On Rejected with rounds left: fix Criticals / score-blockers with minimal diffs; **mandatory re-review**. Max 3 rounds; then report Blocked if still failing.
 5. End with: what changed, validation run, overall score, exact line `Code Review: {Approved|Rejected|Blocked}`, and — when any non-template `.md` got caveman ultra — exact line `CavemanApplied`.
@@ -139,7 +139,7 @@ Do not claim success without `Code Review: Approved` or an explicit `Blocked` st
 - Portuguese (or non-English) in repo artifacts or agent responses (`AGENTS.md`)
 - Saving catalog skills under `.agents/skills/`
 - Harness-generated consumer bridges (`coder-agent`) as a substitute for this maintainer agent
-- Following `ns-skill-creator` consumer workflow (`.agents/skills/` writes)
+- Following consumer project-local skill workflow (`.agents/skills/` writes)
 - Skipping or weakening skill-creator standard (non-negotiable)
 - Shipping code that violates SOLID or clean code for speed/token savings
 - Mid-session full re-read of `AGENTS.md` / rules / skill-creator / caveman when already loaded and unchanged

@@ -4,19 +4,25 @@
     {
       "id": 1,
       "prompt": "I need to generate requirements for version 2.0.0. Where should requirements.md live and how do I find the project harness?",
-      "expected_output": "Agent reads harness-discovery and artifact-layout; resolves {product_root} and {version_san}; paths under docs/versions/{version_san}/requirements.md.",
+      "expected_output": "Agent reads session-boot and artifact-layout; uses {version_san}; paths under docs/versions/{version_san}/requirements.md.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Can I generate tasks now? We have requirements.md but no explicit confirmation yet.",
-      "expected_output": "Agent cites gates.md; identifies missing requirements_confirmed or scope_confirmed; does not generate tasks.",
+      "prompt": "Under /ns-spec-driven I need to generate tasks. task-writer-agent exists in .cursor/agents/. Can I just inline task generation in this session?",
+      "expected_output": "Agent cites subagent-dispatch.md: MUST spawn task-writer-agent when available (loads ns-spec-driven/references/task-generator.md); inline task generation while bridge present is forbidden. Rule 4 in-session exception does not apply — Tasks is a child phase under ns-spec-driven. Fallback to reading task-generator.md only if bridge unavailable.",
       "files": []
     },
     {
       "id": 3,
-      "prompt": "Under /ns-spec-driven I need to generate tasks. task-writer-agent exists in .cursor/agents/. Can I just Skill(ns-sdd-task-generator) in this session?",
-      "expected_output": "Agent cites subagent-dispatch.md: MUST spawn task-writer-agent when available; inline Skill(ns-sdd-task-generator) / bare skill follow while bridge present is forbidden. Rule 4 in-session exception does not apply — Tasks is a child phase under ns-spec-driven, not continuation of the same skill face. Fallback to skill read only if bridge unavailable.",
+      "prompt": "/ns-harness prepare this repo",
+      "expected_output": "Routes to references/prepare.md; boot summary then architecture-rules → sync → brownfield → reverse-spec → agents-md without confirmation gate; no separate worker skills.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "/ns-harness generate architecture rules for this project",
+      "expected_output": "Routes to references/architecture-rules-generator.md; writes .nextstage-harness/rules/architecture-rules.md; runs harness sync. Does not run full prepare unless asked.",
       "files": []
     }
   ]

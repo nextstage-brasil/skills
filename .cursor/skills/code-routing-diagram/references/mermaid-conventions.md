@@ -12,12 +12,12 @@
 | `R` / Entry router | Host priority scan 1→5 (not a skill) |
 | `G` | `ns-execution-gitlab-issue` |
 | `S` | `ns-spec-driven` |
-| `A` | `ns-code-autonomous` |
-| `I` | `ns-code-investigator` |
-| `C` | `ns-code-coder` |
-| `C2` | `ns-code-coder` subagent under `A` |
-| `H` | `ns-sdd-execution-handoff-generator` |
-| `REV` | `ns-code-reviewer` |
+| `A` | `ns-autonomous` |
+| `I` | `ns-investigator` |
+| `C` | `ns-coder` |
+| `C2` | `ns-coder` subagent under `A` |
+| `H` | `run-implementation.md` (ns-coder) |
+| `REV` | `ns-reviewer` |
 | `GL` | `mcp-gitlab-usage` |
 | `U2` / User decision | Investigator human gate before re-entry |
 | `IMPL` | Implement + review loop inside coder |

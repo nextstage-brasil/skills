@@ -2,18 +2,17 @@
 
 # Architecture Rules
 
-Technical constitution for AI agents. Replace this stub by running the `ns-harness-architecture-rules` skill, then `npx @nextstage-brasil/harness sync`.
+Technical constitution for AI agents. Replace this stub by running `/ns-harness` architecture-rules, then `npx @nextstage-brasil/harness sync`.
 
 ## Scope
 
-- **Product root** = `{product_root}` (set during generation).
-- Read `AGENTS.md` first; skills in `.agents/skills/`; canonical rules in `.nextstage-harness/rules/`.
+- Obey `AGENTS.md` (already in context; do not tool-Read); skills in `.agents/skills/`; canonical rules in `.nextstage-harness/rules/`.
 
 ## Stack
 
 | Layer | Technology |
 | ----- | ---------- |
-| TBD   | Run ns-harness-architecture-rules |
+| TBD   | Run `/ns-harness` architecture-rules |
 
 ## Key references
 

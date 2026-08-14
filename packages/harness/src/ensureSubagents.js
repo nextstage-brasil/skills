@@ -1,11 +1,13 @@
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { listInstalledSkillNames } from './prepare.js';
 import { loadManifest, manifestPath } from './manifest.js';
 import { DEFAULT_SUBAGENTS } from './subagentsCatalog.js';
 import {
+  buildDefaultSubagentBody,
   ensureSubagentCanonicalFiles,
   normalizeSubagentCanonical,
+  subagentCanonicalRel,
 } from './subagentCanonical.js';
 import { HARNESS_ROOT } from './agentsLayout.js';
 
@@ -24,18 +26,42 @@ function normalizeModel(model, fallback) {
 }
 
 function cloneEntry(def) {
-  return normalizeSubagentCanonical({
+  const entry = {
     name: def.name,
     skill: def.skill,
     description: def.description,
     model: { ...def.model },
     readonly: Boolean(def.readonly),
-  });
+  };
+  if (def.skillReference) {
+    entry.skillReference = def.skillReference;
+  }
+  return normalizeSubagentCanonical(entry);
 }
 
 function normalizeReadonly(value, fallback) {
   if (typeof value === 'boolean') return value;
   return Boolean(fallback);
+}
+
+const catalogByName = new Map(DEFAULT_SUBAGENTS.map((def) => [def.name, def]));
+
+function catalogBodyForEntry(def, entry) {
+  return buildDefaultSubagentBody({
+    ...entry,
+    name: def.name,
+    skill: def.skill,
+    skillReference: def.skillReference,
+  });
+}
+
+function canonicalBodyStale(harnessRoot, def, entry) {
+  const canonicalPath = join(harnessRoot, subagentCanonicalRel(entry));
+  const expected = catalogBodyForEntry(def, entry);
+  if (!existsSync(canonicalPath)) {
+    return true;
+  }
+  return readFileSync(canonicalPath, 'utf8') !== expected;
 }
 
 /**
@@ -62,6 +88,7 @@ export function ensureSubagents(projectRoot, options = {}) {
     existing.filter((entry) => entry?.name).map((entry) => [entry.name, entry]),
   );
   const seeded = [];
+  const catalogBodyRefresh = new Set();
 
   for (const def of DEFAULT_SUBAGENTS) {
     if (!installed.has(def.skill)) continue;
@@ -72,16 +99,29 @@ export function ensureSubagents(projectRoot, options = {}) {
       existing.push(entry);
       byName.set(def.name, entry);
       seeded.push(def.name);
+      catalogBodyRefresh.add(def.name);
       continue;
     }
 
+    const skillChanged = current.skill !== def.skill;
+    const refChanged = (current.skillReference ?? null) !== (def.skillReference ?? null);
+
     normalizeSubagentCanonical(current);
     current.skill = def.skill;
+    if (def.skillReference) {
+      current.skillReference = def.skillReference;
+    } else {
+      delete current.skillReference;
+    }
     if (!current.description) {
       current.description = def.description;
     }
     current.model = normalizeModel(current.model, def.model);
     current.readonly = normalizeReadonly(current.readonly, def.readonly);
+
+    if (skillChanged || refChanged) {
+      catalogBodyRefresh.add(def.name);
+    }
   }
 
   for (const entry of existing) {
@@ -91,10 +131,22 @@ export function ensureSubagents(projectRoot, options = {}) {
   manifest.subagents = existing;
 
   const harnessRoot = join(projectRoot, HARNESS_ROOT);
-  const { created: canonicalCreated } = ensureSubagentCanonicalFiles(
-    harnessRoot,
-    existing.filter((entry) => entry?.skill && installed.has(entry.skill)),
+  const managed = existing.filter(
+    (entry) => entry?.skill && installed.has(entry.skill) && catalogByName.has(entry.name),
   );
+
+  const { created: canonicalCreated } = ensureSubagentCanonicalFiles(harnessRoot, managed);
+
+  const stale = managed.filter((entry) => {
+    if (!catalogBodyRefresh.has(entry.name)) {
+      return false;
+    }
+    const def = catalogByName.get(entry.name);
+    return def && canonicalBodyStale(harnessRoot, def, entry);
+  });
+  if (stale.length > 0) {
+    ensureSubagentCanonicalFiles(harnessRoot, stale, { force: true });
+  }
 
   const after = JSON.stringify(manifest);
   let written = false;

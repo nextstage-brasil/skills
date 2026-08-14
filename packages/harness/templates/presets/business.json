@@ -1,0 +1,11 @@
+{
+  "name": "business",
+  "requires_harness": ">=1.0.0",
+  "description": "Commercial methodology: budget, schedule, PM, and requirements enrichment",
+  "includes": [
+    "skills/business/ns-project-manager",
+    "skills/business/ns-delivery-schedule",
+    "skills/business/ns-commercial-budget",
+    "skills/business/ns-requirements-enricher"
+  ]
+}

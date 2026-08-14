@@ -13,9 +13,9 @@ const repoRoot = join(__dirname, '../../..');
 const ENTRY_SKILLS = [
   { priority: 1, name: 'ns-execution-gitlab-issue' },
   { priority: 2, name: 'ns-spec-driven' },
-  { priority: 3, name: 'ns-code-autonomous' },
-  { priority: 4, name: 'ns-code-investigator' },
-  { priority: 5, name: 'ns-code-coder' },
+  { priority: 3, name: 'ns-autonomous' },
+  { priority: 4, name: 'ns-investigator' },
+  { priority: 5, name: 'ns-coder' },
 ];
 
 function read(path) {
@@ -81,7 +81,7 @@ Extracted from \`skills/ns-harness/references/code-skill-routing.md\`:
 ${mermaidMatch[1].trim()}
 \`\`\`
 
-Engine mode: \`A\` and \`C2\` do not re-enter \`G\` — see \`skills/ns-code-autonomous/references/routing.md\`.
+Engine mode: \`A\` and \`C2\` do not re-enter \`G\` — see \`skills/code/ns-autonomous/references/routing.md\`.
 
 ---
 

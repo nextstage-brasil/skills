@@ -186,7 +186,7 @@ Upgrade `context-window-and-tokens.md` and expand `context-window.ts.snippet` (~
 | **SSE sanitize user-facing** | Leak of tool XML / infra names | Stream filter; opacity of tool/MCP/provider names in final message |
 | **Guards 403 thread×tenant / 409 busy** | Race and leak | Keep in build checklist |
 | **Browser eval against dev-chat** | Unit green ≠ agent answers | Playwright conversational suite as regression gate when `streaming_sse` |
-| **Golden `tools/list` + mock aligned to live** | Silent mock↔prod drift | Standard task when MCP is in scope (`ns-code-e2e-tests` / eval generators) |
+| **Golden `tools/list` + mock aligned to live** | Silent mock↔prod drift | Standard task when MCP is in scope (`ns-e2e-tests` / eval generators) |
 
 ---
 
@@ -277,7 +277,7 @@ Order to materialize this doc into skills/refs/snippets — **not executed by th
 | P2 | Costs-by-thread + unpriced_calls | `observability.md` |
 | P2 | State-backed evidence & fidelity doctrine | **new** `references/evidence-and-fidelity.md` + anti-patterns |
 | P2 | Conversation-observed locale (`resolveConversationLocale` + Intl `format*`) | `evidence-and-fidelity.md`, `templates/snippets/conversation-locale.ts.snippet`, anti-patterns, architectures intent slots |
-| P2 | Evals: golden MCP `tools/list` + Playwright/dev-chat gate | `evals-and-gates.md`, hooks from `ns-code-e2e-tests` / PM e2e generators |
+| P2 | Evals: golden MCP `tools/list` + Playwright/dev-chat gate | `evals-and-gates.md`, hooks from `ns-e2e-tests` / PM e2e generators |
 | P3 | Structural/field cache pattern (opt-in) | `mcp-complex-access.md` subsection |
 | P3 | Fidelity-alert observability helper | `observability.md` or evidence ref |
 
@@ -287,8 +287,8 @@ Order to materialize this doc into skills/refs/snippets — **not executed by th
 | ------------ | ------------ |
 | Runtime doctrine, snippets, graph-spec, anti-patterns | `ns-langgraph-agents` |
 | Default architecture recommendation for MCP tool-heavy | `ns-multi-agent-architect` |
-| Browser / conversational eval tasks | `ns-code-e2e-tests` (+ PM e2e generator when issuing work) |
-| Implementation of product diffs after doctrine lands | `ns-code-coder` / `ns-code-autonomous` |
+| Browser / conversational eval tasks | `ns-e2e-tests` (+ PM e2e generator when issuing work) |
+| Implementation of product diffs after doctrine lands | `ns-coder` / `ns-autonomous` |
 | Catalog / install discoverability of new refs | `ns-harness` + `packages/harness/templates/catalog.json` if new skill files are added |
 
 ---

@@ -1,0 +1,23 @@
+{
+  "evals": [
+    {
+      "prompt": "Audit security headers for our Express API \u2014 we have no CSP yet.",
+      "id": 1,
+      "expected_output": "Invokes ns-best-practices: scans Express config/middleware, reports CSP and related headers using checklist, suggests minimal safe additions.",
+      "files": []
+    },
+    {
+      "prompt": "Review this merge request for SOLID violations.",
+      "id": 2,
+      "expected_output": "Does not use ns-best-practices as primary; should route to ns-reviewer instead.",
+      "files": []
+    },
+    {
+      "prompt": "Review my UI against Web Interface Guidelines — focus on the prototype login and dashboard pages.",
+      "id": 3,
+      "expected_output": "Invokes ns-best-practices: reads references/ui-guidelines-review.md (bundled), reports findings with file:line per output format, does not hand off to ns-frontend-design as the primary skill.",
+      "files": []
+    }
+  ],
+  "skill_name": "ns-best-practices"
+}

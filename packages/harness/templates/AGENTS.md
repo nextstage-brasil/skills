@@ -4,6 +4,6 @@ The CLI does **not** copy this file. `harness agents-md` generates `AGENTS.md` f
 
 Shared **Docker and testing** rules: `snippets/docker-and-testing.md` (inlined into generated output).
 
-For brownfield refinement, use the `ns-harness-agents-md` skill (`skills/ns-harness-agents-md/`).
+For brownfield refinement, use `/ns-harness` (`references/agents-md.md`).
 
-Generated output includes a **local overrides** rule: when `agents.local.md` exists at `{product_root}` (case-insensitive), agents read it after `AGENTS.md`.
+Generated output includes a **local overrides** rule: when `agents.local.md` exists at the same directory as `AGENTS.md` (case-insensitive), agents read it after `AGENTS.md`.

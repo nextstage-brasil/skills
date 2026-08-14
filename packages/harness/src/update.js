@@ -88,16 +88,8 @@ export async function runUpdate(argv = {}) {
     source: argv.source,
   };
 
-  const hasSkillCreator = diff.toUpdate.includes('ns-skill-creator');
-  const withoutSkillCreator = diff.toUpdate.filter((name) => name !== 'ns-skill-creator');
-
-  if (withoutSkillCreator.length > 0) {
-    updateInstalledSkills(withoutSkillCreator, installOptions);
-  }
-
-  if (hasSkillCreator) {
-    updateInstalledSkills(['ns-skill-creator'], installOptions);
-    installSkills(['ns-skill-creator'], installOptions);
+  if (diff.toUpdate.length > 0) {
+    updateInstalledSkills(diff.toUpdate, installOptions);
   }
 
   const details = [];
@@ -146,10 +138,10 @@ export async function runUpdate(argv = {}) {
   }
 
   const installed = listInstalledSkillNames(projectRoot);
-  if (installed.includes('ns-harness-prepare')) {
+  if (installed.includes('ns-harness')) {
     p.note(
       [
-        '/ns-harness-prepare',
+        '/ns-harness prepare this repo',
         '',
         'Builds architecture rules, brownfield context, and AGENTS.md.',
         'Skip only if greenfield (no application code yet).',

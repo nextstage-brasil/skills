@@ -3,9 +3,18 @@
     "agents-api": {
       "label": "Agents API projects",
       "description": "LangChain/LangGraph agent APIs — MCP, evaluation, testing, and persistence"
+    },
+    "authoring": {
+      "label": "Skill authoring",
+      "description": "Anthropics skill-creator for project-local skills in harness projects"
     }
   },
   "skills": {
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "stack": "authoring",
+      "label": "Skill creator (Anthropics)"
+    },
     "langchain-fundamentals": {
       "source": "langchain-ai/langchain-skills",
       "stack": "agents-api",
@@ -44,8 +53,9 @@
       "nsSkills": [
         "ns-harness",
         "ns-multi-agent-architect",
-        "ns-code-coder",
-        "ns-code-reviewer",
+        "ns-coder",
+        "ns-investigator",
+        "ns-reviewer",
         "ns-langgraph-agents"
       ],
       "skills": [
@@ -55,23 +65,6 @@
         "vitest",
         "llm-evaluation",
         "postgresql-table-design"
-      ]
-    },
-    "coder-langgraph": {
-      "label": "Coder + LangGraph",
-      "description": "LangGraph agent runtime doctrine with ad-hoc coding, investigation, and review — MCP, persistence, and Vitest externals",
-      "nsSkills": [
-        "ns-harness",
-        "ns-code-coder",
-        "ns-code-investigator",
-        "ns-code-reviewer",
-        "ns-langgraph-agents"
-      ],
-      "skills": [
-        "langchain-fundamentals",
-        "langgraph-persistence",
-        "mcp-builder",
-        "vitest"
       ]
     }
   }

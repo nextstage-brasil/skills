@@ -1,7 +1,7 @@
 {
   "results": [
     {
-      "name": "ns-harness-codebase-reverse-spec",
+      "name": "ns-codebase-reverse-spec",
       "ok": true,
       "changed": true,
       "before": 785,
@@ -9,7 +9,7 @@
       "delta": -386
     },
     {
-      "name": "ns-code-coder",
+      "name": "ns-coder",
       "ok": true,
       "changed": true,
       "before": 776,
@@ -25,7 +25,7 @@
       "delta": -387
     },
     {
-      "name": "ns-harness-architecture-rules",
+      "name": "ns-architecture-rules",
       "ok": true,
       "changed": true,
       "before": 728,
@@ -33,7 +33,7 @@
       "delta": -288
     },
     {
-      "name": "ns-harness-agents-md",
+      "name": "ns-agent-generator",
       "ok": true,
       "changed": true,
       "before": 701,
@@ -49,7 +49,7 @@
       "delta": -311
     },
     {
-      "name": "ns-code-autonomous",
+      "name": "ns-autonomous",
       "ok": true,
       "changed": true,
       "before": 660,
@@ -57,28 +57,12 @@
       "delta": -295
     },
     {
-      "name": "ns-execution-orchestrator",
-      "ok": true,
-      "changed": true,
-      "before": 644,
-      "after": 358,
-      "delta": -286
-    },
-    {
-      "name": "ns-code-investigator",
+      "name": "ns-investigator",
       "ok": true,
       "changed": true,
       "before": 618,
       "after": 394,
       "delta": -224
-    },
-    {
-      "name": "ns-sdd-clarify-requirements",
-      "ok": true,
-      "changed": true,
-      "before": 594,
-      "after": 365,
-      "delta": -229
     },
     {
       "name": "ns-multi-agent-architect",
@@ -114,19 +98,17 @@
     }
   ],
   "new_descriptions": {
-    "ns-harness-codebase-reverse-spec": "(NS) Reverse-engineer a brownfield/legacy codebase into a technology-agnostic business description \u2014 rules, actors, permissions, lifecycles, integrations (no implementation detail). Use whenever the user mentions brownfield, legacy, modernization, reverse engineering, engenharia reversa, or extracting business rules from code. Do NOT use for code review, bug fixes, or technical architecture docs.",
-    "ns-code-coder": "(NS) Ad-hoc coding worker \u2014 bug fixes, small refactors, scripts, migrations \u2014 without full SDD. Entry priority 5: use for \"just implement this\", \"quick fix\", or concrete coding without execution-handoff (also C2 under ns-code-autonomous). Do NOT use for GitLab ISSUE_URL (ns-execution-gitlab-issue), multi-day/version scope (ns-spec-driven), diagnosis-only (ns-code-investigator), or when execution-handoff.md exists. Do NOT generate requirements/tasks/handoff.",
-    "ns-harness-prepare": "(NS) Full post-harness-init bootstrap in one session \u2014 architecture rules, sync, brownfield map, reverse business spec, project AGENTS.md. Use for \"harness prepare\", post-install setup, onboard brownfield, or running all prepare skills without separate slash commands. Do NOT use for greenfield with no app code, single-skill runs, or CLI-only baseline AGENTS.md.",
-    "ns-harness-architecture-rules": "(NS) Generate or refresh lean architecture-rules.md for AI agents \u2014 stack, layout, patterns, constraints. Use when the user asks for architecture rules, .nextstage-harness/rules/architecture-rules.md, agent conventions, or \"document how this repo works for the AI\". Do NOT use for business specs (ns-harness-codebase-reverse-spec), brownfield maps (ns-harness-bootstrap-brownfield), or one-off Cursor rules without a full architecture pass.",
-    "ns-harness-agents-md": "(NS) Generate or refresh project AGENTS.md plus minimal CLAUDE.md pointer after harness install. Use for \"write AGENTS.md\", bootstrap agent entry point, replace harness stub, or configure Cursor/Claude project rules. Do NOT copy the harness template verbatim. Do NOT use for architecture-rules, reverse business specs, or brownfield maps.",
-    "ns-spec-driven": "(NS) Spec-driven delivery face \u2014 clarify, requirements, tasks, implement or resume a version. Entry priority 2: use for feature specs, version work, or \"let's build X\" with multi-day scope; auto-sizes and delegates to workers. Prefer ns-code-coder for bare quick fixes. Do NOT use for brownfield onboarding, architecture rules, or /ns-harness-prepare (manual only; never auto-run Prepare).",
-    "ns-code-autonomous": "(NS) Autonomous execution engine \u2014 plans depth, resolves doubts from docs/specs, multi-agent work in an isolated worktree. Use for a local/pasted plan or \"run this autonomously\" without GitLab. Also Phase 2 under ns-execution-gitlab-issue (do not run standalone then). Not for single-step edits (ns-code-coder) or GitLab issues directly (ns-execution-gitlab-issue).",
-    "ns-execution-orchestrator": "(NS) Orchestrate partitioned version implementation slice-by-slice \u2014 one subagent per slice, commit, auto-advance until done or stop. Use when version-roadmap.md has pending slices and the user asks to orchestrate/execute all slices. Do NOT use for non-partitioned versions, ad-hoc coding (ns-code-coder), or partitioning itself (ns-sdd-version-partitioner).",
-    "ns-code-investigator": "(NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, or CI \u2014 entry priority 4 when the user wants diagnosis WITHOUT implement (\"why does X break?\"). Use proactively on unclear test/CI failures if they have not asked to fix yet. Do NOT use for implement/fix (ns-code-coder), version scope (ns-spec-driven), GitLab ISSUE_URL execution, or pre-merge review (ns-code-reviewer).",
-    "ns-sdd-clarify-requirements": "(NS) Resolve ambiguities and gaps in a vague scope before requirements. On brownfield, runs bootstrap when brownfield-map.md is missing; if map exists, human gate to refresh or keep. Use for incomplete scopes (\"dashboard\", \"notifications\", \"integration with X\") or before requirements when terms are unclear. Do NOT generate requirements.md \u2014 enriched context only.",
-    "ns-multi-agent-architect": "(NS) Interview to recommend LangGraph vs CrewAI, multi-agent topology, personas, tools, and models. Use when building multi-agent systems, choosing LangGraph/CrewAI, designing crews/graphs, HITL workflows, or \"agents working together\". Do NOT use for general app requirements (ns-sdd-clarify-requirements) or coding without architecture intent.",
-    "ns-execution-gitlab-issue": "(NS) Execute a GitLab issue end-to-end \u2014 status gates, worktree isolation, atomic delivery, MR, mandatory review+fix loop. Use for ISSUE_URL or \"implement this GitLab issue\". Not for local ad-hoc coding (ns-code-coder) or non-GitLab autonomous runs (ns-code-autonomous). Delegates coding to ns-code-autonomous; needs mcp-gitlab-usage + ns-code-reviewer.",
-    "ns-requirements-enricher": "(NS) Enrich requirements before autonomous execution from a GitLab issue or chat context. Use when the user asks to enrich/expand requirements, flesh out acceptance criteria, or prepare issue context for coding agents. Do NOT replace ns-sdd-requirements-generator for full version requirements.md.",
-    "ns-project-manager": "(NS) Gated PM workflow \u2014 clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk, status, meeting, OKR. Use on transcripts, backlog, timeline, delivery date, or status requests \u2014 even if PM is unnamed. Do NOT use for coding, SDD requirements generation, or GitLab issue execution."
+    "ns-codebase-reverse-spec": "(NS) Reverse-engineer a brownfield/legacy codebase into a technology-agnostic business description — rules, actors, permissions, lifecycles, integrations (no implementation detail). Use whenever the user mentions brownfield, legacy, modernization, reverse engineering, engenharia reversa, or extracting business rules from code. Do NOT use for code review, bug fixes, or technical architecture docs.",
+    "ns-coder": "(NS) Ad-hoc coding worker — bug fixes, small refactors, scripts, migrations — without full SDD. Entry priority 5: use for \"just implement this\", \"quick fix\", or concrete coding without execution-handoff (also C2 under ns-autonomous). Do NOT use for GitLab ISSUE_URL (ns-execution-gitlab-issue), multi-day/version scope (ns-spec-driven), diagnosis-only (ns-investigator), or when execution-handoff.md exists. Do NOT generate requirements/tasks/handoff.",
+    "ns-harness-prepare": "(NS) Full post-harness-init bootstrap in one session — architecture rules, sync, brownfield map, reverse business spec, project AGENTS.md. Use for \"harness prepare\", post-install setup, onboard brownfield, or running all prepare skills without separate slash commands. Do NOT use for greenfield with no app code, single-skill runs, or CLI-only baseline AGENTS.md.",
+    "ns-architecture-rules": "(NS) Generate or refresh lean architecture-rules.md for AI agents — stack, layout, patterns, constraints. Use when the user asks for architecture rules, .nextstage-harness/rules/architecture-rules.md, agent conventions, or \"document how this repo works for the AI\". Do NOT use for business specs (ns-codebase-reverse-spec), brownfield maps (ns-bootstrap-brownfield), or one-off Cursor rules without a full architecture pass.",
+    "ns-agent-generator": "(NS) Generate or refresh project AGENTS.md plus minimal CLAUDE.md pointer after harness install. Use for \"write AGENTS.md\", bootstrap agent entry point, replace harness stub, or configure Cursor/Claude project rules. Do NOT copy the harness template verbatim. Do NOT use for architecture-rules, reverse business specs, or brownfield maps.",
+    "ns-spec-driven": "(NS) Spec-driven delivery face — clarify, requirements, tasks, implement or resume a version. Entry priority 2: use for feature specs, version work, or \"let's build X\" with multi-day scope; auto-sizes and delegates to workers. Prefer ns-coder for bare quick fixes. Do NOT use for brownfield onboarding, architecture rules, or /ns-harness-prepare (manual only; never auto-run Prepare).",
+    "ns-autonomous": "(NS) Autonomous execution engine — plans depth, resolves doubts from docs/specs, multi-agent work in an isolated worktree. Use for a local/pasted plan or \"run this autonomously\" without GitLab. Also Phase 2 under ns-execution-gitlab-issue (do not run standalone then). Not for single-step edits (ns-coder) or GitLab issues directly (ns-execution-gitlab-issue).",
+    "ns-investigator": "(NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, or CI — entry priority 4 when the user wants diagnosis WITHOUT implement (\"why does X break?\"). Use proactively on unclear test/CI failures if they have not asked to fix yet. Do NOT use for implement/fix (ns-coder), version scope (ns-spec-driven), GitLab ISSUE_URL execution, or pre-merge review (ns-reviewer).",
+    "ns-multi-agent-architect": "(NS) Interview to recommend LangGraph vs CrewAI, multi-agent topology, personas, tools, and models. Use when building multi-agent systems, choosing LangGraph/CrewAI, designing crews/graphs, HITL workflows, or \"agents working together\". Do NOT use for general app requirements (/ns-spec-driven Clarify) or coding without architecture intent.",
+    "ns-execution-gitlab-issue": "(NS) Execute a GitLab issue end-to-end — status gates, worktree isolation, atomic delivery, MR, mandatory review+fix loop. Use for ISSUE_URL or \"implement this GitLab issue\". Not for local ad-hoc coding (ns-coder) or non-GitLab autonomous runs (ns-autonomous). Delegates coding to ns-autonomous; needs mcp-gitlab-usage + ns-reviewer.",
+    "ns-requirements-enricher": "(NS) Enrich requirements before autonomous execution from a GitLab issue or chat context. Use when the user asks to enrich/expand requirements, flesh out acceptance criteria, or prepare issue context for coding agents. Do NOT replace /ns-spec-driven Specify for full version requirements.md.",
+    "ns-project-manager": "(NS) Gated PM workflow — clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk, status, meeting, OKR. Use on transcripts, backlog, timeline, delivery date, or status requests — even if PM is unnamed. Do NOT use for coding, SDD requirements generation, or GitLab issue execution."
   }
 }

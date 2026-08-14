@@ -7,6 +7,8 @@ import {
   getPreset,
   listCategories,
   listPresets,
+  assertPresetHarnessCompatible,
+  warnMissingDepends,
 } from './catalog.js';
 import { installSkillCreator, installSkills, installExternalSkills } from './installer.js';
 import {
@@ -32,6 +34,9 @@ import { writeManifestAgents, manifestPath } from './manifest.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
 import { logResolvedAgents } from './logResolvedAgents.js';
 import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
+import { resolveRepoRoot, listPresetDocuments } from './presets.js';
+import { discoverSkillsWithDomain } from './resolveSkillPath.js';
+import { join } from 'node:path';
 
 export async function runInit(argv = {}) {
   p.intro('NextStage harness');
@@ -49,6 +54,18 @@ export async function runInit(argv = {}) {
   if (plan.nsSkills.length === 0 && plan.externalSkills.length === 0) {
     p.cancel('No skills selected.');
     process.exit(1);
+  }
+
+  if (plan.presetWarnings?.length) {
+    for (const warning of plan.presetWarnings) {
+      p.log.warn(warning);
+    }
+  }
+
+  if (plan.dependsWarnings?.length && !argv['dry-run']) {
+    for (const warning of plan.dependsWarnings) {
+      p.log.warn(warning);
+    }
   }
 
   const skillSummary = [
@@ -74,6 +91,9 @@ export async function runInit(argv = {}) {
 
   if (argv['dry-run']) {
     p.log.info(`Source: ${resolvedSource}`);
+    if (plan.presetIncludes?.length) {
+      p.log.info(`Preset includes (${plan.presetIncludes.length}): ${plan.presetIncludes.join(', ')}`);
+    }
     if (plan.externalSkills.length > 0) {
       p.log.info(`External skills: ${plan.externalSkills.join(', ')}`);
     }
@@ -91,17 +111,12 @@ export async function runInit(argv = {}) {
   spinner.start('Installing skills via npx skills add…');
 
   try {
-    const wantsNsSkillCreator = plan.nsSkills.includes('ns-skill-creator');
-    const resolvedWithoutSkillCreator = plan.nsSkills.filter((skill) => skill !== 'ns-skill-creator');
-
-    if (resolvedWithoutSkillCreator.length > 0) {
-      installSkills(resolvedWithoutSkillCreator, installOptions);
+    if (plan.nsSkills.length > 0) {
+      installSkills(plan.nsSkills, installOptions);
     }
-    if (wantsNsSkillCreator) {
+    if (plan.installSkillCreator) {
       spinner.message('Installing skill-creator (anthropics/skills)…');
       installSkillCreator(installOptions);
-      spinner.message('Installing NextStage ns-skill-creator wrapper…');
-      installSkills(['ns-skill-creator'], installOptions);
     }
     if (plan.externalSkills.length > 0) {
       spinner.message(`Installing external skills: ${plan.externalSkills.join(', ')}…`);
@@ -277,23 +292,32 @@ async function resolveProjectDir(argvDir) {
 
 async function resolveInstallPlanFromArgv(argv, detection) {
   if (argv.all) {
-    return resolveInstallPlan({ nsSkillIds: allSkillNames() });
+    return wrapInstallPlan(resolveInstallPlan({ nsSkillIds: allSkillNames() }), {
+      installSkillCreator: true,
+    });
   }
 
   if (argv.preset) {
     const externalPreset = getExternalPreset(argv.preset);
     if (externalPreset) {
-      return resolveInstallPlan({
+      return wrapInstallPlan(resolveInstallPlan({
         nsSkillIds: externalPreset.nsSkills,
         externalSkillIds: externalPreset.skills,
-      });
+      }));
     }
 
     const preset = getPreset(argv.preset);
     if (!preset) {
       throw new Error(`Unknown preset: ${argv.preset}`);
     }
-    return resolveInstallPlan({ nsSkillIds: preset.skills });
+    assertPresetHarnessCompatible(preset.requires_harness);
+    const dependsWarnings = warnMissingDepends(preset.skills);
+    return wrapInstallPlan(resolveInstallPlan({ nsSkillIds: preset.skills }), {
+      presetIncludes: preset.includes,
+      presetWarnings: preset.warnings,
+      dependsWarnings,
+      installSkillCreator: preset.name === 'full',
+    });
   }
 
   if (argv.skill?.length) {
@@ -306,27 +330,27 @@ async function resolveInstallPlanFromArgv(argv, detection) {
         nsSkillIds.push(skill);
       }
     }
-    return resolveInstallPlan({ nsSkillIds, externalSkillIds });
+    return wrapInstallPlan(resolveInstallPlan({ nsSkillIds, externalSkillIds }));
   }
 
   if (!process.stdin.isTTY || argv.yes) {
-    return resolveInstallPlan({ nsSkillIds: allSkillNames() });
+    return wrapInstallPlan(resolveInstallPlan({ nsSkillIds: allSkillNames() }), {
+      installSkillCreator: true,
+    });
   }
 
   const mode = await p.select({
     message: 'What do you want to install?',
     initialValue: 'spec-driven',
     options: [
-      ...listPresets().map((preset) => ({
-        value: preset.id,
-        label: preset.label,
-        hint: preset.description,
+      ...listPresetDocuments(resolveRepoRoot()).map((doc) => ({
+        value: doc.name,
+        label: `${doc.name} (${doc.description})`,
       })),
       { value: 'all', label: 'All NextStage skills', hint: 'excludes Agents API external skills' },
       ...listExternalPresets().map((preset) => ({
         value: `external:${preset.id}`,
-        label: preset.label,
-        hint: `external — ${preset.description}`,
+        label: `${preset.id} (${preset.description})`,
       })),
       { value: 'manual', label: 'Choose manually' },
     ],
@@ -338,22 +362,41 @@ async function resolveInstallPlanFromArgv(argv, detection) {
   }
 
   if (mode === 'all') {
-    return resolveInstallPlan({ nsSkillIds: allSkillNames() });
+    return wrapInstallPlan(resolveInstallPlan({ nsSkillIds: allSkillNames() }), {
+      installSkillCreator: true,
+    });
   }
 
   if (mode.startsWith('external:')) {
     const preset = getExternalPreset(mode.slice('external:'.length));
-    return resolveInstallPlan({
+    return wrapInstallPlan(resolveInstallPlan({
       nsSkillIds: preset?.nsSkills ?? ['ns-harness'],
       externalSkillIds: preset?.skills ?? [],
-    });
+    }));
   }
 
   if (mode !== 'manual') {
-    return resolveInstallPlan({ nsSkillIds: getPreset(mode)?.skills ?? [] });
+    const preset = getPreset(mode);
+    assertPresetHarnessCompatible(preset?.requires_harness);
+    return wrapInstallPlan(resolveInstallPlan({ nsSkillIds: preset?.skills ?? [] }), {
+      presetIncludes: preset?.includes ?? [],
+      presetWarnings: preset?.warnings ?? [],
+      dependsWarnings: warnMissingDepends(preset?.skills ?? []),
+      installSkillCreator: preset?.name === 'full',
+    });
   }
 
   return selectSkillsManually(detection);
+}
+
+function wrapInstallPlan(plan, extras = {}) {
+  return {
+    ...plan,
+    presetIncludes: extras.presetIncludes ?? [],
+    presetWarnings: extras.presetWarnings ?? [],
+    dependsWarnings: extras.dependsWarnings ?? [],
+    installSkillCreator: extras.installSkillCreator ?? false,
+  };
 }
 
 async function selectSkillsManually(detection) {
@@ -409,10 +452,10 @@ async function selectSkillsManually(detection) {
     }
   }
 
-  return resolveInstallPlan({
+  return wrapInstallPlan(resolveInstallPlan({
     nsSkillIds: [...selectedNs],
     externalSkillIds: [...selectedExternal],
-  });
+  }));
 }
 
 function resolveScaffoldOptions(argv) {
@@ -428,56 +471,78 @@ function resolveScaffoldOptions(argv) {
   };
 }
 
-export function printList() {
+export function printList(options = {}) {
+  const hasFilter = Boolean(options.presets || options.skills || options.domain);
+  const showPresets = Boolean(options.presets || !hasFilter);
+  const showSkills = Boolean(options.skills || options.domain || !hasFilter);
+  const domainFilter = options.domain;
+
   p.intro('NextStage skill catalog');
 
-  p.log.step('NextStage presets');
-  for (const preset of listPresets()) {
-    p.log.info(`${preset.id} — ${preset.label}`);
-    p.log.message(preset.skills.join(', '));
+  if (showPresets) {
+    p.log.step('Presets (presets/index.json)');
+    for (const preset of listPresets()) {
+      p.log.info(`${preset.id} — ${preset.label ?? preset.description}`);
+      if (preset.includes?.length) {
+        p.log.message(`includes: ${preset.includes.join(', ')}`);
+      }
+      p.log.message(`resolved (${preset.skills.length}): ${preset.skills.join(', ')}`);
+    }
+
+    p.log.step('External presets (opt-in)');
+    for (const preset of listExternalPresets()) {
+      p.log.info(`${preset.id} — ${preset.label}`);
+      p.log.message(`NS: ${preset.nsSkills.join(', ')}`);
+      p.log.message(`External: ${preset.skills.join(', ')}`);
+    }
   }
 
-  p.log.step('External presets (opt-in)');
-  for (const preset of listExternalPresets()) {
-    p.log.info(`${preset.id} — ${preset.label}`);
-    p.log.message(`NS: ${preset.nsSkills.join(', ')}`);
-    p.log.message(`External: ${preset.skills.join(', ')}`);
+  if (showSkills) {
+    const repoRoot = resolveRepoRoot();
+    const skills = discoverSkillsWithDomain(join(repoRoot, 'skills')).filter((skill) => {
+      if (!domainFilter) return true;
+      return skill.domain === domainFilter || (domainFilter === 'root' && skill.domain === null);
+    });
+
+    p.log.step(domainFilter ? `Skills (${domainFilter}/)` : 'Skills (skills/)');
+    for (const skill of skills) {
+      p.log.message(`${skill.path} → ${skill.id}`);
+    }
   }
 
-  p.log.step('All NextStage skills');
-  p.log.message(allSkillNames().join(', '));
+  if (showPresets) {
+    const presetIds = [
+      ...listPresets().map((preset) => preset.id),
+      ...listExternalPresets().map((preset) => preset.id),
+    ].join(' | ');
 
-  const presetIds = [
-    ...listPresets().map((preset) => preset.id),
-    ...listExternalPresets().map((preset) => preset.id),
-  ].join(' | ');
-
-  p.note(
-    [
-      `Presets: ${presetIds}`,
-      '',
-      'Install a preset (skills + dependencies + scaffold):',
-      '  npx @nextstage-brasil/harness --preset spec-driven --yes',
-      '  npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes',
-      '  npx @nextstage-brasil/harness --preset frontend-prototype --yes',
-      '  npx @nextstage-brasil/harness --preset agents-api --yes',
-      '  npx @nextstage-brasil/harness --preset coder-langgraph --yes',
-      '',
-      'Install one skill only (no scaffold):',
-      '  npx @nextstage-brasil/harness --skill ns-gitlab-board-sync --no-scaffold -y',
-      '',
-      'Preview what a preset would install:',
-      '  npx @nextstage-brasil/harness --preset spec-driven-gitlab --dry-run',
-      '',
-      'Refresh skills already in the project:',
-      '  npx @nextstage-brasil/harness update',
-      '',
-      'Project agents (stored in .nextstage-harness/manifest.json):',
-      '  npx @nextstage-brasil/harness agents',
-      '  npx @nextstage-brasil/harness agents set --agent cursor',
-    ].join('\n'),
-    'Install',
-  );
+    p.note(
+      [
+        `Presets: ${presetIds}`,
+        '',
+        'Install a preset (skills + dependencies + scaffold):',
+        '  npx @nextstage-brasil/harness --preset spec-driven --yes',
+        '  npx @nextstage-brasil/harness --preset gitlab --yes',
+        '  npx @nextstage-brasil/harness --preset agent-creator --yes',
+        '  npx @nextstage-brasil/harness --preset frontend-prototype --yes',
+        '  npx @nextstage-brasil/harness --preset agents-api --yes',
+        '',
+        'Install one skill only (no scaffold):',
+        '  npx @nextstage-brasil/harness --skill ns-gitlab-board-sync --no-scaffold -y',
+        '',
+        'Preview what a preset would install:',
+        '  npx @nextstage-brasil/harness --preset gitlab --dry-run',
+        '',
+        'Refresh skills already in the project:',
+        '  npx @nextstage-brasil/harness update',
+        '',
+        'Project agents (stored in .nextstage-harness/manifest.json):',
+        '  npx @nextstage-brasil/harness agents',
+        '  npx @nextstage-brasil/harness agents set --agent cursor',
+      ].join('\n'),
+      'Install',
+    );
+  }
 
   p.outro('Interactive wizard: npx @nextstage-brasil/harness');
 }

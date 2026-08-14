@@ -1,0 +1,12 @@
+{
+  "name": "full",
+  "requires_harness": ">=1.0.0",
+  "description": "Full catalog",
+  "extends": ["gitlab", "frontend", "business", "agent-creator"],
+  "includes": [
+    "skills/testing/ns-e2e-tests",
+    "skills/testing/ns-backend-tests",
+    "skills/docs/ns-docs-writer",
+    "skills/docs/ns-best-practices"
+  ]
+}

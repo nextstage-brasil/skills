@@ -5,9 +5,9 @@
 export const DEFAULT_SUBAGENTS = [
   {
     name: 'coder-agent',
-    skill: 'ns-code-coder',
+    skill: 'ns-coder',
     description:
-      '(NS) Thin bridge to ns-code-coder. Invoke for ad-hoc coding — loads AGENTS.md then the skill workflow.',
+      '(NS) Thin bridge to ns-coder. Invoke for ad-hoc coding — loads AGENTS.md then the skill workflow.',
     model: {
       cursor: 'composer-2.5[fast=false]',
       claude: 'sonnet',
@@ -16,9 +16,9 @@ export const DEFAULT_SUBAGENTS = [
   },
   {
     name: 'reviewer-agent',
-    skill: 'ns-code-reviewer',
+    skill: 'ns-reviewer',
     description:
-      '(NS) Thin bridge to ns-code-reviewer. Invoke for the review gate — loads AGENTS.md then the skill workflow.',
+      '(NS) Thin bridge to ns-reviewer. Invoke for the review gate — loads AGENTS.md then the skill workflow.',
     model: {
       cursor: 'grok-4.5[effort=medium,fast=false]',
       claude: 'opus',
@@ -27,9 +27,10 @@ export const DEFAULT_SUBAGENTS = [
   },
   {
     name: 'task-writer-agent',
-    skill: 'ns-sdd-task-generator',
+    skill: 'ns-spec-driven',
+    skillReference: 'references/task-generator.md',
     description:
-      '(NS) Thin bridge to ns-sdd-task-generator. Invoke to write SDD task files — prefer a cheaper model than planning.',
+      '(NS) Thin bridge to ns-spec-driven task-generator reference. Invoke to write SDD task files — prefer a cheaper model than planning.',
     model: {
       cursor: 'composer-2.5[fast=false]',
       claude: 'haiku',

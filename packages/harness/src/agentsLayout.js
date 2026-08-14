@@ -26,14 +26,14 @@ export const CLAUDE_MD_CONTENT = `\
 
 CRITICAL — NO EXCEPTIONS.
 
-Before any work: read \`AGENTS.md\` full → load every file it requires → follow its flow.
+Obey \`AGENTS.md\` (already in context when the host injects it; open once only if absent — **never** re-Read). Then load every file it requires and follow its flow.
 
 Must load:
-- \`AGENTS.local.md\` (every session / every turn)
+- \`AGENTS.local.md\` (when present; case-insensitive)
 - all \`alwaysApply: true\` rules (\`.nextstage-harness/rules/\`)
 - any NON-NEGOTIABLE / FIRST ACTION file for the task
 
-No skip. No defer. No memory-only. Missing file → stop, ask human.
+No skip. No defer. No memory-only. Missing required file → stop, ask human.
 
 Then skills / subagents / task as AGENTS.md says.
 
@@ -68,26 +68,26 @@ export const DOCKERIGNORE_BLOCK_HEADER = '# Nextstage-harness ignore files';
 
 /** Paths excluded from Docker build context (managed by harness sync). */
 export const DOCKERIGNORE_ENTRIES = [
-  '/docs',
-  '/.agents',
-  '/.claude',
-  '/.cursor',
-  '/.gitlab',
-  '/.nextstage-harness',
-  '/AGENTS.md',
-  '/AGENTS.local.md',
-  '/CLAUDE.md',
-  '/skills-lock.json',
-  '/.worktrees/',
+  'docs/',
+  '.agents/',
+  '.claude/',
+  '.cursor/',
+  '.gitlab/',
+  '.nextstage-harness/',
+  'AGENTS.md',
+  'AGENTS.local.md',
+  'CLAUDE.md',
+  'skills-lock.json',
+  '.worktrees/',
 ];
 
 export const GITIGNORE_BLOCK_HEADER = '# Nextstage-harness ignore files';
 
 /** Paths excluded from git (managed by harness sync). */
 export const GITIGNORE_ENTRIES = [
-  '/AGENTS.local.md',
-  '/.worktrees/',
-  '/.cursor/rules/',
-  '/.cursor/agents/',
-  '/.claude/',
+  'AGENTS.local.md',
+  '.worktrees/',
+  '.cursor/rules/',
+  '.cursor/agents/',
+  '.claude/',
 ];

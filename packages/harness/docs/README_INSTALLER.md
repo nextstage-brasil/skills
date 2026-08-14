@@ -5,28 +5,30 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 ## 1. What gets installed
 
 ```
-{product_root}/
-  AGENTS.md                         # entry pointer (human-edited)
-  CLAUDE.md                         # stub: Rules boot + AGENTS.md + .claude/agents (if missing)
-  .nextstage-harness/               # CANONICAL — edit rules here
-    README.md                       # Human guide (add/edit rules)
-    manifest.json
-    rules/
-      architecture-rules.md
-      project-rules.md
-    docs/
-  .cursor/rules/*.mdc               # GENERATED — Cursor rule adapters
-  .claude/rules/*.md                # GENERATED — Claude Code rule adapters
-  .agents/skills/                   # Installed skills (Skills CLI canonical; Cursor reads here)
-  .claude/skills/ → symlink          # Claude Code skill adapters (harness sync)
-  docs/context|specs|versions/      # SDD artifacts (.gitkeep in each)
+# Project root (harness --dir)
+AGENTS.md                         # entry pointer (human-edited)
+CLAUDE.md                         # stub: Rules boot + AGENTS.md + .claude/agents (if missing)
+.nextstage-harness/               # CANONICAL — edit rules here
+  README.md                       # Human guide (add/edit rules)
+  manifest.json
+  rules/
+    architecture-rules.md
+    project-rules.md
+  docs/
+.cursor/rules/*.mdc               # GENERATED — Cursor rule adapters
+.claude/rules/*.md                # GENERATED — Claude Code rule adapters
+.agents/skills/                   # Installed skills (Skills CLI canonical; Cursor reads here)
+.claude/skills/ → symlink          # Claude Code skill adapters (harness sync)
+docs/context|specs|versions/      # SDD artifacts (.gitkeep in each)
 ```
 
 **Rules:** edit `.nextstage-harness/rules/` → `harness sync` → `.cursor/rules/`, `.claude/rules/`. Prefer `harness add-rule <name>` for new rules (creates stub, updates `manifest.json`, syncs). See `.nextstage-harness/README.md`.
 
-**Subagents:** edit `.nextstage-harness/agents/` → `harness sync` → `.cursor/agents/`, `.claude/agents/`. Prefer `harness add-subagent <name> --skill <id>` for new bridges. Example: `npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-code-investigator --description "Investigation bridge"`.
+**Subagents:** edit `.nextstage-harness/agents/` → `harness sync` → `.cursor/agents/`, `.claude/agents/`. Prefer `harness add-subagent <name> --skill <id>` for new bridges. Example: `npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-investigator --description "Investigation bridge"`.
 
-**Skills:** canonical in `.agents/skills/` (Skills CLI). **Cursor** (including subagents) discovers skills there directly. **Claude Code** reads `.claude/skills/` — `harness sync` symlinks from canonical when Claude is a target agent. Invoke via the Skills menu / slash (e.g. `/ns-code-coder`).
+**Skills:** canonical in `.agents/skills/` (Skills CLI). **Cursor** (including subagents) discovers skills there directly. **Claude Code** reads `.claude/skills/` — `harness sync` symlinks from canonical when Claude is a target agent. Invoke via the Skills menu / slash (e.g. `/ns-coder`).
+
+**Project-local skills:** install Anthropics `skill-creator` — `npx skills add https://github.com/anthropics/skills --skill skill-creator -y` (or `--preset full` installs it). Follow `.agents/skills/skill-creator/SKILL.md`; path overrides in installed `ns-harness` → `references/project-skill-authoring.md`. Run `harness sync` after each create or edit.
 
 ## 2. Commands
 
@@ -34,7 +36,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 |---------|-------------|
 | `npx @nextstage-brasil/harness` | Interactive init (default) |
 | `harness init [options]` | Install skills + scaffold + sync |
-| `harness prepare` | Print full brownfield prepare instructions (`/ns-harness-prepare`) |
+| `harness prepare` | Print full brownfield prepare instructions (`/ns-harness prepare`) |
 | `harness sync` | Absorb orphan `.cursor/rules/*.mdc` + regenerate adapters + ensure ignore blocks |
 | `harness add-rule <name>` | Create canonical rule + manifest entry + sync |
 | `harness add-subagent <name>` | Create canonical subagent + manifest entry + sync (`--skill` required) |
@@ -49,7 +51,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 
 | Flag | Effect |
 |------|--------|
-| `--preset <name>` | `spec-driven` (default), `spec-driven-gitlab`, `project-manager`, `brownfield`, `frontend-prototype`, `full` |
+| `--preset <name>` | `spec-driven` (default), `gitlab`, `project-manager`, `frontend-prototype`, `agent-creator`, `full` |
 | `--agent <name>` | Repeatable; default `cursor`, `claude-code` |
 | `--yes`, `-y` | Non-interactive |
 | `--no-scaffold` | Skills only — skip AGENTS.md and `.nextstage-harness/` |
@@ -70,7 +72,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 npx @nextstage-brasil/harness --preset spec-driven --yes
 ```
 
-Creates scaffold, stub `architecture-rules.md` and `project-rules.md`, syncs adapters. Use `--preset spec-driven` for `ns-spec-driven` + workers (or `--preset brownfield` for prepare-only). Run `ns-harness-architecture-rules` in your agent when code exists; edit `project-rules.md` manually for project-local settings.
+Creates scaffold, stub `architecture-rules.md` and `project-rules.md`, syncs adapters. Use `--preset spec-driven` for `ns-spec-driven` + workers. Run `/ns-harness` architecture-rules when code exists; edit `project-rules.md` manually for project-local settings.
 
 ### Brownfield (existing codebase)
 
@@ -78,12 +80,12 @@ Creates scaffold, stub `architecture-rules.md` and `project-rules.md`, syncs ada
 npx @nextstage-brasil/harness --preset spec-driven --yes
 ```
 
-Same as greenfield — use `--preset brownfield` so `ns-harness-prepare` is installed. Follow post-install prompts and run `/ns-harness-prepare` in your agent (§10).
+Same install as greenfield. Follow post-install prompts and run `/ns-harness prepare this repo` in your agent (§10).
 
 ### Skills only (no harness scaffold)
 
 ```bash
-npx skills add nextstage-brasil/skills --full-depth -y --skill ns-code-coder
+npx skills add nextstage-brasil/skills --full-depth -y --skill ns-coder
 ```
 
 Skills install under `.agents/skills/` with agent symlinks. No `.nextstage-harness/` unless you run `harness init` without `--no-scaffold`.
@@ -167,16 +169,15 @@ git add .nextstage-harness/ .gitignore
 | `sync --check` fails locally | Edit canonical under `.nextstage-harness/rules/`, run `sync`, commit harness + `.gitignore` only |
 | Adapters missing after init | Run `harness sync` manually |
 | Windows symlink issues | Use `harness init --copy` or Skills CLI `--copy` |
-| Monorepo product folder | Set `--dir` to product root; `{product_root}` = that folder |
-| Legacy skills reference `.cursor/rules/` | Run `harness sync` (absorbs orphans); skills use `{harness_root}` with legacy fallback |
+| Legacy skills reference `.cursor/rules/` | Run `harness sync` (absorbs orphans); skills use `.nextstage-harness/` with legacy fallback |
 
 ## 10. Post-install agent prompts
 
 Run these **in Cursor or Claude Code** after `harness init` (not auto-invoked by CLI).
 
-### 10.0 Full prepare (recommended — brownfield preset)
+### 10.0 Full prepare (recommended — existing codebases)
 
-**Skill:** `ns-harness-prepare` (`/ns-harness-prepare`)
+**Skill:** `ns-harness` (`/ns-harness prepare this repo`)
 
 **CLI check:**
 
@@ -187,16 +188,16 @@ npx @nextstage-brasil/harness prepare
 **Prompt:**
 
 ```
-Run full harness prepare for {product_root}.
+Run full harness prepare for this project.
 ```
 
 **Chain (automatic, one session):**
 
-1. `ns-harness-architecture-rules` → `.nextstage-harness/rules/architecture-rules.md`
+1. `/ns-harness` architecture-rules → `.nextstage-harness/rules/architecture-rules.md`
 2. `npx @nextstage-brasil/harness sync`
-3. `ns-harness-bootstrap-brownfield` → `docs/context/brownfield-map.md`
-4. `ns-harness-codebase-reverse-spec` → `docs/context/system-reverse-spec.md`
-5. `ns-harness-agents-md` → `AGENTS.md` + `CLAUDE.md`
+3. `/ns-harness` brownfield → `docs/context/brownfield-map.md`
+4. `/ns-harness` reverse-spec → `docs/context/system-reverse-spec.md`
+5. `/ns-harness` agents-md → `AGENTS.md` + `CLAUDE.md`
 
 **Greenfield with no code yet:** skip until application code exists.
 
@@ -211,25 +212,25 @@ npx @nextstage-brasil/harness agents-md --force   # overwrite hand-edited file
 
 **Output:** `AGENTS.md`, `CLAUDE.md` (Rules boot + AGENTS.md + `.claude/agents`)
 
-Step 5 of `/ns-harness-prepare` refines this with project context.
+Step 5 of `/ns-harness prepare` refines this with project context.
 
-### 10.2 Individual worker skills (optional)
+### 10.2 Individual `/ns-harness` workers (optional)
 
 Use when you need only one artifact:
 
-| Skill | Output |
+| Prompt | Output |
 | ----- | ------ |
-| `ns-harness-architecture-rules` | `.nextstage-harness/rules/architecture-rules.md` |
-| `ns-harness-bootstrap-brownfield` | `docs/context/brownfield-map.md` |
-| `ns-harness-codebase-reverse-spec` | `docs/context/system-reverse-spec.md` |
-| `ns-harness-agents-md` | `AGENTS.md`, `CLAUDE.md` |
+| `/ns-harness` architecture-rules | `.nextstage-harness/rules/architecture-rules.md` |
+| `/ns-harness` brownfield map | `docs/context/brownfield-map.md` |
+| `/ns-harness` reverse-spec | `docs/context/system-reverse-spec.md` |
+| `/ns-harness` agents-md | `AGENTS.md`, `CLAUDE.md` |
 
 After architecture rules, always run `npx @nextstage-brasil/harness sync`.
 
-### Recommended order (when not using ns-harness-prepare)
+### Recommended order (when not using full prepare)
 
 ```
-ns-harness-architecture-rules → harness sync → ns-harness-bootstrap-brownfield → ns-harness-codebase-reverse-spec → ns-harness-agents-md
+architecture-rules → harness sync → brownfield → reverse-spec → agents-md
 ```
 
 Rationale: constitution first; context artifacts next; AGENTS.md last so it links to all outputs.

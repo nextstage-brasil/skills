@@ -4,11 +4,11 @@
 
 ```
 skills/ns-harness/references/code-skill-routing.md
-skills/ns-execution-gitlab-issue/references/entry-triggers.md
-skills/ns-spec-driven/references/entry-triggers.md
-skills/ns-code-autonomous/references/entry-triggers.md
-skills/ns-code-investigator/references/entry-triggers.md
-skills/ns-code-coder/references/entry-triggers.md
+skills/gitlab/ns-execution-gitlab-issue/references/entry-triggers.md
+skills/sdd/ns-spec-driven/references/entry-triggers.md
+skills/code/ns-autonomous/references/entry-triggers.md
+skills/code/ns-investigator/references/entry-triggers.md
+skills/code/ns-coder/references/entry-triggers.md
 ```
 
 ## Edit order

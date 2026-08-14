@@ -1,6 +1,6 @@
 # Rules sync
 
-Canonical project rules: `{harness_root}/rules/*.md`. Adapters generated — prefer edit canonical or `harness add-rule`, then `npx @nextstage-brasil/harness sync`.
+Canonical project rules: `.nextstage-harness/rules/*.md`. Adapters generated — prefer edit canonical or `harness add-rule`, then `npx @nextstage-brasil/harness sync`.
 
 **Orphan Cursor rules:** hand-created `.cursor/rules/*.mdc` (Cursor UI) not in `manifest.rules` → next `harness sync` absorbs into canonical + manifest (maps `description` / `alwaysApply` / `globs`). Prefer canonical edits still; orphans safe. `sync --check` reports orphans as drift (no write).
 
@@ -71,8 +71,8 @@ Cursor subagents spawned during a session use the same project skill catalog as 
   "subagents": [
     {
       "name": "coder-agent",
-      "skill": "ns-code-coder",
-      "description": "(NS) Thin bridge to ns-code-coder…",
+      "skill": "ns-coder",
+      "description": "(NS) Thin bridge to ns-coder…",
       "model": { "cursor": "composer-2.5[fast=false]", "claude": "sonnet" },
       "readonly": false
     }
@@ -83,13 +83,13 @@ Cursor subagents spawned during a session use the same project skill catalog as 
 | Field                   | Meaning                                                                                                                                        |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `name`                  | Base filename for adapters (`{name}.mdc` / `{name}.md`)                                                                                        |
-| `canonical`             | Path relative to `{harness_root}/`                                                                                                             |
+| `canonical`             | Path relative to `.nextstage-harness/`                                                                                                             |
 | `cursor.alwaysApply`    | Cursor always-on when `true`; default for `add-rule` is `false` (agent-requested via description). Mutually exclusive with `globs` when `true` |
 | `cursor.globs`          | Cursor glob scope (path-scoped; do not combine with `alwaysApply: true`)                                                                       |
 | `cursor.description`    | **Required** — Cursor "when to apply" header; sync fails if missing                                                                            |
 | `claude.paths`          | Claude path scope array; `null` = global (omit `paths:` frontmatter)                                                                           |
 | `subagents[].name`      | Adapter basename → `.cursor/agents/{name}.md`, `.claude/agents/{name}.md`                                                                      |
-| `subagents[].canonical` | Path relative to `{harness_root}/` (default `agents/{name}.md`)                                                                                |
+| `subagents[].canonical` | Path relative to `.nextstage-harness/` (default `agents/{name}.md`)                                                                                |
 | `subagents[].skill`     | Installed skill the bridge loads                                                                                                               |
 | `subagents[].model`     | **Project-owned** — `harness update` never overwrites                                                                                          |
 | `subagents[].readonly`  | No write tools when `true` (reviewer default); filled from catalog if missing                                                                  |
@@ -98,11 +98,11 @@ Cursor subagents spawned during a session use the same project skill catalog as 
 
 | Name                | Skill                   | Default model (cursor / claude)               | `readonly` |
 | ------------------- | ----------------------- | --------------------------------------------- | ---------- |
-| `coder-agent`       | `ns-code-coder`         | `composer-2.5[fast=false]` / `sonnet`         | `false`    |
-| `reviewer-agent`    | `ns-code-reviewer`      | `grok-4.5[effort=medium,fast=false]` / `opus` | `true`     |
-| `task-writer-agent` | `ns-sdd-task-generator` | `composer-2.5[fast=false]` / `haiku`          | `false`    |
+| `coder-agent`       | `ns-coder`         | `composer-2.5[fast=false]` / `sonnet`         | `false`    |
+| `reviewer-agent`    | `ns-reviewer`      | `grok-4.5[effort=medium,fast=false]` / `opus` | `true`     |
+| `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | `composer-2.5[fast=false]` / `haiku`          | `false`    |
 
-Presets that install those skills get matching bridges on `init` / `sync` / `update`. Each bridge body: read `AGENTS.md` → architecture rules → project rules → follow the skill. Seeded bridges = **required** dispatch targets when present — see `subagent-dispatch.md`.
+Presets that install those skills get matching bridges on `init` / `sync` / `update`. Each bridge body: obey `AGENTS.md` (no tool-Read) → Session boot (`session-boot.md`) → follow the skill. Seeded bridges = **required** dispatch targets when present — see `subagent-dispatch.md`.
 
 After adding a new canonical rule file, add a matching entry to `manifest.json`, then run `sync`. Prefer:
 

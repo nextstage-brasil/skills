@@ -1,6 +1,6 @@
 # Agent artifact compress (pre-save)
 
-**Audience:** coding agents — not humans. **Never** apply this pass to human chat. Chat voice: natural language (see `../../ns-spec-driven/references/human-communication.md` when installed). This pass runs on **file drafts** before `Write` only.
+**Audience:** coding agents — not humans. **Never** apply this pass to human chat. Chat voice: natural language (see `../../sdd/ns-spec-driven/references/human-communication.md` when installed). This pass runs on **file drafts** before `Write` only.
 
 Apply **caveman ultra** compression to every **agent-facing** prepare/worker output. If a personal `caveman` skill is loaded, use intensity **ultra** for this pass; otherwise follow this file verbatim.
 
@@ -8,8 +8,8 @@ Apply **caveman ultra** compression to every **agent-facing** prepare/worker out
 
 | Artifact | Compress? |
 | -------- | --------- |
-| `{harness_root}/rules/architecture-rules.md` | **Yes** |
-| `{harness_root}/rules/project-rules.md` | **No** — human-edited project-local settings |
+| `.nextstage-harness/rules/architecture-rules.md` | **Yes** |
+| `.nextstage-harness/rules/project-rules.md` | **No** — human-edited project-local settings |
 | `docs/context/brownfield-map.md` | **Yes** |
 | `docs/context/system-reverse-spec.agent.md` | **Yes** |
 | `AGENTS.md` | **Yes** |
@@ -41,7 +41,7 @@ Apply **caveman ultra** compression to every **agent-facing** prepare/worker out
 - Sections that only restate another table in the same file
 - Prose paragraphs when a table or one-liner carries the fact
 - Human onboarding essays, "why this matters", tutorial tone
-- Absolute machine paths; keep `{product_root}`-relative values
+- Absolute machine paths; keep repo-relative values
 - Invented abbreviations (`cfg`/`impl`/`req`) — full technical words
 - Causal arrows (`→`) used as prose glue (table columns OK)
 

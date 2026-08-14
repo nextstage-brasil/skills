@@ -2,14 +2,7 @@ import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { AGENTS_SKILLS_DIR, HARNESS_ROOT } from './agentsLayout.js';
 
-export const PREPARE_SKILL = 'ns-harness-prepare';
-
-export const PREPARE_WORKER_SKILLS = [
-  'ns-harness-architecture-rules',
-  'ns-harness-bootstrap-brownfield',
-  'ns-harness-codebase-reverse-spec',
-  'ns-harness-agents-md',
-];
+export const PREPARE_SKILL = 'ns-harness';
 
 export function listInstalledSkillNames(projectRoot) {
   const skillsDir = join(projectRoot, AGENTS_SKILLS_DIR);
@@ -40,22 +33,19 @@ function hasApplicationCodeSignals(projectRoot) {
 
 export function assessPrepareReadiness(projectRoot) {
   const installed = listInstalledSkillNames(projectRoot);
-  const installedSet = new Set(installed);
-  const missingWorkers = PREPARE_WORKER_SKILLS.filter((skill) => !installedSet.has(skill));
-  const missingPrepare = !installedSet.has(PREPARE_SKILL);
+  const missingPrepare = !installed.includes(PREPARE_SKILL);
 
   return {
     projectRoot,
     harnessPresent: existsSync(join(projectRoot, HARNESS_ROOT)),
     skillsDirPresent: existsSync(join(projectRoot, AGENTS_SKILLS_DIR)),
     installed,
-    missingWorkers,
+    missingWorkers: [],
     missingPrepare,
     hasCode: hasApplicationCodeSignals(projectRoot),
     ready:
       existsSync(join(projectRoot, HARNESS_ROOT))
       && existsSync(join(projectRoot, AGENTS_SKILLS_DIR))
-      && missingWorkers.length === 0
       && !missingPrepare
       && hasApplicationCodeSignals(projectRoot),
   };
@@ -67,17 +57,17 @@ export function buildPrepareMessage(assessment) {
   lines.push('');
   lines.push('Run in Cursor or Claude Code:');
   lines.push('');
-  lines.push('  /ns-harness-prepare');
+  lines.push('  /ns-harness prepare this repo');
   lines.push('');
   lines.push('Or prompt:');
-  lines.push('  Run full harness prepare for this project.');
+  lines.push('  /ns-harness generate architecture rules for this project');
   lines.push('');
-  lines.push('Chain (automatic, one session):');
-  lines.push('  1. ns-harness-architecture-rules → .nextstage-harness/rules/architecture-rules.md');
+  lines.push('Chain (automatic, one session — ns-harness references/prepare.md):');
+  lines.push('  1. architecture-rules-generator.md → .nextstage-harness/rules/architecture-rules.md');
   lines.push('  2. harness sync');
-  lines.push('  3. ns-harness-bootstrap-brownfield → docs/context/brownfield-map.md');
-  lines.push('  4. ns-harness-codebase-reverse-spec → docs/context/system-reverse-spec.md');
-  lines.push('  5. ns-harness-agents-md → AGENTS.md + CLAUDE.md');
+  lines.push('  3. bootstrap-brownfield.md → docs/context/brownfield-map.md');
+  lines.push('  4. codebase-reverse-spec.md → docs/context/system-reverse-spec.md');
+  lines.push('  5. agents-md.md → AGENTS.md + CLAUDE.md');
   lines.push('');
 
   if (!assessment.harnessPresent) {
@@ -90,13 +80,9 @@ export function buildPrepareMessage(assessment) {
     lines.push('');
   }
 
-  if (assessment.missingPrepare || assessment.missingWorkers.length > 0) {
-    const missing = [
-      ...(assessment.missingPrepare ? [PREPARE_SKILL] : []),
-      ...assessment.missingWorkers,
-    ];
-    lines.push(`⚠  Missing skills: ${missing.join(', ')}`);
-    lines.push('   Install: npx @nextstage-brasil/harness --preset spec-driven --yes');
+  if (assessment.missingPrepare) {
+    lines.push('⚠  Missing skill: ns-harness');
+    lines.push('   Install: npx @nextstage-brasil/harness --yes');
     lines.push('');
   }
 
@@ -106,7 +92,7 @@ export function buildPrepareMessage(assessment) {
   }
 
   if (assessment.ready) {
-    lines.push('✓  Prerequisites OK — invoke /ns-harness-prepare in your agent.');
+    lines.push('✓  Prerequisites OK — invoke /ns-harness prepare this repo in your agent.');
     lines.push('');
     lines.push('Re-run regularly to refresh project context:');
     lines.push('  • After major refactors, new modules, or stack changes');

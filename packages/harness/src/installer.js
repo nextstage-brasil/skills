@@ -1,8 +1,30 @@
 import { spawnSync } from 'node:child_process';
 import { resolveSource } from './source.js';
 import { groupExternalSkillsBySource } from './externalSkills.js';
+import { assertSkillsHarnessCompatible } from './skillManifest.js';
 
 export const SKILL_CREATOR_SOURCE = 'https://github.com/anthropics/skills';
+
+/**
+ * Outer `npx --package=@nextstage-brasil/harness` sets npm_config_package.
+ * Nested `npx skills` then looks for a `skills` bin inside that package and
+ * fails with "skills: command not found".
+ */
+function envForNestedNpx() {
+  const env = { ...process.env };
+  delete env.npm_config_package;
+  delete env.npm_config_packages;
+  return env;
+}
+
+function runNpx(args, projectRoot) {
+  return spawnSync('npx', ['--yes', ...args], {
+    cwd: projectRoot,
+    stdio: 'inherit',
+    env: envForNestedNpx(),
+    shell: process.platform === 'win32',
+  });
+}
 
 function runSkillsAdd({
   source,
@@ -29,11 +51,7 @@ function runSkillsAdd({
     args.push('--agent', agent);
   }
 
-  const result = spawnSync('npx', args, {
-    cwd: projectRoot,
-    stdio: 'inherit',
-    shell: process.platform === 'win32',
-  });
+  const result = runNpx(args, projectRoot);
 
   if (result.error) {
     throw result.error;
@@ -53,8 +71,11 @@ export function installSkills(skills, options = {}) {
     source,
   } = options;
 
+  const resolvedSource = resolveSource(source);
+  assertSkillsHarnessCompatible(skills, resolvedSource);
+
   runSkillsAdd({
-    source: resolveSource(source),
+    source: resolvedSource,
     skills,
     projectRoot,
     global,
@@ -96,11 +117,7 @@ export function updateInstalledSkills(skillNames, options = {}) {
     args.push('-p');
   }
 
-  const result = spawnSync('npx', args, {
-    cwd: projectRoot,
-    stdio: 'inherit',
-    shell: process.platform === 'win32',
-  });
+  const result = runNpx(args, projectRoot);
 
   if (result.error) {
     throw result.error;

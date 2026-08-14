@@ -13,16 +13,16 @@ export function subagentCanonicalRel(entry) {
 }
 
 export function buildDefaultSubagentBody(entry) {
-  const skillPath = `.agents/skills/${entry.skill}/SKILL.md`;
+  const workflowPath = entry.skillReference
+    ? `.agents/skills/${entry.skill}/${entry.skillReference}`
+    : `.agents/skills/${entry.skill}/SKILL.md`;
   return `# ${entry.name}
 
 Thin skill bridge — do not invent a separate workflow. The skill below is the source of truth.
 
-1. Begin Session boot at bridge start: Read \`AGENTS.md\` at the product root in full (and \`agents.local.md\` if present).
-2. Read \`.nextstage-harness/rules/architecture-rules.md\` when that file exists.
-3. Read \`.nextstage-harness/rules/project-rules.md\` when that file exists.
-4. Read and follow \`${skillPath}\` in full — run that skill's workflow exactly (skill completes remaining Session boot steps via harness-discovery when not yet done).
-5. Honor every gate, handoff, and review contract defined in the skill. Do not substitute platform Task personas for named skill steps.
+1. Obey \`AGENTS.md\` already in host context — **do not** tool-Read it. Complete Session boot per \`.agents/skills/ns-harness/references/session-boot.md\` (\`agents.local.md\` + \`.nextstage-harness/rules/\` only).
+2. Read and follow \`${workflowPath}\` in full — run that skill's workflow exactly (skill finishes remaining Session boot steps when not yet done).
+3. Honor every gate, handoff, and review contract defined in the skill. Do not substitute platform Task personas for named skill steps.
 `;
 }
 

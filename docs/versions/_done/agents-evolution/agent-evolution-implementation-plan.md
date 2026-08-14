@@ -30,7 +30,7 @@
 | `context-window.ts.snippet` | Copied code in products diverges | Extend type with optional `skillBodyMaxChars`; keep old helpers signatures |
 | `graph-spec.md` template | New projects get new enum values | Additive `\| react_bounded`; document when to prefer |
 | `ns-multi-agent-architect` | Interview default shifts | Prefer `react_bounded` **only when** MCP/external tools + streaming; else keep prior ReAct MVP path |
-| `ns-code-e2e-tests` | Cypress-centric; agent-api uses Playwright/dev-chat | **Do not** force Cypress into agent-api. Put browser/dev-chat gates in `ns-langgraph-agents` evals doctrine; optional cross-link only |
+| `ns-e2e-tests` | Cypress-centric; agent-api uses Playwright/dev-chat | **Do not** force Cypress into agent-api. Put browser/dev-chat gates in `ns-langgraph-agents` evals doctrine; optional cross-link only |
 | CI `validate-skills.yml` | Broken refs / legacy paths | Run catalog validator + smoke after each wave |
 | DecisionSuite / other products | Zero direct code change | Products adopt only when they re-run harness skills |
 
@@ -47,7 +47,7 @@ Ship in **4 mergeable waves**. Each wave:
 
 **Ownership default:** `ns-langgraph-agents`.  
 **Secondary (Wave 2):** `ns-multi-agent-architect` selection guide only.  
-**Deferred:** `ns-code-e2e-tests` rewrite; harness package release bump (can follow after Wave 1–2 land).
+**Deferred:** `ns-e2e-tests` rewrite; harness package release bump (can follow after Wave 1–2 land).
 
 ---
 
@@ -129,7 +129,7 @@ Ship in **4 mergeable waves**. Each wave:
 | 3.2 | Wire into SKILL reference map + anti-patterns (fixed/bootstrap locale SoT, sticky thread locale, LLM-invented formats) | `SKILL.md`, `anti-patterns.md` |
 | 3.3 | Observability: `llm_logs.stage`, `turn_decisions`, costs-by-thread / `unpriced_calls`, redaction on SoT | `observability.md` |
 | 3.4 | Evals gates: golden `tools/list` when MCP; Playwright (or equivalent) against `/dev-chat` when `streaming_sse` — as **project gate recommendation**, not Cypress rewrite | `evals-and-gates.md` |
-| 3.5 | Optional one-line cross-link from `ns-code-e2e-tests` or PM e2e generator: “agent-api browser evals → see ns-langgraph-agents evals-and-gates” | only if zero confusion with Cypress |
+| 3.5 | Optional one-line cross-link from `ns-e2e-tests` or PM e2e generator: “agent-api browser evals → see ns-langgraph-agents evals-and-gates” | only if zero confusion with Cypress |
 | 3.6 | Evals: append fidelity / evidence-channel prompt | `evals/evals.json` |
 | 3.7 | Gate: catalog OK; spot-check orphan-recovery still coherent |
 
@@ -172,7 +172,7 @@ Ship in **4 mergeable waves**. Each wave:
 - Porting DecisionSuite `src/` into harness templates as a full scaffold.  
 - Changing factory `.batschspec` (separate track).  
 - Forcing existing product agents to migrate topology in the same PR.  
-- Replacing Cypress `ns-code-e2e-tests` with Playwright.  
+- Replacing Cypress `ns-e2e-tests` with Playwright.  
 - Publishing `@nextstage-brasil/harness` unless Wave 4 README needs it.  
 - Auto-updating installed skills in consumer repos (install is pull-based).
 

@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  harness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install harness dependencies
+        working-directory: packages/harness
+        run: npm install
+      - name: Harness tests
+        working-directory: packages/harness
+        run: npm test
+      - name: Harness list
+        run: node packages/harness/bin/cli.js list --presets
+
+  validate-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate depends graph
+        run: node scripts/validate-depends.js
+      - name: Validate catalog
+        run: node packages/harness/scripts/validate-catalog.js
+
+  skills-sdd:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate sdd manifests
+        run: node scripts/validate-manifests.js skills/sdd/
+
+  skills-gitlab:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate gitlab manifests
+        run: node scripts/validate-manifests.js skills/gitlab/
+
+  skills-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate testing manifests
+        run: node scripts/validate-manifests.js skills/testing/
+
+  skills-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate frontend manifests
+        run: node scripts/validate-manifests.js skills/frontend/
+
+  skills-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate docs manifests
+        run: node scripts/validate-manifests.js skills/docs/
+
+  skills-business:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate business manifests
+        run: node scripts/validate-manifests.js skills/business/
+
+  skills-labs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate labs manifests
+        run: node scripts/validate-manifests.js skills/labs/
+
+  skills-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate code manifests
+        run: node scripts/validate-manifests.js skills/code/

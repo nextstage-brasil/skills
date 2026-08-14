@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { resolveSkillDir } from '../src/resolveSkillPath.js';
 
 const SKILL_ID = 'ns-commercial-budget';
 
@@ -55,10 +56,10 @@ function walkFiles(dir, out = []) {
  */
 export function validateCommercialBudgetSkill(skillsDir) {
   const errors = [];
-  const skillDir = join(skillsDir, SKILL_ID);
-  const skillMdPath = join(skillDir, 'SKILL.md');
+  const skillDir = resolveSkillDir(skillsDir, SKILL_ID);
+  const skillMdPath = skillDir ? join(skillDir, 'SKILL.md') : null;
 
-  if (!existsSync(skillMdPath)) {
+  if (!skillMdPath || !existsSync(skillMdPath)) {
     return errors;
   }
 

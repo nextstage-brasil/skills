@@ -19,12 +19,12 @@ npx @nextstage-brasil/harness <command>
 | See which agents this project uses | `npx @nextstage-brasil/harness agents` |
 | Refresh rules + skill + subagent adapters | `npx @nextstage-brasil/harness sync` |
 | Update skills already installed (changed only; `--force` = all) | `npx @nextstage-brasil/harness update` |
-| Brownfield onboarding (manual) | `/ns-harness-prepare` |
+| Brownfield onboarding (manual) | `/ns-harness prepare this repo` |
 | Brownfield instructions (terminal) | `npx @nextstage-brasil/harness prepare` |
 | Spec-driven delivery | `/ns-spec-driven` |
-| Optional complements (UI, docs, security) | `npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y` |
+| Optional complements (UI, docs, security) | `npx @nextstage-brasil/harness --skill ns-frontend-design --skill ns-docs-writer --skill ns-best-practices --no-scaffold -y` |
 
-**In your AI agent:** open `AGENTS.md` at the project root, then invoke skills via the menu or slash (e.g. `/ns-code-coder`, `/mcp-gitlab-usage`).
+**In your AI agent:** open `AGENTS.md` at the project root, then invoke skills via the menu or slash (e.g. `/ns-coder`, `/mcp-gitlab-usage`).
 
 ---
 
@@ -36,7 +36,7 @@ npx @nextstage-brasil/harness <command>
 | `agents/*.md` | Canonical subagent bodies | **Yes** |
 | `manifest.json` | Rule registry + project `agents` + `subagents` (models) | When adding rules/agents or changing subagent models |
 | `.agents/skills/<name>/` | Installed skills (Skills CLI) | Via `harness init` / `update` / `skills add` |
-| `AGENTS.md` | Project entry for agents | CLI baseline; refine with `/ns-harness-agents-md` |
+| `AGENTS.md` | Project entry for agents | CLI baseline; refine with `/ns-harness` agents-md |
 | `.cursor/rules/*.mdc` | Cursor rule adapters | **No** — generated; gitignored |
 | `.claude/rules/*.md` | Claude rule adapters | **No** — generated; gitignored |
 | `.cursor/agents/*.md` | Cursor subagent bridges | **No** — generated; set `model` in manifest; gitignored |
@@ -75,13 +75,13 @@ Cursor reads skills from `.agents/skills/` directly. Claude Code uses symlinks i
 
 ## Project subagents (model bridges)
 
-Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readonly) in `manifest.json` → `"subagents"`. Seeded when matching skills are installed (aligned with presets that pull `ns-code-coder`, `ns-code-reviewer`, `ns-sdd-task-generator`):
+Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readonly) in `manifest.json` → `"subagents"`. Seeded when matching skills are installed (aligned with presets that pull `ns-coder`, `ns-reviewer`, `ns-spec-driven`):
 
 | Agent file | Skill | Default model (cursor / claude) | `readonly` |
 |------------|-------|----------------------------------|------------|
-| `coder-agent.md` | `ns-code-coder` | `composer-2.5[fast=false]` / `sonnet` | `false` |
-| `reviewer-agent.md` | `ns-code-reviewer` | `grok-4.5[effort=medium,fast=false]` / `opus` | `true` |
-| `task-writer-agent.md` | `ns-sdd-task-generator` | `composer-2.5[fast=false]` / `haiku` | `false` |
+| `coder-agent.md` | `ns-coder` | `composer-2.5[fast=false]` / `sonnet` | `false` |
+| `reviewer-agent.md` | `ns-reviewer` | `grok-4.5[effort=medium,fast=false]` / `opus` | `true` |
+| `task-writer-agent.md` | `ns-spec-driven` (`references/task-generator.md`) | `composer-2.5[fast=false]` / `haiku` | `false` |
 
 **Project owns `model`.** Edit `manifest.json`, then `harness sync`. `harness update` refreshes adapter bodies but **never** resets your model values.
 
@@ -90,7 +90,7 @@ Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readon
   {
     "name": "reviewer-agent",
     "canonical": "agents/reviewer-agent.md",
-    "skill": "ns-code-reviewer",
+    "skill": "ns-reviewer",
     "description": "(NS) Thin bridge…",
     "model": { "cursor": "grok-4.5[effort=medium,fast=false]", "claude": "opus" },
     "readonly": true
@@ -102,7 +102,7 @@ Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readon
 
 ```bash
 npx @nextstage-brasil/harness add-subagent investigator-agent \
-  --skill ns-code-investigator \
+  --skill ns-investigator \
   --description "Investigation bridge"
 ```
 
@@ -151,7 +151,7 @@ npx @nextstage-brasil/harness sync
 
 ### Architecture rules (brownfield)
 
-Replace the stub `rules/architecture-rules.md` by running **`/ns-harness-architecture-rules`** in your agent, then:
+Replace the stub `rules/architecture-rules.md` by running **`/ns-harness` architecture-rules** in your agent, then:
 
 ```bash
 npx @nextstage-brasil/harness sync
@@ -181,10 +181,10 @@ npx @nextstage-brasil/harness list
 npx @nextstage-brasil/harness --skill ns-gitlab-board-sync --no-scaffold -y
 
 # Full preset (e.g. GitLab execution chain)
-npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes
+npx @nextstage-brasil/harness --preset gitlab --yes
 
 # Preview without writing files
-npx @nextstage-brasil/harness --preset spec-driven-gitlab --dry-run
+npx @nextstage-brasil/harness --preset gitlab --dry-run
 ```
 
 ### Update installed skills only
@@ -242,7 +242,7 @@ Locally, `harness sync --check` verifies adapters on disk match canonical (use a
 
 For existing codebases, run once (and again after major refactors). **Not** part of `/ns-spec-driven`.
 
-**In agent:** `/ns-harness-prepare`  
+**In agent:** `/ns-harness prepare this repo`  
 **Chain:** architecture-rules → sync → brownfield map → reverse spec → AGENTS.md
 
 **Terminal:** `npx @nextstage-brasil/harness prepare` prints full instructions.
@@ -258,20 +258,19 @@ Artifacts land under `docs/context/`, `docs/specs/`, `docs/versions/`.
 Typical worker chain (invoke via slash in your agent):
 
 ```
-ns-sdd-clarify-requirements
-  → ns-sdd-requirements-generator
-  → ns-sdd-task-generator
-  → ns-code-coder
-  → ns-code-reviewer
+/ns-spec-driven
+  → internal phases (references/clarify-requirements.md … task-generator.md)
+  → ns-coder (execute)
+  → ns-reviewer (close)
 ```
 
 Optional complements (UI, docs, security hygiene) — install per skill:
 
 ```bash
-npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y
+npx @nextstage-brasil/harness --skill ns-frontend-design --skill ns-docs-writer --skill ns-best-practices --no-scaffold -y
 ```
 
-GitLab execution: preset `spec-driven-gitlab` or skills like `mcp-gitlab-usage`, `ns-execution-gitlab-issue`, `ns-gitlab-board-sync`.
+GitLab execution: preset `gitlab` (alias `spec-driven-gitlab`) or skills like `mcp-gitlab-usage`, `ns-execution-gitlab-issue`, `ns-gitlab-board-sync`.
 
 ---
 
@@ -284,7 +283,7 @@ npx @nextstage-brasil/harness agents-md
 npx @nextstage-brasil/harness agents-md --force
 ```
 
-Brownfield refinement: **`/ns-harness-agents-md`** in your agent.
+Brownfield refinement: **`/ns-harness` agents-md** in your agent.
 
 ---
 

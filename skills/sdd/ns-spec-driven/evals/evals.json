@@ -1,0 +1,95 @@
+{
+  "skill_name": "ns-spec-driven",
+  "evals": [
+    {
+      "prompt": "/ns-spec-driven — specify user notification preferences for version 2.1 (email and in-app toggles).",
+      "id": 1,
+      "expected_output": "Invokes ns-spec-driven: auto-sizes Medium+, reads references/clarify-requirements.md if ambiguous then references/requirements-generator.md for docs/versions/2.1/requirements.md. Does not run /ns-harness prepare.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — docs/versions/1.0.0/ already has tasks and execution-handoff.md. Implement the next pending task.",
+      "id": 2,
+      "expected_output": "Resume path: reads session-continuity.md + execution-handoff.md, skips planning phases, MUST dispatch execute via ../../../code/ns-coder/references/run-implementation.md and coder-agent when available. No new requirements.md. Must not implement by reading ns-coder inline while coder-agent bridge is present.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven quick fix: add a maxlength attribute to the profile name input — one file.",
+      "id": 3,
+      "expected_output": "Quick mode: MUST dispatch coder-agent when available, skips PM chain and /ns-harness prepare. Must not Skill(ns-coder) inline while coder-agent present.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — requirements.md for version 2.1 is approved. Generate the task files now.",
+      "id": 4,
+      "expected_output": "Tasks phase: MUST spawn task-writer-agent when available (loads references/task-generator.md). After backend impl tasks MUST read unit-test-task-generator.md; after frontend UI tasks MUST read e2e-test-task-generator.md. Must NOT inline task generation in parent session while task-writer-agent is present.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — plan version 3.0 for intelligent SaaS with Google Calendar MCP on agent-api.",
+      "id": 5,
+      "expected_output": "Boot agent-runtime gate: MUST load ns-langgraph-agents before Clarify/Specify; stops with harness install if missing; cites agent-runtime-integration.md; uses intelligent-saas stack profile in requirements-generator.md.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — continue version 3.8.0 partitioned implementation. version-roadmap.md has five pending slices.",
+      "id": 6,
+      "expected_output": "Reads references/orchestrator.md + session-continuity.md; loops slice-by-slice with blocking coder-agent per slice, commit per slice, no confirmation between slices.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven resume — apps/billing version 2.1.0 planning done, generate execution handoff from eight tasks.",
+      "id": 7,
+      "expected_output": "Reads references/execution-handoff.md; creates execution-handoff.md with task table, time tracking, progress block. Does not generate new task files.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — version 2.3.0 brownfield-map.md exists (Date 2025-11-01). Clarify scope for notifications.",
+      "id": 8,
+      "expected_output": "Reads clarify-requirements.md Step 0.4 gate; shows map date in natural chat; waits for refresh or keep before scope questions.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — analyze requirements at apps/shop/docs/versions/2.0.0/ before task generation.",
+      "id": 9,
+      "expected_output": "Reads analyze-consistency.md; appends Consistency Status to requirements.md; proceed/stop decision. No consistency-report.md.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — master requirements at apps/erp/docs/versions/3.0.0/ has 18 features. Partition into subversions.",
+      "id": 10,
+      "expected_output": "Reads version-partitioner.md; creates version-roadmap.md and subversion excerpt requirements; no task files.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven continue apps/crm version 1.3.0 — task 003 just passed validation, update handoff.",
+      "id": 11,
+      "expected_output": "Reads execution-handoff.md status-update rules; marks task 003 completed with Tokens filled; recalculates Progress and Total process time.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — apps/shop version 2.1.0 has roadmap but no partition yet, split into subversions first.",
+      "id": 12,
+      "expected_output": "Routes to version-partitioner.md (not orchestrator.md) — no pending slices to execute yet.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — backend implementation tasks exist for version 2.1. Generate PHPUnit task files for the same feature.",
+      "id": 13,
+      "expected_output": "Reads references/unit-test-task-generator.md after task-generator.md; writes test task markdown with Unit/Feature paths and cross-tenant P0. Does not invoke ns-pm-unit-test-task-generator as a skill. Does not write PHPUnit classes (ns-backend-tests).",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — frontend tasks for checkout include data-testid contract. Generate Cypress E2E task files.",
+      "id": 14,
+      "expected_output": "Reads references/e2e-test-task-generator.md; copies testid contract; plans tests-e2e/ device paths. Does not invoke ns-pm-e2e-test-task-generator as a skill. Does not write Cypress specs (ns-e2e-tests).",
+      "files": []
+    },
+    {
+      "prompt": "Can I generate tasks now? We have requirements.md for version 2.1 but no explicit confirmation yet.",
+      "id": 15,
+      "expected_output": "Agent cites references/gates.md; identifies missing requirements_confirmed or scope_confirmed; does not generate tasks.",
+      "files": []
+    }
+  ]
+}

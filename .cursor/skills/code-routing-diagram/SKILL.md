@@ -7,7 +7,7 @@ description: Maintainer-only skill for the nextstage-brasil/skills repo. Create 
 
 **Audience:** maintainers of `nextstage-brasil/skills`. **Not** a catalog skill for consumer projects.
 
-Produce an accurate Mermaid flowchart of runtime handoffs between implementation skills — especially `ns-execution-gitlab-issue` and `ns-code-coder` (`C2` under autonomous).
+Produce an accurate Mermaid flowchart of runtime handoffs between implementation skills — especially `ns-execution-gitlab-issue` and `ns-coder` (`C2` under autonomous).
 
 ## When to use
 
@@ -22,11 +22,11 @@ Produce an accurate Mermaid flowchart of runtime handoffs between implementation
 | `skills/ns-harness/references/code-skill-routing.md` | Priority table, handoffs, **canonical ` ```mermaid ` block** |
 | `skills/ns-execution-gitlab-issue/references/entry-triggers.md` | Priority 1 |
 | `skills/ns-spec-driven/references/entry-triggers.md` | Priority 2 |
-| `skills/ns-code-autonomous/references/entry-triggers.md` | Priority 3 |
-| `skills/ns-code-investigator/references/entry-triggers.md` | Priority 4 |
-| `skills/ns-code-coder/references/entry-triggers.md` | Priority 5 |
+| `skills/ns-autonomous/references/entry-triggers.md` | Priority 3 |
+| `skills/ns-investigator/references/entry-triggers.md` | Priority 4 |
+| `skills/ns-coder/references/entry-triggers.md` | Priority 5 |
 | `skills/*/SKILL.md` routing sections | Handoffs out |
-| `skills/ns-code-autonomous/references/routing.md` | Engine anti-cycle |
+| `skills/ns-autonomous/references/routing.md` | Engine anti-cycle |
 
 Details: `references/canonical-sources.md`, `references/mermaid-conventions.md`.
 

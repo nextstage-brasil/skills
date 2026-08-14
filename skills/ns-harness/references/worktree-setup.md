@@ -1,40 +1,40 @@
-# Worktree setup (single tree, monorepo)
+# Worktree setup (single tree)
 
-Canonical mechanics for isolating a run in a dedicated `git worktree`. Consumer skills (`ns-execution-gitlab-issue`, `ns-code-autonomous`) derive their own `{run_id}` and point here instead of duplicating the commands.
+Canonical mechanics for isolating a run in a dedicated `git worktree`. Consumer skills (`ns-execution-gitlab-issue`, `ns-autonomous`) derive their own `{run_id}` and point here instead of duplicating the commands.
 
 ## Path (mandatory)
 
 ```
-{product_root}/.worktrees/{run_id}/
+.worktrees/{run_id}/
 ```
 
-Resolve `{product_root}` first (repo root / product folder — see `harness-discovery.md`). The worktree path is **always** under that product root.
+Worktree path is **always** repo-relative under `.worktrees/`. Complete Session boot (`session-boot.md`) first.
 
 | Valid | Invalid |
 | ----- | ------- |
-| `{product_root}/.worktrees/{run_id}/` | Anywhere under `.cursor/` |
+| `.worktrees/{run_id}/` | Anywhere under `.cursor/` |
 | Absolute form of the same path | Cursor Task / best-of-n / agent-runtime "worktrees" |
 | | OS temp dirs used as a substitute |
-| | Main checkout of `{product_root}` |
+| | Main checkout (non-worktree) |
 
 Never invent a path under `.cursor/`, `.cursor/worktrees/`, or the Cursor agent sandbox. Those are IDE-runtime locations — not this skill's isolation layer.
 
-One worktree, one branch, one MR (when applicable) per run — no per-project/per-repo looping in a monorepo.
+One worktree, one branch, one MR (when applicable) per run — no per-project/per-repo looping.
 
 ## Commands
 
-Run from `{product_root}` (or pass absolute paths). Ensure `.worktrees/` exists as a directory first if needed (`mkdir -p "{product_root}/.worktrees"`).
+Run from the repo root (or pass absolute paths). Ensure `.worktrees/` exists first (`mkdir -p .worktrees`).
 
 ```bash
-git -C "{product_root}" fetch origin {SOURCE_BRANCH}
+git fetch origin {SOURCE_BRANCH}
 
 # REUSE_MODE = false (new branch)
-git -C "{product_root}" worktree add -b {WORK_BRANCH} "{product_root}/.worktrees/{run_id}" origin/{SOURCE_BRANCH}
-git -C "{product_root}/.worktrees/{run_id}" push -u origin {WORK_BRANCH}
+git worktree add -b {WORK_BRANCH} ".worktrees/{run_id}" origin/{SOURCE_BRANCH}
+git -C ".worktrees/{run_id}" push -u origin {WORK_BRANCH}
 
 # REUSE_MODE = true (existing branch, checkout without recreating)
-git -C "{product_root}" fetch origin {WORK_BRANCH}
-git -C "{product_root}" worktree add "{product_root}/.worktrees/{run_id}" {WORK_BRANCH}
+git fetch origin {WORK_BRANCH}
+git worktree add ".worktrees/{run_id}" {WORK_BRANCH}
 ```
 
 `REUSE_MODE = true` never force-pushes and never rewrites history — the branch and its remote already exist.
@@ -54,14 +54,14 @@ If `git worktree add` fails (permissions, sandbox, path conflict, missing remote
 - All coding happens inside `{WORKTREE_ROOT}`; never in the main checkout when concurrent work is possible.
 - `.worktrees/` in `.gitignore` or `.git/info/exclude`.
 - Abort if a worktree already exists for the same `{run_id}` and is in use by another run, unless this is an explicit resume.
-- One worktree per run — do not create additional worktrees per subdirectory or per subagent; multi-agent dispatch (see `ns-code-autonomous`) operates on disjoint file scopes inside the same worktree.
+- One worktree per run — do not create additional worktrees per subdirectory or per subagent; multi-agent dispatch (see `ns-autonomous`) operates on disjoint file scopes inside the same worktree.
 
 ## `{run_id}` derivation (per consumer)
 
 | Consumer            | `{run_id}`                          |
 | -------------------- | ------------------------------------ |
 | `ns-execution-gitlab-issue` | `{ISSUE_ID}` (see its `references/worktree-setup.md` override) |
-| `ns-code-autonomous` standalone | `{version_san}` (see its `references/standalone-pipeline.md`) |
+| `ns-autonomous` standalone | `{version_san}` (see its `references/standalone-pipeline.md`) |
 
 ## Cleanup
 

@@ -16,13 +16,13 @@ Interactive wizard. Prefer CI / scripts? Use flags below — every common path i
 
 ## What you get
 
-| After `init` | Why it matters |
-|--------------|----------------|
-| `.agents/skills/` | Installed skills (Skills CLI). Cursor reads them here. |
-| `.nextstage-harness/rules/` | **Edit rules here** — single source of truth |
-| `.cursor/rules/`, `.claude/rules/` | Generated adapters — do not edit by hand |
-| `AGENTS.md` + `CLAUDE.md` | Project entry for agents |
-| `docs/context`, `docs/specs`, `docs/versions` | SDD artifact folders (unless `--no-scaffold`) |
+| After `init`                                  | Why it matters                                         |
+| --------------------------------------------- | ------------------------------------------------------ |
+| `.agents/skills/`                             | Installed skills (Skills CLI). Cursor reads them here. |
+| `.nextstage-harness/rules/`                   | **Edit rules here** — single source of truth           |
+| `.cursor/rules/`, `.claude/rules/`            | Generated adapters — do not edit by hand               |
+| `AGENTS.md` + `CLAUDE.md`                     | Project entry for agents                               |
+| `docs/context`, `docs/specs`, `docs/versions` | SDD artifact folders (unless `--no-scaffold`)          |
 
 Every install also pulls **alwaysInstall** skills: `ns-harness` (plus its dependencies). Presets add Spec-Driven, PM, GitLab, and other packs on top.
 
@@ -43,8 +43,8 @@ npx @nextstage-brasil/harness --preset spec-driven --yes
 
 Then open the project in your agent and:
 
-1. Read `AGENTS.md`
-2. **Brownfield:** run `/ns-harness-prepare` once
+1. Obey `AGENTS.md` (already in context)
+2. **Brownfield:** run `/ns-harness prepare this repo` once
 3. **Delivery:** run `/ns-spec-driven`
 
 See installed presets/skills anytime:
@@ -67,12 +67,12 @@ npx @nextstage-brasil/harness --preset spec-driven --yes
 
 ### Existing codebase (brownfield)
 
-Same install — then onboard the repo so agents understand architecture and living specs.
+Install a delivery preset, then onboard so agents understand architecture and living specs.
 
 ```bash
-npx @nextstage-brasil/harness --preset brownfield --yes
+npx @nextstage-brasil/harness --preset spec-driven --yes
 # In your agent:
-#   /ns-harness-prepare
+#   /ns-harness prepare this repo
 ```
 
 Need the full prepare prompt in the terminal?
@@ -86,7 +86,7 @@ npx @nextstage-brasil/harness prepare
 Issue execution, board sync, requirements enricher, CI generator — on top of Spec-Driven.
 
 ```bash
-npx @nextstage-brasil/harness --preset spec-driven-gitlab --yes
+npx @nextstage-brasil/harness --preset gitlab --yes
 ```
 
 ### Project Manager (no code execution)
@@ -113,7 +113,7 @@ Install a skill + its catalog `depends`. Skips `.nextstage-harness/`, `AGENTS.md
 
 ```bash
 npx @nextstage-brasil/harness --skill ns-multi-agent-architect --no-scaffold -y
-npx @nextstage-brasil/harness --skill ns-code-coder --skill ns-code-reviewer --no-scaffold -y
+npx @nextstage-brasil/harness --skill ns-coder --skill ns-reviewer --no-scaffold -y
 ```
 
 Already have harness? Add a skill and refresh adapters:
@@ -126,8 +126,8 @@ npx @nextstage-brasil/harness sync
 ### Preview before writing files
 
 ```bash
-npx @nextstage-brasil/harness --preset spec-driven-gitlab --dry-run
-npx @nextstage-brasil/harness --skill ns-code-frontend-design --dry-run
+npx @nextstage-brasil/harness --preset gitlab --dry-run
+npx @nextstage-brasil/harness --skill ns-frontend-design --dry-run
 ```
 
 ### Cursor only (or Cursor + Claude)
@@ -154,10 +154,10 @@ npx @nextstage-brasil/harness update --force
 Install individually (or use `--preset full`):
 
 ```bash
-npx @nextstage-brasil/harness --skill ns-code-frontend-design --skill ns-code-docs-writer --skill ns-code-best-practices --no-scaffold -y
+npx @nextstage-brasil/harness --skill ns-frontend-design --skill ns-docs-writer --skill ns-best-practices --no-scaffold -y
 ```
 
-`ns-code-coder` pulls the full `ns-code-*` suite (investigator, frontend-design, best-practices, backend-tests, e2e-tests, docs-writer, reviewer, autonomous).
+`ns-coder` pulls the full `ns-code-*` suite (investigator, frontend-design, best-practices, backend-tests, e2e-tests, docs-writer, reviewer, autonomous).
 
 ### Agents API / LangChain stack
 
@@ -165,12 +165,6 @@ External + NextStage skills for agent-service work:
 
 ```bash
 npx @nextstage-brasil/harness --preset agents-api --yes
-```
-
-Focused LangGraph implementation (coder + runtime doctrine, fewer externals):
-
-```bash
-npx @nextstage-brasil/harness --preset coder-langgraph --yes
 ```
 
 ### Init into another directory
@@ -187,22 +181,22 @@ npx @nextstage-brasil/harness init \
 
 ## Day-to-day cheat sheet
 
-| Goal | Command |
-|------|---------|
-| Install / re-run wizard | `npx @nextstage-brasil/harness` |
-| See catalog & presets | `npx @nextstage-brasil/harness list` |
-| After editing rules in `.nextstage-harness/` | `npx @nextstage-brasil/harness sync` |
-| CI: validate harness + regenerate adapters | `npx @nextstage-brasil/harness sync` |
-| Update installed skills (changed only) | `npx @nextstage-brasil/harness update` |
-| Regenerate `AGENTS.md` | `npx @nextstage-brasil/harness agents-md --force` |
-| Add a project rule | `npx @nextstage-brasil/harness add-rule api-conventions --description "REST conventions"` |
-| Add a project subagent | `npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-code-investigator --description "Investigation bridge"` |
-| Absorb orphan `.cursor/rules/*.mdc` | `npx @nextstage-brasil/harness sync` |
-| Brownfield instructions | `npx @nextstage-brasil/harness prepare` |
-| Show / set agents | `npx @nextstage-brasil/harness agents` · `agents set --agent cursor` |
-| Uninstall harness | `npx @nextstage-brasil/harness uninstall --dry-run` then `--yes` |
+| Goal                                         | Command                                                                                                                      |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Install / re-run wizard                      | `npx @nextstage-brasil/harness`                                                                                              |
+| See catalog & presets                        | `npx @nextstage-brasil/harness list`                                                                                         |
+| After editing rules in `.nextstage-harness/` | `npx @nextstage-brasil/harness sync`                                                                                         |
+| CI: validate harness + regenerate adapters   | `npx @nextstage-brasil/harness sync`                                                                                         |
+| Update installed skills (changed only)       | `npx @nextstage-brasil/harness update`                                                                                       |
+| Regenerate `AGENTS.md`                       | `npx @nextstage-brasil/harness agents-md --force`                                                                            |
+| Add a project rule                           | `npx @nextstage-brasil/harness add-rule api-conventions --description "REST conventions"`                                    |
+| Add a project subagent                       | `npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-investigator --description "Investigation bridge"` |
+| Absorb orphan `.cursor/rules/*.mdc`          | `npx @nextstage-brasil/harness sync`                                                                                         |
+| Brownfield instructions                      | `npx @nextstage-brasil/harness prepare`                                                                                      |
+| Show / set agents                            | `npx @nextstage-brasil/harness agents` · `agents set --agent cursor`                                                         |
+| Uninstall harness                            | `npx @nextstage-brasil/harness uninstall --dry-run` then `--yes`                                                             |
 
-In the agent, invoke skills via menu or slash: `/ns-spec-driven`, `/ns-code-coder`, `/ns-code-reviewer`, …
+In the agent, invoke skills via menu or slash: `/ns-spec-driven`, `/ns-coder`, `/ns-reviewer`, …
 
 Consumer guide (scaffolded into projects): `.nextstage-harness/README.md`  
 Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
@@ -213,16 +207,14 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 
 **Base (always):** `ns-harness` (+ transitive deps).
 
-| Preset | Use when you want… |
-|--------|-------------------|
-| `spec-driven` | Complete SDD stack (clarify → spec → tasks → implement) + test task generators |
-| `spec-driven-gitlab` | Everything in `spec-driven`, plus GitLab issues, board sync, enricher, CI generator |
-| `project-manager` | Human PM toolkit — `ns-project-manager` + requirements enricher (**no** SDD/code workers) |
-| `brownfield` | Harness + `/ns-harness-prepare` chain on existing code |
+| Preset               | Use when you want…                                                                                    |
+| -------------------- | ----------------------------------------------------------------------------------------------------- |
+| `spec-driven`        | SDD face + coder, review, investigator, autonomous, living-spec                                      |
+| `gitlab`             | Everything in `spec-driven`, plus GitLab issues, board sync, CI generator (alias: `spec-driven-gitlab`) |
+| `project-manager`    | Human PM toolkit — `ns-project-manager` + requirements enricher (**no** SDD/code workers)             |
 | `frontend-prototype` | Playwright reverse prototype (`ns-proto-creator`), visual guides, living appearance, design + quality |
-| `full` | Every skill in the catalog |
-| `agents-api` | LangChain / LangGraph / MCP external skills + NS base |
-| `coder-langgraph` | `ns-langgraph-agents` + coder/investigator/reviewer + core LangChain/MCP/Vitest externals |
+| `full`               | Every skill in the catalog                                                                            |
+| `agents-api`         | LangChain / LangGraph / MCP externals + NS coder/investigator/reviewer/architect                     |
 
 ```bash
 npx @nextstage-brasil/harness --preset <name> --yes
@@ -236,11 +228,11 @@ Exact skill lists: `npx @nextstage-brasil/harness list`.
 
 Choose **one** of:
 
-| Mode | Flag | Behavior |
-|------|------|----------|
-| Preset | `--preset <name>` | Bundled add-ons + alwaysInstall + `depends` |
-| Skills | `--skill <id>` (repeatable) | Only those skills + catalog `depends` + alwaysInstall |
-| Everything | `--all` | Full NextStage catalog |
+| Mode       | Flag                        | Behavior                                              |
+| ---------- | --------------------------- | ----------------------------------------------------- |
+| Preset     | `--preset <name>`           | Bundled add-ons + alwaysInstall + `depends`           |
+| Skills     | `--skill <id>` (repeatable) | Only those skills + catalog `depends` + alwaysInstall |
+| Everything | `--all`                     | Full NextStage catalog                                |
 
 Skill ids match directory names under `skills/<name>/` in the [skills repo](https://github.com/nextstage-brasil/skills). External ids come from `external-skills.json` (see `harness list`).
 
@@ -250,39 +242,39 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 
 ### Commands
 
-| Command | Description |
-|---------|-------------|
-| `harness` / `harness init` | Install skills, scaffold, sync adapters, generate `AGENTS.md` |
-| `harness list` | Presets and skill catalog |
-| `harness prepare` | Print brownfield prepare instructions (`/ns-harness-prepare`) |
-| `harness sync` | Absorb orphan Cursor rules + regenerate rule/skill/subagent adapters |
-| `harness sync --check` | Local — exit 1 if adapters drift or orphan `.mdc` not in manifest |
-| `harness update` | Update changed skills in `.agents/skills/` (skip up-to-date; `--force` = all) |
-| `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` (use `--force` to overwrite) |
-| `harness add-rule <name>` | New rule under `.nextstage-harness/rules/` + sync |
-| `harness add-subagent <name>` | New subagent under `.nextstage-harness/agents/` + sync (`--skill` required) |
-| `harness prune-retired-skills` | Remove renamed skill dirs after replacement |
-| `harness uninstall` | Remove skills, adapters, `.nextstage-harness/`, lock, ignore blocks (`docs/` kept) |
-| `harness agents` | Show active agents from manifest |
-| `harness agents set` | Persist agents, sync, prune unused adapter trees |
+| Command                        | Description                                                                        |
+| ------------------------------ | ---------------------------------------------------------------------------------- |
+| `harness` / `harness init`     | Install skills, scaffold, sync adapters, generate `AGENTS.md`                      |
+| `harness list`                 | Presets and skill catalog                                                          |
+| `harness prepare`              | Print brownfield prepare instructions (`/ns-harness prepare`)                      |
+| `harness sync`                 | Absorb orphan Cursor rules + regenerate rule/skill/subagent adapters               |
+| `harness sync --check`         | Local — exit 1 if adapters drift or orphan `.mdc` not in manifest                  |
+| `harness update`               | Update changed skills in `.agents/skills/` (skip up-to-date; `--force` = all)      |
+| `harness agents-md`            | Generate `AGENTS.md` + `CLAUDE.md` (use `--force` to overwrite)                    |
+| `harness add-rule <name>`      | New rule under `.nextstage-harness/rules/` + sync                                  |
+| `harness add-subagent <name>`  | New subagent under `.nextstage-harness/agents/` + sync (`--skill` required)        |
+| `harness prune-retired-skills` | Remove renamed skill dirs after replacement                                        |
+| `harness uninstall`            | Remove skills, adapters, `.nextstage-harness/`, lock, ignore blocks (`docs/` kept) |
+| `harness agents`               | Show active agents from manifest                                                   |
+| `harness agents set`           | Persist agents, sync, prune unused adapter trees                                   |
 
 ### Common flags
 
-| Flag | Effect |
-|------|--------|
-| `--dir <path>` | Target project root (default: `.`) |
-| `--preset <name>` | Preset selection |
-| `--skill <id>` | Skill selection (repeatable) |
-| `--all` | Full catalog |
-| `--agent <name>` | `cursor`, `claude-code` (repeatable; default both) |
-| `--source <path\|repo>` | Skills source override |
-| `--copy` | Copy skills instead of symlinks |
-| `--global` / `-g` | Global skills install (Skills CLI) |
-| `--no-scaffold` | Skills only — skip harness layout / `AGENTS.md` / `docs/` |
-| `--keep-agents-md` | With `uninstall`: keep `AGENTS.md` / `CLAUDE.md` |
-| `--yes` / `-y` | Non-interactive |
-| `--dry-run` | Print plan, write nothing |
-| `--force` | Overwrite (`agents-md`, `add-rule`, `add-subagent`) |
+| Flag                    | Effect                                                    |
+| ----------------------- | --------------------------------------------------------- |
+| `--dir <path>`          | Target project root (default: `.`)                        |
+| `--preset <name>`       | Preset selection                                          |
+| `--skill <id>`          | Skill selection (repeatable)                              |
+| `--all`                 | Full catalog                                              |
+| `--agent <name>`        | `cursor`, `claude-code` (repeatable; default both)        |
+| `--source <path\|repo>` | Skills source override                                    |
+| `--copy`                | Copy skills instead of symlinks                           |
+| `--global` / `-g`       | Global skills install (Skills CLI)                        |
+| `--no-scaffold`         | Skills only — skip harness layout / `AGENTS.md` / `docs/` |
+| `--keep-agents-md`      | With `uninstall`: keep `AGENTS.md` / `CLAUDE.md`          |
+| `--yes` / `-y`          | Non-interactive                                           |
+| `--dry-run`             | Print plan, write nothing                                 |
+| `--force`               | Overwrite (`agents-md`, `add-rule`, `add-subagent`)       |
 
 `add-rule` extras: `--description`, `--globs` (comma-separated; scoped rule, not always-apply).
 
@@ -292,7 +284,7 @@ Example:
 
 ```bash
 npx @nextstage-brasil/harness add-subagent investigator-agent \
-  --skill ns-code-investigator \
+  --skill ns-investigator \
   --description "Investigation bridge"
 ```
 
@@ -313,21 +305,39 @@ npx @nextstage-brasil/harness init \
 
 ### Local / monorepo source (maintainers)
 
-```bash
-export NEXTSTAGE_SKILLS_SOURCE=~/apps/nextstage/skills
-npx @nextstage-brasil/harness --skill ns-code-coder --no-scaffold -y
+This is the same mechanism as `npx @nextstage-brasil/harness` after publish: `npm pack` then `npx --package=<tgz> harness`. `--source` points at the clone (published npx uses GitHub `nextstage-brasil/skills`).
 
-# Or run the package from a clone
-npx file:~/apps/nextstage/skills/packages/harness
+```bash
+# From this repo
+bash scripts/local-npx-smoke.sh spec-driven
 ```
+
+Or by hand, in an empty project (not inside this clone):
+
+```bash
+SKILLS_REPO="$HOME/apps/nextstage/skills"   # this clone
+VERSION="$(node -p "require('$SKILLS_REPO/packages/harness/package.json').version")"
+
+cd "$SKILLS_REPO/packages/harness" && npm pack --pack-destination /tmp
+
+mkdir -p /tmp/harness-npx-smoke && cd /tmp/harness-npx-smoke && git init
+
+npx --yes --package="/tmp/nextstage-brasil-harness-${VERSION}.tgz" harness \
+  --preset spec-driven --yes --dry-run --source "$SKILLS_REPO"
+
+npx --yes --package="/tmp/nextstage-brasil-harness-${VERSION}.tgz" harness \
+  --preset spec-driven --yes --source "$SKILLS_REPO"
+```
+
+Do **not** put `init` after flags (`--source … init` is invalid). `init` is the default, or must be the first argument.
 
 ### What `init` does (order)
 
-1. Detects new vs existing project  
-2. Resolves `depends` from `templates/catalog.json`  
-3. Runs `npx skills add` → `.agents/skills/`  
-4. Scaffolds `.nextstage-harness/`, `.agents/`, `docs/` (unless `--no-scaffold`)  
-5. `harness sync` — rule adapters + Claude skill symlinks  
+1. Detects new vs existing project
+2. Resolves `depends` from `templates/catalog.json`
+3. Runs `npx skills add` → `.agents/skills/`
+4. Scaffolds `.nextstage-harness/`, `.agents/`, `docs/` (unless `--no-scaffold`)
+5. `harness sync` — rule adapters + Claude skill symlinks
 6. `harness agents-md` — baseline `AGENTS.md` + `CLAUDE.md`
 
 ---
@@ -344,18 +354,18 @@ npm test
 
 On every push to `main`, `.github/workflows/publish-harness.yml`:
 
-1. Runs harness tests  
-2. Reads conventional commits in that push  
-3. Publishes every push — semver: `version:` → major, `feat:` → minor, else → patch  
+1. Runs harness tests
+2. Reads conventional commits in that push
+3. Publishes every push — semver: `version:` → major, `feat:` → minor, else → patch
 4. Bumps `package.json` / lockfile, publishes to npm, tags `harness-v{version}`
 
 ### One-time npm trusted publishing
 
 Without this, `npm publish` fails with `ENEEDAUTH`.
 
-1. Log in at [npmjs.com](https://www.npmjs.com/) as a maintainer of `@nextstage-brasil/harness`  
-2. Package → **Settings → Trusted publishing → GitHub Actions**  
-3. Configure: org `nextstage-brasil`, repo `skills`, workflow `publish-harness.yml`  
+1. Log in at [npmjs.com](https://www.npmjs.com/) as a maintainer of `@nextstage-brasil/harness`
+2. Package → **Settings → Trusted publishing → GitHub Actions**
+3. Configure: org `nextstage-brasil`, repo `skills`, workflow `publish-harness.yml`
 4. Save, push to `main`
 
 No `NPM_TOKEN` — OIDC only. Node 24, npm 11.5.1+, `id-token: write`. Do **not** set `registry-url` on `setup-node` (breaks OIDC).

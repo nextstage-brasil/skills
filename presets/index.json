@@ -1,0 +1,11 @@
+{
+  "spec-driven": "presets/spec-driven.json",
+  "gitlab": "presets/gitlab.json",
+  "spec-driven-gitlab": "presets/gitlab.json",
+  "project-manager": "presets/business.json",
+  "business": "presets/business.json",
+  "frontend-prototype": "presets/frontend.json",
+  "frontend": "presets/frontend.json",
+  "agent-creator": "presets/agent-creator.json",
+  "full": "presets/full.json"
+}

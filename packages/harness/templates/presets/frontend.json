@@ -1,0 +1,10 @@
+{
+  "name": "frontend",
+  "requires_harness": ">=1.0.0",
+  "description": "Design, prototyping, and visual guide",
+  "includes": [
+    "skills/frontend/ns-frontend-design",
+    "skills/frontend/ns-proto-creator",
+    "skills/frontend/ns-proto-visual-guide"
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "@nextstage-brasil/harness",
-  "version": "0.38.2",
+  "version": "1.0.0",
   "description": "Interactive CLI to install NextStage skills and scaffold SDD project layout",
   "type": "module",
   "bin": {
@@ -17,7 +17,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node bin/cli.js list && node bin/cli.js --dry-run --yes --preset spec-driven-gitlab && node test/sync-smoke.mjs",
+    "test": "node bin/cli.js list --presets && node bin/cli.js validate && node bin/cli.js --dry-run --yes --preset gitlab && node bin/cli.js --dry-run --yes --preset spec-driven && node test/sync-smoke.mjs",
     "validate:catalog": "node scripts/validate-catalog.js",
     "generate:coder-routing-doc": "node scripts/generate-coder-skill-routing-doc.mjs",
     "export:coder-routing-mermaid": "node scripts/export-code-routing-mermaid.mjs"

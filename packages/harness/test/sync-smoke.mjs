@@ -191,16 +191,16 @@ try {
   assert(check.status === 0, `sync --check should pass after re-sync: ${check.stderr}${check.stdout}`);
 
   // 5. skill adapters — Claude only (Cursor reads .agents/skills/ directly)
-  const skillsCanonical = join(tempDir, '.agents', 'skills', 'ns-code-coder');
+  const skillsCanonical = join(tempDir, '.agents', 'skills', 'ns-coder');
   mkdirSync(skillsCanonical, { recursive: true });
-  writeFileSync(join(skillsCanonical, 'SKILL.md'), '---\nname: ns-code-coder\ndescription: test\n---\n\n# Code Coder\n', 'utf8');
+  writeFileSync(join(skillsCanonical, 'SKILL.md'), '---\nname: ns-coder\ndescription: test\n---\n\n# Code Coder\n', 'utf8');
   const skillSync = syncSkills(tempDir, { agents: ['cursor', 'claude-code'] });
   assert(skillSync.written.some((entry) => entry.includes('.claude/skills')), 'syncSkills should write claude adapter');
   assert(
     !skillSync.written.some((entry) => entry.includes('.cursor/skills') && !entry.includes('removed-legacy-adapter')),
     'syncSkills should not create cursor skill adapters',
   );
-  const claudeSkill = join(tempDir, '.claude', 'skills', 'ns-code-coder');
+  const claudeSkill = join(tempDir, '.claude', 'skills', 'ns-coder');
   assert(exists(claudeSkill), 'claude skill symlink missing');
   assert(
     lstatSync(claudeSkill).isSymbolicLink() || skillSync.written.some((entry) => entry.includes('copy')),
@@ -538,7 +538,7 @@ Should not land in canonical.
   assert(createdDockerignore.written.length === 1, 'syncDockerignore should create .dockerignore when missing');
   assert(existsSync(createdDockerignorePath), 'syncDockerignore should write .dockerignore file');
   const createdDockerignoreContent = readFileSync(createdDockerignorePath, 'utf8');
-  for (const entry of ['/docs', '/.agents', '/.cursor', '/.claude', '/AGENTS.md', '/CLAUDE.md']) {
+  for (const entry of ['docs/', '.agents/', '.cursor/', '.claude/', 'AGENTS.md', 'CLAUDE.md']) {
     assert(createdDockerignoreContent.includes(entry), `created dockerignore should include ${entry}`);
   }
 
@@ -548,15 +548,15 @@ Should not land in canonical.
   assert(dockerignoreSync.written.length === 1, 'syncDockerignore should update .dockerignore');
   const dockerignoreContent = readFileSync(dockerignorePath, 'utf8');
   assert(dockerignoreContent.startsWith('node_modules\n'), 'syncDockerignore should preserve existing entries');
-  assert(dockerignoreContent.includes('/docs'), 'dockerignore should include /docs');
-  assert(dockerignoreContent.includes('/.agents'), 'dockerignore should include /.agents');
-  assert(dockerignoreContent.includes('/.cursor'), 'dockerignore should include /.cursor');
-  assert(dockerignoreContent.includes('/.claude'), 'dockerignore should include /.claude');
-  assert(dockerignoreContent.includes('/AGENTS.md'), 'dockerignore should include AGENTS.md');
-  assert(dockerignoreContent.includes('/AGENTS.local.md'), 'dockerignore should include AGENTS.local.md');
-  assert(dockerignoreContent.includes('/.worktrees/'), 'dockerignore should include .worktrees');
-  assert(dockerignoreContent.includes('/CLAUDE.md'), 'dockerignore should include CLAUDE.md');
-  assert(dockerignoreContent.includes('/skills-lock.json'), 'dockerignore should include skills-lock.json');
+  assert(dockerignoreContent.includes('docs/'), 'dockerignore should include docs/');
+  assert(dockerignoreContent.includes('.agents/'), 'dockerignore should include .agents/');
+  assert(dockerignoreContent.includes('.cursor/'), 'dockerignore should include .cursor/');
+  assert(dockerignoreContent.includes('.claude/'), 'dockerignore should include .claude/');
+  assert(dockerignoreContent.includes('AGENTS.md'), 'dockerignore should include AGENTS.md');
+  assert(dockerignoreContent.includes('AGENTS.local.md'), 'dockerignore should include AGENTS.local.md');
+  assert(dockerignoreContent.includes('.worktrees/'), 'dockerignore should include .worktrees');
+  assert(dockerignoreContent.includes('CLAUDE.md'), 'dockerignore should include CLAUDE.md');
+  assert(dockerignoreContent.includes('skills-lock.json'), 'dockerignore should include skills-lock.json');
   assert(
     dockerignoreContent.includes(buildDockerignoreBlock().trim()),
     'dockerignore should contain full managed block',
@@ -572,11 +572,11 @@ Should not land in canonical.
   assert(gitignoreSync.written.length === 1, 'syncGitignore should update .gitignore');
   const gitignoreContent = readFileSync(gitignorePath, 'utf8');
   assert(gitignoreContent.startsWith('vendor/\n'), 'syncGitignore should preserve existing entries');
-  assert(gitignoreContent.includes('/AGENTS.local.md'), 'gitignore should include AGENTS.local.md');
-  assert(gitignoreContent.includes('/.worktrees/'), 'gitignore should include .worktrees');
-  assert(gitignoreContent.includes('/.cursor/rules/'), 'gitignore should include .cursor/rules');
-  assert(gitignoreContent.includes('/.cursor/agents/'), 'gitignore should include .cursor/agents');
-  assert(gitignoreContent.includes('/.claude/'), 'gitignore should include .claude');
+  assert(gitignoreContent.includes('AGENTS.local.md'), 'gitignore should include AGENTS.local.md');
+  assert(gitignoreContent.includes('.worktrees/'), 'gitignore should include .worktrees');
+  assert(gitignoreContent.includes('.cursor/rules/'), 'gitignore should include .cursor/rules');
+  assert(gitignoreContent.includes('.cursor/agents/'), 'gitignore should include .cursor/agents');
+  assert(gitignoreContent.includes('.claude/'), 'gitignore should include .claude');
   assert(
     gitignoreContent.includes(buildGitignoreBlock().trim()),
     'gitignore should contain full managed block',
@@ -588,7 +588,7 @@ Should not land in canonical.
   // 11. prune-retired-skills removes old dirs only when replacement exists
   const agentsSkillsDir = join(tempDir, '.agents', 'skills');
   const oldSkillDir = join(agentsSkillsDir, 'task-generator');
-  const newSkillDir = join(agentsSkillsDir, 'ns-sdd-task-generator');
+  const newSkillDir = join(agentsSkillsDir, 'ns-spec-driven');
   const cursorOldSkill = join(tempDir, '.cursor', 'skills', 'task-generator');
   mkdirSync(oldSkillDir, { recursive: true });
   writeFileSync(join(oldSkillDir, 'SKILL.md'), '# old\n', 'utf8');
@@ -633,19 +633,8 @@ Should not land in canonical.
   assert(agentsApiPreset?.skills.includes('postgresql-table-design'), 'agents-api preset should include postgresql skill');
   assert(agentsApiPreset?.nsSkills.includes('ns-multi-agent-architect'), 'agents-api preset should include NS architect skill');
   assert(agentsApiPreset?.nsSkills.includes('ns-langgraph-agents'), 'agents-api preset should include ns-langgraph-agents');
-
-  const coderLanggraphPreset = getExternalPreset('coder-langgraph');
-  assert(coderLanggraphPreset?.nsSkills.includes('ns-langgraph-agents'), 'coder-langgraph preset should include ns-langgraph-agents');
-  assert(coderLanggraphPreset?.nsSkills.includes('ns-code-coder'), 'coder-langgraph preset should include ns-code-coder');
-  assert(coderLanggraphPreset?.nsSkills.includes('ns-code-investigator'), 'coder-langgraph preset should include ns-code-investigator');
-  assert(coderLanggraphPreset?.skills.length === 4, 'coder-langgraph preset should include four external skills');
-
-  const coderLanggraphDryRun = runCli(['--dry-run', '--yes', '--preset', 'coder-langgraph', '--dir', tempDir], harnessRoot);
-  assert(coderLanggraphDryRun.status === 0, `coder-langgraph preset dry-run should pass: ${coderLanggraphDryRun.stderr}${coderLanggraphDryRun.stdout}`);
-  assert(
-    coderLanggraphDryRun.stdout.includes('ns-langgraph-agents') && coderLanggraphDryRun.stdout.includes('langgraph-persistence'),
-    'coder-langgraph dry-run should list NS and external langgraph skills',
-  );
+  assert(agentsApiPreset?.nsSkills.includes('ns-coder'), 'agents-api preset should include ns-coder');
+  assert(agentsApiPreset?.nsSkills.includes('ns-investigator'), 'agents-api preset should include ns-investigator');
 
   const agentsApiDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents-api', '--dir', tempDir], harnessRoot);
   assert(agentsApiDryRun.status === 0, `agents-api preset dry-run should pass: ${agentsApiDryRun.stderr}${agentsApiDryRun.stdout}`);
@@ -659,7 +648,7 @@ Should not land in canonical.
   assert(
     frontendPrototypeDryRun.stdout.includes('ns-proto-creator') &&
       frontendPrototypeDryRun.stdout.includes('ns-proto-visual-guide') &&
-      frontendPrototypeDryRun.stdout.includes('ns-code-frontend-design'),
+      frontendPrototypeDryRun.stdout.includes('ns-frontend-design'),
     'frontend-prototype dry-run should list proto + design skills',
   );
 
@@ -805,7 +794,7 @@ Should not land in canonical.
   const subagentsDir = mkdtempSync(join(tmpdir(), 'harness-subagents-'));
   try {
     scaffoldProject(subagentsDir, { agents: true, docs: false });
-    for (const skill of ['ns-code-coder', 'ns-code-reviewer', 'ns-sdd-task-generator']) {
+    for (const skill of ['ns-coder', 'ns-reviewer', 'ns-spec-driven']) {
       const skillDir = join(subagentsDir, AGENTS_HOME, 'skills', skill);
       mkdirSync(skillDir, { recursive: true });
       writeFileSync(join(skillDir, 'SKILL.md'), `# ${skill}\n`, 'utf8');
@@ -832,8 +821,8 @@ Should not land in canonical.
     assert(cursorCoder.includes('name: coder-agent'), 'cursor adapter should have name');
     assert(cursorCoder.includes('readonly: false'), 'coder-agent should not be readonly');
     assert(cursorCoder.includes('composer-2.5[fast=false]'), 'coder-agent default cursor model');
-    assert(cursorCoder.includes('Read `AGENTS.md`'), 'adapter body should require AGENTS.md');
-    assert(cursorCoder.includes('.agents/skills/ns-code-coder/SKILL.md'), 'adapter should point at skill');
+    assert(cursorCoder.includes('Obey `AGENTS.md`'), 'adapter body should require AGENTS.md');
+    assert(cursorCoder.includes('.agents/skills/ns-coder/SKILL.md'), 'adapter should point at skill');
 
     const cursorReviewer = readFileSync(
       join(subagentsDir, '.cursor', 'agents', 'reviewer-agent.md'),
@@ -851,6 +840,10 @@ Should not land in canonical.
     );
     assert(claudeTask.includes('model: haiku'), 'task-writer default claude model is haiku');
     assert(claudeTask.includes('readonly: false'), 'task-writer-agent should not be readonly');
+    assert(
+      claudeTask.includes('references/task-generator.md'),
+      'task-writer-agent should point at ns-spec-driven task-generator reference',
+    );
     assert(
       readFileSync(join(subagentsDir, '.claude', 'agents', 'coder-agent.md'), 'utf8').includes(
         'model: sonnet',
@@ -926,7 +919,7 @@ Should not land in canonical.
     );
 
     assert(
-      buildSubagentBody({ name: 'coder-agent', skill: 'ns-code-coder' }).includes('AGENTS.md'),
+      buildSubagentBody({ name: 'coder-agent', skill: 'ns-coder' }).includes('AGENTS.md'),
       'buildSubagentBody should mention AGENTS.md',
     );
   } finally {
@@ -940,7 +933,7 @@ Should not land in canonical.
     'list should show agents set command',
   );
   assert(
-    listOut.stdout.includes('--preset spec-driven-gitlab --yes'),
+    listOut.stdout.includes('--preset gitlab --yes'),
     'list should show preset install command',
   );
   assert(

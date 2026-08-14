@@ -4,22 +4,22 @@
   "threshold": 550,
   "skills": [
     {
-      "name": "ns-harness-codebase-reverse-spec",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-harness-codebase-reverse-spec/SKILL.md",
+      "name": "ns-codebase-reverse-spec",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-codebase-reverse-spec/SKILL.md",
       "chars": 785,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Reverse-engineer an existing, legacy, or brownfield codebase into a technology-agnostic business description of what the system actually does \u2014 business rules, actors, permissions, hierarchies, state lifecycles, and external integrations, without implementation details. Use this skill whenever the user mentions brownfield, legacy code, modernization, reverse engineering, codebase analysis, extracting business rules from code, engenharia reversa, documentar sistema legado, gerar spec a partir do c\u00f3digo, or wants a functional description faithful to the current product to support rewrite, migration, onboarding, or audit \u2014 even if they do not name this skill. Do NOT use for simple code reviews, bug fixes, or when the user explicitly wants a technical architecture document."
+      "description": "(NS) Reverse-engineer an existing, legacy, or brownfield codebase into a technology-agnostic business description of what the system actually does — business rules, actors, permissions, hierarchies, state lifecycles, and external integrations, without implementation details. Use this skill whenever the user mentions brownfield, legacy code, modernization, reverse engineering, codebase analysis, extracting business rules from code, engenharia reversa, documentar sistema legado, gerar spec a partir do código, or wants a functional description faithful to the current product to support rewrite, migration, onboarding, or audit — even if they do not name this skill. Do NOT use for simple code reviews, bug fixes, or when the user explicitly wants a technical architecture document."
     },
     {
-      "name": "ns-code-coder",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-code-coder/SKILL.md",
+      "name": "ns-coder",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-coder/SKILL.md",
       "chars": 776,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Central execution worker for ad-hoc coding \u2014 bug fixes, isolated components, small refactors, scripts, migrations \u2014 without full SDD planning. Entry priority 5 (default): use when the user says \"just implement this\", \"quick fix\", \"add a field to the form\", or gives a concrete coding task without execution-handoff \u2014 even without naming an agent. Also runs as C2 subagent under ns-code-autonomous work units. NOT the front door \u2014 do NOT use for GitLab ISSUE_URL (ns-execution-gitlab-issue), multi-day or version scope (ns-spec-driven), root-cause-only diagnosis without implement request (ns-code-investigator), or when execution-handoff.md exists (ns-sdd-execution-handoff-generator run-implementation). Do NOT generate requirements.md, task files, or execution-handoff."
+      "description": "(NS) Central execution worker for ad-hoc coding — bug fixes, isolated components, small refactors, scripts, migrations — without full SDD planning. Entry priority 5 (default): use when the user says \"just implement this\", \"quick fix\", \"add a field to the form\", or gives a concrete coding task without execution-handoff — even without naming an agent. Also runs as C2 subagent under ns-autonomous work units. NOT the front door — do NOT use for GitLab ISSUE_URL (ns-execution-gitlab-issue), multi-day or version scope (ns-spec-driven), root-cause-only diagnosis without implement request (ns-investigator), or when execution-handoff.md exists (run-implementation.md via ns-spec-driven). Do NOT generate requirements.md, task files, or execution-handoff."
     },
     {
       "name": "ns-harness-prepare",
@@ -28,25 +28,25 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Run the full post-harness-init AI bootstrap in one session \u2014 architecture rules, harness sync, brownfield map, business reverse spec, and project AGENTS.md. Use whenever the user says harness prepare, post-install setup, bootstrap this project after harness init, onboard brownfield repo, run full project preparation, or wants all brownfield skills in sequence without invoking each slash command manually \u2014 even if they list ns-harness-architecture-rules, ns-harness-bootstrap-brownfield, ns-harness-codebase-reverse-spec, and ns-harness-agents-md as separate next steps. Do NOT use for greenfield repos with no application code yet, single-skill runs (invoke the worker skill directly), or CLI-only baseline AGENTS.md (use harness agents-md)."
+      "description": "(NS) Run the full post-harness-init AI bootstrap in one session — architecture rules, harness sync, brownfield map, business reverse spec, and project AGENTS.md. Use whenever the user says harness prepare, post-install setup, bootstrap this project after harness init, onboard brownfield repo, run full project preparation, or wants all brownfield skills in sequence without invoking each slash command manually — even if they list ns-architecture-rules, ns-bootstrap-brownfield, ns-codebase-reverse-spec, and ns-agent-generator as separate next steps. Do NOT use for greenfield repos with no application code yet, single-skill runs (invoke the worker skill directly), or CLI-only baseline AGENTS.md (use harness agents-md)."
     },
     {
-      "name": "ns-harness-architecture-rules",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-harness-architecture-rules/SKILL.md",
+      "name": "ns-architecture-rules",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-architecture-rules/SKILL.md",
       "chars": 728,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Scan a codebase and generate or refresh a lean architecture-rules.md constitution for AI agents \u2014 stack, layout, patterns, constraints, and pointers to deeper rules. Use whenever the user asks to generate architecture rules, create .nextstage-harness/rules/architecture-rules.md, bootstrap agent context, codify project conventions, document stack and module layout for agents, or set up always-on project rules \u2014 even if they say \"document how this repo works for the AI\" or \"create rules the agent reads every session\". Do NOT use for business/functional specs (ns-harness-codebase-reverse-spec), SDD brownfield maps (ns-harness-bootstrap-brownfield), or ad-hoc single-topic Cursor rules without a full architecture pass."
+      "description": "(NS) Scan a codebase and generate or refresh a lean architecture-rules.md constitution for AI agents — stack, layout, patterns, constraints, and pointers to deeper rules. Use whenever the user asks to generate architecture rules, create .nextstage-harness/rules/architecture-rules.md, bootstrap agent context, codify project conventions, document stack and module layout for agents, or set up always-on project rules — even if they say \"document how this repo works for the AI\" or \"create rules the agent reads every session\". Do NOT use for business/functional specs (ns-codebase-reverse-spec), SDD brownfield maps (ns-bootstrap-brownfield), or ad-hoc single-topic Cursor rules without a full architecture pass."
     },
     {
-      "name": "ns-harness-agents-md",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-harness-agents-md/SKILL.md",
+      "name": "ns-agent-generator",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-agent-generator/SKILL.md",
       "chars": 701,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Scan a project with NextStage harness installed and generate or refresh a project-specific AGENTS.md entry point plus a minimal CLAUDE.md that points to it. Use whenever the user asks to generate AGENTS.md, create project agents doc, bootstrap agent entry point, replace harness AGENTS stub, set up Claude/Cursor project rules pointer, or onboard agents after harness init \u2014 even if they say \"write AGENTS.md for this repo\" or \"configure agents for this project\". Do NOT copy the harness package template verbatim. Do NOT use for technical constitution (ns-harness-architecture-rules), business specs (ns-harness-codebase-reverse-spec), or brownfield stack maps (ns-harness-bootstrap-brownfield)."
+      "description": "(NS) Scan a project with NextStage harness installed and generate or refresh a project-specific AGENTS.md entry point plus a minimal CLAUDE.md that points to it. Use whenever the user asks to generate AGENTS.md, create project agents doc, bootstrap agent entry point, replace harness AGENTS stub, set up Claude/Cursor project rules pointer, or onboard agents after harness init — even if they say \"write AGENTS.md for this repo\" or \"configure agents for this project\". Do NOT copy the harness package template verbatim. Do NOT use for technical constitution (ns-architecture-rules), business specs (ns-codebase-reverse-spec), or brownfield stack maps (ns-bootstrap-brownfield)."
     },
     {
       "name": "ns-spec-driven",
@@ -55,43 +55,25 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Spec-driven delivery face \u2014 clarify scope, write requirements, generate tasks, implement a version, or resume paused SDD work. Entry priority 2: use when the user wants to specify a feature, start or continue a version, implement from tasks, or says \"let's build X\" with multi-day or version scope \u2014 even without naming individual PM/code skills. Auto-sizes Small/Medium/Large and delegates to worker skills. For bare quick fixes without SDD context, prefer ns-code-coder (entry priority 5). Do NOT use for brownfield onboarding, codebase mapping, architecture rules, or full project prepare (use /ns-harness-prepare manually). Do NOT auto-run ns-harness-prepare or list Prepare in the pipeline."
+      "description": "(NS) Spec-driven delivery face — clarify scope, write requirements, generate tasks, implement a version, or resume paused SDD work. Entry priority 2: use when the user wants to specify a feature, start or continue a version, implement from tasks, or says \"let's build X\" with multi-day or version scope — even without naming individual PM/code skills. Auto-sizes Small/Medium/Large and delegates to worker skills. For bare quick fixes without SDD context, prefer ns-coder (entry priority 5). Do NOT use for brownfield onboarding, codebase mapping, architecture rules, or full project prepare (use /ns-harness-prepare manually). Do NOT auto-run ns-harness-prepare or list Prepare in the pipeline."
     },
     {
-      "name": "ns-code-autonomous",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-code-autonomous/SKILL.md",
+      "name": "ns-autonomous",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-autonomous/SKILL.md",
       "chars": 660,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Harness-aware autonomous execution engine \u2014 self-decides planning depth, resolves doubts against docs/context and docs/specs before escalating, dispatches multi-agent implementation in an isolated worktree. Use as the standalone entry point for a local plan file, a pasted execution plan, or an ad-hoc \"run this autonomously\" request with no GitLab issue involved. Also acts as the Phase 2 execution engine when invoked by ns-execution-gitlab-issue \u2014 do not run the standalone pipeline in that case. Not for simple single-step edits (use ns-code-coder) and not for GitLab issues directly (use ns-execution-gitlab-issue, which calls this skill internally)."
+      "description": "(NS) Harness-aware autonomous execution engine — self-decides planning depth, resolves doubts against docs/context and docs/specs before escalating, dispatches multi-agent implementation in an isolated worktree. Use as the standalone entry point for a local plan file, a pasted execution plan, or an ad-hoc \"run this autonomously\" request with no GitLab issue involved. Also acts as the Phase 2 execution engine when invoked by ns-execution-gitlab-issue — do not run the standalone pipeline in that case. Not for simple single-step edits (use ns-coder) and not for GitLab issues directly (use ns-execution-gitlab-issue, which calls this skill internally)."
     },
     {
-      "name": "ns-execution-orchestrator",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-execution-orchestrator/SKILL.md",
-      "chars": 644,
-      "has_use": true,
-      "has_not": true,
-      "has_ns": true,
-      "description": "(NS) Orchestrate partitioned version implementation slice-by-slice \u2014 dispatch one synchronous subagent per slice with small context, commit after each slice, and advance automatically without confirmation until all slices are done or a stop condition is hit. Use whenever a version has a version-roadmap.md with pending slices and the user asks to \"run the orchestrated implementation\", \"execute all slices\", \"orchestrate the partitioned version\", or drive a subversion roadmap to completion. Do NOT use for non-partitioned versions (execute tasks directly), ad-hoc coding (ns-code-coder), or planning/partitioning (ns-sdd-version-partitioner)."
-    },
-    {
-      "name": "ns-code-investigator",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-code-investigator/SKILL.md",
+      "name": "ns-investigator",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-investigator/SKILL.md",
       "chars": 618,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, CI failures, or obscure bugs \u2014 entry priority 4 when the user wants diagnosis WITHOUT an implement request (\"why does X break?\", paste stack trace, CI fail). Use proactively when tests fail or pipelines break if cause is unclear AND the user has not asked to implement the fix yet. Do NOT use when the user asks to implement or fix code directly (ns-code-coder, priority 5), for multi-day or version scope (ns-spec-driven, priority 2), for GitLab ISSUE_URL execution (ns-execution-gitlab-issue), or for pre-merge code review (ns-code-reviewer)."
-    },
-    {
-      "name": "ns-sdd-clarify-requirements",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-sdd-clarify-requirements/SKILL.md",
-      "chars": 594,
-      "has_use": true,
-      "has_not": true,
-      "has_ns": true,
-      "description": "(NS) Resolve ambiguities, gaps, and unstated assumptions in a scope description before generating requirements. On brownfield repos, runs ns-harness-bootstrap-brownfield when brownfield-map.md is missing; when a map exists, mandatory human gate to refresh or keep it (shows last map date). Use when the user gives a vague or incomplete scope, mentions \"dashboard\", \"notifications\", \"integration with X\" without detail, or before requirements generation when terms are ambiguous \u2014 even if they do not ask to \"clarify\". Do NOT generate requirements.md in this skill; output enriched context only."
+      "description": "(NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, CI failures, or obscure bugs — entry priority 4 when the user wants diagnosis WITHOUT an implement request (\"why does X break?\", paste stack trace, CI fail). Use proactively when tests fail or pipelines break if cause is unclear AND the user has not asked to implement the fix yet. Do NOT use when the user asks to implement or fix code directly (ns-coder, priority 5), for multi-day or version scope (ns-spec-driven, priority 2), for GitLab ISSUE_URL execution (ns-execution-gitlab-issue), or for pre-merge code review (ns-reviewer)."
     },
     {
       "name": "ns-multi-agent-architect",
@@ -100,7 +82,7 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Interview users through focused technical questions to recommend LangGraph vs CrewAI, propose multi-agent architecture, and design agent personas with tools and models. Use whenever the user wants to build a multi-agent system, choose between LangGraph and CrewAI, design agent crews or graphs, plan human-in-the-loop workflows, or asks how to orchestrate AI agents \u2014 even if they only say \"I want a bot for my company\" or \"agents working together\". Do NOT use for general app requirements (use ns-sdd-clarify-requirements) or implementation coding without architecture intent."
+      "description": "(NS) Interview users through focused technical questions to recommend LangGraph vs CrewAI, propose multi-agent architecture, and design agent personas with tools and models. Use whenever the user wants to build a multi-agent system, choose between LangGraph and CrewAI, design agent crews or graphs, plan human-in-the-loop workflows, or asks how to orchestrate AI agents — even if they only say \"I want a bot for my company\" or \"agents working together\". Do NOT use for general app requirements (use /ns-spec-driven Clarify) or implementation coding without architecture intent."
     },
     {
       "name": "ns-langgraph-agents",
@@ -109,7 +91,7 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Production LangGraph.js agent-api \u2014 StateGraph, MCP tools, skill bind/inject, checkpointers, context-window trim, HITL/SSE, content blocks, prompt/locale placement. Use whenever the user works on agent-api, LangGraph graphs, MCP wiring, orphan agent layout, system-prompt compose, bind parity, graph-spec sync, or says \"fix my LangGraph agent\", \"wire MCP tools\", or \"where do translations go in the graph\". Code diffs via ns-code-coder; LangGraph vs CrewAI via ns-multi-agent-architect. Do NOT use for CrewAI crews, generic web apps, or SDD-only requirements."
+      "description": "(NS) Production LangGraph.js agent-api — StateGraph, MCP tools, skill bind/inject, checkpointers, context-window trim, HITL/SSE, content blocks, prompt/locale placement. Use whenever the user works on agent-api, LangGraph graphs, MCP wiring, orphan agent layout, system-prompt compose, bind parity, graph-spec sync, or says \"fix my LangGraph agent\", \"wire MCP tools\", or \"where do translations go in the graph\". Code diffs via ns-coder; LangGraph vs CrewAI via ns-multi-agent-architect. Do NOT use for CrewAI crews, generic web apps, or SDD-only requirements."
     },
     {
       "name": "ns-execution-gitlab-issue",
@@ -118,52 +100,34 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Execute a GitLab issue end-to-end \u2014 first-act status, branch-reuse and source-branch gates, single-worktree isolation, atomic delivery, MR lifecycle, mandatory code review gate with bounded fix loop. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly \u2014 not for local-only ad-hoc coding (use ns-code-coder) or non-GitLab autonomous runs (use ns-code-autonomous standalone). Delegates actual coding to the ns-code-autonomous engine. Requires mcp-gitlab-usage for MCP and ns-code-reviewer for the review gate."
+      "description": "(NS) Execute a GitLab issue end-to-end — first-act status, branch-reuse and source-branch gates, single-worktree isolation, atomic delivery, MR lifecycle, mandatory code review gate with bounded fix loop. Use when the user provides a GitLab ISSUE_URL or asks to implement a GitLab issue directly — not for local-only ad-hoc coding (use ns-coder) or non-GitLab autonomous runs (use ns-autonomous standalone). Delegates actual coding to the ns-autonomous engine. Requires mcp-gitlab-usage for MCP and ns-reviewer for the review gate."
     },
     {
-      "name": "ns-skill-creator",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-skill-creator/SKILL.md",
-      "chars": 507,
-      "has_use": true,
-      "has_not": true,
-      "has_ns": true,
-      "description": "(NS) Create or improve project-local agent skills in a NextStage harness project \u2014 draft SKILL.md under .agents/skills/, run evals, then harness sync. Use whenever the user asks to create a skill, add a custom skill to this project, author SKILL.md, iterate on skill evals/benchmarks, or optimize skill descriptions \u2014 even if they say \"make a skill for our repo\" or \"skill-creator\". Do NOT use for contributing to the nextstage-brasil/skills catalog (that repo has its own maintainer workflow in AGENTS.md)."
-    },
-    {
-      "name": "ns-code-backend-tests",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-code-backend-tests/SKILL.md",
+      "name": "ns-backend-tests",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-backend-tests/SKILL.md",
       "chars": 487,
       "has_use": true,
       "has_not": false,
       "has_ns": true,
-      "description": "(NS) Create and maintain PHPUnit unit and integration tests in the backend package (bootstrap tests/ when missing). Mandatory Docker-only execution with phpunit --testdox --stop-on-failure --stop-on-error and 120s timeout. Use when writing or refactoring PHPUnit tests, implementing unit-test tasks, or scaffolding backend tests on greenfield Laravel/PHP projects \u2014 not when planning test task markdown (use ns-pm-unit-test-task-generator). Read harness backend-tests rules when present."
+      "description": "(NS) Create and maintain PHPUnit unit and integration tests in the backend package (bootstrap tests/ when missing). Mandatory Docker-only execution with phpunit --testdox --stop-on-failure --stop-on-error and 120s timeout. Use when writing or refactoring PHPUnit tests, implementing unit-test tasks, or scaffolding backend tests on greenfield Laravel/PHP projects — not when planning test task markdown (use ns-pm-unit-test-task-generator). Read harness backend-tests rules when present."
     },
     {
-      "name": "ns-sdd-execution-handoff-generator",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-sdd-execution-handoff-generator/SKILL.md",
-      "chars": 479,
-      "has_use": true,
-      "has_not": true,
-      "has_ns": true,
-      "description": "(NS) Generate and update execution-handoff.md for planned SDD versions \u2014 operational prompt, per-task status table, token totals, and time tracking in seconds. Use at the end of planning after all task-NNN-*.md files exist, when tasks exist but handoff is missing, or when updating task status during version implementation. Do NOT use for ad-hoc coding without a version lifecycle, version partitioning (ns-sdd-version-partitioner), or GitLab-only issue execution (ns-execution-gitlab-issue)."
-    },
-    {
-      "name": "ns-code-e2e-tests",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-code-e2e-tests/SKILL.md",
+      "name": "ns-e2e-tests",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-e2e-tests/SKILL.md",
       "chars": 471,
       "has_use": true,
       "has_not": false,
       "has_ns": true,
-      "description": "(NS) Create and maintain Cypress E2E tests in an independent tests-e2e/ Node package at product root (bootstrap when missing). DRY device-aware command architecture (shared/pages/device). Use when writing or refactoring Cypress specs, custom commands, scaffolding E2E on greenfield projects, or implementing E2E tasks \u2014 not when planning E2E task markdown (use ns-pm-e2e-test-task-generator). Read harness e2e rules when present. Mandatory discovery before writing specs."
+      "description": "(NS) Create and maintain Cypress E2E tests in an independent tests-e2e/ Node package at product root (bootstrap when missing). DRY device-aware command architecture (shared/pages/device). Use when writing or refactoring Cypress specs, custom commands, scaffolding E2E on greenfield projects, or implementing E2E tasks — not when planning E2E task markdown (use ns-pm-e2e-test-task-generator). Read harness e2e rules when present. Mandatory discovery before writing specs."
     },
     {
-      "name": "ns-code-best-practices",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-code-best-practices/SKILL.md",
+      "name": "ns-best-practices",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-best-practices/SKILL.md",
       "chars": 459,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Security, compatibility, and modern web quality pass \u2014 headers, CSP, dependencies, accessibility baselines, and pragmatic modernization. Use when the user asks to harden security, fix CSP/CORS/headers, improve compatibility, or modernize stack quality \u2014 even without saying \"best practices\". Orthogonal to ns-code-reviewer SOLID/MR gate. Do NOT use for full MR review (use ns-code-reviewer) or feature implementation (use ns-code-coder / ns-spec-driven)."
+      "description": "(NS) Security, compatibility, and modern web quality pass — headers, CSP, dependencies, accessibility baselines, and pragmatic modernization. Use when the user asks to harden security, fix CSP/CORS/headers, improve compatibility, or modernize stack quality — even without saying \"best practices\". Orthogonal to ns-reviewer SOLID/MR gate. Do NOT use for full MR review (use ns-reviewer) or feature implementation (use ns-coder / ns-spec-driven)."
     },
     {
       "name": "mcp-gitlab-usage",
@@ -172,43 +136,34 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Guides correct usage of GitLab MCP tools for planning, milestones, issues, merge requests, delivery reports, and board sync. Use whenever the user mentions GitLab, MCP GitLab, create issues, start planning in GitLab, delivery report, issue comments, set_issue_labels, merge requests, or execution sync \u2014 even if they do not name this skill. Do NOT hand-craft issue payloads or skip confirmation gates. Do NOT use for non-GitLab project management."
+      "description": "(NS) Guides correct usage of GitLab MCP tools for planning, milestones, issues, merge requests, delivery reports, and board sync. Use whenever the user mentions GitLab, MCP GitLab, create issues, start planning in GitLab, delivery report, issue comments, set_issue_labels, merge requests, or execution sync — even if they do not name this skill. Do NOT hand-craft issue payloads or skip confirmation gates. Do NOT use for non-GitLab project management."
     },
     {
-      "name": "ns-code-docs-writer",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-code-docs-writer/SKILL.md",
+      "name": "ns-docs-writer",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-docs-writer/SKILL.md",
       "chars": 448,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Write and edit human-facing project documentation \u2014 README, docs/ guides, runbooks, and contributor-facing markdown. Use whenever the user asks for documentation, README updates, how-to guides, or docs/ content \u2014 even if they say \"explain how to use\" instead of \"write docs\". Stack-agnostic; follow project layout from AGENTS.md. Do NOT use for code comments, API docblocks in source, requirements.md, or SDD version artifacts (use PM skills)."
+      "description": "(NS) Write and edit human-facing project documentation — README, docs/ guides, runbooks, and contributor-facing markdown. Use whenever the user asks for documentation, README updates, how-to guides, or docs/ content — even if they say \"explain how to use\" instead of \"write docs\". Stack-agnostic; follow project layout from AGENTS.md. Do NOT use for code comments, API docblocks in source, requirements.md, or SDD version artifacts (use PM skills)."
     },
     {
-      "name": "ns-code-reviewer",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-code-reviewer/SKILL.md",
+      "name": "ns-reviewer",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-reviewer/SKILL.md",
       "chars": 436,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate \u2014 even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT write code-review-report.md. Do NOT use for root-cause debugging (use ns-code-investigator)."
+      "description": "(NS) Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate — even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT write code-review-report.md. Do NOT use for root-cause debugging (use ns-investigator)."
     },
     {
-      "name": "ns-code-frontend-design",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-code-frontend-design/SKILL.md",
+      "name": "ns-frontend-design",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-frontend-design/SKILL.md",
       "chars": 434,
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Distinctive production UI \u2014 layout, typography, motion, and component polish that avoids generic AI-slop aesthetics. Use whenever the user builds or refines pages, components, dashboards, forms, or design-brief work, or asks for better UI/UX \u2014 even if they do not say \"design\". Load docs/context/design-brief.md when present. Do NOT use for backend-only work, requirements writing, or full SDD orchestration (use ns-spec-driven)."
-    },
-    {
-      "name": "ns-sdd-requirements-generator",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-sdd-requirements-generator/SKILL.md",
-      "chars": 413,
-      "has_use": true,
-      "has_not": true,
-      "has_ns": true,
-      "description": "(NS) Generate structured requirements.md from scope descriptions, stack context, and design briefs for a product version. Use when starting a new version, the user asks for requirements, RF/features document, or before task generation when requirements.md is missing \u2014 even if they only describe the feature in chat. Follow SDD planning gates in ns-harness. Do NOT generate task files (use ns-sdd-task-generator)."
+      "description": "(NS) Distinctive production UI — layout, typography, motion, and component polish that avoids generic AI-slop aesthetics. Use whenever the user builds or refines pages, components, dashboards, forms, or design-brief work, or asks for better UI/UX — even if they do not say \"design\". Load docs/context/design-brief.md when present. Do NOT use for backend-only work, requirements writing, or full SDD orchestration (use ns-spec-driven)."
     },
     {
       "name": "ns-gitlab-board-sync",
@@ -217,34 +172,7 @@
       "has_use": false,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Sync existing GitLab issues with local planning and execution \u2014 milestone, RF labels, status transitions, assignee, estimates, spent time. Use during implementation when tasks link to GitLab issues or after plan-version-from-gitlab sync \u2014 not for creating new issues (use mcp-gitlab-usage). Always use atomic set_issue_labels and three-step status cycle. Read mcp-gitlab-usage for tool contracts."
-    },
-    {
-      "name": "ns-sdd-task-generator",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-sdd-task-generator/SKILL.md",
-      "chars": 388,
-      "has_use": false,
-      "has_not": true,
-      "has_ns": true,
-      "description": "(NS) Transform atomic implementation work into rich task markdown files for backend and frontend layers with dependencies, estimates, and layer-specific checklists. Use during SDD planning when generating task-NNN-*.md from requirements features \u2014 not for E2E or unit test tasks (use specialized generators). Requires requirements.md. Output English task files under version tasks folder."
-    },
-    {
-      "name": "ns-sdd-analyze-consistency",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-sdd-analyze-consistency/SKILL.md",
-      "chars": 367,
-      "has_use": false,
-      "has_not": true,
-      "has_ns": true,
-      "description": "(NS) Verify internal consistency of requirements.md and adherence to project rules before task generation. Use whenever the user asks to analyze or validate requirements, after scope confirmation, or after manual edits to requirements \u2014 also automatically between Gate 2 and task generation. Appends Consistency status (Approved|Reproved) to requirements.md; on Reproved informs the user and stops. Do NOT generate tasks or consistency-report.md."
-    },
-    {
-      "name": "ns-sdd-version-partitioner",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-sdd-version-partitioner/SKILL.md",
-      "chars": 361,
-      "has_use": true,
-      "has_not": true,
-      "has_ns": true,
-      "description": "(NS) Partition a large master requirements.md into executable subversions with version-roadmap.md and slice requirements excerpts \u2014 without generating tasks. Use when a version has too many features for one planning cycle or the user asks to split a version \u2014 after Gate 1 requirements confirmed. Do NOT generate task-NNN files (planning per slice comes later)."
+      "description": "(NS) Sync existing GitLab issues with local planning and execution — milestone, RF labels, status transitions, assignee, estimates, spent time. Use during implementation when tasks link to GitLab issues or after plan-version-from-gitlab sync — not for creating new issues (use mcp-gitlab-usage). Always use atomic set_issue_labels and three-step status cycle. Read mcp-gitlab-usage for tool contracts."
     },
     {
       "name": "ns-gitlab-ci-generator",
@@ -253,25 +181,25 @@
       "has_use": true,
       "has_not": false,
       "has_ns": true,
-      "description": "(NS) Generate and adapt .gitlab-ci.yml for SaaS products with backend and frontend \u2014 test, build, E2E gate, deploy by branch. Use when the user asks for GitLab CI, pipeline setup, or CI/CD bootstrap for a monorepo product. Uses references/templates/gitlab-ci.template.yml as baseline. Out of scope for pure agent-runtime repos without backend+frontend layout."
+      "description": "(NS) Generate and adapt .gitlab-ci.yml for SaaS products with backend and frontend — test, build, E2E gate, deploy by branch. Use when the user asks for GitLab CI, pipeline setup, or CI/CD bootstrap for a monorepo product. Uses references/templates/gitlab-ci.template.yml as baseline. Out of scope for pure agent-runtime repos without backend+frontend layout."
     },
     {
-      "name": "ns-harness-bootstrap-brownfield",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-harness-bootstrap-brownfield/SKILL.md",
+      "name": "ns-bootstrap-brownfield",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-bootstrap-brownfield/SKILL.md",
       "chars": 358,
       "has_use": true,
       "has_not": false,
       "has_ns": true,
-      "description": "(NS) Onboard an existing codebase into spec-driven planning \u2014 map stack, modules, rule adherence, and gaps without modifying code. Use when the user says analyze existing project, brownfield bootstrap, or before first requirements on a repo with code but no requirements. Outputs brownfield-map.md for ns-sdd-requirements-generator. Read-only on source code."
+      "description": "(NS) Onboard an existing codebase into spec-driven planning — map stack, modules, rule adherence, and gaps without modifying code. Use when the user says analyze existing project, brownfield bootstrap, or before first requirements on a repo with code but no requirements. Outputs brownfield-map.md for /ns-spec-driven Specify. Read-only on source code."
     },
     {
-      "name": "ns-sdd-living-spec-consolidator",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-sdd-living-spec-consolidator/SKILL.md",
+      "name": "ns-living-spec",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-living-spec/SKILL.md",
       "chars": 350,
       "has_use": false,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Consolidate delivered deltas into living domain specs under docs/specs/ \u2014 INDEX.md and per-domain markdown. Use after version closure when requirements, Approved code review, and execution-handoff exist; or in ad-hoc mode when ns-code-coder (or the human) passes an Approved behavioral diff and docs/specs/ already exists. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval."
+      "description": "(NS) Consolidate delivered deltas into living domain specs under docs/specs/ — INDEX.md and per-domain markdown. Use after version closure when requirements, Approved code review, and execution-handoff exist; or in ad-hoc mode when ns-coder (or the human) passes an Approved behavioral diff and docs/specs/ already exists. Updates specs incrementally; never overwrite unrelated content. Do NOT run before code review approval."
     },
     {
       "name": "ns-pm-unit-test-task-generator",
@@ -280,7 +208,7 @@
       "has_use": false,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Generate backend unit and integration test task markdown after implementation tasks exist. Use during SDD planning for PHPUnit/Laravel or equivalent backend test coverage per feature \u2014 not for E2E (use ns-pm-e2e-test-task-generator). Requires requirements and related backend task. Documents cross-tenant and auth P0 scenarios when applicable."
+      "description": "(NS) Generate backend unit and integration test task markdown after implementation tasks exist. Use during SDD planning for PHPUnit/Laravel or equivalent backend test coverage per feature — not for E2E (use ns-pm-e2e-test-task-generator). Requires requirements and related backend task. Documents cross-tenant and auth P0 scenarios when applicable."
     },
     {
       "name": "ns-pm-e2e-test-task-generator",
@@ -289,7 +217,7 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Generate E2E test task markdown for Cypress/TypeScript during SDD planning after frontend tasks exist. Use when planning Cypress coverage per feature \u2014 not for writing specs (use ns-code-e2e-tests). Requires data-testid contract from frontend task. Device-aware desktop/tablet/mobile structure."
+      "description": "(NS) Generate E2E test task markdown for Cypress/TypeScript during SDD planning after frontend tasks exist. Use when planning Cypress coverage per feature — not for writing specs (use ns-e2e-tests). Requires data-testid contract from frontend task. Device-aware desktop/tablet/mobile structure."
     },
     {
       "name": "ns-harness",
@@ -298,7 +226,7 @@
       "has_use": true,
       "has_not": false,
       "has_ns": true,
-      "description": "(NS) Harness discovery, artifact layout, and SDD planning gates for NextStage skills. Installed automatically as a dependency \u2014 use when resolving AGENTS.md, .nextstage-harness/rules, docs/versions paths, or confirmation gates."
+      "description": "(NS) Artifact layout, session boot, and SDD planning gates for NextStage skills. Installed automatically as a dependency — use when reading AGENTS.md, .nextstage-harness/rules, docs/versions paths, or confirmation gates."
     },
     {
       "name": "ns-project-manager",
@@ -307,7 +235,7 @@
       "has_use": false,
       "has_not": false,
       "has_ns": true,
-      "description": "\"(NS) Gated PM: clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk/status/meeting/OKR. Use on transcripts, backlog, timeline, delivery date, status \u2014 even if PM unnamed.\""
+      "description": "\"(NS) Gated PM: clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk/status/meeting/OKR. Use on transcripts, backlog, timeline, delivery date, status — even if PM unnamed.\""
     },
     {
       "name": "ns-requirements-enricher",
@@ -316,20 +244,18 @@
       "has_use": false,
       "has_not": false,
       "has_ns": true,
-      "description": "(NS) Enrich requirements before autonomous execution \u2014 GitLab issue or chat context."
+      "description": "(NS) Enrich requirements before autonomous execution — GitLab issue or chat context."
     }
   ],
   "to_shorten": [
-    "ns-harness-codebase-reverse-spec",
-    "ns-code-coder",
+    "ns-codebase-reverse-spec",
+    "ns-coder",
     "ns-harness-prepare",
-    "ns-harness-architecture-rules",
-    "ns-harness-agents-md",
+    "ns-architecture-rules",
+    "ns-agent-generator",
     "ns-spec-driven",
-    "ns-code-autonomous",
-    "ns-execution-orchestrator",
-    "ns-code-investigator",
-    "ns-sdd-clarify-requirements",
+    "ns-autonomous",
+    "ns-investigator",
     "ns-multi-agent-architect",
     "ns-langgraph-agents",
     "ns-execution-gitlab-issue"

@@ -47,7 +47,7 @@ export function addSubagent(projectRoot, options) {
     );
   }
   if (!skill || typeof skill !== 'string') {
-    throw new Error('--skill is required (installed skill id, e.g. ns-code-investigator)');
+    throw new Error('--skill is required (installed skill id, e.g. ns-investigator)');
   }
   if (!existsSync(manifestPath(projectRoot))) {
     throw new Error(`Missing ${HARNESS_ROOT}/manifest.json — run harness init first`);
