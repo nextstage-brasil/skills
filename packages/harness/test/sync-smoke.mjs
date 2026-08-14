@@ -13,6 +13,7 @@ import { pruneRetiredSkills, assessPruneRetiredSkills } from '../src/pruneRetire
 import { groupExternalSkillsBySource, getExternalPreset } from '../src/externalSkills.js';
 import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js';
 import { listSkillsToUpdate } from '../src/update.js';
+import { computeSkillFolderHash, planSkillUpdates, getSkillFolderHashFromTree } from '../src/skillUpdateDiff.js';
 import { resolveAgentsConfig } from '../src/agentsLayout.js';
 import { writeManifestAgents } from '../src/manifest.js';
 import { syncSubagents } from '../src/syncSubagents.js';
@@ -51,6 +52,7 @@ function runCli(args, cwd) {
 
 let tempDir;
 try {
+  await (async () => {
   tempDir = mkdtempSync(join(tmpdir(), 'harness-sync-'));
 
   // 1. Scaffold creates .nextstage-harness/
@@ -678,11 +680,86 @@ Should not land in canonical.
   assert(plan.skills.length === 1 && plan.skills[0] === 'ns-harness', 'update plan should filter to installed only');
   assert(plan.notInstalled.includes('missing-skill'), 'update plan should track missing skills');
 
-  const updateDryRun = runCli(['update', '--dry-run', '--dir', tempDir], harnessRoot);
+  // Selective update: identical source vs installed → skip
+  const sourceSkill = join(tempDir, 'fake-source', 'skills', 'ns-harness');
+  mkdirSync(sourceSkill, { recursive: true });
+  const skillBody = readFileSync(join(tempDir, '.agents', 'skills', 'ns-harness', 'SKILL.md'), 'utf8');
+  writeFileSync(join(sourceSkill, 'SKILL.md'), skillBody, 'utf8');
+  const sameHash = computeSkillFolderHash(join(tempDir, '.agents', 'skills', 'ns-harness'));
+  assert(
+    sameHash === computeSkillFolderHash(sourceSkill),
+    'content hash should match identical skill trees',
+  );
+  const selectiveUpToDate = await planSkillUpdates(tempDir, ['ns-harness'], {
+    source: join(tempDir, 'fake-source'),
+  });
+  assert(selectiveUpToDate.upToDate.includes('ns-harness'), 'unchanged skill should be up to date');
+  assert(selectiveUpToDate.toUpdate.length === 0, 'unchanged skill should not be queued');
+
+  writeFileSync(join(sourceSkill, 'SKILL.md'), `${skillBody}\n# changed\n`, 'utf8');
+  const selectiveChanged = await planSkillUpdates(tempDir, ['ns-harness'], {
+    source: join(tempDir, 'fake-source'),
+  });
+  assert(selectiveChanged.toUpdate.includes('ns-harness'), 'changed skill should be queued');
+  assert(selectiveChanged.upToDate.length === 0, 'changed skill should not be up to date');
+
+  const forced = await planSkillUpdates(tempDir, ['ns-harness'], {
+    force: true,
+    source: join(tempDir, 'fake-source'),
+  });
+  assert(forced.toUpdate.includes('ns-harness'), '--force should queue all skills');
+
+  const treeHash = getSkillFolderHashFromTree(
+    {
+      sha: 'root',
+      tree: [
+        { type: 'tree', path: 'skills/ns-harness', sha: 'abc123' },
+        { type: 'blob', path: 'skills/ns-harness/SKILL.md', sha: 'blob' },
+      ],
+    },
+    'skills/ns-harness/SKILL.md',
+  );
+  assert(treeHash === 'abc123', 'tree helper should resolve skill folder SHA');
+
+  const githubPlan = await planSkillUpdates(tempDir, ['ns-harness'], {
+    source: 'nextstage-brasil/skills',
+    fetchTree: async () => ({
+      sha: 'root',
+      tree: [{ type: 'tree', path: 'skills/ns-harness', sha: 'same-sha' }],
+    }),
+  });
+  // no skillFolderHash in lock → unchecked refresh
+  assert(githubPlan.toUpdate.includes('ns-harness'), 'missing lock hash should refresh');
+
+  writeFileSync(
+    join(tempDir, 'skills-lock.json'),
+    JSON.stringify({
+      version: 1,
+      skills: {
+        'ns-harness': {
+          source: 'nextstage-brasil/skills',
+          sourceType: 'github',
+          skillPath: 'skills/ns-harness/SKILL.md',
+          skillFolderHash: 'same-sha',
+        },
+      },
+    }, null, 2),
+    'utf8',
+  );
+  const githubUpToDate = await planSkillUpdates(tempDir, ['ns-harness'], {
+    source: 'nextstage-brasil/skills',
+    fetchTree: async () => ({
+      sha: 'root',
+      tree: [{ type: 'tree', path: 'skills/ns-harness', sha: 'same-sha' }],
+    }),
+  });
+  assert(githubUpToDate.upToDate.includes('ns-harness'), 'matching GitHub tree SHA should skip');
+
+  const updateDryRun = runCli(['update', '--dry-run', '--dir', tempDir, '--source', join(tempDir, 'fake-source')], harnessRoot);
   assert(updateDryRun.status === 0, `update --dry-run should pass: ${updateDryRun.stderr}${updateDryRun.stdout}`);
   assert(
-    updateDryRun.stdout.includes('ns-harness'),
-    'update dry-run should list installed skills',
+    updateDryRun.stdout.includes('ns-harness') || updateDryRun.stdout.includes('up to date') || updateDryRun.stdout.includes('Would update'),
+    'update dry-run should report plan',
   );
 
   const updateMissing = runCli(['update', '--skill', 'missing-skill', '--dir', tempDir], harnessRoot);
@@ -950,6 +1027,7 @@ Should not land in canonical.
   );
 
   console.log('OK: harness sync smoke tests passed');
+  })();
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);

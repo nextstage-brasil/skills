@@ -11,6 +11,7 @@ import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
 import { HARNESS_ROOT, resolveAgents } from './agentsLayout.js';
 import { logResolvedAgents } from './logResolvedAgents.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
+import { planSkillUpdates } from './skillUpdateDiff.js';
 
 export function listSkillsToUpdate(projectRoot, requested = []) {
   const installed = listInstalledSkillNames(projectRoot);
@@ -43,10 +44,40 @@ export async function runUpdate(argv = {}) {
     return { skills: [], skipped: true };
   }
 
+  const diff = await planSkillUpdates(projectRoot, skills, {
+    force: Boolean(argv.force),
+    source: argv.source,
+  });
+
   if (argv['dry-run']) {
-    p.log.info(`Would update ${skills.length} skill(s)`);
-    p.log.message(skills.join(', '));
-    return { skills, dryRun: true };
+    p.log.info(
+      `Would update ${diff.toUpdate.length} skill(s)`
+      + (diff.upToDate.length > 0 ? `; ${diff.upToDate.length} already up to date` : ''),
+    );
+    if (diff.toUpdate.length > 0) {
+      p.log.message(`Update: ${diff.toUpdate.join(', ')}`);
+    }
+    if (diff.upToDate.length > 0) {
+      p.log.message(`Up to date: ${diff.upToDate.join(', ')}`);
+    }
+    if (diff.unchecked.length > 0 && diff.toUpdate.length > 0) {
+      const uncheckedNames = diff.unchecked.map((entry) => entry.name);
+      p.log.message(`No baseline hash (will refresh): ${uncheckedNames.join(', ')}`);
+    }
+    return { skills: diff.toUpdate, upToDate: diff.upToDate, dryRun: true };
+  }
+
+  if (diff.upToDate.length > 0) {
+    p.log.info(`${diff.upToDate.length} skill(s) already up to date`);
+  }
+
+  if (diff.toUpdate.length === 0) {
+    p.log.success('All installed skills are up to date');
+    const pruneOnly = pruneRetiredSkills(projectRoot, { agents });
+    if (pruneOnly.removed.length > 0) {
+      p.log.message(`Retired skills removed: ${pruneOnly.removable.map((e) => e.oldName).join(', ')}`);
+    }
+    return { skills: [], upToDate: diff.upToDate, skipped: false };
   }
 
   const installOptions = {
@@ -57,8 +88,8 @@ export async function runUpdate(argv = {}) {
     source: argv.source,
   };
 
-  const hasSkillCreator = skills.includes('ns-skill-creator');
-  const withoutSkillCreator = skills.filter((name) => name !== 'ns-skill-creator');
+  const hasSkillCreator = diff.toUpdate.includes('ns-skill-creator');
+  const withoutSkillCreator = diff.toUpdate.filter((name) => name !== 'ns-skill-creator');
 
   if (withoutSkillCreator.length > 0) {
     updateInstalledSkills(withoutSkillCreator, installOptions);
@@ -106,7 +137,10 @@ export async function runUpdate(argv = {}) {
     details.push(`Refreshed ${HARNESS_ROOT}/README.md`);
   }
 
-  p.log.success(`Updated ${skills.length} skill${skills.length === 1 ? '' : 's'}`);
+  p.log.success(
+    `Updated ${diff.toUpdate.length} skill${diff.toUpdate.length === 1 ? '' : 's'}`
+    + (diff.upToDate.length > 0 ? ` (${diff.upToDate.length} unchanged)` : ''),
+  );
   for (const line of details) {
     p.log.message(line);
   }
@@ -124,5 +158,5 @@ export async function runUpdate(argv = {}) {
     );
   }
 
-  return { skills, skipped: false };
+  return { skills: diff.toUpdate, upToDate: diff.upToDate, skipped: false };
 }

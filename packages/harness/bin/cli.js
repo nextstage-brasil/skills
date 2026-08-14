@@ -28,7 +28,7 @@ Usage:
   harness add-subagent <name>  Create a canonical subagent bridge, update manifest, and sync
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
   harness prune-retired-skills  Remove renamed skill dirs after replacement is installed
-  harness update [options] Update installed skills only (does not install new ones)
+  harness update [options] Update installed skills that changed (skips up-to-date)
   harness uninstall [options]  Remove harness install (skills, adapters, scaffold)
   harness agents [set]   Show or set project agents (.nextstage-harness/manifest.json)
   harness list             List presets and available skills
@@ -46,7 +46,7 @@ Options:
   --no-scaffold          Skip AGENTS.md and docs/ scaffolding
   --keep-agents-md       With uninstall: keep AGENTS.md and CLAUDE.md
   --check                With sync: verify adapters match canonical (CI mode)
-  --force                Overwrite existing files (agents-md, add-rule, add-subagent)
+  --force                Overwrite existing files (agents-md, add-rule, add-subagent); with update: refresh all skills
   --description <text>   With add-rule / add-subagent: short purpose text (add-rule: Cursor "when to apply")
   --globs <patterns>     With add-rule: comma-separated globs (path-scoped; --description still required)
   --always-apply         With add-rule: set alwaysApply true (default false — agent-requested)
@@ -71,6 +71,7 @@ Examples:
   npx @nextstage-brasil/harness prune-retired-skills --dry-run
   npx @nextstage-brasil/harness update
   npx @nextstage-brasil/harness update --dry-run
+  npx @nextstage-brasil/harness update --force
   npx @nextstage-brasil/harness uninstall --dry-run
   npx @nextstage-brasil/harness uninstall --yes
   npx @nextstage-brasil/harness agents

@@ -141,11 +141,12 @@ npx @nextstage-brasil/harness agents          # show current
 
 ### Refresh skills after a catalog release
 
-Updates skills already in `.agents/skills/` — does **not** install new catalog entries.
+Updates only skills that **changed** (compares local/source content hash, or GitHub tree SHA from `skills-lock.json`). Skips up-to-date installs. Does **not** install new catalog entries. Use `--force` to refresh everything.
 
 ```bash
 npx @nextstage-brasil/harness update
 npx @nextstage-brasil/harness update --dry-run
+npx @nextstage-brasil/harness update --force
 ```
 
 ### Optional complements (UI, docs, security)
@@ -192,7 +193,7 @@ npx @nextstage-brasil/harness init \
 | See catalog & presets | `npx @nextstage-brasil/harness list` |
 | After editing rules in `.nextstage-harness/` | `npx @nextstage-brasil/harness sync` |
 | CI: validate harness + regenerate adapters | `npx @nextstage-brasil/harness sync` |
-| Update installed skills | `npx @nextstage-brasil/harness update` |
+| Update installed skills (changed only) | `npx @nextstage-brasil/harness update` |
 | Regenerate `AGENTS.md` | `npx @nextstage-brasil/harness agents-md --force` |
 | Add a project rule | `npx @nextstage-brasil/harness add-rule api-conventions --description "REST conventions"` |
 | Add a project subagent | `npx @nextstage-brasil/harness add-subagent investigator-agent --skill ns-code-investigator --description "Investigation bridge"` |
@@ -256,7 +257,7 @@ Skill ids match directory names under `skills/<name>/` in the [skills repo](http
 | `harness prepare` | Print brownfield prepare instructions (`/ns-harness-prepare`) |
 | `harness sync` | Absorb orphan Cursor rules + regenerate rule/skill/subagent adapters |
 | `harness sync --check` | Local — exit 1 if adapters drift or orphan `.mdc` not in manifest |
-| `harness update` | Update skills already in `.agents/skills/` |
+| `harness update` | Update changed skills in `.agents/skills/` (skip up-to-date; `--force` = all) |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` (use `--force` to overwrite) |
 | `harness add-rule <name>` | New rule under `.nextstage-harness/rules/` + sync |
 | `harness add-subagent <name>` | New subagent under `.nextstage-harness/agents/` + sync (`--skill` required) |
