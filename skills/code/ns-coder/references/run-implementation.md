@@ -7,6 +7,8 @@ For partitioned versions (`version-roadmap.md` present), use
 `../../../sdd/ns-spec-driven/references/orchestrator.md` instead — do not follow this workflow in the parent
 session.
 
+**Batching:** this file only (classic mode). Partitioned mode already batches per slice — do not re-batch across slices here. Classic batch = same-layer consecutive `pending`, prefer **4–7**, hard **max 7**, fewer OK when fewer remain (size 1 = single-task). Slice **target 4–7** = `version-partitioner.md` only.
+
 ## Prerequisites
 
 - `{version_san}` defined
@@ -29,8 +31,8 @@ before coding.
 3. Validate **Time tracking (seconds)** section exists; add from template if missing
 4. Read `requirements.md` (overview — do not replan); confirm Consistency status is `Approved` when present
 5. Load product context: follow **Implementation boot rule** in `../../../ns-harness/references/artifact-layout.md`
-6. Identify **Next task** (first `pending`, or resume `in_progress`)
-7. Load harness rules for the task layer
+6. Identify **Next batch** — consecutive `pending` same layer (max 7); Progress **Next task** column = first short id of that batch (or resume `in_progress`)
+7. Load harness rules for the batch layer
 8. If `Implementation — start` is empty, fill with current ISO local timestamp
 
 ### Work branch (step 1.5 — GitLab)
@@ -42,29 +44,36 @@ When `docs/context/gitlab-sync-config.md` exists:
 3. Create or checkout `work_branch` once per version before first code task
 4. Record branches in the task **Execution notes** when applicable
 
-## Per-task loop (step 2)
+## Per-batch loop (step 2)
 
-For each task until scope is done or all tasks complete:
+Until scope done or all tasks complete:
 
-1. **Update handoff — start:** `Status` → `in_progress`; `Started at` → now; `Updated at` → now
-   - **GitLab:** if sync config exists, run `ns-gitlab-board-sync` (task start: backlog → in_progress) **before** coding
-2. **Read** `tasks/task-NNN-*.md` in full
-3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-task re-read; never tool-Read `AGENTS.md`)
-4. **Implement** per validation criteria (minimal diff, task scope only) — **MUST** dispatch **`coder-agent`** when available (loads `ns-coder`); else `ns-coder` direct. See `../../../ns-harness/references/subagent-dispatch.md`.
-   - **Dispatch must state SDD handoff mode:** this task only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer`; **do not** run living specs; review = **Step 5** only.
+### Select batch
+
+Next batch = consecutive `pending` tasks, **same layer**, prefer **4–7**, hard **max 7**, fewer OK when fewer remain. Stop before dependency on unfinished task. Size 1 → single-task dispatch (same rules).
+
+### Dispatch
+
+1. **Update handoff — batch start:** each selected row `Status` → `in_progress`; `Started at` → now; `Updated at` → now
+   - **GitLab:** if sync config exists, run `ns-gitlab-board-sync` (task start: backlog → in_progress) **per task** **before** coding
+2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). Open `Detailed description` on demand — ambiguity or `blocked`. See `../../../sdd/ns-spec-driven/references/task-schema.md`.
+3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-batch re-read; never tool-Read `AGENTS.md`)
+4. **Implement** — **one** `coder-agent` dispatch per batch (**MUST** when available; loads `ns-coder`); else `ns-coder` direct. See `../../../ns-harness/references/subagent-dispatch.md`.
+   - **Dispatch must state SDD handoff mode:** this batch only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer`; **do not** run living specs; review = **Step 5** only.
+   - Worker reports per-task outcomes (files, tests, blockers, tokens). Parent owns `execution-handoff.md`.
 5. **Validate** per project rules (Docker **unit/integration** tests, i18n, multitenancy, etc.)
    - **Allowed:** unit/integration only (e.g. PHPUnit in test container)
    - **Forbidden:** run E2E (Cypress or equivalent) during any task — including `e2e`-layer tasks. Writing E2E specs OK; **running** them not. Human runs E2E after all tasks complete.
-   - **Forbidden:** per-task / mid-version code review — wait for Step 5
-6. **Collect Tokens** (required before `completed`). Sources (priority):
-   1. Usage/tokens from Task result / UI of `coder-agent` + other subagents for that task
-   2. Parent tokens for that task loop if platform surfaces them
+   - **Forbidden:** per-task / mid-version / mid-batch code review — wait for Step 5
+6. **Collect Tokens** (required before each `completed`). Sources (priority):
+   1. Usage/tokens from Task result / UI of `coder-agent` + other subagents — **split per task** from worker report, or `~N` estimate per task
+   2. Parent tokens attributable to that task if platform surfaces them
    3. Nothing exposed: ask human once; if declined, `~N` estimate + task `## Execution notes` line `tokens: ~N (estimated)`
    **Forbidden:** `0` on `completed` task that did LLM work
-7. **Update handoff — complete:** `Status` → `completed` (or `blocked`); write `Tokens` (step 6)
+7. **Update handoff — per task from worker report:** each task `Status` → `completed` (or `blocked`); write `Tokens` (step 6)
    - On `blocked` / waiver / important events: append to task file `## Execution notes` (relevant only)
-   - **GitLab:** sync in_progress → done + spent time after validation
-8. **Recalculate (required):**
+   - **GitLab:** sync in_progress → done + spent time **per task** after validation
+8. **Recalculate (required)** after batch (or after each task if reporting incremental):
    - Row `Time (s)` = `Finished at − Started at`
    - **Tokens (total)** = sum of `Tokens` (integers; `~N` counts as `N`)
    - `Total task time (s)` = sum of column
@@ -72,7 +81,7 @@ For each task until scope is done or all tasks complete:
    - `Total process time (s)` per handoff formula
    - `Last recalculated` = now
    - **Progress** and **Next task**
-9. Advance to next `pending` task
+9. Advance to next batch
 
 See `../../../sdd/ns-spec-driven/references/execution-handoff.md` for status-update rules and version
 status transitions.
@@ -83,7 +92,7 @@ When pausing mid-version:
 
 1. Ensure handoff reflects current progress and session history (ultra-short Notes)
 2. If implementation finished this session, fill `Implementation — end` and recalculate totals
-3. Report: tasks done this session, next task, blockers, accumulated seconds and tokens
+3. Report: tasks done this session, next batch/task, blockers, accumulated seconds and tokens
 
 ## Closure (steps 4–6)
 
@@ -126,14 +135,15 @@ After human confirms (or documented waiver):
 
 ## Critical rules
 
-- **Always** update `execution-handoff.md` when task status changes
-- **AGENTS first** — Session boot once in Bootstrap (step 1); no rule re-read per task unless `agents.local.md` or harness rules changed; never tool-Read `AGENTS.md`
+- **Always** update `execution-handoff.md` when task status changes — rows stay **per task**; parent owns file
+- **Classic batching only** — same-layer consecutive `pending`, prefer 4–7, hard max 7, fewer OK; size 1 = single-task. Handoff Progress **Next task** = first id of next batch.
+- **AGENTS first** — Session boot once in Bootstrap (step 1); no rule re-read per batch unless `agents.local.md` or harness rules changed; never tool-Read `AGENTS.md`
 - **Numeric task order** unless explicit dependency in the task file says otherwise
-- **Minimal diff** — current task scope only
+- **Minimal diff** — current batch scope only
 - **No commits** unless human explicitly asks
 - On real blocker: `blocked` + task **Execution notes**, stop
 - **No E2E runs** during tasks — unit/integration only; human runs E2E at end
-- **No per-task review** — `coder-agent` / `ns-coder` must not call review gate; **only** Step 5 invokes `reviewer-agent` / `ns-reviewer`
+- **No per-task / mid-batch review** — `coder-agent` / `ns-coder` must not call review gate; **only** Step 5 invokes `reviewer-agent` / `ns-reviewer`
 
 ## References
 

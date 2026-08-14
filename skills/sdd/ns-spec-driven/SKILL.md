@@ -133,14 +133,14 @@ Worker dispatch: **MUST** use harness project agents when available — `../../n
 | Context | Worker |
 | ------- | ------ |
 | Ad-hoc / quick / single task | `coder-agent` → `ns-coder` (**MUST** bridge when available) |
-| Version with `execution-handoff.md` | `../../code/ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available) / `ns-coder` or `ns-autonomous` |
-| Partitioned version (`version-roadmap.md`) | `references/orchestrator.md` (slice workers via `coder-agent` — **MUST** when available) |
+| Version with `execution-handoff.md` | `../../code/ns-coder/references/run-implementation.md` — classic **batched** dispatch (same-layer consecutive `pending`, prefer 4–7, hard max 7; size 1 = single task) + `coder-agent` (**MUST** when available) / `ns-coder` or `ns-autonomous`; handoff rows stay per task; Progress **Next task** = first id of next batch |
+| Partitioned version (`version-roadmap.md`) | `references/orchestrator.md` (slice workers via `coder-agent` — **MUST** when available; already batched per slice) |
 | GitLab issue URL + MCP available | `ns-execution-gitlab-issue` (soft — prefer when GitLab present) |
 | Autonomous multi-step local plan | `ns-autonomous` |
 
 **Face = orchestrator** (`ns-spec-driven`); does not implement — drives `run-implementation.md` (classic) or `orchestrator.md` (slices).
 
-**Tests while executing version tasks:** unit/integration only. **Forbidden** for agents to run E2E during task loop; human runs E2E at version end (`../../code/ns-coder/references/run-implementation.md`).
+**Tests while executing version tasks:** unit/integration only. **Forbidden** for agents to run E2E during task/batch loop; human runs E2E at version end (`../../code/ns-coder/references/run-implementation.md`).
 
 ## Trigger → reference
 

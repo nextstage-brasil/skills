@@ -33,7 +33,7 @@ How delivery face and workers talk **to human**. Separate from agent-facing file
 | After clarification | "Here is what I understood: … Want me to write the requirements document next?" |
 | Gate 1 (requirements) | Path + plain-language highlights + clear ask. See **Gate 1 highlights** below. |
 | Gate 2 (scope) | "Here is the feature/scope summary. OK to proceed, or what should change?" — feature titles in words, not only `Feature 00N`. |
-| Gate 3 (tasks) | "Task plan summary: … Shall I generate the task files?" |
+| Gate 3 (tasks) | "Task plan: N backend, M frontend, … (~K worker batches, prefer 4–7 tasks each). Shall I generate the task files?" — always before any `task-*.md` |
 | Missing prepare | "This repo still needs `/ns-harness prepare this repo` before we can plan safely. Run that, or say if you want to continue anyway." |
 
 ## Gate 1 highlights

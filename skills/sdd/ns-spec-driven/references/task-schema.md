@@ -2,6 +2,8 @@
 
 Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 
+**Read rule:** worker reads the **card** (header through Validation criteria). Open `Detailed description` on demand — ambiguity or `blocked`. No new files. No handoff change.
+
 ```markdown
 # {Imperative task title}
 **Routing rationale:** {one line}
@@ -14,9 +16,6 @@ Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 ### Summary
 {1–2 paragraphs — what and why}
 
-### Detailed description
-{Expanded plan: files, architecture rules, edge cases, validation — NOT a copy of summary}
-
 ### Files to create or modify
 - `{path}` — {purpose}
 
@@ -28,6 +27,9 @@ Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 ### Validation criteria
 - [ ] {testable criterion}
 - [ ] {testable criterion}
+
+### Detailed description
+{Expanded plan: architecture rules, edge cases, non-obvious ordering — NOT a copy of summary. Card above stays executable without this section.}
 
 ### Execution notes
 

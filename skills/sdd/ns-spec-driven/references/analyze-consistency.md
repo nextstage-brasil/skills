@@ -101,8 +101,8 @@ Rules:
 ### Step 4 — Proceed decision
 
 - **Reproved:** Chat list blockers brief, **stop** — no task generation. User fix requirements, then re-run.
-- **Approved with warnings:** Inform; ask fix now or proceed; user decide.
-- **Approved no warnings:** Inform auto-proceed task generation; `execution_confirmed` implicit (skip Gate 3).
+- **Approved with warnings:** Inform; ask fix now or proceed; user decide. Gate 3 still required before any `task-*.md`.
+- **Approved no warnings:** Inform consistency clean. Still run Gate 3 (`execution_confirmed`) before writing tasks — never skip.
 
 ## Critical rules
 

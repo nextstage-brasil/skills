@@ -21,7 +21,7 @@ See `../../../ns-harness/references/artifact-layout.md` and `../../../ns-harness
    - \> 12 features with cross-dependencies, or
    - ~50 estimated tasks, or
    - ~600k token heuristic
-5. **Consolidate undersized** — merge adjacent slices below ~4 tasks when safe; target **4–7 tasks** per subversion
+5. **Consolidate undersized** — merge adjacent slices below ~4 tasks when safe; **slice size target 4–7 tasks** (not the classic dispatch batch). Task unit = **1 Feature × 1 impl layer** + capped test tasks (`task-generator.md` Decomposition) — `tasks est.` must use that unit so slice target holds
 6. **Topological sort** — folders `01-slug`, `02-slug`, …
 7. **Emit artifacts:**
    - `version-roadmap.md` at version root

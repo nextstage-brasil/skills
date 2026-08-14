@@ -21,8 +21,14 @@ See `../../../ns-harness/references/session-boot.md` and
 | Task starts, completes, blocks, or waived        | **Update** status + recalculate times/tokens |
 | All tasks done — review / living specs / closure | **Update** version status + final timestamps |
 
-Full implementer loop (read handoff then task cycle then closure):
+Full implementer loop (read handoff then batch cycle then closure):
 `../../../code/ns-coder/references/run-implementation.md`.
+
+Classic mode batches consecutive same-layer `pending` (prefer **4–7**, hard
+**max 7**, fewer OK) into one `coder-agent` dispatch. **Handoff rows stay per
+task.** Progress **Next task** = first short id of next batch. Partitioned
+mode: batching is per slice via `orchestrator.md` — not this generator. Slice
+size **target 4–7** is `version-partitioner.md` only.
 
 ## Prerequisites (generation)
 
@@ -75,22 +81,24 @@ implementation via `../../../code/ns-coder/references/run-implementation.md`.
 
 ## Status updates (during implementation)
 
-Task starts, completes, blocks, or waived:
+Task starts, completes, blocks, or waived — **per task row** even when classic
+mode dispatches a multi-task batch:
 
 1. Locate task row in **Task status**
-2. Update `Status`, `Started at` (on `in_progress`), `Finished at` (on
-   `completed`), `Time (s)` (`Finished at − Started at`), `Tokens`,
-   `Updated at`
+2. Update `Status`, `Started at` (on `in_progress` — all batch members at batch
+   start), `Finished at` (on `completed` — per task from worker report),
+   `Time (s)` (`Finished at − Started at`), `Tokens`, `Updated at`
 3. **`Tokens` required before `completed`.** Sources (priority):
-   1. Usage/tokens from Task result / UI of `coder-agent` + other subagents
-      for that task
-   2. Parent tokens for that task loop if platform surfaces them
+   1. Usage/tokens from Task result / UI of `coder-agent` + other subagents —
+      **split per task** from worker report, or `~N` estimate per task
+   2. Parent tokens for that task if platform surfaces them
    3. Nothing exposed: ask human once; if declined, `~N` estimate + task
       `## Execution notes` line `tokens: ~N (estimated)`
    **Forbidden:** `0` on `completed` task that did LLM work
 4. Recalculate **Tokens (total)** = sum of `Tokens` column (integers; `~N`
    counts as `N`)
-5. Recalculate **Progress** (`Next task` = first `pending` or `in_progress`)
+5. Recalculate **Progress** (`Next task` = first short id of next batch — first
+   `pending`/`in_progress` in numeric order, which is the batch head)
 6. Recalculate **Time tracking (seconds)**:
    - `Implementation — start` = earliest filled `Started at`
    - `Implementation — end` = latest filled `Finished at` when present
@@ -102,6 +110,8 @@ Task starts, completes, blocks, or waived:
 8. Optionally append **Session history** (Date + ultra-short Notes only)
 9. Important notes (blockers, waivers): append to task file
    `## Execution notes` — relevant only; never Notes column in handoff
+
+**GitLab sync:** still **per task** (start and complete), not per batch.
 
 Version closure (review, living specs, `_done/` move): fill
 `Post-implementation review — end`, `Review — tokens` (or Session history

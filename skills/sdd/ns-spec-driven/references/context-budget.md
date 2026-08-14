@@ -28,7 +28,7 @@ Do **not** re-load full rule corpus per task unless files changed. Fresh worker/
 - Load **two or more** full `requirements.md` from different versions in one session.
 - Paste entire living spec corpus into context.
 - Re-read completed task files unless debugging.
-- Mid-version / per-task code review during `run-implementation` (version closure only).
+- Mid-version / per-task / mid-batch code review during `run-implementation` (version closure only).
 
 ## Worker delegation
 

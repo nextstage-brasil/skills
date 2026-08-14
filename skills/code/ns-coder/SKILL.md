@@ -55,13 +55,14 @@ Entry priority **5** (default). Harness table: `../../ns-harness/references/code
 
 ### When invoked under execution-handoff (SDD task mode)
 
-Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-handoff task**:
+Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-handoff**:
 
-1. Task scope: `references/run-implementation.md`; handoff updates: `../../sdd/ns-spec-driven/references/execution-handoff.md`.
-2. Implement + unit/integration only. No E2E.
-3. **Forbidden:** `reviewer-agent` / `ns-reviewer`, living-spec consolidator, `Code Review:` verdict line.
-4. Report to parent: files changed, tests run, blockers. Parent Step 5 review once all tasks done.
-5. Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
+1. **Scope:** classic = one **batch** (same-layer consecutive `pending`, prefer 4–7, hard max 7; size 1 = single task) per `references/run-implementation.md`. Partitioned slice = that slice's tasks. Parent owns handoff file updates.
+2. Read each task **card** (header through Validation criteria); open `Detailed description` on demand (ambiguity or `blocked`) — `../../sdd/ns-spec-driven/references/task-schema.md`.
+3. Implement + unit/integration only. No E2E.
+4. **Forbidden:** `reviewer-agent` / `ns-reviewer`, living-spec consolidator, `Code Review:` verdict line.
+5. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`). Parent marks rows and runs Step 5 review once all tasks done.
+6. Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
 
 ## Session boot
 
@@ -109,7 +110,7 @@ Then:
 
 ## Per-task cycle
 
-**SDD handoff mode:** stop after step 6; report to parent; skip 7–9.
+**SDD handoff mode:** one dispatch may cover a **batch**; still stop after step 6; report **per task** to parent; skip 7–9.
 
 1. Understand task
 2. Load rules — obey `AGENTS.md` already booted; Session boot again only if cold start this agent or files changed
@@ -192,4 +193,4 @@ Then: what changed, follow-ups, blocked Criticals if applicable.
 - **Review substitutes** — Cursor Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or any review not via `reviewer-agent` / `ns-reviewer` `SKILL.md`. Harness `reviewer-agent` **allowed**.
 - **Skipping re-review** — success after fix when previous `ns-reviewer` verdict was `Rejected` or score < 9 without new passing round (ad-hoc / C2)
 - **Success without verdict** — ad-hoc / C2 closure without mandatory **Final report** fields and parseable `Code Review:` line
-- **Per-task review under handoff** — `reviewer-agent` / `ns-reviewer` during `run-implementation` task (parent owns Step 5)
+- **Per-task / mid-batch review under handoff** — `reviewer-agent` / `ns-reviewer` during `run-implementation` task or batch (parent owns Step 5)
