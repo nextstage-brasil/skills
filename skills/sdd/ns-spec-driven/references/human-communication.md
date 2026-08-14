@@ -1,25 +1,25 @@
 # Human communication (chat)
 
-How the delivery face and its workers talk **to the human**. Separate from agent-facing file compression (`../../../ns-harness/references/agent-artifact-compress.md`).
+How delivery face and workers talk **to human**. Separate from agent-facing file compression (`../../../ns-harness/references/agent-artifact-compress.md`).
 
 ## Mandate
 
-1. **Natural language** — short, direct sentences a senior engineer would write in Slack. No telegraphic status dumps.
-2. **Name the deliverable, not the phase** — say what you will write or do next; never assume the human knows internal pipeline names.
-3. **One ask per gate** — wait for a clear answer before continuing.
-4. **Match conversation language** — if the human writes in Portuguese, chat in Portuguese (artifacts stay English unless they asked otherwise).
+1. **Natural language** — short, direct sentences senior engineer would write in Slack. No telegraphic status dumps.
+2. **Name deliverable, not phase** — say what you will write or do next; never assume human knows internal pipeline names.
+3. **One ask per gate** — wait for clear answer before continuing.
+4. **Match conversation language** — if human writes Portuguese, chat Portuguese (artifacts stay English unless they asked otherwise).
 5. **Never apply caveman / artifact-compress style to chat.**
-6. **Self-contained chat** — the human must understand highlights and questions without opening the artifact. Document IDs (`Feature 00N`, slice labels, decision codes, `§` section refs) stay in files; in chat, lead with meaning, then optionally the ID in parentheses.
+6. **Self-contained chat** — human must understand highlights and questions without opening artifact. Document IDs (`Feature 00N`, slice labels, decision codes, `§` section refs) stay in files; in chat, lead with meaning, then optionally ID in parentheses.
 
 ## Forbidden in chat
 
 | Avoid | Why |
 | ----- | --- |
-| Phase jargon as commands: "Clarify first", "go for Specify", "after Consistency" | Human does not know the pipeline |
-| Opaque document IDs as the message: "Feature 005 touches E1 (D13)" | Forces the human to re-read the whole doc |
+| Phase jargon as commands: "Clarify first", "go for Specify", "after Consistency" | Human does not know pipeline |
+| Opaque document IDs as message: "Feature 005 touches E1 (D13)" | Forces human to re-read whole doc |
 | Section symbols / codes without expansion: "§5.3 item 4", "RL3", "D04" alone | Same — no standalone context |
-| Menu chrome: `Reply:`, `Premise:`, `Premissa:` | Reads like a bot form |
-| Skill / worker names in the ask | Internal wiring; keep in agent reasoning |
+| Menu chrome: `Reply:`, `Premise:`, `Premissa:` | Reads like bot form |
+| Skill / worker names in ask | Internal wiring; keep in agent reasoning |
 | Status telegrams: `Large X — Product. No requirements.md. Clarify first.` | Dense; no conversational frame |
 | Asking "continue to next phase?" between automatic pipeline steps | Face already forbids this |
 
@@ -42,8 +42,8 @@ When asking to confirm `requirements.md`, do **not** dump shorthand. For each no
 
 1. Say **what** changed or is pending (plain language).
 2. Say **why it matters** (impact on tests, deploy, next planning step).
-3. Ask a **concrete** question when a decision is needed.
-4. Optionally append the document ID in parentheses for traceability — never lead with it.
+3. Ask **concrete** question when decision needed.
+4. Optionally append document ID in parentheses for traceability — never lead with it.
 
 **Bad:** "Feature 005 changes the E1 suite (D13). §5.3 and RL3 now say 403. Open: D04, HTTP contract notice to legacy integrator, where E1 suite lives."
 
@@ -59,4 +59,4 @@ Artifacts keep `Feature 00N`, decision codes, and section numbering — chat tra
 
 ## Internal names (agent-only)
 
-Keep `Clarify`, `Specify`, `Consistency`, `Partition`, `Tasks`, `Execute`, `Close` in orchestration tables, logs, and skill handoffs — **not** in human-facing prompts unless the human already used those terms.
+Keep `Clarify`, `Specify`, `Consistency`, `Partition`, `Tasks`, `Execute`, `Close` in orchestration tables, logs, and skill handoffs — **not** in human-facing prompts unless human already used those terms.

@@ -27,11 +27,11 @@ metadata:
 
 # Commercial Budget
 
-Client-facing commercial budget from free-form scope: **Features**, **Mermaid flows**, **FP + COSMIC + hours**, **macro table**, **risk margins**. Fixed path; header **Sequência** + **Gerado em** on each regenerate.
+Client-facing commercial budget from free-form scope: **Features**, **Mermaid flows**, **FP + COSMIC + hours**, **macro table**, **risk margins**. Fixed path; header **Sequência** + **Gerado em** each regenerate.
 
-**Audience:** client first, delivery team second. Client confirms scope understanding; team gets traceable sizing. Narrative = product/commercial. Sizing detail in Estimativas. Read `references/product-voice.md`.
+**Audience:** client first, delivery second. Client confirms scope; team gets traceable sizing. Narrative = product/commercial. Sizing detail in Estimativas. Read `references/product-voice.md`.
 
-**Product context:** full read reverse-spec + brownfield-map when present → reuse inventory → size **delta**, not greenfield. Block sizing without inventory when context exists.
+**Product context:** full-read reverse-spec + brownfield-map when present; reuse inventory; size **delta**, not greenfield. Block sizing if context exists and inventory missing.
 
 **Pricing:** Custo (R$) only when human supplies rates. Never invent.
 
@@ -39,12 +39,12 @@ Not SDD, not tasks/, not GitLab issues, not RICE/sprint/PERT.
 
 ## Session boot
 
-Optional — skip any step whose path does not exist. Do not invent project layout.
+Optional — skip step if path missing. Do not invent project layout.
 
-1. If `agents.local.md` exists beside `AGENTS.md`, read it once. Never tool-Read `AGENTS.md`.
+1. If `agents.local.md` exists beside `AGENTS.md`, read once. Never tool-Read `AGENTS.md`.
 2. If `.nextstage-harness/rules/` exists, read `architecture-rules.md` and `project-rules.md` when present.
 3. If `docs/context/` exists, follow `references/product-context.md` (full reverse-spec + brownfield-map) before clarifying.
-4. If none of the above exist, continue with chat scope only. Ask once for `{version_san}` when persist needs it. Do not create `docs/versions/` until persist is agreed.
+4. If none exist, continue chat scope only. Ask once for `{version_san}` when persist needs it. Do not create `docs/versions/` until persist agreed.
 
 ## Language
 
@@ -58,7 +58,7 @@ Optional — skip any step whose path does not exist. Do not invent project layo
 
 1. Capture scope + productivity / team / rates hints.
 2. Resolve `{version_san}`.
-3. **Product context + reuse gate** — `references/product-context.md`; mandatory full read reverse-spec + `brownfield-map.md` → reuse inventory before clarify/sizing.
+3. **Product context + reuse gate** — `references/product-context.md`; mandatory full-read reverse-spec + `brownfield-map.md`; reuse inventory before clarify/sizing.
 4. Persist under `docs/versions/` or chat-only (default: persist).
 
 ### 2. Clarify
@@ -68,7 +68,7 @@ Read `references/clarification.md`.
 - ≤5 questions, one batch; ≤1 follow-up round.
 - Prefer team experience when hours estimated and missing.
 - Do not re-ask reverse-spec/brownfield facts — ask **delta** only.
-- `proceed with assumptions` / `quick mode` → `[ASSUMPTION]` / `[LACUNA]` in doc.
+- `proceed with assumptions` / `quick mode`: mark `[ASSUMPTION]` / `[LACUNA]` in doc.
 - No invented SLAs, volumes, prices (`references/anti-hallucination.md`).
 
 ### 3. Generate
@@ -90,7 +90,7 @@ Read `references/clarification.md`.
 | RNFs | Only if identified — product language |
 | Estimativas — FP | Internal: per-Feature FP + full **origem do cálculo**. Client export: subtotal negócio + engenharia rollup line; total unchanged (`fp-sizing.md`, `engineering-split.md`) |
 | Estimativas — COSMIC | Summary table + method reference line only — **no** rationale prose |
-| Estimativas — Horas | **Calculation only:** FP × productivity → base → margin → total. Cite productivity source |
+| Estimativas — Horas | **Calculation only:** FP × productivity; base; margin; total. Cite productivity source |
 | Macroatividades | 7-row table unchanged (`macro-activities.md`) |
 | Riscos | Table + margins; **Responsável** column: Cliente / Empresa / Ambos |
 | Premissas | Assumptions, out-of-scope, lacunas — client-readable |
@@ -118,12 +118,12 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 
 1. Summarize sequência, Gerado em, path(s), totals (FP, ΣCFP, hours base, hours com margem, margin %), Custo filled or not. When client file exists: note subtotal negócio vs engenharia rollup.
 2. No tasks, issues, requirements.md, SDD handoff.
-3. Offer approve → SDD / PM forecast in text only.
+3. Offer approve then SDD / PM forecast in text only.
 
 ## Out of scope
 
 - requirements.md, SDD generators
-- reverse-spec / brownfield mapping unless the human asks
+- reverse-spec / brownfield mapping unless human asks
 - Factory bands A/A′/B, token/USD cost
 - RICE, sprint, PERT (`ns-project-manager`)
 - Invented R$ / sales markup as safety margin

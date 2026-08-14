@@ -1,21 +1,21 @@
 # Task Generator
 
-Convert one atomic slice of a Feature into a detailed `task-NNN-slug.md` for engineers or coding agents.
+Convert one atomic Feature slice into detailed `task-NNN-slug.md` for engineers or coding agents.
 
-Face (**MUST** spawn `task-writer-agent` when that bridge exists — `../../../ns-harness/references/subagent-dispatch.md`). This file = worker body, not invite to inline from `ns-spec-driven`.
+Face (**MUST** spawn `task-writer-agent` when bridge exists — `../../../ns-harness/references/subagent-dispatch.md`). This file = worker body, not invite inline from `ns-spec-driven`.
 
 ## Session boot
 
-See `../../../ns-harness/references/session-boot.md`. Load rules from `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` is absent. Read `requirements.md` strictly — do not invent tables or endpoints.
+See `../../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent. Read `requirements.md` strict — invent no tables or endpoints.
 
 ## Scope
 
 - **Layers:** Backend, Frontend, Infrastructure
-- **Then (MUST read, same `task-writer-agent` session):** after backend impl tasks → `unit-test-task-generator.md`; after frontend UI tasks → `e2e-test-task-generator.md`
+- **Then (MUST read, same `task-writer-agent` session):** after backend implementation tasks then `unit-test-task-generator.md`; after frontend UI tasks then `e2e-test-task-generator.md`
 
 ## Golden rule
 
-No one-line summaries. The implementer must know what to do, where (probable paths), which stack/rules apply, and validation criteria. Never repeat the summary verbatim in the detailed section.
+No one-line summaries. Implementer must know what, where (probable paths), which stack/rules, validation criteria. Never repeat summary verbatim in detailed section.
 
 ## Inputs
 
@@ -27,7 +27,7 @@ No one-line summaries. The implementer must know what to do, where (probable pat
 ## Dependencies
 
 - FK parents before children — task order reflects migration/API order
-- Frontend consuming an API → backend task precedes frontend task
+- Frontend consuming API then backend task precedes frontend task
 - See `task-schema.md` for full file template
 
 ## Frontend extras
@@ -53,12 +53,12 @@ For subversions: under `subversions/{subversion_san}/tasks/`.
 
 ## References
 
-| File                        | When                                     |
-| --------------------------- | ---------------------------------------- |
+| File             | When                                     |
+| ---------------- | ---------------------------------------- |
 | `task-schema.md` | Full markdown template and header fields |
 
 ## Related
 
 - `unit-test-task-generator.md` — after backend implementation tasks (**MUST** read)
 - `e2e-test-task-generator.md` — after frontend tasks with UI (**MUST** read)
-- `execution-handoff.md` — after **all** tasks for the version are written (planning closure)
+- `execution-handoff.md` — after **all** version tasks written (planning closure)

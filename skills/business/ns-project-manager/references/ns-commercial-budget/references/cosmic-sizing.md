@@ -15,12 +15,12 @@ Agent sizes E/R/W/X per Feature internally. **Deliverable:** summary table + met
 
 ## Rules of thumb (agent only)
 
-1. Size the functional process — not widgets or CRUD verbs alone.
+1. Size functional process — not widgets or CRUD verbs alone.
 2. One movement = one data group per process — not per field or user.
-3. Duplicate read same group → one R unless distinct purpose.
-4. Validation on entered data only → no extra R.
-5. Outbound notification/API response → X.
-6. Integration: inbound → E; outbound → X; local cache → W (+ R when reused).
+3. Duplicate read same group: one R unless distinct purpose.
+4. Validation on entered data only: no extra R.
+5. Outbound notification/API response: X.
+6. Integration: inbound = E; outbound = X; local cache = W (+ R when reused).
 
 ## Deliverable (Estimativas)
 
@@ -35,7 +35,7 @@ Agent sizes E/R/W/X per Feature internally. **Deliverable:** summary table + met
 **Referência:** COSMIC FSM — contagens de movimentação de dados (E/R/W/X) por processo funcional.
 ```
 
-No **Racional COSMIC** paragraph. No per-Feature sub-blocks in the saved doc.
+No **Racional COSMIC** paragraph. No per-Feature sub-blocks in saved doc.
 
 ## Anti-patterns
 

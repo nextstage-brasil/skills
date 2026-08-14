@@ -1,186 +1,149 @@
 # Codebase Reverse System Description
 
-Reconstruct, from an existing codebase, a **technology-agnostic** descriptive document of the implemented system: observed behavior, business rules, permissions, hierarchies, and external integrations relevant to product operation.
+Reconstruct from existing codebase **technology-agnostic** description: observed behavior, business rules, permissions, hierarchies, external integrations relevant to product operation.
 
 ## Output language (hard rule)
 
-**English only** for both deliverables:
+**English only** for both:
 
 - `docs/context/system-reverse-spec.md` (human body)
 - `docs/context/system-reverse-spec.agent.md` (agent index)
 
-Do **not** mix languages. Section titles, labels, business-rule patterns (`When …, the system …`), glossary, use cases, and prose must all be English — even when the chat or product UI is another language. Translate domain terms into clear English; keep proper nouns / product names as-is.
+No mixed languages. Section titles, labels, rule patterns (`When …, the system …`), glossary, use cases, prose — all English — even when chat or UI is another language. Translate domain terms; keep proper nouns / product names as-is.
 
 ## Central principle
 
-Code is evidence of behavior. The goal is to answer **what the system does and why**, not how it was built. Avoid programming languages, frameworks, libraries, databases, architecture patterns (MVC, microservices, etc.), and class/function names as the axis of explanation.
+Code = evidence of behavior. Answer **what system does and why**, not how built. Avoid programming languages, frameworks, libraries, databases, architecture patterns (MVC, microservices, etc.), class/function names as explanation axis.
 
-Golden rule for every sentence: _"If I rewrote this system from scratch on another stack, would this sentence still be true?"_ If not, rewrite it in business terms.
+Golden rule per sentence: _"If I rewrote this system from scratch on another stack, would this sentence still be true?"_ If not, rewrite in business terms.
 
-Permitted exceptions (only when essential to understand the current domain):
+Permitted exceptions (only when essential):
 
 - External integration/provider names (ERPs, gateways, BI, identity, analytics).
-- Access roles/profiles and organizational hierarchy levels.
-- Entity attribute names when needed to preserve business semantics (not to detail technical structure).
+- Access roles/profiles + organizational hierarchy levels.
+- Entity attribute names when needed for business semantics (not technical structure).
 
 ## When to use
 
-- Legacy modernization/migration without losing business rules
-- Documenting a system with no (or outdated) documentation
-- Onboarding a new team
-- Auditing business rules before a rewrite on another stack
-- Producing a faithful functional description of the current system
+Legacy modernization; undocumented system; team onboarding; business-rule audit before rewrite; faithful functional description of current system.
 
 ## Scope and repository access
 
-1. Confirm the repository path (or ask if unclear). Use `Read` / `Glob` for a high-level structure overview.
-2. In monorepos, confirm which product/module folder is in scope — analyze **only** that subtree unless the user explicitly wants the whole repo.
-3. For external/legacy repos, confirm read access and any folders that are out of scope (generated code, vendored deps, infra-only).
+1. Confirm repository path (or ask). `Read` / `Glob` for structure overview.
+2. Monorepos: confirm product/module folder in scope — analyze **only** that subtree unless user wants whole repo.
+3. External/legacy: confirm read access + out-of-scope folders (generated, vendored, infra-only).
 
 ## Workflow
 
-Follow phases in order. Do not skip Phase 0 — without it the final spec mixes guesswork with fact.
+Follow phases in order. Do not skip Phase 0.
 
 ### Phase 0 — Scope and intent
 
-Ask the user (one question at a time, or `AskQuestion` when appropriate):
+Ask user (one question at a time, or `AskQuestion`):
 
-| Question                                                    | Why it matters                                                 |
-| ----------------------------------------------------------- | -------------------------------------------------------------- |
-| Whole system or a specific module/domain?                   | Prevents scope creep or missed areas                           |
-| Executive summary or exhaustive description? (default: **executive**) | Sets depth; prepare/autonomous always default executive |
-| Any critical/risky domain needing extra scrutiny?           | Prioritizes financial, fiscal, permission, or compliance logic |
-| Deliver incrementally (large codebases) or single document? | Large repos benefit from domain-by-domain drafts               |
+| Question | Why |
+| -------- | --- |
+| Whole system or specific module/domain? | Prevents scope creep |
+| Executive or exhaustive? (default: **executive**) | Depth; prepare/autonomous default executive |
+| Critical/risky domain needing extra scrutiny? | Prioritizes financial, fiscal, permission, compliance |
+| Incremental delivery or single document? | Large repos: domain-by-domain |
 
-Do **not** ask for output language — it is always English (see hard rule above).
+Do **not** ask output language — always English.
 
-If the repo is large, do **not** read everything at once. Do reconnaissance first (Phase 1) and prioritize by business impact, not file size.
+Large repo: reconnaissance first (Phase 1); prioritize by business impact, not file size.
 
-### Phase 1 — Reconnaissance (map, not line-by-line reading)
+### Phase 1 — Reconnaissance (map, not line-by-line)
 
-Goal: locate where business logic lives before reading in detail.
+Locate business logic before detail read.
 
-1. List the directory tree (root, ~2 levels) with `Glob` or equivalent.
-2. Identify domain-core candidates: folders/files named like `services`, `domain`, `rules`, `validators`, `models`, `usecases`, `handlers`, `controllers`, or language-specific equivalents.
-3. Identify entry points: API routes, scheduled jobs, message queues, screens/forms, CLI commands. These reveal **what the system allows someone (human or another system) to do** — the basis for use cases.
-4. Identify data sources (tables, entities, schemas) — not to document persistence technology, but to understand which **things** the business tracks.
-5. List existing tests if any. Tests often document business rules better than production code because they describe expected behavior in scenario language.
-6. Map explicitly:
-   - permission and access model;
-   - organizational/functional hierarchies;
-   - external integrations and each one's role in the business flow.
-7. Build a **prioritized investigation list** ordered by business value (not technical complexity).
+1. Directory tree (root, ~2 levels) via `Glob`.
+2. Domain-core candidates: `services`, `domain`, `rules`, `validators`, `models`, `usecases`, `handlers`, `controllers`, equivalents.
+3. Entry points: API routes, jobs, queues, screens/forms, CLI — basis for use cases.
+4. Data sources (tables, entities, schemas) — which **things** business tracks.
+5. Existing tests — often better rule documentation than production code.
+6. Map: permission model; org/functional hierarchies; external integrations + business role.
+7. **Prioritized investigation list** by business value.
 
-**Checkpoint (recommended):** Present the reconnaissance map and prioritized list to the user before deep extraction. Wrong scope discovered here saves hours of wasted reading. Skip only if the user asked for a fully autonomous run.
+**Checkpoint (recommended):** Present map + list before deep extraction. Skip only on fully autonomous run.
 
-Use `codebase-reverse-spec/coverage_matrix.md` as a mental checklist — mark what you found and what still needs investigation.
+Use `codebase-reverse-spec/coverage_matrix.md` as checklist.
 
 ### Phase 2 — Rule extraction
 
-For each prioritized area, maintain a working log using `codebase-reverse-spec/extraction_log_template.md`. Do not write the final spec yet — accumulate evidence and confidence first.
+Working log: `codebase-reverse-spec/extraction_log_template.md`. No final spec yet.
 
-For each logic fragment:
+Per logic fragment:
 
 1. Read relevant code (handlers, validations, calculations, conditionals, state machines).
-2. Ask:
-   - What business decision does this represent?
-   - Which input data matters, and why?
-   - What happens in each branch (success, failure, exception, edge case)?
-   - Is there a plausible business reason for this rule (credit limit, legal deadline, fiscal rule), even if the code does not comment it?
-3. Translate each finding into a verifiable business-rule sentence: **"When [business condition], the system [expected behavior], unless [exception]."** Never cite function/class/variable names in that sentence.
-4. Mark confidence:
-   - **Confirmed**: clear behavior, covered by tests or explicit validation.
-   - **Inferred**: reasonable deduction from code, without direct confirmation.
-   - **Ambiguous/Suspect**: confusing, contradictory, dead, or likely-bug code. Flag for human review — do **not** promote a bug to an intentional business rule without warning.
-5. Capture **negative rules** — things the system explicitly prevents (validations, permissions, blocks). Restrictions are as much part of the spec as capabilities.
-6. For external integrations, record:
-   - business trigger;
-   - business data involved (no technical payload);
-   - expected outcome on success/failure;
-   - operational impact when unavailable (degraded mode, block, manual fallback).
-7. For entities, record attributes by semantics — cite attribute names only when ambiguity would otherwise remain.
-8. For status/state fields, document the **lifecycle**: allowed transitions, who triggers them, terminal states, and whether transitions are enforced or merely conventional.
+2. Ask: business decision? input data + why? each branch outcome? plausible business reason?
+3. Translate to: **"When [condition], the system [behavior], unless [exception]."** No function/class/variable names in sentence.
+4. Confidence: **Confirmed** | **Inferred** | **Ambiguous/Suspect** (flag bugs — do **not** promote to intentional rule without warning).
+5. **Negative rules** — validations, permissions, blocks.
+6. Integrations: trigger; business data (no payload); success/failure outcome; impact when unavailable.
+7. Entities: attributes by semantics; names only when ambiguity remains.
+8. Status fields: **lifecycle** — transitions, triggers, terminal states, enforcement.
 
 ### Phase 3 — Domain structuring
 
-Organize extracted material into:
-
-- **Business entities** and business-relevant attributes (not DB column types or implementation types).
-- **Relations** in business language ("an Order belongs to a Customer and contains one or more Order Lines").
-- **Use cases / flows**, each with: actor, goal, preconditions, step-by-step expected behavior, outcome, and business exceptions/errors.
-- **Cross-cutting policies**: rules applying across use cases (authorization, audit, limits).
-- **Access model**: roles, profiles, scopes, permission hierarchies.
-- **External integrations**: third-party systems, business purpose, expected behavior.
-- **Domain glossary**: domain-specific terms found in code (field names, statuses, enums) translated into clear definitions.
-- **State lifecycles** (when applicable): entity states, transitions, and enforcement rules.
+Organize into: **entities** + attributes; **relations** in business language; **use cases** (actor, goal, preconditions, steps, outcome, exceptions); **cross-cutting policies**; **access model**; **external integrations**; **glossary**; **state lifecycles**.
 
 ### Phase 4 — Final spec writing
 
-Use `codebase-reverse-spec/spec_template.md` for the **human-readable** body. Adapt title/emphasis to "description of the implemented system." Tone: declarative, present tense, observed product behavior. Write the entire body in **English** (template labels stay English; fill every placeholder in English).
+Human body: `codebase-reverse-spec/spec_template.md`. Declarative, present tense, observed behavior. **English** throughout.
 
-**Depth (from Phase 0 / prepare boot):**
+| Mode | Human body | Agent index |
+| ---- | ---------- | ----------- |
+| **Executive** (default) | Compact tables/bullets | **Always** `system-reverse-spec.agent.md` from `agent_index.template.md` |
+| **Exhaustive** | Full template sections | Still write agent index |
 
-| Mode | Human body (`system-reverse-spec.md`) | Agent index |
-| ---- | ------------------------------------- | ----------- |
-| **Executive** (default) | Overview short; entities/use cases/rules as compact tables or short bullets — not novels | **Always write** `system-reverse-spec.agent.md` from `codebase-reverse-spec/agent_index.template.md` |
-| **Exhaustive** | Full sections per template; deeper flows | Still write the agent index (tables mirror the body) |
+Agent index: tables + one-liners only; no paragraph prose.
 
-Agent index rules: tables and one-liners only; no paragraph prose; agents load the index first when both exist.
+**Pre-save agent index only:** `./agent-artifact-compress.md` (caveman ultra). Do **not** caveman human body.
 
-**Pre-save on agent index only:** before writing `system-reverse-spec.agent.md`, apply `./agent-artifact-compress.md` (caveman ultra). Do **not** caveman-rewrite the human body `system-reverse-spec.md`.
+Sanity pass:
 
-Before delivery, run the sanity pass:
+1. `anti_leakage_checklist.md`
+2. Optional `scripts/scan_leakage.sh <spec-file>`
+3. `coverage_matrix.md` — each dimension covered or N/A with reason
+4. Permissions, hierarchies, integrations functional
+5. Confidence markers in appendix, not main body
+6. Bugs in appendix, not as rules
+7. Answers **what** + **why**, never **how implemented**
+8. Entire deliverable English
 
-1. Walk `codebase-reverse-spec/anti_leakage_checklist.md` — remove or rewrite any technical leakage.
-2. Optionally run `scripts/scan_leakage.sh <spec-file>` for a first-pass automated scan (review hits manually; the script catches patterns, not intent).
-3. Walk `codebase-reverse-spec/coverage_matrix.md` — confirm each dimension is addressed or explicitly marked N/A with reason.
-4. Confirm permissions, hierarchies, and integrations are described functionally.
-5. Attribute names appear only to preserve business semantics, without technical detail.
-6. Confidence markers live in the appendix ("Areas to validate with the team"), not cluttering the main body.
-7. Apparent bugs are not disguised as business rules — they go to the appendix with a note that behavior may be unintentional.
-8. The document answers **what** and **why** (when inferable), never **how it was implemented**.
-9. Entire deliverable is English — no mixed PT/EN section titles, labels, or rule sentences.
+### Phase 5 — Delivery
 
-### Phase 5 — Delivery and validation
+Deliver: `system-reverse-spec.md`; `system-reverse-spec.agent.md`; optional extraction log; appendix "Areas to validate with the team" (+ agent one-liners).
 
-Deliver:
-
-1. **Final spec** — `docs/context/system-reverse-spec.md` (markdown; docx only if requested).
-2. **Agent index** — `docs/context/system-reverse-spec.agent.md` (always for executive/prepare; always recommended for exhaustive).
-3. **Extraction log** (optional to share) — working log if the user wants evidence traceability.
-4. **"Areas to validate with the team"** — in the human body appendix and mirrored as one-liners in the agent index.
-
-Ask whether the user wants to deepen a module, switch to exhaustive, deliver the next domain slice, or export another format.
+Ask: deepen module? exhaustive mode? next domain slice? other format?
 
 ## Large codebase strategy
 
-When the repo exceeds what fits comfortably in one pass:
+1. Phases 0–1 whole scope; checkpoint on domain map.
+2. Phases 2–4 per domain; section or separate file each.
+3. Synthesis: merge, dedupe glossary, reconcile policies, verify coverage matrix once.
+4. Do not block on 100% — deliver completed domains + "not yet analyzed" list.
 
-1. Complete Phases 0–1 for the whole scope; get checkpoint approval on the domain map.
-2. Extract and draft **one domain at a time** (Phases 2–4 per domain), each as a section or separate file.
-3. Run a **synthesis pass**: merge domains, deduplicate glossary entries, reconcile cross-cutting policies, and verify the coverage matrix once for the whole system.
-4. Do not block delivery on 100% coverage — deliver completed domains with an explicit "not yet analyzed" list.
+## Common mistakes
 
-## Common mistakes to avoid
-
-- Writing the reverse-spec (or parts of it) in a non-English language or mixing languages with the English template.
-- Listing the tech stack "for context" instead of describing business behavior.
-- Confusing folder structure (technical artifact) with domain structure (business concept) — always translate.
-- Producing a normative future-requirements document instead of faithfully describing the **currently implemented** system.
-- Treating DB field/variable names as official business terminology without verifying they map to real concepts.
-- Omitting external integrations, access roles, or hierarchies for fear of "coupling" — they are part of the observed domain.
-- Reading the entire repository file-by-file without prioritization.
-- Promoting clearly broken/dead logic to "intentional business rule."
-- Losing confidence markers between extraction and final writing — use the extraction log.
+- Non-English or mixed-language output.
+- Tech stack listing instead of business behavior.
+- Folder structure as domain structure.
+- Future requirements doc instead of **current** system description.
+- DB/variable names as business terms without verification.
+- Omitting integrations, roles, hierarchies.
+- File-by-file read without prioritization.
+- Promoting broken logic to intentional rule.
+- Lost confidence markers between extraction + final write.
 
 ## Reference files
 
-| File                                    | When to read                              |
-| --------------------------------------- | ----------------------------------------- |
-| `codebase-reverse-spec/spec_template.md`           | Phase 4 — human-readable final document   |
-| `codebase-reverse-spec/agent_index.template.md`    | Phase 4 — agent-dense companion index     |
-| `./agent-artifact-compress.md` | Pre-save — **agent index only** |
-| `codebase-reverse-spec/extraction_log_template.md` | Phase 2 — working notes during extraction |
-| `codebase-reverse-spec/coverage_matrix.md`         | Phases 1 and 4 — completeness check       |
-| `codebase-reverse-spec/anti_leakage_checklist.md`  | Phase 4 — pre-delivery sanity pass        |
-| `../scripts/scan_leakage.sh`               | Phase 4 — optional automated first pass   |
+| File | When |
+| ---- | ---- |
+| `codebase-reverse-spec/spec_template.md` | Phase 4 human body |
+| `codebase-reverse-spec/agent_index.template.md` | Phase 4 agent index |
+| `./agent-artifact-compress.md` | Pre-save agent index only |
+| `codebase-reverse-spec/extraction_log_template.md` | Phase 2 working notes |
+| `codebase-reverse-spec/coverage_matrix.md` | Phases 1 + 4 |
+| `codebase-reverse-spec/anti_leakage_checklist.md` | Phase 4 sanity |
+| `../scripts/scan_leakage.sh` | Phase 4 optional |

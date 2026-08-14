@@ -1,46 +1,44 @@
 # Reconnaissance checklist — AGENTS.md
 
-Read-only scan before drafting project `AGENTS.md`. Skip sections with no signals.
+Read-only before drafting project `AGENTS.md`. Skip empty sections.
 
-## 1. Anchor and existing docs
+## 1. Anchor + existing docs
 
-- [ ] Existing `AGENTS.md` — preserve hand-edited sections on refresh
-- [ ] `agents.local.md` beside `AGENTS.md` (case-insensitive) — note present/absent for layout row; do not copy contents into `AGENTS.md`
-- [ ] Existing `CLAUDE.md` — will be replaced with Step 5 boot template (Rules + AGENTS.md + `.claude/agents`)
-- [ ] `README.md` — project name, summary, setup hints
-- [ ] Layout signals — `apps/`, `packages/`, backend/frontend split (document; do not invent product anchors)
+- [ ] Existing `AGENTS.md` — preserve hand-edited on refresh
+- [ ] `agents.local.md` beside `AGENTS.md` (case-insensitive) — present/absent for layout; do not copy contents
+- [ ] Existing `CLAUDE.md` — replace with Step 5 boot template
+- [ ] `README.md` — name, summary, setup
+- [ ] Layout signals — `apps/`, `packages/`, backend/frontend (document; no invented anchors)
 
 ## 2. Harness layout (detect, do not assume)
 
 - [ ] `.nextstage-harness/manifest.json`
-- [ ] `.nextstage-harness/rules/` (list files; note if `architecture-rules.md` is stub)
-- [ ] `.agents/skills/` — **installed skills** (source of truth for workflows section)
-- [ ] `.claude/skills/` — Claude Code skill adapter symlinks (informational; Cursor uses `.agents/skills/`)
-- [ ] `docs/context/`, `docs/specs/`, `docs/versions/` — SDD scaffold present
-- [ ] Legacy only: `.cursor/rules/*.mdc` without `.nextstage-harness/` — note migration path
-- [ ] Ignore legacy `.agents/agents/` / persona wrappers if present — skills replace that layer; do not document personas in `AGENTS.md`
+- [ ] `.nextstage-harness/rules/` (list; note stub `architecture-rules.md`)
+- [ ] `.agents/skills/` — **installed skills** (SoT for workflows)
+- [ ] `.claude/skills/` — Claude symlinks (info; Cursor uses `.agents/skills/`)
+- [ ] `docs/context/`, `docs/specs/`, `docs/versions/`
+- [ ] Legacy only: `.cursor/rules/*.mdc` without `.nextstage-harness/` — migration note
+- [ ] Ignore legacy `.agents/agents/` / persona wrappers — skills replace; no personas in `AGENTS.md`
 
 ## 3. Workflow signals
 
-- [ ] GitLab: `mcp-gitlab-usage` skill, `.gitlab-ci.yml`, issue templates, MCP config in docs
-- [ ] SDD artifacts under `docs/versions/` — active versioning
-- [ ] `execution-handoff.md` pattern in recent versions
-- [ ] Brownfield artifacts: `brownfield-map.md`, `system-reverse-spec.md`, `system-reverse-spec.agent.md`
+- [ ] GitLab: `mcp-gitlab-usage`, `.gitlab-ci.yml`, issue templates, MCP in docs
+- [ ] SDD under `docs/versions/`
+- [ ] `execution-handoff.md` in recent versions
+- [ ] Brownfield: `brownfield-map.md`, `system-reverse-spec.md`, `.agent.md`
 
-## 4. Team conventions (only if evidenced)
+## 4. Team conventions (evidenced only)
 
-- [ ] Language for code/comments vs user chat
-- [ ] Git branch policy in docs or rules
+- [ ] Language for code/comments vs chat
+- [ ] Git branch policy
 - [ ] Commit message style
-- [ ] Test-before-commit requirements
-- [ ] Docker / PHPUnit — test container name or compose service in `architecture-rules.md`, `stack-confirmed.md`, or Compose files (optional extra line under Docker and testing in `AGENTS.md` when found)
+- [ ] Test-before-commit
+- [ ] Docker / PHPUnit — test container from `architecture-rules.md`, `stack-confirmed.md`, or Compose
 
-## Output of this phase
+## Output
 
-Internal summary:
-
-1. Install path / harness presence with evidence
-2. Installed skills list (exact directory names)
-3. Which workflows apply (SDD full chain, GitLab-only, implementation-only, brownfield)
-4. Layout rows to include vs omit
-5. Hand-edited `AGENTS.md` sections to preserve on refresh
+1. Install path / harness presence + evidence
+2. Installed skills (exact dir names)
+3. Workflows that apply (SDD / GitLab-only / implementation-only / brownfield)
+4. Layout rows include vs omit
+5. Hand-edited `AGENTS.md` sections to preserve

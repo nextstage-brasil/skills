@@ -1,23 +1,23 @@
 # Phase 1 — Clarification Loop
 
-Run this phase **before** structuring requirements. The answers here feed Phase 3 (RICE/WSJF) — without a declared OKR, Business Value and Time Criticality are guesses, not reasoned prioritization.
+Run before structuring. Answers feed Phase 3 (RICE/WSJF). No declared OKR = Business Value / Time Criticality = guess.
 
 ## Minimum context checklist
 
-Collect answers (from the user or from prior conversation) for each item:
+Collect (user or prior chat):
 
-| #   | Topic                    | What you need                                                                     |
-| --- | ------------------------ | --------------------------------------------------------------------------------- |
-| 1   | Business objective / OKR | Measurable outcome + deadline (e.g. "reduce dispatch response time by 30% by Q3") |
-| 2   | Scale / reach            | Users, transactions, or assets affected per month                                 |
-| 3   | Constraints              | Compliance (LGPD, GDPR, SOC2), hardware dependencies, external APIs, other teams  |
-| 4   | Deadline pressure        | Hard dates, milestones, contractual commitments                                   |
-| 5   | Stakeholders             | Key roles, who champions what, known conflicts                                    |
-| 6   | Domain context           | Product name, personas, legacy systems, glossary of ambiguous terms               |
+| # | Topic | Need |
+| --- | --- | --- |
+| 1 | Business objective / OKR | Measurable outcome + deadline (e.g. "reduce dispatch response time by 30% by Q3") |
+| 2 | Scale / reach | Users, transactions, or assets affected per month |
+| 3 | Constraints | Compliance (LGPD, GDPR, SOC2), hardware, external APIs, other teams |
+| 4 | Deadline pressure | Hard dates, milestones, contractual commitments |
+| 5 | Stakeholders | Key roles, who champions what, known conflicts |
+| 6 | Domain context | Product name, personas, legacy systems, glossary |
 
 ## Structured input template (send this, don't just narrate)
 
-Send this fill-in block alongside the batched questions — a bullet list of topics is easy to skim past, a template with an example is not:
+Send fill-in with batched questions:
 
 ```
 [FILL IN — business & delivery context]
@@ -37,33 +37,33 @@ Example:
 6. RouteWise fleet platform, personas: dispatcher + fleet manager, legacy Jira board being retired
 ```
 
-Also ask once, in the same message: where to save this project's markdown artifacts — see `references/11-artifact-persistence.md` (default `docs/<project-slug>/`, or "skip docs" to stay chat-only).
+Same message: ask where save markdown artifacts — `references/11-artifact-persistence.md` (default `docs/<project-slug>/`, or "skip docs" = chat-only).
 
 ## How to ask
 
-- Batch up to **5–7 numbered questions** in a single message — don't drip one question at a time.
-- Frame why it matters: "I need the OKR to anchor prioritization in Phase 3 — without it, ranking is opinion, not reason."
-- Maximum **2 rounds** of follow-up on points still ambiguous after the first answer.
+- Batch **5–7 numbered questions** one message — no drip.
+- Frame why: "Need OKR to anchor Phase 3 prioritization — without it, ranking = opinion."
+- Max **2 rounds** follow-up on still-ambiguous points.
 
 ## Exit criteria
 
-Advance to Phase 2 (Structuring) only when:
+Advance Phase 2 only when:
 
-1. The checklist above is substantially filled, **or**
-2. The user explicitly says **"proceed with assumptions"** / **"skip questions"** / **"quick mode"**.
+1. Checklist substantially filled, **or**
+2. User say **"proceed with assumptions"** / **"skip questions"** / **"quick mode"**.
 
-When proceeding with gaps, mark each missing item inline as `[ASSUMPTION: …]` — never silently invent values.
+Gaps: mark `[ASSUMPTION: …]` inline — never silent invent.
 
 ## Quick mode shortcut
 
-When the user asks for "quick mode" or "just the stories":
+User ask "quick mode" or "just the stories":
 
-- Ask only items 1 (OKR) and 4 (deadline) if missing.
-- Mark everything else `[ASSUMPTION]` and proceed to Phase 2 in **quick structuring mode** (User Stories + Open Questions + GitLab cards only — see `references/01-structuring.md`).
+- Ask only 1 (OKR) + 4 (deadline) if missing.
+- Rest `[ASSUMPTION]`. Proceed Phase 2 **quick structuring** (User Stories + Open Questions + GitLab cards — `references/01-structuring.md`).
 
 ## What NOT to do
 
-- Do not start Domain Map / Epics / User Stories until this phase exits.
-- Do not dump all 5 pipeline phases in one response.
-- Do not block forever — 2 rounds max, then offer "proceed with assumptions."
-- Do not infer the answers to the template above from the raw transcript alone — a transcript can *suggest* an OKR or a constraint, but confirm it explicitly before it anchors Phase 3 scoring.
+- No Domain Map / Epics / User Stories until exit.
+- No dump all 5 pipeline phases one response.
+- No block forever — 2 rounds max, then offer "proceed with assumptions."
+- No infer template answers from raw transcript alone — transcript may *suggest* OKR/constraint; confirm explicit before Phase 3 scoring.

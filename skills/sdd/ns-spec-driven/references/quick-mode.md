@@ -1,18 +1,18 @@
 # Quick mode (Small)
 
-Bypass the PM planning chain for **tight, local changes**.
+Bypass PM planning chain for **tight, local changes**.
 
 ## Entry criteria (all must hold)
 
 - Scope fits in **one sentence**.
 - **≤3 files** expected to change (estimate; upgrade if wrong).
 - No new version folder or formal acceptance criteria needed.
-- No `execution-handoff.md` for this work (if handoff exists for the version, use normal Execute routing instead).
+- No `execution-handoff.md` for this work (if handoff exists for version, use normal Execute routing instead).
 
 ## Workflow
 
 1. Read `architecture-rules.md`.
-2. Load `docs/context/` files relevant to the layer (UI → `design-brief.md` if present).
+2. Load `docs/context/` files relevant to layer (UI → `design-brief.md` if present).
 3. Soft-check complements (`skill-integrations.md`) — UI/docs/security signals only.
 4. **MUST** dispatch **`coder-agent`** when available (loads `ns-coder`); else read/follow **`ns-coder`** with explicit `{task_description}`. See `../../../ns-harness/references/subagent-dispatch.md`. Inline `Skill(ns-coder)` while bridge present = forbidden.
 5. Optional: user asks for review → **MUST** `reviewer-agent` when available (else `ns-reviewer`). Not automatic.

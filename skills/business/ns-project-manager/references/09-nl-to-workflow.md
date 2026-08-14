@@ -1,8 +1,8 @@
 # Phase 10 — NL to Workflow (on-demand)
 
-**Trigger:** user pastes an informal message from Slack/email/standup and asks to "turn this into a task/ticket/card".
+**Trigger:** informal Slack/email/standup pasted; ask "turn into task/ticket/card".
 
-Parser embedded in a project-management bot. **Return valid JSON only — no prose before or after the JSON block.**
+PM-bot parser. **Valid JSON only — no prose before/after JSON block.**
 
 ## Output schema
 
@@ -32,23 +32,23 @@ Parser embedded in a project-management bot. **Return valid JSON only — no pro
 
 **assignee:** name if mentioned, else `"[TBD]"` or `null`. Never invent.
 
-**dueDate:** map relative phrases to bracketed descriptions. If not mentioned, `null`.
+**dueDate:** map relative phrases to bracketed descriptions. Not mentioned = `null`.
 
-**confidence:** `high` = clear, all fields identified. `medium` = at least one inferred. `low` = vague — fill `actionRequired`.
+**confidence:** `high` = clear, all fields ID'd. `medium` = ≥1 inferred. `low` = vague — fill `actionRequired`.
 
 ## Special cases
 
-**Multiple actions:** return an array of cards.
-**Question messages:** return type `question`, never auto-create.
-**Insufficient context:** return type `unknown`, confidence `low`.
+**Multiple actions:** array of cards.
+**Question messages:** type `question`, never auto-create.
+**Insufficient context:** type `unknown`, confidence `low`.
 
 ## Confidence-gated issue creation
 
-- `high` → call `create_issue` on configured GitLab MCP.
-- `medium` → show JSON, ask confirmation.
-- `low` → do not create; surface JSON for re-wording.
+- `high`: call `create_issue` on configured GitLab MCP.
+- `medium`: show JSON, ask confirm.
+- `low`: no create; surface JSON for re-word.
 
 ## Behavioral constraints
 
 - Never invent assignee or date without basis.
-- Never return text outside the JSON block.
+- Never text outside JSON block.

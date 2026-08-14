@@ -25,14 +25,14 @@ See `../../ns-harness/references/session-boot.md` and `../../ns-harness/referenc
 | **Ad-hoc** | Invoked by `ns-coder` (or human) after `Code Review: Approved` | `{task_description}` + approved `git diff` | Required (`Approved`) |
 | **Appearance** | Invoked by `ns-proto-creator` or `ns-proto-visual-guide` | Guide/prototype path + short behavioral delta | **None** |
 
-Detect **Appearance** when invoker passes mode `appearance` (or equivalent: guide/prototype path + behavioral delta, no review verdict). Detect **Ad-hoc** when mode `ad-hoc` (or equivalent: no `{version_san}`, plus task description and approved diff). Else **Version**.
+**Appearance** if invoker pass mode `appearance` (or equivalent: guide/prototype path + behavioral delta, no review verdict). **Ad-hoc** if mode `ad-hoc` (or equivalent: no `{version_san}`, task description + approved diff). Else **Version**.
 
 ## When invoked
 
-- After version closure (post `Code Review: Approved`) — **Version**
-- After ad-hoc coding with review **Approved** and existing `docs/specs/` — **Ad-hoc**
-- After prototype create/evolve or normative visual guides that document behavioral UX — **Appearance**
-- **Not** Version/Ad-hoc before code review approval (`Approved` verdict)
+- Version closure post `Code Review: Approved` — **Version**
+- Ad-hoc coding, review **Approved**, `docs/specs/` exists — **Ad-hoc**
+- Prototype create/evolve or normative visual guides documenting behavioral UX — **Appearance**
+- **Not** Version/Ad-hoc before `Approved` verdict
 
 ## Prerequisites
 
@@ -44,23 +44,23 @@ Detect **Appearance** when invoker passes mode `appearance` (or equivalent: guid
 
 ### Ad-hoc mode
 
-- `docs/specs/` already exists (do **not** create tree from scratch in ad-hoc)
+- `docs/specs/` already exists (**not** create tree from scratch)
 - Invoker reports `Code Review: Approved` (score ≥ 9)
 - `{task_description}` + approved working-tree diff (behavioral change)
-- **Skip** (no writes) when diff non-behavioral: cosmetic, rename-only, pure refactor with no API/schema/UX/domain behavior change — report skipped
+- **Skip** (no writes) if diff non-behavioral: cosmetic, rename-only, pure refactor with no API/schema/UX/domain behavior change — report skipped
 
 ### Appearance mode
 
-- Input: path to appearance guide and/or `prototype/` surface + short **behavioral delta** (what users can do / see that changed or was captured)
-- May **create** `docs/specs/` and `INDEX.md` if missing
-- SHALL language only for **product-visible** behavior (flows, fields, states, permissions cues)
-- **Never** paste `Element | How it should appear` tables into domain specs — link to guide instead
-- **Skip** pure chrome polish (spacing, color tweak, font swap with no behavior change) — report reason
+- Input: path to appearance guide and/or `prototype/` surface + short **behavioral delta** (what users can do / see changed or captured)
+- May **create** `docs/specs/` + `INDEX.md` if missing
+- SHALL only for **product-visible** behavior (flows, fields, states, permissions cues)
+- **Never** paste `Element | How it should appear` tables into domain specs — link guide instead
+- **Skip** pure chrome polish (spacing, color tweak, font swap, no behavior change) — report reason
 - No Code Review / Approved requirement
 
 ## Workflow
 
-Shared steps 1–4 apply all modes. Changelog label differs by mode.
+Shared steps 1–4 all modes. Changelog label differs by mode.
 
 ### 1. Identify affected domains
 
@@ -78,7 +78,7 @@ Map features to canonical domains (examples):
 
 Naming: English, kebab-case, singular (`user-profile.md`). Multi-domain features update multiple specs.
 
-**Ad-hoc:** map from `{task_description}` + diff only — no invent domains unrelated to change.
+**Ad-hoc:** map from `{task_description}` + diff only — no invent unrelated domains.
 
 **Appearance:** map from behavioral delta + guide/prototype scope only; add domain links to appearance docs under Related / references when useful.
 
@@ -91,8 +91,8 @@ Naming: English, kebab-case, singular (`user-profile.md`). Multi-domain features
 Per relevant feature:
 
 - Add or update `### Requirement:` blocks (SHALL + scenarios)
-- Update `## Data model` and `## Endpoints` when schema/API changed (Version/Ad-hoc)
-- Appearance: prefer UX/behavior requirements; avoid inventing APIs/schemas not evidenced
+- Update `## Data model` + `## Endpoints` when schema/API changed (Version/Ad-hoc)
+- Appearance: prefer UX/behavior requirements; no invent APIs/schemas not evidenced
 - Append `## Changelog` entry:
   - **Version:** `**{version_san}** — {ISO date}: {summary}`
   - **Ad-hoc:** `**adhoc-YYYY-MM-DD** — {ISO date}: {summary}` (summary from task + diff)
@@ -136,7 +136,7 @@ Reason: {missing docs/specs/|non-behavioral diff|chrome polish only}
 - English for spec content
 - Requirements use verifiable SHALL language
 - Read before write on existing specs
-- Planning orchestrator should read `INDEX.md` before new version requirements
+- Planning orchestrator read `INDEX.md` before new version requirements
 - Ad-hoc must not create version artifacts under `docs/versions/`
 - Ad-hoc must not invent `{version_san}`
 - Appearance must not paste normative Element|How tables into specs
@@ -146,5 +146,5 @@ Reason: {missing docs/specs/|non-behavioral diff|chrome polish only}
 
 - `ns-spec-driven` — reads living specs when planning (`references/requirements-generator.md`)
 - `ns-reviewer` — prerequisite approval for Version/Ad-hoc
-- `ns-coder` — may invoke ad-hoc mode after Approved
+- `ns-coder` — may invoke ad-hoc after Approved
 - `ns-proto-creator` / `ns-proto-visual-guide` — may invoke appearance mode

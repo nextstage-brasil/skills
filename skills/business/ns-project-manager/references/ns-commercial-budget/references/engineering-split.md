@@ -1,8 +1,8 @@
 # Engineering split (business vs delivery)
 
-Optional pattern when scope mixes **stakeholder-verifiable capabilities** with **operational/architectural consequences** of those capabilities (typical brownfield: soft delete, link integrity, inventory of regressions, automated test suites).
+Optional when scope mixes **stakeholder-verifiable capabilities** with **operational/architectural consequences** (typical brownfield: soft delete, link integrity, regression inventory, automated test suites).
 
-Default deliverable remains `commercial-budget-internal.md` (full internal view). When this pattern applies, also emit `commercial-budget-costumer.md` (client export).
+Default deliverable: `commercial-budget-internal.md` (full internal view). When pattern applies, also emit `commercial-budget-costumer.md` (client export).
 
 ## When to apply
 
@@ -12,40 +12,40 @@ Default deliverable remains `commercial-budget-internal.md` (full internal view)
 | Inventory + fix of queries/reports/integrations assuming hard delete | **Yes** |
 | Link/relationship integrity after entity lifecycle change | **Yes** |
 | Dedicated automated verification Features (0 FP) | **Yes** — classify as `qualidade`, not client Features |
-| Greenfield CRUD with no cross-cutting consequences | **No** — single doc, all items are `negócio` |
-| Human asks for “versão cliente” / “pro cliente” / “sem itens de engenharia” | **Yes** |
+| Greenfield CRUD with no cross-cutting consequences | **No** — single doc, all items `negócio` |
+| Human asks “versão cliente” / “pro cliente” / “sem itens de engenharia” | **Yes** |
 
-If unsure: generate internal doc first; add client export when any scoped item fails the **client sign-off test** below.
+If unsure: generate internal doc first; add client export when any scoped item fails **client sign-off test** below.
 
 ## Item classification (mandatory before Features)
 
-Tag every scoped item during sizing (not shown as labels in the deliverable):
+Tag every scoped item during sizing (labels not shown in deliverable):
 
 | Class | Meaning | Client Feature? | FP in client doc |
 |-------|---------|-----------------|------------------|
-| `negócio` | Capability the stakeholder can verify and sign | **Yes** | Per-Feature row |
-| `engenharia` | Operational consequence of `negócio` (consistency, inventory, link fixes) | **No** — absorb outcomes into parent `negócio` acceptance criteria | Rolled into **Engenharia de consistência do produto** line |
+| `negócio` | Capability stakeholder can verify and sign | **Yes** | Per-Feature row |
+| `engenharia` | Operational consequence of `negócio` (consistency, inventory, link fixes) | **No** — absorb outcomes into parent `negócio` acceptance | Rolled into **Engenharia de consistência do produto** line |
 | `qualidade` | Automated verification, test matrices, E2E gates | **No** — one RNF line on quality | **0** — effort stays in macro Testes |
 
 ### Classification rules
 
-1. **`qualidade`** never appears as a numbered Feature in either doc. Hours remain in macro **Testes de implementação**.
-2. **`engenharia`** never appears as a separate numbered Feature in the **client** doc. In the **internal** doc, it may remain as separate Features for delivery traceability.
-3. **`engenharia`** acceptance outcomes merge into the **parent `negócio` Feature** in the client doc (product-verifiable, no internal jargon like “inventário” or “AEQ”).
-4. Parent mapping: assign each `engenharia` item to exactly one `negócio` Feature (the capability that triggers the consequence). Example: link-query fixes → parent = soft-delete business Feature.
+1. **`qualidade`** never numbered Feature in either doc. Hours stay in macro **Testes de implementação**.
+2. **`engenharia`** never separate numbered Feature in **client** doc. In **internal** doc, may stay separate Features for delivery traceability.
+3. **`engenharia`** acceptance outcomes merge into **parent `negócio` Feature** in client doc (product-verifiable; no internal jargon like “inventário” or “AEQ”).
+4. Parent mapping: assign each `engenharia` item to exactly one `negócio` Feature (capability that triggers consequence). Example: link-query fixes parent = soft-delete business Feature.
 5. Renumber client Features `001…N` contiguously — no gaps, no reference to internal Feature numbers.
 
 ## Client sign-off test
 
-> Would the client sign this Feature knowing what they buy?
+> Would client sign this Feature knowing what they buy?
 
-If **no** (too operational/architectural) → `engenharia` or `qualidade`, not a client Feature.
+If **no** (too operational/architectural): `engenharia` or `qualidade`, not client Feature.
 
 Engineering boundary test still applies on merged criteria:
 
-> Would engineering find a missing boundary?
+> Would engineering find missing boundary?
 
-Both tests must pass on the **client** doc.
+Both tests must pass on **client** doc.
 
 ## Two artifacts
 
@@ -66,7 +66,7 @@ After `## Agrupamento de objetivos (Features)`, include:
 > **Nota de leitura:** este documento apresenta apenas **objetivos de negócio** verificáveis pelo solicitante. A consistência interna do produto faz parte da entrega, mas não aparece como feature separada — está embutida nos critérios de aceite abaixo e refletida no total de horas.
 ```
 
-Omit this block when the project has no `engenharia` / `qualidade` items (single-doc mode).
+Omit block when project has no `engenharia` / `qualidade` items (single-doc mode).
 
 ## Client doc — FP table shape
 
@@ -81,7 +81,7 @@ Omit this block when the project has no `engenharia` / `qualidade` items (single
 ```
 
 - `sum_negócio + sum_engenharia` = **Total FP** (unchanged from internal doc).
-- `qualidade` items: **0 FP** in both docs; never a row in client FP table.
+- `qualidade` items: **0 FP** in both docs; never row in client FP table.
 - COSMIC client table: per `negócio` Feature rows + optional **Engenharia de consistência** aggregate row; **Σ CFP** unchanged.
 
 #### Origem do cálculo (client)
@@ -108,7 +108,7 @@ Footer:
 
 1. Size all items; classify each as `negócio` | `engenharia` | `qualidade`.
 2. Write `commercial-budget-internal.md` (always).
-3. If any `engenharia` or `qualidade` items exist **or** human requested client export → derive and write `commercial-budget-costumer.md` from the internal doc using `assets/commercial-budget-costumer.template.md`.
+3. If any `engenharia` or `qualidade` items exist **or** human requested client export: derive and write `commercial-budget-costumer.md` from internal doc using `assets/commercial-budget-costumer.template.md`.
 4. Report both paths in Stop summary when client file exists.
 
 ## Anti-patterns

@@ -36,7 +36,7 @@ Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 
 ## Header fields
 
-- **Estimate** in seconds (integer) — used for GitLab `set_issue_estimate` when synced
+- **Estimate** in seconds (integer) — for GitLab `set_issue_estimate` when synced
 - **Depends on** — explicit task file names for ordering
 - **Related feature** — traceability to requirements
 

@@ -40,7 +40,7 @@ npx @nextstage-brasil/harness --skill ns-frontend-design --skill ns-docs-writer 
 | --------- | -------- |
 | `mcp-gitlab-usage` + `ns-execution-gitlab-issue` | Prefer issue execution on `ISSUE_URL` |
 | MCP only | MCP per `mcp-gitlab-usage`; code via `ns-autonomous` or `ns-coder` |
-| Neither | Local execute; mention `--preset gitlab` once if user cites GitLab |
+| Neither | Local execute; mention `--preset gitlab` once if user cite GitLab |
 
 ## ns-project-manager
 

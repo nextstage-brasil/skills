@@ -1,14 +1,14 @@
 # Phase 5 — Forecast (PERT + Monte Carlo)
 
-Quantitative project management specialist. PERT/variance is explained reasoning, but **Monte Carlo is always the script, never the LLM**.
+Quantitative PM. PERT/variance = reasoned. **Monte Carlo = script only, never LLM**.
 
-**Nested skill:** If the human wants a **triple productivity** delivery schedule (current h/FP = P100, 50% faster = P85, 85% faster = P50) with FP remaining and capacity — read **`references/ns-delivery-schedule/SKILL.md`**, not this phase. Phase 5 stays story-level O/M/P only.
+**Nested skill:** human want **triple productivity** schedule (current h/FP = P100, 50% faster = P85, 85% faster = P50) with FP remaining + capacity — read **`references/ns-delivery-schedule/SKILL.md`**, not this phase. Phase 5 = story-level O/M/P only.
 
 ## Step 1 — Collect three-point estimates
 
-For each story, get O (optimistic), M (most likely), P (pessimistic) in the same unit (weeks or days). If the user only gives a single number per story, ask for the three points — don't split a single estimate into three yourself.
+Per story: O (optimistic), M (most likely), P (pessimistic), same unit (weeks or days). Single number only: ask three points — don't split one estimate yourself.
 
-Send this template if the three-point estimates or the team's parallelism aren't in the conversation yet:
+Missing three-points or parallelism: send template:
 
 ```
 [FILL IN — three-point estimate per story, same unit]
@@ -31,13 +31,13 @@ Per story:
 - `Variance = ((P - O) / 6)²`
 - `StdDev = √Variance`
 
-If P is less than 1.5× M, question whether the pessimistic estimate is optimistically biased. If StdDev exceeds 30% of the PERT estimate, classify as "High Uncertainty" and flag it.
+P < 1.5× M: question pessimistic bias. StdDev > 30% of PERT: "High Uncertainty", flag.
 
 ## Step 3 — Monte Carlo (always the script)
 
-Ask for parallel tracks: how many people work in parallel, effective parallelism factor per track, and any track start offsets (e.g. hardware-blocked track).
+Ask parallel tracks: people in parallel, effective parallelism factor per track, start offsets (e.g. hardware-blocked).
 
-Build a config JSON and run:
+Build config JSON, run:
 
 ```bash
 python3 scripts/pert_montecarlo.py config.json
@@ -52,16 +52,16 @@ Example config:
 }
 ```
 
-Use P50/P85/P95/mean from the script output directly — never approximate them.
+Use P50/P85/P95/mean from script — never approximate.
 
 ## Output format
 
 1. **PERT table** — Story, O, M, P, PERT, Variance, StdDev, Status.
-2. **Top 3 highest-uncertainty stories** — with recommended action to reduce uncertainty.
-3. **Monte Carlo results** — P50/P85/P95/mean; **P85 = the committed delivery date** for client commitments.
+2. **Top 3 highest-uncertainty stories** — recommended action cut uncertainty.
+3. **Monte Carlo results** — P50/P85/P95/mean; **P85 = committed delivery date** for client.
 4. **Audience translation** — four short paragraphs: Technical, Product, Executive, Client.
 
 ## Behavioral constraints
 
-- Never compute Monte Carlo "in your head" — always call the script.
-- Never present a percentile you didn't get from the script's output.
+- Never Monte Carlo "in head" — always script.
+- Never present percentile not from script output.

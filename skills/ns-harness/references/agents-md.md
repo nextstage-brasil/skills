@@ -1,97 +1,82 @@
 # Agents.md Generator
 
-Produce the **project entry document** for coding agents: `AGENTS.md` tailored to what is actually installed and detected in the repo — not the generic harness scaffold template.
-
-Then write `CLAUDE.md` with the fixed Rules boot template (see Step 5).
+Produce **project entry document** for coding agents: `AGENTS.md` from installed skills + detected repo — not generic harness scaffold. Then write `CLAUDE.md` (Step 5 boot template).
 
 ## Design principles
 
-1. **Evidence-based** — list only skills, paths, and workflows that exist in the project. Mark `inferred` when guessing.
-2. **Entry pointer, not constitution** — stack, layout, and constraints belong in `architecture-rules.md` (`architecture-rules-generator.md`). `AGENTS.md` routes agents to the right files and skills.
-3. **No harness template copy-paste** — do not dump `packages/harness/templates/AGENTS.md` into the project. Use `agents-md/template.md` as a skeleton and fill from reconnaissance.
-4. **Lean** — target **~95–110 lines** (hard max **130**). Link to `docs/context/` and harness references instead of inlining.
-5. **Agent-first** — saved file is for agents, not humans. Pre-save compress via `./agent-artifact-compress.md`.
-6. **Refresh-safe** — on update, preserve stable hand-edited sections (language exceptions, GitLab server name, team conventions) unless recon proves them wrong.
+1. **Evidence-based** — list only existing skills, paths, workflows. Mark `inferred` when guessing.
+2. **Entry pointer, not constitution** — stack/layout/constraints in `architecture-rules.md`. `AGENTS.md` routes to files + skills.
+3. **No harness template copy-paste** — `agents-md/template.md` skeleton + recon fill.
+4. **Lean** — **~95–110 lines** (hard max **130**). Link `docs/context/` + harness refs.
+5. **Agent-first** — pre-save `./agent-artifact-compress.md`.
+6. **Refresh-safe** — preserve hand-edited sections unless recon proves wrong.
 
 ## Session boot
 
-See `./session-boot.md` and `./rules-sync.md`.
+`./session-boot.md` + `./rules-sync.md`.
 
-| Output               | Path                       |
-| -------------------- | -------------------------- |
+| Output | Path |
+| ------ | ---- |
 | Project agents entry | `AGENTS.md` |
-| Claude Code pointer  | `CLAUDE.md` |
+| Claude pointer | `CLAUDE.md` |
 
-## Supporting skills (read-only helpers)
+## Supporting skills (read-only)
 
-| Skill                          | Use during recon                                                      |
-| ------------------------------ | --------------------------------------------------------------------- |
-| `architecture-rules-generator.md` | Check if constitution exists or is still stub; link, do not duplicate |
-| `bootstrap-brownfield.md`         | Link to `brownfield-map.md` when present                              |
-| `codebase-reverse-spec.md`        | Link to `system-reverse-spec.md` + `.agent.md` when present           |
+| Skill | Recon use |
+| ----- | --------- |
+| `architecture-rules-generator.md` | Constitution exists/stub? Link, don't duplicate |
+| `bootstrap-brownfield.md` | Link `brownfield-map.md` when present |
+| `codebase-reverse-spec.md` | Link `system-reverse-spec.md` + `.agent.md` when present |
 
 ## When to use
 
-| Trigger                                            | Action                                                          |
-| -------------------------------------------------- | --------------------------------------------------------------- |
-| After `harness init` (CLI already ran `agents-md`) | **Refine** with project context — do not duplicate CLI baseline |
-| Brownfield / monorepo / team conventions in README | **Generate** or **refresh** with evidence                       |
-| User hand-edited `AGENTS.md` and wants AI merge    | **Refresh** preserving custom sections                          |
-| User only needs skill list from disk               | Use `npx @nextstage-brasil/harness agents-md` instead — no AI   |
+| Trigger | Action |
+| ------- | ------ |
+| After `harness init` (CLI ran `agents-md`) | **Refine** — don't duplicate CLI baseline |
+| Brownfield / monorepo / README conventions | **Generate** or **refresh** |
+| Hand-edited `AGENTS.md` + AI merge | **Refresh** preserving custom sections |
+| Skill list from disk only | `npx @nextstage-brasil/harness agents-md` — no AI |
 
 ## Workflow
 
 ### Step 1 — Anchor
 
-1. Complete Session boot; note whether `.nextstage-harness/` is present.
-2. Determine **create** vs **refresh**; read existing `AGENTS.md` if present.
-3. Note whether `agents.local.md` exists at the same directory as `AGENTS.md` (case-insensitive filename) — include the local-overrides rule in output; do not copy its contents into `AGENTS.md`.
+Session boot; note `.nextstage-harness/`. **Create** vs **refresh**; read existing `AGENTS.md`. Note `agents.local.md` beside `AGENTS.md` (case-insensitive) — rule in output; don't copy contents.
 
 ### Step 2 — Reconnaissance
 
-Follow `agents-md/reconnaissance-checklist.md`. Read-only on application source.
+`agents-md/reconnaissance-checklist.md`. Read-only. Minimum: list `.agents/skills/`; detect harness paths; skim `README.md`; note `docs/context/` artifacts.
 
-Minimum:
-
-1. List `.agents/skills/` (installed skill directory names).
-2. Detect harness paths (`.nextstage-harness/`, `docs/`, legacy `.cursor/rules/`).
-3. Skim `README.md` for project name and summary.
-4. Note brownfield/context artifacts under `docs/context/`.
-
-**Checkpoint (recommended):** Present detected skills and proposed SDD chain; confirm before writing. Skip only on explicit autonomous run.
+**Checkpoint (recommended):** Present skills + SDD chain; confirm before write. Skip on autonomous run.
 
 ### Step 3 — Draft AGENTS.md
 
-Use `agents-md/template.md` as skeleton.
+`agents-md/template.md` skeleton. Writing rules:
 
-Writing rules:
+- **First action** — obey `AGENTS.md` (no tool-Read), then `agents.local.md` when present (case-insensitive), then GitLab MCP from project notes.
+- **How to start** — Planning / Implementation / Ad-hoc table with skill entry points.
+- **Implementation routing** — priority 1–5 from `code-skill-routing.md`; link `ns-harness` for handoffs.
+- **Hard stops / FORBIDDEN** — no invented personas, no skip architecture-rules, ISSUE_URL → gitlab-issue, no speculative version folders.
+- **Local overrides** — `agents.local.md` (case-insensitive) after `AGENTS.md`; mark present/absent in Layout; never inline.
+- **Installed skills** — exact `.agents/skills/` names, **grouped by role**. SDD chain from installed only.
+- **No persona section**.
+- **Layout** — compact present/absent: rules, skills, local, docs/context|specs|versions.
+- **No Workflows → Implementation** — routing table covers it.
+- **Ownership + Language + Project notes** — ≤5 bullets.
+- **Docker and testing** — MUST NOT compose/restart without ask. Host vs container evidence from recon. PHPUnit block from `./docker-and-testing.md` **only** when PHP evidenced.
+- **Preserve** `<!-- harness-sync-managed: ... -->`.
+- **Do not** inline architecture rules.
+- English only.
 
-- **First action** — mandatory section: obey `AGENTS.md` (no tool-Read), then `agents.local.md` when present (case-insensitive), then note GitLab MCP server from project notes.
-- **How to start** — mandatory table: Planning / Implementation / Ad-hoc with skill entry points.
-- **Implementation routing** — mandatory priority table (1–5) from `code-skill-routing.md`; link to installed `ns-harness` for full handoffs.
-- **Hard stops / FORBIDDEN** — mandatory section: no invented personas, no skip architecture-rules, ISSUE_URL → gitlab-issue skill, no speculative version folders.
-- **Local overrides** — when `agents.local.md` exists (case-insensitive), agents read it after `AGENTS.md`. Mark present/not present in Layout; never inline its content.
-- **Installed skills** — exact names from `.agents/skills/`, **grouped by role** in a compact table. Build the SDD chain only from installed skills.
-- **No persona section** — skills only; no "Agent personas" / subagents.
-- **Layout** — one compact present/absent line or tiny table: rules, skills, local, docs/context|specs|versions. No almost-obvious multi-row essay.
-- **No Workflows → Implementation** section — routing table already covers it. Keep SDD chain + brownfield/context links only.
-- **Ownership + Language + Project notes** — single short block (≤5 bullets): routes vs architecture-rules; language; GitLab MCP / quirks.
-- **Docker and testing** — always keep MUST NOT compose / restart without ask. Add host vs container test evidence from recon only (e.g. Vitest on host). Include full PHPUnit block from `./docker-and-testing.md` **only** when PHP/PHPUnit is evidenced; otherwise omit PHPUnit subsection.
-- **Preserve** `<!-- harness-sync-managed: ... -->` if present.
-- **Do not** inline architecture rules — one pointer line.
-- English only in `AGENTS.md`.
-
-**Pre-save (mandatory):** apply `./agent-artifact-compress.md` (caveman ultra). Target ~95–110 lines; hard max 130. Write only the compressed file.
+**Pre-save:** `./agent-artifact-compress.md` (caveman ultra). ~95–110 lines; max 130.
 
 ### Step 4 — Write AGENTS.md
 
-1. Write `AGENTS.md` (post-compress).
-2. Do **not** modify application source unless explicitly asked.
-3. If `architecture-rules.md` is still the harness stub, add a note to run `architecture-rules-generator.md` next.
+Write post-compress. Don't modify application source unless asked. If `architecture-rules.md` still stub, note run `architecture-rules-generator.md`.
 
 ### Step 5 — Write CLAUDE.md
 
-Write `CLAUDE.md` with **exactly**:
+**Exactly:**
 
 ```markdown
 # Rules
@@ -114,44 +99,28 @@ Then skills / subagents / task as AGENTS.md says.
 `@.claude/agents` — use them; model optional per agent.
 ```
 
-No other content. If the file had extra content, replace entirely unless the user asked to preserve something specific.
+No other content. Replace entirely unless user asked to preserve something.
 
 ### Step 6 — Report
 
-Brief bullets (3–5): project root, skills detected, recommended next skill (`architecture-rules-generator.md` if constitution missing), whether create or refresh.
+3–5 bullets: root, skills detected, next skill (`architecture-rules-generator.md` if constitution missing), create vs refresh.
 
 ## Refresh mode
 
-When updating existing `AGENTS.md`:
+Preserve **Project-specific notes**, language, GitLab/MCP names if accurate. Replace skills/layout/workflows from evidence. Re-write `CLAUDE.md` if drifted.
 
-1. Preserve **Project-specific notes**, language policy, and GitLab/MCP names if still accurate.
-2. Replace installed-skills, layout, and workflow sections from current evidence.
-3. Re-write `CLAUDE.md` to the Step 5 template if it drifted.
+## Quality bar
 
-## Quality bar (self-check before save)
+- [ ] `agent-artifact-compress.md` applied
+- [ ] First action, How to start, routing 1–5, FORBIDDEN present
+- [ ] Ownership/language/notes collapsed; no Workflows echo
+- [ ] Local overrides rule (`agents.local.md`, case-insensitive); not harness template copy
+- [ ] Every skill exists under `.agents/skills/`; grouped by role; no personas
+- [ ] Layout repo-relative; Docker MUST NOT; PHPUnit only if PHP evidenced
+- [ ] SDD chain from installed skills only
+- [ ] `CLAUDE.md` exact Step 5 — no compress
+- [ ] No stack deep-dive; ≤130 lines (ideally 95–110)
 
-- [ ] `agent-artifact-compress.md` applied (caveman ultra)
-- [ ] First action section present (AGENTS.md → agents.local.md → GitLab MCP server)
-- [ ] How to start table present (Planning / Implementation / Ad-hoc)
-- [ ] Implementation routing table present (priority 1–5)
-- [ ] Hard stops / FORBIDDEN section present
-- [ ] Ownership/language/notes collapsed into one short block
-- [ ] No separate "Workflows → Implementation" echo of the routing table
-- [ ] Local overrides rule present (`agents.local.md`, case-insensitive)
-- [ ] Not a verbatim copy of harness `templates/AGENTS.md`
-- [ ] Every listed skill exists under `.agents/skills/`
-- [ ] Skills are grouped by role (not a flat dump of all names)
-- [ ] No "Agent personas" / subagents section
-- [ ] Paths in Layout are repo-relative (never an absolute machine path)
-- [ ] Docker MUST NOT present; PHPUnit only if PHP evidenced
-- [ ] SDD chain uses only installed skills
-- [ ] `CLAUDE.md` matches Step 5 (Rules boot + AGENTS.md + `.claude/agents`) — no compress
-- [ ] No stack/module deep-dive (belongs in `architecture-rules.md`)
-- [ ] Line count ≤ 130 (ideally 95–110)
+## Related
 
-## Related references
-
-- `architecture-rules-generator.md` — technical constitution (run after or in parallel)
-- `bootstrap-brownfield.md` — brownfield map for SDD planning
-- `codebase-reverse-spec.md` — business behavior spec
-- `session-boot.md` / `artifact-layout.md`
+`architecture-rules-generator.md` | `bootstrap-brownfield.md` | `codebase-reverse-spec.md` | `session-boot.md` | `artifact-layout.md`

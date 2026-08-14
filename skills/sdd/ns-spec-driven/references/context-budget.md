@@ -1,6 +1,6 @@
 # Context budget
 
-Keep active window focused. Prefer **disk artifacts** over pasting large docs into chat.
+Keep active window focused. Prefer **disk artifacts** over paste large docs into chat.
 
 ## Base load (every SDD session)
 
@@ -9,7 +9,7 @@ Keep active window focused. Prefer **disk artifacts** over pasting large docs in
 3. `.nextstage-harness/rules/architecture-rules.md` when implementing.
 4. **One** version folder: `docs/versions/{version_san}/` for active version only.
 
-Do **not** re-load full rule corpus per task unless those files changed. Fresh worker/subagent = own cold-start boot.
+Do **not** re-load full rule corpus per task unless files changed. Fresh worker/subagent = own cold-start boot.
 
 ## On-demand load
 
@@ -32,12 +32,12 @@ Do **not** re-load full rule corpus per task unless those files changed. Fresh w
 
 ## Worker delegation
 
-Delegate: pass **paths and phase goal** — worker skill loads own references.
+Delegate: pass **paths + phase goal** — worker skill loads own references.
 Coding under handoff: state **SDD handoff mode** (implement only; parent owns review).
 
 ## Missing context docs
 
-`brownfield-map.md` or architecture rules missing and phase needs them:
+`brownfield-map.md` or architecture rules missing + phase needs them:
 
 1. Warn: `/ns-harness prepare` should run manually.
-2. Stop — unless user explicitly insists continue without prepare.
+2. Stop — unless user explicitly insist continue without prepare.

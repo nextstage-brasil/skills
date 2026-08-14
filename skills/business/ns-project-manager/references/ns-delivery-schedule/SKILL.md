@@ -23,7 +23,7 @@ metadata:
 
 # Delivery Schedule — triple productivity (P100 / P85 / P50)
 
-Produce **one** delivery-schedule markdown for a version (or remaining slices): three productivity scenarios, each with PERT phases + Monte Carlo **calendar** percentiles.
+Produce **one** delivery-schedule markdown for version (or remaining slices): three productivity scenarios, each with PERT phases + Monte Carlo **calendar** percentiles.
 
 **Not** commercial FP quoting (`ns-commercial-budget`). **Not** story-level forecast alone (`ns-project-manager` Phase 5). **Never** invent R$.
 
@@ -38,21 +38,21 @@ Produce **one** delivery-schedule markdown for a version (or remaining slices): 
 
 P100 = reality. P85 and P50 productivity scenarios = **acceleration goals**, not Monte Carlo percentiles.
 
-Faster formula: `horas_novas = horas_atuais × (1 − X/100)` → 50% faster ⇒ ×0.50; 85% faster ⇒ ×0.15.
+Faster formula: `horas_novas = horas_atuais × (1 − X/100)`. 50% faster = ×0.50; 85% faster = ×0.15.
 
 ## Session boot
 
-Optional — skip any step whose path does not exist. Do not invent project layout.
+Optional — skip that step if path missing. Do not invent project layout.
 
-1. If `agents.local.md` exists beside `AGENTS.md`, read it once. Never tool-Read `AGENTS.md`.
+1. If `agents.local.md` exists beside `AGENTS.md`, read once. Never tool-Read `AGENTS.md`.
 2. If `.nextstage-harness/rules/` exists, read `architecture-rules.md` and `project-rules.md` when present.
-3. If `docs/context/` exists, list it and read reverse-spec / brownfield-map when present.
-4. If none of the above exist, continue with chat + budget inputs only. Ask once for `{version_san}` if missing. Do not create `docs/versions/` until persist is agreed.
+3. If `docs/context/` exists, list it; read reverse-spec / brownfield-map when present.
+4. If none exist, continue with chat + budget inputs only. Ask once for `{version_san}` if missing. Do not create `docs/versions/` until persist agreed.
 
 ## Language
 
 - Skill + references: English.
-- Deliverable: mirror the human (pt_BR default for NextStage commercial/PM docs). English only when human writes in English or asks.
+- Deliverable: mirror human (pt_BR default for NextStage commercial/PM docs). English only when human writes English or asks.
 
 ## Workflow
 
@@ -60,12 +60,12 @@ Optional — skip any step whose path does not exist. Do not invent project layo
 
 Read `references/intake.md`.
 
-Ask the human **only** for missing capacity + start (`horas_por_dia`,
+Ask human **only** for missing capacity + start (`horas_por_dia`,
 `dias_uteis_por_semana`, `data_inicio`) — clear numbered questions, human
-language (pt_BR default). Infer ceiling, phases, and O/M/P (mark
+language (pt_BR default). Infer ceiling, phases, O/M/P (mark
 `[ASSUMPTION]`). Do not invent productivity, FP, or capacity/start. Do **not**
-use a `[FILL IN]` form. Do **not** ask for estimativa experiencial unless the
-human volunteers it.
+use `[FILL IN]` form. Do **not** ask estimativa experiencial unless human
+volunteers it.
 
 ### 2. Compute
 
@@ -73,7 +73,7 @@ Read `references/calculations.md`.
 
 1. Derive `h_fp` for P100 / P85 / P50.
 2. Scale remaining hours from remaining FP × `h_fp` (same phase structure and O/M/P **bands** across scenarios; only hours scale).
-3. Convert hours → effort days (`hours ÷ hours_per_day`).
+3. Convert hours to effort days (`hours ÷ hours_per_day`).
 4. For **each** scenario, write `pert-config-p100.json` / `pert-config-p85.json` / `pert-config-p50.json` and run:
 
 ```bash
@@ -84,7 +84,7 @@ python3 ../../scripts/pert_montecarlo.py pert-config-pNNN.json
 
 ### 3. Write document
 
-Read `references/document-structure.md`. Emit the full markdown in one pass (Section 0 first).
+Read `references/document-structure.md`. Emit full markdown in one pass (Section 0 first).
 
 Default official commitment = **calendar P85 of productivity scenario P100**, unless human picks another.
 
@@ -98,7 +98,7 @@ Default base: `docs/versions/{version_san}/pm/`
 | `pert-config-p100.json` | MC input P100 |
 | `pert-config-p85.json` | MC input P85 |
 | `pert-config-p50.json` | MC input P50 |
-| `roadmap.md` | Update with the three calendar-P85 dates |
+| `roadmap.md` | Update with three calendar-P85 dates |
 
 Chat-only only if human says so. Confirm path once if persistence not yet agreed.
 
@@ -108,7 +108,7 @@ Chat-only only if human says so. Confirm path once if persistence not yet agreed
 |--------|--------|
 | Orçamento / FP / COSMIC / R$ | `../ns-commercial-budget/SKILL.md` |
 | Story RICE / sprint / single PERT forecast | `ns-project-manager` Phase 3–5 |
-| FP + productivity → triple delivery schedule | **this skill** |
+| FP + productivity, triple delivery schedule | **this skill** |
 
 ## Out of scope
 

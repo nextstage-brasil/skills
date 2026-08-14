@@ -1,8 +1,8 @@
 # Rules sync
 
-Canonical project rules: `.nextstage-harness/rules/*.md`. Adapters generated — prefer edit canonical or `harness add-rule`, then `npx @nextstage-brasil/harness sync`.
+Canonical: `.nextstage-harness/rules/*.md`. Adapters generated — edit canonical or `harness add-rule`, then `npx @nextstage-brasil/harness sync`.
 
-**Orphan Cursor rules:** hand-created `.cursor/rules/*.mdc` (Cursor UI) not in `manifest.rules` → next `harness sync` absorbs into canonical + manifest (maps `description` / `alwaysApply` / `globs`). Prefer canonical edits still; orphans safe. `sync --check` reports orphans as drift (no write).
+**Orphan Cursor rules:** hand-created `.cursor/rules/*.mdc` not in `manifest.rules` — next `harness sync` absorbs into canonical + manifest (maps `description` / `alwaysApply` / `globs`). Prefer canonical edits; orphans safe. `sync --check` reports orphans as drift (no write).
 
 ## Layout
 
@@ -29,12 +29,12 @@ Canonical project rules: `.nextstage-harness/rules/*.md`. Adapters generated —
 
 **Agent skill discovery**
 
-| Agent                    | Reads skills from                                  | Harness sync                                                |
-| ------------------------ | -------------------------------------------------- | ----------------------------------------------------------- |
-| Cursor (incl. subagents) | `.agents/skills/` at project root                  | None — canonical path is enough                             |
-| Claude Code              | `.claude/skills/` (not `.agents/skills/` natively) | Symlink `.agents/skills/{name}/` → `.claude/skills/{name}/` |
+| Agent | Reads skills from | Harness sync |
+| ----- | ----------------- | ------------ |
+| Cursor (incl. subagents) | `.agents/skills/` at project root | None — canonical path enough |
+| Claude Code | `.claude/skills/` (not `.agents/skills/` natively) | Symlink `.agents/skills/{name}/` → `.claude/skills/{name}/` |
 
-Cursor subagents spawned during a session use the same project skill catalog as the parent agent — no separate `.cursor/skills/` copy required.
+Cursor subagents use same skill catalog as parent — no `.cursor/skills/` copy.
 
 ## Manifest schema (v1)
 
@@ -80,58 +80,58 @@ Cursor subagents spawned during a session use the same project skill catalog as 
 }
 ```
 
-| Field                   | Meaning                                                                                                                                        |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                  | Base filename for adapters (`{name}.mdc` / `{name}.md`)                                                                                        |
-| `canonical`             | Path relative to `.nextstage-harness/`                                                                                                             |
-| `cursor.alwaysApply`    | Cursor always-on when `true`; default for `add-rule` is `false` (agent-requested via description). Mutually exclusive with `globs` when `true` |
-| `cursor.globs`          | Cursor glob scope (path-scoped; do not combine with `alwaysApply: true`)                                                                       |
-| `cursor.description`    | **Required** — Cursor "when to apply" header; sync fails if missing                                                                            |
-| `claude.paths`          | Claude path scope array; `null` = global (omit `paths:` frontmatter)                                                                           |
-| `subagents[].name`      | Adapter basename → `.cursor/agents/{name}.md`, `.claude/agents/{name}.md`                                                                      |
-| `subagents[].canonical` | Path relative to `.nextstage-harness/` (default `agents/{name}.md`)                                                                                |
-| `subagents[].skill`     | Installed skill the bridge loads                                                                                                               |
-| `subagents[].model`     | **Project-owned** — `harness update` never overwrites                                                                                          |
-| `subagents[].readonly`  | No write tools when `true` (reviewer default); filled from catalog if missing                                                                  |
+| Field | Meaning |
+| ----- | ------- |
+| `name` | Base filename for adapters (`{name}.mdc` / `{name}.md`) |
+| `canonical` | Path relative to `.nextstage-harness/` |
+| `cursor.alwaysApply` | Cursor always-on when `true`; default for `add-rule` is `false` (agent-requested via description). Mutually exclusive with `globs` when `true` |
+| `cursor.globs` | Cursor glob scope (path-scoped; do not combine with `alwaysApply: true`) |
+| `cursor.description` | **Required** — Cursor "when to apply" header; sync fails if missing |
+| `claude.paths` | Claude path scope array; `null` = global (omit `paths:` frontmatter) |
+| `subagents[].name` | Adapter basename → `.cursor/agents/{name}.md`, `.claude/agents/{name}.md` |
+| `subagents[].canonical` | Path relative to `.nextstage-harness/` (default `agents/{name}.md`) |
+| `subagents[].skill` | Installed skill bridge loads |
+| `subagents[].model` | **Project-owned** — `harness update` never overwrites |
+| `subagents[].readonly` | No write tools when `true` (reviewer default); filled from catalog if missing |
 
-### Default subagents (seeded when skill is installed)
+### Default subagents (seeded when skill installed)
 
-| Name                | Skill                   | Default model (cursor / claude)               | `readonly` |
-| ------------------- | ----------------------- | --------------------------------------------- | ---------- |
-| `coder-agent`       | `ns-coder`         | `composer-2.5[fast=false]` / `sonnet`         | `false`    |
-| `reviewer-agent`    | `ns-reviewer`      | `grok-4.5[effort=medium,fast=false]` / `opus` | `true`     |
-| `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | `composer-2.5[fast=false]` / `haiku`          | `false`    |
+| Name | Skill | Default model (cursor / claude) | `readonly` |
+| ---- | ----- | ------------------------------- | ---------- |
+| `coder-agent` | `ns-coder` | `composer-2.5[fast=false]` / `sonnet` | `false` |
+| `reviewer-agent` | `ns-reviewer` | `grok-4.5[effort=medium,fast=false]` / `opus` | `true` |
+| `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | `composer-2.5[fast=false]` / `haiku` | `false` |
 
-Presets that install those skills get matching bridges on `init` / `sync` / `update`. Each bridge body: obey `AGENTS.md` (no tool-Read) → Session boot (`session-boot.md`) → follow the skill. Seeded bridges = **required** dispatch targets when present — see `subagent-dispatch.md`.
+Presets get bridges on `init` / `sync` / `update`. Bridge body: obey `AGENTS.md` (no tool-Read) → Session boot (`session-boot.md`) → skill. Seeded bridges = **required** dispatch when present — `subagent-dispatch.md`.
 
-After adding a new canonical rule file, add a matching entry to `manifest.json`, then run `sync`. Prefer:
+New canonical rule: manifest entry + `sync`. Prefer:
 
 ```bash
 npx @nextstage-brasil/harness add-rule <name> \
   --description "When this applies — e.g. NsUtil consumer constraints when editing ns-util-dependent code"
 ```
 
-That creates the stub, sets `cursor.alwaysApply: false` (default) + `description` in the manifest, and syncs adapters. Pass `--always-apply` for always-on (e.g. constitution siblings that must load every session).
+Stub + `cursor.alwaysApply: false` (default) + `description`, syncs adapters. `--always-apply` for always-on siblings (rare).
 
 ### Do not (broken Cursor adapters)
 
-- Put YAML `alwaysApply` / `description` only in canonical `rules/*.md` — sync **strips** frontmatter; metadata must live in `manifest.json`.
-- Register a rule in `manifest.json` without `cursor.description` and without `alwaysApply` or `globs` — `harness sync` fails; Cursor would otherwise get an empty apply mode.
-- Expect hand-edits to a **registered** adapter to stick — next sync regenerates from canonical (orphans not in manifest are absorbed once, then managed).
+- YAML `alwaysApply` / `description` only in canonical `rules/*.md` — sync **strips** frontmatter; metadata in `manifest.json`.
+- Register rule without `cursor.description` + without `alwaysApply` or `globs` — sync fails.
+- Expect hand-edits to **registered** adapter to stick — sync regenerates (orphans absorbed once, then managed).
 
 ## Adapter generation
 
-`harness sync` (also runs at end of `harness init` when scaffold is enabled):
+`harness sync` (end of `harness init` when scaffold enabled):
 
-1. **Absorb orphans** — `.cursor/rules/*.mdc` whose basename is not in `manifest.rules`: write canonical body, map frontmatter → manifest (`description` required — default `Project rule: {name}`; `alwaysApply` preferred over `globs` if both; else `alwaysApply: false`), persist manifest. Skip names already registered (canonical wins).
-2. Strip YAML frontmatter from canonical body before wrapping.
-3. If canonical lacks body-only HTML hint, **write hint into canonical**.
-4. Write `.cursor/rules/{name}.mdc` / `.claude/rules/{name}.md` with Cursor/Claude frontmatter + generation marker + body — **hint stripped** from adapter.
-5. Embed `<!-- harness-sync:sha256=<hash> -->` for drift detection.
-6. Symlink `.agents/skills/{name}/` → `.claude/skills/{name}/` when Claude Code is a target. Cursor uses `.agents/skills/` directly — legacy `.cursor/skills/` harness symlinks removed on sync.
-7. Seed `manifest.subagents` for installed default skills (preserve `model`), ensure `agents/{name}.md`, write agent adapters.
+1. **Absorb orphans** — `.cursor/rules/*.mdc` not in manifest: write canonical, map frontmatter → manifest (`description` required — default `Project rule: {name}`; `alwaysApply` over `globs` if both; else `alwaysApply: false`), persist. Skip registered names.
+2. Strip YAML from canonical before wrap.
+3. Missing body-only HTML hint: **write into canonical**.
+4. Write `.cursor/rules/{name}.mdc` / `.claude/rules/{name}.md` — frontmatter + marker + body; **hint stripped** from adapter.
+5. `<!-- harness-sync:sha256=<hash> -->` for drift.
+6. Symlink `.agents/skills/{name}/` → `.claude/skills/{name}/` for Claude Code. Cursor uses `.agents/skills/` — legacy `.cursor/skills/` symlinks removed on sync.
+7. Seed `manifest.subagents` (preserve `model`), ensure `agents/{name}.md`, write agent adapters.
 
-Generation marker (first line of body):
+Marker (first body line):
 
 ```html
 <!-- generated by @nextstage-brasil/harness sync — do not edit -->
@@ -139,37 +139,31 @@ Generation marker (first line of body):
 
 ## Commands
 
-| Command                       | Behavior                                                                                            |
-| ----------------------------- | --------------------------------------------------------------------------------------------------- |
-| `harness add-rule <name>`     | Create stub + manifest entry + sync (`--description`, `--globs`, `--force`)                         |
-| `harness add-subagent <name>` | Create canonical `agents/{name}.md` + manifest entry + sync (`--skill`, `--description`, `--force`) |
-| `harness sync`                | Absorb orphan `.mdc` → regenerate rule adapters + Claude skill symlinks + subagent bridges          |
-| `harness sync --check`        | CI mode — no writes; exit 1 on adapter drift **or** orphan `.mdc` not in manifest                   |
+| Command | Behavior |
+| ------- | -------- |
+| `harness add-rule <name>` | Stub + manifest + sync (`--description`, `--globs`, `--force`) |
+| `harness add-subagent <name>` | Canonical `agents/{name}.md` + manifest + sync (`--skill`, `--description`, `--force`) |
+| `harness sync` | Absorb orphan `.mdc` → rule adapters + Claude symlinks + subagent bridges |
+| `harness sync --check` | CI — no writes; exit 1 on drift **or** orphan `.mdc` not in manifest |
 
 ## Git policy
 
-Commit canonical sources only:
+Commit canonical only: `.nextstage-harness/` (`rules/`, `agents/`, `manifest.json` + `subagents`); `.agents/skills/` + `skills-lock.json`; `AGENTS.md`, `CLAUDE.md`.
 
-- `.nextstage-harness/` (`rules/`, `agents/`, `manifest.json` including `subagents`)
-- `.agents/skills/` and `skills-lock.json`
-- `AGENTS.md`, `CLAUDE.md` (when present)
-
-Generated adapters under `.cursor/rules/`, `.cursor/agents/`, and `.claude/` are **gitignored** — `harness sync` adds them to `.gitignore` on init/update. Regenerate after clone:
+Generated `.cursor/rules/`, `.cursor/agents/`, `.claude/` **gitignored** — `harness sync` adds to `.gitignore` on init/update. After clone:
 
 ```bash
 npx @nextstage-brasil/harness sync
 ```
 
-Do not hand-edit registered adapter files long-term. Custom rules: `.nextstage-harness/rules/` / `harness add-rule`, or create in Cursor UI and run `harness sync` to absorb.
+Don't hand-edit registered adapters long-term. Custom rules: `.nextstage-harness/rules/` / `harness add-rule`, or Cursor UI + `harness sync` to absorb.
 
-**CI:** run `harness sync` as smoke that canonical + manifest valid. Use `harness sync --check` after editing canonical to verify adapters match before commit.
+**CI:** `harness sync` smoke; `harness sync --check` after canonical edits before commit.
 
 ## AGENTS.md sync marker
-
-`AGENTS.md` may contain a managed block updated by sync:
 
 ```html
 <!-- harness-sync-managed: last-sync=2026-07-07T12:00:00.000Z -->
 ```
 
-Do not hand-edit registered adapters — lost on next sync.
+Don't hand-edit registered adapters — lost on next sync.

@@ -33,7 +33,7 @@
 
 ## Requirements
 
-Living functional requirements in SHALL + GIVEN/WHEN/THEN format.
+SHALL + GIVEN/WHEN/THEN.
 
 ### Requirement: {short name}
 

@@ -1,6 +1,6 @@
 # Function Points (commercial budget)
 
-FP sizes the version. Client sees **per-Feature FP + justification** and **origem do cálculo**. Team verifies nothing was skipped.
+FP sizes version. Client sees **per-Feature FP + justification** and **origem do cálculo**. Team verifies nothing skipped.
 
 ## Internal doc (`commercial-budget-internal.md`)
 
@@ -26,7 +26,7 @@ Show traceable arithmetic. Pick one stated method; do not mix silently.
 | **Total** | | | | **{n}** | |
 
 - **Fonte** column links each row to Feature(s) or reuse inventory (`extend` / `net-new`).
-- Reuse / `extend` → discount or zero rows with one-line rationale.
+- Reuse / `extend`: discount or zero rows with one-line rationale.
 - `[ASSUMPTION: …]` on complexity weights when not negotiated.
 
 **House simplified count:** table still required — list what was counted and multiplier.
@@ -42,7 +42,7 @@ When `engineering-split.md` applies:
 | **Engenharia de consistência do produto** | Σ `engenharia` FP — plain-language rollup, no internal Feature numbers |
 | **Total** | Same as internal — `subtotal + engenharia` |
 
-- `qualidade` items: **0 FP** — never a client Feature row.
+- `qualidade` items: **0 FP** — never client Feature row.
 - **Origem do cálculo:** summary by capability (Elemento | FP | Vinculado a); footer points to internal doc for ILF/EQ detail.
 - Do **not** reduce Total FP or hours vs internal doc.
 

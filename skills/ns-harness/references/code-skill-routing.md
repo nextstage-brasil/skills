@@ -1,8 +1,8 @@
 # Code skill routing
 
-Canonical runtime routing between NextStage implementation skills. The host agent uses this file for **entry priority** and cross-skill handoffs. Each entry skill owns trigger phrases in `references/entry-triggers.md`. Each skill's `SKILL.md` documents its own **handoffs out**.
+Runtime routing: **entry priority** + cross-skill handoffs. Entry skills own triggers in `references/entry-triggers.md`. Each `SKILL.md` owns **handoffs out**.
 
-**Derived doc:** `docs/coder-skill-routing.md` may be generated locally — do not edit by hand. Maintainer diagram workflow: `.cursor/skills/code-routing-diagram/`. After changing skills, optional:
+**Derived:** `docs/coder-skill-routing.md` — do not hand-edit. Maintainer: `.cursor/skills/code-routing-diagram/`. Optional regen:
 
 ```bash
 node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
@@ -12,28 +12,28 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 
 | Role | Skill | Notes |
 | ---- | ----- | ----- |
-| Front door (entry router) | Host agent + skill descriptions + this file | Fixed priority below — not a dedicated skill |
-| Central execution worker | `ns-coder` / `C2` via `coder-agent` (**MUST** when available) | G, A, and S converge here for diffs + review — `subagent-dispatch.md` |
-| GitLab lifecycle | `ns-execution-gitlab-issue` | Delegates coding to A in Phase 2 |
-| Multi-unit engine | `ns-autonomous` | Standalone entry or engine under G |
-| Spec / version planning | `ns-spec-driven` | Hand off to C or A (**MUST** `coder-agent` when available) |
-| Root-cause debugging | `ns-investigator` | Diagnosis; implementation is a separate user step |
-| Review gate | `ns-reviewer` via `reviewer-agent` (**MUST** when available) | Only allowed review path — `../../code/ns-reviewer/references/review-gate-workflow.md` |
+| Front door | Host + descriptions + this file | Fixed priority — not dedicated skill |
+| Central execution | `ns-coder` / `C2` via `coder-agent` (**MUST** when available) | G, A, S converge — `subagent-dispatch.md` |
+| GitLab lifecycle | `ns-execution-gitlab-issue` | Phase 2 → A |
+| Multi-unit engine | `ns-autonomous` | Standalone or engine under G |
+| Spec / version planning | `ns-spec-driven` | → C or A (**MUST** `coder-agent` when available) |
+| Root-cause | `ns-investigator` | Diagnosis only; implement = separate user step |
+| Review gate | `ns-reviewer` via `reviewer-agent` (**MUST** when available) | Only review path — `../../code/ns-reviewer/references/review-gate-workflow.md` |
 
 ## Install vs runtime
 
-`ns-coder` `depends` installs coder peers (`ns-reviewer`, `ns-investigator`, test skills, etc.) at install time. That does **not** make coder the runtime router.
+`ns-coder` `depends` installs peers at install time. Does **not** make coder the runtime router.
 
 ## Entry priority (host agent) {#entry-priority}
 
-**Rule:** scan priorities **1 → 5**; the **first row whose signal matches wins**. Lower number always beats higher when multiple signals appear in one message — e.g. `ISSUE_URL` + multi-day feature → priority **1** (`G`), not priority 2 (`S`).
+Scan **1 → 5**; **first matching signal wins**. Lower beats higher — e.g. `ISSUE_URL` + multi-day feature → **1** (`G`), not 2 (`S`).
 
 | Priority | Signal | Entry skill | Trigger phrases |
 | -------- | ------ | ----------- | ----------------- |
 | 1 | GitLab `ISSUE_URL` or explicit "implement this issue" | `ns-execution-gitlab-issue` | `../../gitlab/ns-execution-gitlab-issue/references/entry-triggers.md` |
 | 2 | Feature / version / SDD / multi-day scope | `ns-spec-driven` | `../../sdd/ns-spec-driven/references/entry-triggers.md` |
-| 3 | "Run autonomously" with a local plan, no issue | `ns-autonomous` | `../../code/ns-autonomous/references/entry-triggers.md` |
-| 4 | Root-cause only — **without** an implement request | `ns-investigator` | `../../code/ns-investigator/references/entry-triggers.md` |
+| 3 | "Run autonomously" with local plan, no issue | `ns-autonomous` | `../../code/ns-autonomous/references/entry-triggers.md` |
+| 4 | Root-cause only — **without** implement request | `ns-investigator` | `../../code/ns-investigator/references/entry-triggers.md` |
 | 5 | Default — quick fix, "implement X", small ad-hoc diff | `ns-coder` | `../../code/ns-coder/references/entry-triggers.md` |
 
 ### Multi-signal examples (first match wins) {#multi-signal-examples}
@@ -41,33 +41,33 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | User message (signals present) | Winner | Why |
 | ------------------------------ | ------ | --- |
 | `ISSUE_URL` + "big feature for v2" | Priority **1** → `G` | `ISSUE_URL` scanned before SDD scope |
-| `ISSUE_URL` + pasted stack trace | Priority **1** → `G` | Issue execution owns the worktree path |
+| `ISSUE_URL` + pasted stack trace | Priority **1** → `G` | Issue execution owns worktree path |
 | "Build notifications v2" + "CI is red" (no `ISSUE_URL`) | Priority **2** → `S` | SDD scope before investigator |
 | "Run this plan autonomously" + stack trace in plan context | Priority **3** → `A` | Autonomous entry before diagnosis-only |
 | Paste stack trace, no implement words | Priority **4** → `I` | Diagnosis-only |
 | "Fix this NullPointerException" | Priority **5** → `C` | Implement intent → coder, not investigator |
 
-### Tie-breakers (same priority band or ambiguous scope) {#tie-breakers}
+### Tie-breakers {#tie-breakers}
 
-Apply only when the priority table alone does not decide:
+Only when priority table alone insufficient:
 
-- Bug + large / multi-day feature (no `ISSUE_URL`) → priority **2** (`ns-spec-driven`).
-- Bug + quick fix, **cause unclear** → priority **4** (`ns-investigator`).
-- Bug + quick fix, **cause obvious** from the message → priority **5** (`ns-coder`).
+- Bug + large / multi-day (no `ISSUE_URL`) → **2** (`ns-spec-driven`).
+- Bug + quick fix, **cause unclear** → **4** (`ns-investigator`).
+- Bug + quick fix, **cause obvious** → **5** (`ns-coder`).
 
 ### Priority 4 vs 5 {#priority-4-vs-5}
 
-Owned by entry skills — see `../../code/ns-investigator/references/entry-triggers.md` and `../../code/ns-coder/references/entry-triggers.md`. **Heuristic:** code change requested → **5**; understanding only → **4**. One clarifying question when ambiguous; default **5** if still unclear.
+See entry-triggers for `ns-investigator` + `ns-coder`. **Heuristic:** code change → **5**; understanding only → **4**. One clarify when ambiguous; default **5**.
 
 ### Fallback
 
-No qualifier matches → priority **5** (`ns-coder`). If scope is still unclear after one clarifying question, coder escalates per its stop conditions.
+No match → **5** (`ns-coder`). Still unclear after one question: coder escalates per stop conditions.
 
-Mid-run coder escalations (`C → G`, `C → S`, `C → I`) use the same signals as the table above.
+Mid-run escalations (`C → G`, `C → S`, `C → I`) = same signals.
 
-## Handoff edges (summary) {#handoff-edges}
+## Handoff edges {#handoff-edges}
 
-Per-skill detail lives in each `SKILL.md` routing section.
+Detail in each `SKILL.md` routing section.
 
 | From | Condition | To |
 | ---- | --------- | -- |
@@ -89,17 +89,17 @@ Per-skill detail lives in each `SKILL.md` routing section.
 
 ## Engine anti-cycle (G ↔ A) {#engine-anti-cycle}
 
-When `G` invokes `A` in Engine mode, work units run as `C2` inside the existing worktree and branch. `A` and `C2` must not re-open `G`: no standalone routing, no GitLab MCP mutations, no new worktree. An `ISSUE_URL` in code or comments is context, not a routing signal — `G` remains the single lifecycle owner until delivery completes. Review rejection loops (`G → A → C2 → REV`) stay inside that boundary.
+`G` invokes `A` Engine mode: units as `C2` in existing worktree + branch. `A` + `C2` must not re-open `G` — no standalone routing, no GitLab MCP mutations, no new worktree. `ISSUE_URL` in code/comments = context, not signal. `G` owns lifecycle until delivery. Rejection loops (`G → A → C2 → REV`) stay inside.
 
 See `../../code/ns-autonomous/references/routing.md`.
 
 ## Investigator handoff {#investigator-handoff}
 
-`I` ends with root cause + fix proposal to the user. It does **not** auto-dispatch implementation. When the user asks to implement the fix, they re-enter through the entry router (usually priority 5 → `C`). There is no direct `I → C` skill handoff — the human gate sits between diagnosis and diff.
+`I` ends: root cause + fix proposal. **No** auto-dispatch. User asks implement → re-enter router (usually **5** → `C`). No direct `I → C` — human gate.
 
 ## Skill handoffs (diagram source)
 
-Mermaid below is extracted into `docs/coder-skill-routing.md` by the generator script.
+Mermaid extracted into `docs/coder-skill-routing.md` by generator.
 
 ```mermaid
 flowchart TD

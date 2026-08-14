@@ -63,17 +63,17 @@ ALWAYS use this skeleton (adapt labels to human language; keep productivity vs p
 | P85 | … | … |
 | P95 | … | … |
 
-Compromisso recomendado neste cenário: **calendário P85** → {date}.
+Compromisso recomendado neste cenário: **calendário P85** = {date}.
 
 ---
 
-## Tabela 2 — Cenário P85 (objetivo: 50% mais rápido → {Y} h/FP)
+## Tabela 2 — Cenário P85 (objetivo: 50% mais rápido = {Y} h/FP)
 
 {same structure as Tabela 1}
 
 ---
 
-## Tabela 3 — Cenário P50 (objetivo: 85% mais rápido → {Z} h/FP)
+## Tabela 3 — Cenário P50 (objetivo: 85% mais rápido = {Z} h/FP)
 
 {same structure as Tabela 1}
 
@@ -87,7 +87,7 @@ Compromisso recomendado neste cenário: **calendário P85** → {date}.
 | 2 | P85 — objetivo 50% mais rápido | … | … | … | … | … | … |
 | 3 | P50 — objetivo 85% mais rápido | … | … | … | … | … | … |
 
-**Compromisso oficial (default):** calendário P85 do cenário de produtividade **P100** → {date}.
+**Compromisso oficial (default):** calendário P85 do cenário de produtividade **P100** = {date}.
 
 ---
 
@@ -101,11 +101,11 @@ Compromisso recomendado neste cenário: **calendário P85** → {date}.
 ## Header rules
 
 - Prefer explicit table titles: `Tabela N — Cenário P100 (produtividade atual: X h/FP)`.
-- Never label a Monte Carlo percentile row as "cenário P85" without the word **calendário** / **entrega**.
+- Never label Monte Carlo percentile row as "cenário P85" without word **calendário** / **entrega**.
 
 ## `roadmap.md` update
 
-Rewrite or patch the PM roadmap so stakeholders see:
+Rewrite or patch PM roadmap so stakeholders see:
 
 ```markdown
 ## Delivery schedule (triple productivity)
@@ -116,6 +116,6 @@ Rewrite or patch the PM roadmap so stakeholders see:
 | P85 — objetivo 50% mais rápido | … |
 | P50 — objetivo 85% mais rápido | … |
 
-Official commitment (default): P100 calendar P85 → …
+Official commitment (default): P100 calendar P85 = …
 Artifact: [05-cronograma-tres-cenarios.md](05-cronograma-tres-cenarios.md)
 ```

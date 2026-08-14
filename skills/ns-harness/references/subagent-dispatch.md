@@ -1,32 +1,32 @@
 # Harness project subagent dispatch
 
-Skill must **spawn separate agent** (Cursor/Claude project agent, Task tool, `/name`): **MUST** use harness **thin bridge** if available. Bare skill call / invented persona = forbidden while bridge exists.
+Skill must **spawn separate agent** (Cursor/Claude project agent, Task tool, `/name`): **MUST** use harness **thin bridge** if available. Bare skill / invented persona = forbidden while bridge exists.
 
-Skills = **workflow source of truth**. Bridges bind `model` / `readonly`, complete Session boot at cold start per `session-boot.md` (obey `AGENTS.md` already in context — no tool-Read; then rules), then skill. Worker owns that boot — parent must **not** instruct per-task `AGENTS.md` re-read.
+Skills = **workflow SoT**. Bridges bind `model` / `readonly`, Session boot at cold start per `session-boot.md` (obey `AGENTS.md` in context — no tool-Read; then rules), then skill. Worker owns boot — parent must **not** instruct per-task `AGENTS.md` re-read.
 
 ## Bridges (v1)
 
 | Project agent | Skill | Typical use |
 | ------------- | ----- | ----------- |
-| `coder-agent` | `ns-coder` | Implement task / slice / ad-hoc unit |
+| `coder-agent` | `ns-coder` | Implement task / slice / ad-hoc |
 | `reviewer-agent` | `ns-reviewer` | Review gate (readonly) |
-| `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | Write SDD task files during planning |
+| `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | SDD task files |
 
-Defaults/seeding: `rules-sync.md` Default subagents. Project owns `model` in `.nextstage-harness/manifest.json` `subagents`.
+Defaults: `rules-sync.md` Default subagents. Project owns `model` in `.nextstage-harness/manifest.json` `subagents`.
 
 ## Presence check
 
-Bridge **available** when **any** of:
+Bridge **available** if **any**:
 
-1. `.cursor/agents/{name}.md` exists, or
-2. `.claude/agents/{name}.md` exists, or
-3. `manifest.json` `subagents[]` has `{ "name": "{name}" }` and `.agents/skills/{skill}/` installed
+1. `.cursor/agents/{name}.md`, or
+2. `.claude/agents/{name}.md`, or
+3. `manifest.json` `subagents[]` has `{ "name": "{name}" }` + `.agents/skills/{skill}/` installed
 
-Unavailable: **only then** read/follow `.agents/skills/{skill}/SKILL.md` in current session (or generic subagent whose **only** instruction = that skill).
+Unavailable: **only then** follow `.agents/skills/{skill}/SKILL.md` in-session (or generic subagent whose **only** instruction = that skill).
 
 ## Child phases (always spawn)
 
-Parent face (`ns-spec-driven`, handoff, orchestrator, autonomous, gitlab) needs these phases: **MUST** dispatch bridge when available. Not in-session continuation of parent.
+Parent face (`ns-spec-driven`, handoff, orchestrator, autonomous, gitlab) needs these phases: **MUST** dispatch bridge when available. Not in-session parent continuation.
 
 | Phase | Bridge | Mapped skill |
 | ----- | ------ | ------------ |
@@ -34,32 +34,32 @@ Parent face (`ns-spec-driven`, handoff, orchestrator, autonomous, gitlab) needs 
 | Execute / Quick implement | `coder-agent` | `ns-coder` |
 | Review gate / Close review | `reviewer-agent` | `ns-reviewer` |
 
-Clarify / Specify / Consistency / Partition: no v1 bridge — in-session worker skill OK.
+Clarify / Specify / Consistency / Partition: no v1 bridge — in-session OK.
 
 ## Dispatch rules
 
-1. Bridge **available**: **MUST** dispatch that bridge for its child phase. Inline `Skill(ns-*)` / bare in-session follow of mapped skill = **forbidden**.
-2. **Do not** paraphrase skill into custom persona. Bridge body already points at skill.
-3. Pass task context (paths, `ISSUE_URL`, unit scope, mode) in dispatch message; bridge begins Session boot at cold start then skill.
-4. **In-session exception:** only when user already invoked **that same** skill/bridge as session face (e.g. `/ns-coder`, `/task-writer-agent`). Continue that face — do not bounce to bridge. Does **not** apply when parent is `ns-spec-driven` (or handoff/orchestrator/autonomous/gitlab) and phase is a **child** in table above.
+1. Bridge **available**: **MUST** dispatch for its child phase. Inline `Skill(ns-*)` / bare follow while bridge present = **forbidden**.
+2. **Do not** paraphrase skill into custom persona.
+3. Pass task context (paths, `ISSUE_URL`, unit scope, mode) in dispatch message; bridge boots then skill.
+4. **In-session exception:** user already invoked **that same** skill/bridge as session face (e.g. `/ns-coder`, `/task-writer-agent`). Continue face. Does **not** apply when parent is `ns-spec-driven` (or handoff/orchestrator/autonomous/gitlab) + phase is **child** above.
 
 ## Allowed vs forbidden
 
-| Allowed | Forbidden (unless human explicitly requests) |
-| ------- | ---------------------------------------------- |
+| Allowed | Forbidden (unless human explicit) |
+| ------- | --------------------------------- |
 | `coder-agent`, `reviewer-agent`, `task-writer-agent` | Cursor Task personas: `senior-tech-lead-reviewer`, `bugbot`, `security-review` |
-| Direct skill read when bridge **missing** | Inline `Skill` / bare follow of mapped skill while bridge **present** |
+| Direct skill when bridge **missing** | Inline `Skill` / bare follow while bridge **present** |
 | | Improvised "act as reviewer" without `ns-reviewer` |
 
-`reviewer-agent` = required review-gate vehicle when present — loads `ns-reviewer`; not substitute for that skill.
+`reviewer-agent` = required review-gate vehicle when present — loads `ns-reviewer`.
 
 ## Callers
 
-Cite this file when dispatching workers:
+Cite when dispatching:
 
-- `ns-spec-driven` (Tasks / Execute / Quick / Close / partitioned orchestration)
-- `../../code/ns-coder/references/run-implementation.md` (classic handoff loop)
-- `ns-autonomous` (C2 units + review gate)
+- `ns-spec-driven` (Tasks / Execute / Quick / Close / partitioned)
+- `../../code/ns-coder/references/run-implementation.md`
+- `ns-autonomous` (C2 + review gate)
 - `ns-coder` (review loop)
 - `ns-execution-gitlab-issue` (Phase 4)
 - `../../code/ns-reviewer/references/review-gate-workflow.md`

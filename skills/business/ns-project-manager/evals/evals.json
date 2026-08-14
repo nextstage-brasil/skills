@@ -72,6 +72,12 @@
       "prompt": "Grill-me on this scope before we plan the version: users need a dashboard filter by club and role, show only active members, paginated list.",
       "expected_output": "Reads references/ns-requirements-enricher/SKILL.md. Chat mode: inline verdict + numbered product questions; no GitLab comment, no files created.",
       "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "help",
+      "expected_output": "Shows example prompts covering pipeline, commercial budget, delivery schedule, enricher, and on-demand modes. Does not start Phase 0/1, does not ask clarification questions, does not create files.",
+      "files": []
     }
   ]
 }

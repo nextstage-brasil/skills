@@ -1,15 +1,15 @@
 # Reconnaissance checklist
 
-Read-only scan before drafting `architecture-rules.md`. Check items in order; skip sections with no signals.
+Read-only scan before drafting `architecture-rules.md`. Order below; skip empty sections.
 
-## 1. Harness and existing context
+## 1. Harness + existing context
 
-- [ ] `AGENTS.md` — agent workflow, skill paths, completion conventions
-- [ ] `.nextstage-harness/rules/*.md` — list siblings; note what **not** to duplicate
+- [ ] `AGENTS.md` — workflow, skill paths, completion conventions
+- [ ] `.nextstage-harness/rules/*.md` — siblings; note what **not** to duplicate
 - [ ] `docs/context/`, `docs/specs/` — product docs when present
-- [ ] `docs/context/` — stack-confirmed, gitlab-sync-config, integration docs
-- [ ] `docs/specs/` — living functional specs (link, do not copy)
-- [ ] Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` is absent
+- [ ] `docs/context/` — stack-confirmed, gitlab-sync-config, integrations
+- [ ] `docs/specs/` — living specs (link, do not copy)
+- [ ] Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent
 
 ## 2. Stack manifests
 
@@ -17,52 +17,50 @@ Read-only scan before drafting `architecture-rules.md`. Check items in order; sk
 | ----------- | ------- |
 | `composer.json` | PHP version, Laravel/Symfony, key packages |
 | `package.json` | Node, React/Vue, scripts, test runners |
-| `pyproject.toml` / `requirements.txt` | Python stack |
+| `pyproject.toml` / `requirements.txt` | Python |
 | `go.mod` / `Cargo.toml` | Go/Rust |
 | `docker-compose.yml` | Services, container names, ports |
 | `.env.example` | DB, cache, queue, URLs |
 | `Makefile` / `justfile` | Canonical dev commands |
 
-## 3. Layout and boundaries
+## 3. Layout + boundaries
 
-- [ ] Monorepo: `apps/`, `packages/`, `backend/` + `frontend/` split
+- [ ] Monorepo: `apps/`, `packages/`, `backend/` + `frontend/`
 - [ ] Domain modules: `app/Modules/`, `src/Modules/`, `modules/`
-- [ ] Generated/build output: `Generated/`, `.build/`, `auto/`, `dist/`, `vendor/`
-- [ ] API surface: routes files, `public/api/`, OpenAPI specs
+- [ ] Generated/build: `Generated/`, `.build/`, `auto/`, `dist/`, `vendor/`
+- [ ] API surface: routes, `public/api/`, OpenAPI
 - [ ] Frontend entry: `src/`, `frontend/`, `view/`
 
 ## 4. Runtime patterns
 
-- [ ] Single entry bootstrap (e.g. `SistemaLibrary`, `public/index.php`, `artisan`)
-- [ ] Router strategy / middleware chain
+- [ ] Single entry bootstrap (`SistemaLibrary`, `public/index.php`, `artisan`, …)
+- [ ] Router / middleware chain
 - [ ] Auth model (session, Sanctum, API keys, tenant headers)
 - [ ] Multitenancy resolution
-- [ ] Queue and event handlers
-- [ ] External integrations (names + boundary class/service)
+- [ ] Queue + event handlers
+- [ ] External integrations (names + boundary)
 
-## 5. Testing and CI
+## 5. Testing + CI
 
-- [ ] Test directories and naming (`tests/`, `tests-e2e/`, legacy `testes-cypress/` or `frontend/cypress/`)
+- [ ] Test dirs/naming (`tests/`, `tests-e2e/`, legacy `testes-cypress/` / `frontend/cypress/`)
 - [ ] PHPUnit/Pest/Jest/Vitest/Cypress config
-- [ ] **Test environment** — which container/service runs tests (`app_test` vs dev `app`); document name and commands here; agents follow `AGENTS.md` for behavioral rules
-- [ ] `.gitlab-ci.yml` or GitHub Actions test jobs (copy exact commands when found)
+- [ ] **Test environment** — container/service (`app_test` vs `app`); document name + commands
+- [ ] `.gitlab-ci.yml` / GitHub Actions — copy exact commands when found
 
-## 6. Agent-relevant constraints
+## 6. Agent constraints
 
-- [ ] Migration rules (raw SQL only, no Eloquent in migrations)
-- [ ] Error logging pattern (central service vs `Log::`)
+- [ ] Migration rules (raw SQL only, no Eloquent in migrations, …)
+- [ ] Error logging pattern
 - [ ] i18n location
 - [ ] Protected branches / work branch policy
-- [ ] `.gitignore` or CI touch policies if documented in rules
+- [ ] `.gitignore` or CI touch policies if in rules
 
-## Output of this phase
+## Output
 
-Produce a short internal summary:
-
-1. Detected stack (with file evidence)
+1. Detected stack (file evidence)
 2. Repo layout sketch
-3. Module list (max ~15 rows; group the rest as "other")
+3. Module list (max ~15; rest "other")
 4. Forbidden/generated zones
 5. Primary test command(s)
-6. Sibling rules to link (not inline)
-7. Open questions / `inferred` items for user checkpoint
+6. Sibling rules to link
+7. Open questions / `inferred` for checkpoint

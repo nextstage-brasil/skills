@@ -1,10 +1,10 @@
-# Artifact persistence — writing the roadmap to disk
+# Artifact persistence — writing roadmap to disk
 
-The pipeline (Phases 0–5) produces the material for an execution roadmap. Chat scrollback isn't a roadmap — a living set of markdown files in the user's repo is. This reference defines when and how to write them.
+Pipeline (Phases 0–5) produces execution roadmap material. Chat scrollback ≠ roadmap — living markdown in user repo is. When/how write them:
 
 ## Ask once, early
 
-At Phase 0/1 (alongside the clarification questions), ask:
+Phase 0/1 (with clarification questions), ask:
 
 ```
 Where should I save this project's artifacts as markdown files as we go?
@@ -12,26 +12,26 @@ Default: docs/<project-slug>/ (I'll derive the slug from the project name).
 Say "skip docs" to keep everything in chat only.
 ```
 
-Don't ask again in the same conversation once answered. If the user never answers, default to `docs/<project-slug>/` — don't silently skip persistence, since the user asked for it as a standing capability.
+Don't re-ask same conversation once answered. User never answer: default `docs/<project-slug>/` — don't silent skip (standing capability).
 
 ## File map
 
-Inside the confirmed base folder (default `docs/<project-slug>/`):
+Inside confirmed base (default `docs/<project-slug>/`):
 
 | File | Written after | Content |
 |---|---|---|
-| `00-clarification.md` | Phase 1 gate | Filled context template + any `[ASSUMPTION]` markers |
+| `00-clarification.md` | Phase 1 gate | Filled context template + `[ASSUMPTION]` markers |
 | `01-requirements.md` | Phase 2 gate | Domain map, stakeholder map, epics, user stories (INVEST+Gherkin) |
 | `02-prioritization.md` | Phase 3 gate | RICE/WSJF tables, combined ranking, flags |
 | `03-schedule.md` | Phase 4 gate | Sprint-by-sprint plan, dependencies, critical path |
 | `04-forecast.md` | Phase 5 gate | PERT table, Monte Carlo P50/P85/P95, audience translation |
-| `roadmap.md` | Every gate (rewritten, not appended) | Living index — see template below |
+| `roadmap.md` | Every gate (rewrite, not append) | Living index — template below |
 
-On-demand modes (6+) append dated files under `docs/<project-slug>/status/` (e.g. `status/2026-07-20-meeting-digest.md`) only when persistence is enabled — ask before creating that subfolder the first time it's needed.
+On-demand modes (6+): append dated files under `docs/<project-slug>/status/` (e.g. `status/2026-07-20-meeting-digest.md`) only if persistence on — ask before create that subfolder first time.
 
 ## `roadmap.md` template
 
-Rewrite this file in full after every phase gate so it always reflects current state — it's the one file a stakeholder can open to see where the project stands:
+Rewrite full after every phase gate — one file stakeholder open for project stand:
 
 ```markdown
 # <Project name> — execution roadmap
@@ -67,7 +67,7 @@ Last updated: <phase just completed>
 
 ## Rules
 
-- Write the file with the **same content** just presented in chat — never a diverging or expanded version.
-- Write/update the file *before* asking the phase's gate question, so the gate question can reference the saved path (e.g. "Saved to `docs/routewise/03-schedule.md` — confirm to run the forecast?").
-- Never create files without the user having confirmed a path (or accepted the default) once in the conversation.
-- If persistence was declined ("skip docs"), don't write anything — respect it for the rest of the conversation without re-asking.
+- Write file **same content** just presented in chat — never diverge/expand.
+- Write/update *before* gate question, so gate can cite path (e.g. "Saved to `docs/routewise/03-schedule.md` — confirm to run the forecast?").
+- Never create files without user confirmed path (or accepted default) once.
+- Persistence declined ("skip docs"): write nothing — respect rest of conversation, no re-ask.

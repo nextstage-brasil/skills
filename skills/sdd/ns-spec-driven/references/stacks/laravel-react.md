@@ -1,6 +1,6 @@
 # Laravel + React stack profile
 
-Apply when stack is confirmed as Laravel backend + React/TypeScript frontend (optional monorepo `backend/` + `frontend/`).
+Apply when stack confirmed Laravel backend + React/TypeScript frontend (optional monorepo `backend/` + `frontend/`).
 
 Load harness rules when present: `backend-rules.mdc`, `frontend-rules.mdc`, `architecture-rules.mdc`, `i18n-rules.mdc`, `e2e-tests-rules.mdc`.
 
@@ -10,7 +10,7 @@ Load harness rules when present: `backend-rules.mdc`, `frontend-rules.mdc`, `arc
 2. PostgreSQL + Redis + queue
 3. Backend modules (DDD layout under `app/Modules/` when rule exists)
 4. Frontend shell + auth
-5. E2E and PHPUnit strategy
+5. E2E + PHPUnit strategy
 
 ## Data model
 
@@ -23,7 +23,7 @@ Load harness rules when present: `backend-rules.mdc`, `frontend-rules.mdc`, `arc
 - CRUD: list + form patterns per frontend rules when present
 - i18n: all visible strings via translation keys
 - `data-testid` contract for interactive elements when E2E planned
-- Navigation: route registry and breadcrumbs when applicable
+- Navigation: route registry + breadcrumbs when applicable
 
 ## uses_grogoo
 
@@ -31,4 +31,4 @@ Only reference Grogoo pipeline when `uses_grogoo: true` in stack context. Defaul
 
 ## Docker / frontend proxy
 
-When frontend runs in container: relative API base path, proxy target to host gateway, CORS/Sanctum domains — per `infra-rules.mdc` when harness provides it.
+Frontend in container: relative API base path, proxy target to host gateway, CORS/Sanctum domains — per `infra-rules.mdc` when harness provides it.

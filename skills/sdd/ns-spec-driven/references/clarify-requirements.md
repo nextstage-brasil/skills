@@ -10,9 +10,9 @@ Stack and architecture questions belong to stack detection — not this phase.
 
 ## When to use
 
-- Vague or incomplete scope from the user
+- Vague or incomplete scope from user
 - Ambiguous terms (dashboard, integration, notification system)
-- First version of a new system without prior documentation
+- First version of new system without prior documentation
 - Face judges scope too thin (< 3 paragraphs or vague terms)
 
 ## Workflow
@@ -22,22 +22,22 @@ Stack and architecture questions belong to stack detection — not this phase.
 **Do not grep or explore application source code** until this step completes.
 
 1. Check `docs/context/brownfield-map.md`.
-2. Detect brownfield signals under the repo: `backend/`, `frontend/`, `src/`, `app/`, or equivalent application code (not docs-only repos).
+2. Detect brownfield signals under repo: `backend/`, `frontend/`, `src/`, `app/`, or equivalent application code (not docs-only repos).
 3. **If brownfield signals exist and `brownfield-map.md` is missing:**
    - Stop — do not ask clarification questions yet.
    - Invoke **`/ns-harness`** `bootstrap-brownfield.md` and produce `docs/context/brownfield-map.md`.
-   - Tell the user briefly that brownfield context was required before refining scope.
-   - Resume this phase at **Step 0.4** (refresh gate) once the map file exists.
+   - Tell user briefly brownfield context required before refining scope.
+   - Resume this phase at **Step 0.4** (refresh gate) once map file exists.
 4. **If greenfield** (no application code) — skip bootstrap; proceed to Step 1.
 5. **If `brownfield-map.md` already exists** — run **Step 0.4** before any scope analysis.
 
 #### Step 0.4 — Brownfield refresh gate (mandatory human confirmation)
 
-**Stop. Do not proceed to Step 1 until the human replies.**
+**Stop. Do not proceed to Step 1 until human replies.**
 
 1. Read `docs/context/brownfield-map.md`.
-2. Extract the map date from the `**Date:**` line in the file header. If absent, state `date unknown`.
-3. Present the gate to the human in **natural chat** (match conversation language; English template below). Do **not** use phase jargon, `Reply:`, or telegraphic status dumps. See `human-communication.md`.
+2. Extract map date from `**Date:**` line in file header. If absent, state `date unknown`.
+3. Present gate to human in **natural chat** (match conversation language; English template below). Do **not** use phase jargon, `Reply:`, or telegraphic status dumps. See `human-communication.md`.
 
 ```
 There's already a codebase map at docs/context/brownfield-map.md
@@ -49,21 +49,21 @@ Want me to re-scan the repo and update it, or keep this one and move on to scope
 - keep — use the map as-is
 ```
 
-4. **Wait for an explicit reply.** Valid answers: `refresh` / `keep` (or clear equivalent in natural language).
-5. **Never assume** `keep` because the map looks recent, because planning is urgent, or because the user already pasted a descritivo.
-6. On **`refresh`:** invoke **`/ns-harness`** `bootstrap-brownfield.md` (update in place), then continue to Step 1 with the new map.
-7. On **`keep`:** note in session context that the human accepted map date `{date}`; continue to Step 1 using the existing file.
-8. On ambiguous reply: ask once more — do not start Step 1 until `refresh` or `keep` is clear.
+4. **Wait for explicit reply.** Valid answers: `refresh` / `keep` (or clear equivalent in natural language).
+5. **Never assume** `keep` because map looks recent, because planning urgent, or because user already pasted descritivo.
+6. On **`refresh`:** invoke **`/ns-harness`** `bootstrap-brownfield.md` (update in place), then continue to Step 1 with new map.
+7. On **`keep`:** note in session context human accepted map date `{date}`; continue to Step 1 using existing file.
+8. On ambiguous reply: ask once more — do not start Step 1 until `refresh` or `keep` clear.
 
-Also read `docs/context/system-reverse-spec.agent.md` when present (prefer over the prose body); else `system-reverse-spec.md` (after the gate resolves).
+Also read `docs/context/system-reverse-spec.agent.md` when present (prefer over prose body); else `system-reverse-spec.md` (after gate resolves).
 
-Allowed reads before Step 1 (brownfield): user scope file, `brownfield-map.md`, `system-reverse-spec.agent.md` / `system-reverse-spec.md`, `.nextstage-harness/rules/architecture-rules.md`, files under `docs/versions/{version_san}/` for the active version.
+Allowed reads before Step 1 (brownfield): user scope file, `brownfield-map.md`, `system-reverse-spec.agent.md` / `system-reverse-spec.md`, `.nextstage-harness/rules/architecture-rules.md`, files under `docs/versions/{version_san}/` for active version.
 
-**Forbidden before Step 1:** ad-hoc `grep`/code search in `backend/`, `frontend/`, or `src/` to "reduce ambiguity"; skipping Step 0.4 when a map exists.
+**Forbidden before Step 1:** ad-hoc `grep`/code search in `backend/`, `frontend/`, or `src/` to "reduce ambiguity"; skipping Step 0.4 when map exists.
 
 ### Step 1 — Analyze raw scope
 
-Read the user's description (and brownfield context when Step 0 applied). Flag ambiguities:
+Read user's description (and brownfield context when Step 0 applied). Flag ambiguities:
 
 | Category        | Example                           |
 | --------------- | --------------------------------- |
@@ -77,17 +77,17 @@ Read the user's description (and brownfield context when Step 0 applied). Flag a
 | Performance     | volume, concurrency, SLA?         |
 | Security        | auth required, role permissions?  |
 
-Use the brownfield map for **what exists** — ask the user only for **what the version should change or add**.
+Use brownfield map for **what exists** — ask user only for **what version should change or add**.
 
 ### Step 2 — Ask questions
 
 - Maximum **5 questions per round**
 - Prioritize blockers for correct feature generation
 - Group related questions when possible
-- Plain language, numbered, self-contained — **conversational**, not a form (`Reply:`, `Premise:`, skill names)
-- Never say "before Clarify/Specify" — name the next deliverable in plain words
+- Plain language, numbered, self-contained — **conversational**, not form (`Reply:`, `Premise:`, skill names)
+- Never say "before Clarify/Specify" — name next deliverable in plain words
 
-Present (adapt language to the conversation):
+Present (adapt language to conversation):
 
 ```
 A few open points before I draft the requirements document:
@@ -103,7 +103,7 @@ Answer in your own words — no special format needed.
 
 After responses:
 
-1. Confirm understanding in a short summary (3–5 bullets)
+1. Confirm understanding in short summary (3–5 bullets)
 2. Ask in plain language: "Want me to write the requirements document next?"
    — **Forbidden:** "go for Specify", "proceed to Specify", phase-name commands
 3. Wait for yes or correction
@@ -138,13 +138,13 @@ Pass this document as input to `requirements-generator.md`. Do **not** write `re
 
 ## Critical rules
 
-- **Brownfield without map:** run `/ns-harness` `bootstrap-brownfield.md` first — never skip by grepping the codebase instead
-- **Brownfield with map:** Step 0.4 gate is **mandatory** — show last map date; wait for explicit `refresh` or `keep`; never assume
+- **Brownfield without map:** run `/ns-harness` `bootstrap-brownfield.md` first — never skip by grepping codebase instead
+- **Brownfield with map:** Step 0.4 gate **mandatory** — show last map date; wait for explicit `refresh` or `keep`; never assume
 - **Human chat:** natural language; name deliverables ("requirements document"), not phases ("Specify"); never caveman-compress chat
 - **One round of questions max** — then assume conservatively and document premises
 - **No requirements document** in this workflow
 - **No stack/architecture questions** — defer to stack profiles / project rules and brownfield map
-- If user answers "don't know" on a critical point: assume smallest safest scope and document it
+- If user answers "don't know" on critical point: assume smallest safest scope and document it
 
 ## Integration
 
@@ -156,6 +156,6 @@ Brownfield refresh gate: human confirms `refresh` or `keep` after seeing `brownf
 
 ## Related
 
-- `/ns-harness` `bootstrap-brownfield.md` — mandatory prerequisite when code exists and `brownfield-map.md` is missing
+- `/ns-harness` `bootstrap-brownfield.md` — mandatory prerequisite when code exists and `brownfield-map.md` missing
 - `requirements-generator.md` — next step after clarification
-- `/ns-harness` `architecture-rules-generator.md` — constitution when `architecture-rules.md` is still a stub (separate from this phase)
+- `/ns-harness` `architecture-rules-generator.md` — constitution when `architecture-rules.md` still stub (separate from this phase)

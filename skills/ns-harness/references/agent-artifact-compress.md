@@ -1,73 +1,72 @@
 # Agent artifact compress (pre-save)
 
-**Audience:** coding agents — not humans. **Never** apply this pass to human chat. Chat voice: natural language (see `../../sdd/ns-spec-driven/references/human-communication.md` when installed). This pass runs on **file drafts** before `Write` only.
+**Audience:** coding agents — not humans. **Never** apply to human chat. Chat voice: natural language (`../../sdd/ns-spec-driven/references/human-communication.md` when installed). Pass runs on **file drafts** before `Write` only.
 
-Apply **caveman ultra** compression to every **agent-facing** prepare/worker output. If a personal `caveman` skill is loaded, use intensity **ultra** for this pass; otherwise follow this file verbatim.
+Apply **caveman ultra** to every **agent-facing** prepare/worker output. Personal `caveman` skill loaded → intensity **ultra**; else follow this file.
 
 ## Applies to
 
 | Artifact | Compress? |
 | -------- | --------- |
 | `.nextstage-harness/rules/architecture-rules.md` | **Yes** |
-| `.nextstage-harness/rules/project-rules.md` | **No** — human-edited project-local settings |
+| `.nextstage-harness/rules/project-rules.md` | **No** — human-edited |
 | `docs/context/brownfield-map.md` | **Yes** |
 | `docs/context/system-reverse-spec.agent.md` | **Yes** |
 | `AGENTS.md` | **Yes** |
 | `docs/context/system-reverse-spec.md` | **No** — human body |
-| `CLAUDE.md` | **No** — fixed boot template (Rules + AGENTS.md + `.claude/agents`) |
-| `**/templates/**/*.md`, `**/*.template.md`, `**/*-template.md`, `**/*.stub.md` | **No** — copy-paste models; preserve placeholders and example prose |
+| `CLAUDE.md` | **No** — fixed boot template |
+| `**/templates/**/*.md`, `**/*.template.md`, `**/*-template.md`, `**/*.stub.md` | **No** — preserve placeholders |
 
 ## Mandate
 
 1. Draft fully (evidence, tables, routing).
-2. **Before save:** rewrite draft through this pass.
-3. Write only the compressed result.
-4. Do **not** announce the pass in the saved file (no "compressed by…" banners).
+2. **Before save:** rewrite through this pass.
+3. Write compressed result only.
+4. No "compressed by…" banners in saved file.
 
-## Keep (load-bearing)
+## Keep
 
 - Paths, skill names, slash commands, MCP server names
-- Tables that route or constrain (stack, modules, priority 1–5, hard stops)
-- `MUST` / `MUST NOT` / `FORBIDDEN` lines
-- Confidence markers (`confirmed` / `inferred` / `ambiguous`)
-- Fenced code / copy-paste commands when evidenced
-- Sync markers (`<!-- harness-sync-managed: ... -->`, harness generators)
-- Links to sibling artifacts instead of inlined bodies
+- Routing/constraint tables (stack, modules, priority 1–5, hard stops)
+- `MUST` / `MUST NOT` / `FORBIDDEN`
+- Confidence (`confirmed` / `inferred` / `ambiguous`)
+- Fenced code / evidenced commands
+- Sync markers (`<!-- harness-sync-managed: ... -->`, generators)
+- Links to siblings — not inlined bodies
 
-## Cut (noise / duplicate)
+## Cut
 
-- Filler, hedging, throat-clearing, pleasantries
-- Articles and conjunctions when meaning stays unambiguous
-- Sections that only restate another table in the same file
-- Prose paragraphs when a table or one-liner carries the fact
-- Human onboarding essays, "why this matters", tutorial tone
-- Absolute machine paths; keep repo-relative values
-- Invented abbreviations (`cfg`/`impl`/`req`) — full technical words
-- Causal arrows (`→`) used as prose glue (table columns OK)
+- Filler, hedging, throat-clearing
+- Articles/conjunctions when unambiguous
+- Sections that only restate another table
+- Prose when table/one-liner carries fact
+- Human onboarding / tutorial tone
+- Absolute machine paths — repo-relative only
+- Invented abbreviations (`cfg`/`impl`/`req`)
+- Prose arrows (`→`) as glue (table columns OK)
 
 ## Intensity (ultra)
 
-- One fact once.
-- Fragments OK.
-- Telegraphic bullets: `[thing] [constraint].`
-- Prefer tables over paragraphs.
-- English in saved artifacts unless the worker skill sets another output language. Exception: `system-reverse-spec.md` and `system-reverse-spec.agent.md` are **always English** (never conversation language).
+- One fact once. Fragments OK.
+- Telegraphic: `[thing] [constraint].`
+- Tables over paragraphs.
+- English in saved artifacts unless worker sets other language. Exception: reverse-spec pair **always English**.
 
-## Per-artifact targets (soft → hard)
+## Targets (soft → hard)
 
-| Artifact | Soft target | Hard max |
-| -------- | ----------- | -------- |
+| Artifact | Soft | Hard |
+| -------- | ---- | ---- |
 | `architecture-rules.md` | 80–200 | 250 |
 | `brownfield-map.md` | ≤120 | ~180 |
 | `system-reverse-spec.agent.md` | tables only; lean | no novel prose |
 | `AGENTS.md` | 95–110 | 130 |
 
-If over hard max after one pass: delete lowest-value section, replace with a link, repeat once.
+Over hard max: delete lowest-value section, link, repeat once.
 
-## Self-check (before Write)
+## Self-check
 
-- [ ] Draft re-read after compress — no load-bearing path/skill/MUST lost
-- [ ] No duplicate section that only echoes another table in the same file
-- [ ] Line count within hard max (or linked overflow)
-- [ ] Human-only files in the "No" table above were **not** caveman-rewritten
-- [ ] Template MDs (`templates/`, `*.template.md`, `*-template.md`, `*.stub.md`) left uncompressed
+- [ ] No load-bearing path/skill/MUST lost
+- [ ] No duplicate section echoing another table
+- [ ] Line count ≤ hard max (or linked overflow)
+- [ ] "No" table files not caveman-rewritten
+- [ ] Templates left uncompressed

@@ -1,37 +1,37 @@
 # Phase 7 — Status Report (on-demand)
 
-**Trigger:** user asks for a sprint report, status update, or "write this up for my manager/for leadership/board".
+**Trigger:** sprint report, status update, "write this up for my manager/leadership/board".
 
-Multi-audience project communication specialist. All three reports must come from **exactly the same data** — reuse pipeline context when available; never invent additional information.
+Multi-audience comms. All three reports from **exact same data** — reuse pipeline context; never invent extra.
 
-## Step 1 — Get the sprint data
+## Step 1 — Get sprint data
 
-If a GitLab MCP server is configured, offer to pull milestone burndown and merge request activity. Otherwise ask for: sprint number/period, delivery metrics, quality metrics, risk context.
+GitLab MCP: offer milestone burndown + MR activity. Else ask: sprint number/period, delivery metrics, quality metrics, risk context.
 
 ## Step 2 — Generate three reports
 
 ### Report 1: Technical team
-Audience: developers, QA, tech leads. Register: technical. Natural language: same as the human (see SKILL.md Language matching). Length: 150–250 words. Format: prose + next-sprint actions.
+Audience: developers, QA, tech leads. Register: technical. Language: match human (SKILL.md Language matching). Length: 150–250 words. Format: prose + next-sprint actions.
 
 ### Report 2: Manager / PM / PMO
-Audience: project manager, coordinator, PMO. Register: risk- and decision-oriented — Green/Yellow/Red badge, at most 2 required decisions. Natural language: same as the human. Length: 150–200 words.
+Audience: PM, coordinator, PMO. Register: risk/decision — Green/Yellow/Red badge, ≤2 required decisions. Language: match human. Length: 150–200 words.
 
 ### Report 3: Executive / leadership
-Audience: C-level, directors. Register: business only — **never** mention story points, velocity, Lead Time, or unexplained acronyms. Natural language: same as the human. Length: 80–120 words.
+Audience: C-level, directors. Register: business only — **never** story points, velocity, Lead Time, unexplained acronyms. Language: match human. Length: 80–120 words.
 
 ## Status classification rule
 
-If data shows serious risk, managerial report must be Red and executive report must use urgency language.
+Serious risk in data: managerial = Red; executive = urgency language.
 
 ## Step 3 — Curation checklist
 
-Always close with verification checklist:
-1. Velocity numbers and dates consistent across all three reports?
+Always close verification:
+1. Velocity numbers + dates consistent across three reports?
 2. Tone calibrated per audience?
-3. Required decisions explicit in managerial and executive reports?
-4. Executive report free of technical metrics?
+3. Required decisions explicit in managerial + executive?
+4. Executive free of technical metrics?
 
 ## Behavioral constraints
 
-- All three reports traceable to the same input data.
-- Never let the executive report leak technical metrics.
+- All three reports traceable same input.
+- Never leak technical metrics into executive report.

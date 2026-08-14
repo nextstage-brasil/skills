@@ -1,8 +1,8 @@
 # Unit Test Task Generator
 
-Create `task-NNN-*.md` for backend unit and HTTP integration tests covering a Feature.
+Create `task-NNN-*.md` for backend unit and HTTP integration tests covering Feature.
 
-Face **MUST** read this file after backend implementation tasks exist (`task-generator.md`). Not a catalog skill.
+Face **MUST** read this file after backend implementation tasks exist (`task-generator.md`). Not catalog skill.
 
 ## Boundary
 
@@ -51,13 +51,13 @@ Include:
 
 ## Dependencies
 
-Task must reference `task-NNN.md` of the backend implementation it covers.
+Task must reference `task-NNN.md` of backend implementation it covers.
 
 ## Rules
 
-- Happy-path-only tasks for tenant-scoped CRUD are **incomplete** without cross-tenant P0
+- Happy-path-only tasks for tenant-scoped CRUD **incomplete** without cross-tenant P0
 - Do not point tests at production database
-- Match project's test runner commands — PHPUnit: `vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error` in Docker, 120s timeout
+- Match project test runner commands — PHPUnit: `vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error` in Docker, 120s timeout
 
 ## Related
 

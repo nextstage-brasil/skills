@@ -13,10 +13,10 @@
 
 ## Notes
 
-{Partition rationale — oversized groups split, merges for undersized slices}
+{Partition rationale — oversized groups split, undersized slices merge}
 
 ## Next steps
 
 1. Human validates roadmap (Gate Roadmap)
-2. For each subversion in dependency order: run consistency + task generation on slice `requirements.md`
-3. Update `status` → `planned` after each slice is planned
+2. Each subversion in dependency order: consistency + task generation on slice `requirements.md`
+3. Update `status` to `planned` after each slice planned

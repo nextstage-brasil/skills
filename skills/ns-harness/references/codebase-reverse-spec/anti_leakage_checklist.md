@@ -1,60 +1,60 @@
 # Anti-leakage checklist
 
-Walk this list before delivering the final spec. For each hit, rewrite in business language or confirm the exception (external provider name, role name, business attribute name).
+Walk before delivery. Each hit: rewrite business language or confirm exception (provider / role / business attribute name).
 
 ## Document language
 
-- [ ] Entire human body and agent index are **English only**
-- [ ] No mixed-language sentences (e.g. Portuguese condition + English "the system …")
-- [ ] Section titles and template labels left in English; placeholders filled in English
+- [ ] Human body + agent index **English only**
+- [ ] No mixed-language sentences
+- [ ] Titles + template labels English; placeholders English
 
-## Programming languages and runtimes
+## Languages / runtimes
 
-- [ ] No language names used as system description (Python, JavaScript, PHP, Java, Go, Rust, Ruby, C#, TypeScript, etc.)
-- [ ] No runtime/platform references (Node, JVM, .NET, browser engine names) unless the **product feature** explicitly depends on client device capability described in business terms (e.g., "device location services")
+- [ ] No language names as system description (Python, JS, PHP, Java, Go, Rust, Ruby, C#, TypeScript, …)
+- [ ] No runtime/platform (Node, JVM, .NET, browser engines) unless **product feature** needs device capability in business terms
 
-## Frameworks and libraries
+## Frameworks / libraries
 
-- [ ] No web framework names (React, Vue, Angular, Laravel, Django, Rails, Express, Spring, etc.)
-- [ ] No ORM/query builder names (Eloquent, Hibernate, Prisma, Sequelize, ActiveRecord, etc.)
-- [ ] No UI library or CSS framework names
-- [ ] No test framework names in the spec body
+- [ ] No web frameworks (React, Vue, Angular, Laravel, Django, Rails, Express, Spring, …)
+- [ ] No ORM/query builders (Eloquent, Hibernate, Prisma, Sequelize, ActiveRecord, …)
+- [ ] No UI/CSS framework names
+- [ ] No test framework names in body
 
-## Infrastructure and protocols
+## Infra / protocols
 
-- [ ] No database product names (PostgreSQL, MySQL, MongoDB, Redis, Supabase, Firebase, etc.)
-- [ ] No cloud provider or hosting names (AWS, GCP, Azure, Vercel, Heroku, Docker, Kubernetes)
-- [ ] No protocol/stack jargon (HTTP, REST, GraphQL, WebSocket, JWT, OAuth) — describe the **business effect** instead (e.g., "the operator must present a shared secret" not "JWT in Authorization header")
-- [ ] No message broker or queue product names unless they are the **external integration** the business cares about
+- [ ] No DB product names (PostgreSQL, MySQL, MongoDB, Redis, Supabase, Firebase, …)
+- [ ] No cloud/hosting (AWS, GCP, Azure, Vercel, Heroku, Docker, Kubernetes)
+- [ ] No protocol jargon (HTTP, REST, GraphQL, WebSocket, JWT, OAuth) — **business effect** instead
+- [ ] No broker/queue product names unless **external integration** business cares about
 
-## Code structure leakage
+## Code structure
 
-- [ ] No class, struct, interface, trait, or module names from the codebase
-- [ ] No function/method/variable names from the codebase
-- [ ] No file paths or folder names as domain structure ("the `services/` layer handles…")
-- [ ] No design pattern names (MVC, repository, factory, singleton, middleware pipeline)
-- [ ] No "the API returns JSON" — describe what information is exchanged
+- [ ] No class/struct/interface/trait/module names from codebase
+- [ ] No function/method/variable names
+- [ ] No file/folder names as domain structure
+- [ ] No design pattern names (MVC, repository, factory, singleton, middleware)
+- [ ] No "API returns JSON" — describe exchanged information
 
-## Data model leakage
+## Data model
 
 - [ ] No column types (VARCHAR, UUID, BIGINT, TIMESTAMP, JSONB)
-- [ ] No primary/foreign key terminology — use business relations
-- [ ] No migration or schema version references
-- [ ] Attribute names used only when they carry business meaning, not as a schema dump
+- [ ] No PK/FK terminology — business relations
+- [ ] No migration/schema version refs
+- [ ] Attribute names only for business meaning, not schema dump
 
-## Architecture leakage
+## Architecture
 
 - [ ] No microservices/monolith/serverless labels
-- [ ] No "frontend/backend" split — describe actors and channels (operator panel, client link, etc.)
-- [ ] No caching, indexing, or performance implementation details unless they create a **user-visible business constraint** (e.g., "the list shows at most 50 recent records")
+- [ ] No "frontend/backend" split — actors + channels
+- [ ] No cache/index/perf detail unless **user-visible business constraint**
 
-## Tone and intent
+## Tone
 
-- [ ] Present tense, describing **current** behavior — not future requirements
-- [ ] No "should" / "will" for unimplemented behavior (use "the system does" / "the system prevents")
-- [ ] Suspected bugs are in the appendix, not stated as intentional rules
-- [ ] Inferred rules are flagged in the appendix, not presented as confirmed fact in the body
+- [ ] Present tense = **current** behavior
+- [ ] No "should"/"will" for unimplemented (use "system does"/"system prevents")
+- [ ] Suspected bugs → appendix
+- [ ] Inferred → appendix, not confirmed body fact
 
-## Quick self-test
+## Self-test
 
-Pick three random sentences from the spec. For each, ask: *"Would this still be true if the system were rebuilt in a completely different technology?"* If any answer is no, rewrite.
+Three random sentences: *"Still true if rebuilt on different technology?"* Any no → rewrite.

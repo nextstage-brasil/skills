@@ -1,12 +1,12 @@
 # Artifact layout (SDD)
 
-Canonical paths for spec-driven planning and delivery artifacts. Keep `{version_san}` / `{subversion_san}` as sanitized ids (e.g. `1.0.0`).
+Canonical paths for SDD planning/delivery. `{version_san}` / `{subversion_san}` = sanitized ids (e.g. `1.0.0`).
 
 ## Isolation
 
-- All version planning artifacts live under `docs/versions/{version_san}/`.
-- Do not save product specs at repo root `/docs/` unless explicitly documented.
-- Living specs live under `docs/specs/` — see `ns-living-spec` skill.
+- Version planning under `docs/versions/{version_san}/`.
+- No product specs at repo root `/docs/` unless explicitly documented.
+- Living specs under `docs/specs/` — see `ns-living-spec`.
 
 ## Minimum tree (create before writing)
 
@@ -14,14 +14,14 @@ Canonical paths for spec-driven planning and delivery artifacts. Keep `{version_
 docs/versions/{version_san}/
 docs/versions/{version_san}/tasks/
 docs/context/
-docs/specs/          # created on first living-spec delivery
+docs/specs/          # first living-spec delivery
 ```
 
 ## Standard artifacts
 
 | Artifact | Path |
 |----------|------|
-| Requirements | `docs/versions/{version_san}/requirements.md` (trailing `## Consistency` status from `ns-spec-driven` Consistency phase — `references/analyze-consistency.md`) |
+| Requirements | `docs/versions/{version_san}/requirements.md` (trailing `## Consistency` from `ns-spec-driven` Consistency — `references/analyze-consistency.md`) |
 | Tasks | `docs/versions/{version_san}/tasks/task-NNN-*.md` |
 | Execution handoff | `docs/versions/{version_san}/execution-handoff.md` |
 | Commercial budget (internal) | `docs/versions/{version_san}/commercial-budget-internal.md` (header: Sequência + Gerado em) |
@@ -31,56 +31,45 @@ docs/specs/          # created on first living-spec delivery
 
 ## Product context (`docs/context/`)
 
-Stable product-wide context — stack, design, brownfield notes, GitLab sync — lives
-outside version folders so every implementer reads the same source.
+Stable product-wide context outside version folders.
 
 | File | Purpose |
 |------|---------|
-| `stack-confirmed.md` | Confirmed stack, constraints, test environment |
+| `stack-confirmed.md` | Stack, constraints, test environment |
 | `design-brief.md` | UI/UX tokens, layout, component style |
 | `brownfield-map.md` | Agent-dense module/gap map (stack via `architecture-rules.md`) |
-| `system-reverse-spec.md` | Human-readable business reverse description |
-| `system-reverse-spec.agent.md` | Agent-dense index of the reverse spec (prefer when both exist) |
-| `gitlab-sync-config.md` | GitLab project ids, status labels, branches |
-| `ci-cd-notes.md` | Pipeline and deployment notes |
+| `system-reverse-spec.md` | Human reverse description |
+| `system-reverse-spec.agent.md` | Agent index (prefer when both exist) |
+| `gitlab-sync-config.md` | Project ids, status labels, branches |
+| `ci-cd-notes.md` | Pipeline / deploy notes |
 
-Other `*.md` files in `docs/context/` (including subfolders) are valid — read
-them when the task layer or filename suggests relevance.
+Other `docs/context/**/*.md` valid — read when task layer/filename relevant.
 
 ### Implementation boot rule
 
-Before writing code for any task (ad-hoc, handoff, slice, or GitLab issue):
+Before writing code (ad-hoc, handoff, slice, GitLab issue):
 
-1. If `docs/context/` exists, **list** its contents (including one level of
-   subdirectories).
-2. **Read** every file that applies to the task layer — at minimum
-   `stack-confirmed.md` when present; add `design-brief.md` for UI work;
-   `brownfield-map.md` when touching legacy areas; prefer
-   `system-reverse-spec.agent.md` over the prose body when both exist;
-   `gitlab-sync-config.md` when syncing with GitLab or choosing branches.
-3. Do not skip this step because the active path is a version or subversion folder.
+1. `docs/context/` exists → **list** contents (+ one level of subdirs).
+2. **Read** every file for task layer — at min `stack-confirmed.md` when present; `design-brief.md` for UI; `brownfield-map.md` for legacy; prefer `system-reverse-spec.agent.md` over prose body; `gitlab-sync-config.md` for GitLab/branches.
+3. Do not skip because path is version/subversion folder.
 
 ## Subversions (optional)
 
-When a version is partitioned:
-
 - Master roadmap: `docs/versions/{version_san}/version-roadmap.md`
-- Slice folder: `docs/versions/{version_san}/subversions/{subversion_san}/`
+- Slice: `docs/versions/{version_san}/subversions/{subversion_san}/`
 - Slice requirements: excerpt under each subversion folder
 
-See `ns-spec-driven` → `references/version-partitioner.md` and `core-subversions` rule when present in harness.
+See `ns-spec-driven` → `references/version-partitioner.md` + `core-subversions` when present.
 
 ## Handoff rule
 
-- Do not declare planning complete if tasks exist without `execution-handoff.md`.
-- The handoff is the **single source of truth** for version progress — do not
-  duplicate task status inside individual `task-NNN-*.md` files.
-- Must include **Time tracking (seconds)** with `Total process time (s)`
-  (planning → final delivery).
-- Update timestamps and totals during execution, review, living specs, and closure.
-- Generate and maintain via `ns-spec-driven` → `references/execution-handoff.md` (internal phase).
+- Planning incomplete if tasks exist without `execution-handoff.md`.
+- Handoff = **single SoT** for version progress — no task-status duplicate in `task-NNN-*.md`.
+- Must include **Time tracking (seconds)** with `Total process time (s)`.
+- Update timestamps/totals during execution, review, living specs, closure.
+- Maintain via `ns-spec-driven` → `references/execution-handoff.md`.
 
-Slice handoff (partitioned versions):
+Slice handoff:
 
 - `docs/versions/{version_san}/subversions/{subversion_san}/execution-handoff.md`
-- Master version may also hold a top-level handoff for aggregate closure.
+- Master may hold top-level handoff for aggregate closure.

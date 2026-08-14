@@ -1,51 +1,51 @@
 # Compression guide
 
-`architecture-rules.md` is **hot memory** — loaded every session. Every line competes with the user's task context.
+`architecture-rules.md` = **hot memory**. Every line competes with task context.
 
-**Always first:** `../agent-artifact-compress.md` (shared pre-save / caveman ultra). This file adds constitution-specific tactics after that pass.
+**Always first:** `../agent-artifact-compress.md`. This file = constitution tactics after that pass.
 
 ## Target
 
 | Metric | Target |
 | ------ | ------ |
 | Lines | 80–200 (hard max 250) |
-| Prose paragraphs | Avoid — use tables and bullets |
-| Bullet style | Telegraphic — one fact per line; no filler ("Note that…", "It is important…") |
-| Module tables | ≤ 12 rows; merge minor modules into "Other" |
-| Code blocks | ≤ 2 short blocks (test commands, compose exec) |
+| Prose paragraphs | Avoid — tables + bullets |
+| Bullet style | Telegraphic — one fact/line; no filler |
+| Module tables | ≤12 rows; minor → "Other" |
+| Code blocks | ≤2 short (test commands, compose exec) |
 
-## What belongs here vs elsewhere
+## Keep vs move out
 
-| Keep in architecture-rules | Move out |
-| -------------------------- | -------- |
+| Keep | Move out |
+| ---- | -------- |
 | Scope, stack table, layout tree | Full API route lists |
-| Module **names** and one-line responsibility | Per-handler webhook pipelines |
+| Module **names** + one-line responsibility | Per-handler webhook pipelines |
 | Generated/forbidden paths | Domain business rules |
 | Primary test command | Full test matrix |
 | Pointers to sibling rules | Full NsUtil/Grogoo manuals |
-| Auth/tenant **model** in one sentence | Status label cascade steps |
+| Auth/tenant **model** one sentence | Status label cascade steps |
 
-## Compression tactics
+## Tactics
 
-1. **Route by reference** — replace 20-line subsystem docs with `See docs/specs/foo.md` or `backend-rules.md`.
-2. **Collapse duplicates** — if `AGENTS.md` already states SDD chain, one line: "SDD workflow: see AGENTS.md".
-3. **Table over prose** — stack, modules, crons, test suites as tables.
-4. **Telegraphic bullets** — subject → constraint; drop articles and throat-clearing when meaning stays clear.
-5. **Drop the obvious** — do not document "use git" or generic SOLID unless the repo encodes a **specific** rule (e.g. "never edit Generated/").
-6. **Mark inference** — `(inferred)` on one line beats a wrong confident rule.
-7. **Split on overflow** — if NsUtil or Grogoo needs >40 lines, create `nsutil-architecture-rules.md` and keep one cross-link here.
+1. **Route by reference** — 20-line subsystem → `See docs/specs/foo.md` or `backend-rules.md`.
+2. **Collapse duplicates** — SDD already in `AGENTS.md` → one line pointer.
+3. **Table over prose** — stack, modules, crons, tests.
+4. **Telegraphic bullets** — subject + constraint.
+5. **Drop obvious** — no "use git" / generic SOLID unless repo-specific (e.g. "never edit Generated/").
+6. **Mark inference** — `(inferred)` beats wrong confident rule.
+7. **Split overflow** — NsUtil/Grogoo >40 lines → sibling rule + one cross-link.
 
-## Anti-patterns (seen in bloated rules)
+## Anti-patterns
 
-- Full router strategy enumeration — keep entry point + "new routes: see X"
-- Copy-paste from README — agents can read README; constitution is **constraints**
-- Business workflows (billing quotas, webhook cascades) — belong in `docs/specs/`
-- Listing every cron job — table with schedule + command only if agents routinely touch crons
+- Full router strategy enum — entry point + "new routes: see X"
+- README copy-paste — constitution = **constraints**
+- Business workflows — `docs/specs/`
+- Every cron — schedule + command table only if agents touch crons
 
-## Self-check before save
+## Self-check
 
 ```
 wc -l .nextstage-harness/rules/architecture-rules.md
 ```
 
-If > 200 lines, run one compression pass: delete lowest-value section, add link, repeat. Then run `npx @nextstage-brasil/harness sync`.
+>200 lines: delete lowest-value section, link, repeat once. Then `npx @nextstage-brasil/harness sync`.

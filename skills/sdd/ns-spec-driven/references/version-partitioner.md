@@ -15,7 +15,7 @@ See `../../../ns-harness/references/artifact-layout.md` and `../../../ns-harness
 ## Algorithm
 
 1. **Parse master** — Features, precedences, data model hints, layer tags
-2. **Build DAG** — default order: schema → API → FE → tests; honor explicit precedence
+2. **Build DAG** — default order: schema then API then FE then tests; honor explicit precedence
 3. **Group by bounded context** — cluster by domain/entity
 4. **Split oversized groups** when:
    - \> 12 features with cross-dependencies, or
@@ -25,7 +25,7 @@ See `../../../ns-harness/references/artifact-layout.md` and `../../../ns-harness
 6. **Topological sort** — folders `01-slug`, `02-slug`, …
 7. **Emit artifacts:**
    - `version-roadmap.md` at version root
-   - `subversions/{subversion_san}/requirements.md` — **excerpt** + link to master `../requirements.md#Feature-ID`
+   - `subversions/{subversion_san}/requirements.md` — **excerpt** + link master `../requirements.md#Feature-ID`
    - Empty `subversions/{subversion_san}/tasks/` per slice
 
 ## Roadmap table columns
@@ -39,15 +39,15 @@ Start `status` as `pending`.
 - [ ] `version-roadmap.md` saved
 - [ ] All subversion folders with excerpt requirements + empty `tasks/`
 - [ ] No `task-*.md` created
-- [ ] Human can review before slice planning loop
+- [ ] Human review before slice planning loop
 
 ## References
 
-| File                                     | When                              |
-| ---------------------------------------- | --------------------------------- |
-| `version-roadmap.template.md` | Roadmap structure                 |
+| File                          | When                              |
+| ----------------------------- | --------------------------------- |
+| `../templates/version-roadmap.template.md` | Roadmap structure                 |
 | `partition-workflow.md`       | Orchestrator loop after partition |
 
 ## Integration
 
-After partition → Gate Roadmap (human confirms) → plan each slice (Gates 2–3, tasks) without repeating Gate 1.
+After partition then Gate Roadmap (human confirms) then plan each slice (Gates 2–3, tasks) without repeating Gate 1.

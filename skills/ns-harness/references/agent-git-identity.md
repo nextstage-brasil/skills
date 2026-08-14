@@ -1,7 +1,6 @@
 # Agent git commit identity
 
-When committing on behalf of an automated agent, attribute the commit only when
-both environment variables are set and non-empty:
+Attribute agent commits only when **both** env vars set + non-empty:
 
 | Variable | Purpose |
 |----------|---------|
@@ -9,8 +8,6 @@ both environment variables are set and non-empty:
 | `AGENT_GIT_AUTHOR_EMAIL` | Email for `git commit --author` |
 
 ## Usage
-
-Check both vars before committing:
 
 ```bash
 if [ -n "$AGENT_GIT_AUTHOR_NAME" ] && [ -n "$AGENT_GIT_AUTHOR_EMAIL" ]; then
@@ -22,6 +19,6 @@ fi
 
 ## Rules
 
-- Use `--author` only when **both** vars are set; otherwise use the default git identity.
-- Never modify global or local `git config` to set author name or email.
-- Commit messages: English, imperative, focused on **why**.
+- `--author` only when **both** vars set; else default git identity.
+- Never modify global/local `git config` for author.
+- Messages: English, imperative, **why**.

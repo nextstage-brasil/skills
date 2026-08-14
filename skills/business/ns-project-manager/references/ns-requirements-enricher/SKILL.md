@@ -28,34 +28,34 @@ Prepare requirements for **autonomous execution** by closing gaps before any bra
 
 | Mode | Trigger | Delivery |
 | ---- | ------- | -------- |
-| **Issue** | `ISSUE_URL` present or user points to a GitLab issue | Post one **internal** GitLab comment (Phase 4) |
+| **Issue** | `ISSUE_URL` present or user points to GitLab issue | Post one **internal** GitLab comment (Phase 4) |
 | **Chat** | User pastes/describes requirements in conversation — no issue URL | Render verdict + numbered questions **inline in chat only** — no files, no GitLab, no version artifacts |
 
 Both modes share Phases 2–3 (investigation + grill-me). Phase 1 (MCP load) applies only in **issue** mode.
 
 ## Session boot
 
-Optional — skip any step whose path does not exist. Investigate the codebase after this boot when a repo is available.
+Optional — skip that step if path missing. Investigate codebase after this boot when repo available.
 
-1. If `agents.local.md` exists beside `AGENTS.md`, read it once. Never tool-Read `AGENTS.md`.
+1. If `agents.local.md` exists beside `AGENTS.md`, read once. Never tool-Read `AGENTS.md`.
 2. If `.nextstage-harness/rules/` exists, read `architecture-rules.md` and `project-rules.md` when present.
-3. If `docs/context/` exists, list it and read reverse-spec / brownfield-map when present.
-4. If GitLab MCP is available, follow `mcp-gitlab-usage` when that skill is installed (`get_mcp_gitlab_skill` version check on first access). Otherwise stay in chat mode.
+3. If `docs/context/` exists, list it; read reverse-spec / brownfield-map when present.
+4. If GitLab MCP available, follow `mcp-gitlab-usage` when that skill installed (`get_mcp_gitlab_skill` version check on first access). Otherwise stay in chat mode.
 
 ## Objective
 
 **Issue mode:** given `ISSUE_URL`, produce one **internal** GitLab comment that:
 
-1. Summarizes what you understood from the issue + comments
-2. Opens with a **verdict icon** — `✅` (ready) or `❌` (blocking questions)
+1. Summarizes what you understood from issue + comments
+2. Opens with **verdict icon** — `✅` (ready) or `❌` (blocking questions)
 3. Lists **all** blocking/open questions **numbered sequentially** (never one-by-one in chat)
-4. **@mentions** the issue **author** (who opened it) so they can reply in the issue thread
+4. **@mentions** issue **author** (who opened it) so they can reply in issue thread
 
-**Chat mode:** given requirements text from the conversation, produce an **inline** response that:
+**Chat mode:** given requirements text from conversation, produce **inline** response that:
 
-1. Summarizes what you understood from the user's description
-2. Opens with the same **verdict icon** — `✅` or `❌`
-3. Lists **all** blocking/open questions **numbered sequentially** in the chat reply
+1. Summarizes what you understood from user's description
+2. Opens with same **verdict icon** — `✅` or `❌`
+3. Lists **all** blocking/open questions **numbered sequentially** in chat reply
 4. Does **not** @mention anyone (no issue author)
 
 Do **not** implement, commit, change issue status, create files, or ask questions interactively one-by-one (except when blocked on missing context or MCP access in issue mode).
@@ -63,16 +63,16 @@ Do **not** implement, commit, change issue status, create files, or ask question
 ## When to use
 
 - User provides `ISSUE_URL` and wants requirements clarified before coding (**issue** mode)
-- User pastes a feature brief, scope, or acceptance criteria in chat without a GitLab issue (**chat** mode)
+- User pastes feature brief, scope, or acceptance criteria in chat without GitLab issue (**chat** mode)
 - User invokes grill-me on requirements (issue or chat)
 - `ns-autonomous` / human flags work as underspecified
-- Pre-step before `ns-execution-gitlab-issue` when acceptance criteria are incomplete
+- Pre-step before `ns-execution-gitlab-issue` when acceptance criteria incomplete
 
 ## Prerequisites
 
 1. Obey `AGENTS.md` when already in host context — Docker/runtime context if investigation touches tests or services. Never tool-Read it.
-2. Read `agents.local.md` when present — use **only** the GitLab MCP server named there.
-3. Follow GitLab MCP tool contracts when MCP is available; if MCP is missing, stay in chat mode.
+2. Read `agents.local.md` when present — use **only** GitLab MCP server named there.
+3. Follow GitLab MCP tool contracts when MCP available; if MCP missing, stay in chat mode.
 
 ## Inputs
 
@@ -84,9 +84,9 @@ Do **not** implement, commit, change issue status, create files, or ask question
 
 ## Phase 1 — Load issue context (issue mode only)
 
-**Skip this phase in chat mode.** Use the user's message and any pasted context as the requirements source instead.
+**Skip this phase in chat mode.** Use user's message and any pasted context as requirements source instead.
 
-**Parse URL** → `project_id` (or `project_name` for discovery) + `issue_iid`.
+**Parse URL** for `project_id` (or `project_name` for discovery) + `issue_iid`.
 
 **Mandatory reads:**
 
@@ -95,11 +95,11 @@ Do **not** implement, commit, change issue status, create files, or ask question
 
 ### Author username (mandatory — do not guess)
 
-The `@mention` on the first line **must** use the GitLab login exactly as returned by `read_issue`.
+`@mention` on first line **must** use GitLab login exactly as returned by `read_issue`.
 
 **Source of truth (only):**
 
-- `author.username` from the `read_issue` response — the user who **opened** the issue.
+- `author.username` from `read_issue` response — user who **opened** issue.
 
 **Immediately after `read_issue`, record:**
 
@@ -111,11 +111,11 @@ author_username = <author.username>   # literal string from MCP; case-sensitive
 
 - `author.name` (display name)
 - Slug/sanitize derivations from `author.name`
-- Assignee username (unless assignee **is** the author)
+- Assignee username (unless assignee **is** author)
 - Username inferred from comments, email, profile URL, or memory
 - Lowercasing or normalizing unless GitLab returned that casing
 
-**If `author` or `author.username` is missing:** stop and report — do not substitute assignee or guess.
+**If `author` or `author.username` missing:** stop and report — do not substitute assignee or guess.
 
 **Synthesize** (internal notes, not yet posted):
 
@@ -124,13 +124,13 @@ author_username = <author.username>   # literal string from MCP; case-sensitive
 - **Constraints** — note labels/milestone/due date for _your_ context; do **not** turn missing labels into questions.
 - **Already answered** — facts from comments that remove ambiguity; do not re-ask these.
 
-If `ISSUE_URL` is missing in issue mode, or MCP is unavailable, stop with a single line telling the human what is missing (do not invent issue content).
+If `ISSUE_URL` missing in issue mode, or MCP unavailable, stop with single line telling human what is missing (do not invent issue content).
 
-In **chat mode**, synthesize Goal, Acceptance criteria, Constraints, and Already answered from the conversation text using the same structure as above.
+In **chat mode**, synthesize Goal, Acceptance criteria, Constraints, and Already answered from conversation text using same structure as above.
 
 ## Phase 2 — Investigate codebase and product context
 
-Scope investigation to what the issue touches. Goal: discover **real product ambiguities**; keep technical findings in "Current understanding" / "Assumptions", not in the question list.
+Scope investigation to what issue touches. Goal: discover **real product ambiguities**; keep technical findings in "Current understanding" / "Assumptions", not in question list.
 
 **Read product context when relevant:**
 
@@ -141,37 +141,37 @@ Scope investigation to what the issue touches. Goal: discover **real product amb
 
 **Investigation actions (pick what applies):**
 
-- Grep symbols, routes, module names mentioned in the issue.
-- Read controllers, services, views, API routes, and integrations in the affected area.
-- Check existing tests for the same area.
+- Grep symbols, routes, module names mentioned in issue.
+- Read controllers, services, views, API routes, and integrations in affected area.
+- Check existing tests for same area.
 - Note: current behavior, extension points, permissions, events/queues, env dependencies.
 
-**Output:** short bullet list of **relevant files/areas** and **assumptions** the issue implies but does not state.
+**Output:** short bullet list of **relevant files/areas** and **assumptions** issue implies but does not state.
 
 ## Phase 3 — Grill-me gap analysis
 
-Apply relentless interview logic: sharpen the plan by exposing what is still unknown for _behavior the requester cares about_.
+Apply relentless interview logic: sharpen plan by exposing what still unknown for _behavior requester cares about_.
 
-Cross **issue text + comments + code findings**. For each gap, ask: _"Could an agent implement and verify this without guessing the product intent?"_ If no → candidate question — then **rewrite** it for the requester (see below).
+Cross **issue text + comments + code findings**. For each gap, ask: _"Could agent implement and verify this without guessing product intent?"_ If no, candidate question — then **rewrite** it for requester (see below).
 
 ### Audience (mandatory)
 
-Questions are for **who opened the issue** (`author` from `read_issue`), not for a developer, tech lead, or ops.
+Questions are for **who opened issue** (`author` from `read_issue`), not for developer, tech lead, or ops.
 
 - Language: **common product/UX language** (screen, button, filter, what appears, when it applies).
-- The requester's answers must **imply** the technical decision; you translate later at execution time.
-- Put schema, SQL, class names, branches, labels, and file paths in **Current understanding / Assumptions** — never as the question itself.
+- Requester's answers must **imply** technical decision; you translate later at execution time.
+- Put schema, SQL, class names, branches, labels, and file paths in **Current understanding / Assumptions** — never as question itself.
 
 ### Question quality rules
 
-- **Requester-facing** — a non-dev product owner can answer without reading code.
-- **Specific** — name the screen/flow the user sees, not the implementation class.
-- **Answerable** — one line or a short paragraph; prefer closed choices when useful.
-- **Blocking** — omit nice-to-haves that have a safe default (state the default in "Assumptions").
+- **Requester-facing** — non-dev product owner can answer without reading code.
+- **Specific** — name screen/flow user sees, not implementation class.
+- **Answerable** — one line or short paragraph; prefer closed choices when useful.
+- **Blocking** — omit nice-to-haves that have safe default (state default in "Assumptions").
 - **Non-duplicative** — skip anything already answered in issue or comments.
-- **Numbered** — final list is `1.`, `2.`, … ordered by user journey (what appears → when it applies → edge cases → acceptance).
+- **Numbered** — final list is `1.`, `2.`, … ordered by user journey (what appears, when it applies, edge cases, acceptance).
 
-### Translate technical gaps → product questions
+### Translate technical gaps to product questions
 
 | Technical gap (keep internal / in assumptions) | Ask the requester instead                                                                                                                     |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -179,7 +179,7 @@ Questions are for **who opened the issue** (`author` from `read_issue`), not for
 | Base branch / GATE 1 / `develop-*` naming      | Do **not** ask (see Out of scope)                                                                                                             |
 | Missing label `Team: *`                        | Do **not** ask                                                                                                                                |
 | Endpoint payload / SQL join                    | "When Federation and Role are both selected, must a person match both or either?"                                                             |
-| Unit vs E2E test path                          | Only if acceptance is unclear — e.g. "How will we validate this is done: on the screen, with specific scenarios?" — not "which phpunit path?" |
+| Unit vs E2E test path                          | Only if acceptance unclear — e.g. "How will we validate this is done: on the screen, with specific scenarios?" — not "which phpunit path?" |
 
 ### Good vs bad examples
 
@@ -195,22 +195,22 @@ Questions are for **who opened the issue** (`author` from `read_issue`), not for
 
 > Should table `agencia_2.linktable` with relation `PESSOA|CLUBE` filter by `id_right_linktable`?
 
-**Milestone (only allowed case):** at most _one_ question like "Is the milestone on this issue correct?" — when product version is genuinely ambiguous. Nothing about branch naming, underscores vs hyphens, or GATE 1.
+**Milestone (only allowed case):** at most _one_ question like "Is the milestone on this issue correct?" — when product version genuinely ambiguous. Nothing about branch naming, underscores vs hyphens, or GATE 1.
 
-### Out of scope for the question list
+### Out of scope for question list
 
 Do **not** promote to numbered questions:
 
 - Missing or wrong **labels** (Team, Type, Priority, Severity, …)
 - **Base branch**, remote branch naming, GATE 1 / `develop-{semver}` vs `develop_X.Y.Z`
-- Pure engineering choices with a safe default already stated in Assumptions
+- Pure engineering choices with safe default already stated in Assumptions
 - "How should we implement…" / schema / class / env var names
 
 ### Categories to scan
 
 See `references/question-checklist.md`. Prefer product/UX/acceptance gaps only.
 
-Cap at **15 questions**; merge related micro-questions. If zero gaps remain, say so explicitly and post a short "ready for execution" internal note instead of filler questions.
+Cap at **15 questions**; merge related micro-questions. If zero gaps remain, say so explicitly and post short "ready for execution" internal note instead of filler questions.
 
 ## Phase 4 — Deliver results
 
@@ -228,23 +228,23 @@ Unless `DRY_RUN=true`, call `add_issue_comment` with:
 | Zero blocking questions — execution-ready | `✅` | `✅ @{author_username} — requirements enrichment for autonomous execution. **Ready for execution.**`      |
 | One or more blocking questions            | `❌` | `❌ @{author_username} — requirements enrichment for autonomous execution. **{N} blocking question(s).**` |
 
-Use the **execution-ready** template when `N = 0`; use the **questions** template when `N ≥ 1`. The icon is mandatory — never omit.
+Use **execution-ready** template when `N = 0`; use **questions** template when `N ≥ 1`. Icon mandatory — never omit.
 
-**Mention author:** `author_username` is the **literal** `author.username` captured in Phase 1. Re-read `read_issue` output if unsure — never infer.
+**Mention author:** `author_username` is **literal** `author.username` captured in Phase 1. Re-read `read_issue` output if unsure — never infer.
 
 **After posting:** reply in chat with:
 
 - Link or `project_id` + `issue_iid`
 - Count of questions posted
-- One-line note if the issue looks execution-ready vs blocked
+- One-line note if issue looks execution-ready vs blocked
 
 Do **not** use `set_issue_status`, `update_issue`, or `create_issue` in this skill.
 
 ### Chat mode (inline)
 
-Render the same structure as the comment template **directly in the chat reply**:
+Render same structure as comment template **directly in chat reply**:
 
-- Verdict icon on the first line (`✅` ready / `❌` with question count)
+- Verdict icon on first line (`✅` ready / `❌` with question count)
 - **Current understanding** — short summary
 - **Assumptions** — safe defaults you applied
 - **Areas investigated** — relevant files/modules (OK to include paths here)
@@ -259,42 +259,42 @@ Do **not** create files, post to GitLab, or write version artifacts (`requiremen
 
 ## Language
 
-- GitLab comment (issue mode): **English** unless the user or project docs explicitly require another language for stakeholder communication.
-- Chat reply (chat mode): match the language the user used unless they request otherwise.
+- GitLab comment (issue mode): **English** unless user or project docs explicitly require another language for stakeholder communication.
+- Chat reply (chat mode): match language user used unless they request otherwise.
 - In **Questions**: no file paths, class names, SQL, or env vars
-- In **Current understanding / Assumptions / Areas investigated**: code paths OK (for the executing agent)
+- In **Current understanding / Assumptions / Areas investigated**: code paths OK (for executing agent)
 
 ## Anti-patterns
 
-- Asking questions one-by-one in chat instead of batching in the issue comment
-- Posting a public (non-internal) comment
+- Asking questions one-by-one in chat instead of batching in issue comment
+- Posting public (non-internal) comment
 - Hand-crafting `requirements.md` or calling `start_execution_planning` (out of scope)
 - Starting implementation or creating branches
 - Generic questions ignoring codebase ("How should this work?" without screen/context)
 - Re-asking facts already in comments
 - Forgetting `@author_username` (opener)
-- Using `author.name`, a slug of the display name, or any username not equal to `author.username` from `read_issue`
+- Using `author.name`, slug of display name, or any username not equal to `author.username` from `read_issue`
 - Questions aimed at **developers** (table, branch, label, GATE, test path, JSON payload)
 - Asking about **missing labels**
 - Asking about **base branch** / remote branch naming (except optional "is milestone correct?")
-- Putting the **technical solution** inside the question
+- Putting **technical solution** inside question
 
 ## Relationship to other skills
 
 | Skill                    | When                                                                |
 | ------------------------ | ------------------------------------------------------------------- |
-| `ns-execution-gitlab-issue`   | After requirements are clear; implements the issue                  |
+| `ns-execution-gitlab-issue`   | After requirements clear; implements issue                  |
 | `ns-reviewer`          | After code exists; reviews diffs                                    |
 | `mcp-gitlab-usage`       | All MCP calls, version check, `add_issue_comment` contract          |
 | `/ns-spec-driven` Clarify | Version-scope clarification in chat before Specify |
-| `/ns-spec-driven` Specify | Produces `requirements.md` for a version — not per-issue enrichment |
+| `/ns-spec-driven` Specify | Produces `requirements.md` for version — not per-issue enrichment |
 
 ## Quick checklist
 
 - [ ] Mode detected: issue (`ISSUE_URL`) vs chat (conversation text)
 - [ ] Issue mode: `read_issue` + `list_issue_comments` done; `author_username` = literal `author.username`
 - [ ] Chat mode: requirements synthesized from user message; no MCP issue load
-- [ ] Codebase and product context investigated; technical gaps → assumptions or rewritten for requester
+- [ ] Codebase and product context investigated; technical gaps to assumptions or rewritten for requester
 - [ ] Questions: requester-facing, plain language, no labels/branch/schema as questions
 - [ ] Issue mode: comment uses template; verdict icon; `@author`; `internal: true`
 - [ ] Chat mode: verdict + questions inline only; no files, no GitLab posts

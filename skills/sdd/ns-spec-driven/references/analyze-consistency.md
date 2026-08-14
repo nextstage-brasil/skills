@@ -1,15 +1,15 @@
 # Analyze Consistency
 
-Pre-execution validation: plan vs plan before coding.
+Pre-execution: plan vs plan before coding.
 
 ## Session boot
 
-See `../../../ns-harness/references/session-boot.md`. Load rules from `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` is absent.
+See `../../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent.
 
 ## When to use
 
 - After Gate 2 (`scope_confirmed`)
-- User asks "analyze requirements" or "check consistency"
+- User say "analyze requirements" or "check consistency"
 - After manual `requirements.md` edits
 
 ## Prerequisites
@@ -20,7 +20,7 @@ See `../../../ns-harness/references/session-boot.md`. Load rules from `.nextstag
 
 ### Step 1 — Index requirements
 
-Read `requirements.md` and index:
+Read `requirements.md`. Index:
 
 - Main objective
 - Features (title, precedence, acceptance criteria)
@@ -29,7 +29,7 @@ Read `requirements.md` and index:
 
 ### Step 2 — Run checks
 
-Classify each as ✅ OK | ⚠️ Warning | ❌ Blocker:
+Classify each: ✅ OK | ⚠️ Warning | ❌ Blocker
 
 **Feature integrity**
 
@@ -65,14 +65,13 @@ Classify each as ✅ OK | ⚠️ Warning | ❌ Blocker:
 | Features support stated objective | ⚠️ Warning    |
 | Out-of-scope features present     | ⚠️ Warning    |
 
-Apply stack-specific checks from harness rules when they exist (Laravel/React checks are optional).
+Apply stack-specific checks from harness rules when present (Laravel/React optional).
 
 ### Step 3 — Write status into requirements.md
 
 **Do not** create `consistency-report.md`.
 
-Append (or replace an existing trailing `## Consistency` block) at the end of
-`requirements.md`:
+Append (or replace trailing `## Consistency` block) at end of `requirements.md`:
 
 ```markdown
 ## Consistency
@@ -93,32 +92,29 @@ Append (or replace an existing trailing `## Consistency` block) at the end of
 
 Rules:
 
-- **Any ❌ Blocker** → `Status: Reproved`
-- **Zero blockers** → `Status: Approved` (warnings/recommendations still allowed)
-- Include **Warnings** only when at least one ⚠️ exists
-- Include **Recommendations** only when there is at least one optional improvement
-- On re-run, replace the previous `## Consistency` block — do not duplicate
+- **Any ❌ Blocker** then `Status: Reproved`
+- **Zero blockers** then `Status: Approved` (warnings/recommendations OK)
+- **Warnings** only when ≥1 ⚠️
+- **Recommendations** only when ≥1 optional improvement
+- Re-run: replace prior `## Consistency` block — no duplicate
 
 ### Step 4 — Proceed decision
 
-- **Reproved:** Tell the user in chat (list blockers briefly), **stop** — do not
-  proceed to task generation. Ask them to fix requirements, then re-run.
-- **Approved with warnings:** Inform; ask fix now or proceed; user decides.
-- **Approved with no warnings:** Inform auto-proceed to task generation;
-  `execution_confirmed` implicit (skip Gate 3).
+- **Reproved:** Chat list blockers brief, **stop** — no task generation. User fix requirements, then re-run.
+- **Approved with warnings:** Inform; ask fix now or proceed; user decide.
+- **Approved no warnings:** Inform auto-proceed task generation; `execution_confirmed` implicit (skip Gate 3).
 
 ## Critical rules
 
-- Edit `requirements.md` **only** to update the trailing Consistency block
-- Blockers prevent task generation without fix or explicit waiver
-- If requirements missing → redirect to Gate 1 / `requirements-generator.md`
+- Edit `requirements.md` **only** for trailing Consistency block
+- Blockers block task generation without fix or explicit waiver
+- Requirements missing then redirect Gate 1 / `requirements-generator.md`
 - Never write `consistency-report.md`
 
 ## Integration
 
-```
-Gate 2 → analyze-consistency → [Approved] → task-generator
-                            → [Reproved] → stop; fix requirements
-```
+Gate 2 then `analyze-consistency`:
+- **Approved** then `task-generator`
+- **Reproved** then stop; fix requirements
 
-Post-implementation: `ns-reviewer` validates requirements × code — complementary, not a substitute.
+Post-implementation: `ns-reviewer` validates requirements × code — complementary, not substitute.

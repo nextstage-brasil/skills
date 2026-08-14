@@ -1,6 +1,6 @@
 # Requirements Generator
 
-Produce a structured `requirements.md` for `docs/versions/{version_san}/`.
+Produce structured `requirements.md` for `docs/versions/{version_san}/`.
 
 ## Session boot
 
@@ -14,7 +14,7 @@ See `../../../ns-harness/references/session-boot.md` and `../../../ns-harness/re
 
 ## Stack profiles
 
-Load **one** profile from `stacks/` when stack is known:
+Load **one** profile from `stacks/` when stack known:
 
 | Profile               | When                                           |
 | --------------------- | ---------------------------------------------- |
@@ -22,11 +22,11 @@ Load **one** profile from `stacks/` when stack is known:
 | `laravel-react.md`    | Laravel + React monorepo detected or confirmed |
 | `intelligent-saas.md` | Backend + frontend + agent-api                 |
 
-Do not mention framework-specific tooling unless the profile or detected stack applies.
+Do not mention framework-specific tooling unless profile or detected stack applies.
 
 ## Document structure
 
-Generate **only** the markdown document (no conversational preamble):
+Generate **only** markdown document (no conversational preamble):
 
 ```markdown
 ## Main objective of the version:
@@ -64,18 +64,18 @@ Generate **only** the markdown document (no conversational preamble):
 
 ## New project ordering
 
-When the project is greenfield, infrastructure/setup features come before domain features (per stack profile): infra → database → cache/queues → backend modules → frontend → tests.
+When project greenfield, infrastructure/setup features before domain features (per stack profile): infra → database → cache/queues → backend modules → frontend → tests.
 
 ## Language
 
-English unless the user explicitly requests another language for the deliverable.
+English unless user explicitly requests another language for deliverable.
 
 ## Rules
 
-- Work only inside the repo
+- Work only inside repo
 - Incorporate research into NFRs or acceptance criteria when provided
 - For frontend features: include UI/UX section from design brief; acceptance criteria for visual tokens when applicable
-- Data model section is **critical** — explicit table creation order and endpoints
+- Data model section **critical** — explicit table creation order and endpoints
 
 ## Integration
 

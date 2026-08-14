@@ -14,7 +14,7 @@ intelligent_saas
 - agent-api/
 
 ## Architecture rule
-Frontend → Backend → Agent-API (never direct browser → agent-api)
+Frontend then Backend then Agent-API (never direct browser to agent-api)
 ```
 
 ## Mandatory setup features (before domain)
@@ -29,11 +29,11 @@ Frontend → Backend → Agent-API (never direct browser → agent-api)
 
 ## Additional artifacts
 
-- `docs/versions/{version_san}/graph-spec.md` when agent graph is in scope
+- `docs/versions/{version_san}/graph-spec.md` when agent graph in scope
 - Agent module features section or dedicated agent requirements merge
 
 ## References in harness
 
-When `docs/context/intelligent-saas/` exists, read for graph and networking details.
+When `docs/context/intelligent-saas/` exists, read for graph + networking details.
 
 `ns-spec-driven` parent: **MUST** load `ns-langgraph-agents` per `ns-spec-driven/references/agent-runtime-integration.md` before agent-api planning or execute.

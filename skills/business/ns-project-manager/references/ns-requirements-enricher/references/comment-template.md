@@ -2,11 +2,11 @@
 
 Copy structure below into `add_issue_comment` `body`. Replace `{placeholders}`.
 
-**Verdict icon (mandatory):** first character of the first line — `❌` if there are blocking questions; `✅` if zero blocking questions (execution-ready).
+**Verdict icon (mandatory):** first character of first line — `❌` if blocking questions; `✅` if zero blocking questions (execution-ready).
 
-**Questions:** always for the **issue author (requester)** — plain product language. No schema, branch, labels, class names, or file paths inside the numbered list.
+**Questions:** always for **issue author (requester)** — plain product language. No schema, branch, labels, class names, or file paths inside numbered list.
 
-**`{author_username}`:** copy **only** `author.username` from `read_issue` (GitLab login). Never `author.name`, never slugify the display name, never guess.
+**`{author_username}`:** copy **only** `author.username` from `read_issue` (GitLab login). Never `author.name`, never slugify display name, never guess.
 
 ## Variant A — blocking questions (`❌`)
 

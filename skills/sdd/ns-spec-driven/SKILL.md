@@ -16,11 +16,11 @@ depends:
 
 # NextStage Spec-Driven
 
-**Delivery face** for the spec-driven journey: clarify → specify → (consistency / partition) → tasks → execute → close.
+**Delivery face** for spec-driven journey: clarify, specify, (consistency / partition), tasks, execute, close.
 
-You **orchestrate** — you do **not** implement phase bodies inline. **Read** the phase reference at delegation time. State lives on **disk** (`docs/versions/`, `docs/context/`, handoff files), not chat history.
+**Orchestrate** — **not** implement phase bodies inline. **Read** phase reference at delegation time. State on **disk** (`docs/versions/`, `docs/context/`, handoff files), not chat history.
 
-Entry priority **2** (feature / version / SDD / multi-day / resume). Harness table: `../../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`. Bare quick fixes without SDD context → redirect to `ns-coder` (priority 5) unless the user explicitly invoked this skill.
+Entry priority **2** (feature / version / SDD / multi-day / resume). Harness table: `../../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`. Bare quick fix, no SDD context → redirect `ns-coder` (priority 5) unless user explicitly invoked this skill.
 
 ## Routing (read first)
 
@@ -29,11 +29,11 @@ Entry priority **2** (feature / version / SDD / multi-day / resume). Harness tab
 | Small / quick inside SDD | `coder-agent` → `ns-coder` (**MUST** bridge when available — `../../ns-harness/references/subagent-dispatch.md`) |
 | Version + handoff | `references/execution-handoff.md` + `../../code/ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available) |
 | Task file generation | `task-writer-agent` → `references/task-generator.md` (**MUST** bridge when available) |
-| Bare quick fix, no SDD context | Redirect to `ns-coder` (priority 5) — if spawning worker: **MUST** `coder-agent` when available |
+| Bare quick fix, no SDD context | Redirect `ns-coder` (priority 5) — if spawning worker: **MUST** `coder-agent` when available |
 
 ## Harness
 
-See `../../ns-harness/references/session-boot.md`, `../../ns-harness/references/artifact-layout.md`, and `references/gates.md`.
+See `../../ns-harness/references/session-boot.md`, `../../ns-harness/references/artifact-layout.md`, `references/gates.md`.
 
 | Variable | Resolve via |
 | -------- | ----------- |
@@ -41,14 +41,14 @@ See `../../ns-harness/references/session-boot.md`, `../../ns-harness/references/
 
 ## Out of band (not this skill)
 
-**Brownfield onboarding** is manual — never auto-run, never a pipeline phase:
+**Brownfield onboarding** manual — never auto-run, never pipeline phase:
 
 | Need | Skill |
 | ---- | ----- |
 | Full prepare after `harness init` | `/ns-harness prepare this repo` or `npx @nextstage-brasil/harness prepare` |
 | Single worker only | `/ns-harness` + architecture-rules / brownfield / reverse-spec / agents-md |
 
-If `architecture-rules.md` is still a stub or `docs/context/brownfield-map.md` is missing and the task needs them: **tell the user to run `/ns-harness prepare this repo`**, then stop — or continue SDD **only if they insist** after the warning.
+`architecture-rules.md` still stub or `docs/context/brownfield-map.md` missing and task needs them: **tell user run `/ns-harness prepare this repo`**, then stop — or continue SDD **only if they insist** after warning.
 
 ## Journey (delivery only)
 
@@ -92,25 +92,25 @@ Details: `references/auto-sizing.md`, `references/router.md`.
 
 ## Boot (mandatory, once per session)
 
-1. Classify request → **Small / Medium / Large** (see `references/auto-sizing.md`).
-2. Check for **resume** signals (`execution-handoff.md`, `version-roadmap.md`, partial version) → `references/session-continuity.md`.
-3. **Agent runtime gate** — if agent-api / intelligent SaaS (see `references/agent-runtime-integration.md`): **MUST** load `ns-langgraph-agents` in session before any phase; **stop** if skill is not installed.
+1. Classify request → **Small / Medium / Large** (`references/auto-sizing.md`).
+2. Check **resume** signals (`execution-handoff.md`, `version-roadmap.md`, partial version) → `references/session-continuity.md`.
+3. **Agent runtime gate** — agent-api / intelligent SaaS (`references/agent-runtime-integration.md`): **MUST** load `ns-langgraph-agents` in session before any phase; **stop** if skill not installed.
 4. Scan installed complements (soft) → `references/skill-integrations.md`.
-5. Confirm **once** when needed: target version id, and language for markdown artifacts — in **natural chat** (see `references/human-communication.md`). Never open with a telegraphic status dump or phase jargon.
+5. Confirm **once** when needed: target version id, language for markdown artifacts — **natural chat** (`references/human-communication.md`). Never open with telegraphic status dump or phase jargon.
 
 ## Human communication
 
-Chat with the human in short, natural language. **Read `references/human-communication.md` before any human gate or boot confirm.**
+Chat short, natural language. **Read `references/human-communication.md` before any human gate or boot confirm.**
 
-- Name the next **deliverable** ("requirements document", "task files") — not internal phases ("Specify", "Clarify").
-- Chat must stand alone: explain highlights in plain language; document IDs only after the meaning (see **Gate 1 highlights** in that file).
+- Name next **deliverable** ("requirements document", "task files") — not internal phases ("Specify", "Clarify").
+- Chat stand alone: highlights in plain language; document IDs only after meaning (**Gate 1 highlights** in that file).
 - Never use `Reply:`, `Premise:`, or "go for Specify".
-- Caveman / artifact-compress applies to **files only** — never to chat.
+- Caveman / artifact-compress = **files only** — never chat.
 
 ## Orchestration mandate
 
 - **Delegate** = spawn bridge when available (else read phase reference in-session). Not "skip reference" while bridge present. See `../../ns-harness/references/subagent-dispatch.md`.
-- **Read** the phase reference before running that phase — never improvise from memory.
+- **Read** phase reference before that phase — never improvise from memory.
 - **Do not** ask "continue to next phase?" between phases in same sized pipeline.
 - **Do not** invoke `/ns-harness prepare` or brownfield prepare references.
 - **Do not** load multiple version specs into context — see `references/context-budget.md`.
@@ -124,7 +124,7 @@ Chat with the human in short, natural language. **Read `references/human-communi
 | **Medium** | Clarify (if needed) → Specify → Tasks (**MUST** `task-writer-agent` when available) + handoff → Execute → Close |
 | **Large** | Full chain including Consistency and/or Partition when scope warrants |
 
-**Safety valve:** if scope exceeds ~3 files or explodes mid-session → stop and formalize via Medium+ pipeline (requirements + tasks).
+**Safety valve:** scope exceeds ~3 files or explodes mid-session → stop, formalize via Medium+ pipeline (requirements + tasks).
 
 ## Execute routing
 
@@ -138,12 +138,9 @@ Worker dispatch: **MUST** use harness project agents when available — `../../n
 | GitLab issue URL + MCP available | `ns-execution-gitlab-issue` (soft — prefer when GitLab present) |
 | Autonomous multi-step local plan | `ns-autonomous` |
 
-**Face = orchestrator** (`ns-spec-driven`); it does not implement — it drives
-`run-implementation.md` (classic) or `orchestrator.md` (slices).
+**Face = orchestrator** (`ns-spec-driven`); does not implement — drives `run-implementation.md` (classic) or `orchestrator.md` (slices).
 
-**Tests while executing version tasks:** unit/integration only. **Forbidden** for
-agents to run E2E during the task loop; human runs E2E at version end (see
-`../../code/ns-coder/references/run-implementation.md`).
+**Tests while executing version tasks:** unit/integration only. **Forbidden** for agents to run E2E during task loop; human runs E2E at version end (`../../code/ns-coder/references/run-implementation.md`).
 
 ## Trigger → reference
 
@@ -167,7 +164,7 @@ Non-negotiable for agent-api and intelligent SaaS products. See `references/agen
 
 ## Soft integrations
 
-Before relevant work, check `.agents/skills/` for complements. If present → **delegate**. If absent → continue with workers/rules and **recommend install once per session** (agent runtime is **not** soft — see above):
+Before relevant work, check `.agents/skills/` for complements. If present → **delegate**. If absent → continue with workers/rules and **recommend install once per session** (agent runtime **not** soft — see above):
 
 ```bash
 npx @nextstage-brasil/harness --skill ns-frontend-design --skill ns-docs-writer --skill ns-best-practices --no-scaffold -y
@@ -177,7 +174,7 @@ See `references/skill-integrations.md`.
 
 ## Completion summary
 
-When a version or quick fix closes, report:
+When version or quick fix closes, report:
 
 1. Artifacts written or updated (paths).
 2. Handoff status if applicable.
@@ -186,12 +183,12 @@ When a version or quick fix closes, report:
 ## Forbidden
 
 - Auto-run or chain `/ns-harness prepare`.
-- List Prepare as an SDD phase.
+- List Prepare as SDD phase.
 - Hard-require soft complement skills (`ns-frontend-design`, etc.).
 - Plan or execute agent-api / intelligent SaaS work without loading `ns-langgraph-agents` when detection signals match.
 - Generate requirements/tasks yourself without reading phase references / delegating task files via `task-writer-agent`.
-- Skip `execution-handoff.md` when formal tasks exist for a version.
-- Address the human with internal phase names ("Specify", "Clarify") or bot chrome (`Reply:`, `Premise:`).
+- Skip `execution-handoff.md` when formal tasks exist for version.
+- Address human with internal phase names ("Specify", "Clarify") or bot chrome (`Reply:`, `Premise:`).
 
 ## Invocation examples
 

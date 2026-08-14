@@ -138,5 +138,5 @@ After human confirms (or documented waiver):
 ## References
 
 - Handoff generation and updates: `../../../sdd/ns-spec-driven/references/execution-handoff.md`
-- Handoff template: `../../../sdd/ns-spec-driven/references/execution-handoff.template.md`
+- Handoff template: `../../../sdd/ns-spec-driven/templates/execution-handoff.template.md`
 - Orchestrated mode: `../../../sdd/ns-spec-driven/references/orchestrator.md`

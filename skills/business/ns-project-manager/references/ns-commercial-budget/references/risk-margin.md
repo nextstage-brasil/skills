@@ -19,7 +19,7 @@ Safety margin % grounded in explicit risks — never silent round-up.
 
 2. **Margem de erro estimada:** `{p}%` — uncertainty on base effort.
 3. **Margem de segurança aplicada:** `{s}%` — buffer on base hours: `base × (1 + s/100)`.
-4. Short rationale: risks → `{s}%` (and `{p}%` vs `{s}%` if different).
+4. Short rationale: risks justify `{s}%` (and `{p}%` vs `{s}%` if different).
 
 ## Pick percentages
 

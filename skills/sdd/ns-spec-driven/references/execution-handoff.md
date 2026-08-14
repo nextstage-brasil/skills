@@ -1,11 +1,11 @@
 # Execution Handoff Generator
 
-Bridge **planning → implementation**. Produces and maintains
-`docs/versions/{version_san}/execution-handoff.md` — the single
-source of truth for **task order**, **progress**, **tokens**, and **elapsed time**.
+Bridge planning to implementation. Produce and maintain
+`docs/versions/{version_san}/execution-handoff.md` — single source of truth for
+**task order**, **progress**, **tokens**, **elapsed time**.
 
-> `requirements.md` says **what**; `tasks/task-NNN-*.md` says **how**;
-> `execution-handoff.md` says **in what order** and **where execution stopped**.
+> `requirements.md` = **what**; `tasks/task-NNN-*.md` = **how**;
+> `execution-handoff.md` = **order** and **where execution stopped**.
 
 ## Session boot
 
@@ -17,11 +17,11 @@ See `../../../ns-harness/references/session-boot.md` and
 | Trigger                                          | Action                                       |
 | ------------------------------------------------ | -------------------------------------------- |
 | End of planning (all `task-NNN-*.md` written)    | **Generate** initial handoff                 |
-| Tasks exist but handoff is missing               | **Generate** before implementation           |
-| Task starts, completes, blocks, or is waived     | **Update** status + recalculate times/tokens |
+| Tasks exist but handoff missing                  | **Generate** before implementation           |
+| Task starts, completes, blocks, or waived        | **Update** status + recalculate times/tokens |
 | All tasks done — review / living specs / closure | **Update** version status + final timestamps |
 
-For the full implementer loop (read handoff → task cycle → closure), see
+Full implementer loop (read handoff then task cycle then closure):
 `../../../code/ns-coder/references/run-implementation.md`.
 
 ## Prerequisites (generation)
@@ -29,13 +29,13 @@ For the full implementer loop (read handoff → task cycle → closure), see
 - `{version_san}` defined
 - `docs/versions/{version_san}/requirements.md` exists
 - At least one `docs/versions/{version_san}/tasks/task-*.md`
-- Template: `execution-handoff.template.md`
-- Planning timestamps from the planning session:
+- Template: `../templates/execution-handoff.template.md`
+- Planning timestamps from planning session:
   - `planning_started_at` (ISO local `YYYY-MM-DDTHH:MM:SS`)
   - `planning_finished_at` (ISO local `YYYY-MM-DDTHH:MM:SS`)
   - `planning_total_seconds` (integer ≥ 0)
 
-For subversions: write handoff under
+Subversions: write handoff under
 `subversions/{subversion_san}/execution-handoff.md` (slice scope only).
 
 ## Initial generation
@@ -46,23 +46,22 @@ For each `task-NNN-*.md` in numeric order:
 
 | Field  | Source                                                                                 |
 | ------ | -------------------------------------------------------------------------------------- |
-| Task   | Short id only: `task-NNN` (from `task-NNN-*.md` — drop the slug)                       |
+| Task   | Short id only: `task-NNN` (from `task-NNN-*.md` — drop slug)                           |
 | Layer  | infer from filename or task body (`backend`, `frontend`, `infra`, `unit-tests`, `e2e`) |
 
-Do **not** put Feature, model tier, or free-form Notes in the handoff table —
-those belong in the task file.
+Do **not** put Feature, model tier, or free-form Notes in handoff table —
+those belong in task file.
 
 ### 2. Build execution rules block
 
-Read `requirements.md` and `docs/context/stack-confirmed.md` when
-present. Add up to 10 critical bullets to `{execution_rules_block}` — legacy DB
-constraints, multitenancy, test environment rules, etc. Do not duplicate the full
-requirements file.
+Read `requirements.md` and `docs/context/stack-confirmed.md` when present.
+Add ≤10 critical bullets to `{execution_rules_block}` — legacy DB constraints,
+multitenancy, test environment rules, etc. Do not duplicate full requirements file.
 
-### 3. Write the file
+### 3. Write file
 
 Save to `docs/versions/{version_san}/execution-handoff.md` using
-`execution-handoff.template.md`:
+`../templates/execution-handoff.template.md`:
 
 - All tasks start `Status: pending`, timestamps `—`, `Time (s): 0`, `Tokens: 0`
 - Header **Tokens (total):** `0`
@@ -71,8 +70,8 @@ Save to `docs/versions/{version_san}/execution-handoff.md` using
 
 ### 4. Report to face
 
-Return: handoff path, total tasks indexed, first task ID, and instruction to
-start implementation via `../../../code/ns-coder/references/run-implementation.md`.
+Return: handoff path, total tasks indexed, first task ID, instruction to start
+implementation via `../../../code/ns-coder/references/run-implementation.md`.
 
 ## Status updates (during implementation)
 
@@ -113,15 +112,15 @@ applicable), `Final delivery — end`; recalculate `Total process time (s)`.
 
 `pending` | `in_progress` | `completed` | `blocked` | `waived`
 
-- **`waived`:** requires human waiver in the task's **Execution notes**. Do not
+- **`waived`:** requires human waiver in task **Execution notes**. Do not
   waive P0 test tasks (tenant isolation, URL RBAC, auth rate limits) without
   documented risk acceptance.
 - **Forbidden:** mark version `completed` without `Code Review: Approved`
-- **Forbidden:** reorder tasks or rewrite the base prompt without human approval
+- **Forbidden:** reorder tasks or rewrite base prompt without human approval
 - **Forbidden:** delete session history — append only
 
-If tasks are added or removed after generation, **regenerate** preserving
-existing statuses by task short id.
+Tasks added or removed after generation: **regenerate** preserving existing
+statuses by task short id.
 
 ## Integration
 
@@ -136,7 +135,7 @@ existing statuses by task short id.
 
 ## References
 
-| File                                       | When                           |
-| ------------------------------------------ | ------------------------------ |
-| `execution-handoff.template.md` | Handoff structure              |
-| `../../../code/ns-coder/references/run-implementation.md`         | Classic version execution loop |
+| File                                                      | When                           |
+| --------------------------------------------------------- | ------------------------------ |
+| `../templates/execution-handoff.template.md`              | Handoff structure              |
+| `../../../code/ns-coder/references/run-implementation.md` | Classic version execution loop |

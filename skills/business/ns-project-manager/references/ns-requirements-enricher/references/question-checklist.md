@@ -1,8 +1,8 @@
 # Question checklist (grill-me scan)
 
-Use during Phase 3. Only promote items to numbered questions when the issue + comments + code leave a **product** gap.
+Use during Phase 3. Only promote items to numbered questions when issue + comments + code leave **product** gap.
 
-Rewrite every candidate so the **issue author (requester)** can answer in plain language. Technical discovery stays in Assumptions.
+Rewrite every candidate so **issue author (requester)** can answer in plain language. Technical discovery stays in Assumptions.
 
 ## Do NOT ask (never promote)
 
@@ -11,36 +11,36 @@ Rewrite every candidate so the **issue author (requester)** can answer in plain 
 - Schema, table, column, class, file path, env var, SQL, payload shape
 - "How should we implement…"
 
-**Milestone exception:** at most one question — "Is the milestone on this issue correct?" — only if version/product release is genuinely ambiguous. Nothing about branches.
+**Milestone exception:** at most one question — "Is the milestone on this issue correct?" — only if version/product release genuinely ambiguous. Nothing about branches.
 
 ## Scope (product)
 
 - [ ] What is **out of scope** for this delivery (other screens, reports, export)?
 - [ ] Applies to **all** tenants/clients or only one context?
-- [ ] Must existing screen/filter behavior stay unchanged outside the request?
+- [ ] Must existing screen/filter behavior stay unchanged outside request?
 
 ## Behavior / UX (prefer these)
 
-- [ ] Happy path: what does the user do, see, on which screen?
-- [ ] When does the filter/action **apply** (immediately vs after Search/Save)?
+- [ ] Happy path: what does user do, see, on which screen?
+- [ ] When does filter/action **apply** (immediately vs after Search/Save)?
 - [ ] Empty list, error, no permission: what should appear?
 - [ ] Combined selections: must match **all** criteria or **any** one?
 - [ ] Double submit / toggle again: what happens?
 
-## Data as the user sees it (not schema)
+## Data as user sees it (not schema)
 
 - [ ] What counts as "linked", "latest role", "active", etc. in business language?
-- [ ] External integration visible to the user (syncs automatically? editable on screen?)?
+- [ ] External integration visible to user (syncs automatically? editable on screen?)?
 
 ## Permissions (user-facing)
 
-- [ ] Who can see/use the new control (same profile as today's screen X)?
-- [ ] Sensitive data: visible to the same audience as today?
+- [ ] Who can see/use new control (same profile as today's screen X)?
+- [ ] Sensitive data: visible to same audience as today?
 
 ## Done / acceptance
 
-- [ ] How will the requester **accept** that it is done (steps on screen)?
-- [ ] Only when description is silent: specific usage scenarios needed — ask in user language, not "unit vs E2E".
+- [ ] How will requester **accept** that it is done (steps on screen)?
+- [ ] Only when description silent: specific usage scenarios needed — ask in user language, not "unit vs E2E".
 
 ## Rewrite examples
 

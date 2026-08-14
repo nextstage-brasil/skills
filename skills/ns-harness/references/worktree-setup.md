@@ -1,6 +1,6 @@
 # Worktree setup (single tree)
 
-Canonical mechanics for isolating a run in a dedicated `git worktree`. Consumer skills (`ns-execution-gitlab-issue`, `ns-autonomous`) derive their own `{run_id}` and point here instead of duplicating the commands.
+Canonical isolation for one run. Consumers (`ns-execution-gitlab-issue`, `ns-autonomous`) own `{run_id}`; point here — do not duplicate commands.
 
 ## Path (mandatory)
 
@@ -8,22 +8,22 @@ Canonical mechanics for isolating a run in a dedicated `git worktree`. Consumer 
 .worktrees/{run_id}/
 ```
 
-Worktree path is **always** repo-relative under `.worktrees/`. Complete Session boot (`session-boot.md`) first.
+Always repo-relative under `.worktrees/`. Session boot (`session-boot.md`) first.
 
 | Valid | Invalid |
 | ----- | ------- |
-| `.worktrees/{run_id}/` | Anywhere under `.cursor/` |
-| Absolute form of the same path | Cursor Task / best-of-n / agent-runtime "worktrees" |
-| | OS temp dirs used as a substitute |
+| `.worktrees/{run_id}/` | Under `.cursor/` |
+| Absolute form of same path | Cursor Task / best-of-n / agent-runtime "worktrees" |
+| | OS temp as substitute |
 | | Main checkout (non-worktree) |
 
-Never invent a path under `.cursor/`, `.cursor/worktrees/`, or the Cursor agent sandbox. Those are IDE-runtime locations — not this skill's isolation layer.
+Never invent path under `.cursor/`, `.cursor/worktrees/`, or Cursor agent sandbox. IDE runtime ≠ this isolation layer.
 
 One worktree, one branch, one MR (when applicable) per run — no per-project/per-repo looping.
 
 ## Commands
 
-Run from the repo root (or pass absolute paths). Ensure `.worktrees/` exists first (`mkdir -p .worktrees`).
+From repo root. `mkdir -p .worktrees` first.
 
 ```bash
 git fetch origin {SOURCE_BRANCH}
@@ -32,37 +32,37 @@ git fetch origin {SOURCE_BRANCH}
 git worktree add -b {WORK_BRANCH} ".worktrees/{run_id}" origin/{SOURCE_BRANCH}
 git -C ".worktrees/{run_id}" push -u origin {WORK_BRANCH}
 
-# REUSE_MODE = true (existing branch, checkout without recreating)
+# REUSE_MODE = true (existing branch)
 git fetch origin {WORK_BRANCH}
 git worktree add ".worktrees/{run_id}" {WORK_BRANCH}
 ```
 
-`REUSE_MODE = true` never force-pushes and never rewrites history — the branch and its remote already exist.
+`REUSE_MODE = true`: never force-push, never rewrite history.
 
 ## Failure policy
 
-If `git worktree add` fails (permissions, sandbox, path conflict, missing remote branch):
+`git worktree add` fails (permissions, sandbox, path conflict, missing remote):
 
-1. **Abort** — report the exact error and path attempted.
-2. **Do not** fall back to coding in the main checkout.
-3. **Do not** retry under `.cursor/` or any other non-canonical path.
-4. **Do not** switch to / stay on `main`/`master`/`SOURCE_BRANCH` and continue implementation "to make progress". That is a policy violation, not an alternative isolation strategy.
-5. Ask the human only if the failure is a path/permission decision they can unlock — or if they explicitly authorize working in place on the current branch for this run.
+1. **Abort** — exact error + path attempted.
+2. **Do not** code in main checkout.
+3. **Do not** retry under `.cursor/` or non-canonical path.
+4. **Do not** stay on `main`/`master`/`SOURCE_BRANCH` "to make progress".
+5. Ask human only for path/permission unlock — or explicit authorize work-in-place on current branch.
 
 ## Rules
 
-- All coding happens inside `{WORKTREE_ROOT}`; never in the main checkout when concurrent work is possible.
+- All coding inside `{WORKTREE_ROOT}`; never main checkout when concurrent work possible.
 - `.worktrees/` in `.gitignore` or `.git/info/exclude`.
-- Abort if a worktree already exists for the same `{run_id}` and is in use by another run, unless this is an explicit resume.
-- One worktree per run — do not create additional worktrees per subdirectory or per subagent; multi-agent dispatch (see `ns-autonomous`) operates on disjoint file scopes inside the same worktree.
+- Abort if worktree for same `{run_id}` already in use (unless explicit resume).
+- One worktree per run — no extra trees per subdir/subagent; multi-agent (`ns-autonomous`) = disjoint scopes in same tree.
 
-## `{run_id}` derivation (per consumer)
+## `{run_id}` derivation
 
-| Consumer            | `{run_id}`                          |
-| -------------------- | ------------------------------------ |
-| `ns-execution-gitlab-issue` | `{ISSUE_ID}` (see its `references/worktree-setup.md` override) |
-| `ns-autonomous` standalone | `{version_san}` (see its `references/standalone-pipeline.md`) |
+| Consumer | `{run_id}` |
+| -------- | ---------- |
+| `ns-execution-gitlab-issue` | `{ISSUE_ID}` (its `references/worktree-setup.md` override) |
+| `ns-autonomous` standalone | `{version_san}` (`references/standalone-pipeline.md`) |
 
 ## Cleanup
 
-After merge, remove the worktree with `git worktree remove` once a human confirms.
+After merge: `git worktree remove` once human confirms.

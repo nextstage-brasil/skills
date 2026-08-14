@@ -29,9 +29,9 @@ Classify every request **once** at session boot. Re-classify only if scope mater
 
 Stop informal execution and **upgrade to Medium+** when:
 
-- More than ~3 files will change without a task file.
-- Scope grows beyond the original one-liner (new entities, integrations, migrations).
-- User adds "also include…" that implies a new bounded context.
+- More than ~3 files will change without task file.
+- Scope grows beyond original one-liner (new entities, integrations, migrations).
+- User adds "also include…" that implies new bounded context.
 - Inline steps exceed one focused coding session.
 
 Action: pause coding → read `requirements-generator.md` (and downstream references) → regenerate tasks and handoff → resume execute.
