@@ -8,17 +8,11 @@ Skills are decoupled from any single harness: they use **session boot** (`AGENTS
 
 ```
 skills/
-├── _meta/              # Migration notes
-├── ns-harness/         # Session boot, prepare, artifact layout (auto-installed)
-├── sdd/                # Spec-driven delivery face + living specs
-├── code/               # Coder, reviewer, investigator, autonomous
-├── gitlab/             # GitLab MCP + issue execution
-├── testing/            # Cypress/PHPUnit execution skills
-├── frontend/           # UI design + reverse prototyping
-├── docs/               # Docs writer + best-practices
-├── business/           # PM face (budget, schedule, enricher nested in references/)
-└── labs/               # Multi-agent architecture experiments
+├── _meta/           # Migration notes
+└── <skill-id>/      # Flat catalog — one directory per skill (SKILL.md + references/, evals/)
 ```
+
+Examples: `ns-harness`, `ns-spec-driven`, `ns-coder`, `ns-reviewer`, `mcp-gitlab-usage`, `ns-project-manager`. Nested PM workers live under `ns-project-manager/references/ns-*/workflow.md` (not separate catalog skills).
 
 Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`).
 
@@ -39,12 +33,12 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-investigator`               | Root-cause analysis and minimal fixes                                                                                                         |
 | `ns-e2e-tests`                  | Implement/refactor Cypress specs (execution phase)                                                                                            |
 | `ns-backend-tests`              | Implement/refactor PHPUnit tests in Docker (execution phase)                                                                                  |
-| `ns-frontend-design`            | Distinctive production UI; anti–generic AI aesthetics (optional complement)                                                                   |
-| `ns-docs-writer`                | README and `docs/` guides for humans (optional complement)                                                                                    |
-| `ns-best-practices`             | Security headers, compatibility, modernization, and Web Interface Guidelines UI pass (optional complement)                                    |
+| `ns-frontend-design`            | Distinctive production UI; anti–generic AI aesthetics (code complement — installed with `spec-driven` via `ns-coder`)                         |
+| `ns-docs-writer`                | README and `docs/` guides for humans (code complement)                                                                                          |
+| `ns-best-practices`             | Security headers, compatibility, modernization, and Web Interface Guidelines UI pass (code complement)                                          |
 | `ns-proto-creator`                   | Playwright reverse prototyping face — create/evolve single `prototype/` tree (optional; `--preset frontend-prototype`)                        |
 | `ns-proto-visual-guide`              | Normative visual appearance guides (`*-visual.md`) for implementation handoff (optional)                                                      |
-| `ns-project-manager`                 | PM face — gated pipeline, commercial budget, triple delivery schedule, requirements enricher (`references/ns-*/`) |
+| `ns-project-manager`                 | PM face — gated pipeline; commercial budget, delivery schedule, enricher in `references/ns-*/workflow.md` |
 | `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
 | `ns-langgraph-agents`                | LangGraph.js runtime — MCP governance, context window, HITL, evals                                                                            |
 
@@ -72,11 +66,12 @@ See `packages/harness/README.md` for all flags. Install and migration details: `
 
 | Preset | What it does |
 | ------ | ------------ |
-| `spec-driven` | SDD face + coder, reviewer, investigator, autonomous, living-spec (clarify → spec → tasks → implement → close). |
+| `spec-driven` | SDD face + coder, reviewer, investigator, autonomous, living-spec — and code complements (frontend-design, docs-writer, best-practices, backend/e2e tests) via `ns-coder` `depends`. |
 | `gitlab` | Extends `spec-driven`. Adds GitLab issue execution, board sync, CI generator, MCP usage. Alias: `spec-driven-gitlab`. |
-| `project-manager` | PM face only: budget (FP/COSMIC), delivery schedule (Monte Carlo), requirements enricher. No code execution. |
-| `frontend` | UI design, reverse prototyping, visual appearance guides. No SDD face. |
-| `full` | Entire NS catalog (gitlab + frontend + project-manager + labs + testing + docs) + Anthropics skill-creator. |
+| `project-manager` | PM face only (`ns-project-manager`). No SDD or code workers. |
+| `frontend` | UI design, reverse prototyping, visual appearance guides. Alias: `frontend-prototype`. |
+| `agent-creator` | Extends `spec-driven`. Adds `ns-multi-agent-architect` + `ns-langgraph-agents` (labs). |
+| `full` | Entire NS catalog: `gitlab` + `frontend` + `project-manager` + `agent-creator` (+ any skills not already pulled by `extends`). |
 | `agents-api` | Agent API stack: NS coder/review/investigator/langgraph plus LangChain/MCP/Vitest/eval externals. |
 
 Aliases: `frontend-prototype` → `frontend`, `spec-driven-gitlab` → `gitlab`.
@@ -139,7 +134,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
-Typical delivery: `/ns-spec-driven` (auto-sizes, internal phases in `references/`, resume from disk). Manual brownfield first: `/ns-harness prepare this repo`. Implementation: `ns-coder` / `ns-execution-gitlab-issue` / `ns-autonomous` → `ns-reviewer` → `ns-living-spec`. Optional complements: `--skill ns-frontend-design` (etc.) or `--preset full`.
+Typical delivery: `/ns-spec-driven` (auto-sizes, internal phases in `references/`, resume from disk). Manual brownfield first: `/ns-harness prepare this repo`. Implementation: `ns-coder` / `ns-execution-gitlab-issue` / `ns-autonomous` → `ns-reviewer` → `ns-living-spec`. Code complements (`ns-frontend-design`, `ns-best-practices`, `ns-docs-writer`) install with `--preset spec-driven` and delegate from `ns-coder` / `ns-spec-driven` when relevant.
 
 ## Contributing
 

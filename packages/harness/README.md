@@ -83,7 +83,7 @@ npx @nextstage-brasil/harness prepare
 
 ### GitLab-heavy team
 
-Issue execution, board sync, requirements enricher, CI generator — on top of Spec-Driven.
+Issue execution, board sync, CI generator, MCP usage — on top of Spec-Driven.
 
 ```bash
 npx @nextstage-brasil/harness --preset gitlab --yes
@@ -91,10 +91,17 @@ npx @nextstage-brasil/harness --preset gitlab --yes
 
 ### Project Manager (no code execution)
 
-Human PM workflow only — `ns-project-manager` (budget, schedule, enricher nested). Does **not** install SDD workers or coding skills.
+Human PM workflow only — `ns-project-manager` (commercial budget, delivery schedule, requirements enricher in nested `workflow.md` files). Does **not** install SDD or coding skills.
 
 ```bash
 npx @nextstage-brasil/harness --preset project-manager --yes
+```
+
+Standalone Claude export (zip, no harness coupling):
+
+```bash
+cd packages/harness && npm run export:external
+# → dist/external/ns-project-manager.zip
 ```
 
 ### Frontend reverse prototyping
@@ -149,15 +156,15 @@ npx @nextstage-brasil/harness update --dry-run
 npx @nextstage-brasil/harness update --force
 ```
 
-### Optional complements (UI, docs, security)
+### Code complements (UI, docs, security)
 
-Install individually (or use `--preset full`):
+With `--preset spec-driven`, `gitlab`, or `agent-creator`, harness resolves `ns-coder` `depends` — you get `ns-frontend-design`, `ns-docs-writer`, `ns-best-practices`, `ns-backend-tests`, and `ns-e2e-tests` without extra flags. `ns-coder` and `ns-spec-driven` delegate to the design/docs/hygiene skills when relevant.
+
+Minimal install only? Add complements explicitly:
 
 ```bash
 npx @nextstage-brasil/harness --skill ns-frontend-design --skill ns-docs-writer --skill ns-best-practices --no-scaffold -y
 ```
-
-`ns-coder` pulls the full `ns-code-*` suite (investigator, frontend-design, best-practices, backend-tests, e2e-tests, docs-writer, reviewer, autonomous).
 
 ### Agents API / LangChain stack
 
@@ -209,11 +216,12 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 
 | Preset               | Use when you want…                                                                                    |
 | -------------------- | ----------------------------------------------------------------------------------------------------- |
-| `spec-driven`        | SDD face + coder, review, investigator, autonomous, living-spec                                      |
+| `spec-driven`        | SDD face + coder, review, investigator, autonomous, living-spec + code complements via `ns-coder`   |
 | `gitlab`             | Everything in `spec-driven`, plus GitLab issues, board sync, CI generator (alias: `spec-driven-gitlab`) |
-| `project-manager`    | Human PM toolkit — `ns-project-manager` (**no** SDD/code workers)             |
-| `frontend-prototype` | Playwright reverse prototype (`ns-proto-creator`), visual guides, living appearance, design + quality |
-| `full`               | Every skill in the catalog                                                                            |
+| `project-manager`    | Human PM toolkit — `ns-project-manager` only (**no** SDD/code workers)                                |
+| `frontend`           | UI design, reverse prototype (`ns-proto-creator`), visual guides (alias: `frontend-prototype`)        |
+| `agent-creator`      | `spec-driven` + LangGraph labs (`ns-multi-agent-architect`, `ns-langgraph-agents`)                    |
+| `full`               | Full catalog (`gitlab` + `frontend` + `project-manager` + `agent-creator`)                            |
 | `agents-api`         | LangChain / LangGraph / MCP externals + NS coder/investigator/reviewer/architect                     |
 
 ```bash
@@ -234,7 +242,7 @@ Choose **one** of:
 | Skills     | `--skill <id>` (repeatable) | Only those skills + catalog `depends` + alwaysInstall |
 | Everything | `--all`                     | Full NextStage catalog                                |
 
-Skill ids match directory names under `skills/<name>/` in the [skills repo](https://github.com/nextstage-brasil/skills). External ids come from `external-skills.json` (see `harness list`).
+Skill ids match directory names under `skills/<skill-id>/` in the [skills repo](https://github.com/nextstage-brasil/skills). External ids come from `external-skills.json` (see `harness list`).
 
 ---
 
@@ -348,6 +356,7 @@ Do **not** put `init` after flags (`--source … init` is invalid). `init` is th
 cd packages/harness
 npm install
 npm test
+npm run export:external   # maintainer: dist/external/ns-project-manager.zip
 ```
 
 ## Release (CI)
