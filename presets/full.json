@@ -4,9 +4,9 @@
   "description": "Full catalog",
   "extends": ["gitlab", "frontend", "project-manager", "agent-creator"],
   "includes": [
-    "skills/testing/ns-e2e-tests",
-    "skills/testing/ns-backend-tests",
-    "skills/docs/ns-docs-writer",
-    "skills/docs/ns-best-practices"
+    "skills/ns-e2e-tests",
+    "skills/ns-backend-tests",
+    "skills/ns-docs-writer",
+    "skills/ns-best-practices"
   ]
 }

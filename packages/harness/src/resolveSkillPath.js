@@ -73,7 +73,7 @@ export function resolveSkillMd(skillsDir, skillId) {
  * Relative repo path from source root to skill folder (for skillPath in lock files).
  * @param {string} sourceRoot Repo root
  * @param {string} skillId Leaf skill ID
- * @returns {string | null} e.g. skills/code/ns-coder
+ * @returns {string | null} e.g. skills/ns-coder
  */
 export function skillRepoPath(sourceRoot, skillId) {
   const dir = resolveSkillDir(join(sourceRoot, 'skills'), skillId);

@@ -4,6 +4,7 @@ import {
   mkdirSync,
   readFileSync,
   readdirSync,
+  renameSync,
   rmSync,
   statSync,
   writeFileSync,
@@ -102,6 +103,32 @@ function copySkill(src, dest, excludeDirs) {
   });
 }
 
+/** Claude zip import allows exactly one SKILL.md per skill — flatten nested workers. */
+function flattenNestedSkillMd(skillDir, nestedName = 'workflow.md') {
+  const rootSkillMd = join(skillDir, 'SKILL.md');
+  const renames = [];
+
+  for (const file of walkFiles(skillDir)) {
+    if (!file.endsWith('SKILL.md') || file === rootSkillMd) continue;
+    const oldRel = relative(skillDir, file).replace(/\\/g, '/');
+    const newRel = oldRel.replace(/SKILL\.md$/, nestedName);
+    renameSync(file, join(skillDir, ...newRel.split('/')));
+    renames.push([oldRel, newRel]);
+  }
+
+  if (!renames.length) return;
+
+  for (const file of walkFiles(skillDir)) {
+    if (!TEXT_EXT.test(file)) continue;
+    let content = readFileSync(file, 'utf8');
+    let next = content;
+    for (const [from, to] of renames) {
+      next = next.split(from).join(to);
+    }
+    if (next !== content) writeFileSync(file, next);
+  }
+}
+
 function zipSkill(outDir, skillId) {
   const zip = spawnSync('zip', ['-r', '-q', `${skillId}.zip`, skillId], {
     cwd: outDir,
@@ -160,6 +187,7 @@ export function exportExternal(options) {
       if (next !== original) writeFileSync(file, next);
     }
 
+    flattenNestedSkillMd(dest, profile.nestedSkillMdName ?? 'workflow.md');
     exported.push(skillId);
   }
 
@@ -201,6 +229,10 @@ export function validateExternalDir(dir) {
     if (!existsSync(join(skillDir, 'SKILL.md'))) {
       errors.push(`${entry}: missing SKILL.md`);
       continue;
+    }
+    const skillMdCount = walkFiles(skillDir).filter((f) => f.endsWith('SKILL.md')).length;
+    if (skillMdCount !== 1) {
+      errors.push(`${entry}: expected exactly 1 SKILL.md, found ${skillMdCount}`);
     }
     for (const file of walkFiles(skillDir)) {
       if (!TEXT_EXT.test(file)) continue;

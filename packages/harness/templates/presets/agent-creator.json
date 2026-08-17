@@ -4,7 +4,7 @@
   "description": "Spec-driven + multi-agent architecture (LangGraph labs)",
   "extends": "spec-driven",
   "includes": [
-    "skills/labs/ns-multi-agent-architect",
-    "skills/labs/ns-langgraph-agents"
+    "skills/ns-multi-agent-architect",
+    "skills/ns-langgraph-agents"
   ]
 }

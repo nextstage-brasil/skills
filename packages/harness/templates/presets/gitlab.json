@@ -4,9 +4,9 @@
   "description": "SDD cycle with GitLab integration (issues, board, CI)",
   "extends": "spec-driven",
   "includes": [
-    "skills/gitlab/ns-gitlab-board-sync",
-    "skills/gitlab/ns-gitlab-ci-generator",
-    "skills/gitlab/ns-execution-gitlab-issue",
-    "skills/gitlab/mcp-gitlab-usage"
+    "skills/ns-gitlab-board-sync",
+    "skills/ns-gitlab-ci-generator",
+    "skills/ns-execution-gitlab-issue",
+    "skills/mcp-gitlab-usage"
   ]
 }

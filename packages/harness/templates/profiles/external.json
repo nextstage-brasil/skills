@@ -1,6 +1,7 @@
 {
   "excludeDirs": ["evals"],
   "stripFrontmatterKeys": ["requires_harness", "depends", "provides", "consumes"],
+  "nestedSkillMdName": "workflow.md",
   "vendor": [],
   "rewrites": []
 }

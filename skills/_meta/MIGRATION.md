@@ -4,7 +4,7 @@ Migration notes for skills promoted into this repository as the canonical home f
 
 ## Fold business skills into `ns-project-manager` (2026-08-14)
 
-`ns-commercial-budget`, `ns-delivery-schedule`, and `ns-requirements-enricher` are no longer catalog skills. They live under `skills/business/ns-project-manager/references/<id>/` (own `SKILL.md` + `references/` / `assets/`; no evals). Invoke `/ns-project-manager`. Retired aliases in `packages/harness/templates/retired-skills.json` redirect installs to `ns-project-manager`.
+`ns-commercial-budget`, `ns-delivery-schedule`, and `ns-requirements-enricher` are no longer catalog skills. They live under `skills/ns-project-manager/references/<id>/` (own `workflow.md` + `references/` / `assets/`; no evals). Invoke `/ns-project-manager`. Retired aliases in `packages/harness/templates/retired-skills.json` redirect installs to `ns-project-manager`.
 
 ## Conventions
 
@@ -76,7 +76,13 @@ npx skills add nextstage-brasil/skills@<skill-name> --full-depth -y
 
 When CLI supports `depends`, transitive deps install automatically. Until then (`skills@1.5.14`), use `@nextstage-brasil/harness` or install peers explicitly — see `README.md`.
 
-## Domain folders + skill renames (2026-08-14, harness 1.x)
+## Flatten domain folders (2026-08-14)
+
+Domain folders (`sdd/`, `code/`, `gitlab/`, …) were removed. All catalog skills live at `skills/<name>/` again so cross-skill relative paths resolve correctly after install. Skill IDs unchanged.
+
+**Consumer action:** reinstall skills; run `harness update` if lock files still reference old `skills/<domain>/<name>` paths.
+
+## Domain folders + skill renames (2026-08-14, harness 1.x) — superseded
 
 Catalog skills (except `ns-harness`) moved under domain folders. Several skills dropped redundant category prefixes from their IDs. Skill ID = **leaf directory name** (install path includes domain).
 

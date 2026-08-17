@@ -1,6 +1,6 @@
 # Skill dependency graph (post Phase 1.5 + Phase 2)
 
-Skill IDs are **leaf names** (not full paths). Install paths use domain folders — see `skills/_meta/MIGRATION.md`.
+Skill IDs match directory names. Install paths: `skills/<name>/` — see `skills/_meta/MIGRATION.md`.
 
 ## Core execution (no SDD face required)
 

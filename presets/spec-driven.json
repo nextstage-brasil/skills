@@ -3,11 +3,11 @@
   "requires_harness": ">=1.0.0",
   "description": "SDD face, coder, review, investigator, autonomous, living-spec",
   "includes": [
-    "skills/code/ns-coder",
-    "skills/code/ns-reviewer",
-    "skills/code/ns-investigator",
-    "skills/code/ns-autonomous",
-    "skills/sdd/ns-spec-driven",
-    "skills/sdd/ns-living-spec"
+    "skills/ns-coder",
+    "skills/ns-reviewer",
+    "skills/ns-investigator",
+    "skills/ns-autonomous",
+    "skills/ns-spec-driven",
+    "skills/ns-living-spec"
   ]
 }

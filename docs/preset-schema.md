@@ -10,12 +10,12 @@ Declarative preset format for `@nextstage-brasil/harness` **1.x**. Presets refer
   "requires_harness": ">=1.0.0",
   "description": "Full SDD cycle without external integrations",
   "includes": [
-    "skills/code/ns-coder",
-    "skills/code/ns-reviewer",
-    "skills/code/ns-investigator",
-    "skills/code/ns-autonomous",
-    "skills/sdd/ns-spec-driven",
-    "skills/sdd/ns-living-spec"
+    "skills/ns-coder",
+    "skills/ns-reviewer",
+    "skills/ns-investigator",
+    "skills/ns-autonomous",
+    "skills/ns-spec-driven",
+    "skills/ns-living-spec"
   ],
   "warnings": []
 }
@@ -29,7 +29,7 @@ Declarative preset format for `@nextstage-brasil/harness` **1.x**. Presets refer
 | `requires_harness` | yes | semver range | Minimum harness version (`>=1.0.0` for this release). |
 | `description` | yes | string | Human-readable summary for `harness list --presets`. |
 | `extends` | no | string \| string[] | Parent preset(s) to merge before applying `includes`. |
-| `includes` | no | string[] | Skill paths relative to repo root (e.g. `skills/code/ns-coder`). |
+| `includes` | no | string[] | Skill paths relative to repo root (e.g. `skills/ns-coder`). |
 | `warnings` | no | string[] | Shown after install (e.g. experimental labs skills). |
 
 ## Resolution algorithm

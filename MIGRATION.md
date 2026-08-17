@@ -9,8 +9,8 @@ npx @nextstage-brasil/harness@1 --preset spec-driven --yes
 
 ## What changed
 
-1. **Domain folders** — skills moved from flat `skills/<name>/` to `skills/<domain>/<name>/` (except `ns-harness` at root).
-2. **Renames** — category prefixes dropped where the domain folder communicates the category (e.g. `ns-code-coder` → `ns-coder` in `skills/code/`).
+1. **Flat layout** — all catalog skills at `skills/<name>/` (domain folders removed 2026-08-14 so cross-skill paths resolve after install).
+2. **Renames** — category prefixes dropped (e.g. `ns-code-coder` → `ns-coder`).
 3. **SDD pipeline consolidated** — seven internal workers plus unit/e2e test-task generators are now `references/` inside `ns-spec-driven`. Invoke only `/ns-spec-driven`.
 4. **Business face consolidated** — `ns-commercial-budget`, `ns-delivery-schedule`, and `ns-requirements-enricher` are nested under `ns-project-manager/references/`. Invoke only `/ns-project-manager`.
 5. **Presets** — declarative JSON in `presets/`; harness reads `presets/index.json` at runtime.

@@ -81,7 +81,7 @@ Extracted from \`skills/ns-harness/references/code-skill-routing.md\`:
 ${mermaidMatch[1].trim()}
 \`\`\`
 
-Engine mode: \`A\` and \`C2\` do not re-enter \`G\` — see \`skills/code/ns-autonomous/references/routing.md\`.
+Engine mode: \`A\` and \`C2\` do not re-enter \`G\` — see \`skills/ns-autonomous/references/routing.md\`.
 
 ---
 

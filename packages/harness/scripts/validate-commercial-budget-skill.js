@@ -58,17 +58,17 @@ export function validateCommercialBudgetSkill(skillsDir) {
   const errors = [];
   const pmDir = resolveSkillDir(skillsDir, 'ns-project-manager');
   const skillDir = pmDir ? join(pmDir, 'references', SKILL_ID) : null;
-  const skillMdPath = skillDir ? join(skillDir, 'SKILL.md') : null;
+  const skillMdPath = skillDir ? join(skillDir, 'workflow.md') : null;
 
   if (!skillMdPath || !existsSync(skillMdPath)) {
-    errors.push(`${SKILL_ID}: missing nested skill at ns-project-manager/references/${SKILL_ID}/SKILL.md`);
+    errors.push(`${SKILL_ID}: missing nested workflow at ns-project-manager/references/${SKILL_ID}/workflow.md`);
     return errors;
   }
 
   const skillMd = readFileSync(skillMdPath, 'utf8');
   for (const artifact of REQUIRED_ARTIFACTS) {
     if (!skillMd.includes(artifact)) {
-      errors.push(`${SKILL_ID}: SKILL.md must reference canonical artifact "${artifact}"`);
+      errors.push(`${SKILL_ID}: workflow.md must reference canonical artifact "${artifact}"`);
     }
   }
 

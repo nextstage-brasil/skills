@@ -58,8 +58,8 @@ Clarify / Specify / Consistency / Partition: no v1 bridge — in-session OK.
 Cite when dispatching:
 
 - `ns-spec-driven` (Tasks / Execute / Quick / Close / partitioned)
-- `../../code/ns-coder/references/run-implementation.md`
+- `../ns-coder/references/run-implementation.md`
 - `ns-autonomous` (C2 + review gate)
 - `ns-coder` (review loop)
 - `ns-execution-gitlab-issue` (Phase 4)
-- `../../code/ns-reviewer/references/review-gate-workflow.md`
+- `../ns-reviewer/references/review-gate-workflow.md`

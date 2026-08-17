@@ -34,58 +34,9 @@ jobs:
       - name: Validate catalog
         run: node packages/harness/scripts/validate-catalog.js
 
-  skills-sdd:
+  skills-manifests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate sdd manifests
-        run: node scripts/validate-manifests.js skills/sdd/
-
-  skills-gitlab:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Validate gitlab manifests
-        run: node scripts/validate-manifests.js skills/gitlab/
-
-  skills-testing:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Validate testing manifests
-        run: node scripts/validate-manifests.js skills/testing/
-
-  skills-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Validate frontend manifests
-        run: node scripts/validate-manifests.js skills/frontend/
-
-  skills-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Validate docs manifests
-        run: node scripts/validate-manifests.js skills/docs/
-
-  skills-business:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Validate business manifests
-        run: node scripts/validate-manifests.js skills/business/
-
-  skills-labs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Validate labs manifests
-        run: node scripts/validate-manifests.js skills/labs/
-
-  skills-code:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Validate code manifests
-        run: node scripts/validate-manifests.js skills/code/
+      - name: Validate skill manifests
+        run: node scripts/validate-manifests.js

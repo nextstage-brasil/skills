@@ -18,7 +18,7 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | Multi-unit engine | `ns-autonomous` | Standalone or engine under G |
 | Spec / version planning | `ns-spec-driven` | → C or A (**MUST** `coder-agent` when available) |
 | Root-cause | `ns-investigator` | Diagnosis only; implement = separate user step |
-| Review gate | `ns-reviewer` via `reviewer-agent` (**MUST** when available) | Only review path — `../../code/ns-reviewer/references/review-gate-workflow.md` |
+| Review gate | `ns-reviewer` via `reviewer-agent` (**MUST** when available) | Only review path — `../ns-reviewer/references/review-gate-workflow.md` |
 
 ## Install vs runtime
 
@@ -30,11 +30,11 @@ Scan **1 → 5**; **first matching signal wins**. Lower beats higher — e.g. `I
 
 | Priority | Signal | Entry skill | Trigger phrases |
 | -------- | ------ | ----------- | ----------------- |
-| 1 | GitLab `ISSUE_URL` or explicit "implement this issue" | `ns-execution-gitlab-issue` | `../../gitlab/ns-execution-gitlab-issue/references/entry-triggers.md` |
-| 2 | Feature / version / SDD / multi-day scope | `ns-spec-driven` | `../../sdd/ns-spec-driven/references/entry-triggers.md` |
-| 3 | "Run autonomously" with local plan, no issue | `ns-autonomous` | `../../code/ns-autonomous/references/entry-triggers.md` |
-| 4 | Root-cause only — **without** implement request | `ns-investigator` | `../../code/ns-investigator/references/entry-triggers.md` |
-| 5 | Default — quick fix, "implement X", small ad-hoc diff | `ns-coder` | `../../code/ns-coder/references/entry-triggers.md` |
+| 1 | GitLab `ISSUE_URL` or explicit "implement this issue" | `ns-execution-gitlab-issue` | `../ns-execution-gitlab-issue/references/entry-triggers.md` |
+| 2 | Feature / version / SDD / multi-day scope | `ns-spec-driven` | `../ns-spec-driven/references/entry-triggers.md` |
+| 3 | "Run autonomously" with local plan, no issue | `ns-autonomous` | `../ns-autonomous/references/entry-triggers.md` |
+| 4 | Root-cause only — **without** implement request | `ns-investigator` | `../ns-investigator/references/entry-triggers.md` |
+| 5 | Default — quick fix, "implement X", small ad-hoc diff | `ns-coder` | `../ns-coder/references/entry-triggers.md` |
 
 ### Multi-signal examples (first match wins) {#multi-signal-examples}
 
@@ -74,7 +74,7 @@ Detail in each `SKILL.md` routing section.
 | `C` | `ISSUE_URL` detected | `G` |
 | `C` | too large / multi-day SDD | `S` |
 | `C` | obscure bug | `I` |
-| `C` | ad-hoc diff | `REV` (`reviewer-agent` → `ns-reviewer` — `../../code/ns-reviewer/references/review-gate-workflow.md` + `subagent-dispatch.md`) |
+| `C` | ad-hoc diff | `REV` (`reviewer-agent` → `ns-reviewer` — `../ns-reviewer/references/review-gate-workflow.md` + `subagent-dispatch.md`) |
 | `G` | Phase 2 | `A` (engine mode) |
 | `G` | MR / status / time | `mcp-gitlab-usage` |
 | `G` | review gate | `REV` (`reviewer-agent` / `ns-reviewer` only) |
@@ -91,7 +91,7 @@ Detail in each `SKILL.md` routing section.
 
 `G` invokes `A` Engine mode: units as `C2` in existing worktree + branch. `A` + `C2` must not re-open `G` — no standalone routing, no GitLab MCP mutations, no new worktree. `ISSUE_URL` in code/comments = context, not signal. `G` owns lifecycle until delivery. Rejection loops (`G → A → C2 → REV`) stay inside.
 
-See `../../code/ns-autonomous/references/routing.md`.
+See `../ns-autonomous/references/routing.md`.
 
 ## Investigator handoff {#investigator-handoff}
 

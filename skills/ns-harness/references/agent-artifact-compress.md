@@ -1,6 +1,6 @@
 # Agent artifact compress (pre-save)
 
-**Audience:** coding agents — not humans. **Never** apply to human chat. Chat voice: natural language (`../../sdd/ns-spec-driven/references/human-communication.md` when installed). Pass runs on **file drafts** before `Write` only.
+**Audience:** coding agents — not humans. **Never** apply to human chat. Chat voice: natural language (`../ns-spec-driven/references/human-communication.md` when installed). Pass runs on **file drafts** before `Write` only.
 
 Apply **caveman ultra** to every **agent-facing** prepare/worker output. Personal `caveman` skill loaded → intensity **ultra**; else follow this file.
 
