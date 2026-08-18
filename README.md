@@ -41,6 +41,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-project-manager`                 | PM face — gated pipeline; commercial budget, delivery schedule, enricher in `references/ns-*/workflow.md` |
 | `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
 | `ns-langgraph-agents`                | LangGraph.js runtime — MCP governance, context window, HITL, evals                                                                            |
+| `ns-postgres-rag`                    | PostgreSQL retrieval doctrine — pgvector, hybrid FTS, GraphRAG. Opt-in only; **`full` does not install this skill**. Example: `npx skills add nextstage-brasil/skills@ns-postgres-rag --full-depth -y` |
 
 Project-local skill authoring: install Anthropics `skill-creator` (`npx skills add https://github.com/anthropics/skills --skill skill-creator -y`) — see `ns-harness` → `references/project-skill-authoring.md`.
 
@@ -71,7 +72,7 @@ See `packages/harness/README.md` for all flags. Install and migration details: `
 | `project-manager` | PM face only (`ns-project-manager`). No SDD or code workers. |
 | `frontend` | UI design, reverse prototyping, visual appearance guides. Alias: `frontend-prototype`. |
 | `agents` | Extends `spec-driven`. Adds LangGraph labs (`ns-multi-agent-architect`, `ns-langgraph-agents`) plus LangChain/MCP/Vitest/eval externals. Aliases: `agent-creator`, `agents-api`. |
-| `full` | Entire NS catalog: `gitlab` + `frontend` + `project-manager` + `agents` (+ any skills not already pulled by `extends`). |
+| `full` | Bundled NS presets: `gitlab` + `frontend` + `project-manager` + `agents` (plus leftover skills those presets already list). Does **not** install `ns-postgres-rag` — opt-in only (see catalog table). |
 
 Aliases: `frontend-prototype` → `frontend`, `spec-driven-gitlab` → `gitlab`, `agent-creator` / `agents-api` → `agents`.
 

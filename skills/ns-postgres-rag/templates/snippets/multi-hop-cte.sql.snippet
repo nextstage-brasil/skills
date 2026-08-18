@@ -1,0 +1,44 @@
+-- Snippet: multi-hop-cte.sql — capped recursive walk
+-- Sole example: company → contract → invoice → payment
+-- Depth / fanout / cycle / score prune are mandatory.
+
+WITH RECURSIVE walk AS (
+  SELECT
+    e.to_id AS node_id,
+    ARRAY[e.from_id, e.to_id] AS path_nodes,
+    ARRAY[e.id] AS path_edges,
+    e.confidence AS path_confidence,
+    1 AS depth,
+    1 AS fanout_seen
+  FROM edge e
+  JOIN entity s ON s.id = e.from_id
+  WHERE s.entity_type = 'company'
+    AND s.id = $company_id
+    AND e.edge_type = 'company_has_contract'
+
+  UNION ALL
+
+  SELECT
+    e.to_id,
+    w.path_nodes || e.to_id,
+    w.path_edges || e.id,
+    LEAST(w.path_confidence, e.confidence),
+    w.depth + 1,
+    w.fanout_seen + 1
+  FROM walk w
+  JOIN edge e ON e.from_id = w.node_id
+  JOIN entity t ON t.id = e.to_id
+  WHERE w.depth < 3
+    AND w.fanout_seen < 32
+    AND NOT e.to_id = ANY (w.path_nodes)
+    AND LEAST(w.path_confidence, e.confidence) >= 0.5
+    AND (
+      (w.depth = 1 AND e.edge_type = 'contract_has_invoice')
+      OR (w.depth = 2 AND e.edge_type = 'invoice_has_payment')
+    )
+)
+SELECT path_nodes, path_edges, path_confidence, depth
+FROM walk
+WHERE depth = 3
+ORDER BY path_confidence DESC
+LIMIT 20;

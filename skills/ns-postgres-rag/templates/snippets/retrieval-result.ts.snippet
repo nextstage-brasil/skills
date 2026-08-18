@@ -1,0 +1,27 @@
+// Snippet: retrieval-result.ts — illustrative return shape only (not a stack choice)
+// Required: ids, score, path, provenance, confidence, cut_reason, classified error.
+
+export type RetrievalCutReason =
+  | "none"
+  | "depth"
+  | "fanout"
+  | "score"
+  | "cycle";
+
+export type RetrievalErrorCode =
+  | "not_found"
+  | "ambiguous_entity"
+  | "below_confidence"
+  | "cap_hit"
+  | "timeout"
+  | "index_unavailable";
+
+export type RetrievalResult = {
+  ids: string[];
+  score: number;
+  path: string[];
+  provenance: Record<string, unknown>;
+  confidence: number;
+  cut_reason: RetrievalCutReason;
+  error: RetrievalErrorCode | null;
+};

@@ -1,0 +1,30 @@
+-- Snippet: chunk-schema.sql — document + chunk (embedding, metadata, tsvector)
+-- Illustrative target DDL. Dimension D must match the embedding model version.
+
+CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE document (
+  id            bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  natural_key   text NOT NULL UNIQUE,
+  source_uri    text NOT NULL,
+  content_hash  text NOT NULL,
+  mime          text,
+  ingest_version text NOT NULL,
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  updated_at    timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE chunk (
+  id               bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  document_id      bigint NOT NULL REFERENCES document (id),
+  ordinal          integer NOT NULL,
+  body             text NOT NULL,
+  embedding        vector(1536) NOT NULL,
+  embedding_version text NOT NULL,
+  metadata         jsonb NOT NULL DEFAULT '{}'::jsonb,
+  tsv              tsvector GENERATED ALWAYS AS (to_tsvector('english', body)) STORED,
+  UNIQUE (document_id, ordinal)
+);
+
+CREATE INDEX chunk_document_id_idx ON chunk (document_id);
+CREATE INDEX chunk_tsv_gin ON chunk USING gin (tsv);

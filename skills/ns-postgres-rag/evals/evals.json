@@ -1,0 +1,43 @@
+{
+  "skill_name": "ns-postgres-rag",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We have about a million contract and invoice files in Postgres. Users ask questions like which payments belong to a company through its contracts and invoices — the chain is never in one file. Design the retrieval layer. Do not write application code.",
+      "expected_output": "Agent runs inventory (or states repo scan + Gate 1 fields), chooses relational GraphRAG because N≥2 hops and no single document contains the chain, fills a Retrieval Design Report (DDL, provenance edges, traversal caps, eval gates), does not implement application code, hands off to ns-spec-driven after approval.",
+      "files": [],
+      "assertions": [
+        "Chooses relational GraphRAG (entity/edge), not vector-only as the primary mode",
+        "States N≥2 hops and that no single document contains the chain",
+        "Includes or requires a Corpus Inventory (volume, archetypes, or equivalent Gate 1)",
+        "Produces or fills a Retrieval Design Report (or equivalent structured report)",
+        "Does not implement application code / refuses to write app workers or HTTP",
+        "Mentions handoff to ns-spec-driven (Specify/Tasks) after human approval"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Small internal knowledge base, a few thousand markdown notes. We only need topic search — find similar notes. Should we add a graph?",
+      "expected_output": "Agent recommends vector-only, refuses graph tables, still requires Gate 1 inventory at appropriate scale, may mention pgvector HNSW; no GraphRAG, no application code.",
+      "files": [],
+      "assertions": [
+        "Recommends vector-only (or equivalent semantic/pgvector search without graph tables)",
+        "Explicitly refuses or rejects adding entity/edge / GraphRAG for this case",
+        "Does not prescribe multi-hop traversal as required",
+        "Does not write application implementation code"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our current schema stores nearest-neighbor rows as if they were relationships — we INSERT an edge whenever cosine similarity is high. Retrieval sometimes invents links between companies and payments. Diagnose and tell us what to change in the design. No application code.",
+      "expected_output": "Agent diagnoses similarity-as-link anti-pattern, requires entity resolution (candidates vs confirmed edges with provenance), lists eval gates (false-link rate, path precision), points to anti-patterns / entity-resolution / evaluation refs; does not treat distance as sufficient for an edge.",
+      "files": [],
+      "assertions": [
+        "Diagnoses treating vector similarity as a stored link / edge as an anti-pattern",
+        "Requires entity resolution: vector = candidate only; edge needs key/rule + provenance",
+        "Mentions false-link rate or path precision (or equivalent eval gates)",
+        "Cites anti-patterns, entity-resolution, or evaluation-and-gates doctrine"
+      ]
+    }
+  ]
+}

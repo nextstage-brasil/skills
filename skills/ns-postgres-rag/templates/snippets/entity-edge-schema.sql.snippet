@@ -1,0 +1,36 @@
+-- Snippet: entity-edge-schema.sql — surviving identity, aliases, typed edge + provenance
+-- Illustrative. Vector similarity must not INSERT into edge.
+
+CREATE TABLE entity (
+  id           bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  entity_type  text NOT NULL,
+  canonical_key text NOT NULL,
+  confidence   real NOT NULL CHECK (confidence >= 0 AND confidence <= 1),
+  UNIQUE (entity_type, canonical_key)
+);
+
+CREATE TABLE entity_alias (
+  id            bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  entity_id     bigint NOT NULL REFERENCES entity (id),
+  alias_key     text NOT NULL,
+  source        text NOT NULL,
+  UNIQUE (alias_key, source)
+);
+
+CREATE TABLE edge (
+  id            bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  edge_type     text NOT NULL,
+  from_id       bigint NOT NULL REFERENCES entity (id),
+  to_id         bigint NOT NULL REFERENCES entity (id),
+  provenance    jsonb NOT NULL,
+  confidence    real NOT NULL CHECK (confidence >= 0 AND confidence <= 1),
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  CHECK (from_id <> to_id),
+  UNIQUE (edge_type, from_id, to_id)
+);
+
+-- provenance example (jsonb, not a constraint):
+-- {"rule_id":"invoice_fk","document_ids":[...],"source_keys":{"contract_id":"...","invoice_id":"..."}}
+
+CREATE INDEX edge_from_type_idx ON edge (from_id, edge_type);
+CREATE INDEX edge_to_type_idx ON edge (to_id, edge_type);

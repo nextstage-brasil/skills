@@ -46,7 +46,8 @@
     "ns-e2e-tests": [],
     "ns-backend-tests": ["ns-harness"],
     "ns-multi-agent-architect": [],
-    "ns-langgraph-agents": ["ns-harness"]
+    "ns-langgraph-agents": ["ns-harness"],
+    "ns-postgres-rag": ["ns-harness"]
   },
   "categories": {
     "foundation": {
@@ -89,7 +90,7 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["ns-coder", "ns-autonomous", "ns-frontend-design", "ns-docs-writer", "ns-best-practices", "ns-execution-gitlab-issue", "ns-investigator", "ns-reviewer", "ns-e2e-tests", "ns-backend-tests"]
+      "skills": ["ns-coder", "ns-autonomous", "ns-frontend-design", "ns-docs-writer", "ns-best-practices", "ns-execution-gitlab-issue", "ns-investigator", "ns-reviewer", "ns-e2e-tests", "ns-backend-tests", "ns-postgres-rag"]
     },
     "labs": {
       "label": "Labs (multi-agent)",

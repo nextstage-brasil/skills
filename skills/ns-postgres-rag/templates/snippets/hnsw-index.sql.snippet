@@ -1,0 +1,14 @@
+-- Snippet: hnsw-index.sql — HNSW + iterative scan for metadata filters
+-- Illustrative. Tune m / ef_construction / ef_search against recall@k.
+
+CREATE INDEX chunk_embedding_hnsw
+  ON chunk
+  USING hnsw (embedding vector_cosine_ops)
+  WITH (m = 16, ef_construction = 64);
+
+-- Query session (or role default):
+-- SET hnsw.ef_search = 64;
+-- SET hnsw.iterative_scan = strict_order;
+
+-- Hot filters: promote columns or jsonb GIN so predicates can use iterative scan.
+CREATE INDEX chunk_metadata_gin ON chunk USING gin (metadata);

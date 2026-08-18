@@ -1,0 +1,32 @@
+-- Snippet: hybrid-search.sql — tsvector + vector, RRF fusion
+-- Illustrative. $1 = query embedding; $2 = query text; k = 60 (RRF constant).
+
+WITH query AS (
+  SELECT
+    $1::vector AS qvec,
+    websearch_to_tsquery('english', $2) AS qts
+),
+vec AS (
+  SELECT
+    c.id,
+    row_number() OVER (ORDER BY c.embedding <=> (SELECT qvec FROM query)) AS rnk
+  FROM chunk c
+  ORDER BY c.embedding <=> (SELECT qvec FROM query)
+  LIMIT 50
+),
+fts AS (
+  SELECT
+    c.id,
+    row_number() OVER (ORDER BY ts_rank_cd(c.tsv, (SELECT qts FROM query)) DESC) AS rnk
+  FROM chunk c
+  WHERE c.tsv @@ (SELECT qts FROM query)
+  ORDER BY ts_rank_cd(c.tsv, (SELECT qts FROM query)) DESC
+  LIMIT 50
+)
+SELECT
+  COALESCE(vec.id, fts.id) AS chunk_id,
+  COALESCE(1.0 / (60 + vec.rnk), 0) + COALESCE(1.0 / (60 + fts.rnk), 0) AS rrf_score
+FROM vec
+FULL OUTER JOIN fts ON fts.id = vec.id
+ORDER BY rrf_score DESC
+LIMIT 20;

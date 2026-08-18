@@ -2,6 +2,14 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Add catalog skill — `ns-postgres-rag` (2026-08-18)
+
+PostgreSQL retrieval doctrine (`pgvector`, hybrid FTS, relational GraphRAG). Frontmatter and catalog `depends`: `ns-harness` (session-boot). **Not** in `alwaysInstall`, **not** in any harness preset (`full` included). Opt-in:
+
+```bash
+npx skills add nextstage-brasil/skills@ns-postgres-rag --full-depth -y
+```
+
 ## Fold business skills into `ns-project-manager` (2026-08-14)
 
 `ns-commercial-budget`, `ns-delivery-schedule`, and `ns-requirements-enricher` are no longer catalog skills. They live under `skills/ns-project-manager/references/<id>/` (own `workflow.md` + `references/` / `assets/`; no evals). Invoke `/ns-project-manager`. Retired aliases in `packages/harness/templates/retired-skills.json` redirect installs to `ns-project-manager`.
@@ -59,6 +67,7 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | `ns-execution-gitlab-issue` | `ns-harness`, `mcp-gitlab-usage`, `ns-reviewer`, `ns-autonomous` (calls it internally for Phase 2) |
 | `ns-autonomous` | `ns-harness`, `ns-reviewer` |
 | `ns-gitlab-board-sync` | `mcp-gitlab-usage` |
+| `ns-postgres-rag` | `ns-harness` (not in any preset) |
 
 SDD workflow ordering (internal `ns-spec-driven` phases including unit/e2e test-task references) and execution pairs (`ns-e2e-tests`, `ns-backend-tests`) stay as separate install phases.
 
