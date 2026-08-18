@@ -159,11 +159,3 @@ npx @nextstage-brasil/harness sync
 Don't hand-edit registered adapters long-term. Custom rules: `.nextstage-harness/rules/` / `harness add-rule`, or Cursor UI + `harness sync` to absorb.
 
 **CI:** `harness sync` smoke; `harness sync --check` after canonical edits before commit.
-
-## AGENTS.md sync marker
-
-```html
-<!-- harness-sync-managed: last-sync=2026-07-07T12:00:00.000Z -->
-```
-
-Don't hand-edit registered adapters — lost on next sync.

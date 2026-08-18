@@ -64,7 +64,6 @@ Session boot; note `.nextstage-harness/`. **Create** vs **refresh**; read existi
 - **No Workflows → Implementation** — routing table covers it.
 - **Ownership + Language + Project notes** — ≤5 bullets.
 - **Docker and testing** — MUST NOT compose/restart without ask. Host vs container evidence from recon. PHPUnit block from `./docker-and-testing.md` **only** when PHP evidenced.
-- **Preserve** `<!-- harness-sync-managed: ... -->`.
 - **Do not** inline architecture rules.
 - English only.
 

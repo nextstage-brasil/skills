@@ -31,7 +31,6 @@ Apply **caveman ultra** to every **agent-facing** prepare/worker output. Persona
 - `MUST` / `MUST NOT` / `FORBIDDEN`
 - Confidence (`confirmed` / `inferred` / `ambiguous`)
 - Fenced code / evidenced commands
-- Sync markers (`<!-- harness-sync-managed: ... -->`, generators)
 - Links to siblings — not inlined bodies
 
 ## Cut

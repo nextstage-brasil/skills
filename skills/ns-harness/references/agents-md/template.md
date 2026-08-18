@@ -2,8 +2,6 @@
 
 {one_line_project_summary}
 
-<!-- harness-sync-managed: last-sync=never -->
-
 ## First action (before any work)
 
 Obey this file (`AGENTS.md`) — already in host context; **do not** tool-Read it.
