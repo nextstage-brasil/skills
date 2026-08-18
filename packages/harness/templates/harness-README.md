@@ -17,7 +17,7 @@ npx @nextstage-brasil/harness <command>
 |------|---------|
 | See installed skills & presets | `npx @nextstage-brasil/harness list` |
 | See which agents this project uses | `npx @nextstage-brasil/harness agents` |
-| Refresh rules + skill + subagent adapters | `npx @nextstage-brasil/harness sync` |
+| Refresh rules + skill + subagent adapters; create `CLAUDE.md` if missing (`claude-code`) | `npx @nextstage-brasil/harness sync` |
 | Update skills already installed (changed only; `--force` = all) | `npx @nextstage-brasil/harness update` |
 | Brownfield onboarding (manual) | `/ns-harness prepare this repo` |
 | Brownfield instructions (terminal) | `npx @nextstage-brasil/harness prepare` |
@@ -305,7 +305,7 @@ Brownfield refinement: **`/ns-harness` agents-md** in your agent.
 |---------|---------|
 | `harness` / `harness init` | Install skills, scaffold, sync |
 | `harness list` | Presets and skill catalog |
-| `harness sync` | Absorb orphan Cursor rules + regenerate adapters |
+| `harness sync` | Absorb orphan Cursor rules + regenerate adapters; create `CLAUDE.md` if missing when `claude-code` is active |
 | `harness update` | Update changed installed skills (`--force` refreshes all) |
 | `harness agents` | Show project agents |
 | `harness agents set` | Persist agents in manifest |

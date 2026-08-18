@@ -6,6 +6,7 @@ import { syncSkills } from '../src/syncSkills.js';
 import { syncSubagents } from '../src/syncSubagents.js';
 import { syncDockerignore } from '../src/syncDockerignore.js';
 import { syncGitignore } from '../src/syncGitignore.js';
+import { syncClaudeMd } from '../src/syncClaudeMd.js';
 import { addRule } from '../src/addRule.js';
 import { addSubagent } from '../src/addSubagent.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
@@ -51,7 +52,7 @@ function formatHelp() {
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
   harness prepare          Print full brownfield prepare instructions (/ns-harness prepare)
-  harness sync [options]   Absorb orphan .cursor/rules/*.mdc, then regenerate adapters
+  harness sync [options]   Absorb orphan .cursor/rules/*.mdc, regenerate adapters, ensure CLAUDE.md when claude-code is set
   harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
   harness add-subagent <name>  Create a canonical subagent bridge, update manifest, and sync
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
@@ -307,10 +308,12 @@ async function runSync(parsed) {
   const gitignoreResult = parsed.check
     ? { written: [], skipped: [] }
     : syncGitignore(projectRoot);
+  const claudeMdResult = syncClaudeMd(projectRoot, { agents, check: parsed.check });
   const drifts = [
     ...rulesResult.drifts,
     ...skillsResult.drifts,
     ...subagentsResult.drifts,
+    ...claudeMdResult.drifts,
   ];
 
   if (parsed.check) {
@@ -336,7 +339,8 @@ async function runSync(parsed) {
     + skillsResult.written.length
     + subagentsResult.written.length
     + dockerignoreResult.written.length
-    + gitignoreResult.written.length;
+    + gitignoreResult.written.length
+    + claudeMdResult.written.length;
   if (totalWritten > 0) {
     console.log(`Synced ${totalWritten} adapter(s)`);
     if (skillsResult.written.length > 0) {
@@ -353,6 +357,9 @@ async function runSync(parsed) {
     }
     if (gitignoreResult.written.length > 0) {
       console.log('  .gitignore → harness ignore block');
+    }
+    if (claudeMdResult.written.length > 0) {
+      console.log('  CLAUDE.md → Claude Code boot stub');
     }
   } else {
     console.log('No adapters written');

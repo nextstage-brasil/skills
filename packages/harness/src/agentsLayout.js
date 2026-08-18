@@ -19,7 +19,7 @@ export const AGENTS_SKILLS_DIR = join(AGENTS_HOME, 'skills');
 
 /**
  * Claude Code project entry (`CLAUDE.md`). Boot rules + AGENTS.md + subagents.
- * Written by scaffold and `harness agents-md`.
+ * Written by scaffold, `harness sync` (create-if-missing when `claude-code` is active), and `harness agents-md`.
  */
 export const CLAUDE_MD_CONTENT = `\
 # Rules

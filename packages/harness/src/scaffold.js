@@ -2,12 +2,12 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  CLAUDE_MD_CONTENT,
   DOCS_LAYOUT_DIRS,
   HARNESS_ROOT,
   HARNESS_RULES_DIR,
 } from './agentsLayout.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
+import { writeClaudeMdIfMissing } from './syncClaudeMd.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const templatesDir = join(__dirname, '..', 'templates');
@@ -93,12 +93,11 @@ function scaffoldHarnessRoot(projectRoot, { force, created, skipped }) {
 }
 
 function scaffoldClaudeStub(projectRoot, { created, skipped }) {
-  const claudePath = join(projectRoot, 'CLAUDE.md');
-  if (existsSync(claudePath)) {
+  const result = writeClaudeMdIfMissing(projectRoot);
+  if (result.skipped) {
     skipped.push('CLAUDE.md');
     return;
   }
-  writeUtf8(claudePath, CLAUDE_MD_CONTENT);
   created.push('CLAUDE.md');
 }
 

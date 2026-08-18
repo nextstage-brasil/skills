@@ -254,8 +254,8 @@ Skill ids match directory names under `skills/<skill-id>/` in the [skills repo](
 | `harness` / `harness init`     | Install skills, scaffold, sync adapters, generate `AGENTS.md`                      |
 | `harness list`                 | Presets and skill catalog                                                          |
 | `harness prepare`              | Print brownfield prepare instructions (`/ns-harness prepare`)                      |
-| `harness sync`                 | Absorb orphan Cursor rules + regenerate rule/skill/subagent adapters               |
-| `harness sync --check`         | Local — exit 1 if adapters drift or orphan `.mdc` not in manifest                  |
+| `harness sync`                 | Absorb orphan Cursor rules + regenerate adapters; create `CLAUDE.md` stub if missing when `claude-code` is active |
+| `harness sync --check`         | Local — exit 1 if adapters drift, orphan `.mdc`, or `CLAUDE.md` missing while `claude-code` is active |
 | `harness update`               | Update changed skills in `.agents/skills/` (skip up-to-date; `--force` = all)      |
 | `harness agents-md`            | Generate `AGENTS.md` + `CLAUDE.md` (use `--force` to overwrite)                    |
 | `harness add-rule <name>`      | New rule under `.nextstage-harness/rules/` + sync                                  |

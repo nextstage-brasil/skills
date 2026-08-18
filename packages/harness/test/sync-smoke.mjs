@@ -783,6 +783,28 @@ Should not land in canonical.
   assert(prunedAgents.removed.some((path) => path.endsWith('CLAUDE.md')), 'cursor-only should remove CLAUDE.md');
   assert(!existsSync(join(tempDir, 'CLAUDE.md')), 'CLAUDE.md should be removed after cursor-only prune');
 
+  const missingClaudeCheck = runCli(['sync', '--check', '--dir', tempDir], harnessRoot);
+  assert(missingClaudeCheck.status === 1, 'sync --check should fail when claude-code is active and CLAUDE.md is missing');
+  assert(
+    missingClaudeCheck.stderr.includes('CLAUDE.md') || missingClaudeCheck.stdout.includes('CLAUDE.md'),
+    'sync --check should name CLAUDE.md drift',
+  );
+
+  const recreateClaude = runCli(['sync', '--dir', tempDir], harnessRoot);
+  assert(recreateClaude.status === 0, `sync should recreate CLAUDE.md: ${recreateClaude.stderr}${recreateClaude.stdout}`);
+  assert(existsSync(join(tempDir, 'CLAUDE.md')), 'sync should create CLAUDE.md when claude-code is active');
+  const recreatedClaudeMd = readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8');
+  assert(recreatedClaudeMd.includes('# Rules'), 'recreated CLAUDE.md must use the boot stub');
+  assert(recreatedClaudeMd.includes('@.claude/agents'), 'recreated CLAUDE.md must point at .claude/agents');
+
+  writeFileSync(join(tempDir, 'CLAUDE.md'), '# custom claude entry\n', 'utf8');
+  const keepCustomClaude = runCli(['sync', '--dir', tempDir], harnessRoot);
+  assert(keepCustomClaude.status === 0, `sync should pass with existing CLAUDE.md: ${keepCustomClaude.stderr}`);
+  assert(
+    readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8') === '# custom claude entry\n',
+    'sync must not overwrite an existing CLAUDE.md',
+  );
+
   const agentsOnlyDir = mkdtempSync(join(tmpdir(), 'harness-agents-manifest-'));
   try {
     scaffoldProject(agentsOnlyDir, { agents: true, docs: false });

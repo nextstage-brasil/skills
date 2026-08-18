@@ -7,6 +7,7 @@ import { pruneRetiredSkills } from './pruneRetiredSkills.js';
 import { syncSkills } from './syncSkills.js';
 import { syncRules } from './syncRules.js';
 import { syncSubagents } from './syncSubagents.js';
+import { syncClaudeMd } from './syncClaudeMd.js';
 import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
 import { HARNESS_ROOT, resolveAgents } from './agentsLayout.js';
 import { logResolvedAgents } from './logResolvedAgents.js';
@@ -122,6 +123,11 @@ export async function runUpdate(argv = {}) {
   const prunedAdapters = pruneExcludedAgentAdapters(projectRoot, agents);
   if (prunedAdapters.removed.length > 0) {
     details.push(`Excluded-agent adapters removed: ${prunedAdapters.removed.length}`);
+  }
+
+  const claudeMd = syncClaudeMd(projectRoot, { agents });
+  if (claudeMd.written.length > 0) {
+    details.push('Created CLAUDE.md (Claude Code boot stub)');
   }
 
   const readmeResult = refreshHarnessReadme(projectRoot);

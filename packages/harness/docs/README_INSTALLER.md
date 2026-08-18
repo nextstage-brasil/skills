@@ -37,12 +37,12 @@ docs/context|specs|versions/      # SDD artifacts (.gitkeep in each)
 | `npx @nextstage-brasil/harness` | Interactive init (default) |
 | `harness init [options]` | Install skills + scaffold + sync |
 | `harness prepare` | Print full brownfield prepare instructions (`/ns-harness prepare`) |
-| `harness sync` | Absorb orphan `.cursor/rules/*.mdc` + regenerate adapters + ensure ignore blocks |
+| `harness sync` | Absorb orphan `.cursor/rules/*.mdc` + regenerate adapters + ensure ignore blocks; create `CLAUDE.md` if missing when `claude-code` is active |
 | `harness add-rule <name>` | Create canonical rule + manifest entry + sync |
 | `harness add-subagent <name>` | Create canonical subagent + manifest entry + sync (`--skill` required) |
 | `harness agents-md` | Generate `AGENTS.md` + `CLAUDE.md` from installed skills (no AI) |
 | `harness agents-md --force` | Overwrite existing `AGENTS.md` |
-| `harness sync --check` | Local mode — exit 1 if adapters on disk drift from canonical (or orphan `.mdc`) |
+| `harness sync --check` | Local mode — exit 1 if adapters drift, orphan `.mdc`, or `CLAUDE.md` missing while `claude-code` is active |
 | `harness uninstall` | Remove harness install (skills, adapters, scaffold; keeps `docs/`) |
 | `harness uninstall --keep-agents-md` | Same, but keep `AGENTS.md` / `CLAUDE.md` |
 | `harness list` | Presets and skill catalog |

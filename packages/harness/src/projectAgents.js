@@ -13,6 +13,7 @@ import {
 } from './manifest.js';
 import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
+import { syncClaudeMd } from './syncClaudeMd.js';
 import { syncRules } from './syncRules.js';
 import { syncSkills } from './syncSkills.js';
 import { syncSubagents } from './syncSubagents.js';
@@ -72,6 +73,7 @@ export function runAgentsSet(projectRoot, agentIds, options = {}) {
 
   const agents = writeManifestAgents(projectRoot, agentIds);
   const pruned = pruneExcludedAgentAdapters(projectRoot, agents);
+  const claudeMd = syncClaudeMd(projectRoot, { agents });
 
   let rulesWritten = 0;
   let skillsWritten = 0;
@@ -100,11 +102,14 @@ export function runAgentsSet(projectRoot, agentIds, options = {}) {
   if (subagentsWritten > 0) {
     console.log(`Synced ${subagentsWritten} subagent adapter(s)`);
   }
+  if (claudeMd.written.length > 0) {
+    console.log('Created CLAUDE.md (Claude Code boot stub)');
+  }
 
   const readmeResult = refreshHarnessReadme(projectRoot);
   if (readmeResult.updated) {
     console.log(`Updated: ${HARNESS_ROOT}/README.md`);
   }
 
-  return { agents, pruned, rulesWritten, skillsWritten, subagentsWritten };
+  return { agents, pruned, rulesWritten, skillsWritten, subagentsWritten, claudeMd };
 }
