@@ -27,7 +27,7 @@ Compose via helper outside god-node (`composeSystemPrompt`). Layers feed `base_i
 
 | # | Layer | Source | Bucket | Notes |
 | - | ----- | ------ | ------ | ----- |
-| 1 | Canonical body | File under `src/conversation/prompts/` | Usually `injected` (persona/role) | Single source for product role/behavior |
+| 1 | Canonical body | File under `src/conversation/prompts/` or mode-resolved fragment | Usually `injected` (persona/role) | Resolver picks body per mode when applicable; else single canonical file |
 | 2 | Opacity / safety fixed rules | Shared constants or prompt fragment | Prefer `base_invariant` | Keep short |
 | 3 | Data-plane truth | Runtime connection state | Either; often `injected` overlay | Never claim tools agent cannot call |
 | 4 | Session context overlay | `RunnableConfig.configurable` | `injected` | **Overlay**, not body replace; never persist into graph state. **Exception:** `configurable.locale` is a weak runtime hint for `resolveConversationLocale` only — **MUST NOT** copy into product `injected` as language/format SoT (`evidence-and-fidelity.md`) |
@@ -52,6 +52,26 @@ Names matter: "required system prompt" ≠ session overlay ≠ summary `SystemMe
 ### Nudges
 
 Runtime nudges (force format, one-shot) = layer 7 of composed system text. Fake user turns pollute history, break trim/summarize, train model on fake dialogue.
+
+## Mode-resolved `injected` (single graph)
+
+`base_invariant` (motor) **same every turn** — any mode, any phase. Never mode-swap motor rules.
+
+`injected` (layer 1 canonical body) **may resolve per turn/mode** — not always one fixed file per product. Resolver picks body + output schema from classification result.
+
+**Mode pick:** existing analyst/intent node classifies; **conditional edge** routes branch (same pattern as post-analyst routing in `architectures.md`). **One graph** — modes = branches inside same phase, not subgraphs, not separate products.
+
+Structured mode output: JSON mode + Zod parse; schema selected by mode (same pattern as other structured turns).
+
+**Example (adapt per product):**
+
+| Mode | `injected` source | Output schema | State/config precondition |
+| ---- | ----------------- | ------------- | ------------------------- |
+| `search` | General search prompt file or fragment | Free text or domain reply schema | None beyond thread context |
+| `personal_scoped` | Personal-scope prompt overlay | Domain reply schema | `personal_id` in state or `configurable` — missing → clarify, do not proceed |
+| `document_validation` | Validation prompt (no search tools) | JSON actions for validation pipeline | Submitted document ref in state; no search branch |
+
+Document mode example: read submitted doc, return structured JSON of validation actions — bind/search tools off for that branch.
 
 ## Capability primitives
 
@@ -119,7 +139,7 @@ Gather nudge: system section in composed invoke payload — no fake `HumanMessag
 ### Prompt / Capability plan
 - Compose: base_invariant + injected (rebuild per invoke; not in state/checkpointer/durable messages)
 - Motor (`base_invariant`): [gather-no-Markdown / sole-writer / tool discipline / …]
-- Product (`injected`): canonical path + persona/tone notes
+- Product (`injected`): canonical path + persona/tone notes; mode-resolved: yes/no; modes: [...]; resolver: ...
 - System layers touched: [1–7 numbers]
 - Canonical prompt path: src/conversation/prompts/...
 - Session overlay: yes/no (configurable field names)

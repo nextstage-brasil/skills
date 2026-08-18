@@ -6,7 +6,7 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 
 | Anti-pattern | Why it hurts | Fix |
 | ------------ | ------------ | --- |
-| Locale / i18n / humanize under `graph/` | Graph becomes a junk drawer; breaks vertical data model | `src/conversation/locale/` |
+| Locale / i18n / humanize under `graph/` | Graph becomes a junk drawer; breaks config/conversation data model | `src/conversation/locale/` |
 | Presentation (charts, mermaid) under `graph/` or `llm/` | Mixes display with control flow / infra | `src/conversation/presentation/` |
 | Domain prompts under `llm/` or top-level `src/prompts/` | Dual trees; orphan copies | `src/conversation/prompts/` |
 | Domain heuristics in `src/skills/` or vendor policy in `src/mcp/` | Runtime TS hardcodes product rules | `conversation/` or `config/` |

@@ -16,7 +16,6 @@ Read this before any new file under `{agent_api_root}`. Emit a **Placement Decis
 | `resolveConversationLocale` / `formatUserFacing` (conversation-observed) | `src/conversation/locale/` | conversation |
 | Presentation (charts, mermaid sanitize, display adapters) | `src/conversation/presentation/` | conversation |
 | Versioned tenant / product domain data | `config/tenants/{id}/` | config |
-| Segment / vertical behavior as data | `config/verticals/{id}/` | config |
 | Local `StructuredTool`s | `src/tools/` | tools |
 | MCP client, discovery, adapters, governance glue | `src/mcp/` | mcp |
 | Capability types, allowlist, rate limit, fingerprint | `src/capability/` | capability |
@@ -27,27 +26,16 @@ Read this before any new file under `{agent_api_root}`. Emit a **Placement Decis
 | HTTP server, SSE, routes | `src/http/` | http |
 | Audit / LangSmith / OTel | `src/observability/` | observability |
 
-`tenant_model: simple` still uses this matrix — do not invent ad-hoc folders because the product has one tenant.
+Do not invent ad-hoc folders because the product has one tenant — still use this matrix.
 
 ## Ownership rules
 
 - **`src/graph/`** — wiring only. Nodes call into conversation/tools/mcp; they do not own locale, copy, or domain regex.
 - **`src/conversation/`** — prompts, schemas, locale, presentation. One canonical prompt path: `conversation/prompts/`.
-- **`src/skills/`** — loader, registry, and LangChain tool adapters only. No domain heuristics, no vertical-specific regex, no auto-inject policy that embeds product rules in TypeScript.
-- **`src/mcp/`** — generic client + governance adapters. No hardcoded vendor/vertical policy tables in adapters; policy lives in config or capability allowlists.
-- **`config/`** — versioned domain and vertical data. Code may reference only paths that exist on disk (and vice versa).
+- **`src/skills/`** — loader, registry, and LangChain tool adapters only. No domain heuristics, no domain-specific regex, no auto-inject policy that embeds product rules in TypeScript.
+- **`src/mcp/`** — generic client + governance adapters. No hardcoded vendor/domain policy tables in adapters; policy lives in config or capability allowlists.
+- **`config/`** — versioned domain and tenant data. Code may reference only paths that exist on disk (and vice versa).
 - **`src/llm/`** — provider/infra only. Never domain prompts or qualify copy.
-
-## `tenant_model: vertical`
-
-A new vertical is **data only**:
-
-1. Add under `config/verticals/{id}/` (prompts overlays, allowlists, copy, feature flags as files).
-2. Do **not** add vertical-specific modules under `src/`.
-3. Runtime loads vertical via config + existing conversation/capability layers.
-4. Domain ownership stays in `config/` + `conversation/`; graph/skills/mcp stay generic.
-
-Condensed contract: **new vertical = only `config/`, zero new `src/`.**
 
 ## Anti-patterns (placement)
 
@@ -58,8 +46,8 @@ Condensed contract: **new vertical = only `config/`, zero new `src/`.**
 | Domain prompts under `src/llm/` or top-level `src/prompts/` | `src/conversation/prompts/` |
 | Frontend-style `locales/translation.json` inside agent-api | conversation locale helpers + config copy |
 | Bootstrap / `.env` locale as primary reply-format SoT | `resolveConversationLocale` + ephemeral `turnLocale` — `evidence-and-fidelity.md` |
-| Domain regex / vertical heuristics in `src/skills/*-auto-inject.ts` | `conversation/` or `config/` |
-| Vendor/vertical policy hardcoded in `src/mcp/` adapters | allowlist + `config/` + `capability/` |
+| Domain regex / heuristics in `src/skills/*-auto-inject.ts` | `conversation/` or `config/` |
+| Vendor/domain policy hardcoded in `src/mcp/` adapters | allowlist + `config/` + `capability/` |
 | Orphan `src/prompts/` plus dead `* copy.md` duplicates | Single canonical path; delete dead copies |
 | `config/*` paths imported in code but missing on disk | Create config files in the same change (or remove refs) |
 | Fat god-node with compose + bind + routing inline | Thin `*.node.ts` + helpers outside the node |

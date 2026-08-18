@@ -17,13 +17,13 @@ Score each item: ✅ pass | ⚠️ partial | ❌ fail
 - [ ] Presentation under `conversation/presentation/` — not under `graph/` or `llm/`
 - [ ] No orphan `src/prompts/` or dead `* copy.md` prompt duplicates
 - [ ] `src/skills/` is loader/registry only — no domain heuristics
-- [ ] `src/mcp/` has no hardcoded vertical/vendor policy tables
+- [ ] `src/mcp/` has no hardcoded vendor/domain policy tables
 
 ## Spec artifacts
 
 - [ ] `graph-spec.md` exists and matches compiled nodes/edges/capabilities/wire names
 - [ ] Spec includes domain ownership, prompt composition, bind/inject table, `recursion_limit`
-- [ ] Locked header: `framework`, `tenant_model`, `architecture`, `interaction_mode`
+- [ ] Locked header: `framework`, `architecture`, `interaction_mode`
 - [ ] Postman collection matches HTTP routes
 - [ ] Spec Sync Gate understood: stale archive ≠ force-fit code
 

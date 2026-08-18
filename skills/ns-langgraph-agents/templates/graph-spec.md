@@ -8,7 +8,6 @@
 | Field | Value |
 | ----- | ----- |
 | `framework` | langgraph |
-| `tenant_model` | simple \| vertical |
 | `architecture` | react \| react_bounded \| plan_execute \| reflection \| supervisor \| rag_qa |
 | `interaction_mode` | sync_json \| streaming_sse |
 | `recursion_limit` | {{number}} |
@@ -25,13 +24,11 @@
 | System prompts | `src/conversation/prompts/` | `graph/`, `llm/`, `src/prompts/` |
 | Locale / humanize | `src/conversation/locale/` (`resolveConversationLocale` + Intl formatters; conversation-observed, not bootstrap SoT) | `graph/` |
 | Presentation | `src/conversation/presentation/` | `graph/`, `llm/` |
-| Versioned domain / verticals | `config/tenants/`, `config/verticals/` | new `src/` modules for verticals |
+| Versioned tenant / domain config | `config/tenants/{id}/` (optional) | new `src/` modules for domain rules |
 | Local tools | `src/tools/` | — |
-| MCP client | `src/mcp/` (generic) | hardcoded vertical/vendor policy |
+| MCP client | `src/mcp/` (generic) | hardcoded vendor/domain policy |
 | Skill procedures | `skills/*.md` | — |
 | Skill runtime | `src/skills/` (loader only) | domain heuristics |
-
-`tenant_model: vertical`: new vertical = **only** `config/verticals/{id}/`, zero new `src/`.
 
 ## Prompt composition
 
@@ -49,7 +46,9 @@ Ordered layers (see `references/prompt-and-capability-injection.md`):
 
 Compose helper: `{{module path}}` (outside god-node).
 
-Motor (`base_invariant`) source: `{{path or constant}}`. Product (`injected`) source: `{{path}}`.
+Motor (`base_invariant`) source: `{{path or constant}}`. Product (`injected`) source: `{{path}}` or mode resolver `{{module}}`.
+
+Optional when modes vary per turn — mode table (`mode | injected source | output schema | precondition`); see `references/prompt-and-capability-injection.md`.
 
 ## State schema
 

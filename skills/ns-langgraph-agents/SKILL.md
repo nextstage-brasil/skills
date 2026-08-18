@@ -4,7 +4,7 @@ description: (NS) LangGraph.js agent-api — StateGraph, MCP tools, skill bind/i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.3"
+  version: "1.4"
 depends:
   - ns-harness
 ---
@@ -93,7 +93,7 @@ Before new file or inject/bind change: complete all three. No code until posted.
 - do_not_create_under: […]
 ```
 
-Full matrix: `references/placement-and-domains.md`. `tenant_model: simple` still needs matrix; `vertical` = config-only (`config/verticals/`, zero new `src/`).
+Full matrix: `references/placement-and-domains.md`.
 
 ### 2. Prompt / Capability plan
 
@@ -101,7 +101,7 @@ Full matrix: `references/placement-and-domains.md`. `tenant_model: simple` still
 ### Prompt / Capability plan
 - Compose: base_invariant + injected (rebuild per invoke; not in state/checkpointer/durable messages)
 - Motor (`base_invariant`): [gather-no-Markdown / sole-writer / tool discipline / …]
-- Product (`injected`): canonical path + persona/tone notes
+- Product (`injected`): canonical path + persona/tone notes; mode-resolved: yes/no; modes: [...]; resolver: ...
 - System layers touched: […]
 - Canonical prompt path: …
 - Session overlay: yes/no
@@ -167,7 +167,7 @@ No new graph nodes or MCP servers until layout + governance baselines pass.
 
 ### Phase 0 — Spec gate
 
-If `graph-spec.md` is missing, create it from `templates/graph-spec.md`. Minimum sections: locked header (`framework`, `tenant_model`, `architecture`, `interaction_mode`), domain ownership, prompt composition, state schema, nodes table, edges, interrupts, memory, capability bind/inject table, recursion_limit, HTTP routes.
+If `graph-spec.md` is missing, create it from `templates/graph-spec.md`. Minimum sections: locked header (`framework`, `architecture`, `interaction_mode`), domain ownership, prompt composition, state schema, nodes table, edges, interrupts, memory, capability bind/inject table, recursion_limit, HTTP routes.
 
 If the user has no architecture decision yet, stop and invoke `ns-multi-agent-architect` first.
 

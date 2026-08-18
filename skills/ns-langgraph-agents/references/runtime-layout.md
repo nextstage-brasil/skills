@@ -10,8 +10,7 @@ Canonical LangGraph.js production tree. Adapt folder names; keep **layer rules**
 ```
 agent-api/
 ├── config/                 # Versioned domain data (not fixtures/)
-│   ├── tenants/{id}/
-│   └── verticals/{id}/     # optional: segment-specific behavior as data
+│   └── tenants/{id}/       # optional: tenant-specific config as data
 ├── evals/
 ├── postman/                # executable HTTP contract
 ├── skills/                 # *.md procedure files (auto-discovered)
@@ -54,7 +53,7 @@ graph → observability
 mcp/skills → capability governance → tools bound in agent node
 ```
 
-`graph/` wires control flow. Domain prompts, locale, and presentation live under `conversation/`. Skill and MCP TypeScript modules stay generic; product/vertical rules live in `config/` + conversation.
+`graph/` wires control flow. Domain prompts, locale, and presentation live under `conversation/`. Skill and MCP TypeScript modules stay generic; product/domain rules live in `config/` + conversation.
 
 ## Hard prohibitions
 
