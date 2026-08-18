@@ -70,11 +70,10 @@ See `packages/harness/README.md` for all flags. Install and migration details: `
 | `gitlab` | Extends `spec-driven`. Adds GitLab issue execution, board sync, CI generator, MCP usage. Alias: `spec-driven-gitlab`. |
 | `project-manager` | PM face only (`ns-project-manager`). No SDD or code workers. |
 | `frontend` | UI design, reverse prototyping, visual appearance guides. Alias: `frontend-prototype`. |
-| `agent-creator` | Extends `spec-driven`. Adds `ns-multi-agent-architect` + `ns-langgraph-agents` (labs). |
-| `full` | Entire NS catalog: `gitlab` + `frontend` + `project-manager` + `agent-creator` (+ any skills not already pulled by `extends`). |
-| `agents-api` | Agent API stack: NS coder/review/investigator/langgraph plus LangChain/MCP/Vitest/eval externals. |
+| `agents` | Extends `spec-driven`. Adds LangGraph labs (`ns-multi-agent-architect`, `ns-langgraph-agents`) plus LangChain/MCP/Vitest/eval externals. Aliases: `agent-creator`, `agents-api`. |
+| `full` | Entire NS catalog: `gitlab` + `frontend` + `project-manager` + `agents` (+ any skills not already pulled by `extends`). |
 
-Aliases: `frontend-prototype` → `frontend`, `spec-driven-gitlab` → `gitlab`.
+Aliases: `frontend-prototype` → `frontend`, `spec-driven-gitlab` → `gitlab`, `agent-creator` / `agents-api` → `agents`.
 
 There is **no** selective install of individual SDD phases — use `/ns-spec-driven` (internal phases live in `references/`).
 

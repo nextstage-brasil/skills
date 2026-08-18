@@ -50,6 +50,9 @@ Declarative preset format for `@nextstage-brasil/harness` **1.x**. Presets refer
 | `frontend-prototype` | `presets/frontend.json` |
 | `spec-driven-gitlab` | `presets/gitlab.json` |
 | `gitlab` | `presets/gitlab.json` |
+| `agent-creator` | `presets/agents.json` |
+| `agents-api` | `presets/agents.json` |
+| `agents` | `presets/agents.json` |
 
 ## Notes
 

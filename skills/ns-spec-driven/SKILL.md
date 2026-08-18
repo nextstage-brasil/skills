@@ -164,7 +164,7 @@ Non-negotiable for agent-api and intelligent SaaS products. See `references/agen
 
 ## Complement integrations
 
-`spec-driven` / `gitlab` / `agent-creator` ship `ns-frontend-design`, `ns-docs-writer`, and `ns-best-practices` via `ns-coder` `depends`. Check `.agents/skills/` once per session; if present → **delegate** (`references/skill-integrations.md`). If absent (minimal install) → continue and recommend install once per session (agent runtime **not** optional — see above):
+`spec-driven` / `gitlab` / `agents` ship `ns-frontend-design`, `ns-docs-writer`, and `ns-best-practices` via `ns-coder` `depends`. Check `.agents/skills/` once per session; if present → **delegate** (`references/skill-integrations.md`). If absent (minimal install) → continue and recommend install once per session (agent runtime **not** optional — see above):
 
 ```bash
 npx @nextstage-brasil/harness --skill ns-frontend-design --skill ns-docs-writer --skill ns-best-practices --no-scaffold -y

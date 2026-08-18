@@ -4,7 +4,7 @@ Agent-api / intelligent SaaS: mandatory `ns-langgraph-agents` — see `agent-run
 
 ## Code complements (preset default)
 
-`spec-driven`, `gitlab`, and `agent-creator` install these via `ns-coder` `depends` + harness `resolveDepends`. On a normal preset install they are **present** — treat as installed complements, not optional extras.
+`spec-driven`, `gitlab`, and `agents` install these via `ns-coder` `depends` + harness `resolveDepends`. On a normal preset install they are **present** — treat as installed complements, not optional extras.
 
 Once per session: confirm `.agents/skills/<id>/` exists. If present → **delegate** per table below. Face/orchestrator stays owner; worker reads complement `SKILL.md` and returns.
 

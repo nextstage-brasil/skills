@@ -1,7 +1,7 @@
 {
-  "name": "agent-creator",
+  "name": "agents",
   "requires_harness": ">=1.0.0",
-  "description": "Spec-driven + multi-agent architecture (LangGraph labs)",
+  "description": "Spec-driven + LangGraph labs + LangChain/MCP/eval externals",
   "extends": "spec-driven",
   "includes": [
     "skills/ns-multi-agent-architect",

@@ -1,7 +1,7 @@
 {
   "stacks": {
-    "agents-api": {
-      "label": "Agents API projects",
+    "agents": {
+      "label": "Agents projects",
       "description": "LangChain/LangGraph agent APIs — MCP, evaluation, testing, and persistence"
     },
     "authoring": {
@@ -17,39 +17,39 @@
     },
     "langchain-fundamentals": {
       "source": "langchain-ai/langchain-skills",
-      "stack": "agents-api",
+      "stack": "agents",
       "label": "LangChain fundamentals"
     },
     "langgraph-persistence": {
       "source": "langchain-ai/langchain-skills",
-      "stack": "agents-api",
+      "stack": "agents",
       "label": "LangGraph persistence"
     },
     "mcp-builder": {
       "source": "anthropics/skills",
-      "stack": "agents-api",
+      "stack": "agents",
       "label": "MCP builder"
     },
     "vitest": {
       "source": "antfu/skills",
-      "stack": "agents-api",
+      "stack": "agents",
       "label": "Vitest"
     },
     "llm-evaluation": {
       "source": "wshobson/agents",
-      "stack": "agents-api",
+      "stack": "agents",
       "label": "LLM evaluation"
     },
     "postgresql-table-design": {
       "source": "wshobson/agents",
-      "stack": "agents-api",
+      "stack": "agents",
       "label": "PostgreSQL table design"
     }
   },
   "presets": {
-    "agents-api": {
-      "label": "Agents API projects",
-      "description": "Agent API services — not for general web apps or SDD-only repos",
+    "agents": {
+      "label": "Agents projects",
+      "description": "Spec-driven + LangGraph labs + LangChain/MCP/eval externals",
       "nsSkills": [
         "ns-harness",
         "ns-multi-agent-architect",

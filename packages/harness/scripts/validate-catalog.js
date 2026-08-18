@@ -112,12 +112,12 @@ for (const [presetId, preset] of Object.entries(externalCatalog.presets ?? {})) 
       errors.push(`external-skills.json preset "${presetId}" references unknown NS skill "${skillId}"`);
     }
   }
-  if (presetId === 'agents-api') {
+  if (presetId === 'agents') {
     const presetSkills = new Set(preset.skills ?? []);
     for (const [skillId, entry] of Object.entries(externalCatalog.skills ?? {})) {
-      if (entry.stack !== 'agents-api') continue;
+      if (entry.stack !== 'agents') continue;
       if (!presetSkills.has(skillId)) {
-        errors.push(`agents-api preset must include all agents-api stack skills; missing "${skillId}"`);
+        errors.push(`agents preset must include all agents stack skills; missing "${skillId}"`);
       }
     }
   }
@@ -150,7 +150,7 @@ for (const skillId of Object.keys(skillPaths)) {
 const bundledPresetsDir = join(__dirname, '..', 'templates', 'presets');
 const repoPresetsDir = join(repoRoot, 'presets');
 if (existsSync(bundledPresetsDir) && existsSync(repoPresetsDir)) {
-  for (const file of ['index.json', 'spec-driven.json', 'gitlab.json', 'project-manager.json', 'frontend.json', 'agent-creator.json', 'full.json']) {
+  for (const file of ['index.json', 'spec-driven.json', 'gitlab.json', 'project-manager.json', 'frontend.json', 'agents.json', 'full.json']) {
     const bundled = join(bundledPresetsDir, file);
     const repo = join(repoPresetsDir, file);
     if (!existsSync(bundled) || !existsSync(repo)) continue;

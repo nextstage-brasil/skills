@@ -290,6 +290,17 @@ Path overrides and `harness sync` after authoring: `ns-harness` → `references/
 
 **Consumer action:** install `skill-creator` (`npx skills add https://github.com/anthropics/skills --skill skill-creator -y`) or `npx @nextstage-brasil/harness --preset full --yes`. Run `harness update` to prune retired `ns-skill-creator` when `skill-creator` is present.
 
+## Breaking change — merge `agent-creator` and `agents-api` into `agents` (2026-08-18)
+
+| Old preset | New preset | Detail |
+| ---------- | ---------- | ------ |
+| `agent-creator` | `agents` | Same spec-driven + LangGraph labs; also installs LangChain/MCP/eval externals |
+| `agents-api` | `agents` | Same externals + NS agent stack; also includes the full spec-driven set |
+
+Aliases `agent-creator` and `agents-api` still resolve to `presets/agents.json`.
+
+**Consumer action:** replace `--preset agent-creator` / `--preset agents-api` with `--preset agents`.
+
 ## Breaking change — domain prefix rename (2026-07)
 
 Skills were renamed with domain prefixes (`pm-`, `code-`, `execution-`, `harness-`). Those mid-names are themselves retired in favor of the `ns-` names above; the table below is historical.

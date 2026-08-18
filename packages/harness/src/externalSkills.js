@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { resolveDepends } from './catalog.js';
+import { resolvePreset } from './presets.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const externalPath = join(__dirname, '..', 'templates', 'external-skills.json');
@@ -36,8 +37,18 @@ export function listExternalPresets() {
 }
 
 export function getExternalPreset(id) {
-  const preset = listExternalPresets().find((entry) => entry.id === id);
-  return preset ?? null;
+  const presets = listExternalPresets();
+  const direct = presets.find((entry) => entry.id === id);
+  if (direct) return direct;
+  try {
+    const indexed = resolvePreset(id);
+    if (indexed?.name) {
+      return presets.find((entry) => entry.id === indexed.name) ?? null;
+    }
+  } catch {
+    return null;
+  }
+  return null;
 }
 
 export function listExternalStacks() {

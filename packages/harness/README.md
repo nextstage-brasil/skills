@@ -158,7 +158,7 @@ npx @nextstage-brasil/harness update --force
 
 ### Code complements (UI, docs, security)
 
-With `--preset spec-driven`, `gitlab`, or `agent-creator`, harness resolves `ns-coder` `depends` — you get `ns-frontend-design`, `ns-docs-writer`, `ns-best-practices`, `ns-backend-tests`, and `ns-e2e-tests` without extra flags. `ns-coder` and `ns-spec-driven` delegate to the design/docs/hygiene skills when relevant.
+With `--preset spec-driven`, `gitlab`, or `agents`, harness resolves `ns-coder` `depends` — you get `ns-frontend-design`, `ns-docs-writer`, `ns-best-practices`, `ns-backend-tests`, and `ns-e2e-tests` without extra flags. `ns-coder` and `ns-spec-driven` delegate to the design/docs/hygiene skills when relevant.
 
 Minimal install only? Add complements explicitly:
 
@@ -166,12 +166,12 @@ Minimal install only? Add complements explicitly:
 npx @nextstage-brasil/harness --skill ns-frontend-design --skill ns-docs-writer --skill ns-best-practices --no-scaffold -y
 ```
 
-### Agents API / LangChain stack
+### Agents stack
 
-External + NextStage skills for agent-service work:
+SDD + LangGraph labs + LangChain/MCP/eval externals:
 
 ```bash
-npx @nextstage-brasil/harness --preset agents-api --yes
+npx @nextstage-brasil/harness --preset agents --yes
 ```
 
 ### Init into another directory
@@ -220,9 +220,8 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 | `gitlab`             | Everything in `spec-driven`, plus GitLab issues, board sync, CI generator (alias: `spec-driven-gitlab`) |
 | `project-manager`    | Human PM toolkit — `ns-project-manager` only (**no** SDD/code workers)                                |
 | `frontend`           | UI design, reverse prototype (`ns-proto-creator`), visual guides (alias: `frontend-prototype`)        |
-| `agent-creator`      | `spec-driven` + LangGraph labs (`ns-multi-agent-architect`, `ns-langgraph-agents`)                    |
-| `full`               | Full catalog (`gitlab` + `frontend` + `project-manager` + `agent-creator`)                            |
-| `agents-api`         | LangChain / LangGraph / MCP externals + NS coder/investigator/reviewer/architect                     |
+| `agents`             | `spec-driven` + LangGraph labs + LangChain/MCP/eval externals (aliases: `agent-creator`, `agents-api`) |
+| `full`               | Full catalog (`gitlab` + `frontend` + `project-manager` + `agents`)                                   |
 
 ```bash
 npx @nextstage-brasil/harness --preset <name> --yes

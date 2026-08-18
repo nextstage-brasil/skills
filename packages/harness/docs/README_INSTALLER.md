@@ -51,7 +51,7 @@ docs/context|specs|versions/      # SDD artifacts (.gitkeep in each)
 
 | Flag | Effect |
 |------|--------|
-| `--preset <name>` | `spec-driven` (default), `gitlab`, `project-manager`, `frontend-prototype`, `agent-creator`, `full` |
+| `--preset <name>` | `spec-driven` (default), `gitlab`, `project-manager`, `frontend-prototype`, `agents`, `full` |
 | `--agent <name>` | Repeatable; default `cursor`, `claude-code` |
 | `--yes`, `-y` | Non-interactive |
 | `--no-scaffold` | Skills only — skip AGENTS.md and `.nextstage-harness/` |

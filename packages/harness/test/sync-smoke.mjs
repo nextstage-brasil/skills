@@ -627,20 +627,32 @@ Should not land in canonical.
   const langchainGroup = grouped.find((group) => group.source === 'langchain-ai/langchain-skills');
   assert(langchainGroup?.skills.length === 2, 'langchain repo should include two skills');
 
-  const agentsApiPreset = getExternalPreset('agents-api');
-  assert(agentsApiPreset?.skills.length === 6, 'agents-api preset should include all six external skills');
-  assert(agentsApiPreset?.skills.includes('langgraph-persistence'), 'agents-api preset should include langgraph skill');
-  assert(agentsApiPreset?.skills.includes('postgresql-table-design'), 'agents-api preset should include postgresql skill');
-  assert(agentsApiPreset?.nsSkills.includes('ns-multi-agent-architect'), 'agents-api preset should include NS architect skill');
-  assert(agentsApiPreset?.nsSkills.includes('ns-langgraph-agents'), 'agents-api preset should include ns-langgraph-agents');
-  assert(agentsApiPreset?.nsSkills.includes('ns-coder'), 'agents-api preset should include ns-coder');
-  assert(agentsApiPreset?.nsSkills.includes('ns-investigator'), 'agents-api preset should include ns-investigator');
+  const agentsPreset = getExternalPreset('agents');
+  assert(agentsPreset?.skills.length === 6, 'agents preset should include all six external skills');
+  assert(agentsPreset?.skills.includes('langgraph-persistence'), 'agents preset should include langgraph skill');
+  assert(agentsPreset?.skills.includes('postgresql-table-design'), 'agents preset should include postgresql skill');
+  assert(agentsPreset?.nsSkills.includes('ns-multi-agent-architect'), 'agents preset should include NS architect skill');
+  assert(agentsPreset?.nsSkills.includes('ns-langgraph-agents'), 'agents preset should include ns-langgraph-agents');
+  assert(agentsPreset?.nsSkills.includes('ns-coder'), 'agents preset should include ns-coder');
+  assert(agentsPreset?.nsSkills.includes('ns-investigator'), 'agents preset should include ns-investigator');
+  assert(getExternalPreset('agents-api')?.id === 'agents', 'agents-api alias should resolve to agents');
+  assert(getExternalPreset('agent-creator')?.id === 'agents', 'agent-creator alias should resolve to agents');
 
-  const agentsApiDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents-api', '--dir', tempDir], harnessRoot);
-  assert(agentsApiDryRun.status === 0, `agents-api preset dry-run should pass: ${agentsApiDryRun.stderr}${agentsApiDryRun.stdout}`);
+  const agentsDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents', '--dir', tempDir], harnessRoot);
+  assert(agentsDryRun.status === 0, `agents preset dry-run should pass: ${agentsDryRun.stderr}${agentsDryRun.stdout}`);
   assert(
-    agentsApiDryRun.stdout.includes('langchain-fundamentals') && agentsApiDryRun.stdout.includes('vitest'),
-    'agents-api dry-run should list all external skills',
+    agentsDryRun.stdout.includes('langchain-fundamentals') &&
+      agentsDryRun.stdout.includes('vitest') &&
+      agentsDryRun.stdout.includes('ns-spec-driven') &&
+      agentsDryRun.stdout.includes('ns-langgraph-agents'),
+    'agents dry-run should list spec-driven + labs + external skills',
+  );
+
+  const agentsAliasDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents-api', '--dir', tempDir], harnessRoot);
+  assert(agentsAliasDryRun.status === 0, `agents-api alias dry-run should pass: ${agentsAliasDryRun.stderr}${agentsAliasDryRun.stdout}`);
+  assert(
+    agentsAliasDryRun.stdout.includes('langchain-fundamentals') && agentsAliasDryRun.stdout.includes('ns-spec-driven'),
+    'agents-api alias should install the unified agents preset',
   );
 
   const frontendPrototypeDryRun = runCli(['--dry-run', '--yes', '--preset', 'frontend-prototype', '--dir', tempDir], harnessRoot);
