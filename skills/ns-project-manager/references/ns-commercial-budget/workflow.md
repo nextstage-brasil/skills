@@ -23,12 +23,12 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.15"
+  version: "1.19"
 ---
 
 # Commercial Budget
 
-Client-facing commercial budget from free-form scope: **Features**, **Mermaid flows**, **Function Points + hours**, **macro table**, **risk margins**. **Default sizing = IFPUG Function Points only.** Include COSMIC CFP only when the human explicitly asks. Other FP methods (NESMA, house) only when the human names them. Fixed path; header **Sequência** + **Gerado em** each regenerate.
+Client-facing commercial budget from free-form scope: **Features**, **Mermaid flows**, **Function Points + hours**, **macro table**, **risk margins**. **Default sizing = APF (IFPUG CPM latest; SISP latest only for cases CPM does not cover).** Include COSMIC CFP only when the human explicitly asks. Other FP methods only when the human names them. Count screen consults, planograph, charts, maps — never 0 PF as “UI only”. Fixed path; header **Sequência** + **Gerado em** each regenerate.
 
 **Audience:** client first, delivery second. Client confirms scope; team gets traceable sizing. Narrative = product/commercial. Sizing detail in Estimativas. Read `references/product-voice.md`.
 
@@ -77,11 +77,11 @@ Read `references/clarification.md`.
 1. `assets/commercial-budget-internal.template.md`
 2. `references/product-voice.md`
 3. `references/engineering-split.md` — classify each scoped item `negócio` | `engenharia` | `qualidade` before Features
-4. `references/fp-sizing.md` — always (default commercial size = IFPUG CPM)
+4. `references/fp-sizing.md` — always (default = APF: IFPUG CPM latest, SISP fallback)
 5. `references/cosmic-sizing.md` — **only** if human asked for COSMIC / CFP / cosmic functions; otherwise skip (do not size, do not add a CFP section)
 6. `references/macro-activities.md` + `references/risk-margin.md`
 7. `references/document-versioning.md`
-8. **Reuse inventory applied** — `reuse` / `extend` / `net-new`; discount reuse. Block if context existed and inventory skipped.
+8. **Reuse inventory applied** — map `net-new`→ADD, `extend`→CHG, `reuse`→omit (IFPUG enhancement). Block if context existed and inventory skipped.
 
 | Section | Rules |
 |---------|--------|
@@ -89,7 +89,7 @@ Read `references/clarification.md`.
 | Fluxos principais | 1–3 Mermaid `flowchart TD`; white init + Palette A/B `classDef` + `linkStyle` edges (`product-voice.md`). Subtitle per diagram; validation chain optional; client-readable PT-BR labels |
 | Features (≤10) | `Feature 001`…; generous product description + acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
 | RNFs | Only if identified — product language |
-| Estimativas — FP | Internal: IFPUG per-Feature FP + full **origem do cálculo** (other FP method only if human named it). Client export: subtotal negócio + engenharia rollup line; total unchanged (`fp-sizing.md`, `engineering-split.md`) |
+| Estimativas — FP | **Same Total PF** in both docs. Internal: APF + CPM/SISP origem. Client: per-Feature FP + justificativa — **no** CPM/SISP types (`fp-sizing.md`, `engineering-split.md`) |
 | Estimativas — COSMIC | **Omit by default.** If human asked: summary table + method reference line only — **no** rationale prose |
 | Estimativas — Horas | **Calculation only:** FP × productivity; base; margin; total. Cite productivity source |
 | Macroatividades | 7-row table unchanged (`macro-activities.md`) |
@@ -138,7 +138,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 | `references/engineering-split.md` | Before Features — classify negócio / engenharia / qualidade; client export |
 | `assets/commercial-budget-costumer.template.md` | When writing `commercial-budget-costumer.md` |
 | `references/clarification.md` | Before generating |
-| `references/fp-sizing.md` | Before FP tables |
+| `references/fp-sizing.md` | Before FP tables — APF default (CPM then SISP) |
 | `references/cosmic-sizing.md` | Only when human asked for COSMIC/CFP (agent sizing; doc = table only) |
 | `references/macro-activities.md` | Before lifecycle table |
 | `references/risk-margin.md` | Before risks / margin % |

@@ -36,7 +36,7 @@ See `engineering-split.md` for triggers, templates, anti-patterns.
 | Need | Put it here | Not here |
 |------|-------------|----------|
 | Scope completeness | Features + critérios de aceite + fluxos Mermaid | Class names, schemas, endpoints |
-| Sizing traceability | Estimativas: FP origem do cálculo + per-Feature FP | Feature narrative |
+| Sizing traceability | Internal: APF origem (CPM/SISP). Client: per-Feature FP + justificativa only | Feature narrative; client `commercial-budget-costumer.md` |
 | COSMIC counts | Omit unless asked; then Estimativas: CFP table only | Unsolicited CFP; per-Feature E/R/W/X prose |
 | Productivity math | Estimativas: Horas (cálculo) | Narrative justification in horas row |
 
@@ -55,7 +55,7 @@ See `engineering-split.md` for triggers, templates, anti-patterns.
 |------|---------|
 | Filter `tipo_pessoa = restrito` | Só cadastros da categoria elegível ao parceiro |
 | Persist `api_key` hash | Admin atualiza chave de acesso da integração |
-| EO/EQ IFPUG ILF | FP origem table in Estimativas; Feature = capability |
+| EO/EQ IFPUG ILF | Internal origem table only; Feature = capability; omit from client commercial doc |
 | GET paginated | Consulta paginada dos cadastros elegíveis |
 
 ## Acceptance criteria

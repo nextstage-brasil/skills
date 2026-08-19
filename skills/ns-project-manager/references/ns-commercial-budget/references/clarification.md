@@ -1,6 +1,6 @@
 # Clarification (commercial budget)
 
-Ask only what blocks a credible client budget (Features + Function Points + hours + macro table + risk margins). Do not ask which FP method (default IFPUG) or whether to add COSMIC; include CFP only if the human already asked. Batch questions — no drip one-at-a-time across turns.
+Ask only what blocks a credible client budget (Features + Function Points + hours + macro table + risk margins). Do not ask which FP method (default APF: IFPUG CPM latest, SISP only when CPM does not cover) or whether to add COSMIC; include CFP only if the human already asked. Batch questions — no drip one-at-a-time across turns.
 
 ## Limits
 

@@ -31,7 +31,7 @@ When any context artifact from read order above exists, build **reuse inventory*
 Rules:
 
 - **Features:** prefer delta (`extend` / `reuse`); do not recreate documented capability as greenfield.
-- **FP / CFP / hours:** discount documented reuse; hours premise must cite these signals.
+- **FP / hours:** IFPUG enhancement — `reuse` omitted, `extend` = CHG, `net-new` = ADD; hours premise must cite these signals. CFP: same reuse classes only if COSMIC was requested.
 - **Blocked:** do not advance to sizing without this inventory when context files were present.
 
 ## How to use for sharper budget

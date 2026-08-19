@@ -110,18 +110,27 @@ flowchart TD
 
 ### Pontos de Função (FP)
 
+A unidade de mensuração é a Análise de Pontos de Função (APF).
+A contagem dos pontos de função foi realizada de acordo com o Manual de Práticas de Contagem (Counting Practices Manual - CPM) publicado pelo International Function Point Users Group (IFPUG), na sua versão mais atual ({edition, e.g. CPM 4.3.1}).
+Situações não contempladas pelo CPM foram contadas com o Roteiro de Métricas de Software do SISP, na versão mais atual ({edition, e.g. SISP 3.0}). {Or: nenhuma situação fora do CPM.}
+
+| Campo | Valor |
+|-------|--------|
+| Tipo de contagem | {Desenvolvimento \| Melhoria \| Aplicação} |
+| Fronteira da aplicação | {inside this product vs users / other applications} |
+
 | Feature | FP | Justificativa |
 |---------|-----|---------------|
 | Feature 001 | {n} | {product-language rationale} |
 | Feature 002 | {n} | {…} |
 | **Total** | **{n}** | |
 
-#### Origem do cálculo (IFPUG CPM)
+#### Origem do cálculo (APF)
 
-| Elemento | Tipo | Qtd | Complexidade | FP/u | Subtotal | Fonte |
-|----------|------|-----|--------------|------|----------|-------|
-| {…} | {ILF/EIF/EI/EO/EQ} | | {Low/Average/High} | | | Feature 00N / reuse |
-| **Total** | | | | | **{n}** | |
+| Elemento | Tipo | Contribuição | RET/FTR | DET | Complexidade | UFP | Base | Fonte |
+|----------|------|--------------|---------|-----|--------------|-----|------|-------|
+| {…} | {ILF/EIF/EI/EO/EQ} | {ADD/CHG/DEL} | | | {Low/Average/High} | | {CPM\|SISP} | Feature 00N / reuse |
+| **Total UFP** | | | | | | **{n}** | | |
 
 <!-- COSMIC (CFP): omit entire subsection unless the human explicitly asked for COSMIC/CFP. See references/cosmic-sizing.md. -->
 

@@ -58,16 +58,6 @@
 | Engenharia de consistência do produto | {sum_engenharia} | {Plain-language rollup — no internal Feature numbers} |
 | **Total** | **{total}** | Contagem **delta** |
 
-#### Origem do cálculo (resumo)
-
-| Elemento | FP | Vinculado a |
-|----------|-----|-------------|
-| {capability summary} | {n} | Feature 00N |
-| Consistência interna (consultas, relatórios, vínculos) | {n} | Entrega operacional embutida |
-| **Total** | **{total}** | |
-
-> Detalhamento elemento a elemento (IFPUG: ILF, EIF, EI, EO, EQ) disponível na versão interna `commercial-budget-internal.md`.
-
 <!-- COSMIC (CFP): omit entire subsection unless the human explicitly asked for COSMIC/CFP. -->
 
 ### Horas previstas (cálculo)
@@ -98,7 +88,6 @@
 
 - {Same as internal where client-relevant}
 - A **engenharia de consistência do produto** faz parte da entrega e do total de horas, mas não é apresentada como feature de negócio separada neste documento.
-- FP detalhado na versão interna `commercial-budget-internal.md`.
 - Este artefato **não** contém lista de tarefas (`tasks/`), issues GitLab nem handoff SDD.
 
 ---

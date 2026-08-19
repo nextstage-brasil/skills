@@ -52,11 +52,11 @@ Both tests must pass on **client** doc.
 | File | Audience | Features section | FP origem |
 |------|----------|------------------|-----------|
 | `commercial-budget-internal.md` | Delivery (internal) | All scoped items — `negócio`, `engenharia`, `qualidade` as separate Features when useful for traceability | Full **origem do cálculo** table |
-| `commercial-budget-costumer.md` | Client export | `negócio` only (+ merged `engenharia` criteria in parents) | Summary table + **Engenharia de consistência** line; pointer to internal doc for element-level detail |
+| `commercial-budget-costumer.md` | Client export | `negócio` only (+ merged `engenharia` criteria in parents) | Per-Feature FP + justificativa + **Engenharia de consistência** line — **no** IFPUG Tipo/Complexidade/UFP |
 
 **Versioning:** independent **Sequência** per file (`document-versioning.md`).
 
-**Suffix:** client reference field = `{version_san}-costumer`.
+**Invariant:** client **Total** FP = internal **Total UFP**. Same hours. Only the origem table is omitted on the client file.
 
 ## Client doc — Features block
 
@@ -84,24 +84,15 @@ Omit block when project has no `engenharia` / `qualidade` items (single-doc mode
 - `qualidade` items: **0 FP** in both docs; never row in client FP table.
 - COSMIC client table (**only if human asked for COSMIC**): per `negócio` Feature rows + optional **Engenharia de consistência** aggregate row; **Σ CFP** unchanged. Omit CFP from both docs by default.
 
-#### Origem do cálculo (client)
+#### Client doc — no IFPUG origem
 
-Summary table by capability (not ILF/EQ jargon), e.g.:
-
-| Elemento | FP | Vinculado a |
-|----------|-----|-------------|
-| … | | Feature 00N |
-
-Footer:
-
-```markdown
-> Detalhamento elemento a elemento (IFPUG: ILF, EIF, EI, EO, EQ) disponível na versão interna `commercial-budget-internal.md`.
-```
+Do **not** include the APF/CPM/SISP method paragraph, `Origem do cálculo`, or columns Tipo / Contribuição / RET / DET / Complexidade / UFP / Base / ILF / EIF / EI / EO / EQ. That block exists only in `commercial-budget-internal.md`.
 
 ## Internal doc — unchanged obligations
 
 - Full per-Feature FP including `engenharia` and `qualidade` (0 FP) Features when they help delivery traceability.
-- Full origem table with IFPUG types (ILF/EIF/EI/EO/EQ) unless the human named another FP method.
+- Full origem table with APF (CPM types + SISP Base when needed) unless the human named another FP method.
+- User-facing consulta/planograph/chart/map is never `qualidade` (0 FP).
 - Risks may name internal Feature numbers; **client** risks use product language only (no internal Feature refs).
 
 ## Workflow hook (generate step)
@@ -118,3 +109,4 @@ Footer:
 - Gaps in client Feature numbering (001, 002, 005).
 - `engenharia` criteria only in client doc with no parent Feature — orphan boundaries.
 - Removing `engenharia` FP from Total to “simplify” pricing — roll up, do not drop.
+- Copying APF origem (Tipo, Complexidade, UFP, SISP) into `commercial-budget-costumer.md`.
