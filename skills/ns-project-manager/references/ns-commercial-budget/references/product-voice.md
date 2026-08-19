@@ -8,7 +8,7 @@ Deliverable serves **client first**, also **delivery team**. Client confirms sco
 |---------|--------------|------------|
 | Objetivo, Features, fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Same text must cover every committed capability |
 | Critérios de aceite | Verifiable by stakeholder | Each criterion maps to scoped behavior — no hidden gap |
-| Estimativas (FP, COSMIC, horas) | Totals + per-Feature FP justification readable | FP origins traceable; COSMIC table complete; hours = formula only |
+| Estimativas (FP, horas; COSMIC only if asked) | Totals + per-Feature FP justification readable | FP origins traceable; hours = formula only; CFP table only when requested |
 | Macroatividades | Lifecycle effort split | Unchanged |
 
 **Rule:** _Would client sign this knowing what they buy?_ AND _Would engineering find missing boundary?_ Both must pass.
@@ -37,7 +37,7 @@ See `engineering-split.md` for triggers, templates, anti-patterns.
 |------|-------------|----------|
 | Scope completeness | Features + critérios de aceite + fluxos Mermaid | Class names, schemas, endpoints |
 | Sizing traceability | Estimativas: FP origem do cálculo + per-Feature FP | Feature narrative |
-| COSMIC counts | Estimativas: CFP table only | Per-Feature E/R/W/X prose |
+| COSMIC counts | Omit unless asked; then Estimativas: CFP table only | Unsolicited CFP; per-Feature E/R/W/X prose |
 | Productivity math | Estimativas: Horas (cálculo) | Narrative justification in horas row |
 
 ## Forbidden in narrative sections

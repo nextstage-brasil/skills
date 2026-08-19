@@ -224,7 +224,7 @@ Triple productivity delivery schedule: one markdown with PERT + Monte Carlo for 
 
 ## New skill — `ns-commercial-budget` (2026-08-03)
 
-Client-facing commercial budget in **product voice** (PM/client — no fields/classes). Features + FP + COSMIC + hours; macro-activity table; risk margins. Paths `commercial-budget-internal.md` (delivery) and optional `commercial-budget-costumer.md` (client export); header Sequência + Gerado em. Custo (R$) only with rates. Loads reverse-spec/brownfield when present. Presets `project-manager` and `full`. Depends on `ns-harness`.
+Client-facing commercial budget in **product voice** (PM/client — no fields/classes). Features + Function Points + hours (COSMIC CFP only when asked); macro-activity table; risk margins. Paths `commercial-budget-internal.md` (delivery) and optional `commercial-budget-costumer.md` (client export); header Sequência + Gerado em. Custo (R$) only with rates. Loads reverse-spec/brownfield when present. Presets `project-manager` and `full`. Depends on `ns-harness`.
 
 ## Commercial budget artifact rename (2026-08-05)
 

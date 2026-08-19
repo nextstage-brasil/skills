@@ -1,6 +1,6 @@
 # Clarification (commercial budget)
 
-Ask only what blocks credible client budget (Features + FP + COSMIC + hours + macro table + risk margins). Batch questions — no drip one-at-a-time across turns.
+Ask only what blocks a credible client budget (Features + Function Points + hours + macro table + risk margins). Do not ask whether to add COSMIC; include CFP only if the human already asked. Batch questions — no drip one-at-a-time across turns.
 
 ## Limits
 
@@ -20,7 +20,7 @@ Highest-value gaps for this scope:
 2. **In / out of scope (delta)** — what must ship vs explicit exclusions; when reverse-spec exists, ask what **changes/adds** vs what already works.
 3. **Actors / personas** — who uses system (roles), external systems touched — skip if clear in reverse-spec Access / Integrations.
 4. **Constraints** — deadline, compliance (e.g. LGPD), brownfield vs greenfield, known stack — skip stack if `brownfield-map` / `stack-confirmed` already covers.
-5. **Team experience (prefer when estimating hours)** — seniority of builders; tenure on product/project; involvement depth (core maintainers vs occasional). Goal: calibrate codebase/domain knowledge before hours. Optionally ask house productivity (h/PF or h/CFP) if standard exists.
+5. **Team experience (prefer when estimating hours)** — seniority of builders; tenure on product/project; involvement depth (core maintainers vs occasional). Goal: calibrate codebase/domain knowledge before hours. Optionally ask house productivity (h/PF) if a standard exists. Ask h/CFP only when COSMIC was requested.
 6. **Rates for Custo (optional)** — R$/h and/or R$/PF **only if** human wants macro Custo column filled; else leave `—` / `_pending rates_`.
 7. **Acceptance depth** — must-have SLAs or volumes stakeholder will commit (do not invent).
 8. **Persist or chat-only** — write/overwrite `commercial-budget-internal.md` (header bumps Sequência + Gerado em)?

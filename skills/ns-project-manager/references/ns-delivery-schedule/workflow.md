@@ -106,7 +106,7 @@ Chat-only only if human says so. Confirm path once if persistence not yet agreed
 
 | Signal | Skill |
 |--------|--------|
-| Orçamento / FP / COSMIC / R$ | `../ns-commercial-budget/workflow.md` |
+| Orçamento / FP / R$ (COSMIC only if asked) | `../ns-commercial-budget/workflow.md` |
 | Story RICE / sprint / single PERT forecast | `ns-project-manager` Phase 3–5 |
 | FP + productivity, triple delivery schedule | **this skill** |
 

@@ -1,6 +1,6 @@
 # Macro activities (commercial budget)
 
-After FP / COSMIC / base hours set, **allocate** across fixed project macro activities. Output one mandatory table in deliverable.
+After FP / base hours set (and COSMIC only if requested), **allocate** across fixed project macro activities. Output one mandatory table in deliverable.
 
 ## Fixed rows (always — this order)
 
@@ -44,7 +44,7 @@ Use unless human supplies another split. Mark `[ASSUMPTION: mix macro …]` when
 
 **PF share:** same percentages applied to Total FP (or redistribute with explicit rationale if phase is PF-light — document why).
 
-**CFP:** keep at Feature level; do not force second COSMIC table per macro unless asked.
+**CFP:** omit unless human asked for COSMIC. If present, keep at Feature level; do not force a second COSMIC table per macro.
 
 ## Base vs margin
 

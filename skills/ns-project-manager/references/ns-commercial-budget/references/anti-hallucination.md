@@ -34,7 +34,7 @@ Bump header **Sequência** + **Gerado em** every regenerate; keep same `commerci
 
 ## Estimates honesty
 
-- FP: per-Feature justificativa + origem do cálculo table (`fp-sizing.md`). CFP: table + reference line only.
+- FP: per-Feature justificativa + origem do cálculo table (`fp-sizing.md`). CFP: omit unless asked; then table + reference line only.
 - Hours = formula (FP × productivity); cite productivity source or `[ASSUMPTION]` / `[LACUNA]`.
 - When reverse-spec/map show reuse, hours premise reflects brownfield delta — not full rebuild of documented behavior.
 - FP/CFP without documented reuse discount when context files existed = skill failure — fix reuse inventory, re-size before persist.

@@ -1,6 +1,8 @@
 # COSMIC sizing (commercial budget)
 
-Agent sizes E/R/W/X per Feature internally. **Deliverable:** summary table + method reference only — no per-Feature rationale prose.
+**Gate:** apply this file only when the human explicitly asked for COSMIC, CFP, or cosmic functions. Default commercial budget is Function Points only (`fp-sizing.md`). Do not add a CFP section, do not size E/R/W/X, and do not offer COSMIC unsolicited.
+
+When gated in: agent sizes E/R/W/X per Feature internally. **Deliverable:** summary table + method reference only — no per-Feature rationale prose.
 
 ## Data movements (agent reference)
 
@@ -46,4 +48,4 @@ No **Racional COSMIC** paragraph. No per-Feature sub-blocks in saved doc.
 
 ## Relation to FP
 
-Separate methods. Both may coexist. FP detail in `fp-sizing.md`.
+Separate methods. FP is always required. COSMIC is additive and optional. FP detail in `fp-sizing.md`. Hours stay FP × productivity unless the human asked to size hours from CFP.

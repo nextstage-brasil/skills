@@ -3,9 +3,10 @@ name: ns-commercial-budget
 description: >
   (NS) Client-facing commercial budget from free-form scope — dual audience
   (client-first + delivery completeness). Features with acceptance criteria,
-  Mermaid flow validation, per-Feature FP with calculation origins, COSMIC CFP
-  table (E/R/W/X reference only), hours as productivity formula, macro-activity
-  table, risk-based safety margin with Responsável (Cliente/Empresa/Ambos).
+  Mermaid flow validation, per-Feature Function Points with calculation origins,
+  hours as productivity formula, macro-activity table, risk-based safety margin
+  with Responsável (Cliente/Empresa/Ambos). COSMIC CFP table only when the human
+  explicitly asks (COSMIC, CFP, cosmic functions).
   Header Sequência + Gerado em on regenerate. When docs/context exists, full
   read reverse-spec + brownfield-map, reuse inventory, size delta not greenfield.
   Never invent R$. Optional engineering split: internal commercial-budget-internal.md
@@ -22,12 +23,12 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.13"
+  version: "1.14"
 ---
 
 # Commercial Budget
 
-Client-facing commercial budget from free-form scope: **Features**, **Mermaid flows**, **FP + COSMIC + hours**, **macro table**, **risk margins**. Fixed path; header **Sequência** + **Gerado em** each regenerate.
+Client-facing commercial budget from free-form scope: **Features**, **Mermaid flows**, **Function Points + hours**, **macro table**, **risk margins**. **Default sizing = FP only.** Include COSMIC CFP only when the human explicitly asks. Fixed path; header **Sequência** + **Gerado em** each regenerate.
 
 **Audience:** client first, delivery second. Client confirms scope; team gets traceable sizing. Narrative = product/commercial. Sizing detail in Estimativas. Read `references/product-voice.md`.
 
@@ -76,8 +77,8 @@ Read `references/clarification.md`.
 1. `assets/commercial-budget-internal.template.md`
 2. `references/product-voice.md`
 3. `references/engineering-split.md` — classify each scoped item `negócio` | `engenharia` | `qualidade` before Features
-4. `references/fp-sizing.md`
-5. `references/cosmic-sizing.md`
+4. `references/fp-sizing.md` — always (default commercial size)
+5. `references/cosmic-sizing.md` — **only** if human asked for COSMIC / CFP / cosmic functions; otherwise skip (do not size, do not add a CFP section)
 6. `references/macro-activities.md` + `references/risk-margin.md`
 7. `references/document-versioning.md`
 8. **Reuse inventory applied** — `reuse` / `extend` / `net-new`; discount reuse. Block if context existed and inventory skipped.
@@ -89,7 +90,7 @@ Read `references/clarification.md`.
 | Features (≤10) | `Feature 001`…; generous product description + acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
 | RNFs | Only if identified — product language |
 | Estimativas — FP | Internal: per-Feature FP + full **origem do cálculo**. Client export: subtotal negócio + engenharia rollup line; total unchanged (`fp-sizing.md`, `engineering-split.md`) |
-| Estimativas — COSMIC | Summary table + method reference line only — **no** rationale prose |
+| Estimativas — COSMIC | **Omit by default.** If human asked: summary table + method reference line only — **no** rationale prose |
 | Estimativas — Horas | **Calculation only:** FP × productivity; base; margin; total. Cite productivity source |
 | Macroatividades | 7-row table unchanged (`macro-activities.md`) |
 | Riscos | Table + margins; **Responsável** column: Cliente / Empresa / Ambos |
@@ -116,7 +117,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 
 ### 5. Stop
 
-1. Summarize sequência, Gerado em, path(s), totals (FP, ΣCFP, hours base, hours com margem, margin %), Custo filled or not. When client file exists: note subtotal negócio vs engenharia rollup.
+1. Summarize sequência, Gerado em, path(s), totals (FP, hours base, hours com margem, margin %), Custo filled or not. Include ΣCFP only when COSMIC was requested. When client file exists: note subtotal negócio vs engenharia rollup.
 2. No tasks, issues, requirements.md, SDD handoff.
 3. Offer approve then SDD / PM forecast in text only.
 
@@ -138,7 +139,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 | `assets/commercial-budget-costumer.template.md` | When writing `commercial-budget-costumer.md` |
 | `references/clarification.md` | Before generating |
 | `references/fp-sizing.md` | Before FP tables |
-| `references/cosmic-sizing.md` | Before COSMIC (agent sizing; doc = table only) |
+| `references/cosmic-sizing.md` | Only when human asked for COSMIC/CFP (agent sizing; doc = table only) |
 | `references/macro-activities.md` | Before lifecycle table |
 | `references/risk-margin.md` | Before risks / margin % |
 | `references/document-versioning.md` | Before persist |

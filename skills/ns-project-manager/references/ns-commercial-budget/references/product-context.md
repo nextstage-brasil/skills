@@ -22,7 +22,7 @@ Do **not** invent missing reverse-spec content. Do **not** run reverse-spec from
 
 ## Reuse inventory gate (before sizing)
 
-When any context artifact from read order above exists, build **reuse inventory** (internal / maintainer chat — not client-facing dump) **before** Features, FP, COSMIC CFP, or hours:
+When any context artifact from read order above exists, build **reuse inventory** (internal / maintainer chat — not client-facing dump) **before** Features, FP, hours, or optional COSMIC CFP:
 
 | Scope piece | Classification | Signal from reverse-spec / map |
 |-------------|----------------|--------------------------------|

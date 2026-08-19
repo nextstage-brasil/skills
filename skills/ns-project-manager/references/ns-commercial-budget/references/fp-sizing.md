@@ -49,7 +49,7 @@ When `engineering-split.md` applies:
 ## Consistency
 
 - Σ per-Feature FP = Total FP = Σ PF in macro table.
-- FP ≠ CFP. State both methods in premissas when both used.
+- FP ≠ CFP. Mention COSMIC in premissas only when the human asked and CFP is in the doc.
 
 ## Anti-patterns
 

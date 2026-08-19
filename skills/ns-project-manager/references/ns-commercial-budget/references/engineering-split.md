@@ -82,7 +82,7 @@ Omit block when project has no `engenharia` / `qualidade` items (single-doc mode
 
 - `sum_negócio + sum_engenharia` = **Total FP** (unchanged from internal doc).
 - `qualidade` items: **0 FP** in both docs; never row in client FP table.
-- COSMIC client table: per `negócio` Feature rows + optional **Engenharia de consistência** aggregate row; **Σ CFP** unchanged.
+- COSMIC client table (**only if human asked for COSMIC**): per `negócio` Feature rows + optional **Engenharia de consistência** aggregate row; **Σ CFP** unchanged. Omit CFP from both docs by default.
 
 #### Origem do cálculo (client)
 

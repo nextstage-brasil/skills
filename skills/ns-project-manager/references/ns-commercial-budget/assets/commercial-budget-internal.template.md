@@ -123,15 +123,7 @@ flowchart TD
 | {…} | {ILF/EIF/EI/EO/EQ or house unit} | | | | Feature 00N / reuse |
 | **Total** | | | | **{n}** | |
 
-### COSMIC (CFP)
-
-| Feature | E | R | W | X | CFP |
-|---------|---|---|---|---|-----|
-| Feature 001 | | | | | |
-| Feature 002 | | | | | |
-| **Σ** | | | | | **{ΣCFP}** |
-
-**Referência:** COSMIC FSM — contagens de movimentação de dados (E/R/W/X) por processo funcional.
+<!-- COSMIC (CFP): omit entire subsection unless the human explicitly asked for COSMIC/CFP. See references/cosmic-sizing.md. -->
 
 ### Horas previstas (cálculo)
 

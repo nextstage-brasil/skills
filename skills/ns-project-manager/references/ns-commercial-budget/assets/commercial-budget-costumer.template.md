@@ -68,15 +68,7 @@
 
 > Detalhamento elemento a elemento (ILF, EI, EO, AEQ etc.) disponível na versão interna `commercial-budget-internal.md`.
 
-### COSMIC (CFP)
-
-| Feature | E | R | W | X | CFP |
-|---------|---|---|---|---|-----|
-| Feature 001 | | | | | |
-| Engenharia de consistência | | | | | |
-| **Σ** | | | | | **{ΣCFP}** |
-
-**Referência:** COSMIC FSM — contagens de movimentação de dados (E/R/W/X) por processo funcional.
+<!-- COSMIC (CFP): omit entire subsection unless the human explicitly asked for COSMIC/CFP. -->
 
 ### Horas previstas (cálculo)
 

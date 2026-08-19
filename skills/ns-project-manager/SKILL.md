@@ -3,7 +3,7 @@ name: ns-project-manager
 description: >
   (NS) Gated PM workflow — clarify, structure, RICE/WSJF, sprint plan, PERT/Monte
   Carlo forecast; risk, status, meeting, OKR. Also commercial budget (orçamento,
-  Function Points, COSMIC, CFP, proposta comercial), triple productivity delivery
+  Function Points, proposta comercial; COSMIC/CFP only if asked), triple productivity delivery
   schedule (cronograma P100/P85/P50, prazo, when we deliver), and requirements
   enricher / grill-me for GitLab issues or chat. Use on transcripts, backlog,
   timeline, delivery date, status, orçamento, cotação, cronograma, enrich
@@ -48,7 +48,7 @@ Gated PM pipeline (Phases 0–5) + on-demand modes (6+). One phase per turn unle
 | "Deploy checklist", "compliance", "before we ship" | **9** Compliance | `references/08-compliance-checklist.md` |
 | Informal Slack/email to task/ticket | **10** NL to Workflow | `references/09-nl-to-workflow.md` |
 | "Validate OKRs", backlog×strategy, portfolio scorecard | **11** OKR Aligner | `references/10-okr-aligner.md` |
-| Commercial budget, orçamento, proposta comercial, Function Points, COSMIC, CFP, cotação R$ | **commercial-budget** (not PM phase) | `references/ns-commercial-budget/workflow.md` then its `references/` + `assets/` |
+| Commercial budget, orçamento, proposta comercial, Function Points, ponto-função, cotação R$ (COSMIC/CFP only if named) | **commercial-budget** (not PM phase) | `references/ns-commercial-budget/workflow.md` then its `references/` + `assets/` |
 | Enrich / grill-me / blocking questions on issue or pasted scope | **requirements-enricher** (not PM phase) | `references/ns-requirements-enricher/workflow.md` then its `references/` |
 
 Modes 6+ skip pipeline. Run direct. Reuse prior phase context when present.
@@ -82,7 +82,7 @@ Close: one line — paste input or pick row.
 
 **Nested workflows:** router hit `references/ns-*/workflow.md` — read full file, follow it (own `references/`, `assets/`, `scripts/`). No evals.
 
-**Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Phases 1–5 = delivery forecast (RICE / sprint / PERT). Not client COSMIC commercial sizing.
+**Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Default size = Function Points only. COSMIC CFP only when human asks. Phases 1–5 = delivery forecast (RICE / sprint / PERT).
 
 **Triple productivity schedule (FP × h/FP, P100/P85/P50):** `references/ns-delivery-schedule/workflow.md`. Phase 5 = story-level PERT only.
 
