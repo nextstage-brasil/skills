@@ -95,13 +95,13 @@ Summary table by capability (not ILF/EQ jargon), e.g.:
 Footer:
 
 ```markdown
-> Detalhamento elemento a elemento (ILF, EI, EO, AEQ etc.) disponível na versão interna `commercial-budget-internal.md`.
+> Detalhamento elemento a elemento (IFPUG: ILF, EIF, EI, EO, EQ) disponível na versão interna `commercial-budget-internal.md`.
 ```
 
 ## Internal doc — unchanged obligations
 
 - Full per-Feature FP including `engenharia` and `qualidade` (0 FP) Features when they help delivery traceability.
-- Full origem table with IFPUG/house types.
+- Full origem table with IFPUG types (ILF/EIF/EI/EO/EQ) unless the human named another FP method.
 - Risks may name internal Feature numbers; **client** risks use product language only (no internal Feature refs).
 
 ## Workflow hook (generate step)

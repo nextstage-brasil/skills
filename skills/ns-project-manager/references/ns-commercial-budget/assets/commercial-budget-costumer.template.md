@@ -66,7 +66,7 @@
 | Consistência interna (consultas, relatórios, vínculos) | {n} | Entrega operacional embutida |
 | **Total** | **{total}** | |
 
-> Detalhamento elemento a elemento (ILF, EI, EO, AEQ etc.) disponível na versão interna `commercial-budget-internal.md`.
+> Detalhamento elemento a elemento (IFPUG: ILF, EIF, EI, EO, EQ) disponível na versão interna `commercial-budget-internal.md`.
 
 <!-- COSMIC (CFP): omit entire subsection unless the human explicitly asked for COSMIC/CFP. -->
 

@@ -58,7 +58,7 @@
     {
       "id": 10,
       "prompt": "Preciso de um orçamento comercial para uma API de consulta de cadastros: autenticação, busca por documento, histórico de consultas e exportação CSV. Versão orcamento-api-consulta-v1. Pode gravar em docs.",
-      "expected_output": "Reads references/ns-commercial-budget/workflow.md. Clarifies with ≤5 questions. Writes commercial-budget-internal.md with Function Points only — no COSMIC/CFP section (user did not ask). No invented R$. No tasks/SDD.",
+      "expected_output": "Reads references/ns-commercial-budget/workflow.md. Clarifies with ≤5 questions. Does not ask FP method. Writes commercial-budget-internal.md with IFPUG Function Points (ILF/EIF/EI/EO/EQ origem) — no COSMIC/CFP section (user did not ask). No invented R$. No tasks/SDD.",
       "files": []
     },
     {

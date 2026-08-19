@@ -82,7 +82,7 @@ Close: one line — paste input or pick row.
 
 **Nested workflows:** router hit `references/ns-*/workflow.md` — read full file, follow it (own `references/`, `assets/`, `scripts/`). No evals.
 
-**Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Default size = Function Points only. COSMIC CFP only when human asks. Phases 1–5 = delivery forecast (RICE / sprint / PERT).
+**Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Default size = IFPUG Function Points only. COSMIC CFP only when human asks. Other FP methods only when human names them. Phases 1–5 = delivery forecast (RICE / sprint / PERT).
 
 **Triple productivity schedule (FP × h/FP, P100/P85/P50):** `references/ns-delivery-schedule/workflow.md`. Phase 5 = story-level PERT only.
 

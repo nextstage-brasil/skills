@@ -23,12 +23,12 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.14"
+  version: "1.15"
 ---
 
 # Commercial Budget
 
-Client-facing commercial budget from free-form scope: **Features**, **Mermaid flows**, **Function Points + hours**, **macro table**, **risk margins**. **Default sizing = FP only.** Include COSMIC CFP only when the human explicitly asks. Fixed path; header **Sequência** + **Gerado em** each regenerate.
+Client-facing commercial budget from free-form scope: **Features**, **Mermaid flows**, **Function Points + hours**, **macro table**, **risk margins**. **Default sizing = IFPUG Function Points only.** Include COSMIC CFP only when the human explicitly asks. Other FP methods (NESMA, house) only when the human names them. Fixed path; header **Sequência** + **Gerado em** each regenerate.
 
 **Audience:** client first, delivery second. Client confirms scope; team gets traceable sizing. Narrative = product/commercial. Sizing detail in Estimativas. Read `references/product-voice.md`.
 
@@ -77,7 +77,7 @@ Read `references/clarification.md`.
 1. `assets/commercial-budget-internal.template.md`
 2. `references/product-voice.md`
 3. `references/engineering-split.md` — classify each scoped item `negócio` | `engenharia` | `qualidade` before Features
-4. `references/fp-sizing.md` — always (default commercial size)
+4. `references/fp-sizing.md` — always (default commercial size = IFPUG CPM)
 5. `references/cosmic-sizing.md` — **only** if human asked for COSMIC / CFP / cosmic functions; otherwise skip (do not size, do not add a CFP section)
 6. `references/macro-activities.md` + `references/risk-margin.md`
 7. `references/document-versioning.md`
@@ -89,7 +89,7 @@ Read `references/clarification.md`.
 | Fluxos principais | 1–3 Mermaid `flowchart TD`; white init + Palette A/B `classDef` + `linkStyle` edges (`product-voice.md`). Subtitle per diagram; validation chain optional; client-readable PT-BR labels |
 | Features (≤10) | `Feature 001`…; generous product description + acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
 | RNFs | Only if identified — product language |
-| Estimativas — FP | Internal: per-Feature FP + full **origem do cálculo**. Client export: subtotal negócio + engenharia rollup line; total unchanged (`fp-sizing.md`, `engineering-split.md`) |
+| Estimativas — FP | Internal: IFPUG per-Feature FP + full **origem do cálculo** (other FP method only if human named it). Client export: subtotal negócio + engenharia rollup line; total unchanged (`fp-sizing.md`, `engineering-split.md`) |
 | Estimativas — COSMIC | **Omit by default.** If human asked: summary table + method reference line only — **no** rationale prose |
 | Estimativas — Horas | **Calculation only:** FP × productivity; base; margin; total. Cite productivity source |
 | Macroatividades | 7-row table unchanged (`macro-activities.md`) |

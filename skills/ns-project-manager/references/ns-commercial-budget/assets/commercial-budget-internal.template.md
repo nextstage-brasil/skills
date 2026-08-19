@@ -116,12 +116,12 @@ flowchart TD
 | Feature 002 | {n} | {…} |
 | **Total** | **{n}** | |
 
-#### Origem do cálculo
+#### Origem do cálculo (IFPUG CPM)
 
-| Elemento | Tipo | Qtd | FP/u | Subtotal | Fonte |
-|----------|------|-----|------|----------|-------|
-| {…} | {ILF/EIF/EI/EO/EQ or house unit} | | | | Feature 00N / reuse |
-| **Total** | | | | **{n}** | |
+| Elemento | Tipo | Qtd | Complexidade | FP/u | Subtotal | Fonte |
+|----------|------|-----|--------------|------|----------|-------|
+| {…} | {ILF/EIF/EI/EO/EQ} | | {Low/Average/High} | | | Feature 00N / reuse |
+| **Total** | | | | | **{n}** | |
 
 <!-- COSMIC (CFP): omit entire subsection unless the human explicitly asked for COSMIC/CFP. See references/cosmic-sizing.md. -->
 
