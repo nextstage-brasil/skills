@@ -139,14 +139,18 @@ When `engineering-split.md` applies:
 
 | Row type | Content |
 |----------|---------|
-| Per `negócio` Feature | FP + product-language justificativa |
-| **Subtotal negócio** | Σ `negócio` FP |
-| **Engenharia de consistência do produto** | Σ `engenharia` FP — plain-language rollup |
-| **Total** | Same as internal |
+| Per `negócio` Feature | FP + product-language justificativa + Esforço (h) + Custo (R$) |
+| **Subtotal negócio** | Σ `negócio` FP (and Σ hours / Σ R$ when those columns are filled) |
+| **Engenharia de consistência do produto** | Σ `engenharia` FP — plain-language rollup; same extra columns |
+| **Total** | Same as internal Total PF; Esforço total = Horas base when productivity given |
+
+**Esforço (h)** — row FP × team productivity (h/PF used in Horas previstas). No safety margin here. If productivity was **not specified**: `—` in every Esforço cell (including subtotal/total). Do not invent h/PF.
+
+**Custo (R$)** — Esforço × R$/h, or row FP × R$/PF when that rate was given. If **no rate** was specified: `—` in every Custo cell. Never invent R$. R$/PF can fill Custo even when Esforço is `—`.
 
 - No method statement, Tipo, RET/DET, UFP, ADD/CHG/DEL, ILF/EIF/EI/EO/EQ, SISP chapter names.
 - Do **not** copy the internal origem table.
-- **Total** line = internal **Total UFP**. Hours base/margin/total = internal. Macro Σ PF = that same total.
+- **Total** PF line = internal **Total UFP**. Hours base/margin/total = internal. Macro Σ PF = that same total.
 
 ## Consistency
 
@@ -164,3 +168,4 @@ When `engineering-split.md` applies:
 - Counting files/tables/APIs instead of logical files and elementary processes — but **do** count the user function those APIs serve.
 - CPM/SISP origem in `commercial-budget-costumer.md`.
 - Different Total PF (or hours) between internal and client docs.
+- Invented Esforço or Custo in the client FP table when productivity or rates were not specified.

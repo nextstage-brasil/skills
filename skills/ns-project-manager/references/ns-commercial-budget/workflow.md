@@ -23,7 +23,7 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.19"
+  version: "1.20"
 ---
 
 # Commercial Budget
@@ -86,10 +86,11 @@ Read `references/clarification.md`.
 | Section | Rules |
 |---------|--------|
 | Objetivo principal | Commercial/product — value, who benefits, product change. **Not** engineering-area framing |
+| Valor agregado (client export only) | After Objetivo in `commercial-budget-costumer.md`. Confirm audience first. Four topics, headings verbatim: Em uma frase; O que muda no trabalho do {audience}; Exemplos de ganho concreto (Antes/Depois); O que esta versão **não** faz (`product-voice.md`) |
 | Fluxos principais | 1–3 Mermaid `flowchart TD`; white init + Palette A/B `classDef` + `linkStyle` edges (`product-voice.md`). Subtitle per diagram; validation chain optional; client-readable PT-BR labels |
 | Features (≤10) | `Feature 001`…; generous product description + acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
 | RNFs | Only if identified — product language |
-| Estimativas — FP | **Same Total PF** in both docs. Internal: APF + CPM/SISP origem. Client: per-Feature FP + justificativa — **no** CPM/SISP types (`fp-sizing.md`, `engineering-split.md`) |
+| Estimativas — FP | **Same Total PF** in both docs. Internal: APF + CPM/SISP origem. Client: per-Feature FP + justificativa + **Esforço (h)** + **Custo (R$)** — **no** CPM/SISP types (`fp-sizing.md`, `engineering-split.md`). Esforço = `—` if productivity unspecified; Custo = `—` if rates unspecified |
 | Estimativas — COSMIC | **Omit by default.** If human asked: summary table + method reference line only — **no** rationale prose |
 | Estimativas — Horas | **Calculation only:** FP × productivity; base; margin; total. Cite productivity source |
 | Macroatividades | 7-row table unchanged (`macro-activities.md`) |
@@ -117,7 +118,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 
 ### 5. Stop
 
-1. Summarize sequência, Gerado em, path(s), totals (FP, hours base, hours com margem, margin %), Custo filled or not. Include ΣCFP only when COSMIC was requested. When client file exists: note subtotal negócio vs engenharia rollup.
+1. Summarize sequência, Gerado em, path(s), totals (FP, hours base, hours com margem, margin %), Custo filled or not. Include ΣCFP only when COSMIC was requested. When client file exists: note value-section audience, subtotal negócio vs engenharia rollup, and whether Esforço/Custo columns are filled or `—`.
 2. No tasks, issues, requirements.md, SDD handoff.
 3. Offer approve then SDD / PM forecast in text only.
 

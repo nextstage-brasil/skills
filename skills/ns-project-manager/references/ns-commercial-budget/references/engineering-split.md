@@ -71,13 +71,13 @@ Omit block when project has no `engenharia` / `qualidade` items (single-doc mode
 ## Client doc — FP table shape
 
 ```markdown
-| Feature | FP | Justificativa |
-|---------|-----|---------------|
-| Feature 001 | {n} | {negócio} |
-| … | | |
-| **Subtotal negócio** | **{sum_negócio}** | Features verificáveis pelo solicitante |
-| Engenharia de consistência do produto | {sum_engenharia} | Revisão de consultas, relatórios, integrações e vínculos; verificação automatizada complementar — incluída no total, não detalhada como feature de negócio |
-| **Total** | **{total}** | Contagem delta |
+| Feature | FP | Justificativa | Esforço (h) | Custo (R$) |
+|---------|-----|---------------|-------------|------------|
+| Feature 001 | {n} | {negócio} | {FP × h/PF or —} | {from rates or —} |
+| … | | | | |
+| **Subtotal negócio** | **{sum_negócio}** | Features verificáveis pelo solicitante | **{sum or —}** | **{sum or —}** |
+| Engenharia de consistência do produto | {sum_engenharia} | Revisão de consultas, relatórios, integrações e vínculos; verificação automatizada complementar — incluída no total, não detalhada como feature de negócio | {… or —} | {… or —} |
+| **Total** | **{total}** | Contagem delta | **{Horas base or —}** | **{sum or —}** |
 ```
 
 - `sum_negócio + sum_engenharia` = **Total FP** (unchanged from internal doc).
@@ -110,3 +110,6 @@ Do **not** include the APF/CPM/SISP method paragraph, `Origem do cálculo`, or c
 - `engenharia` criteria only in client doc with no parent Feature — orphan boundaries.
 - Removing `engenharia` FP from Total to “simplify” pricing — roll up, do not drop.
 - Copying APF origem (Tipo, Complexidade, UFP, SISP) into `commercial-budget-costumer.md`.
+- Client FP table without Esforço (h) / Custo (R$) columns, or invented hours/R$ instead of `—` when productivity/rates were not given.
+- Client export missing **Valor agregado desta versão** after Objetivo, or writing it for a silent unconfirmed audience.
+- Valor agregado without the four headings (Em uma frase; O que muda no trabalho do {audience}; Exemplos de ganho concreto; O que esta versão **não** faz) or replacing them with a Feature dump.

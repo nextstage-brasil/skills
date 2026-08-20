@@ -19,7 +19,8 @@ Every Feature, RNF, estimate premise, macro-row figure, margin % must trace to h
 10. **Macro table shortcuts** — Do not drop/rename seven mandatory macro rows; do not put all hours only in “Implementação”.
 11. **Naked margin** — Do not apply safety % without risks section + short rationale.
 12. **Technical voice in narrative** — No class/field/schema/endpoint/framework in Objetivo, Features, fluxos, RNFs, acceptance, risks narrative, premissas (`product-voice.md`). APF origem (CPM/SISP) only in `commercial-budget-internal.md`.
-13. **Zero-PF UI** — Do not omit consulta de tela, planograph, chart, map, or GraphQL-backed user query from APF.
+14. **Silent value audience** — Do not write **Valor agregado desta versão** without a confirmed or explicitly assumed (`[ASSUMPTION]`) job/role for that section (`product-voice.md`).
+15. **Invented commercial ROI** — Do not put made-up time saved, R$ payback, or volumes in Valor agregado.
 
 ## Lacunas
 

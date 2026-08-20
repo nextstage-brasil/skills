@@ -19,6 +19,7 @@ Highest-value gaps for this scope:
 1. **`{version_san}` / product label** — slug for `docs/versions/{version_san}/` (placeholder ok).
 2. **In / out of scope (delta)** — what must ship vs explicit exclusions; when reverse-spec exists, ask what **changes/adds** vs what already works.
 3. **Actors / personas** — who uses system (roles), external systems touched — skip if clear in reverse-spec Access / Integrations.
+3a. **Value-section audience (client export)** — which **job/role this version is sold to** (who the commercial conversation addresses). Per version, not a fixed title. If inferable: ask confirmation of that guess, not a blank “who is the user?”. If not inferable: ask them to name it. Blocker for `## Valor agregado desta versão` in `commercial-budget-costumer.md` (`product-voice.md`). Prefer this slot when a client export is expected.
 4. **Constraints** — deadline, compliance (e.g. LGPD), brownfield vs greenfield, known stack — skip stack if `brownfield-map` / `stack-confirmed` already covers.
 5. **Team experience (prefer when estimating hours)** — seniority of builders; tenure on product/project; involvement depth (core maintainers vs occasional). Goal: calibrate codebase/domain knowledge before hours. Optionally ask house productivity (h/PF) if a standard exists. Ask h/CFP only when COSMIC was requested.
 6. **Rates for Custo (optional)** — R$/h and/or R$/PF **only if** human wants macro Custo column filled; else leave `—` / `_pending rates_`.

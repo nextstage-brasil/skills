@@ -58,7 +58,7 @@
     {
       "id": 10,
       "prompt": "Preciso de um orçamento comercial para uma API de consulta de cadastros: autenticação, busca por documento, histórico de consultas e exportação CSV. Versão orcamento-api-consulta-v1. Pode gravar em docs.",
-      "expected_output": "Reads references/ns-commercial-budget/workflow.md. Clarifies with ≤5 questions. Does not ask FP method. Writes commercial-budget-internal.md with APF statement (IFPUG CPM latest; SISP only if CPM does not cover), type of count, application boundary, and UFP origem including screen/consulta functions. Client commercial-budget-costumer.md (if emitted) has no CPM/SISP types, complexity, or UFP, and the same Total PF and hours as internal. No COSMIC/CFP (user did not ask). No invented R$. No tasks/SDD.",
+      "expected_output": "Reads references/ns-commercial-budget/workflow.md. Clarifies with ≤5 questions. Does not ask FP method. If emitting commercial-budget-costumer.md and value-section audience is unclear, asks once stating the assumed job/role. Writes commercial-budget-internal.md with APF statement (IFPUG CPM latest; SISP only if CPM does not cover), type of count, application boundary, and UFP origem including screen/consulta functions. Client commercial-budget-costumer.md (if emitted) has Valor agregado after Objetivo with headings Em uma frase, O que muda no trabalho, Exemplos de ganho concreto, and O que esta versão não faz; no CPM/SISP types, complexity, or UFP; FP table with Esforço (h) and Custo (R$) (dashes when productivity/rates missing); same Total PF and hours as internal. No COSMIC/CFP (user did not ask). No invented R$. No tasks/SDD.",
       "files": []
     },
     {
