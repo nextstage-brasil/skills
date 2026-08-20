@@ -561,7 +561,7 @@ Should not land in canonical.
   assert(createdDockerignore.written.length === 1, 'syncDockerignore should create .dockerignore when missing');
   assert(existsSync(createdDockerignorePath), 'syncDockerignore should write .dockerignore file');
   const createdDockerignoreContent = readFileSync(createdDockerignorePath, 'utf8');
-  for (const entry of ['docs/', '.agents/', '.cursor/', '.claude/', 'AGENTS.md', 'CLAUDE.md']) {
+  for (const entry of ['/docs/', '/.agents/', '/.cursor/', '/.claude/', '/AGENTS.md', '/CLAUDE.md']) {
     assert(createdDockerignoreContent.includes(entry), `created dockerignore should include ${entry}`);
   }
 
@@ -571,15 +571,15 @@ Should not land in canonical.
   assert(dockerignoreSync.written.length === 1, 'syncDockerignore should update .dockerignore');
   const dockerignoreContent = readFileSync(dockerignorePath, 'utf8');
   assert(dockerignoreContent.startsWith('node_modules\n'), 'syncDockerignore should preserve existing entries');
-  assert(dockerignoreContent.includes('docs/'), 'dockerignore should include docs/');
-  assert(dockerignoreContent.includes('.agents/'), 'dockerignore should include .agents/');
-  assert(dockerignoreContent.includes('.cursor/'), 'dockerignore should include .cursor/');
-  assert(dockerignoreContent.includes('.claude/'), 'dockerignore should include .claude/');
-  assert(dockerignoreContent.includes('AGENTS.md'), 'dockerignore should include AGENTS.md');
-  assert(dockerignoreContent.includes('AGENTS.local.md'), 'dockerignore should include AGENTS.local.md');
-  assert(dockerignoreContent.includes('.worktrees/'), 'dockerignore should include .worktrees');
-  assert(dockerignoreContent.includes('CLAUDE.md'), 'dockerignore should include CLAUDE.md');
-  assert(dockerignoreContent.includes('skills-lock.json'), 'dockerignore should include skills-lock.json');
+  assert(dockerignoreContent.includes('/docs/'), 'dockerignore should include /docs/');
+  assert(dockerignoreContent.includes('/.agents/'), 'dockerignore should include /.agents/');
+  assert(dockerignoreContent.includes('/.cursor/'), 'dockerignore should include /.cursor/');
+  assert(dockerignoreContent.includes('/.claude/'), 'dockerignore should include /.claude/');
+  assert(dockerignoreContent.includes('/AGENTS.md'), 'dockerignore should include /AGENTS.md');
+  assert(dockerignoreContent.includes('/AGENTS.local.md'), 'dockerignore should include /AGENTS.local.md');
+  assert(dockerignoreContent.includes('/.worktrees/'), 'dockerignore should include /.worktrees/');
+  assert(dockerignoreContent.includes('/CLAUDE.md'), 'dockerignore should include /CLAUDE.md');
+  assert(dockerignoreContent.includes('/skills-lock.json'), 'dockerignore should include /skills-lock.json');
   assert(
     dockerignoreContent.includes(buildDockerignoreBlock().trim()),
     'dockerignore should contain full managed block',
@@ -595,11 +595,11 @@ Should not land in canonical.
   assert(gitignoreSync.written.length === 1, 'syncGitignore should update .gitignore');
   const gitignoreContent = readFileSync(gitignorePath, 'utf8');
   assert(gitignoreContent.startsWith('vendor/\n'), 'syncGitignore should preserve existing entries');
-  assert(gitignoreContent.includes('AGENTS.local.md'), 'gitignore should include AGENTS.local.md');
-  assert(gitignoreContent.includes('.worktrees/'), 'gitignore should include .worktrees');
-  assert(gitignoreContent.includes('.cursor/rules/'), 'gitignore should include .cursor/rules');
-  assert(gitignoreContent.includes('.cursor/agents/'), 'gitignore should include .cursor/agents');
-  assert(gitignoreContent.includes('.claude/'), 'gitignore should include .claude');
+  assert(gitignoreContent.includes('/AGENTS.local.md'), 'gitignore should include /AGENTS.local.md');
+  assert(gitignoreContent.includes('/.worktrees/'), 'gitignore should include /.worktrees/');
+  assert(gitignoreContent.includes('/.cursor/rules/'), 'gitignore should include /.cursor/rules/');
+  assert(gitignoreContent.includes('/.cursor/agents/'), 'gitignore should include /.cursor/agents/');
+  assert(gitignoreContent.includes('/.claude/'), 'gitignore should include /.claude/');
   assert(
     gitignoreContent.includes(buildGitignoreBlock().trim()),
     'gitignore should contain full managed block',
@@ -607,6 +607,20 @@ Should not land in canonical.
 
   const gitignoreResync = syncGitignore(tempDir);
   assert(gitignoreResync.written.length === 0, 'syncGitignore should be idempotent');
+
+  writeFileSync(
+    gitignorePath,
+    `vendor/\n\n${GITIGNORE_BLOCK_HEADER}\nAGENTS.local.md\n.worktrees/\n.cursor/rules/\n.cursor/agents/\n.claude/\n`,
+    'utf8',
+  );
+  const gitignoreMigrate = syncGitignore(tempDir);
+  assert(gitignoreMigrate.written.length === 1, 'syncGitignore should rewrite unprefixed managed paths');
+  const migratedGitignore = readFileSync(gitignorePath, 'utf8');
+  assert(migratedGitignore.includes('/.cursor/rules/'), 'migrated gitignore should root-anchor /.cursor/rules/');
+  assert(
+    !migratedGitignore.split('\n').includes('.cursor/rules/'),
+    'migrated gitignore should drop unprefixed .cursor/rules/',
+  );
 
   // 11. prune-retired-skills removes old dirs only when replacement exists
   const agentsSkillsDir = join(tempDir, '.agents', 'skills');

@@ -1,23 +1,50 @@
 /**
  * Append a managed ignore block or merge missing entries into an existing block.
+ * Unprefixed managed paths are rewritten to root-anchored form (`/path`).
  */
 export function patchIgnoreContent(existingContent, header, entries) {
+  const byKey = new Map(entries.map((entry) => [ignoreEntryKey(entry), entry]));
+
   if (!existingContent.includes(header)) {
     const block = `${header}\n${entries.join('\n')}\n`;
     const trimmed = existingContent.replace(/\s+$/, '');
     return trimmed.length === 0 ? block : `${trimmed}\n\n${block}`;
   }
 
-  let result = existingContent;
-  for (const entry of entries) {
-    const hasEntry = result.split('\n').some((line) => line.trim() === entry);
-    if (!hasEntry) {
-      const headerIndex = result.indexOf(header);
-      const insertAt = result.indexOf('\n', headerIndex) + 1;
-      result = `${result.slice(0, insertAt)}${entry}\n${result.slice(insertAt)}`;
+  const lines = existingContent.split('\n');
+  const headerIndex = lines.indexOf(header);
+  const presentKeys = new Set();
+  let i = headerIndex + 1;
+  let changed = false;
+
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.trim() === '') {
+      i += 1;
+      continue;
     }
+    const canonical = byKey.get(ignoreEntryKey(line));
+    if (!canonical) {
+      break;
+    }
+    if (line !== canonical) {
+      lines[i] = canonical;
+      changed = true;
+    }
+    presentKeys.add(ignoreEntryKey(canonical));
+    i += 1;
   }
-  return result;
+
+  const missing = entries.filter((entry) => !presentKeys.has(ignoreEntryKey(entry)));
+  if (missing.length > 0) {
+    lines.splice(headerIndex + 1, 0, ...missing);
+    changed = true;
+  }
+
+  if (!changed) {
+    return existingContent;
+  }
+  return lines.join('\n');
 }
 
 /**
@@ -29,7 +56,7 @@ export function stripIgnoreContent(existingContent, header, entries) {
     return existingContent;
   }
 
-  const entrySet = new Set(entries);
+  const entryKeys = new Set(entries.map(ignoreEntryKey));
   const lines = existingContent.split('\n');
   const out = [];
   let i = 0;
@@ -39,7 +66,7 @@ export function stripIgnoreContent(existingContent, header, entries) {
       i += 1;
       while (i < lines.length) {
         const line = lines[i];
-        if (entrySet.has(line) || line.trim() === '') {
+        if (entryKeys.has(ignoreEntryKey(line)) || line.trim() === '') {
           i += 1;
           continue;
         }
@@ -52,4 +79,8 @@ export function stripIgnoreContent(existingContent, header, entries) {
   }
 
   return `${out.join('\n').replace(/\n{3,}/g, '\n\n').replace(/^\n+/, '').replace(/\s+$/, '')}\n`;
+}
+
+function ignoreEntryKey(line) {
+  return line.trim().replace(/^\/+/, '');
 }

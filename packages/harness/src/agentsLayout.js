@@ -68,26 +68,26 @@ export const DOCKERIGNORE_BLOCK_HEADER = '# Nextstage-harness ignore files';
 
 /** Paths excluded from Docker build context (managed by harness sync). */
 export const DOCKERIGNORE_ENTRIES = [
-  'docs/',
-  '.agents/',
-  '.claude/',
-  '.cursor/',
-  '.gitlab/',
-  '.nextstage-harness/',
-  'AGENTS.md',
-  'AGENTS.local.md',
-  'CLAUDE.md',
-  'skills-lock.json',
-  '.worktrees/',
+  '/docs/',
+  '/.agents/',
+  '/.claude/',
+  '/.cursor/',
+  '/.gitlab/',
+  '/.nextstage-harness/',
+  '/AGENTS.md',
+  '/AGENTS.local.md',
+  '/CLAUDE.md',
+  '/skills-lock.json',
+  '/.worktrees/',
 ];
 
 export const GITIGNORE_BLOCK_HEADER = '# Nextstage-harness ignore files';
 
 /** Paths excluded from git (managed by harness sync). */
 export const GITIGNORE_ENTRIES = [
-  'AGENTS.local.md',
-  '.worktrees/',
-  '.cursor/rules/',
-  '.cursor/agents/',
-  '.claude/',
+  '/AGENTS.local.md',
+  '/.worktrees/',
+  '/.cursor/rules/',
+  '/.cursor/agents/',
+  '/.claude/',
 ];
