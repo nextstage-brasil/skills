@@ -98,8 +98,8 @@ Do **not** include the APF/CPM/SISP method paragraph, `Origem do cálculo`, or c
 ## Workflow hook (generate step)
 
 1. Size all items; classify each as `negócio` | `engenharia` | `qualidade`.
-2. Write `commercial-budget-internal.md` (always).
-3. If any `engenharia` or `qualidade` items exist **or** human requested client export: derive and write `commercial-budget-costumer.md` from internal doc using `assets/commercial-budget-costumer.template.md`.
+2. Write `docs/versions/{version_san}/pm/commercial-budget-internal.md` (always).
+3. If any `engenharia` or `qualidade` items exist **or** human requested client export: derive and write `docs/versions/{version_san}/pm/commercial-budget-costumer.md` from internal doc using `assets/commercial-budget-costumer.template.md`.
 4. Report both paths in Stop summary when client file exists.
 
 ## Anti-patterns
@@ -111,5 +111,5 @@ Do **not** include the APF/CPM/SISP method paragraph, `Origem do cálculo`, or c
 - Removing `engenharia` FP from Total to “simplify” pricing — roll up, do not drop.
 - Copying APF origem (Tipo, Complexidade, UFP, SISP) into `commercial-budget-costumer.md`.
 - Client FP table without Esforço (h) / Custo (R$) columns, or invented hours/R$ instead of `—` when productivity/rates were not given.
-- Client export missing **Valor agregado desta versão** after Objetivo, or writing it for a silent unconfirmed audience.
-- Valor agregado without the four headings (Em uma frase; O que muda no trabalho do {audience}; Exemplos de ganho concreto; O que esta versão **não** faz) or replacing them with a Feature dump.
+- Client export missing **Valor agregado desta versão** after Objetivo, extra subsections under it, or speech addressed to the operator instead of the decision-maker.
+- Valor agregado without the four locked headings, or objections about the quote/sample/next version instead of trust / overlap / permission (`sales-value-speech.md`).

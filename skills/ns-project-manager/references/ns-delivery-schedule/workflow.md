@@ -92,6 +92,8 @@ Default official commitment = **calendar P85 of productivity scenario P100**, un
 
 Default base: `docs/versions/{version_san}/pm/`
 
+Before write: `../pm-persist.md` — if the same basename already exists outside `pm/`, search references, propose the move, wait; do not silent-move.
+
 | File | Role |
 |------|------|
 | `05-cronograma-tres-cenarios.md` | Main deliverable |
@@ -130,6 +132,7 @@ Chat-only only if human says so. Confirm path once if persistence not yet agreed
 | File | When |
 |------|------|
 | `references/intake.md` | Missing inputs |
+| `../pm-persist.md` | Before persist — if file is outside `pm/`, propose move + update refs |
 | `references/calculations.md` | Before MC / calendar math |
 | `references/document-structure.md` | Before writing markdown |
 | `../../scripts/pert_montecarlo.py` | Every scenario MC run |

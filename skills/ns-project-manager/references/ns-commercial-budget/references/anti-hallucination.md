@@ -19,8 +19,8 @@ Every Feature, RNF, estimate premise, macro-row figure, margin % must trace to h
 10. **Macro table shortcuts** — Do not drop/rename seven mandatory macro rows; do not put all hours only in “Implementação”.
 11. **Naked margin** — Do not apply safety % without risks section + short rationale.
 12. **Technical voice in narrative** — No class/field/schema/endpoint/framework in Objetivo, Features, fluxos, RNFs, acceptance, risks narrative, premissas (`product-voice.md`). APF origem (CPM/SISP) only in `commercial-budget-internal.md`.
-14. **Silent value audience** — Do not write **Valor agregado desta versão** without a confirmed or explicitly assumed (`[ASSUMPTION]`) job/role for that section (`product-voice.md`).
-15. **Invented commercial ROI** — Do not put made-up time saved, R$ payback, or volumes in Valor agregado.
+14. **Improvised value speech** — Do not add extra headings under **Valor agregado desta versão**, pitch the operator instead of the decision-maker, or use procurement objections (“why another quote”, “sample first”, “wait for v2”). Follow `sales-value-speech.md`.
+15. **Invented commercial ROI** — No fabricated single-point R$ payback. Gains: range + short justification, cited benchmark, or stakeholder figure. `[⚠️ validar com cliente]` only on unsourced clauses — not on every line (`sales-value-speech.md`).
 
 ## Lacunas
 
@@ -32,7 +32,7 @@ PT-BR markers in deliverable (default language):
 
 Surface open lacunas in **Premissas / ressalvas**. Budget with open lacunas still deliverable; call them out in chat summary.
 
-Bump header **Sequência** + **Gerado em** every regenerate; keep same `commercial-budget-internal.md` path (`references/document-versioning.md`). No timestamped filenames.
+Bump header **Sequência** + **Gerado em** every regenerate; keep same `docs/versions/{version_san}/pm/commercial-budget-internal.md` path (`references/document-versioning.md`). No timestamped filenames.
 
 ## Estimates honesty
 

@@ -7,16 +7,18 @@
 **Internal (delivery):**
 
 ```
-docs/versions/{version_san}/commercial-budget-internal.md
+docs/versions/{version_san}/pm/commercial-budget-internal.md
 ```
 
 **Client export (optional):**
 
 ```
-docs/versions/{version_san}/commercial-budget-costumer.md
+docs/versions/{version_san}/pm/commercial-budget-costumer.md
 ```
 
-Overwrite each file on regenerate. Do **not** create subfolders or timestamped filenames.
+Create `pm/` if missing. Overwrite each file on regenerate. Do **not** use timestamped filenames. Do **not** write these files at the version folder root (beside `requirements.md`).
+
+**Misplaced copy:** if the file already exists outside `pm/`, follow `../../pm-persist.md` — search references, **propose** the move, wait. Do not silent-move or write a second copy.
 
 **Versão / referência** in client header: `{version_san}-costumer`.
 
@@ -34,9 +36,10 @@ Each file has **own** Sequência counter — bump independently on regenerate.
 
 Apply separately to `commercial-budget-internal.md` and `commercial-budget-costumer.md`:
 
-1. If target file does not exist: Sequência = `1`.
-2. If it exists: read current `**Sequência:**` value in that file's header; next = that value + 1.
-3. If header missing or unparseable: Sequência = `1` and note `[ASSUMPTION: sequência reiniciada — header anterior ilegível]`.
+1. If the canonical `pm/` file exists: read `**Sequência:**`; next = that value + 1.
+2. Else if only a misplaced copy exists: after the approved move (`../../pm-persist.md`), use that file’s Sequência, then +1 for this regenerate.
+3. Else Sequência = `1`.
+4. If header missing or unparseable: Sequência = `1` and note `[ASSUMPTION: sequência reiniciada — header anterior ilegível]`.
 
 Always refresh **Gerado em** to clock time at persist.
 

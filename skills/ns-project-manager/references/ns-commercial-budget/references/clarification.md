@@ -16,15 +16,15 @@ Do not re-ask what free-form description already states. Deduplicate against pri
 
 Highest-value gaps for this scope:
 
-1. **`{version_san}` / product label** — slug for `docs/versions/{version_san}/` (placeholder ok).
+1. **`{version_san}` / product label** — slug for `docs/versions/{version_san}/pm/` (placeholder ok).
 2. **In / out of scope (delta)** — what must ship vs explicit exclusions; when reverse-spec exists, ask what **changes/adds** vs what already works.
 3. **Actors / personas** — who uses system (roles), external systems touched — skip if clear in reverse-spec Access / Integrations.
-3a. **Value-section audience (client export)** — which **job/role this version is sold to** (who the commercial conversation addresses). Per version, not a fixed title. If inferable: ask confirmation of that guess, not a blank “who is the user?”. If not inferable: ask them to name it. Blocker for `## Valor agregado desta versão` in `commercial-budget-costumer.md` (`product-voice.md`). Prefer this slot when a client export is expected.
+3a. **Value-speech context (client export, optional)** — segment, main reported pain, alternatives under evaluation, only if missing and a question slot remains. **Not** a blocker. Valor agregado is always addressed to the **decision-maker** (`sales-value-speech.md`); do not ask “who do we pitch to?” as if the operator were the addressee.
 4. **Constraints** — deadline, compliance (e.g. LGPD), brownfield vs greenfield, known stack — skip stack if `brownfield-map` / `stack-confirmed` already covers.
 5. **Team experience (prefer when estimating hours)** — seniority of builders; tenure on product/project; involvement depth (core maintainers vs occasional). Goal: calibrate codebase/domain knowledge before hours. Optionally ask house productivity (h/PF) if a standard exists. Ask h/CFP only when COSMIC was requested.
 6. **Rates for Custo (optional)** — R$/h and/or R$/PF **only if** human wants macro Custo column filled; else leave `—` / `_pending rates_`.
 7. **Acceptance depth** — must-have SLAs or volumes stakeholder will commit (do not invent).
-8. **Persist or chat-only** — write/overwrite `commercial-budget-internal.md` (header bumps Sequência + Gerado em)?
+8. **Persist or chat-only** — write/overwrite `docs/versions/{version_san}/pm/commercial-budget-internal.md` (header bumps Sequência + Gerado em)?
 
 Do **not** invent rates. Skip rates question when human already said ignore pricing.
 

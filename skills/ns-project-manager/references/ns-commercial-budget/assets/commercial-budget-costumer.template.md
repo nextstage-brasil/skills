@@ -15,36 +15,33 @@
 
 ## Valor agregado desta versão
 
-<!-- Client export only. Commercial talking track for management ↔ client. Same topic set as the proven executive-summary shape. See references/product-voice.md → Valor agregado. Do not write until value-audience is confirmed (or explicit `[ASSUMPTION]` after human said proceed). -->
+<!-- Locked brief: references/sales-value-speech.md. Addressee = decision-maker (CEO/CFO/ops). Four headings only. No extra subsections. -->
 
-**Público desta conversa:** {confirmed job/role this version is sold to — not a fixed title}
+### Headline de valor
 
-### Em uma frase
+{One transformative sentence: what the organization gains. Not delivery, not the quote, not technology.}
 
-{One sentence: the daily pain → what this version lets {audience} do instead. Concrete, speakable. No Feature numbers.}
+### Parágrafo de valor agregado
 
-### O que muda no trabalho do {audience}
+{One paragraph, 120–180 words PT-BR, read-aloud. Capability + business differentiator (not the UI) + main deliveries tied to result + foundation/ROI if in scope. No bullets, no jargon, no architecture.}
 
-- **{Outcome in bold.}** {How work changes — grounded in scoped Features only.}
-- **{…}** {…}
+### Ganhos concretos esperados
 
-<!-- Several bullets. Prefer outcome-first (time, proof, permission, searchable corpus, false-positive control, own workspace) over a Feature dump. -->
-
-### Exemplos de ganho concreto
-
-| Antes | Depois |
-|-------|--------|
-| {How {audience} does it today} | {Same job after this version} |
-| {…} | {…} |
-
-<!-- 3–6 rows. Pair current friction with the scoped capability. No invented volumes or R$ ROI. -->
-
-### O que esta versão **não** faz (para não gerar expectativa errada)
-
-- {Explicit out-of-scope or “not this version” — from Premissas / Sugestões fora de escopo / known exclusions.}
+- {Redução de X% a Y% em [processo], liberando A a B horas para [função]. Cite benchmark if real. `[⚠️ validar com cliente]` only on unsourced clauses.}
+- {…}
 - {…}
 
-<!-- Include operational caveats that would otherwise oversell (e.g. batch ingest before full production use) when they are already in the budget. -->
+<!-- 3–5 measurable gains. Scope facts (volume, hop count) are not gains by themselves. -->
+
+### Possíveis objeções + resposta sugerida
+
+**"{Trust / overlap / permission objection a decision-maker would raise.}"**  
+{Rebuttal from scoped behavior — sure, direct. Not quote theater.}
+
+**"{…}"**  
+{…}
+
+<!-- 2–3 pairs. Never: why another quote, sample first, wait for next version. -->
 
 ---
 

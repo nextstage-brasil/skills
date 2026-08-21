@@ -67,7 +67,7 @@ Never invent R$ or commercial rates. Never invent `produtividade_atual_h_fp`,
 
 - Human override of ceiling, phase split, O/M/P, or acceleration factors — only if they volunteer.
 - Explicit choice of official commitment scenario (default: calendar P85 of productivity P100).
-- Links to `commercial-budget-*.md` (read if present; do not regenerate FP).
+- Links to `docs/versions/{version_san}/pm/commercial-budget-*.md` (read if present; also look at version-root legacy names via `../pm-persist.md`; do not regenerate FP).
 
 ## Forbidden in intake reply
 

@@ -23,7 +23,7 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.20"
+  version: "1.24"
 ---
 
 # Commercial Budget
@@ -60,7 +60,7 @@ Optional — skip step if path missing. Do not invent project layout.
 1. Capture scope + productivity / team / rates hints.
 2. Resolve `{version_san}`.
 3. **Product context + reuse gate** — `references/product-context.md`; mandatory full-read reverse-spec + `brownfield-map.md`; reuse inventory before clarify/sizing.
-4. Persist under `docs/versions/` or chat-only (default: persist).
+4. Persist under `docs/versions/{version_san}/pm/` or chat-only (default: persist).
 
 ### 2. Clarify
 
@@ -76,17 +76,18 @@ Read `references/clarification.md`.
 
 1. `assets/commercial-budget-internal.template.md`
 2. `references/product-voice.md`
-3. `references/engineering-split.md` — classify each scoped item `negócio` | `engenharia` | `qualidade` before Features
-4. `references/fp-sizing.md` — always (default = APF: IFPUG CPM latest, SISP fallback)
-5. `references/cosmic-sizing.md` — **only** if human asked for COSMIC / CFP / cosmic functions; otherwise skip (do not size, do not add a CFP section)
-6. `references/macro-activities.md` + `references/risk-margin.md`
-7. `references/document-versioning.md`
-8. **Reuse inventory applied** — map `net-new`→ADD, `extend`→CHG, `reuse`→omit (IFPUG enhancement). Block if context existed and inventory skipped.
+3. `references/sales-value-speech.md` — when writing `commercial-budget-costumer.md` (Valor agregado)
+4. `references/engineering-split.md` — classify each scoped item `negócio` | `engenharia` | `qualidade` before Features
+5. `references/fp-sizing.md` — always (default = APF: IFPUG CPM latest, SISP fallback)
+6. `references/cosmic-sizing.md` — **only** if human asked for COSMIC / CFP / cosmic functions; otherwise skip (do not size, do not add a CFP section)
+7. `references/macro-activities.md` + `references/risk-margin.md`
+8. `references/document-versioning.md`
+9. **Reuse inventory applied** — map `net-new`→ADD, `extend`→CHG, `reuse`→omit (IFPUG enhancement). Block if context existed and inventory skipped.
 
 | Section | Rules |
 |---------|--------|
 | Objetivo principal | Commercial/product — value, who benefits, product change. **Not** engineering-area framing |
-| Valor agregado (client export only) | After Objetivo in `commercial-budget-costumer.md`. Confirm audience first. Four topics, headings verbatim: Em uma frase; O que muda no trabalho do {audience}; Exemplos de ganho concreto (Antes/Depois); O que esta versão **não** faz (`product-voice.md`) |
+| Valor agregado (client export only) | After Objetivo in `commercial-budget-costumer.md`. Locked speech to the **decision-maker**. Four headings only (`sales-value-speech.md`). No extra subsections. Gains = measurable ranges; objections = trust / overlap / permission — not quote theater |
 | Fluxos principais | 1–3 Mermaid `flowchart TD`; white init + Palette A/B `classDef` + `linkStyle` edges (`product-voice.md`). Subtitle per diagram; validation chain optional; client-readable PT-BR labels |
 | Features (≤10) | `Feature 001`…; generous product description + acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
 | RNFs | Only if identified — product language |
@@ -102,23 +103,25 @@ Read `references/clarification.md`.
 
 ### 4. Persist
 
+Create `pm/` if missing. Before write: `../pm-persist.md` — if the same basename already exists outside `pm/` under this version, search references, propose the move, wait; do not silent-move.
+
 **Internal (always):**
 
 ```
-docs/versions/{version_san}/commercial-budget-internal.md
+docs/versions/{version_san}/pm/commercial-budget-internal.md
 ```
 
 **Client export (when `engineering-split.md` applies or human asks):**
 
 ```
-docs/versions/{version_san}/commercial-budget-costumer.md
+docs/versions/{version_san}/pm/commercial-budget-costumer.md
 ```
 
 Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per file (`document-versioning.md`).
 
 ### 5. Stop
 
-1. Summarize sequência, Gerado em, path(s), totals (FP, hours base, hours com margem, margin %), Custo filled or not. Include ΣCFP only when COSMIC was requested. When client file exists: note value-section audience, subtotal negócio vs engenharia rollup, and whether Esforço/Custo columns are filled or `—`.
+1. Summarize sequência, Gerado em, path(s), totals (FP, hours base, hours com margem, margin %), Custo filled or not. Include ΣCFP only when COSMIC was requested. When client file exists: note Valor agregado followed locked speech (decision-maker), subtotal negócio vs engenharia rollup, and whether Esforço/Custo columns are filled or `—`.
 2. No tasks, issues, requirements.md, SDD handoff.
 3. Offer approve then SDD / PM forecast in text only.
 
@@ -136,6 +139,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 |------|------|
 | `references/product-context.md` | After Session boot — reuse inventory gate |
 | `references/product-voice.md` | Before drafting — dual-audience rules |
+| `references/sales-value-speech.md` | When writing Valor agregado in `commercial-budget-costumer.md` |
 | `references/engineering-split.md` | Before Features — classify negócio / engenharia / qualidade; client export |
 | `assets/commercial-budget-costumer.template.md` | When writing `commercial-budget-costumer.md` |
 | `references/clarification.md` | Before generating |
@@ -144,5 +148,6 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 | `references/macro-activities.md` | Before lifecycle table |
 | `references/risk-margin.md` | Before risks / margin % |
 | `references/document-versioning.md` | Before persist |
+| `../pm-persist.md` | Before persist — canonical `pm/` path; propose move + update refs if misplaced |
 | `references/anti-hallucination.md` | Before Features / estimates |
 | `assets/commercial-budget-internal.template.md` | Document structure (internal) |

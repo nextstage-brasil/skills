@@ -6,7 +6,7 @@ Deliverable serves **client first**, also **delivery team**. Client confirms sco
 
 | Section | Client reads | Team needs |
 |---------|--------------|------------|
-| Objetivo, **Valor agregado** (client export), Features, fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Same text must cover every committed capability; Valor agregado is the sales/approval track |
+| Objetivo, **Valor agregado** (client export), Features, fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Same text must cover every committed capability; Valor agregado = locked decision-maker speech (`sales-value-speech.md`) |
 | Critérios de aceite | Verifiable by stakeholder | Each criterion maps to scoped behavior — no hidden gap |
 | Estimativas (FP, horas; COSMIC only if asked) | Totals + per-Feature FP justification; client table also Esforço (h) / Custo (R$) or `—` | FP origins traceable; hours = formula only; CFP table only when requested |
 | Macroatividades | Lifecycle effort split | Unchanged |
@@ -15,24 +15,11 @@ Deliverable serves **client first**, also **delivery team**. Client confirms sco
 
 ## Valor agregado (client export only)
 
-Section **Valor agregado desta versão** sits **immediately after Objetivo** in `commercial-budget-costumer.md`. It is the talking track for **commercial + management with the client** — how to value the sale and seek approval. It is **not** a second Objetivo and **not** a Feature list.
+Section **Valor agregado desta versão** sits **immediately after Objetivo** in `commercial-budget-costumer.md`. It is a **locked sales speech** for an executive talking to the **decision-maker** (CEO, CFO, operations director). It is **not** a second Objetivo, **not** a Feature list, **not** a pitch to the operator who will click the product.
 
-**Audience of this section** = the job/role **this version** is sold to (who lives the outcome in the client conversation). That role is **per version**, not a catalog constant. Example: a version built for intelligence work is pitched to an *analista de inteligência*; another version might be pitched to a store manager or a buyer. Do not hard-code a title.
+**Writing brief (mandatory):** follow `references/sales-value-speech.md` exactly — four headings, addressee, tone, gain shape, objection kinds. Do not invent extra subsections or a personal commercial angle.
 
-**Resolve audience before writing the section:**
-
-1. Prefer an explicit human statement (brief, chat, clarification).
-2. Else infer from actors/personas/scope and **ask once**, naming the guess: state the assumed role and ask to confirm or redefine. Do not write the section on a silent guess.
-3. `proceed with assumptions` / `quick mode` with no confirmation: keep the guessed role, mark `[ASSUMPTION: público da seção de valor = {role}]` in Premissas, and still write the section for that role.
-
-**Writing brief:** fill the four PT-BR topics below (headings unchanged). Adapt content to **{audience}**. Speakable by management with the client. Grounded only in scoped Features + stated out-of-scope. No invented metrics, R$ ROI, or gold plating. Product language (`Forbidden in narrative sections` still applies).
-
-| Heading (keep verbatim) | What to write |
-|-------------------------|---------------|
-| **Em uma frase** | One sentence: today’s grind → what {audience} can do instead. |
-| **O que muda no trabalho do {audience}** | Outcome-first bullets (bold lead + one line). Time, proof/provenance, permission, searchable corpus, false-positive control, own workspace — only if in scope. |
-| **Exemplos de ganho concreto** | Table **Antes \| Depois**. 3–6 rows pairing current friction with this version. |
-| **O que esta versão não faz (para não gerar expectativa errada)** | Exclusions and caveats that would otherwise oversell. Pull from Premissas / fora de escopo. Keep the heading emphasis on **não**. |
+Product language (`Forbidden in narrative sections` still applies). Operator / persona from the brief grounds **examples**, not the addressee.
 
 Do not add a “Leia também” block — this section already lives inside `commercial-budget-costumer.md`.
 

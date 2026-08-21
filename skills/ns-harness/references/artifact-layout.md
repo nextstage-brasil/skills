@@ -12,6 +12,7 @@ Canonical paths for SDD planning/delivery. `{version_san}` / `{subversion_san}` 
 
 ```
 docs/versions/{version_san}/
+docs/versions/{version_san}/pm/   # ns-project-manager deliverables
 docs/versions/{version_san}/tasks/
 docs/context/
 docs/specs/          # first living-spec delivery
@@ -24,8 +25,8 @@ docs/specs/          # first living-spec delivery
 | Requirements | `docs/versions/{version_san}/requirements.md` (trailing `## Consistency` from `ns-spec-driven` Consistency — `references/analyze-consistency.md`) |
 | Tasks | `docs/versions/{version_san}/tasks/task-NNN-*.md` |
 | Execution handoff | `docs/versions/{version_san}/execution-handoff.md` |
-| Commercial budget (internal) | `docs/versions/{version_san}/commercial-budget-internal.md` (header: Sequência + Gerado em) |
-| Commercial budget (client) | `docs/versions/{version_san}/commercial-budget-costumer.md` (optional; header: `{version_san}-costumer`) |
+| Commercial budget (internal) | `docs/versions/{version_san}/pm/commercial-budget-internal.md` (header: Sequência + Gerado em) |
+| Commercial budget (client) | `docs/versions/{version_san}/pm/commercial-budget-costumer.md` (optional; header: `{version_san}-costumer`) |
 | Living spec index | `docs/specs/INDEX.md` |
 | Domain spec | `docs/specs/{domain}.md` |
 
