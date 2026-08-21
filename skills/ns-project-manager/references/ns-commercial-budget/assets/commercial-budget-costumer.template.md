@@ -82,13 +82,13 @@
 
 ### Pontos de Função (FP) — visão de negócio
 
-| Feature | FP | Justificativa | Esforço (h) | Custo (R$) |
-|---------|-----|---------------|-------------|------------|
-| Feature 001 | {n} | {product-language rationale} | {FP × h/PF, or —} | {from rates, or —} |
-| Feature 002 | {n} | {…} | {… or —} | {… or —} |
-| **Subtotal negócio** | **{sum_negócio}** | Features verificáveis pelo solicitante | **{sum or —}** | **{sum or —}** |
-| Engenharia de consistência do produto | {sum_engenharia} | {Plain-language rollup — no internal Feature numbers} | {… or —} | {… or —} |
-| **Total** | **{total}** | Contagem **delta** | **{Horas base or —}** | **{sum or —}** |
+| Feature | FP | Esforço (h) | Custo (R$) | Justificativa |
+|---------|-----|-------------|------------|---------------|
+| Feature 001 | {n} | {FP × h/PF, or —} | {from rates, or —} | {product-language rationale} |
+| Feature 002 | {n} | {… or —} | {… or —} | {…} |
+| **Subtotal negócio** | **{sum_negócio}** | **{sum or —}** | **{sum or —}** | Features verificáveis pelo solicitante |
+| Engenharia de consistência do produto | {sum_engenharia} | {… or —} | {… or —} | {Plain-language rollup — no internal Feature numbers} |
+| **Total** | **{total}** | **{Horas base or —}** | **{sum or —}** | Contagem **delta** |
 
 <!-- Esforço (h) = that row’s FP × team productivity (h/PF). Same productivity as Horas previstas. No safety margin in this column (margin stays in Horas previstas). If productivity was not given: every Esforço cell is `—` (including totals). -->
 <!-- Custo (R$) = Esforço × R$/h, or FP × R$/PF when that rate was given. If no rate: every Custo cell is `—`. Never invent R$. -->

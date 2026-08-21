@@ -71,13 +71,13 @@ Omit block when project has no `engenharia` / `qualidade` items (single-doc mode
 ## Client doc — FP table shape
 
 ```markdown
-| Feature | FP | Justificativa | Esforço (h) | Custo (R$) |
-|---------|-----|---------------|-------------|------------|
-| Feature 001 | {n} | {negócio} | {FP × h/PF or —} | {from rates or —} |
+| Feature | FP | Esforço (h) | Custo (R$) | Justificativa |
+|---------|-----|-------------|------------|---------------|
+| Feature 001 | {n} | {FP × h/PF or —} | {from rates or —} | {negócio} |
 | … | | | | |
-| **Subtotal negócio** | **{sum_negócio}** | Features verificáveis pelo solicitante | **{sum or —}** | **{sum or —}** |
-| Engenharia de consistência do produto | {sum_engenharia} | Revisão de consultas, relatórios, integrações e vínculos; verificação automatizada complementar — incluída no total, não detalhada como feature de negócio | {… or —} | {… or —} |
-| **Total** | **{total}** | Contagem delta | **{Horas base or —}** | **{sum or —}** |
+| **Subtotal negócio** | **{sum_negócio}** | **{sum or —}** | **{sum or —}** | Features verificáveis pelo solicitante |
+| Engenharia de consistência do produto | {sum_engenharia} | {… or —} | {… or —} | Revisão de consultas, relatórios, integrações e vínculos; verificação automatizada complementar — incluída no total, não detalhada como feature de negócio |
+| **Total** | **{total}** | **{Horas base or —}** | **{sum or —}** | Contagem delta |
 ```
 
 - `sum_negócio + sum_engenharia` = **Total FP** (unchanged from internal doc).

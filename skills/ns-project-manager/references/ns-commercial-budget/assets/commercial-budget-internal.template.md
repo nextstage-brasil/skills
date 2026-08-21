@@ -150,8 +150,8 @@ Situações não contempladas pelo CPM foram contadas com o Roteiro de Métricas
 
 <!-- Hours = with safety margin. Fixed 7 rows. See references/macro-activities.md. -->
 
-| Macroatividade | Esforço (h) | PF | Custo (R$) |
-|----------------|-------------|-----|------------|
+| Macroatividade | PF | Esforço (h) | Custo (R$) |
+|----------------|-----|-------------|------------|
 | Engenharia de requisitos | | | {n or —} |
 | Design / Arquitetura | | | |
 | Implementação | | | |
@@ -159,7 +159,7 @@ Situações não contempladas pelo CPM foram contadas com o Roteiro de Métricas
 | Testes de homologação | | | |
 | Homologação | | | |
 | Implantação | | | |
-| **Σ** | **{n}** | **{Total FP}** | **{n or —}** |
+| **Σ** | **{Total FP}** | **{n}** | **{n or —}** |
 
 **Notas:**  
 - Base: {h} h · Margem de segurança: {s}% · Total com margem: {h} h  

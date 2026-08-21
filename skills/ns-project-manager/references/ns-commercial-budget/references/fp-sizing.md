@@ -139,7 +139,7 @@ When `engineering-split.md` applies:
 
 | Row type | Content |
 |----------|---------|
-| Per `negócio` Feature | FP + product-language justificativa + Esforço (h) + Custo (R$) |
+| Per `negócio` Feature | FP + Esforço (h) + Custo (R$) + product-language justificativa |
 | **Subtotal negócio** | Σ `negócio` FP (and Σ hours / Σ R$ when those columns are filled) |
 | **Engenharia de consistência do produto** | Σ `engenharia` FP — plain-language rollup; same extra columns |
 | **Total** | Same as internal Total PF; Esforço total = Horas base when productivity given |

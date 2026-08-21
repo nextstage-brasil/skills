@@ -91,7 +91,7 @@ Read `references/clarification.md`.
 | Fluxos principais | 1–3 Mermaid `flowchart TD`; white init + Palette A/B `classDef` + `linkStyle` edges (`product-voice.md`). Subtitle per diagram; validation chain optional; client-readable PT-BR labels |
 | Features (≤10) | `Feature 001`…; generous product description + acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
 | RNFs | Only if identified — product language |
-| Estimativas — FP | **Same Total PF** in both docs. Internal: APF + CPM/SISP origem. Client: per-Feature FP + justificativa + **Esforço (h)** + **Custo (R$)** — **no** CPM/SISP types (`fp-sizing.md`, `engineering-split.md`). Esforço = `—` if productivity unspecified; Custo = `—` if rates unspecified |
+| Estimativas — FP | **Same Total PF** in both docs. Internal: APF + CPM/SISP origem. Client: per-Feature FP + **Esforço (h)** + **Custo (R$)** + justificativa — **no** CPM/SISP types (`fp-sizing.md`, `engineering-split.md`). Esforço = `—` if productivity unspecified; Custo = `—` if rates unspecified |
 | Estimativas — COSMIC | **Omit by default.** If human asked: summary table + method reference line only — **no** rationale prose |
 | Estimativas — Horas | **Calculation only:** FP × productivity; base; margin; total. Cite productivity source |
 | Macroatividades | 7-row table unchanged (`macro-activities.md`) |

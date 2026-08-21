@@ -21,11 +21,11 @@ Do **not** rename, merge, or drop rows. Do **not** add extra macro rows unless h
 | Column | Rule |
 |--------|------|
 | Macroatividade | Exact labels above |
-| Esforço (h) | Hours for that row (one decimal ok) |
 | PF | Function-point **share** of version total (may be fractional; sum = Total FP) |
+| Esforço (h) | Hours for that row (one decimal ok) |
 | Custo (R$) | Fill **only** if human gave R$/h and/or R$/PF; else `—` for every row and one footnote `_pending rates_` |
 
-**Σ row:** sum of esforço, sum of PF (= Total FP), sum of Custo when rates exist.
+**Σ row:** sum of PF (= Total FP), sum of esforço, sum of Custo when rates exist.
 
 ## Default effort mix (baseline)
 
