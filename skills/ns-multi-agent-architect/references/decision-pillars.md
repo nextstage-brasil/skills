@@ -97,7 +97,7 @@ Ask only if still open after integrations:
 
 When user locks **LangGraph** and scope includes **MCP or many external tools**:
 
-- Recommend **`react_bounded`** topology (intent → bounded gather → composer) in final report — not open ReAct as only path
+- Recommend **`plan_execute`** Decision Suite motor (`guard → context_manager → mcp_catalog → analyst ⇄ executor → composer → respond`) — not open ReAct; not `intent_classify`
 - Sequential only when the next worker needs the previous **output** — calendar order is not a reason to serialize
 - Note greenfield MUST items from `ns-langgraph-agents`: dev-chat, tool budgets, evidence channels, JSON-planner `userFacingIntent` + SSE `thinking` when the gather/analyst hop is structured plan (no `bindTools`)
 - Simple local-tools MVP may still use open ReAct — do not over-prescribe topology for trivial tool count
