@@ -1,6 +1,6 @@
 # Evidence and fidelity
 
-`react_bounded` + MCP tool-heavy. LLM prose **never** SoT for numbers, entities, tool outcomes.
+When using analyst/executor + MCP: LLM prose **never** SoT for numbers, entities, tool outcomes.
 
 ## Principle
 
@@ -20,7 +20,7 @@
 | `externalError` | Classified MCP/auth/transport failure | Above generic clarify |
 | `turnDecisions` | Router, gather exit, bypass | Audit + optional transparency |
 
-Placeholders: `templates/snippets/state.ts.snippet`. Declare in `graph-spec.md` when `architecture: react_bounded`.
+Placeholders: `templates/snippets/state.ts.snippet`. Declare in `graph-spec.md` when `architecture: plan_execute`.
 
 ## Discovery vs analytical evidence
 
@@ -84,15 +84,12 @@ Format numbers/dates for user’s language **this turn**; follow conversation, n
 ### Flow
 
 ```
-guard (clear turnLocale / currencyHint)
-  → … → intent_classify (optional locale/speechLanguage slots)
-  → resolveConversationLocale(messages, { hint: configurable.locale, intentSlots })
-  → set turnLocale (+ currencyHint)
-  → evidence raw (numbers)
+guard (clear + resolveConversationLocale)
+  → context_manager → mcp_catalog → analyst ⇄ executor
   → composer + formatUserFacing(turnLocale)
 ```
 
-Helpers: `templates/snippets/conversation-locale.ts.snippet`. Placement: `src/conversation/locale/`. Resolve step: after guard clear, before composer format — typically end of `intent_classify` or dedicated pre-composer helper.
+Helpers: `templates/snippets/conversation-locale.ts.snippet`. Placement: `src/conversation/locale/`. Resolve in `guard` (same hop as clear), before composer format.
 
 ### Forbidden
 

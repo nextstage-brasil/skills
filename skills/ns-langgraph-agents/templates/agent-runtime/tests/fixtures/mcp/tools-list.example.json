@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MCP tools/list golden fixture (example)",
+  "description": "Schema-only example — replace with live tools/list capture. No business data.",
+  "tools": [
+    {
+      "name": "example_search",
+      "description": "Example search tool",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "limit": { "type": "integer", "minimum": 1 }
+        },
+        "required": ["query"]
+      }
+    }
+  ]
+}

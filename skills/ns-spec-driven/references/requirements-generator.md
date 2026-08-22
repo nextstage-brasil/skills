@@ -21,6 +21,7 @@ Load **one** profile from `stacks/` when stack known:
 | `generic.md`          | Default — stack-agnostic structure             |
 | `laravel-react.md`    | Laravel + React monorepo detected or confirmed |
 | `intelligent-saas.md` | Backend + frontend + agent-api                 |
+| `agent-runtime.md`    | Standalone LangGraph `agent-api/`              |
 
 Do not mention framework-specific tooling unless profile or detected stack applies.
 
@@ -64,7 +65,7 @@ Generate **only** markdown document (no conversational preamble):
 
 ## New project ordering
 
-When project greenfield, infrastructure/setup features before domain features (per stack profile): infra → database → cache/queues → backend modules → frontend → tests.
+When project greenfield, infrastructure/setup features before domain features (per stack profile): infra → database → cache/queues → backend modules → frontend → tests. Agent-api / intelligent SaaS: Feature 001 = runtime bootstrap (`stacks/agent-runtime.md` or `stacks/intelligent-saas.md`).
 
 ## Language
 
@@ -90,3 +91,4 @@ English unless user explicitly requests another language for deliverable.
 | `stacks/generic.md`          | Default              |
 | `stacks/laravel-react.md`    | Laravel/React stack  |
 | `stacks/intelligent-saas.md` | Agent-augmented SaaS |
+| `stacks/agent-runtime.md`    | Standalone agent-api |

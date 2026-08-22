@@ -1,0 +1,94 @@
+{
+  "info": {
+    "_postman_id": "factory-agent-api-{{PRODUCT_SLUG}}",
+    "name": "{{PRODUCT_DISPLAY_NAME}} — agent-api",
+    "description": "HTTP API do runtime LangGraph (`agent-api`).\n\n**Fábrica:** manter esta collection alinhada a cada rota em `src/api/` ou `src/http/`. Base URL padrão: `http://localhost:3100`.\n\n## Contrato padrão (HITL)\n\n| Método | Path | Descrição |\n|--------|------|------------|\n| POST | `/threads` | Cria thread e executa intake |\n| POST | `/threads/:thread_id/message` | Mensagem do usuário |\n| POST | `/threads/:thread_id/resume` | Retoma após `interrupt()` (`approve` / `reject`) |\n\nAdicione requests extras (health, tenants, webhooks) conforme o produto.\n\n## Resposta típica\n\n```json\n{ \"thread_id\": \"thread_…\", \"state\": { … } }\n```\n\n## Erros\n\n- `404` `{ \"error\": \"not_found\" }`\n- `500` `{ \"error\": \"<message>\" }`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3100", "type": "string" },
+    { "key": "thread_id", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Threads",
+      "item": [
+        {
+          "name": "Create thread",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.thread_id) pm.collectionVariables.set('thread_id', body.thread_id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Hello\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/threads",
+              "host": ["{{baseUrl}}"],
+              "path": ["threads"]
+            },
+            "description": "Ajuste o body conforme `graph-spec.md` e contratos do produto."
+          },
+          "response": []
+        },
+        {
+          "name": "Send message",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Follow-up message\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/threads/{{thread_id}}/message",
+              "host": ["{{baseUrl}}"],
+              "path": ["threads", "{{thread_id}}", "message"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resume HITL — approve",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"approve\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/threads/{{thread_id}}/resume",
+              "host": ["{{baseUrl}}"],
+              "path": ["threads", "{{thread_id}}", "resume"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resume HITL — reject",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"reject\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/threads/{{thread_id}}/resume",
+              "host": ["{{baseUrl}}"],
+              "path": ["threads", "{{thread_id}}", "resume"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

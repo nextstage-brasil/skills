@@ -58,8 +58,8 @@ Every `logLlmCall` tagged:
 
 | Stage | Typical node |
 | ----- | -------------- |
-| `intent` | Light router |
-| `gather` / `analyst` | Bounded ReAct loop |
+| `analyst` | JSON planner |
+| `executor` | Tool/MCP hop |
 | `composer` | Sole user-facing writer |
 | `summarize` | Context compaction |
 

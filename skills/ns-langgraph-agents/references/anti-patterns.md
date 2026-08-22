@@ -31,7 +31,8 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 
 | Anti-pattern | Why it hurts | Fix |
 | ------------ | ------------ | --- |
-| Open ReAct as **only** analytical path over open MCP catalog | Fixed-shape pipelines fail outside mold; token blow-up | Prefer `react_bounded` — `architectures.md` |
+| Open ReAct as **only** analytical path over open MCP catalog without a spec lock | Token blow-up / ungoverned tools | Suggest `plan_execute` or lock another architecture in `graph-spec.md` — `architectures.md` |
+| Dedicated `intent_classify` hop | Extra LLM; skips executor on fake chitchat | Analyst JSON + `routeAfterAnalyst` |
 | Gather emits final user-facing answer | SSE flicker; polluted history | Composer sole-writer |
 | JSON planner hop without `userFacingIntent` on state | Operator sees only generic “model started” or silence | Persist + emit `thinking` at next hop entry — `planner-contract.md` |
 | `userFacingIntent` on `response_streaming` or in `messages` as the answer | Dual-writer; looks like the reply | SSE `thinking` only |
@@ -85,7 +86,7 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 
 | Anti-pattern | Why it hurts | Fix |
 | ------------ | ------------ | --- |
-| `addNode` id equals `AgentState` channel key | LangGraph compile/runtime error | Different node id — e.g. `intent_classify` writes `intent`; `plan_node` writes `plan` |
+| `addNode` id equals `AgentState` channel key | LangGraph compile/runtime error | Different node id — e.g. `analyst` writes `analysis`; `executor` writes `executionResults` |
 | Topology doc uses channel name as node id | Agents copy wrong `addNode` name | Diagrams + graph-spec Nodes table use node ids; map channels in Outputs |
 | Graph in `memory/` | — | `graph/graph.ts` |
 | Domain prompts in `llm/` | — | `conversation/` |
@@ -122,6 +123,7 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | ------------ | --- |
 | Code without Placement / Inject / Spec gates | Complete pre-change gates in `SKILL.md` |
 | Code without `graph-spec.md` | Spec gate first |
+| Greenfield tree from snippets or another product | `templates/agent-runtime/` + `bootstrap-agent-runtime.mjs` |
 | Prompt roulette | Contract iteration + evals |
 | Skip review | `ns-reviewer` + LangGraph anti-patterns when `agent-api` |
 

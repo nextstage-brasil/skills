@@ -7,22 +7,21 @@ export const AgentState = Annotation.Root({
     reducer: messagesStateReducer,
     default: () => [],
   }),
-  // Add domain fields here — keep scalars and refs, not large blobs
-  // Node id MUST differ from channel key — e.g. addNode("intent_classify") returns { intent: … }
-  // intent: Annotation<{ speechAct: string; needsData: boolean } | null>({ default: () => null }),
-  //   ^ channel key — node id must differ (e.g. intent_classify.node.ts, addNode("intent_classify", …))
-  // Optional MCP / react_bounded channels (uncomment when graph-spec declares evidence topology):
+  // Node id MUST differ from channel key — e.g. addNode("analyst") writes { analysis, executionPlan }
+  // plan_execute — uncomment when graph-spec declares:
+  // guardRoute: Annotation<"agent" | "respond" | null>({ default: () => null }),
+  // summary: Annotation<string | null>({ default: () => null }),
+  // mcpCatalog: Annotation<{ tools: { name: string; description: string }[]; catalogVersion: string } | null>({ default: () => null }),
+  // analysis: Annotation<{ intent?: string; userFacingIntent?: string } | null>({ default: () => null }),
+  // executionPlan: Annotation<{ status: string; actions: unknown[] } | null>({ default: () => null }),
+  // executionResults: Annotation<unknown[]>({ default: () => [] }),
+  // analystStatus: Annotation<"need_more_data" | "complete" | "clarification_required" | null>({ default: () => null }),
   // dataBundle: Annotation<Record<string, unknown> | null>({ default: () => null }),
   // discoveryBrief: Annotation<{ found: string[]; absent: string[] } | null>({ default: () => null }),
   // externalError: Annotation<{ code: string; message: string } | null>({ default: () => null }),
   // turnDecisions: Annotation<Record<string, unknown>[]>({ default: () => [] }),
-  // Ephemeral per turn — clear in guard; NEVER sticky thread persona locale:
   // turnLocale: Annotation<string | null>({ default: () => null }),
   // currencyHint: Annotation<string | null>({ default: () => null }),
-  // JSON planner hops (uncomment when graph-spec declares structured executionPlan):
-  // analysis: Annotation<{ intent?: string; userFacingIntent?: string } | null>({ default: () => null }),
-  // executionPlan: Annotation<{ status: string; actions: unknown[] } | null>({ default: () => null }),
-  // analystNarration: Annotation<string[]>({ default: () => [] }),
 });
 
 export type AgentStateType = typeof AgentState.State;

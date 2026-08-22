@@ -23,7 +23,7 @@ Frontend then Backend then Agent-API (never direct browser to agent-api)
 2. Backend base + API auth
 3. Backend agent proxy — HTTP/SSE relay to agent-api
 4. Backend tool execution layer — internal endpoints consumed by agent
-5. Agent runtime bootstrap — graph spec
+5. Agent runtime bootstrap — `ns-langgraph-agents` `bootstrap-agent-runtime.mjs` into `agent-api/` + `graph-spec.md`
 6. Frontend shell — API base URL to backend only; no direct agent env in browser
 7. Env wiring — service tokens, healthchecks
 

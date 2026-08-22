@@ -2,6 +2,8 @@
 
 Canonical LangGraph.js production tree. Adapt folder names; keep **layer rules**.
 
+**Greenfield:** copy `templates/agent-runtime/` via `scripts/bootstrap-agent-runtime.mjs`. Nodes are `nodes/*.node.ts`.
+
 **Placement:** `references/placement-and-domains.md` — Placement Decision Block before new files.
 **Inject:** `references/prompt-and-capability-injection.md` — compose/bind before prompt or tool changes.
 

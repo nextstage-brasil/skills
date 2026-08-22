@@ -1,0 +1,30 @@
+{
+  "name": "@nextstage/{{PRODUCT_SLUG}}-agent-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "eval": "vitest run evals",
+    "start": "RUN_HTTP=1 npx tsx --env-file-if-exists=.env src/http/server.ts",
+    "db:migrate": "npx tsx --env-file-if-exists=.env -e \"import('./src/observability/postgres.js').then(m=>m.initDb())\""
+  },
+  "dependencies": {
+    "@langchain/core": "^1.1.48",
+    "@langchain/langgraph": "^1.3.2",
+    "@langchain/langgraph-checkpoint-postgres": "^1.0.0",
+    "@langchain/openai": "^1.4.7",
+    "pg": "^8.16.0",
+    "zod": "^3.23.0"
+  },
+  "optionalDependencies": {
+    "@opentelemetry/api": "^1.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.15.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

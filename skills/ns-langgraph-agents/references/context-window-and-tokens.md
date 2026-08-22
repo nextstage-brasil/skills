@@ -27,9 +27,9 @@ raw MCP result
 
 Snippet: `context-window.ts.snippet`. Wire patterns: `references/mcp-complex-access.md`.
 
-## context_compact (MCP-heavy)
+## context_manager (MCP-heavy)
 
-Node or `prepareLlmMessages` **before** intent/gather:
+Node or `prepareLlmMessages` **before** analyst:
 
 ```
 state.messages

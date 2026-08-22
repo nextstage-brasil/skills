@@ -83,7 +83,7 @@ Two servers expose `search` or `read_file`:
 
 | Challenge | Mitigation |
 | --------- | ---------- |
-| 40+ tools | Strict allowlist per persona; dynamic bind by route/intent node |
+| 40+ tools | Strict allowlist per persona; dynamic bind by analyst/executor hop |
 | Write/destructive | `destructive` class → HITL before execute |
 | Tenant MCP URL | `url_source: payload` + validated host allowlist |
 | Schema drift | Pin server version; re-discover on deploy, not every message |

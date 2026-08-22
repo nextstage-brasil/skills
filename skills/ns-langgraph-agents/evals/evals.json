@@ -120,12 +120,13 @@
     {
       "id": 10,
       "prompt": "We're designing a new LangGraph agent with Postgres + Slack + internal REST MCP. Open query space, streaming SSE. Which architecture should graph-spec lock?",
-      "expected_output": "Agent recommends react_bounded (intent → bounded gather → composer), not open ReAct as sole path; mentions evidence channels, composer sole-writer, optional bypass; cites architectures.md and graph-spec template.",
+      "expected_output": "Agent suggests plan_execute (guard → context_manager → mcp_catalog → analyst ⇄ executor → composer → respond) as the usual start for MCP, not a hard rule; lock in graph-spec; not open ReAct as unexamined default and not intent_classify unless spec says so; composer sole-writer if that topology is chosen.",
       "files": [],
       "assertions": [
-        "Recommends react_bounded or bounded gather/composer topology for MCP tool-heavy open query space",
+        "Suggests plan_execute analyst/executor as a starting topology for MCP tool-heavy open query space, not as a mandatory rule",
+        "Does not recommend a dedicated intent_classify / intent hop",
         "States composer (or single node) is sole user-facing writer",
-        "Mentions tool budgets or bounded gather / MAX_ITERATIONS concept",
+        "Mentions tool budgets or MAX_ANALYST_ITERATIONS / executor loop cap",
         "References architectures.md or graph-spec evidence channels",
         "Does not mandate deleting open ReAct for simple local-tool MVP without MCP"
       ]
@@ -174,6 +175,18 @@
         "Keeps composer as sole user-facing Markdown / response_streaming writer",
         "Mentions executor tool_started and/or tool_finished",
         "Cites planner-contract.md and/or streaming-and-hitl.md"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Empty repo. Build a new LangGraph.js agent-api from scratch, streaming SSE, we'll add MCP later via spec-driven versions. Scaffold it.",
+      "expected_output": "Phase 0 graph-spec (architect if framework unlocked); Phase 1 runs scripts/bootstrap-agent-runtime.mjs copying templates/agent-runtime/; npm test; does not assemble from snippets or copy another product; later domain/MCP as ns-spec-driven features.",
+      "files": [],
+      "assertions": [
+        "Creates or requires graph-spec.md before or with scaffold",
+        "Runs or cites bootstrap-agent-runtime.mjs / templates/agent-runtime",
+        "Rejects assembling the tree from snippets or copying another product",
+        "Defers domain/MCP product features to later SDD or ns-coder tasks"
       ]
     }
   ]

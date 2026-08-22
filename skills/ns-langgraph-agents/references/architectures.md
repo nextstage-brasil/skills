@@ -8,13 +8,13 @@ Lock architecture in `graph-spec.md` before code. Runtime follows **signals**, n
 
 | Rule | Example |
 | ---- | ------- |
-| Node id ≠ channel when both exist | `intent_classify` returns `{ intent: { speechAct, needsData } }` |
-| Diagrams use node ids | `intent_classify`, not channel `intent` |
+| Node id ≠ channel when both exist | `analyst` writes `analysis` / `executionPlan` — never `addNode("analysis")` |
+| Diagrams use node ids | `analyst`, `executor`, `mcp_catalog` |
 | `graph-spec.md` Nodes table = node ids | State schema = channel keys; map writer in Outputs |
 
-`messages` = reducer channel — still no node named `messages`. State has `plan` — node `plan_node` or `planner`, not `plan`. Any channel key: different node id (`intent` channel, `intent_classify` node).
+`messages` = reducer channel — still no node named `messages`. State has `plan` — node is not `plan`. Any channel key: different node id.
 
-`context_compact` as node id only when state has **no** `context_compact` channel (typical: node rewrites `messages` only). Need compact metadata channel: use `compactMeta` or node `context_compact_node`.
+`context_manager` as node id only when state has **no** `context_manager` channel (typical: node rewrites `messages` / `summary` only).
 
 ## ReAct (default loop)
 
@@ -28,41 +28,47 @@ agent → tools? → agent → … → END
 
 **Graph:** `agent` + `ToolNode` + conditional on `tool_calls`.
 
-## Bounded ReAct (`react_bounded`)
+## Analyst–executor (`plan_execute`) — suggested start for most MCP agents
+
+Starting suggestion, not a rule. Lock the real topology in `graph-spec.md` (architect interview may pick ReAct, HITL-heavy, supervisor, etc.).
+
+**No `intent` / `intent_classify` hop** on this suggestion. Retired names (`intent_node`, `context_compact`, `gather` as the greenfield default) stay retired unless `graph-spec.md` explicitly restores a different compile.
 
 ```
-guard → context_compact → intent_classify → (gather | bypass | composer) → composer → respond → END
+START → guard → context_manager → mcp_catalog → analyst
+analyst → executor | composer | analyst
+executor → analyst
+composer → respond → END
 ```
 
-Node ids above — not channel names. `intent_classify` writes `intent`. No `addNode("intent", …)` when `intent` on `AgentState`.
+`routeAfterGuard`: `agent` → `context_manager`; block → `respond`.
 
-**Signals:** open MCP/external query space; `needsData` routing; composer sole-writer; optional catalog bypass.
+`routeAfterAnalyst`: `need_more_data` + non-empty `executionPlan.actions` → `executor`; `need_more_data` + empty actions → `analyst` (directive hop, cap iterations); else → `composer`.
 
-**When:** tool-heavy; unbounded ReAct blows tokens/latency or gather pollutes stream. **Preferred default** greenfield LangGraph + MCP. Simple local-tool MVP may stay open ReAct.
+**HITL:** optional `interrupt()` **inside** executor (or analyst) when `graph-spec.md` locks HITL / destructive tools. Resume → continue executor or composer. Default greenfield graph **does not** compile an `interrupt` node.
+
+**Signals:** JSON analyst (no `bindTools`); deterministic executor; composer sole-writer; persisted `mcpCatalog` (name+description only); durable `summary` off `messages`.
+
+**When:** typical MCP / open query space — **suggested start**. Not mandatory. Simple local-tool MVP may stay open ReAct; HITL-heavy or specialist graphs may differ.
 
 **Graph rules:**
 
-- Gather strips terminal `content`/`reasoning` without `tool_calls` — no user Markdown
+- Analyst emits `executionPlan` + `userFacingIntent` (operator language = current user message) — SSE `thinking`, not Markdown — `planner-contract.md`
+- Executor runs tools/MCP; hydrate `dataBundle` / `discoveryBrief`; never user Markdown
 - Composer only node with final user text (`response_streaming`)
-- JSON planner/analyst (no `bindTools` on gather hop): persist `executionPlan` + `userFacingIntent`; emit SSE `thinking` at **node entry** (hop 0 generic presentation copy; later hops previous `userFacingIntent`) — `planner-contract.md`, `streaming-and-hitl.md`
-- `intent_classify` — light LLM; writes `intent`; routes chitchat/clarify vs fetch; optional generic slots `locale` / `speechLanguage` when heuristic weak; post-process calendar + epistemic gates only; no domain vocabulary in `src/`
-- Bypass (optional): zero-LLM closed catalog classes
-- Budgets: `tool-budget.ts.snippet`; evidence channels: `templates/graph-spec.md`
-- Locale: `guard` clears `turnLocale`/`currencyHint`; after `intent_classify` (or pre-composer) call `resolveConversationLocale` and set ephemeral fields — conversation-observed, not fixed/bootstrap locale SoT (`evidence-and-fidelity.md`, `conversation-locale.ts.snippet`)
+- `mcp_catalog` no-op when `catalogVersion` matches; never checkpoint bound tools or secrets
+- `context_manager` compact + durable `summary` — `context-window-and-tokens.md`
+- Locale: `guard` clears ephemeral fields then `resolveConversationLocale` same hop
+- Budgets: `tool-budget.ts.snippet`; evidence: `templates/graph-spec.md`
+- Cap analyst↔executor loops (`MAX_ANALYST_ITERATIONS`)
 
-**State channels (optional):** `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions`, ephemeral `turnLocale` / `currencyHint`; JSON planner: `executionPlan` + `userFacingIntent` (or nested on `analysis`) — `templates/snippets/state.ts.snippet`.
+**State channels:** `analysis`, `executionPlan`, `executionResults`, `analystStatus`, `mcpCatalog`, `summary`, `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions`, ephemeral `turnLocale` — `templates/snippets/state.ts.snippet`.
 
-## Plan-Execute
+`react_bounded` in old specs = this motor. Do not implement speechAct `intent_classify` as a node.
 
-```
-plan → execute_step → execute_step → … → synthesize → END
-```
+## Plan-Execute (generic)
 
-**Signals:** `modo_execucao: plan_execute`, `plano_completo[]` on first LLM call only.
-
-**When:** predictable multi-step workflows; lower per-step token cost.
-
-**Graph:** `plan_node` or `planner` — not `plan` when `plan` on `AgentState`; executor reads step index from state. Same operator-progress contract as JSON analyst hops when `streaming_sse`.
+Non-MCP fixed workflows may use `plan_node` → `execute_step`* → `synthesize`. Same operator-progress contract when `streaming_sse`. MCP agent-api often starts from **Analyst–executor** above, unless `graph-spec.md` locks another architecture.
 
 ## Reflection
 
@@ -98,7 +104,7 @@ retrieve → agent → tools? → END
 
 **Rules:** filter `tenant_id`; citations as state refs, not full docs.
 
-More than one retrieve-evaluate cycle: use **`react_bounded`** + tool budget — not a separate “agentic RAG” topology. Budget exhausted / low confidence → clarify or HITL; do not invent.
+More than one retrieve-evaluate cycle: prefer analyst⇄executor + tool budget over a separate “agentic RAG” topology — unless `graph-spec.md` locks otherwise. Budget exhausted / low confidence → clarify or HITL; do not invent.
 
 ## Guardrails-first
 
@@ -112,14 +118,16 @@ safeguard → agent → tools → END
 
 ## Selection guide
 
-| Need | Start with |
-| ---- | ---------- |
+Suggested starting point only — lock the architecture in `graph-spec.md`.
+
+| Need | Suggested start |
+| ---- | --------------- |
 | MVP chat + local tools only | ReAct |
-| MCP / external tools + open query space | **react_bounded** |
-| Fixed business workflow | Plan-Execute |
+| MCP / external tools + open query space | `plan_execute` (most cases) |
+| Fixed business workflow (no MCP agent-api) | Plan-Execute (generic) |
 | Quality gate | Reflection (pays +1 LLM invoke / turn) |
 | Many specialists | Supervisor (later) |
-| Untrusted input | Guardrails + ReAct or react_bounded |
+| Untrusted input | Guardrails + ReAct or plan_execute |
 
 ## graph-spec requirements per architecture
 

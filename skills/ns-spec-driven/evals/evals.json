@@ -28,7 +28,7 @@
     {
       "prompt": "/ns-spec-driven — plan version 3.0 for intelligent SaaS with Google Calendar MCP on agent-api.",
       "id": 5,
-      "expected_output": "Boot agent-runtime gate: MUST load ns-langgraph-agents before Clarify/Specify; stops with harness install if missing; cites agent-runtime-integration.md; uses intelligent-saas stack profile in requirements-generator.md.",
+      "expected_output": "Boot agent-runtime gate: MUST load ns-langgraph-agents before Clarify/Specify; stops with harness install if missing; cites agent-runtime-integration.md; uses intelligent-saas stack profile in requirements-generator.md; if agent-api/package.json missing, Feature 001 is bootstrap-agent-runtime.mjs + graph-spec (not snippet assembly).",
       "files": []
     },
     {
@@ -95,6 +95,12 @@
       "prompt": "/ns-spec-driven — requirements approved for version 2.4. One CRUD Feature needs backend + frontend. Generate tasks.",
       "id": 16,
       "expected_output": "Gate 3 always before any task-*.md (count by layer/type + estimated batches, prefer 4–7). Decomposition: 1 Feature × 1 impl layer = 1 impl task + at most 1 unit-HTTP + 1 E2E → expect 4 tasks (backend, frontend, unit/HTTP, e2e) — not 1 mega-task, not one task per class. MUST spawn task-writer-agent when available; then unit-test-task-generator.md and e2e-test-task-generator.md.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — greenfield standalone LangGraph agent-api (no Laravel). Plan version 1.0.0 from scratch.",
+      "id": 17,
+      "expected_output": "Loads ns-langgraph-agents; uses stacks/agent-runtime.md; Feature 001 is bootstrap-agent-runtime.mjs + graph-spec; later features are domain/MCP deltas; first execute task runs the bootstrap script not snippet assembly.",
       "files": []
     }
   ]

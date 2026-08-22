@@ -4,7 +4,7 @@ description: "(NS) Spec-driven delivery face — clarify, requirements, tasks (i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.4"
+  version: "1.5"
 depends:
   - ns-harness
   - ns-coder
@@ -160,7 +160,7 @@ Worker dispatch: **MUST** use harness project agents when available — `../../n
 
 ## Agent runtime (mandatory when detected)
 
-Non-negotiable for agent-api and intelligent SaaS products. See `references/agent-runtime-integration.md`.
+Non-negotiable for agent-api and intelligent SaaS products. See `references/agent-runtime-integration.md`. Greenfield with no `agent-api/`: Feature 001 = langgraph bootstrap, then version deltas.
 
 ## Complement integrations
 

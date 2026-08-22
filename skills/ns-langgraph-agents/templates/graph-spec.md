@@ -8,7 +8,7 @@
 | Field | Value |
 | ----- | ----- |
 | `framework` | langgraph |
-| `architecture` | react \| react_bounded \| plan_execute \| reflection \| supervisor \| rag_qa |
+| `architecture` | react \| plan_execute \| react_bounded \| reflection \| supervisor \| rag_qa |
 | `interaction_mode` | sync_json \| streaming_sse |
 | `recursion_limit` | {{number}} |
 | `decision_record` | `docs/specs/agent-architecture.md` (or `n/a` + reason if architect skipped) |
@@ -58,7 +58,7 @@ Optional when modes vary per turn — mode table (`mode | injected source | outp
 {
   messages: BaseMessage[];
   // thread_id, tenant_id via configurable — not duplicated in state
-  // react_bounded evidence channels (optional — declare when architecture is react_bounded):
+  // plan_execute evidence / planner channels:
   // dataBundle?: Record<string, unknown> | null;
   // discoveryBrief?: { found: string[]; absent: string[] } | null;
   // externalError?: { code: string; message: string } | null;
@@ -73,7 +73,7 @@ Optional when modes vary per turn — mode table (`mode | injected source | outp
 }
 ```
 
-### Evidence channels (when `architecture: react_bounded`)
+### Evidence channels (when `architecture: plan_execute`)
 
 | Channel | Writer | Composer reads |
 | ------- | ------ | -------------- |
@@ -84,22 +84,24 @@ Optional when modes vary per turn — mode table (`mode | injected source | outp
 | `userFacingIntent` (or `analysis.userFacingIntent`) | JSON planner/analyst hop | Operator language = current user message. **Not** composer Markdown — HTTP emits SSE `thinking` from this field |
 | `executionPlan` | Same hop | Executor reads actions |
 
-**Sole writer:** exactly one node (`composer`) emits user-facing Markdown / `response_streaming`. Gather/planner may emit tool calls and **operator progress via SSE `thinking` from state** — never Markdown answers. `references/streaming-and-hitl.md`.
+**Sole writer:** exactly one node (`composer`) emits user-facing Markdown / `response_streaming`. Analyst/executor may emit tool calls and **operator progress via SSE `thinking` from state** — never Markdown answers.
 
 ### Node id vs state channel
 
 LangGraph: **node id** (`addNode`) cannot equal a **state channel** key on `AgentState`. Diagrams and the Nodes table use node ids. State schema lists channel keys.
 
-Wrong: `addNode("intent", …)` when `intent` is on `AgentState`. Same for any channel key — node id must differ.
+Wrong: `addNode("analysis", …)` when `analysis` is on `AgentState`. Same for any channel key — node id must differ.
 
-Example `react_bounded` mapping (adjust if a channel key collides):
+Example `plan_execute` mapping:
 
 | Node id | Writes channel(s) | Notes |
 | ------- | ----------------- | ----- |
-| `intent_classify` | `intent` | `{ intent: { speechAct, needsData } }` |
-| `context_compact` | `messages` | Node id OK only if state has no `context_compact` channel |
-| `gather` | `messages`, `dataBundle`, `executionPlan`, `userFacingIntent` / `analysis`, … | Or `analyst` if `gather` is a channel; JSON hops write plan + operator intent |
-| `composer` | `messages` | Sole user-facing writer |
+| `guard` | `guardRoute`, `turnLocale` | Block → `respond`; else `context_manager` |
+| `context_manager` | `messages`, `summary` | Compact; summary not inside messages |
+| `mcp_catalog` | `mcpCatalog` | `{name, description}[]` only; no-op on version match |
+| `analyst` | `executionPlan`, `analysis`, `analystStatus` | No `bindTools`; JSON plan |
+| `executor` | `dataBundle`, `executionResults` | Tools/MCP; optional `interrupt()` if HITL locked |
+| `composer` | `responseMarkdown` / `messages` | Sole user-facing writer |
 
 ## Nodes
 

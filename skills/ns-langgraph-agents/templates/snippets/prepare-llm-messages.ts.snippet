@@ -1,4 +1,4 @@
-// Snippet: prepare-llm-messages.ts — context_compact helper (optional node or pre-intent hook)
+// Snippet: prepare-llm-messages.ts — context_manager helper
 import type { BaseMessage } from "@langchain/core/messages";
 import type { BaseLanguageModel } from "@langchain/core/language_models/base";
 import {
@@ -8,9 +8,9 @@ import {
 } from "./context-window";
 
 /**
- * context_compact pipeline: prune → compress discovery tools → trim → optional summarize.
+ * context_manager pipeline: prune → compress discovery tools → trim → optional summarize.
  * Placeholder: summarize branch not implemented — extend before production use.
- * Run before intent/gather on MCP-heavy graphs. Emit SSE `thinking` only when summarize runs.
+ * Run before analyst on MCP-heavy graphs. Emit SSE `thinking` only when summarize runs.
  */
 export async function prepareLlmMessages(
   messages: BaseMessage[],

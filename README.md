@@ -40,7 +40,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-proto-visual-guide`              | Normative visual appearance guides (`*-visual.md`) for implementation handoff (optional)                                                      |
 | `ns-project-manager`                 | PM face — gated pipeline; commercial budget, delivery schedule, enricher in `references/ns-*/workflow.md` |
 | `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
-| `ns-langgraph-agents`                | LangGraph.js runtime — MCP governance, context window, HITL, evals                                                                            |
+| `ns-langgraph-agents`                | LangGraph.js runtime — greenfield `agent-api` scaffold, MCP governance, context window, HITL, evals                                           |
 | `ns-postgres-rag`                    | PostgreSQL retrieval doctrine — pgvector, hybrid FTS, GraphRAG. Opt-in only; **`full` does not install this skill**. Example: `npx skills add nextstage-brasil/skills@ns-postgres-rag --full-depth -y` |
 
 Project-local skill authoring: install Anthropics `skill-creator` (`npx skills add https://github.com/anthropics/skills --skill skill-creator -y`) — see `ns-harness` → `references/project-skill-authoring.md`.

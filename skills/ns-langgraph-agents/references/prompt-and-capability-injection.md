@@ -59,7 +59,7 @@ Runtime nudges (force format, one-shot) = layer 7 of composed system text. Fake 
 
 `injected` (layer 1 canonical body) **may resolve per turn/mode** — not always one fixed file per product. Resolver picks body + output schema from classification result.
 
-**Mode pick:** existing analyst/intent node classifies; **conditional edge** routes branch (same pattern as post-analyst routing in `architectures.md`). **One graph** — modes = branches inside same phase, not subgraphs, not separate products.
+**Mode pick:** analyst JSON + **conditional edge** (`routeAfterAnalyst`). **One graph** — modes = branches, not subgraphs.
 
 Structured mode output: JSON mode + Zod parse; schema selected by mode (same pattern as other structured turns).
 
@@ -118,20 +118,21 @@ not both in the same bind/inject plan unless the product records an explicit dua
 
 Extract compose, bind list construction, and routing helpers from the agent node. A `*.node.ts` file orchestrates; it must not contain the entire doctrine (~hundreds of LOC of prompt assembly).
 
-## Gather vs deliver prompts (`react_bounded`)
+## Analyst vs composer prompts (`plan_execute`)
 
 Split compose per phase. Motor pieces stay in `base_invariant`; product persona/tone in `injected`:
 
 | Phase | `base_invariant` owns | `injected` owns | Must not include |
 | ----- | --------------------- | --------------- | ---------------- |
-| **Gather** | Tool discipline; gather MUST NOT emit user-facing Markdown; MCP wire hints | Optional short gather persona (no deliver templates) | Deliver/formatting skills, final Markdown, chart prose |
-| **Composer** | Composer sole-writer; evidence-narration discipline; format via conversation-observed `turnLocale` (Intl in code) | Skill auto-inject, user tone | Tool-call authoring beyond evidence narration; inventing number/date separators |
+| **Analyst** | JSON plan; no user Markdown; no `bindTools` | Optional short analyst persona | Deliver/formatting skills, final Markdown |
+| **Executor** | Tool discipline; hydrate evidence | — | User-facing Markdown |
+| **Composer** | Composer sole-writer; evidence-narration; Intl via `turnLocale` | Skill auto-inject, user tone | Tool-call authoring; inventing number/date separators |
 
-Deliver skill in gather = premature Markdown in tool loop. Bind deliver skills on composer turn only (or auto-inject in composer compose).
+Deliver skill on analyst hop = premature Markdown. Bind deliver skills on composer only.
 
 **Locale ≠ product `injected`:** reply language/formatting = conversation-observed (`evidence-and-fidelity.md`). `configurable.locale` weak hint for `resolveConversationLocale` only — never paste into `injected` as SoT. Do not bake fixed product locale into `injected`.
 
-Gather nudge: system section in composed invoke payload — no fake `HumanMessage`; do not write nudge into durable `messages`. Skip nudge when `discoveryBrief` confirms catalog absence.
+Analyst nudge: system section in composed invoke payload — no fake `HumanMessage`; do not write nudge into durable `messages`. Skip nudge when `discoveryBrief` confirms catalog absence.
 
 ## Prompt / Capability plan (required shape)
 
