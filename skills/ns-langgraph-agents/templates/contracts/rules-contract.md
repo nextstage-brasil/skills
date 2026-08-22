@@ -34,6 +34,7 @@ Stop and report to user when:
 - Human denies interrupt
 - Circuit breaker trips on invalid planner JSON
 - MCP server unavailable and no fallback
+- Latency budget hit with no evidence to narrate
 
 ## Security
 

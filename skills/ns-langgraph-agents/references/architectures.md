@@ -43,13 +43,14 @@ Node ids above — not channel names. `intent_classify` writes `intent`. No `add
 **Graph rules:**
 
 - Gather strips terminal `content`/`reasoning` without `tool_calls` — no user Markdown
-- Composer only node with final user text
+- Composer only node with final user text (`response_streaming`)
+- JSON planner/analyst (no `bindTools` on gather hop): persist `executionPlan` + `userFacingIntent`; emit SSE `thinking` at **node entry** (hop 0 generic presentation copy; later hops previous `userFacingIntent`) — `planner-contract.md`, `streaming-and-hitl.md`
 - `intent_classify` — light LLM; writes `intent`; routes chitchat/clarify vs fetch; optional generic slots `locale` / `speechLanguage` when heuristic weak; post-process calendar + epistemic gates only; no domain vocabulary in `src/`
 - Bypass (optional): zero-LLM closed catalog classes
 - Budgets: `tool-budget.ts.snippet`; evidence channels: `templates/graph-spec.md`
 - Locale: `guard` clears `turnLocale`/`currencyHint`; after `intent_classify` (or pre-composer) call `resolveConversationLocale` and set ephemeral fields — conversation-observed, not fixed/bootstrap locale SoT (`evidence-and-fidelity.md`, `conversation-locale.ts.snippet`)
 
-**State channels (optional):** `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions`, ephemeral `turnLocale` / `currencyHint` — `templates/snippets/state.ts.snippet`.
+**State channels (optional):** `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions`, ephemeral `turnLocale` / `currencyHint`; JSON planner: `executionPlan` + `userFacingIntent` (or nested on `analysis`) — `templates/snippets/state.ts.snippet`.
 
 ## Plan-Execute
 
@@ -61,7 +62,7 @@ plan → execute_step → execute_step → … → synthesize → END
 
 **When:** predictable multi-step workflows; lower per-step token cost.
 
-**Graph:** `plan_node` or `planner` — not `plan` when `plan` on `AgentState`; executor reads step index from state.
+**Graph:** `plan_node` or `planner` — not `plan` when `plan` on `AgentState`; executor reads step index from state. Same operator-progress contract as JSON analyst hops when `streaming_sse`.
 
 ## Reflection
 
@@ -69,7 +70,9 @@ plan → execute_step → execute_step → … → synthesize → END
 agent → tools → critic → (retry | END)
 ```
 
-**Signals:** `critic.md` — `aprovado`, `nota`, `max_reflexoes`.
+**Signals:** `critic.md` — `aprovado`, `nota`, `max_reflexoes`. Named error categories, not “revise this.” If none found, say so — no generic praise. High-stakes facts: flag + HITL, do not auto-correct. Optional critic on a different model family.
+
+**Cost:** one extra LLM invoke per turn. Skip unless the quality gate pays for it.
 
 **When:** quality-sensitive outputs.
 
@@ -81,7 +84,7 @@ agent → tools → critic → (retry | END)
 supervisor → worker_a | worker_b → supervisor → END
 ```
 
-**When:** distinct personas, separate tool sets. Avoid premature use.
+**When:** distinct personas **and** vocab/tools/risk diverge (`ns-multi-agent-architect` one-vs-many). Avoid premature use.
 
 **Pattern:** subgraph per worker OR supervisor routes via structured output.
 
@@ -91,9 +94,11 @@ supervisor → worker_a | worker_b → supervisor → END
 retrieve → agent → tools? → END
 ```
 
-**When:** knowledge-heavy Q&A; tenant-scoped corpora.
+**When:** knowledge-heavy Q&A; tenant-scoped corpora. One retrieve is enough.
 
 **Rules:** filter `tenant_id`; citations as state refs, not full docs.
+
+More than one retrieve-evaluate cycle: use **`react_bounded`** + tool budget — not a separate “agentic RAG” topology. Budget exhausted / low confidence → clarify or HITL; do not invent.
 
 ## Guardrails-first
 
@@ -112,7 +117,7 @@ safeguard → agent → tools → END
 | MVP chat + local tools only | ReAct |
 | MCP / external tools + open query space | **react_bounded** |
 | Fixed business workflow | Plan-Execute |
-| Quality gate | Reflection |
+| Quality gate | Reflection (pays +1 LLM invoke / turn) |
 | Many specialists | Supervisor (later) |
 | Untrusted input | Guardrails + ReAct or react_bounded |
 

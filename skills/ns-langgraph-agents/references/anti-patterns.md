@@ -33,6 +33,11 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | ------------ | ------------ | --- |
 | Open ReAct as **only** analytical path over open MCP catalog | Fixed-shape pipelines fail outside mold; token blow-up | Prefer `react_bounded` — `architectures.md` |
 | Gather emits final user-facing answer | SSE flicker; polluted history | Composer sole-writer |
+| JSON planner hop without `userFacingIntent` on state | Operator sees only generic “model started” or silence | Persist + emit `thinking` at next hop entry — `planner-contract.md` |
+| `userFacingIntent` on `response_streaming` or in `messages` as the answer | Dual-writer; looks like the reply | SSE `thinking` only |
+| Hop 0 `thinking` from LLM before first plan exists | Hallucinated progress | Generic copy from `conversation/presentation/` |
+| Copy `intent` (English machine line) into `userFacingIntent` | Wrong language / restates the ask | New evidence-gap line in operator-message language |
+| `userFacingIntent` not in the user’s input language | Operator sees English (or default locale) while they wrote another language | Match last `HumanMessage`; prompt MUST require it |
 | Discovery-only tool calls counted as "has evidence" | False progress; duplicate-skip breaks | Analytical evidence channels — `evidence-and-fidelity.md` |
 | Silent `break` on LLM failure in gather | User sees empty or stale reply | Set `errorCode` on state; route to composer or `failed` |
 | Generic clarify when `externalError` already in state | Credential/MCP failure reads as "send me data" | Branch composer on `externalError` channel |

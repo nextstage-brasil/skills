@@ -29,6 +29,8 @@ export function skillWireName(id: string): string {
 
 Assign locally — **never** trust MCP metadata alone.
 
+Same input always same logic → **local tool**, not an LLM worker.
+
 | Class | Typical ops | Default policy |
 | ----- | ----------- | -------------- |
 | `read` | list, get, search | Allow |
@@ -98,9 +100,15 @@ Redact secrets in audit + fingerprints.
 
 ## Human-in-the-loop
 
-`classification: destructive` or `sensitive_tools`:
+Three bands (business sets numbers). **Always-scale** categories (official publish, irreversible write) skip the high band — gate even at high score.
 
-1. Agent proposes tool call
+| Band | Behavior |
+| ---- | -------- |
+| High confidence, not always-scale | Run |
+| Mid | `interrupt` |
+| Low, **or** always-scale / `destructive` / `sensitive_tools` | `interrupt` — **sync** if undo is impossible; async if reversible |
+
+1. Agent proposes tool call or recommendation
 2. `interrupt({ tool, args, reason })`
 3. UI approves/edits/rejects
 4. `Command({ resume: approval })`

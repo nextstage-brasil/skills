@@ -1,8 +1,20 @@
 #!/usr/bin/env node
+/**
+ * Export standalone Claude-importable skills (no harness coupling).
+ * Always exports every skill in templates/profiles/external-presets.json.
+ *
+ * Usage:
+ *   node scripts/build-external.mjs
+ *   node scripts/build-external.mjs --out ./dist/external
+ *   node scripts/build-external.mjs --no-zip
+ *
+ * npm:
+ *   npm run export:external
+ */
 
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { exportExternal, validateExternalDir } from '../src/exportExternal.js';
+import { exportExternalAll, validateExternalDir } from '../src/exportExternal.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(__dirname, '..', '..', '..');
@@ -13,12 +25,10 @@ function arg(flag) {
   return process.argv[i + 1];
 }
 
-const preset = arg('--preset') ?? 'project-manager';
 const outDir = arg('--out');
 const noZip = process.argv.includes('--no-zip');
 
-const result = exportExternal({
-  preset,
+const result = exportExternalAll({
   repoRoot,
   outDir,
   zip: !noZip,

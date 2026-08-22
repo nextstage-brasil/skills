@@ -15,11 +15,11 @@ Typical turn order:
 
 | Status | Meaning |
 | ------ | ------- |
-| `thinking` | Model started |
+| `thinking` | Operator progress — hop 0 generic copy; later hops `userFacingIntent` from state. Not raw model reasoning |
 | `accessing_data` | Optional progress |
-| `tool_started` | Tool name + args summary |
-| `tool_finished` | Truncated result summary |
-| `response_streaming` | Cumulative markdown (replace prior) |
+| `tool_started` | Tool name + args summary (executor) |
+| `tool_finished` | Truncated result summary (executor) |
+| `response_streaming` | Cumulative markdown (replace prior) — **composer only** |
 | `completed` | Terminal success |
 | `failed` | Terminal error |
 | `cancelled` | Client abort |
@@ -29,8 +29,25 @@ Rules:
 - Terminal status **last** event
 - `response_streaming` full cumulative text each tick
 - No raw reasoning in user stream
+- Operator progress is `thinking` (or `tool_*`), never `response_streaming`
 
 Snippet: `sse-envelope.ts.snippet`.
+
+## Operator progress (JSON planner hops)
+
+Greenfield `streaming_sse` + planner/analyst structured JSON (no `bindTools` on that hop): **MUST**.
+
+1. Planner LLM returns `executionPlan` + `userFacingIntent` in one JSON object — `templates/contracts/planner-contract.md`. **`userFacingIntent` MUST be in the same language as the current user message** (not English unless that message is English).
+2. Persist both on `AgentState`. Do **not** append the intent line to `messages`.
+3. At **planner node entry**, before the next invoke:
+   - hop 0 (`analystIteration === 0` or equivalent): emit `thinking` with generic copy from `conversation/presentation/` (product language)
+   - later hops: emit `thinking` with `state` `userFacingIntent` (or `analysis.userFacingIntent`) from the **previous** hop
+4. After tools run, executor emits `tool_started` then `tool_finished` (presentation copy, not tool JSON dump).
+5. Composer remains the only writer of `response_streaming`.
+
+Open ReAct + `ToolNode`: skip `userFacingIntent`; `tool_started` / `tool_finished` is enough.
+
+Static strings (“planning…”, “fetching data…”) live in `src/conversation/presentation/` or locale — not in `graph/` and not in `base_invariant` as product copy.
 
 ## HITL with interrupt()
 
@@ -80,7 +97,7 @@ Dev-chat = same SSE envelope as `POST /threads/:id/message`. Without it, human M
 
 ### Turn latency budget
 
-`TURN_LATENCY_BUDGET_MS` (default 60000) at HTTP layer. Exceed: SSE `failed` + `error_code: turn_latency_budget_exceeded` — not client `cancelled`. `references/error-and-reliability.md`.
+`TURN_LATENCY_BUDGET_MS` (default 60000) at HTTP layer. Exceed: stop new work; partial composer if evidence exists, else `failed` + `turn_latency_budget_exceeded`. Not client `cancelled`. `references/error-and-reliability.md`.
 
 ## Postman
 
@@ -89,5 +106,6 @@ Collection synced with routes — executable contract.
 ## UX notes
 
 - Tool progress without full JSON dump
+- Planner operator line via `thinking`, not as streamed Markdown
 - Interrupt UI: editable args when safe
 - Client keeps `thread_id` for resume

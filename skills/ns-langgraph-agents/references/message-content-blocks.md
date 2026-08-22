@@ -80,7 +80,7 @@ return new ToolMessage({
 ## Reasoning in UX
 
 - **Do not** stream raw reasoning to end-user chat by default.
-- **Do** log reasoning blocks in observability when policy allows.
+- **Do** persist reasoning blocks in Postgres audit (`observability.md`). Spec opt-out only.
 - **Do** include reasoning in developer `dev-chat` when debugging.
 
 ## State hygiene

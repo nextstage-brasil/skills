@@ -38,6 +38,36 @@ export function loadExternalProfile(harnessRoot = join(__dirname, '..')) {
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
+export function loadExternalSkills(harnessRoot = join(__dirname, '..')) {
+  const path = join(harnessRoot, 'templates', 'profiles', 'external-presets.json');
+  const doc = JSON.parse(readFileSync(path, 'utf8'));
+  if (!Array.isArray(doc.skills) || doc.skills.length === 0) {
+    throw new Error('external-presets.json must list at least one skill');
+  }
+  return doc.skills;
+}
+
+function exportSkillToDir(skillId, skillsDir, outDir, profile) {
+  const src = resolveSkillDir(skillsDir, skillId);
+  if (!src) {
+    throw new Error(`Skill not found: ${skillId}`);
+  }
+  const dest = join(outDir, skillId);
+  copySkill(src, dest, profile.excludeDirs);
+
+  for (const file of walkFiles(dest)) {
+    if (!TEXT_EXT.test(file)) continue;
+    const original = readFileSync(file, 'utf8');
+    const next =
+      file.endsWith('SKILL.md')
+        ? transformSkillMd(original, profile)
+        : applyRewrites(original, profile.rewrites ?? []);
+    if (next !== original) writeFileSync(file, next);
+  }
+
+  flattenNestedSkillMd(dest, profile.nestedSkillMdName ?? 'workflow.md');
+}
+
 /**
  * @param {string} frontmatter
  * @param {string[]} keys
@@ -149,6 +179,7 @@ function zipSkill(outDir, skillId) {
  * @param {string} [options.repoRoot]
  * @param {string} [options.outDir]
  * @param {boolean} [options.zip]
+ * @param {boolean} [options.clean] — default true; set false when appending to outDir
  */
 export function exportExternal(options) {
   const repoRoot = options.repoRoot ?? defaultRepoRoot();
@@ -158,47 +189,84 @@ export function exportExternal(options) {
   }
 
   const skillIds = [...new Set(preset.includes.map(skillIdFromInclude))];
-  const skillsDir = join(repoRoot, 'skills');
   const outDir = options.outDir ?? join(repoRoot, 'dist', 'external');
-  const profile = loadExternalProfile();
-  const shouldZip = options.zip !== false;
+  const clean = options.clean !== false;
 
+  if (clean) {
+    rmSync(outDir, { recursive: true, force: true });
+    mkdirSync(outDir, { recursive: true });
+  } else {
+    mkdirSync(outDir, { recursive: true });
+  }
+
+  return exportSkillIds({
+    skillIds,
+    repoRoot,
+    outDir,
+    zip: options.zip !== false,
+    vendor: clean,
+  });
+}
+
+/**
+ * Export every skill listed in templates/profiles/external-presets.json.
+ * Independent of presets/index.json (install presets).
+ *
+ * @param {object} options
+ * @param {string} [options.repoRoot]
+ * @param {string} [options.outDir]
+ * @param {boolean} [options.zip]
+ */
+export function exportExternalAll(options = {}) {
+  const repoRoot = options.repoRoot ?? defaultRepoRoot();
+  const harnessRoot = join(__dirname, '..');
+  const skillIds = loadExternalSkills(harnessRoot);
+
+  const outDir = options.outDir ?? join(repoRoot, 'dist', 'external');
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(outDir, { recursive: true });
 
+  return exportSkillIds({
+    skillIds: [...new Set(skillIds)],
+    repoRoot,
+    outDir,
+    zip: options.zip !== false,
+    vendor: true,
+  });
+}
+
+/**
+ * @param {object} options
+ * @param {string[]} options.skillIds
+ * @param {string} options.repoRoot
+ * @param {string} options.outDir
+ * @param {boolean} [options.zip]
+ * @param {boolean} [options.vendor]
+ */
+function exportSkillIds(options) {
+  const { skillIds, repoRoot, outDir } = options;
+  const skillsDir = join(repoRoot, 'skills');
+  const profile = loadExternalProfile();
+  const shouldZip = options.zip !== false;
   const exported = [];
   const warnings = [];
 
   for (const skillId of skillIds) {
-    const src = resolveSkillDir(skillsDir, skillId);
-    if (!src) {
-      throw new Error(`Skill not found: ${skillId}`);
-    }
-    const dest = join(outDir, skillId);
-    copySkill(src, dest, profile.excludeDirs);
-
-    for (const file of walkFiles(dest)) {
-      if (!TEXT_EXT.test(file)) continue;
-      const original = readFileSync(file, 'utf8');
-      const next =
-        file.endsWith('SKILL.md')
-          ? transformSkillMd(original, profile)
-          : applyRewrites(original, profile.rewrites ?? []);
-      if (next !== original) writeFileSync(file, next);
-    }
-
-    flattenNestedSkillMd(dest, profile.nestedSkillMdName ?? 'workflow.md');
+    if (existsSync(join(outDir, skillId))) continue;
+    exportSkillToDir(skillId, skillsDir, outDir, profile);
     exported.push(skillId);
   }
 
-  for (const item of profile.vendor ?? []) {
-    const from = join(repoRoot, item.from);
-    const into = join(outDir, item.into);
-    if (!existsSync(from)) {
-      throw new Error(`Vendor source missing: ${item.from}`);
+  if (options.vendor !== false) {
+    for (const item of profile.vendor ?? []) {
+      const from = join(repoRoot, item.from);
+      const into = join(outDir, item.into);
+      if (!existsSync(from)) {
+        throw new Error(`Vendor source missing: ${item.from}`);
+      }
+      mkdirSync(dirname(into), { recursive: true });
+      cpSync(from, into);
     }
-    mkdirSync(dirname(into), { recursive: true });
-    cpSync(from, into);
   }
 
   const zips = [];

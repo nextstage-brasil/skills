@@ -21,5 +21,6 @@ export function writeSse(res: import("node:http").ServerResponse, env: AgentStre
   res.write(`data: ${JSON.stringify(env)}\n\n`);
 }
 
-// response_streaming: send cumulative markdown in `text` each tick
+// response_streaming: send cumulative markdown in `text` each tick — composer only
+// thinking: operator progress from state.userFacingIntent (or hop-0 presentation copy), not raw reasoning
 // completed | failed | cancelled: must be last event

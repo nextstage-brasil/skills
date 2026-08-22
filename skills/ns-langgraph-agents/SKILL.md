@@ -4,7 +4,7 @@ description: (NS) LangGraph.js agent-api — StateGraph, MCP tools, skill bind/i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.4"
+  version: "1.10"
 depends:
   - ns-harness
 ---
@@ -57,6 +57,7 @@ See `../../ns-harness/references/session-boot.md` — **complete Session boot (b
 | Token blow-up / slow turns | Read `references/context-window-and-tokens.md` |
 | Provider message/reasoning quirks | Read `references/message-content-blocks.md` |
 | HITL / streaming UX | Read `references/streaming-and-hitl.md` |
+| JSON planner / analyst chooses tools | Operator-progress channel — `templates/contracts/planner-contract.md` + `references/streaming-and-hitl.md` |
 | Evals before merge | Read `references/evals-and-gates.md` |
 
 ## Core doctrine
@@ -66,6 +67,8 @@ LangGraph = control flow. MCP/local tools = capabilities under graph. Small grap
 **System prompt:** compose `base_invariant` (motor) + `injected` (product persona) **per LLM invoke**. Never persist composed system/persona text in graph state, checkpointer, or durable `messages`. Summary `SystemMessage` at index 0 ≠ full system — `references/prompt-and-capability-injection.md`, `references/message-content-blocks.md`.
 
 **Locale:** conversation-observed `turnLocale` (detection-first from human messages ± intent slots); `configurable.locale` weak hint only; Intl formatters in code — not fixed bootstrap locale. `references/evidence-and-fidelity.md`, `templates/snippets/conversation-locale.ts.snippet`.
+
+**Operator progress (JSON planner hops):** greenfield `streaming_sse` with a planner/analyst that emits structured `executionPlan` (no `bindTools` on that hop) **MUST** persist `userFacingIntent` (or `analysis.userFacingIntent`) + `executionPlan` on `AgentState`. **`userFacingIntent` language MUST match the current user message** (last `HumanMessage`) — not English unless that message is English; not product default locale. Machine `intent` stays English for audit. Emit SSE `thinking` from that field at **node entry** of the next hop — not `response_streaming`, not in durable `messages`. Hop 0 uses generic copy from `conversation/presentation/` (or locale) in the **same operator language**. Open ReAct + `ToolNode` uses `tool_started` / `tool_finished` only. Details: `templates/contracts/planner-contract.md`, `references/streaming-and-hitl.md`.
 
 Three capability kinds bind to the model:
 
@@ -100,7 +103,7 @@ Full matrix: `references/placement-and-domains.md`.
 ```markdown
 ### Prompt / Capability plan
 - Compose: base_invariant + injected (rebuild per invoke; not in state/checkpointer/durable messages)
-- Motor (`base_invariant`): [gather-no-Markdown / sole-writer / tool discipline / …]
+- Motor (`base_invariant`): [gather-no-Markdown / sole-writer / tool discipline / JSON planner userFacingIntent is SSE not Markdown / …]
 - Product (`injected`): canonical path + persona/tone notes; mode-resolved: yes/no; modes: [...]; resolver: ...
 - System layers touched: […]
 - Canonical prompt path: …
@@ -139,7 +142,8 @@ Load on demand — do not memorize whole files.
 | `references/error-and-reliability.md` | Tool errors, circuit breaker, retries |
 | `references/observability.md` | Postgres audit, LangSmith, OTel, run context |
 | `references/architectures.md` | ReAct, react_bounded, plan-execute; **node id ≠ state channel** |
-| `references/streaming-and-hitl.md` | SSE envelopes, `interrupt()`, `Command` resume |
+| `references/streaming-and-hitl.md` | SSE envelopes, operator `thinking` from planner state, `interrupt()`, `Command` resume |
+| `templates/contracts/planner-contract.md` | JSON planner hops: `executionPlan` + `userFacingIntent` |
 | `references/evals-and-gates.md` | Architecture, tool-selection, memory evals |
 | `references/anti-patterns.md` | Review gate before marking done |
 
@@ -182,6 +186,7 @@ Use snippets from `templates/snippets/` — do not paste a monolithic scaffold.
 - `AgentState` with `messages` reducer (`Annotation.Root` or Zod + `MessagesZodMeta`).
 - `PostgresSaver` in dev/prod; `MemorySaver` only in `tests/setup.ts`.
 - Every invoke/stream: `configurable.thread_id` via `buildRunConfig`.
+- JSON planner/analyst (no `bindTools` on that hop): declare `executionPlan` + `userFacingIntent` (or nested on `analysis`) in `graph-spec.md` state schema — `templates/snippets/state.ts.snippet`.
 
 ### Phase 3 — LLM and messages
 
@@ -213,14 +218,14 @@ Apply `references/capability-governance.md` and `references/prompt-and-capabilit
 | Mode | Requirements |
 | ---- | ------------ |
 | `sync_json` | `POST /threads`, `POST /threads/:id/message` |
-| `streaming_sse` | SSE envelope per `references/streaming-and-hitl.md`; **greenfield MUST** ship `GET /dev-chat` gated by `DEV_CHAT_ENABLED` (local-only) |
+| `streaming_sse` | SSE envelope per `references/streaming-and-hitl.md`; **greenfield MUST** ship `GET /dev-chat` gated by `DEV_CHAT_ENABLED` (local-only); JSON planner hops **MUST** emit operator `thinking` from state `userFacingIntent` |
 | HITL | `interrupt()` + `POST /threads/:id/resume` with `Command({ resume })` |
 
 Brownfield missing dev-chat: recommend add — not Critical. Postman synced with live routes.
 
 ### Phase 7 — Observability
 
-Wire `references/observability.md`: `initDb`, `runStorage`, `logLlmCall`, `logToolExecution`. LangSmith and OTel are opt-in.
+Wire `references/observability.md`: `initDb`, `runStorage`, `logLlmCall`, `logToolExecution`, persist `turn_decisions`. LangSmith and OTel are opt-in.
 
 ### Phase 8 — Evals and review
 
@@ -300,6 +305,8 @@ Stay here for diagnosis, spec, placement, governance design. `ns-coder` for diff
 
 ## Forbidden
 
+- Emitting planner `userFacingIntent` as `response_streaming` or as Markdown in `messages` (SSE `thinking` only; composer remains sole Markdown writer)
+- Writing `userFacingIntent` in a language other than the current user message (e.g. English progress when the operator wrote Portuguese)
 - Persisting composed system/persona prompt (`base_invariant + injected`) — or secrets/API keys — in graph state, checkpointer, or durable `messages` (rebuild system text per invoke)
 - Treating bootstrap / `.env` / `configurable.locale` as primary locale SoT, or persisting sticky thread locale (use conversation-observed `turnLocale` + Intl)
 - Passing unbounded tool/MCP output into `state.messages`

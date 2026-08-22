@@ -31,6 +31,8 @@ Three eval types before production-ready.
 
 Cheaper than full benchmark — CI on every prompt change.
 
+JSON planner hops: also assert `userFacingIntent` present, language matches last human message, and line ≠ `intent`.
+
 ## 3. Memory impact eval
 
 **Measures:** A/B memory on vs `MEMORY_DISABLED=1`.

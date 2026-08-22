@@ -11,6 +11,7 @@
 | `architecture` | react \| react_bounded \| plan_execute \| reflection \| supervisor \| rag_qa |
 | `interaction_mode` | sync_json \| streaming_sse |
 | `recursion_limit` | {{number}} |
+| `decision_record` | `docs/specs/agent-architecture.md` (or `n/a` + reason if architect skipped) |
 
 ## Objective
 
@@ -42,7 +43,7 @@ Ordered layers (see `references/prompt-and-capability-injection.md`):
 6. Skill auto-inject — {{skill ids or none}}
 7. Ephemeral runtime nudge — system section only (never fake HumanMessage)
 
-**Compose invariant:** each LLM turn rebuilds system text as `base_invariant` (motor: gather MUST NOT emit user-facing Markdown; composer sole-writer; tool discipline; format numbers/dates for the user's language this turn — conversation-observed locale) + `injected` (product persona/tone). Do **not** persist the composed system/persona string in graph state, checkpointer, or durable `messages`. A summary `SystemMessage` at index 0 is allowed and is **not** the full system prompt — see `references/message-content-blocks.md`. Reply locale/formatting is **not** the product `injected` string: resolve ephemeral `turnLocale` via `resolveConversationLocale` (see `references/evidence-and-fidelity.md`).
+**Compose invariant:** each LLM turn rebuilds system text as `base_invariant` (motor: gather MUST NOT emit user-facing Markdown; composer sole-writer; JSON planner `userFacingIntent` is SSE `thinking` not Markdown; tool discipline; format numbers/dates for the user's language this turn — conversation-observed locale) + `injected` (product persona/tone). Do **not** persist the composed system/persona string in graph state, checkpointer, or durable `messages`. A summary `SystemMessage` at index 0 is allowed and is **not** the full system prompt — see `references/message-content-blocks.md`. Reply locale/formatting is **not** the product `injected` string: resolve ephemeral `turnLocale` via `resolveConversationLocale` (see `references/evidence-and-fidelity.md`).
 
 Compose helper: `{{module path}}` (outside god-node).
 
@@ -64,6 +65,10 @@ Optional when modes vary per turn — mode table (`mode | injected source | outp
   // turnDecisions?: Record<string, unknown>[];
   // turnLocale?: string | null; // ephemeral — clear each turn; conversation-observed
   // currencyHint?: string | null;
+  // JSON planner / analyst hops (MUST when streaming_sse + structured executionPlan, no bindTools on that hop):
+  // analysis?: { intent?: string; userFacingIntent?: string; /* domain slots */ } | null;
+  // executionPlan?: { status: string; actions: unknown[] } | null;
+  // analystNarration?: string[]; // optional duplicate-guard for operator lines
   {{custom_fields}}
 }
 ```
@@ -76,8 +81,10 @@ Optional when modes vary per turn — mode table (`mode | injected source | outp
 | `discoveryBrief` | Discovery tools | Branch on found/absent — no hallucinated entities |
 | `externalError` | MCP/auth/classified failures | Prefer over generic clarify |
 | `turnDecisions` | Router/gather audit | Observability + optional user transparency |
+| `userFacingIntent` (or `analysis.userFacingIntent`) | JSON planner/analyst hop | Operator language = current user message. **Not** composer Markdown — HTTP emits SSE `thinking` from this field |
+| `executionPlan` | Same hop | Executor reads actions |
 
-**Sole writer:** exactly one node (`composer`) emits user-facing Markdown. Gather may emit tool calls only.
+**Sole writer:** exactly one node (`composer`) emits user-facing Markdown / `response_streaming`. Gather/planner may emit tool calls and **operator progress via SSE `thinking` from state** — never Markdown answers. `references/streaming-and-hitl.md`.
 
 ### Node id vs state channel
 
@@ -91,7 +98,7 @@ Example `react_bounded` mapping (adjust if a channel key collides):
 | ------- | ----------------- | ----- |
 | `intent_classify` | `intent` | `{ intent: { speechAct, needsData } }` |
 | `context_compact` | `messages` | Node id OK only if state has no `context_compact` channel |
-| `gather` | `messages`, `dataBundle`, … | Or `analyst_agent` if `gather` is a channel |
+| `gather` | `messages`, `dataBundle`, `executionPlan`, `userFacingIntent` / `analysis`, … | Or `analyst` if `gather` is a channel; JSON hops write plan + operator intent |
 | `composer` | `messages` | Sole user-facing writer |
 
 ## Nodes
@@ -125,7 +132,7 @@ flowchart TD
 | Layer | Mechanism |
 | ----- | --------- |
 | Short | LangGraph checkpointer (`postgres` prod, `memory` tests) |
-| Long | {{none \| store namespace \| RAG}} |
+| Long | {{**none** (default) \| store namespace \| RAG}} — enable store only if the same user/context repeats across sessions |
 | Context window | trim + optional summarize — tool cap vs skill-body cap |
 
 ## Capabilities — bind / inject

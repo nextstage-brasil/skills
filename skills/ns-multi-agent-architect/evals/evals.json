@@ -4,19 +4,25 @@
     {
       "id": 1,
       "prompt": "I want to build a bot for my company. Not sure where to start — maybe LangGraph or CrewAI?",
-      "expected_output": "Agent posts ~200-word summary, asks save path, writes self-contained handoff report with interview record, functional requirements, state schema, and LangGraph mermaid.",
+      "expected_output": "Agent posts ~200-word summary, writes docs/specs/agent-architecture.md (no path prompt) with Reference Architecture (colored Mermaid + component table), Subtask Decomposition grid (Type, P1, P2, P3, component per row), Trade-off Budget table (five components), Architecture Change Signal (one sentence), Why this design, interview record, functional requirements, state schema, and LangGraph mermaid. Grill turns include a use-case Example.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "I need a multi-agent system that researches competitors, drafts a report, and requires my approval before sending email to clients. We have 2 weeks for MVP but it must not send email without me clicking approve.",
-      "expected_output": "Agent asks ONE question at a time with recommended answers; after sufficient turns posts ~200-word on-screen recommendation, asks for save path, then writes full report with LangGraph mermaid diagram and tooling stack.",
+      "expected_output": "Agent asks ONE question at a time with recommended answers and a use-case Example; after sufficient turns posts ~200-word on-screen recommendation, then writes docs/specs/agent-architecture.md with Reference Architecture, Trade-off Budget, Architecture Change Signal, LangGraph mermaid, tooling stack, and subtask classification grid.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Three specialist agents — researcher, writer, editor — working in sequence on blog posts. No human review, just fast iteration. Small team, Python okay.",
-      "expected_output": "Agent locks in context, asks ONE question at a time; posts ~200-word recommendation, asks save path, writes full report with CrewAI team structure table and tooling stack.",
+      "expected_output": "Agent detects the flow is already broken down, skips decomposition with a one-line reason, fills the subtask grid from the given steps, classifies each row, locks trade-off budget and change signal, then writes docs/specs/agent-architecture.md with Reference Architecture, CrewAI team structure table, and tooling stack.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "We already have a LangGraph agent running in production but nobody ever documented why it was designed this way. Can you reconstruct the architecture decisions?",
+      "expected_output": "Agent enters reverse mode: reads graph nodes, tools, interrupts and any docs/context artifacts, drafts Reference Architecture and subtask grid with source=code and status=inferred. Must not map the whole compiled graph to Orchestrator; LLM nodes map to Model. Infers trade-off budget and change signal with confirmation when weak, grills only what code cannot prove, then writes docs/specs/agent-architecture.md flagging contradictions such as irreversible actions without a gate.",
       "files": []
     }
   ]

@@ -4,7 +4,7 @@ description: (NS) Write and edit human-facing project documentation — README, 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.4"
 depends:
   - ns-harness
 ---
@@ -54,6 +54,8 @@ Create subfolders only when they match project convention.
 ## Integration
 
 When called from `ns-spec-driven`, document **delivered behavior** — do not invent requirements.
+
+Agent **why** (reference architecture, agent vs code, trade-offs, topology, HITL, change signal) lives in `docs/specs/agent-architecture.md`. Link it. Do not copy the interview or rewrite the decision record in README. `docs/specs/agent.md` is behavior (`ns-living-spec`), not this ADR.
 
 ## Forbidden
 

@@ -159,6 +159,22 @@
         "Mentions graph-spec sync (Spec Sync Gate) for topology, modes, and prompt composition",
         "Hands off implementation to ns-coder rather than writing agent-api code directly"
       ]
+    },
+    {
+      "id": 13,
+      "prompt": "Greenfield LangGraph agent-api, streaming_sse. Analyst node returns JSON executionPlan (no bindTools) and we need the UI to show what the analyst is trying to do while tools run. How should graph-spec and SSE work?",
+      "expected_output": "Agent requires userFacingIntent (or analysis.userFacingIntent) plus executionPlan on AgentState; userFacingIntent MUST match the current user-message language; hop 0 thinking from presentation copy; later hops emit thinking from previous userFacingIntent at node entry before invoke; not response_streaming; composer sole Markdown writer; executor tool_started/tool_finished; cites planner-contract and streaming-and-hitl.",
+      "files": [],
+      "assertions": [
+        "Requires userFacingIntent (or analysis.userFacingIntent) persisted on graph state with executionPlan",
+        "Requires userFacingIntent language to match the current user message (not English unless the user wrote English)",
+        "States hop 0 uses generic presentation/locale copy, not LLM text",
+        "States later hops emit SSE thinking from the previous hop's userFacingIntent at planner node entry",
+        "Forbids putting that line on response_streaming or as the Markdown answer",
+        "Keeps composer as sole user-facing Markdown / response_streaming writer",
+        "Mentions executor tool_started and/or tool_finished",
+        "Cites planner-contract.md and/or streaming-and-hitl.md"
+      ]
     }
   ]
 }

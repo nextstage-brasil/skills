@@ -28,6 +28,7 @@
 2. Prerequisites
 3. Install / run (verified commands)
 4. Link to deeper `docs/` — not a dump of every detail
+5. Agent-api / multi-agent: one sentence + link to `docs/specs/agent-architecture.md` (**Reference Architecture**, **Why this design**, **Trade-off Budget**; `graph-spec.md` for runtime). Not a second architecture essay in README.
 
 ## Maintenance
 

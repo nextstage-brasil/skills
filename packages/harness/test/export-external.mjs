@@ -2,7 +2,7 @@ import { mkdtempSync, readFileSync, existsSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { exportExternal, validateExternalDir } from '../src/exportExternal.js';
+import { exportExternalAll, validateExternalDir } from '../src/exportExternal.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(__dirname, '..', '..', '..');
@@ -14,15 +14,15 @@ function assert(condition, message) {
 const outDir = join(mkdtempSync(join(tmpdir(), 'ns-export-')), 'external');
 
 try {
-  const result = exportExternal({
-    preset: 'project-manager',
+  const result = exportExternalAll({
     repoRoot,
     outDir,
     zip: false,
   });
 
-  assert(result.skills.length === 1, `expected 1 face skill, got ${result.skills.join(',')}`);
-  assert(result.skills[0] === 'ns-project-manager', 'face must be ns-project-manager');
+  assert(result.skills.length === 2, `expected 2 skills, got ${result.skills.join(',')}`);
+  assert(result.skills.includes('ns-project-manager'), 'missing ns-project-manager');
+  assert(result.skills.includes('ns-multi-agent-architect'), 'missing ns-multi-agent-architect');
 
   const errors = validateExternalDir(outDir);
   assert(errors.length === 0, errors.join('\n'));
@@ -47,6 +47,12 @@ try {
   const faceRouter = readFileSync(join(face, 'SKILL.md'), 'utf8');
   assert(faceRouter.includes('references/ns-commercial-budget/workflow.md'), 'face router paths not rewritten');
   assert(!enricher.includes('../../gitlab/'), 'gitlab skill path leaked');
+
+  const architectDir = join(outDir, 'ns-multi-agent-architect');
+  const architectMd = readFileSync(join(architectDir, 'SKILL.md'), 'utf8');
+  assert(architectMd.includes('Standalone import'), 'standalone delivery note missing');
+  assert(existsSync(join(architectDir, 'references', 'reference-architecture.md')), 'reference-architecture.md missing');
+  assert(!existsSync(join(architectDir, 'evals')), 'evals must not export');
 
   console.log('export-external smoke ok');
 } finally {

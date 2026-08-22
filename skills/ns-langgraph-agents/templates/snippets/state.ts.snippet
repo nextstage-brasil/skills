@@ -19,6 +19,10 @@ export const AgentState = Annotation.Root({
   // Ephemeral per turn — clear in guard; NEVER sticky thread persona locale:
   // turnLocale: Annotation<string | null>({ default: () => null }),
   // currencyHint: Annotation<string | null>({ default: () => null }),
+  // JSON planner hops (uncomment when graph-spec declares structured executionPlan):
+  // analysis: Annotation<{ intent?: string; userFacingIntent?: string } | null>({ default: () => null }),
+  // executionPlan: Annotation<{ status: string; actions: unknown[] } | null>({ default: () => null }),
+  // analystNarration: Annotation<string[]>({ default: () => [] }),
 });
 
 export type AgentStateType = typeof AgentState.State;

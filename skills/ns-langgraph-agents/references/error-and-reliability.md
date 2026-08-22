@@ -12,6 +12,8 @@
 
 MCP: distinguish `CallToolResult(isError=true)` from protocol failure. Only latter may crash without tool message.
 
+Empty lookup: same success keys, explicit `null`s, short next-step hint — not a generic throw. “Not found” ≠ “does not exist.”
+
 ## Circuit breaker (structured planners)
 
 Model returns JSON plans:
@@ -44,9 +46,9 @@ Model returns JSON plans:
 
 | Env | Default | On exceed |
 | --- | ------- | --------- |
-| `TURN_LATENCY_BUDGET_MS` | 60000 | SSE/HTTP `failed`, `error_code: turn_latency_budget_exceeded` |
+| `TURN_LATENCY_BUDGET_MS` | 60000 | Stop new LLM/tool work; composer on existing evidence, else `failed` + `turn_latency_budget_exceeded` |
 
-Tool budget OK but turn slow: explicit timeout — not silent stall or client-only `cancelled`.
+Tool budget OK but turn slow: explicit timeout — not silent stall or client-only `cancelled`. Partial reply beats empty `failed` when channels already hold evidence.
 
 ### Gather LLM failure
 
@@ -60,6 +62,8 @@ No silent `break` on gather `invoke` fail. Set `errorCode` or `externalError`; r
 | Summarizer light model fails | Trim only |
 | OTel exporter down | Postgres audit continues |
 | LangSmith off | `buildRunConfig` still sets `thread_id` |
+| Low confidence / empty evidence | Composer clarify or reduced answer; do not invent; log reason on `turnDecisions` |
+| Turn latency budget hit | Composer on current channels; `failed` only if nothing to narrate |
 
 ## Idempotency
 

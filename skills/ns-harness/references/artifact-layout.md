@@ -29,6 +29,7 @@ docs/specs/          # first living-spec delivery
 | Commercial budget (client) | `docs/versions/{version_san}/pm/commercial-budget-costumer.md` (optional; header: `{version_san}-costumer`) |
 | Living spec index | `docs/specs/INDEX.md` |
 | Domain spec | `docs/specs/{domain}.md` |
+| Agent architecture ADR | `docs/specs/agent-architecture.md` (`ns-multi-agent-architect`; living + Changelog — not under `docs/versions/`) |
 
 ## Product context (`docs/context/`)
 

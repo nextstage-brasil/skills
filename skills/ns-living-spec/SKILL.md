@@ -4,7 +4,7 @@ description: (NS) Consolidate delivered deltas into living domain specs under do
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.3"
+  version: "1.4"
 depends:
   - ns-harness
 ---
@@ -76,6 +76,8 @@ Map features to canonical domains (examples):
 | Integrations      | `integrations.md`  |
 | Agent / graph     | `agent.md`         |
 
+`docs/specs/agent-architecture.md` is the living ADR (`ns-multi-agent-architect`). Not a domain spec. Do not treat as `{domain}.md`.
+
 Naming: English, kebab-case, singular (`user-profile.md`). Multi-domain features update multiple specs.
 
 **Ad-hoc:** map from `{task_description}` + diff only — no invent unrelated domains.
@@ -141,6 +143,7 @@ Reason: {missing docs/specs/|non-behavioral diff|chrome polish only}
 - Ad-hoc must not invent `{version_san}`
 - Appearance must not paste normative Element|How tables into specs
 - Appearance must not require Code Review Approved
+- Do not overwrite `docs/specs/agent-architecture.md` (`ns-multi-agent-architect` living ADR). `agent.md` is behavior only
 
 ## Related skills
 

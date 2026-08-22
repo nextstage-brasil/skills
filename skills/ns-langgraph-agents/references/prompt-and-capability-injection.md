@@ -10,7 +10,7 @@ Read before system-prompt compose, skill auto-inject, MCP bind, or local tool re
 
 | Piece | Name | Owns |
 | ----- | ---- | ---- |
-| Motor | `base_invariant` | Rigid factory rules — gather MUST NOT emit user-facing Markdown; composer sole-writer; tool discipline; bind/truncate doctrine; format numbers/dates for user’s language **this turn** (conversation-observed locale, not fixed product locale) |
+| Motor | `base_invariant` | Rigid factory rules — gather MUST NOT emit user-facing Markdown; composer sole-writer; JSON planner `userFacingIntent` is a **state field for SSE `thinking`**, not Markdown; tool discipline; bind/truncate doctrine; format numbers/dates for user’s language **this turn** (conversation-observed locale, not fixed product locale) |
 | Product | `injected` | Persona, tone, domain product prompt |
 
 **REQUIRED compose each LLM invoke:** `base_invariant + injected`. Rebuild for invoke. **FORBIDDEN** store composed system/persona text in graph state, checkpointer, or durable `messages` history.
@@ -35,7 +35,7 @@ Compose via helper outside god-node (`composeSystemPrompt`). Layers feed `base_i
 | 6 | Optional skill body auto-inject | Skill markdown when product policy says so | Phase-dependent | Body-only; exclusivity below |
 | 7 | Ephemeral runtime nudge | System section (`Runtime directive`) | Ephemeral `injected` / phase prompt | **Never** fake `HumanMessage` |
 
-Motor invariants (gather-no-Markdown, composer sole-writer, tool discipline) always in `base_invariant` for that phase — gather vs composer may use different motor fragments; still never persist composed result.
+Motor invariants (gather-no-Markdown, composer sole-writer, tool discipline, planner operator line via SSE not messages) always in `base_invariant` for that phase — gather vs composer may use different motor fragments; still never persist composed result. Planner JSON schema (`userFacingIntent` + `executionPlan`) lives in the hop output contract — `templates/contracts/planner-contract.md`. Planner prompt **MUST** require `userFacingIntent` in the **same language as the current user message**.
 
 ### Session overlay vs canonical body
 
