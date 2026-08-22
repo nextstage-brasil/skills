@@ -200,7 +200,7 @@ Rules:
 | `references/09-nl-to-workflow.md` | 10 |
 | `references/10-okr-aligner.md` | 11 |
 | `references/11-artifact-persistence.md` | all (docs/) |
-| `references/pm-persist.md` | versioned PM artifacts → `docs/versions/{version_san}/pm/`; propose move + update refs |
+| `references/pm-persist.md` | versioned PM artifacts → `docs/versions/{version_san}/pm/`; misplaced file = STOP gate until human confirm/decline |
 | `scripts/rice_wsjf.py` | 3 |
 | `scripts/pert_montecarlo.py` | 5 |
 | `scripts/flow_metrics.py` | 6 |

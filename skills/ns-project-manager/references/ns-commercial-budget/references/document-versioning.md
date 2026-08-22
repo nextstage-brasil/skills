@@ -18,7 +18,7 @@ docs/versions/{version_san}/pm/commercial-budget-costumer.md
 
 Create `pm/` if missing. Overwrite each file on regenerate. Do **not** use timestamped filenames. Do **not** write these files at the version folder root (beside `requirements.md`).
 
-**Misplaced copy:** if the file already exists outside `pm/`, follow `../../pm-persist.md` — search references, **propose** the move, wait. Do not silent-move or write a second copy.
+**Misplaced copy:** if the file already exists outside `pm/` (or both root and `pm/` exist), follow `../../pm-persist.md` — **STOP gate**. Search references, propose from-path → to-path, ask confirm/decline, **end the turn**. Do not write, move, delete, or duplicate until the human answers that gate explicitly. `proceed` / assumptions / silence are not confirmation.
 
 **Versão / referência** in client header: `{version_san}-costumer`.
 

@@ -92,7 +92,7 @@ Default official commitment = **calendar P85 of productivity scenario P100**, un
 
 Default base: `docs/versions/{version_san}/pm/`
 
-Before write: `../pm-persist.md` — if the same basename already exists outside `pm/`, search references, propose the move, wait; do not silent-move.
+Before write: `../pm-persist.md` — if the same basename already exists outside `pm/` (or both root and `pm/` exist): **STOP gate**. Search refs, propose from→to, ask confirm/decline, end the turn. Do not write/move/delete until the human answers that gate.
 
 | File | Role |
 |------|------|
@@ -132,7 +132,7 @@ Chat-only only if human says so. Confirm path once if persistence not yet agreed
 | File | When |
 |------|------|
 | `references/intake.md` | Missing inputs |
-| `../pm-persist.md` | Before persist — if file is outside `pm/`, propose move + update refs |
+| `../pm-persist.md` | Before persist — misplaced file = STOP gate until human confirm/decline |
 | `references/calculations.md` | Before MC / calendar math |
 | `references/document-structure.md` | Before writing markdown |
 | `../../scripts/pert_montecarlo.py` | Every scenario MC run |

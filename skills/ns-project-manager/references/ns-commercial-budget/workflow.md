@@ -103,7 +103,7 @@ Read `references/clarification.md`.
 
 ### 4. Persist
 
-Create `pm/` if missing. Before write: `../pm-persist.md` — if the same basename already exists outside `pm/` under this version, search references, propose the move, wait; do not silent-move.
+Create `pm/` if missing. Before write: `../pm-persist.md` — if the same basename already exists outside `pm/` under this version (or both root and `pm/` exist): **STOP gate**. Search refs, propose from→to, ask confirm/decline, end the turn. Do not write/move/delete until the human answers that gate. `proceed` / assumptions / silence are not confirmation.
 
 **Internal (always):**
 
@@ -148,6 +148,6 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 | `references/macro-activities.md` | Before lifecycle table |
 | `references/risk-margin.md` | Before risks / margin % |
 | `references/document-versioning.md` | Before persist |
-| `../pm-persist.md` | Before persist — canonical `pm/` path; propose move + update refs if misplaced |
+| `../pm-persist.md` | Before persist — canonical `pm/` path; misplaced file = STOP gate until human confirm/decline |
 | `references/anti-hallucination.md` | Before Features / estimates |
 | `assets/commercial-budget-internal.template.md` | Document structure (internal) |

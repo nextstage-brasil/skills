@@ -26,6 +26,8 @@ Highest-value gaps for this scope:
 7. **Acceptance depth** — must-have SLAs or volumes stakeholder will commit (do not invent).
 8. **Persist or chat-only** — write/overwrite `docs/versions/{version_san}/pm/commercial-budget-internal.md` (header bumps Sequência + Gerado em)?
 
+Misplaced-file **STOP gate** (`../../pm-persist.md`) is **not** a clarification question and is **not** skipped by `proceed with assumptions` / `quick mode`. Persist stays blocked until the human explicitly confirms or declines the path action.
+
 Do **not** invent rates. Skip rates question when human already said ignore pricing.
 
 ## Framing
