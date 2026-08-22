@@ -6,5 +6,7 @@
   "frontend-prototype": "presets/frontend.json",
   "frontend": "presets/frontend.json",
   "agents": "presets/agents.json",
+  "agent-creator": "presets/agents.json",
+  "agents-api": "presets/agents.json",
   "full": "presets/full.json"
 }

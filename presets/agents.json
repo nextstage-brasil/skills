@@ -3,5 +3,8 @@
   "requires_harness": ">=1.0.0",
   "description": "Spec-driven + LangGraph labs + LangChain/MCP/eval externals",
   "extends": "spec-driven",
-  "includes": ["skills/ns-multi-agent-architect", "skills/ns-langgraph-agents"]
+  "includes": [
+    "skills/ns-multi-agent-architect",
+    "skills/ns-langgraph-agents"
+  ]
 }
