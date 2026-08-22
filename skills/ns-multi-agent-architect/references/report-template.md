@@ -205,14 +205,40 @@ Define the structured error payload returned to the requester on fail-fast or in
 
 Include this heading and mermaid **only** if LangGraph is the chosen framework. If CrewAI won: skip this entire subsection. Do not add a stub.
 
-List **every** graph node. Label or group each node by doctrine block. Five-block Mermaid above stays role-level (one box each). Agent Design lists only `agent` rows.
+List **every** graph node. Paint each node with the five-block `classDef` (do not wrap nodes in doctrine `subgraph`s). Five-block Mermaid above stays role-level (one box each, doctrine title on line 1). Agent Design lists only `agent` rows.
 
-**Node → block legend** (required on this mermaid): rule/router = Orchestrator; LLM = Model; `interrupt` = Approval Gate.
+**MUST — LangGraph node flowchart (readable):**
+
+- One `flowchart TB` column: happy path top→bottom. Cycle as a single back-edge (`executor` → earlier node). No `subgraph` around doctrine blocks (cross-cluster edges are unreadable).
+- Paint **nodes** with the same `classDef` as the five-block diagram: Orchestrator = `orchestrator` (purple), LLM = `model` (orange, including `context_manager`). START/END = `term` (gray).
+- Approval Gate = **dashed** edges (`-.->`) labeled `interrupt` / error code; resume = self-loop or back to the same node. Do **not** add a cluster of interrupt boxes.
+- Compact legend table under the mermaid (color → block → node ids).
+
+**Node → block legend** (required): rule/router = Orchestrator; LLM = Model; `interrupt` = Approval Gate (dashed edges, not a box cluster).
 
 ```mermaid
-flowchart TD
-    [Every node, happy path, and error/interrupt edge — each labeled or grouped by doctrine block]
+flowchart TB
+  START([START]) --> guard
+  guard -->|ok| context_manager
+  context_manager --> nextNode
+  %% happy path continues...
+  lastNode --> END([END])
+  guard -.->|ACL_DENIED / HITL| respond
+  someNode -.->|interrupt / resume| someNode
+  classDef orchestrator fill:#7B68EE,stroke:#4B0082,color:#fff
+  classDef model fill:#FF8C42,stroke:#CC5500,color:#fff
+  classDef term fill:#95A5A6,stroke:#5D6D7E,color:#fff
+  class START,END term
+  class guard,mcp_catalog,resolve_entities,validate_plan,executor,respond orchestrator
+  class context_manager,analyst,composer model
 ```
+
+| Color | Block | Node ids (this graph) |
+| ----- | ----- | --------------------- |
+| Purple | Orchestrator | [rule/router node ids] |
+| Orange | Model + Tools/RAG | [LLM node ids] |
+| Gray | — | START, END |
+| Dashed edge | Approval Gate | `interrupt` / error codes |
 
 ### CrewAI team structure
 

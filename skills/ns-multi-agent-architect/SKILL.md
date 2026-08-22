@@ -4,7 +4,7 @@ description: (NS) Interview to map the five-block reference architecture, decomp
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.16"
+  version: "1.17"
 ---
 
 # Multi-Agent Architect
@@ -159,7 +159,7 @@ File-only extras — **chosen framework only**. Omit the other heading. No "N/A"
 
 | Framework | Extra (include iff chosen) |
 | --------- | -------------------------- |
-| **LangGraph** | Mermaid `flowchart`: every node, happy path, error/interrupt edges; node→block legend (`references/reference-architecture.md` — LangGraph container vs doctrine blocks) |
+| **LangGraph** | Mermaid `flowchart TB`: every node, one-column happy path, dashed error/interrupt edges; paint **nodes** with the same `classDef` as the five-block diagram; compact node→block legend. Layout MUST: `references/report-template.md` (LangGraph flow diagram). Forbidden: `subgraph` per doctrine block on this flowchart (`references/reference-architecture.md` — LangGraph container vs doctrine blocks) |
 | **CrewAI** | Team structure table: crew names, agents per crew, process type, task handoffs |
 
 Always in file:
@@ -180,6 +180,7 @@ Chat ~200 words: no mermaid, no interview table, no full tooling tables.
 - Not `docs/specs/agent.md` (behavior; `ns-living-spec`)
 - Reopen this skill only when an architecture decision changes (topology, HITL, MCP contract, change signal). Implementation-only: `ns-langgraph-agents` + `graph-spec.md`; ADR intact
 - No implementation code unless user asks after report
+- LangGraph node flowchart: `subgraph` per doctrine block (Orchestrator / Model / Gate clusters) = forbidden — paint nodes, do not wrap them
 - Not requirements generation — architecture + agent design only
 - Rich context upfront: lock those branches, skip, start at highest-uncertainty gap
 

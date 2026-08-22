@@ -30,6 +30,8 @@ Classify subtasks first. Then assemble the graph.
 
 Anti-pattern: list LLM nodes under Orchestrator. Treat compiled graph as Orchestrator. Forbidden.
 
+Anti-pattern: wrap the LangGraph **node** flowchart in `subgraph` per doctrine block. Cross-cluster edges become unreadable. Paint nodes with the five-block `classDef`; Approval Gate = dashed edges. The only canonical `subgraph` is Observability on the five-block diagram.
+
 ## Interview — Step 2 (reference mapping)
 
 After objective and end-to-end journey (Step 1), walk the five blocks **one question per turn**:
