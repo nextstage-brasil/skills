@@ -97,7 +97,7 @@ Ask only if still open after integrations:
 
 When user locks **LangGraph** and scope includes **MCP or many external tools**:
 
-- Recommend **`plan_execute`** Decision Suite motor (`guard → context_manager → mcp_catalog → analyst ⇄ executor → composer → respond`) — not open ReAct; not `intent_classify`
+- **Suggest** `plan_execute` (`guard → context_manager → mcp_catalog → analyst ⇄ executor → composer → respond`) as the usual start for MCP — not a rule; lock in the ADR / `graph-spec.md`. Do not invent `intent_classify` unless spec says so
 - Sequential only when the next worker needs the previous **output** — calendar order is not a reason to serialize
 - Note greenfield MUST items from `ns-langgraph-agents`: dev-chat, tool budgets, evidence channels, JSON-planner `userFacingIntent` + SSE `thinking` when the gather/analyst hop is structured plan (no `bindTools`)
 - Simple local-tools MVP may still use open ReAct — do not over-prescribe topology for trivial tool count
