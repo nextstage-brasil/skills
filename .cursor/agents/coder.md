@@ -19,11 +19,11 @@ You implement work **in the nextstage-brasil/skills catalog repo**. Not a consum
 
 **Once per cold start.** Mid-session: no re-read of docs already in context unless file changed on disk.
 
-| When | Action |
-|------|--------|
-| Cold start | Full boot |
-| Continuing; files unchanged | Skip `AGENTS.md`, rules, skill-creator, caveman, compress ref |
-| Continuing; those files changed | Re-read changed files only |
+| When                            | Action                                                        |
+| ------------------------------- | ------------------------------------------------------------- |
+| Cold start                      | Full boot                                                     |
+| Continuing; files unchanged     | Skip `AGENTS.md`, rules, skill-creator, caveman, compress ref |
+| Continuing; those files changed | Re-read changed files only                                    |
 
 Cold-start steps:
 
@@ -113,20 +113,20 @@ Routing changes in `ns-code-*` → update diagram via `.cursor/skills/code-routi
 
 ## Available skills (load when relevant)
 
-| Need                          | Skill / path                                                                                                |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Create/improve catalog skills | `~/.agents/skills/skill-creator/SKILL.md`                                                                   |
-| Compress skill prose          | `~/.agents/skills/caveman/SKILL.md` (ultra) + `skills/ns-harness/references/agent-artifact-compress.md`     |
-| Code routing Mermaid          | `.cursor/skills/code-routing-diagram/SKILL.md`                                                              |
-| Review score/severity rubric  | `skills/ns-reviewer/SKILL.md` — **Score gate** section only (never consumer Session boot / issue mode) |
-| Naming exception              | `.cursor/rules/mcp-gitlab-usage-naming.mdc`                                                                 |
-| Migration / path rules        | `skills/_meta/MIGRATION.md`                                                                                 |
+| Need                          | Skill / path                                                                                            |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Create/improve catalog skills | `~/.agents/skills/skill-creator/SKILL.md`                                                               |
+| Compress skill prose          | `~/.agents/skills/caveman/SKILL.md` (ultra) + `skills/ns-harness/references/agent-artifact-compress.md` |
+| Code routing Mermaid          | `.cursor/skills/code-routing-diagram/SKILL.md`                                                          |
+| Review score/severity rubric  | `skills/ns-reviewer/SKILL.md` — **Score gate** section only (never consumer Session boot / issue mode)  |
+| Naming exception              | `.cursor/rules/mcp-gitlab-usage-naming.mdc`                                                             |
+| Migration / path rules        | `skills/_meta/MIGRATION.md`                                                                             |
 
 ## Closure — code review (mandatory)
 
 Before reporting done:
 
-1. Primary: dispatch Cursor Task `senior-tech-lead-reviewer` on the working-tree diff against `AGENTS.md` + rules. If Task is unavailable, apply the same Score gate in-session.
+1. Primary: dispatch `.cursor/agents/reviewer.md`on the working-tree diff against `AGENTS.md` + rules. If Task is unavailable, apply the same Score gate in-session.
 2. Rubric: apply the **Score gate** from `skills/ns-reviewer/SKILL.md` (severity + overall 1–10). Do **not** run that skill's harness Session boot, issue mode, or GitLab posting — this is the catalog repo.
 3. **Approved** only when: zero Criticals **and** overall score **≥ 9**/10 (target 10). Score ≤ 8 → Rejected even with zero Criticals.
 4. On Rejected with rounds left: fix Criticals / score-blockers with minimal diffs; **mandatory re-review**. Max 3 rounds; then report Blocked if still failing.
