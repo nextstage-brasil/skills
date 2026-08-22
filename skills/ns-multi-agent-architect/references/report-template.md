@@ -14,9 +14,11 @@ Then write the living ADR to **`docs/specs/agent-architecture.md`** (create `doc
 
 The file must be **self-contained**: a developer who never saw the interview can read it and start implementation. Include every question asked, the recommended answer offered, the user's actual reply, and the locked decision derived from it. Also include the user's initial unprompted context.
 
-Write the complete report to `docs/specs/agent-architecture.md` using the **section schema** below. The English headings in this template are the schema for the agent — **the written file** translates every heading, table header, and cell to the human's locked language (Language rule in `SKILL.md`). Fill every **applicable** section — no placeholder text. If a framework-specific section does not apply, **omit the heading**. Do not write "does not apply" / "N/A" under an unused CrewAI or LangGraph heading. The one-line rejection in **Framework Recommendation** is the only mention of the unused framework.
+Write the complete report to `docs/specs/agent-architecture.md` using the **section schema** below. The English headings in this template are the schema for the agent — **the written file** translates every heading, table header, and cell to the human's locked language (Language rule in `SKILL.md`), **except** doctrine ids (Gateway, Orchestrator, Model + Tools/RAG, Approval Gate, Observability): they stay English in the Component column and as the first line of each Mermaid box. Fill every **applicable** section — no placeholder text. If a framework-specific section does not apply, **omit the heading**. Do not write "does not apply" / "N/A" under an unused CrewAI or LangGraph heading. The one-line rejection in **Framework Recommendation** is the only mention of the unused framework.
 
-**Component table:** id column = doctrine names (Gateway, …). Role column = product prose only in locked language. Status column header + values in locked language (`Exists today?` / `yes` become the user's equivalents — never leave English headers beside non-English cells).
+**Component table:** id column = doctrine names (Gateway, …) in English. Role column = product prose only in locked language. Status column header + values in locked language (`Exists today?` / `yes` become the user's equivalents — never leave English headers beside non-English cells).
+
+**Mermaid boxes:** first line = doctrine id (English). Second line = this case's role in the locked language. Do not translate or omit the first line.
 
 ```markdown
 # Multi-Agent Architecture
@@ -38,7 +40,7 @@ Write the complete report to `docs/specs/agent-architecture.md` using the **sect
 
 ## Reference Architecture
 
-Canonical AI-first diagram for this case. Structure is fixed; labels describe this product.
+Canonical AI-first diagram for this case. Structure is fixed; first line of each box is the doctrine id; second line describes this product.
 
 ```mermaid
 flowchart LR

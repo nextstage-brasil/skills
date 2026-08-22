@@ -4,7 +4,7 @@ description: (NS) Interview to map the five-block reference architecture, decomp
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.15"
+  version: "1.16"
 ---
 
 # Multi-Agent Architect
@@ -21,7 +21,7 @@ Lock **one** language for the whole run: the language of the human's **first** m
 
 Interview turns, ~200-word chat summary, and `docs/specs/agent-architecture.md` (titles, table headers, cell prose, changelog) = that language only. No mixed-language tables.
 
-**Doctrine ids** (Gateway, Orchestrator, Model + Tools/RAG, Approval Gate, Observability) live **only** in the Component column (or equivalent id column). Role / description cells = product prose in the locked language. Do not drop doctrine names into the sentence.
+**Doctrine ids** (Gateway, Orchestrator, Model + Tools/RAG, Approval Gate, Observability) stay English — never translate. They appear in the Component column **and** as the first line of each Mermaid box. Role / description cells and the Mermaid second line = product prose in the locked language. Do not drop doctrine names into interview sentences or role cells. Do not strip the doctrine title from the box.
 
 Proper nouns that are not doctrine labels stay: LangGraph, CrewAI, path, HTTP method, route.
 
@@ -89,7 +89,7 @@ No future-question list. After objective: **end-to-end journey**, one sentence (
 
 ### Step 2 — Reference architecture (`references/reference-architecture.md`)
 
-Five blocks, one question per turn: Gateway, Orchestrator, Model + Tools/RAG, Approval Gate, Observability. All locked: colored Mermaid once, label confirm. LangGraph: compiled graph = container; map parts in **LangGraph container vs doctrine blocks** (`references/reference-architecture.md`).
+Five blocks, one question per turn: Gateway, Orchestrator, Model + Tools/RAG, Approval Gate, Observability. All locked: colored Mermaid once; confirm **second-line** labels only (doctrine titles stay). LangGraph: compiled graph = container; map parts in **LangGraph container vs doctrine blocks** (`references/reference-architecture.md`).
 
 Reverse mode: infer from routes, graph entry, LLM nodes, `interrupt` points, audit stores. Grill unproven mapping only.
 
@@ -176,7 +176,7 @@ Chat ~200 words: no mermaid, no interview table, no full tooling tables.
 - No framework pick before interview complete
 - Three questions not on whole product — one classification per subtask row
 - Living ADR only `docs/specs/agent-architecture.md` — must include Reference Architecture (colored Mermaid), Trade-off Budget, Architecture Change Signal, Changelog
-- One language: human's opening language. No English headers with other-language cells. Doctrine names not in prose cells
+- One language: human's opening language. No English headers with other-language cells. Doctrine ids stay English in the Component column and Mermaid first line; not in prose cells or interview sentences
 - Not `docs/specs/agent.md` (behavior; `ns-living-spec`)
 - Reopen this skill only when an architecture decision changes (topology, HITL, MCP contract, change signal). Implementation-only: `ns-langgraph-agents` + `graph-spec.md`; ADR intact
 - No implementation code unless user asks after report

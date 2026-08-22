@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "I want to build a bot for my company. Not sure where to start — maybe LangGraph or CrewAI?",
-      "expected_output": "Agent posts ~200-word summary, writes docs/specs/agent-architecture.md (no path prompt) with Reference Architecture (colored Mermaid + component table), Subtask Decomposition grid (Type, P1, P2, P3, component per row), Trade-off Budget table (five components), Architecture Change Signal (one sentence), Why this design, interview record, functional requirements, state schema, and LangGraph mermaid. Grill turns include a use-case Example.",
+      "expected_output": "Agent posts ~200-word summary, writes docs/specs/agent-architecture.md (no path prompt) with Reference Architecture (colored Mermaid: English doctrine title on first line of each box, case prose on second line; component table with English doctrine ids), Subtask Decomposition grid (Type, P1, P2, P3, component per row), Trade-off Budget table (five components), Architecture Change Signal (one sentence), Why this design, interview record, functional requirements, state schema, and LangGraph mermaid. Grill turns include a use-case Example.",
       "files": []
     },
     {

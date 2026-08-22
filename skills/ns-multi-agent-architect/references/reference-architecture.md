@@ -42,11 +42,11 @@ After objective and end-to-end journey (Step 1), walk the five blocks **one ques
 
 Infer from code in reverse mode; mark `status: inferred` until confirmed.
 
-Present the colored Mermaid diagram **once** after block 5 is locked — ask the user to confirm or correct labels only.
+Present the colored Mermaid diagram **once** after block 5 is locked — ask the user to confirm or correct the **second-line** wording only (doctrine titles stay).
 
 ## Mermaid template (report file)
 
-Use this structure in the report. Replace node labels with this case's wording; keep `classDef` colors.
+Use this structure in the report. Keep `classDef` colors and the doctrine title as the **first** line of each box (English, untranslated). Replace only `[one-line role]` with this case's wording in the locked language. Do not drop or translate Gateway / Orchestrator / Model + Tools/RAG / Approval Gate / Observability.
 
 ```mermaid
 flowchart LR
@@ -75,7 +75,7 @@ flowchart LR
     class OBSN obs
 ```
 
-When Approval Gate is not used, keep the node with label `None — [reason]` (e.g. all actions reversible).
+When Approval Gate is not used, keep the first line `Approval Gate`; second line `None — [reason]` (e.g. all actions reversible). Subgraph title stays `Observability & Audit Trail`; only OBSN is case prose.
 
 ## Component mapping table (report file)
 
