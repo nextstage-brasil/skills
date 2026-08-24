@@ -9,7 +9,19 @@
 
 ## Objetivo principal da versão
 
-{Same commercial/product summary as internal doc — no engineering framing.}
+<!-- Same three-block Objetivo as internal doc — references/objective-structure.md -->
+
+### O que buscamos
+
+{Copy from internal — outcome pursued + context/scale/pain when applicable.}
+
+### O que é ({short concept name for this version})
+
+{Copy from internal — definition; optional Camada | Papel table; optional concrete example.}
+
+### O que entregamos
+
+{Copy from internal — scope paragraph + **Resultado esperado:** sentence.}
 
 ---
 

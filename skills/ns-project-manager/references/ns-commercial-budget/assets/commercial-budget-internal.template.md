@@ -9,7 +9,27 @@
 
 ## Objetivo principal da versão
 
-{Commercial/product summary — business value, who benefits, what changes in the product relationship. No tech stack or engineering area framing.}
+<!-- Mandatory three blocks: references/objective-structure.md -->
+
+### O que buscamos
+
+{Paragraph 1: outcome pursued — problem removed or capability unlocked; product/commercial language only.}
+
+{Paragraph 2 (when context exists): who is affected, scale from brief, current workaround and why it does not scale.}
+
+### O que é ({short concept name for this version})
+
+{Paragraph: plain definition of the mechanism or capability — what it does in use.}
+
+<!-- Optional when multi-layer: Camada | Papel table — stakeholder labels, not schemas/endpoints. -->
+
+<!-- Optional: concrete example grounded in persona from brief. -->
+
+### O que entregamos
+
+{Paragraph: end-to-end scope in this version — what ships, how pieces connect in product terms.}
+
+**Resultado esperado:** {One sentence — organizational outcome: scale, support load, self-service, etc.}
 
 ---
 
@@ -95,6 +115,33 @@ flowchart TD
 - [ ] {…}
 
 <!-- Repeat Feature 003…N (≤10). -->
+
+---
+
+## Notas técnicas ({source label})
+
+<!-- Internal only — omit entire section when no technical source. See references/technical-notes.md. -->
+
+Detalhes acordados {source — e.g. na reunião de {date}, transcrição, POC} que orientam implementação — especialmente **Feature {NNN}** ({short title}) {when applicable}.
+
+### {Subsection — e.g. Hoje vs. alvo}
+
+| Aspecto | Hoje ({as-is}) | Alvo ({version or target}) |
+| ------- | -------------- | -------------------------- |
+| {aspect} | {current state} | {target state} `[confirmado {name}]` |
+
+<!-- Optional pseudocode block — label illustrative; name implementation owner when known. -->
+
+```{lang}
+// Pseudocode — implementação exata a cargo de {owner} por {unit, e.g. app}
+{snippet}
+```
+
+> {Per-unit variance, POC prerequisite, or mapping caveat.}
+
+### {Subsection — logical structure, boundaries, session behavior, prerequisites, scope, documentation}
+
+<!-- Repeat ### subsections as needed. Tables, bullets, transcript timestamps. -->
 
 ---
 

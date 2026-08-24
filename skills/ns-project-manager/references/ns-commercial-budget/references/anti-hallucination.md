@@ -18,7 +18,7 @@ Every Feature, RNF, estimate premise, macro-row figure, margin % must trace to h
 9. **Contradict reverse-spec silently** — If chat scope conflicts with documented behavior, surface it; do not overwrite reverse-spec in budget.
 10. **Macro table shortcuts** — Do not drop/rename seven mandatory macro rows; do not put all hours only in “Implementação”.
 11. **Naked margin** — Do not apply safety % without risks section + short rationale.
-12. **Technical voice in narrative** — No class/field/schema/endpoint/framework in Objetivo, Features, fluxos, RNFs, acceptance, risks narrative, premissas (`product-voice.md`). APF origem (CPM/SISP) only in `commercial-budget-internal.md`.
+12. **Technical voice in narrative** — No class/field/schema/endpoint/framework in Objetivo, Features, fluxos, RNFs, acceptance, risks narrative, premissas (`product-voice.md`). APF origem (CPM/SISP) only in Estimativas. Implementation detail from transcript/POC belongs in internal **Notas técnicas** only (`technical-notes.md`) — omit section if no source; never copy to client export.
 14. **Improvised value speech** — Do not add extra headings under **Valor agregado desta versão**, pitch the operator instead of the decision-maker, or use procurement objections (“why another quote”, “sample first”, “wait for v2”). Follow `sales-value-speech.md`.
 15. **Invented commercial ROI** — No fabricated single-point R$ payback. Gains: range + short justification, cited benchmark, or stakeholder figure. `[⚠️ validar com cliente]` only on unsourced clauses — not on every line (`sales-value-speech.md`).
 

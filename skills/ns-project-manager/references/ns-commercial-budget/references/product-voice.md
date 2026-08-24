@@ -6,12 +6,22 @@ Deliverable serves **client first**, also **delivery team**. Client confirms sco
 
 | Section | Client reads | Team needs |
 |---------|--------------|------------|
-| Objetivo, **Valor agregado** (client export), Features, fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Same text must cover every committed capability; Valor agregado = locked decision-maker speech (`sales-value-speech.md`) |
+| Objetivo (**O que buscamos** / **O que é** / **O que entregamos**), **Valor agregado** (client export), Features, fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Three-block Objetivo (`objective-structure.md`); same text internal + client; must cover every committed capability; Valor agregado = locked decision-maker speech (`sales-value-speech.md`) |
 | Critérios de aceite | Verifiable by stakeholder | Each criterion maps to scoped behavior — no hidden gap |
 | Estimativas (FP, horas; COSMIC only if asked) | Totals + per-Feature FP justification; client table also Esforço (h) / Custo (R$) or `—` | FP origins traceable; hours = formula only; CFP table only when requested |
 | Macroatividades | Lifecycle effort split | Unchanged |
 
 **Rule:** _Would client sign this knowing what they buy?_ AND _Would engineering find missing boundary?_ Both must pass.
+
+## Objetivo principal (both docs)
+
+Follow `references/objective-structure.md` — three subsections under **Objetivo principal da versão**:
+
+1. **O que buscamos** — problem and, when relevant, who/scale/current pain.
+2. **O que é ({concept})** — definition; optional `Camada | Papel` table; optional persona-grounded example.
+3. **O que entregamos** — scope paragraph + **`Resultado esperado:`** sentence.
+
+Not a Feature list. Not the decision-maker pitch (that is **Valor agregado** on the client export only).
 
 ## Valor agregado (client export only)
 
@@ -46,6 +56,7 @@ See `engineering-split.md` for triggers, templates, anti-patterns.
 | Need | Put it here | Not here |
 |------|-------------|----------|
 | Scope completeness | Features + critérios de aceite + fluxos Mermaid | Class names, schemas, endpoints |
+| Implementation notes from meeting/POC/transcript | Internal: **Notas técnicas** after Features (`technical-notes.md`) | Objetivo, Features narrative, client export |
 | Sizing traceability | Internal: APF origem (CPM/SISP). Client: per-Feature FP + justificativa only | Feature narrative; client `commercial-budget-costumer.md` |
 | COSMIC counts | Omit unless asked; then Estimativas: CFP table only | Unsolicited CFP; per-Feature E/R/W/X prose |
 | Productivity math | Estimativas: Horas (cálculo) | Narrative justification in horas row |

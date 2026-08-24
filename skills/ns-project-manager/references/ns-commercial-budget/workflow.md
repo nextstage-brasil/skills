@@ -10,6 +10,7 @@ description: >
   Header Sequência + Gerado em on regenerate. When docs/context exists, full
   read reverse-spec + brownfield-map, reuse inventory, size delta not greenfield.
   Never invent R$. Optional engineering split: internal commercial-budget-internal.md
+  (includes optional Notas técnicas from transcript/POC — internal only)
   plus client export commercial-budget-costumer.md when scope mixes business
   capabilities with operational/architectural consequences. Use for orçamento,
   proposta comercial, cotação, budget proposal, ponto-função, Function Points,
@@ -23,7 +24,7 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.24"
+  version: "1.25"
 ---
 
 # Commercial Budget
@@ -77,19 +78,23 @@ Read `references/clarification.md`.
 1. `assets/commercial-budget-internal.template.md`
 2. `references/product-voice.md`
 3. `references/sales-value-speech.md` — when writing `commercial-budget-costumer.md` (Valor agregado)
-4. `references/engineering-split.md` — classify each scoped item `negócio` | `engenharia` | `qualidade` before Features
-5. `references/fp-sizing.md` — always (default = APF: IFPUG CPM latest, SISP fallback)
-6. `references/cosmic-sizing.md` — **only** if human asked for COSMIC / CFP / cosmic functions; otherwise skip (do not size, do not add a CFP section)
-7. `references/macro-activities.md` + `references/risk-margin.md`
-8. `references/document-versioning.md`
-9. **Reuse inventory applied** — map `net-new`→ADD, `extend`→CHG, `reuse`→omit (IFPUG enhancement). Block if context existed and inventory skipped.
+4. `references/objective-structure.md` — three-block Objetivo (O que buscamos / O que é / O que entregamos)
+5. `references/engineering-split.md` — classify each scoped item `negócio` | `engenharia` | `qualidade` before Features
+6. Draft **Features** (numbered) — product voice in narrative; internal may include `engenharia` / `qualidade`
+7. `references/technical-notes.md` — **internal only**, after Features: meeting/transcript/POC implementation detail; omit section if no source; never in client export
+8. `references/fp-sizing.md` — always (default = APF: IFPUG CPM latest, SISP fallback)
+9. `references/cosmic-sizing.md` — **only** if human asked for COSMIC / CFP / cosmic functions; otherwise skip (do not size, do not add a CFP section)
+10. `references/macro-activities.md` + `references/risk-margin.md`
+11. `references/document-versioning.md`
+12. **Reuse inventory applied** — map `net-new`→ADD, `extend`→CHG, `reuse`→omit (IFPUG enhancement). Block if context existed and inventory skipped.
 
 | Section | Rules |
 |---------|--------|
-| Objetivo principal | Commercial/product — value, who benefits, product change. **Not** engineering-area framing |
+| Objetivo principal | Three mandatory subsections (`objective-structure.md`): **O que buscamos** (problem + context/scale/pain), **O que é** (concept definition; optional Camada \| Papel table; optional example), **O que entregamos** (scope + labeled **Resultado esperado:**). Same text in internal and client export. Commercial/product voice — **not** engineering-area framing |
 | Valor agregado (client export only) | After Objetivo in `commercial-budget-costumer.md`. Locked speech to the **decision-maker**. Four headings only (`sales-value-speech.md`). No extra subsections. Gains = measurable ranges; objections = trust / overlap / permission — not quote theater |
 | Fluxos principais | 1–3 Mermaid `flowchart TD`; white init + Palette A/B `classDef` + `linkStyle` edges (`product-voice.md`). Subtitle per diagram; validation chain optional; client-readable PT-BR labels |
-| Features (≤10) | `Feature 001`…; generous product description + acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
+| Features (≤10) | `Feature 001`…; generous product description + acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema in narrative. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
+| Notas técnicas (internal only) | After Features, before RNFs. Include only when transcript/meeting/POC/architecture source exists (`technical-notes.md`). Cross-ref Feature numbers; hoje vs. alvo tables, pseudocode, prerequisites OK. **Omit entire section** if no source. **Never** in client export |
 | RNFs | Only if identified — product language |
 | Estimativas — FP | **Same Total PF** in both docs. Internal: APF + CPM/SISP origem. Client: per-Feature FP + **Esforço (h)** + **Custo (R$)** + justificativa — **no** CPM/SISP types (`fp-sizing.md`, `engineering-split.md`). Esforço = `—` if productivity unspecified; Custo = `—` if rates unspecified |
 | Estimativas — COSMIC | **Omit by default.** If human asked: summary table + method reference line only — **no** rationale prose |
@@ -141,6 +146,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 | `references/product-voice.md` | Before drafting — dual-audience rules |
 | `references/sales-value-speech.md` | When writing Valor agregado in `commercial-budget-costumer.md` |
 | `references/engineering-split.md` | Before Features — classify negócio / engenharia / qualidade; client export |
+| `references/technical-notes.md` | After Features — internal-only implementation notes from transcript/POC; omit if no source |
 | `assets/commercial-budget-costumer.template.md` | When writing `commercial-budget-costumer.md` |
 | `references/clarification.md` | Before generating |
 | `references/fp-sizing.md` | Before FP tables — APF default (CPM then SISP) |
