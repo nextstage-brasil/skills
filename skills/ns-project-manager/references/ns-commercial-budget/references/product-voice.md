@@ -6,7 +6,7 @@ Deliverable serves **client first**, also **delivery team**. Client confirms sco
 
 | Section | Client reads | Team needs |
 |---------|--------------|------------|
-| Objetivo (**O que buscamos** / **O que é** / **O que entregamos**), **Valor agregado** (client export), Features, fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Three-block Objetivo (`objective-structure.md`); same text internal + client; must cover every committed capability; Valor agregado = locked decision-maker speech (`sales-value-speech.md`) |
+| Objetivo (**O que buscamos** / **O que é** / **O que entregamos**), **Valor agregado** (client export), Features (**Descrição detalhada**), fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Three-block Objetivo (`objective-structure.md`); Feature Descrição rich in both docs — client structured, internal prose OK (`feature-description-structure.md`); Objetivo same text internal + client; Valor agregado = locked decision-maker speech (`sales-value-speech.md`) |
 | Critérios de aceite | Verifiable by stakeholder | Each criterion maps to scoped behavior — no hidden gap |
 | Estimativas (FP, horas; COSMIC only if asked) | Totals + per-Feature FP justification; client table also Esforço (h) / Custo (R$) or `—` | FP origins traceable; hours = formula only; CFP table only when requested |
 | Macroatividades | Lifecycle effort split | Unchanged |
@@ -34,6 +34,16 @@ Product language (`Forbidden in narrative sections` still applies). Operator / p
 Do not add a “Leia também” block — this section already lives inside `commercial-budget-costumer.md`.
 
 When scope mixes business capabilities with operational/architectural consequences, apply `references/engineering-split.md`: internal doc keeps full traceability; client export (`commercial-budget-costumer.md`) shows `negócio` Features only, with `engenharia` outcomes merged into parent acceptance and FP rolled into **Engenharia de consistência do produto**.
+
+## Feature — Descrição detalhada
+
+Follow `references/feature-description-structure.md`:
+
+- **Both docs:** rich detail (states, rules, actors, boundaries) — not thin summaries.
+- **Client export:** 1–3 bold-titled subsections + bullets with **Bold lead term:** — never a run-on paragraph.
+- **Internal:** continuous prose OK; same richness as client (structured rewrite on client, not a cut-down).
+
+Critérios de aceite stay separate — verifiable checks, not a repeat of the narrative.
 
 ## Item classification (before Features)
 

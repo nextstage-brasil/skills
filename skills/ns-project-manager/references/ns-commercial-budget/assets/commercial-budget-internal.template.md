@@ -98,7 +98,7 @@ flowchart TD
 ### Feature 001 — {TÍTULO}
 
 **Descrição detalhada:**  
-{Who benefits, what the product allows/blocks, business rules — complete enough for client sign-off and team boundary check.}
+{Rich continuous prose OK — who benefits, states, rules, boundaries. Same detail depth as client. See references/feature-description-structure.md.}
 
 #### Critérios de aceite
 

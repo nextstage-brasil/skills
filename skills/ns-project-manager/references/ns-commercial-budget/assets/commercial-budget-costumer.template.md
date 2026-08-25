@@ -71,8 +71,20 @@
 
 ### Feature 001 — {TÍTULO}
 
-**Descrição detalhada:**  
-{Product language — include parent-level mention of product consistency when `engenharia` children were merged.}
+**Descrição detalhada:**
+
+<!-- Client only: structured narrative — references/feature-description-structure.md. Never a run-on paragraph. Same richness as internal. -->
+
+**{Subsection 1 — e.g. Resumo do fluxo de trabalho}**
+
+{Optional one-sentence intro.}
+
+* **{Lead term}:** {Explanation — include parent-level product consistency when `engenharia` children were merged.}
+* **{Lead term}:** {Explanation.}
+
+**{Subsection 2 — e.g. Regras de …}** *(omit when narrow scope)*
+
+* **{Lead term}:** {Explanation.}
 
 #### Critérios de aceite
 
