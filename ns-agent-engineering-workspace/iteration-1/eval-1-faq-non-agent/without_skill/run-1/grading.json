@@ -1,0 +1,62 @@
+{
+  "expectations": [
+    {
+      "text": "Wrote docs/specs/agent-design.md under outputs",
+      "passed": true,
+      "evidence": "PASS: found supporting content in eval-1-faq-non-agent/without_skill"
+    },
+    {
+      "text": "Locks Evaluation criteria before adaptation recommendations",
+      "passed": false,
+      "evidence": "FAIL: no locked Evaluation criteria section before adaptation"
+    },
+    {
+      "text": "Diagnoses failure as information-based (or both with information primary)",
+      "passed": false,
+      "evidence": "FAIL: no explicit information-vs-behavior failure diagnosis"
+    },
+    {
+      "text": "Adaptation path pushes Prompt and/or RAG before Agent",
+      "passed": false,
+      "evidence": "FAIL: jumped to agent orchestration; no Prompt\u2192RAG\u2192Agent ladder"
+    },
+    {
+      "text": "Agent justification is explicit non-agent OR Agent rejected as primary approach",
+      "passed": false,
+      "evidence": "FAIL: baseline treated request as agent+RAG; transcript says no adaptation ladder; designed ReAct agent"
+    },
+    {
+      "text": "Does not recommend LangGraph, CrewAI, LangChain, AutoGen, or any framework",
+      "passed": false,
+      "evidence": "FAIL: agent-design.md recommends 'LangGraph or equivalent ReAct loop' and stack table 'LangGraph (Python)'"
+    },
+    {
+      "text": "Contains no implementation code",
+      "passed": true,
+      "evidence": "PASS: found supporting content in eval-1-faq-non-agent/without_skill"
+    },
+    {
+      "text": "Interview used one-question-at-a-time format with recommended answers",
+      "passed": false,
+      "evidence": "FAIL: no grill-me Qn format; single design dump"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 6,
+    "total": 8,
+    "pass_rate": 0.25
+  },
+  "timing": {
+    "total_duration_seconds": 0.0,
+    "executor_duration_seconds": 0.0,
+    "grader_duration_seconds": 0.0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "Eval-3 assertions are non-discriminating: baseline also rejects agent for format/tone \u2014 consider asserting doctrine labels / agent-design.md schema / Evaluation-before-adaptation order"
+      }
+    ]
+  }
+}

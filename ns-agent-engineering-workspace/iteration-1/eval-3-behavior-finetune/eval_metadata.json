@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "behavior-finetune",
+  "prompt": "The model already has the right facts from our docs but keeps answering in the wrong JSON shape and ignores our tone guide. Should we build an agent?",
+  "assertions": [
+    "Wrote docs/specs/agent-design.md under outputs",
+    "Diagnoses failure as behavior-based (not information-based)",
+    "Adaptation path includes Prompt then Fine-Tune (or Fine-Tune after Prompt exhausted)",
+    "Explicitly rejects Agent as the primary fix",
+    "Does not recommend a framework",
+    "Contains no implementation code",
+    "Agent justification section records non-agent Fine-Tune (or Prompt+Fine-Tune) path"
+  ]
+}

@@ -1,0 +1,7 @@
+[
+  "with_skill pass rates: FAQ 100%, refund 100%, behavior 100% (mean 100%).",
+  "without_skill: FAQ 25% (jumped to LangGraph agent, no ladder), refund ~56% (HITL ok but missing Write taxonomy / plan\u2260execute / architect handoff), behavior 100% (non-discriminating \u2014 baseline also rejects agent).",
+  "Eval-3 assertions always pass both configs \u2014 weak discrimination; strengthen with doctrine-label + agent-design.md schema checks.",
+  "Timing/tokens unavailable from harness notifications \u2014 benchmark time/token deltas are placeholders.",
+  "Skill value clearest on FAQ (force non-agent Prompt+RAG) and refund (doctrine taxonomy + handoff naming)."
+]

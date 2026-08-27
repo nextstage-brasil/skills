@@ -1,0 +1,16 @@
+{
+  "eval_id": 2,
+  "eval_name": "refund-agent",
+  "prompt": "We need something that looks up customer orders in SQL, decides whether a refund applies, then sends the customer an email. Multi-step. Must not send mail without approval.",
+  "assertions": [
+    "Wrote docs/specs/agent-design.md under outputs",
+    "Locks Evaluation criteria",
+    "Justifies Agent (perceive/act/tools multi-step) rather than RAG-only",
+    "Tool inventory tags email send as Write actions",
+    "Write-action safety requires HITL / approval before send",
+    "Planning contract states plan decoupled from execution (plan≠execute)",
+    "Next handoff names ns-multi-agent-architect (or equivalent architecture ADR skill)",
+    "Does not pick LangGraph vs CrewAI or name a framework as the solution",
+    "Contains no implementation code"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "expectations": [
+    {
+      "text": "Wrote docs/specs/agent-design.md under outputs",
+      "passed": true,
+      "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+    },
+    {
+      "text": "Locks Evaluation criteria",
+      "passed": false,
+      "evidence": "FAIL: no locked Evaluation criteria gate before design"
+    },
+    {
+      "text": "Justifies Agent (perceive/act/tools multi-step) rather than RAG-only",
+      "passed": true,
+      "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+    },
+    {
+      "text": "Tool inventory tags email send as Write actions",
+      "passed": false,
+      "evidence": "FAIL: HITL present but no Tools taxonomy label 'Write actions'"
+    },
+    {
+      "text": "Write-action safety requires HITL / approval before send",
+      "passed": true,
+      "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+    },
+    {
+      "text": "Planning contract states plan decoupled from execution (plan\u2260execute)",
+      "passed": false,
+      "evidence": "FAIL: no explicit plan\u2260execute planning contract"
+    },
+    {
+      "text": "Next handoff names ns-multi-agent-architect",
+      "passed": false,
+      "evidence": "FAIL: no handoff to ns-multi-agent-architect"
+    },
+    {
+      "text": "Does not pick LangGraph vs CrewAI or name a framework as the solution",
+      "passed": true,
+      "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+    },
+    {
+      "text": "Contains no implementation code",
+      "passed": true,
+      "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 4,
+    "total": 9,
+    "pass_rate": 0.5556
+  },
+  "timing": {
+    "total_duration_seconds": 0.0,
+    "executor_duration_seconds": 0.0,
+    "grader_duration_seconds": 0.0
+  },
+  "eval_feedback": {
+    "suggestions": []
+  }
+}

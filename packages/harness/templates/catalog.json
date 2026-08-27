@@ -45,6 +45,7 @@
     "ns-investigator": ["ns-harness"],
     "ns-e2e-tests": [],
     "ns-backend-tests": ["ns-harness"],
+    "ns-agent-engineering": [],
     "ns-multi-agent-architect": [],
     "ns-langgraph-agents": ["ns-harness"],
     "ns-postgres-rag": ["ns-harness"]
@@ -94,7 +95,7 @@
     },
     "labs": {
       "label": "Labs (multi-agent)",
-      "skills": ["ns-multi-agent-architect", "ns-langgraph-agents"]
+      "skills": ["ns-agent-engineering", "ns-multi-agent-architect", "ns-langgraph-agents"]
     },
     "brownfield": {
       "label": "Brownfield",

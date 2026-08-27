@@ -1,0 +1,53 @@
+{
+  "skill_name": "ns-agent-engineering",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build an agent that answers employee FAQs from our internal wiki and HR PDFs. Just make it an agent so it can be smart.",
+      "expected_output": "Grill one question at a time with recommended answers and product examples; lock Evaluation and failure diagnosis as information-based; push Prompt then RAG before Agent; may conclude explicit non-agent; write docs/specs/agent-design.md with adaptation path and Agent justification = non-agent; no LangGraph/CrewAI/code.",
+      "files": [],
+      "assertions": [
+        "Wrote docs/specs/agent-design.md under outputs",
+        "Locks Evaluation criteria before adaptation recommendations",
+        "Diagnoses failure as information-based (or both with information primary)",
+        "Adaptation path pushes Prompt and/or RAG before Agent",
+        "Agent justification is explicit non-agent OR Agent rejected as primary approach",
+        "Does not recommend LangGraph, CrewAI, LangChain, AutoGen, or any framework",
+        "Contains no implementation code",
+        "Interview used one-question-at-a-time format with recommended answers"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need something that looks up customer orders in SQL, decides whether a refund applies, then sends the customer an email. Multi-step. Must not send mail without approval.",
+      "expected_output": "Locks Evaluation then Agent justification with Tools taxonomy tagging write email as Write actions plus HITL; Planning contract plan≠execute; docs/specs/agent-design.md with tool inventory safety and next handoff ns-multi-agent-architect; no framework pick.",
+      "files": [],
+      "assertions": [
+        "Wrote docs/specs/agent-design.md under outputs",
+        "Locks Evaluation criteria",
+        "Justifies Agent (perceive/act/tools multi-step) rather than RAG-only",
+        "Tool inventory tags email send as Write actions",
+        "Write-action safety requires HITL / approval before send",
+        "Planning contract states plan decoupled from execution (plan≠execute)",
+        "Next handoff names ns-multi-agent-architect",
+        "Does not pick LangGraph vs CrewAI or name a framework as the solution",
+        "Contains no implementation code"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The model already has the right facts from our docs but keeps answering in the wrong JSON shape and ignores our tone guide. Should we build an agent?",
+      "expected_output": "Diagnoses behavior-based failure; adaptation path Prompt then Fine-Tune; rejects Agent as primary fix; docs/specs/agent-design.md records non-agent Fine-Tune path; no framework or implementation code.",
+      "files": [],
+      "assertions": [
+        "Wrote docs/specs/agent-design.md under outputs",
+        "Diagnoses failure as behavior-based (not information-based)",
+        "Adaptation path includes Prompt then Fine-Tune",
+        "Explicitly rejects Agent as the primary fix",
+        "Does not recommend a framework",
+        "Contains no implementation code",
+        "Agent justification records non-agent Fine-Tune (or Prompt+Fine-Tune) path"
+      ]
+    }
+  ]
+}

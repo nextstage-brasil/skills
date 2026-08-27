@@ -1,0 +1,419 @@
+{
+  "metadata": {
+    "skill_name": "ns-agent-engineering",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-08-27T22:43:34Z",
+    "evals_run": [
+      1,
+      2,
+      3
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Wrote docs/specs/agent-design.md under outputs",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Locks Evaluation criteria before adaptation recommendations",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Diagnoses failure as information-based (or both with information primary)",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Adaptation path pushes Prompt and/or RAG before Agent",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Agent justification is explicit non-agent OR Agent rejected as primary approach",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Does not recommend LangGraph, CrewAI, LangChain, AutoGen, or any framework",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Contains no implementation code",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Interview used one-question-at-a-time format with recommended answers",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Wrote docs/specs/agent-design.md under outputs",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent locked; Write+HITL; plan\u2260execute; ns-multi-agent-architect); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Locks Evaluation criteria",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent locked; Write+HITL; plan\u2260execute; ns-multi-agent-architect); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Justifies Agent (perceive/act/tools multi-step) rather than RAG-only",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent locked; Write+HITL; plan\u2260execute; ns-multi-agent-architect); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Tool inventory tags email send as Write actions",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent locked; Write+HITL; plan\u2260execute; ns-multi-agent-architect); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Write-action safety requires HITL / approval before send",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent locked; Write+HITL; plan\u2260execute; ns-multi-agent-architect); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Planning contract states plan decoupled from execution (plan\u2260execute)",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent locked; Write+HITL; plan\u2260execute; ns-multi-agent-architect); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Next handoff names ns-multi-agent-architect",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent locked; Write+HITL; plan\u2260execute; ns-multi-agent-architect); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Does not pick LangGraph vs CrewAI or name a framework as the solution",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent locked; Write+HITL; plan\u2260execute; ns-multi-agent-architect); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Contains no implementation code",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (Agent locked; Write+HITL; plan\u2260execute; ns-multi-agent-architect); see docs/specs/agent-design.md"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Wrote docs/specs/agent-design.md under outputs",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Diagnoses failure as behavior-based (not information-based)",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Adaptation path includes Prompt then Fine-Tune",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Explicitly rejects Agent as the primary fix",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Does not recommend a framework",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Contains no implementation code",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+        },
+        {
+          "text": "Agent justification records non-agent Fine-Tune (or Prompt+Fine-Tune) path",
+          "passed": true,
+          "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 2,
+        "failed": 6,
+        "total": 8,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Wrote docs/specs/agent-design.md under outputs",
+          "passed": true,
+          "evidence": "PASS: found supporting content in eval-1-faq-non-agent/without_skill"
+        },
+        {
+          "text": "Locks Evaluation criteria before adaptation recommendations",
+          "passed": false,
+          "evidence": "FAIL: no locked Evaluation criteria section before adaptation"
+        },
+        {
+          "text": "Diagnoses failure as information-based (or both with information primary)",
+          "passed": false,
+          "evidence": "FAIL: no explicit information-vs-behavior failure diagnosis"
+        },
+        {
+          "text": "Adaptation path pushes Prompt and/or RAG before Agent",
+          "passed": false,
+          "evidence": "FAIL: jumped to agent orchestration; no Prompt\u2192RAG\u2192Agent ladder"
+        },
+        {
+          "text": "Agent justification is explicit non-agent OR Agent rejected as primary approach",
+          "passed": false,
+          "evidence": "FAIL: baseline treated request as agent+RAG; transcript says no adaptation ladder; designed ReAct agent"
+        },
+        {
+          "text": "Does not recommend LangGraph, CrewAI, LangChain, AutoGen, or any framework",
+          "passed": false,
+          "evidence": "FAIL: agent-design.md recommends 'LangGraph or equivalent ReAct loop' and stack table 'LangGraph (Python)'"
+        },
+        {
+          "text": "Contains no implementation code",
+          "passed": true,
+          "evidence": "PASS: found supporting content in eval-1-faq-non-agent/without_skill"
+        },
+        {
+          "text": "Interview used one-question-at-a-time format with recommended answers",
+          "passed": false,
+          "evidence": "FAIL: no grill-me Qn format; single design dump"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5556,
+        "passed": 5,
+        "failed": 4,
+        "total": 9,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Wrote docs/specs/agent-design.md under outputs",
+          "passed": true,
+          "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+        },
+        {
+          "text": "Locks Evaluation criteria",
+          "passed": false,
+          "evidence": "FAIL: no locked Evaluation criteria gate before design"
+        },
+        {
+          "text": "Justifies Agent (perceive/act/tools multi-step) rather than RAG-only",
+          "passed": true,
+          "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+        },
+        {
+          "text": "Tool inventory tags email send as Write actions",
+          "passed": false,
+          "evidence": "FAIL: HITL present but no Tools taxonomy label 'Write actions'"
+        },
+        {
+          "text": "Write-action safety requires HITL / approval before send",
+          "passed": true,
+          "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+        },
+        {
+          "text": "Planning contract states plan decoupled from execution (plan\u2260execute)",
+          "passed": false,
+          "evidence": "FAIL: no explicit plan\u2260execute planning contract"
+        },
+        {
+          "text": "Next handoff names ns-multi-agent-architect",
+          "passed": false,
+          "evidence": "FAIL: no handoff to ns-multi-agent-architect"
+        },
+        {
+          "text": "Does not pick LangGraph vs CrewAI or name a framework as the solution",
+          "passed": true,
+          "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+        },
+        {
+          "text": "Contains no implementation code",
+          "passed": true,
+          "evidence": "PASS: found supporting content in eval-2-refund-agent/without_skill"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Wrote docs/specs/agent-design.md under outputs",
+          "passed": true,
+          "evidence": "PASS: baseline also rejects agent and suggests prompt/SFT (non-discriminating for this eval)"
+        },
+        {
+          "text": "Diagnoses failure as behavior-based (not information-based)",
+          "passed": true,
+          "evidence": "PASS: baseline also rejects agent and suggests prompt/SFT (non-discriminating for this eval)"
+        },
+        {
+          "text": "Adaptation path includes Prompt then Fine-Tune",
+          "passed": true,
+          "evidence": "PASS: baseline also rejects agent and suggests prompt/SFT (non-discriminating for this eval)"
+        },
+        {
+          "text": "Explicitly rejects Agent as the primary fix",
+          "passed": true,
+          "evidence": "PASS: baseline also rejects agent and suggests prompt/SFT (non-discriminating for this eval)"
+        },
+        {
+          "text": "Does not recommend a framework",
+          "passed": true,
+          "evidence": "PASS: baseline also rejects agent and suggests prompt/SFT (non-discriminating for this eval)"
+        },
+        {
+          "text": "Contains no implementation code",
+          "passed": true,
+          "evidence": "PASS: baseline also rejects agent and suggests prompt/SFT (non-discriminating for this eval)"
+        },
+        {
+          "text": "Agent justification records non-agent Fine-Tune (or Prompt+Fine-Tune) path",
+          "passed": true,
+          "evidence": "PASS: baseline also rejects agent and suggests prompt/SFT (non-discriminating for this eval)"
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.6019,
+        "stddev": 0.3771,
+        "min": 0.25,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.40",
+      "time_seconds": "+0.0",
+      "tokens": "+0"
+    }
+  },
+  "notes": [
+    "with_skill pass rates: FAQ 100%, refund 100%, behavior 100% (mean 100%).",
+    "without_skill: FAQ 25% (jumped to LangGraph agent, no ladder), refund ~56% (HITL ok but missing Write taxonomy / plan\u2260execute / architect handoff), behavior 100% (non-discriminating \u2014 baseline also rejects agent).",
+    "Eval-3 assertions always pass both configs \u2014 weak discrimination; strengthen with doctrine-label + agent-design.md schema checks.",
+    "Timing/tokens unavailable from harness notifications \u2014 benchmark time/token deltas are placeholders.",
+    "Skill value clearest on FAQ (force non-agent Prompt+RAG) and refund (doctrine taxonomy + handoff naming)."
+  ]
+}

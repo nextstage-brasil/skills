@@ -1,0 +1,15 @@
+{
+  "eval_id": 1,
+  "eval_name": "faq-non-agent",
+  "prompt": "Build an agent that answers employee FAQs from our internal wiki and HR PDFs. Just make it an agent so it can be smart.",
+  "assertions": [
+    "Wrote docs/specs/agent-design.md (or equivalent path under outputs)",
+    "Locks Evaluation criteria before adaptation recommendations",
+    "Diagnoses failure as information-based (or both with information primary)",
+    "Adaptation path pushes Prompt and/or RAG before Agent",
+    "Agent justification is explicit non-agent OR Agent rejected as primary approach",
+    "Does not recommend LangGraph, CrewAI, LangChain, AutoGen, or any framework",
+    "Contains no implementation code (no app source, no scaffold)",
+    "Interview used one-question-at-a-time format with recommended answers"
+  ]
+}

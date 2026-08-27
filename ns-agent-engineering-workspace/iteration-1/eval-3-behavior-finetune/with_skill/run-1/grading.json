@@ -1,0 +1,53 @@
+{
+  "expectations": [
+    {
+      "text": "Wrote docs/specs/agent-design.md under outputs",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Diagnoses failure as behavior-based (not information-based)",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Adaptation path includes Prompt then Fine-Tune",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Explicitly rejects Agent as the primary fix",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Does not recommend a framework",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Contains no implementation code",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Agent justification records non-agent Fine-Tune (or Prompt+Fine-Tune) path",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (behavior; Prompt\u2192Fine-Tune; Agent rejected); see docs/specs/agent-design.md"
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_duration_seconds": 0.0,
+    "executor_duration_seconds": 0.0,
+    "grader_duration_seconds": 0.0
+  },
+  "eval_feedback": {
+    "suggestions": []
+  }
+}

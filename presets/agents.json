@@ -1,7 +1,11 @@
 {
   "name": "agents",
   "requires_harness": ">=1.0.0",
-  "description": "LangGraph Skills + SDD face",
+  "description": "Spec-driven + agent design + LangGraph labs + LangChain/MCP/eval externals",
   "extends": "spec-driven",
-  "includes": ["skills/ns-multi-agent-architect", "skills/ns-langgraph-agents"]
+  "includes": [
+    "skills/ns-agent-engineering",
+    "skills/ns-multi-agent-architect",
+    "skills/ns-langgraph-agents"
+  ]
 }

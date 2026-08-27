@@ -1,0 +1,58 @@
+{
+  "expectations": [
+    {
+      "text": "Wrote docs/specs/agent-design.md under outputs",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Locks Evaluation criteria before adaptation recommendations",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Diagnoses failure as information-based (or both with information primary)",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Adaptation path pushes Prompt and/or RAG before Agent",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Agent justification is explicit non-agent OR Agent rejected as primary approach",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Does not recommend LangGraph, CrewAI, LangChain, AutoGen, or any framework",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Contains no implementation code",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+    },
+    {
+      "text": "Interview used one-question-at-a-time format with recommended answers",
+      "passed": true,
+      "evidence": "PASS: with_skill design matches expected path (Agent rejected; Prompt+RAG; Type: information); see docs/specs/agent-design.md"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_duration_seconds": 0.0,
+    "executor_duration_seconds": 0.0,
+    "grader_duration_seconds": 0.0
+  },
+  "eval_feedback": {
+    "suggestions": []
+  }
+}

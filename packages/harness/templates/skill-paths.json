@@ -14,6 +14,7 @@
   "ns-execution-gitlab-issue": "skills/ns-execution-gitlab-issue",
   "ns-gitlab-board-sync": "skills/ns-gitlab-board-sync",
   "ns-gitlab-ci-generator": "skills/ns-gitlab-ci-generator",
+  "ns-agent-engineering": "skills/ns-agent-engineering",
   "ns-langgraph-agents": "skills/ns-langgraph-agents",
   "ns-multi-agent-architect": "skills/ns-multi-agent-architect",
   "ns-living-spec": "skills/ns-living-spec",

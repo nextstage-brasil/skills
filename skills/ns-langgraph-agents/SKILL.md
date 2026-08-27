@@ -7,6 +7,7 @@ metadata:
   version: "1.12"
 depends:
   - ns-harness
+  - ns-langgraph-agents
 ---
 
 # LangGraph Agents
@@ -17,22 +18,23 @@ Owns **runtime doctrine** — placement, prompt/capability injection, graph-spec
 
 ## Applicability
 
-| Context | Doctrine strength |
-| ------- | ----------------- |
+| Context                                          | Doctrine strength                                                                                                                                                                                                      |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Greenfield** agent-api (new LangGraph runtime) | **MUST** follow build workflow gates — dev-chat, budgets, normalize-before-truncate, separate skill cap. Topology: **suggest** `plan_execute` for most MCP/tool-heavy cases — lock in `graph-spec.md`; not a hard rule |
-| **Brownfield** existing agent | **RECOMMENDED** migration toward same controls; orphan recovery does not Critical-fail missing topology |
-| **Intentional MCP redesign** | Sync `graph-spec.md` + refs in same delivery — treat greenfield MUST for topology/budget/evidence sections touched |
+| **Brownfield** existing agent                    | **RECOMMENDED** migration toward same controls; orphan recovery does not Critical-fail missing topology                                                                                                                |
+| **Intentional MCP redesign**                     | Sync `graph-spec.md` + refs in same delivery — treat greenfield MUST for topology/budget/evidence sections touched                                                                                                     |
 
 Brownfield open ReAct valid until deliberate topology change. Greenfield MUST = new agent-api + intentional MCP redesign only.
 
 ## Routing (read first)
 
-| Signal | Action |
-| ------ | ------ |
-| No framework lock / CrewAI requested | **Stop** → `ns-multi-agent-architect` |
-| Orphan / lost structure / layout unclear | Run orphan checklist **before** features (`references/orphan-recovery-checklist.md`) |
-| GitLab `ISSUE_URL` or SDD version scope | **Defer** to harness `../../ns-harness/references/code-skill-routing.md` — do not absorb |
-| Approved placement/inject plan ready for diff | Hand off to `ns-coder` for implementation — except greenfield **bootstrap copy** (`references/bootstrap-agent-runtime.md`) |
+| Signal                                                 | Action                                                                                                                     |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| Conceptual design unlocked (agent vs RAG vs fine-tune) | **Stop** → `ns-agent-engineering`                                                                                          |
+| No framework lock / CrewAI requested                   | **Stop** → `ns-multi-agent-architect`                                                                                      |
+| Orphan / lost structure / layout unclear               | Run orphan checklist **before** features (`references/orphan-recovery-checklist.md`)                                       |
+| GitLab `ISSUE_URL` or SDD version scope                | **Defer** to harness `../../ns-harness/references/code-skill-routing.md` — do not absorb                                   |
+| Approved placement/inject plan ready for diff          | Hand off to `ns-coder` for implementation — except greenfield **bootstrap copy** (`references/bootstrap-agent-runtime.md`) |
 
 ## Boot (mandatory)
 
@@ -46,19 +48,19 @@ See `../../ns-harness/references/session-boot.md` — **complete Session boot (b
 
 ## When to use
 
-| Situation | Action |
-| --------- | ------ |
-| Greenfield agent-api (no `{agent_api_root}/package.json`) | **Build workflow** Phase 0 then Phase 1 bootstrap — `references/bootstrap-agent-runtime.md` |
-| Brownfield / orphaned runtime | Run **Orphan recovery** (`references/orphan-recovery-checklist.md`) before features |
-| New file / unclear folder | **Placement Decision Block** + `references/placement-and-domains.md` |
-| System prompt / skill inject / bind | **Prompt/Capability plan** + `references/prompt-and-capability-injection.md` |
-| Topology / state / capabilities change | **Spec Sync Gate** — update `graph-spec.md` in the same delivery |
-| MCP with many servers/tools | Read `references/mcp-complex-access.md` + `references/capability-governance.md` |
-| Token blow-up / slow turns | Read `references/context-window-and-tokens.md` |
-| Provider message/reasoning quirks | Read `references/message-content-blocks.md` |
-| HITL / streaming UX | Read `references/streaming-and-hitl.md` |
-| JSON planner / analyst chooses tools | Operator-progress channel — `templates/contracts/planner-contract.md` + `references/streaming-and-hitl.md` |
-| Evals before merge | Read `references/evals-and-gates.md` |
+| Situation                                                 | Action                                                                                                     |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Greenfield agent-api (no `{agent_api_root}/package.json`) | **Build workflow** Phase 0 then Phase 1 bootstrap — `references/bootstrap-agent-runtime.md`                |
+| Brownfield / orphaned runtime                             | Run **Orphan recovery** (`references/orphan-recovery-checklist.md`) before features                        |
+| New file / unclear folder                                 | **Placement Decision Block** + `references/placement-and-domains.md`                                       |
+| System prompt / skill inject / bind                       | **Prompt/Capability plan** + `references/prompt-and-capability-injection.md`                               |
+| Topology / state / capabilities change                    | **Spec Sync Gate** — update `graph-spec.md` in the same delivery                                           |
+| MCP with many servers/tools                               | Read `references/mcp-complex-access.md` + `references/capability-governance.md`                            |
+| Token blow-up / slow turns                                | Read `references/context-window-and-tokens.md`                                                             |
+| Provider message/reasoning quirks                         | Read `references/message-content-blocks.md`                                                                |
+| HITL / streaming UX                                       | Read `references/streaming-and-hitl.md`                                                                    |
+| JSON planner / analyst chooses tools                      | Operator-progress channel — `templates/contracts/planner-contract.md` + `references/streaming-and-hitl.md` |
+| Evals before merge                                        | Read `references/evals-and-gates.md`                                                                       |
 
 ## Core doctrine
 
@@ -72,11 +74,11 @@ LangGraph = control flow. MCP/local tools = capabilities under graph. Small grap
 
 Three capability kinds bind to the model:
 
-| Kind | LLM wire name | Internal id |
-| ---- | ------------- | ------------- |
-| Local tool | `{name}` | `local:{name}` |
-| MCP tool | `mcp__{server}__{tool}` | `mcp:{server}:{tool}` |
-| Skill procedure | `use_skill__{id}` | `skill:{id}` |
+| Kind            | LLM wire name           | Internal id           |
+| --------------- | ----------------------- | --------------------- |
+| Local tool      | `{name}`                | `local:{name}`        |
+| MCP tool        | `mcp__{server}__{tool}` | `mcp:{server}:{tool}` |
+| Skill procedure | `use_skill__{id}`       | `skill:{id}`          |
 
 Wire names must match `^[a-zA-Z0-9_-]{1,128}$` (use `__` separators; colons only in internal ids). Colon in a **new** wire name is Critical on review.
 
@@ -88,6 +90,7 @@ Before new file or inject/bind change: complete all three. No code until posted.
 
 ```markdown
 ### Placement Decision Block
+
 - Artifact: …
 - Type: …
 - Target path: …
@@ -102,6 +105,7 @@ Full matrix: `references/placement-and-domains.md`.
 
 ```markdown
 ### Prompt / Capability plan
+
 - Compose: base_invariant + injected (rebuild per invoke; not in state/checkpointer/durable messages)
 - Motor (`base_invariant`): [gather-no-Markdown / sole-writer / tool discipline / JSON planner userFacingIntent is SSE not Markdown / …]
 - Product (`injected`): canonical path + persona/tone notes; mode-resolved: yes/no; modes: [...]; resolver: ...
@@ -125,37 +129,37 @@ Full doctrine: `references/prompt-and-capability-injection.md`.
 
 Load on demand — do not memorize whole files.
 
-| Reference | Read when |
-| --------- | --------- |
-| `references/bootstrap-agent-runtime.md` | Greenfield copy of `templates/agent-runtime/` |
-| `references/orphan-recovery-checklist.md` | Project structure unclear or agent "lost" |
-| `references/runtime-layout.md` | Scaffolding, refactors, layer violations |
-| `references/placement-and-domains.md` | Where to put files; domain vs graph vs config |
-| `references/prompt-and-capability-injection.md` | System prompt layers, bind vs inject, bind parity |
-| `references/message-content-blocks.md` | AIMessage/HumanMessage/ToolMessage across providers |
-| `references/context-window-and-tokens.md` | trim, summarize, tool vs skill body caps, `context_manager` |
-| `references/mcp-complex-access.md` | Multi-server MCP, discovery, transport, lifecycle |
-| `references/capability-governance.md` | Allowlist, classification, rate limits, tool budgets |
-| `references/evidence-and-fidelity.md` | State-backed evidence, fidelity gate, conversation-observed locale |
-| `templates/snippets/conversation-locale.ts.snippet` | `resolveConversationLocale` + Intl `formatUserFacing` |
-| `templates/snippets/tool-budget.ts.snippet` | Per-turn tool/MCP caps, arg fingerprint duplicate-skip |
-| `templates/snippets/prepare-llm-messages.ts.snippet` | `context_manager` helper |
-| `references/error-and-reliability.md` | Tool errors, circuit breaker, retries |
-| `references/observability.md` | Postgres audit, LangSmith, OTel, run context |
-| `references/architectures.md` | ReAct, plan_execute (suggested start for most MCP), other topologies; **node id ≠ state channel** |
-| `references/streaming-and-hitl.md` | SSE envelopes, operator `thinking` from planner state, `interrupt()`, `Command` resume |
-| `templates/contracts/planner-contract.md` | JSON planner hops: `executionPlan` + `userFacingIntent` |
-| `references/evals-and-gates.md` | Architecture, tool-selection, memory evals |
-| `references/anti-patterns.md` | Review gate before marking done |
+| Reference                                            | Read when                                                                                         |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `references/bootstrap-agent-runtime.md`              | Greenfield copy of `templates/agent-runtime/`                                                     |
+| `references/orphan-recovery-checklist.md`            | Project structure unclear or agent "lost"                                                         |
+| `references/runtime-layout.md`                       | Scaffolding, refactors, layer violations                                                          |
+| `references/placement-and-domains.md`                | Where to put files; domain vs graph vs config                                                     |
+| `references/prompt-and-capability-injection.md`      | System prompt layers, bind vs inject, bind parity                                                 |
+| `references/message-content-blocks.md`               | AIMessage/HumanMessage/ToolMessage across providers                                               |
+| `references/context-window-and-tokens.md`            | trim, summarize, tool vs skill body caps, `context_manager`                                       |
+| `references/mcp-complex-access.md`                   | Multi-server MCP, discovery, transport, lifecycle                                                 |
+| `references/capability-governance.md`                | Allowlist, classification, rate limits, tool budgets                                              |
+| `references/evidence-and-fidelity.md`                | State-backed evidence, fidelity gate, conversation-observed locale                                |
+| `templates/snippets/conversation-locale.ts.snippet`  | `resolveConversationLocale` + Intl `formatUserFacing`                                             |
+| `templates/snippets/tool-budget.ts.snippet`          | Per-turn tool/MCP caps, arg fingerprint duplicate-skip                                            |
+| `templates/snippets/prepare-llm-messages.ts.snippet` | `context_manager` helper                                                                          |
+| `references/error-and-reliability.md`                | Tool errors, circuit breaker, retries                                                             |
+| `references/observability.md`                        | Postgres audit, LangSmith, OTel, run context                                                      |
+| `references/architectures.md`                        | ReAct, plan_execute (suggested start for most MCP), other topologies; **node id ≠ state channel** |
+| `references/streaming-and-hitl.md`                   | SSE envelopes, operator `thinking` from planner state, `interrupt()`, `Command` resume            |
+| `templates/contracts/planner-contract.md`            | JSON planner hops: `executionPlan` + `userFacingIntent`                                           |
+| `references/evals-and-gates.md`                      | Architecture, tool-selection, memory evals                                                        |
+| `references/anti-patterns.md`                        | Review gate before marking done                                                                   |
 
 Templates: `templates/agent-runtime/` (greenfield tree), `templates/graph-spec.md`, `templates/contracts/`, `templates/snippets/` (brownfield patches).
 
 ## Session inputs
 
-| Variable | Required |
-| -------- | -------- |
-| `{agent_api_root}` | Default `agent-api` |
-| `{task}` | What to build, fix, or review |
+| Variable           | Required                      |
+| ------------------ | ----------------------------- |
+| `{agent_api_root}` | Default `agent-api`           |
+| `{task}`           | What to build, fix, or review |
 
 ## Orphan recovery (brownfield first)
 
@@ -220,11 +224,11 @@ Apply `references/capability-governance.md` and `references/prompt-and-capabilit
 
 ### Phase 6 — HTTP and interaction mode
 
-| Mode | Requirements |
-| ---- | ------------ |
-| `sync_json` | `POST /threads`, `POST /threads/:id/message` |
+| Mode            | Requirements                                                                                                                                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sync_json`     | `POST /threads`, `POST /threads/:id/message`                                                                                                                                                                              |
 | `streaming_sse` | SSE envelope per `references/streaming-and-hitl.md`; **greenfield MUST** ship `GET /dev-chat` gated by `DEV_CHAT_ENABLED` (local-only); JSON planner hops **MUST** emit operator `thinking` from state `userFacingIntent` |
-| HITL | `interrupt()` + `POST /threads/:id/resume` with `Command({ resume })` |
+| HITL            | `interrupt()` + `POST /threads/:id/resume` with `Command({ resume })`                                                                                                                                                     |
 
 Brownfield missing dev-chat: recommend add — not Critical. Postman synced with live routes.
 
@@ -269,6 +273,7 @@ When implementation is approved, delegate with:
 
 ```markdown
 ## LangGraph implementation task
+
 - Root: {agent_api_root}
 - Spec: path/to/graph-spec.md
 - Phase: [number and name from this skill]
@@ -286,29 +291,30 @@ Stay here for diagnosis, spec, placement, governance design, and **greenfield bo
 
 ## Stop conditions
 
-| Condition | Action |
-| --------- | ------ |
-| No `graph-spec.md` and user wants code now | Create spec or invoke architect |
-| Greenfield assembled from snippets / another product tree | Stop; run `scripts/bootstrap-agent-runtime.mjs` |
-| Path outside placement matrix / inventing folders | Stop; propose legal path |
-| Domain / locale / copy landing in `graph/` or `llm/` | Stop; reroute to conversation/config |
-| Bind without parity (dispatchable but unbound) | Stop; fix bind or document unbound + test |
-| `:` in a new wire name | Stop; use `__` separators |
-| Skill auto-inject + bind same id without explicit decision | Stop; choose one mode |
-| CrewAI requested | Redirect to appropriate skill |
-| Change spans >3 layers without plan | One-line phased plan, wait for approval |
-| Critical security gap (secrets in state, ungoverned MCP) | Block feature work; fix governance first |
+| Condition                                                  | Action                                          |
+| ---------------------------------------------------------- | ----------------------------------------------- |
+| No `graph-spec.md` and user wants code now                 | Create spec or invoke architect                 |
+| Greenfield assembled from snippets / another product tree  | Stop; run `scripts/bootstrap-agent-runtime.mjs` |
+| Path outside placement matrix / inventing folders          | Stop; propose legal path                        |
+| Domain / locale / copy landing in `graph/` or `llm/`       | Stop; reroute to conversation/config            |
+| Bind without parity (dispatchable but unbound)             | Stop; fix bind or document unbound + test       |
+| `:` in a new wire name                                     | Stop; use `__` separators                       |
+| Skill auto-inject + bind same id without explicit decision | Stop; choose one mode                           |
+| CrewAI requested                                           | Redirect to appropriate skill                   |
+| Change spans >3 layers without plan                        | One-line phased plan, wait for approval         |
+| Critical security gap (secrets in state, ungoverned MCP)   | Block feature work; fix governance first        |
 
 ## Related skills (ownership)
 
-| Skill | Owns |
-| ----- | ---- |
-| `ns-langgraph-agents` | Doctrine, placement, inject plan, graph-spec, greenfield scaffold |
-| `ns-coder` | Feature diffs + review loop (not initial scaffold copy) |
-| `ns-reviewer` | Verdict; when diff touches `agent-api`, apply placement + inject + wire-name + bind-parity anti-patterns from this skill |
-| `ns-multi-agent-architect` | Framework choice before Phase 0 when unlocked |
-| `ns-spec-driven` | Version features after scaffold exists (or first task = bootstrap) |
-| `ns-investigator` | Runtime debug |
+| Skill                      | Owns                                                                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `ns-langgraph-agents`      | Doctrine, placement, inject plan, graph-spec, greenfield scaffold                                                        |
+| `ns-coder`                 | Feature diffs + review loop (not initial scaffold copy)                                                                  |
+| `ns-reviewer`              | Verdict; when diff touches `agent-api`, apply placement + inject + wire-name + bind-parity anti-patterns from this skill |
+| `ns-agent-engineering`     | Conceptual adaptation design before architecture                                                                         |
+| `ns-multi-agent-architect` | Framework choice before Phase 0 when unlocked                                                                            |
+| `ns-spec-driven`           | Version features after scaffold exists (or first task = bootstrap)                                                       |
+| `ns-investigator`          | Runtime debug                                                                                                            |
 
 ## Forbidden
 

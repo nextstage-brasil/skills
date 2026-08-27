@@ -1,10 +1,13 @@
 ---
 name: ns-multi-agent-architect
-description: (NS) Interview to map the five-block reference architecture, decompose a workflow into subtasks, decide agent vs rule vs approval gate per subtask, assign trade-off budget per component, lock an architecture change signal, then recommend LangGraph vs CrewAI, topology, personas, tools, and models. Use when building multi-agent systems, choosing LangGraph/CrewAI, designing crews/graphs, HITL workflows, "agents working together", producing official architecture decision records, or reverse-documenting an agent that already exists. Do NOT use for general app requirements (`/ns-spec-driven` Clarify) or coding without architecture intent.
+description: (NS) Interview to map the five-block reference architecture, decompose a workflow into subtasks, decide agent vs rule vs approval gate per subtask, assign trade-off budget per component, lock an architecture change signal, then recommend LangGraph vs CrewAI, topology, personas, tools, and models — after conceptual adaptation design from `ns-agent-engineering` when agent vs RAG vs fine-tune is not yet locked. Use when building multi-agent systems, choosing LangGraph/CrewAI, designing crews/graphs, HITL workflows, "agents working together", producing official architecture decision records, or reverse-documenting an agent that already exists. Do NOT use for conceptual Prompt/RAG/Agent/Fine-Tune ladder (`ns-agent-engineering`), general app requirements (`/ns-spec-driven` Clarify), or coding without architecture intent.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
   version: "1.17"
+depends:
+  - ns-harness
+  - ns-langgraph-agents
 ---
 
 # Multi-Agent Architect
@@ -33,6 +36,8 @@ Once per session: grep or Glob `ns-langgraph-agents/SKILL.md` under `.agents/ski
 - Missing: skip. Interview still runs
 
 ## Core behavior (grill-me)
+
+**Prerequisite:** conceptual adaptation locked (`docs/specs/agent-design.md` or equivalent). Agent vs RAG vs Prompt vs Fine-Tune still open → **Stop** → `ns-agent-engineering` first.
 
 Walk tree depth-first. Resolve A before B.
 
@@ -70,12 +75,12 @@ User replies: one-line ack. Lock. Next question. Re-ask only if user contradicts
 
 Depth-first on rows already classified as agents (Steps 3–4). Reference blocks + end-to-end I/O first. Probes: `references/decision-pillars.md`.
 
-| Pillar | LangGraph signal | CrewAI signal |
-| ------ | ---------------- | ------------- |
-| **Control vs autonomy** | Rigid rules, deterministic paths, explicit branching | Agents freely decide how to collaborate |
-| **State complexity** | Feedback loops, state rollback, complex conditional routing | Linear or sequential pipeline |
-| **Human-in-the-loop** | Formal approval gates, runtime state edits, pause/resume | Minimal or informal human checkpoints |
-| **Scope and team** | Enterprise resilience, fault tolerance, long-lived system | Fast MVP, persona-driven tasks, small team |
+| Pillar                  | LangGraph signal                                            | CrewAI signal                              |
+| ----------------------- | ----------------------------------------------------------- | ------------------------------------------ |
+| **Control vs autonomy** | Rigid rules, deterministic paths, explicit branching        | Agents freely decide how to collaborate    |
+| **State complexity**    | Feedback loops, state rollback, complex conditional routing | Linear or sequential pipeline              |
+| **Human-in-the-loop**   | Formal approval gates, runtime state edits, pause/resume    | Minimal or informal human checkpoints      |
+| **Scope and team**      | Enterprise resilience, fault tolerance, long-lived system   | Fast MVP, persona-driven tasks, small team |
 
 Track mentally. No LangGraph/CrewAI pick until all four covered.
 
@@ -157,10 +162,10 @@ Required sections (plus architecture):
 
 File-only extras — **chosen framework only**. Omit the other heading. No "N/A" / "does not apply" stub. Why the other was rejected lives in **Framework Recommendation → Alternative considered** (one line). That line is enough.
 
-| Framework | Extra (include iff chosen) |
-| --------- | -------------------------- |
+| Framework     | Extra (include iff chosen)                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **LangGraph** | Mermaid `flowchart TB`: every node, one-column happy path, dashed error/interrupt edges; paint **nodes** with the same `classDef` as the five-block diagram; compact node→block legend. Layout MUST: `references/report-template.md` (LangGraph flow diagram). Forbidden: `subgraph` per doctrine block on this flowchart (`references/reference-architecture.md` — LangGraph container vs doctrine blocks) |
-| **CrewAI** | Team structure table: crew names, agents per crew, process type, task handoffs |
+| **CrewAI**    | Team structure table: crew names, agents per crew, process type, task handoffs                                                                                                                                                                                                                                                                                                                              |
 
 Always in file:
 
@@ -196,6 +201,7 @@ Trigger: "document why this agent is like this", "we never wrote the architectur
 
 ## Related skills (optional — when installed in same project)
 
+- `ns-agent-engineering` — if conceptual agent vs RAG vs Prompt vs Fine-Tune not locked, run first (`docs/specs/agent-design.md`)
 - `ns-spec-driven` — Clarify first if product scope vague
 - `ns-spec-driven` Specify — product requirements after architecture locked
 - `ns-docs-writer` — README / `docs/` **link** `docs/specs/agent-architecture.md`. Do not rewrite decision record
