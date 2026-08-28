@@ -4,7 +4,7 @@
     {
       "prompt": "/ns-spec-driven — specify user notification preferences for version 2.1 (email and in-app toggles).",
       "id": 1,
-      "expected_output": "Invokes ns-spec-driven: auto-sizes Medium+, reads references/clarify-requirements.md if ambiguous then references/requirements-generator.md for docs/versions/2.1/requirements.md. Does not run /ns-harness prepare.",
+      "expected_output": "Invokes ns-spec-driven: auto-sizes Medium+, Clarify-Strict mandatory (clarify-requirements.md → clarify-strict.md), Gate 0, then references/requirements-generator.md for docs/versions/2.1/requirements.md (and ui-contract.md if UI / ui-screen in scope). Does not run /ns-harness prepare.",
       "files": []
     },
     {
@@ -155,6 +155,132 @@
       "prompt": "/ns-spec-driven — generate backend task for Feature 003. requirements.md asks for new OrderDto for orders table but repo migration builder already emits Order model and DTO.",
       "id": 26,
       "expected_output": "task-writer loads task-generator.md Grounding + Backend extras; refuses to name OrderDto in card; marks needs-clarification or omits DTO; cites builder/generator precedent and repo-over-requirements rule.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — version 4.0 dense API spec pasted (endpoints, payloads) but no error/rejection matrix. Specify now.",
+      "id": 27,
+      "expected_output": "Clarify-Strict Gate 0: error/rejection matrix is critical unknown. Stops; writes clarify-contract.md + unknowns-register.md; does NOT write requirements.md.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — after first clarify round, critical unknowns remain (pagination limit unset). User says that's enough questions.",
+      "id": 28,
+      "expected_output": "No one-round cap. Starts another question round. Does not Specify. Does not invent the limit.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — sensitive enum still unconfirmed. User says proceed.",
+      "id": 29,
+      "expected_output": "proceed alone is not sensitive confirmation (clarify-strict.md + human-communication.md Gate 0). Re-asks the enum. Does not write requirements.md.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — human accepts premise 'page size 20' with impact noted. Continue to requirements.",
+      "id": 30,
+      "expected_output": "Premise appears in clarify-contract.md Assumed premises with impact AND in requirements.md Assumed premises after Gate 0 + Specify.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven resume version 4.1 — unknowns-register.md still has critical open. Write requirements.md.",
+      "id": 31,
+      "expected_output": "session-continuity.md: re-enters Clarify-Strict, not Specify. Refuses requirements-generator until Gate 0.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — user pastes 10-section OpenAPI-like table for version 4.2. Start planning.",
+      "id": 32,
+      "expected_output": "Intake: persists docs/versions/4.2/source/{slug}.md verbatim with Sx anchors; classifies sections; seeds spec-coverage.md. Auto-size Large min. Does not paraphrase source/.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — analyze requirements for 4.2. source/ has an unclassified api-contract section; some ACs lack Source: Sx.",
+      "id": 33,
+      "expected_output": "analyze-consistency.md Source coverage: Blocker; Consistency Status Reproved; no task generation.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — generate backend task. requirements mention WidgetDto but it only appears in chat, not in version source/ or repo.",
+      "id": 34,
+      "expected_output": "task-generator Grounding: source-only miss. Does not name WidgetDto on the card; needs-clarification or omit.",
+      "files": []
+    },
+    {
+      "prompt": "Close version 4.2 — spec-coverage.md missing while source/ exists. Reviewer?",
+      "id": 35,
+      "expected_output": "ns-reviewer Version closure spec-conformance: missing ledger evidence → Rejected. Not Approved.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — execute unit-001. ui-contract.md lists 8 elements; worker implemented 6. Next wave?",
+      "id": 36,
+      "expected_output": "orchestrator.md unit checkpoint: report UI divergence before next wave; do not silently advance; spec-coverage not flipped verified for missing elements.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — source names FPA08 for rate-limit. Ask the human about the success-cap gap.",
+      "id": 37,
+      "expected_output": "human-communication.md + clarify-strict.md: chat asks observable HTTP/when (successful request cap), numbered 1. 2. 3., invites reply by number. Does NOT require human to recall or confirm FPA08. Codes may be written only in clarify-contract.md / source/ after the situation is answered.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — items 6–12 are yes/no confirms of stated values. Human: Tudo sim. Items 1–2 still open (HTTP pick).",
+      "id": 38,
+      "expected_output": "clarify-strict.md + human-communication.md: Tudo sim / all yes confirms remaining yes/no sensitive items. Re-asks only open numbers 1–2. Does not treat proceed or pode seguir as bulk-yes. Does not Specify until open questions answered.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — limit table cell is a numeric range. Specify now.",
+      "id": 39,
+      "expected_output": "clarify-strict.md D1: Limits stay open. No Specify until single value, allowed set, or accepted premise. Does not treat range as answered.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — source cites a prototype for screen copy; path not in reference-sources.md.",
+      "id": 40,
+      "expected_output": "clarify-strict.md D2: UI/copy stays open. Does not mark answered. Intake must register path before Clarify close.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — two sections conflict on naming (display label vs never-hardcode). Continue.",
+      "id": 41,
+      "expected_output": "clarify-strict.md D3: records both sides; does not silently pick a winner. Category stays open until premise or human pick.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — report UI asks a date range longer than the only declared store can keep; no other store.",
+      "id": 42,
+      "expected_output": "clarify-strict.md: D3 capability + critical. Gate 0 does not pass. No Specify without pin, other store, or skip-clarify waiver.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — source has a delivery-phase / order table. Open Clarify questions for phase sequence?",
+      "id": 43,
+      "expected_output": "Not a Gate 0 detector. Maps spec-coverage.md rows + version-partitioner / task order. Does not open Gate 0 questions for phase sequence.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — layout path registered in reference-sources.md but unreachable. Re-ask and block?",
+      "id": 44,
+      "expected_output": "D2 escape: major premise + impact; unknowns-register row; quote at Gate 1. Does not re-ask twice. Does not block Gate 0 on unreachable registered path.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven analyze consistency — requirements.md limit table still says unresolved adjective; no Assumed premises row.",
+      "id": 45,
+      "expected_output": "analyze-consistency.md D1 rescan on contract tables: Blocker; Consistency Reproved; no task generation.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven analyze consistency — requirements.md narrative has a size estimate range; contract tables are pinned.",
+      "id": 46,
+      "expected_output": "D1 rescan scope is contract tables only. Narrative size/volume aside is not a D1 Blocker.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven generate tasks — task Contract block still has TBD and no premise cite.",
+      "id": 47,
+      "expected_output": "task-generator.md D1 on Contract: refuse / needs-clarification. Does not emit the card.",
       "files": []
     }
   ]

@@ -1,6 +1,6 @@
 # Intelligent SaaS stack profile
 
-Apply when product includes backend, frontend, and agent-api (LangGraph or similar agent runtime).
+Product includes backend, frontend, and agent-api (LangGraph or similar agent runtime).
 
 ## product_class
 

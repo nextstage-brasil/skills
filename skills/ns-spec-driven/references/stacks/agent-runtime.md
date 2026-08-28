@@ -1,6 +1,6 @@
 # Agent-runtime stack profile
 
-Apply when the product is a standalone LangGraph `agent-api` (`product_class: agent_runtime`) — no Laravel/React app in the same version.
+Standalone LangGraph `agent-api` (`product_class: agent_runtime`). No Laravel/React app in same version.
 
 ## product_class
 

@@ -1,6 +1,6 @@
 # Version Partitioner
 
-Split master `requirements.md` into subversions for sequential planning.
+Split master `requirements.md` into subversions. Sequential planning.
 
 ## Session boot
 
@@ -15,13 +15,13 @@ See `../../../ns-harness/references/artifact-layout.md` and `../../../ns-harness
 ## Algorithm
 
 1. **Parse master** — Features, precedences, data model hints, layer tags
-2. **Build DAG** — default order: schema then API then FE then tests; honor explicit precedence
+2. **Build DAG** — default: schema then API then FE then tests; honor explicit precedence
 3. **Group by bounded context** — cluster by domain/entity
 4. **Split oversized groups** when:
    - \> 12 features with cross-dependencies, or
    - ~50 estimated tasks, or
    - ~600k token heuristic
-5. **Consolidate undersized** — merge adjacent slices below ~4 tasks when safe; **slice size target 4–7 tasks** (not the classic dispatch batch). Task unit = **1 Feature × 1 impl layer** + capped test tasks (`task-generator.md` Decomposition) — `tasks est.` must use that unit so slice target holds
+5. **Consolidate undersized** — merge adjacent slices below ~4 tasks when safe; **slice size target 4–7 tasks** (not classic dispatch batch). Task unit = **1 Feature × 1 impl layer** + capped test tasks (`task-generator.md` Decomposition) — `tasks est.` MUST use that unit so slice target holds
 6. **Topological sort** — folders `01-slug`, `02-slug`, …
 7. **Emit artifacts:**
    - `version-roadmap.md` at version root
@@ -50,6 +50,6 @@ Start `status` as `pending`.
 
 ## Integration
 
-After partition then Gate Roadmap (human confirms) then plan each slice (Gates 2–3, tasks) without repeating Gate 1.
+Partition then Gate Roadmap (human confirms) then plan each slice (Gates 2–3, tasks). Do not repeat Gate 1.
 
-**Delivery units:** slice folder = **candidate grouping only** for later `delivery-units.md`. Never merge tasks across slices into one unit. Slice may **split** into multiple units when task graph shows independence — see `delivery-units.md` (authoritative for GitLab publish).
+**Delivery units:** slice folder = **candidate grouping only** for later `delivery-units.md`. Never merge tasks across slices into one unit. Slice may **split** into multiple units when task graph shows independence — `delivery-units.md` authoritative for GitLab publish.

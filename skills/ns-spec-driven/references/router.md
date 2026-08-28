@@ -2,20 +2,28 @@
 
 Map natural-language triggers to **phase** and **reference** (under `references/`).
 
+## Intake
+
+| Trigger phrases | Reference | Output |
+| --------------- | ------ | ------ |
+| pasted contract/schema, dense spec, "persist source" | `source-registry.md` | `docs/versions/{version_san}/source/{slug}.md`, `spec-coverage.md`, `docs/context/reference-sources.md` |
+
 ## Clarify
 
 | Trigger phrases | Reference | Preconditions |
 | --------------- | ------ | ------------- |
-| vague scope, "dashboard", "notifications", "integrate with X" | `clarify-requirements.md` | None |
-| before first requirements for a version | `clarify-requirements.md` | Skip if requirements.md already approved |
+| vague scope, "dashboard", "notifications", "integrate with X" | `clarify-strict.md` via `clarify-requirements.md` | None |
+| before first requirements for a version | `clarify-strict.md` via `clarify-requirements.md` | Skip if requirements.md already approved **and** no open critical unknowns |
+| reopen clarification, Gate 0 fail, resume with open critical | `clarify-strict.md` | Do not Specify |
+| coverage check, unmapped section | `spec-coverage.md` + `analyze-consistency.md` | `source/` exists |
 
-**Output:** enriched context in chat + optional updates to `docs/context/` — not `requirements.md`.
+**Output:** `clarify-contract.md` + `unknowns-register.md`. Not `requirements.md`.
 
 ## Specify
 
 | Trigger phrases | Reference | Output |
 | --------------- | ------ | ------ |
-| "write requirements", "spec for vX", "define version" | `requirements-generator.md` | `docs/versions/{version_san}/requirements.md` |
+| "write requirements", "spec for vX", "define version" | `requirements-generator.md` | `docs/versions/{version_san}/requirements.md` (+ `ui-contract.md` when UI / `ui-screen`) |
 
 ## Consistency
 

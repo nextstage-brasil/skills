@@ -74,7 +74,7 @@ Until scope done or all tasks complete:
 
 1. **Update handoff — batch start:** each selected row `Status` → `in_progress`; `Started at` → now; `Updated at` → now
    - **GitLab batch start:** if caller is `ns-execution-gitlab-issue` → **zero** board writes here. Else apply SSoT at **unit** start only (Flow B per task only when SSoT Flow B row).
-2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). Open `Detailed description` on demand — ambiguity or `blocked`. See `../../ns-spec-driven/references/task-schema.md`.
+2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). If `### Contract` present (API/schema/screen), always read it. Open cited `source/` section anchors for the batch. Open `Detailed description` on demand — ambiguity or `blocked`. See `../../ns-spec-driven/references/task-schema.md`.
 3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-batch re-read; never tool-Read `AGENTS.md`)
 4. **Implement** — **one** `coder-agent` dispatch per batch (**MUST** when available; loads `ns-coder`); else `ns-coder` direct. See `../../../ns-harness/references/subagent-dispatch.md`.
    - **Dispatch must state SDD handoff mode:** this batch only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer`; **do not** run living specs; review = **Step 5** only.
@@ -116,10 +116,11 @@ When pausing mid-version:
 
 When all tasks are `completed` or `waived`:
 
-### Step 4 — Optional UI / nav review
+### Step 4 — UI / nav review
 
-When the product has frontend navigation changes, present grouping proposals and
-**wait for human approval** before applying.
+When `docs/versions/{version_san}/ui-contract.md` exists: **mandatory** — every contract element/handler vs implementation; report divergence. Then, if product has frontend navigation changes, present grouping proposals and **wait for human approval** before applying.
+
+When no `ui-contract.md` but frontend navigation changes: present grouping proposals and **wait for human approval** before applying.
 
 ### Step 4.5 — E2E (human only)
 

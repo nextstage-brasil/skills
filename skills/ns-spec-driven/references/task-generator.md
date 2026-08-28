@@ -1,12 +1,12 @@
 # Task Generator
 
-Convert Features into detailed `task-NNN-slug.md` for engineers or coding agents. Unit = **1 Feature × 1 impl layer = 1 implementation task** (+ capped test tasks — see **Decomposition**).
+Convert Features into `task-NNN-slug.md`. Unit = **1 Feature × 1 impl layer = 1 implementation task** (+ capped test tasks — **Decomposition**).
 
 Face (**MUST** spawn `task-writer-agent` when bridge exists — `../../../ns-harness/references/subagent-dispatch.md`). This file = worker body, not invite inline from `ns-spec-driven`.
 
 ## Session boot
 
-See `../../../ns-harness/references/session-boot.md` — finish steps 1–6 there; task-generator adds:
+`../../../ns-harness/references/session-boot.md` steps 1–6 first; task-generator adds:
 
 - Load **all** `.nextstage-harness/rules/*.md` marked **always-applicable** in harness `manifest.json`, plus layer rules for target layer.
 - Load **agent-requested** rules when `manifest.json` `description` matches task scope (persistence, auth, tenancy, build). No manifest: scan `rules/*.md`; read files whose scope matches.
@@ -23,21 +23,22 @@ See `../../../ns-harness/references/session-boot.md` — finish steps 1–6 ther
 
 ## Golden rule
 
-No one-line summaries. Implementer must know what, where (probable paths), which stack/rules, validation criteria. Never repeat summary verbatim in detailed section.
+No one-line summaries. Implementer must know what, where (probable paths), stack/rules, validation. Never repeat summary verbatim in detailed section.
 
-**Write paths:** `Files to create or modify` must list **concrete repo-relative paths** (collision input for `delivery-units.md`). No globs, no placeholders — see `task-schema.md`.
+**Write paths:** `Files to create or modify` = **concrete repo-relative paths** (collision input for `delivery-units.md`). No globs, no placeholders — `task-schema.md`.
 
 ## Grounding (blocking)
 
-Before writing card, every **named symbol** (class, command, helper, DTO, migration path) must be one of:
+Before card, every **named symbol** (class, command, helper, DTO, migration path) must be one of:
 
 | Source | OK |
 | ------ | -- |
+| Named in version `source/` (cite anchor `Sx`) | Yes |
 | Grep-confirmed in repo | Yes |
 | Named in loaded rules | Yes |
 | Listed under **New artifacts** with command that creates it | Yes |
 
-Any other case: remove symbol or mark `needs-clarification`. Do not dispatch grounded-on-assumption cards.
+Else: remove symbol or mark `needs-clarification`. Do not dispatch grounded-on-assumption cards.
 
 ## Decomposition
 
@@ -57,6 +58,9 @@ No mega-task (whole Feature all layers). No one-task-per-class (FormRequest alon
 - Feature + layer (from face / Gate 3 plan)
 - Layer type: Backend | Frontend | Infra | unit-tests | e2e
 - `docs/versions/{version_san}/requirements.md`
+- `source/` + `spec-coverage.md` when present — refuse cards for unmapped mappable sections
+- `ui-contract.md` when UI in scope
+- **D1 on Contract:** `### Contract` still has `TBD` / `impl.` / `to be defined` / range in constant cell / limit adjectives (`short`, `generic`) and no premise cite: refuse / `needs-clarification`. Do not emit card.
 - Task number `NNN` and dependency tasks
 
 ## Dependencies
@@ -69,14 +73,16 @@ No mega-task (whole Feature all layers). No one-task-per-class (FormRequest alon
 
 When task touches UI:
 
-- **data-testid contract** — kebab-case, prefixed (`btn-`, `input-`, `form-`, etc.)
+- **UI grain:** one screen or modal group = **one** task if **≥6** elements (`ui-contract.md`)
+- **data-testid contract** — from `ui-contract.md` when present; else kebab-case, prefixed (`btn-`, `input-`, `form-`, etc.)
+- Every card: **Source refs** header (`task-schema.md`)
 - Auth forms: marketing panel, PasswordInput, i18n keys per frontend rules when present
 - i18n: all strings via translation keys; `useFormat()` for dates/currency
 - Navigation: `groupKey` when adding menu items (if nav rules exist)
 
 ## Backend extras
 
-Persistence, auth, tenancy, clock, ID conventions come from `architecture-rules.md` + mandatory project rules — **not** this file.
+Persistence, auth, tenancy, clock, ID conventions from `architecture-rules.md` + mandatory project rules — **not** this file.
 
 | Rule | Action |
 | ---- | ------ |

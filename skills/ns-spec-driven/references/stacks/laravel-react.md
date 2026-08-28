@@ -1,6 +1,6 @@
 # Laravel + React stack profile
 
-Apply when stack confirmed Laravel backend + React/TypeScript frontend (optional monorepo `backend/` + `frontend/`).
+Stack confirmed Laravel backend + React/TypeScript frontend (optional monorepo `backend/` + `frontend/`).
 
 Load harness rules when present: `backend-rules.mdc`, `frontend-rules.mdc`, `architecture-rules.mdc`, `i18n-rules.mdc`, `e2e-tests-rules.mdc`.
 
@@ -27,7 +27,7 @@ Load harness rules when present: `backend-rules.mdc`, `frontend-rules.mdc`, `arc
 
 ## uses_grogoo
 
-Only reference Grogoo pipeline when `uses_grogoo: true` in stack context. Default `false`: Sanctum, manual modules, no Grogoo-specific commands in requirements.
+Reference Grogoo pipeline only when `uses_grogoo: true` in stack context. Default `false`: Sanctum, manual modules, no Grogoo-specific commands in requirements.
 
 ## Docker / frontend proxy
 

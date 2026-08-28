@@ -4,7 +4,7 @@ description: '(NS) Spec-driven delivery face — clarify, requirements, tasks (i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.6"
+  version: "1.8"
 depends:
   - ns-harness
   - ns-coder
@@ -15,7 +15,9 @@ depends:
 
 # NextStage Spec-Driven
 
-**Delivery face** for spec-driven journey: clarify, specify, (consistency / partition), tasks, execute, close.
+**Delivery face** for spec-driven journey: intake, clarify-strict, specify, (consistency / partition), tasks, execute, close.
+
+Completeness before fidelity, both by construction. Clarify-Strict **grill** = Gate 0 only. Confirm gates **1–4** and brownfield Step 0.4 stay. Version Clarify-Strict ≠ per-issue enricher (`ns-requirements-enricher`). `ns-project-manager` stays decoupled.
 
 **Orchestrate** — **not** implement phase bodies inline. **Read** phase reference at delegation time. State on **disk** (`docs/versions/`, `docs/context/`, handoff files), not chat history.
 
@@ -45,7 +47,7 @@ See `../../ns-harness/references/session-boot.md`, `../../ns-harness/references/
 | Need                              | Skill                                                                      |
 | --------------------------------- | -------------------------------------------------------------------------- |
 | Full prepare after `harness init` | `/ns-harness prepare this repo` or `npx @nextstage-brasil/harness prepare` |
-| Single worker only                | `/ns-harness` + architecture-rules / brownfield / reverse-spec / agents-md |
+| Per-issue GitLab grill-me         | `/ns-requirements-enricher` — not version Clarify-Strict                   |
 
 `architecture-rules.md` still stub or `docs/context/brownfield-map.md` missing and task needs them: **tell user run `/ns-harness prepare this repo`**, then stop — or continue SDD **only if they insist** after warning.
 
@@ -55,7 +57,8 @@ See `../../ns-harness/references/session-boot.md`, `../../ns-harness/references/
 flowchart LR
   user[User request]
   size[Auto-size]
-  clarify[Clarify]
+  intake[Intake]
+  clarify[Clarify-Strict]
   specify[Specify]
   consist[Consistency]
   part[Partition]
@@ -68,7 +71,8 @@ flowchart LR
 
   user --> size
   size -->|Small| quick
-  size -->|Medium+| clarify
+  size -->|Medium+| intake
+  intake --> clarify
   clarify --> specify
   specify --> consist
   specify --> part
@@ -83,8 +87,9 @@ flowchart LR
 
 | Phase       | When                         | Reference                                                                                                                                                                            |
 | ----------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Clarify     | Ambiguity / gray areas       | `references/clarify-requirements.md` (in-session — no v1 bridge)                                                                                                                     |
-| Specify     | Always for Medium+           | `references/requirements-generator.md` (in-session — no v1 bridge)                                                                                                                   |
+| Intake      | Dense / pasted source        | `references/source-registry.md` — persist `source/{slug}.md`, anchors, classify                                                                                                       |
+| Clarify     | Medium+ mandatory            | `references/clarify-requirements.md` then `references/clarify-strict.md`: checklist, D1–D3, Gate 0 (in-session)                                                                      |
+| Specify     | Always for Medium+           | `references/requirements-generator.md` — also writes `ui-contract.md` when `ui-screen` in source (in-session — no v1 bridge)                                                                 |
 | Consistency | Before tasks (Large+)        | `references/analyze-consistency.md` (in-session — no v1 bridge)                                                                                                                      |
 | Partition   | Multi-slice versions         | `references/version-partitioner.md` (in-session — no v1 bridge)                                                                                                                      |
 | Tasks       | Medium+ formal tasks         | `task-writer-agent` → `references/task-generator.md` (**MUST** when available) then `unit-test-task-generator.md` / `e2e-test-task-generator.md` |
@@ -98,18 +103,19 @@ Details: `references/auto-sizing.md`, `references/router.md`.
 
 ## Boot (mandatory, once per session)
 
-1. Classify request → **Small / Medium / Large** (`references/auto-sizing.md`).
-2. Check **resume** signals (`execution-handoff.md`, `version-roadmap.md`, partial version) → `references/session-continuity.md`.
-3. **Agent runtime gate** — agent-api / intelligent SaaS (`references/agent-runtime-integration.md`): **MUST** load `ns-langgraph-agents` in session before any phase; **stop** if skill not installed.
-4. Scan installed complements (soft) → `references/skill-integrations.md`.
-5. Confirm **once** when needed: target version id, language for markdown artifacts — **natural chat** (`references/human-communication.md`). Never open with telegraphic status dump or phase jargon.
+1. Classify request → **Small / Medium / Large** (`references/auto-sizing.md`). Dense source (contract/schema tables or ~8+ sections) → Large min.
+2. **Source detection:** list `docs/versions/{version_san}/source/` and user-pasted specs → Intake (`source-registry.md`) before Clarify.
+3. Check **resume** signals (`execution-handoff.md`, `version-roadmap.md`, partial version, open unknowns) → `references/session-continuity.md`.
+4. **Agent runtime gate** — agent-api / intelligent SaaS (`references/agent-runtime-integration.md`): **MUST** load `ns-langgraph-agents` in session before any phase; **stop** if skill not installed.
+5. Scan installed complements (soft) → `references/skill-integrations.md`.
+6. Confirm **once** when needed: target version id, language for markdown artifacts — **natural chat** (`references/human-communication.md`). Never open with telegraphic status dump or phase jargon.
 
 ## Human communication
 
 Chat short, natural language. **Read `references/human-communication.md` before any human gate or boot confirm.**
 
 - Name next **deliverable** ("requirements document", "task files") — not internal phases ("Specify", "Clarify").
-- Chat stand alone: highlights in plain language; document IDs only after meaning (**Gate 1 highlights** in that file).
+- Chat stand alone: highlights in plain language; document IDs only after meaning (**Gate 1 highlights** in that file). Gate 0: **numbered** asks (`1.` `2.` …); human may reply by number **or** `Tudo sim` / `all yes` on remaining yes/no confirms (not open questions). Behavior (when, HTTP, copy) — never product error codes (`FPA*`) for the human to recall.
 - Never use `Reply:`, `Premise:`, or "go for Specify".
 - Caveman / artifact-compress = **files only** — never chat.
 
@@ -127,7 +133,7 @@ Chat short, natural language. **Read `references/human-communication.md` before 
 | Size       | Pipeline                                                                                                        |
 | ---------- | --------------------------------------------------------------------------------------------------------------- |
 | **Small**  | `coder-agent` → `ns-coder` (quick mode — `references/quick-mode.md`)                                            |
-| **Medium** | Clarify (if needed) → Specify → Tasks (**MUST** `task-writer-agent` when available) → optional Gate 4 + units → handoff → Execute → Close |
+| **Medium** | Intake (if source) → Clarify-Strict → Specify → Tasks (**MUST** `task-writer-agent` when available) → optional Gate 4 + units → handoff → Execute → Close |
 | **Large**  | Full chain including Consistency and/or Partition when scope warrants                                           |
 
 **Safety valve:** scope exceeds ~3 files or explodes mid-session → stop, formalize via Medium+ pipeline (requirements + tasks).
@@ -154,7 +160,8 @@ Worker dispatch: **MUST** use harness project agents when available — `../../n
 | User says                                              | Read first                                                                        |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------- |
 | "specify", "requirements for vX"                       | `references/router.md` → `requirements-generator.md`                              |
-| "clarify", vague scope                                 | `references/router.md` → `clarify-requirements.md`                                |
+| "clarify", vague scope, reopen clarification           | `references/router.md` → `clarify-strict.md` via `clarify-requirements.md`        |
+| Intake / persist source / coverage                     | `references/source-registry.md` + `references/spec-coverage.md`                   |
 | "implement", "build version", tasks exist              | `references/session-continuity.md` + Execute                                      |
 | "quick fix", "just change X"                           | `references/quick-mode.md`                                                        |
 | "resume", "continue version", partial `docs/versions/` | `references/session-continuity.md`                                                |
@@ -198,6 +205,11 @@ When version or quick fix closes, report:
 - Create GitLab issue per `task-NNN` or one issue for whole version.
 - Parallel unit execution without `A ∥ B` or without Gate 4 parallel choice.
 - Address human with internal phase names ("Specify", "Clarify") or bot chrome (`Reply:`, `Premise:`).
+- Specify with open critical unknown (no `skip clarify` waiver).
+- Silent assumption from unanswered critical.
+- Edit `docs/versions/{version_san}/source/` after Gate 1.
+- Task cards for unmapped mappable source sections.
+- UI implementation task without `ui-contract.md` when UI in scope.
 
 ## Invocation examples
 

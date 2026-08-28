@@ -36,12 +36,12 @@ npx @nextstage-brasil/harness --skill ns-langgraph-agents --no-scaffold -y
 
 ## Greenfield (no `agent-api/package.json`)
 
-Coordinate **features** here; **skeleton** is `ns-langgraph-agents` bootstrap. Do not invent a second tree.
+Coordinate **features** here. **Skeleton** = `ns-langgraph-agents` bootstrap. Do not invent second tree.
 
-1. Framework unlocked? → `ns-multi-agent-architect` then continue
+1. Framework unlocked? `ns-multi-agent-architect` then continue
 2. Specify first infrastructure feature: copy `templates/agent-runtime/` (`ns-langgraph-agents/references/bootstrap-agent-runtime.md`) + `graph-spec.md`
 3. Later features = deltas only (MCP servers, HITL routes, domain in `conversation/` + `config/`, evals)
-4. Execute: first pending task **runs the bootstrap script** (not snippet assembly, not copy from another product). Later tasks → `ns-coder`
+4. Execute: first pending task **runs bootstrap script** (not snippet assembly, not copy from another product). Later tasks: `ns-coder`
 
 ## Orchestration
 

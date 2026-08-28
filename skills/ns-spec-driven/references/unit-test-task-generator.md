@@ -1,8 +1,8 @@
 # Unit Test Task Generator
 
-Create `task-NNN-*.md` for backend unit and HTTP integration tests covering Feature.
+Emit `task-NNN-*.md` for backend unit + HTTP integration covering Feature.
 
-Face **MUST** read this file after backend implementation tasks exist (`task-generator.md`). Not catalog skill.
+Face **MUST** read after backend implementation tasks exist (`task-generator.md`). Not catalog skill.
 
 ## Boundary
 
@@ -16,16 +16,16 @@ Load `.nextstage-harness/rules/backend-tests-rules.mdc` and `backend-rules.mdc` 
 ## Inputs
 
 - Feature to cover
-- List of backend implementation tasks already generated
+- Backend implementation tasks already generated
 - `requirements.md` data model
 
 ## Test pyramid (backend)
 
-```
-        [ E2E ]  ← e2e-test-task-generator.md
-     [ Integration ]  ← Controller/HTTP tests
-    [ Unit tests ]  ← Service, FormRequest, Model, Rules
-```
+| Layer | Owner |
+| ----- | ----- |
+| E2E | `e2e-test-task-generator.md` |
+| Integration | Controller/HTTP tests |
+| Unit | Service, FormRequest, Model, Rules |
 
 ## What to test
 
@@ -39,25 +39,23 @@ Load `.nextstage-harness/rules/backend-tests-rules.mdc` and `backend-rules.mdc` 
 
 ## Output structure
 
-Include:
-
-- Summary and detailed test plan (not duplicate)
+- Summary + detailed test plan (not duplicate)
 - **Backend root** — `backend/` (monorepo) or detected brownfield path
 - Files under `tests/Unit/` and `tests/Feature/`
 - Scenario checklists per component
 - Mandatory patterns: RefreshDatabase, factories, response shape, cross-tenant cases
-- **Run command** — `vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error` in Docker with 120s timeout (see `ns-backend-tests`)
-- Bootstrap note when project has no `tests/` yet: executor must run `ns-backend-tests` Phase 0 before test classes
+- **Run command** — `vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error` in Docker, 120s timeout (`ns-backend-tests`)
+- No `tests/` yet: executor runs `ns-backend-tests` Phase 0 before test classes
 
 ## Dependencies
 
-Task must reference `task-NNN.md` of backend implementation it covers.
+Reference `task-NNN.md` of backend implementation covered.
 
 ## Rules
 
-- Happy-path-only tasks for tenant-scoped CRUD **incomplete** without cross-tenant P0
+- Happy-path-only for tenant-scoped CRUD **incomplete** without cross-tenant P0
 - Do not point tests at production database
-- Match project test runner commands — PHPUnit: `vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error` in Docker, 120s timeout
+- Match project test runner — PHPUnit: `vendor/bin/phpunit --testdox --stop-on-failure --stop-on-error` in Docker, 120s timeout
 
 ## Related
 

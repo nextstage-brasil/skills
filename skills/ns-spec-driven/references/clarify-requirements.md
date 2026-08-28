@@ -1,43 +1,46 @@
 # Clarify Requirements
 
-Pre-planning workflow: identify and resolve ambiguities **before** Specify (`requirements-generator.md`).
+Entry shell for Clarify-Strict. Ambiguities **before** Specify. Doctrine: `clarify-strict.md`.
 
 ## Harness
 
-See `../../../ns-harness/references/session-boot.md` and `../../../ns-harness/references/artifact-layout.md`.
+`../../../ns-harness/references/session-boot.md` + `../../../ns-harness/references/artifact-layout.md`.
 
-Stack and architecture questions belong to stack detection — not this phase.
+Stack/architecture questions = stack detection — not this phase.
 
 ## When to use
 
-- Vague or incomplete scope from user
-- Ambiguous terms (dashboard, integration, notification system)
-- First version of new system without prior documentation
-- Face judges scope too thin (< 3 paragraphs or vague terms)
+- Medium+ pipeline (Clarify **mandatory** — `auto-sizing.md`)
+- Vague / incomplete scope; ambiguous terms
+- First version without prior docs
+- Resume with open critical unknowns (`session-continuity.md`) — re-enter here, not Specify
+- Intake persisted `source/` — still run checklist vs inventory
+
+Grain: version `docs/versions/{version_san}/`. Per-issue GitLab grill-me = `ns-requirements-enricher` (not this file).
 
 ## Workflow
 
 ### Step 0 — Brownfield gate (before analysis)
 
-**Do not grep or explore application source code** until this step completes.
+**Do not grep or explore application source** until this step completes.
 
 1. Check `docs/context/brownfield-map.md`.
-2. Detect brownfield signals under repo: `backend/`, `frontend/`, `src/`, `app/`, or equivalent application code (not docs-only repos).
-3. **If brownfield signals exist and `brownfield-map.md` is missing:**
-   - Stop — do not ask clarification questions yet.
-   - Invoke **`/ns-harness`** `bootstrap-brownfield.md` and produce `docs/context/brownfield-map.md`.
-   - Tell user briefly brownfield context required before refining scope.
-   - Resume this phase at **Step 0.4** (refresh gate) once map file exists.
-4. **If greenfield** (no application code) — skip bootstrap; proceed to Step 1.
-5. **If `brownfield-map.md` already exists** — run **Step 0.4** before any scope analysis.
+2. Detect brownfield signals: `backend/`, `frontend/`, `src/`, `app/`, or equivalent (not docs-only).
+3. **Brownfield signals + map missing:**
+   - Stop — no clarification questions yet.
+   - Invoke **`/ns-harness`** `bootstrap-brownfield.md`; output `docs/context/brownfield-map.md`.
+   - Tell user brownfield context required before refining scope.
+   - Resume at **Step 0.4** once map exists.
+4. **Greenfield** (no application code) — skip bootstrap; Step 1.
+5. **Map already exists** — **Step 0.4** before any scope analysis.
 
 #### Step 0.4 — Brownfield refresh gate (mandatory human confirmation)
 
-**Stop. Do not proceed to Step 1 until human replies.**
+**Stop. No Step 1 until human replies.**
 
 1. Read `docs/context/brownfield-map.md`.
-2. Extract map date from `**Date:**` line in file header. If absent, state `date unknown`.
-3. Present gate to human in **natural chat** (match conversation language; English template below). Do **not** use phase jargon, `Reply:`, or telegraphic status dumps. See `human-communication.md`.
+2. Extract map date from `**Date:**` header. Absent → `date unknown`.
+3. Present gate in **natural chat** (conversation language; English template below). No phase jargon, `Reply:`, telegraphic dumps. See `human-communication.md`.
 
 ```
 There's already a codebase map at docs/context/brownfield-map.md
@@ -49,114 +52,76 @@ Want me to re-scan the repo and update it, or keep this one and move on to scope
 - keep — use the map as-is
 ```
 
-4. **Wait for explicit reply.** Valid answers: `refresh` / `keep` (or clear equivalent in natural language).
-5. **Never assume** `keep` because map looks recent, because planning urgent, or because user already pasted descritivo.
-6. On **`refresh`:** invoke **`/ns-harness`** `bootstrap-brownfield.md` (update in place), then continue to Step 1 with new map.
-7. On **`keep`:** note in session context human accepted map date `{date}`; continue to Step 1 using existing file.
-8. On ambiguous reply: ask once more — do not start Step 1 until `refresh` or `keep` clear.
+4. **Wait for explicit reply.** Valid: `refresh` / `keep` (or clear natural equivalent).
+5. **Never assume** `keep` (recent map, urgency, pasted spec).
+6. On **`refresh`:** `/ns-harness` `bootstrap-brownfield.md` (update in place), then Step 1 with new map.
+7. On **`keep`:** note human accepted map date `{date}`; Step 1 with existing file.
+8. Ambiguous reply: ask once more — no Step 1 until `refresh` or `keep` clear.
 
-Also read `docs/context/system-reverse-spec.agent.md` when present (prefer over prose body); else `system-reverse-spec.md` (after gate resolves).
+Also read `docs/context/system-reverse-spec.agent.md` when present (prefer over prose); else `system-reverse-spec.md` after gate.
 
-Allowed reads before Step 1 (brownfield): user scope file, `brownfield-map.md`, `system-reverse-spec.agent.md` / `system-reverse-spec.md`, `.nextstage-harness/rules/architecture-rules.md`, files under `docs/versions/{version_san}/` for active version.
+Allowed reads before Step 1 (brownfield): user scope, `brownfield-map.md`, reverse-spec pair, `.nextstage-harness/rules/architecture-rules.md`, `docs/versions/{version_san}/` for active version (incl. `source/`).
 
-**Forbidden before Step 1:** ad-hoc `grep`/code search in `backend/`, `frontend/`, or `src/` to "reduce ambiguity"; skipping Step 0.4 when map exists.
+**Forbidden before Step 1:** ad-hoc grep in `backend/` / `frontend/` / `src/` to "reduce ambiguity"; skip Step 0.4 when map exists.
 
 ### Step 1 — Analyze raw scope
 
-Read user's description (and brownfield context when Step 0 applied). Flag ambiguities:
+Read user description, brownfield (if Step 0), Intake `source/` if present (`source-registry.md`). Flag gaps vs **blocking category checklist** in `clarify-strict.md` (actors/permissions; states/transitions; payload type+nullability; error/rejection matrix; pagination/limits/constants; UI; integration/auth; persistence/migration; out-of-scope; NFRs; test evidence).
 
-| Category        | Example                           |
-| --------------- | --------------------------------- |
-| Actors          | "the user does X" — which role?   |
-| Data scope      | list fields, pagination, filters? |
-| Integrations    | REST, webhook, auth method?       |
-| Multitenancy    | multi-company isolation?          |
-| Business rules  | which validations exactly?        |
-| State lifecycle | allowed transitions?            |
-| Scope limits    | what's in/out of this version?    |
-| Performance     | volume, concurrency, SLA?         |
-| Security        | auth required, role permissions?  |
-
-Use brownfield map for **what exists** — ask user only for **what version should change or add**.
+Brownfield map = **what exists** — ask only **what this version changes or adds**. Derive questions from source inventory + unclassified/thin sections.
 
 ### Step 2 — Ask questions
 
-- Maximum **5 questions per round**
-- Prioritize blockers for correct feature generation
-- Group related questions when possible
-- Plain language, numbered, self-contained — **conversational**, not form (`Reply:`, `Premise:`, skill names)
-- Never say "before Clarify/Specify" — name next deliverable in plain words
+Load `clarify-strict.md`. Category checklist drives questions. Multi-round until **critical unknowns = 0**. **5 questions** = per-round grouping guideline, not cap. Sensitive items need round-trip confirm. Silence / `proceed` / `quick mode` / `assume` / `pode seguir` ≠ confirmation. **`Tudo sim` / `all yes`** = yes on remaining yes/no confirms only (not open questions).
 
-Present (adapt language to conversation):
+Plain language, numbered, self-contained — conversational, not form. Never "before Clarify/Specify" — name next deliverable.
+
+Present (adapt language). **Must** number every ask `1.`, `2.`, … in one sequence (open questions then sensitive confirms). Tell human they may reply by number only.
 
 ```
-A few open points before I draft the requirements document:
+A few open points before we lock the version inputs:
 
-1. [actor question]
-2. [data scope]
-...
+1. [observable-behavior question]
+2. [next]
+3. Confirm: page starts at 1 and size is 300? (yes/no)
 
-Answer in your own words — no special format needed.
+Reply by number, e.g. 1: agency of the key only  2: block like failed login  3: yes
+Tudo sim / all yes = yes on remaining yes/no confirms only.
 ```
 
-### Step 3 — Consolidate answers
+### Step 3 — Write contracts, stop at Gate 0
 
-After responses:
+After answers (or `skip clarify` escape in `clarify-strict.md`):
 
-1. Confirm understanding in short summary (3–5 bullets)
-2. Ask in plain language: "Want me to write the requirements document next?"
-   — **Forbidden:** "go for Specify", "proceed to Specify", phase-name commands
-3. Wait for yes or correction
-4. **Maximum one clarification round** — if still unclear, document reasonable assumptions as "Assumed premises"
+1. Write `docs/versions/{version_san}/clarify-contract.md` + `unknowns-register.md` from templates.
+2. Assumed items = premises **with impact** in clarify-contract. Waivers quoted in unknowns-register.
+3. **Stop.** Gate 0 (`gates.md` `requirements_inputs_confirmed`). Do **not** write `requirements.md`. Do **not** ask "write the requirements document" until Gate 0 passes.
 
 ### Step 4 — Hand off to Specify
 
-Compile enriched context:
-
-```markdown
-## Original scope (user-provided):
-
-[original text]
-
-## Brownfield context (if applicable):
-
-[Summary from brownfield-map.md — modules and constraints relevant to this version]
-[Brownfield gate: human chose refresh | keep on {date shown in gate}]
-
-## Clarifications obtained:
-
-1. Question: [...]
-   Answer: [...]
-
-## Confirmed premises:
-
-- [Premise 1]
-- [Premise 2]
-```
-
-Pass this document as input to `requirements-generator.md`. Do **not** write `requirements.md` here.
+Only after Gate 0 pass (`gates.md`: `(critical unknowns = 0 AND explicit Gate 0 human confirm) OR recorded skip-clarify waiver`). Pass `clarify-contract.md` + `unknowns-register.md` + `source/` into `requirements-generator.md`.
 
 ## Critical rules
 
-- **Brownfield without map:** run `/ns-harness` `bootstrap-brownfield.md` first — never skip by grepping codebase instead
-- **Brownfield with map:** Step 0.4 gate **mandatory** — show last map date; wait for explicit `refresh` or `keep`; never assume
-- **Human chat:** natural language; name deliverables ("requirements document"), not phases ("Specify"); never caveman-compress chat
-- **One round of questions max** — then assume conservatively and document premises
-- **No requirements document** in this workflow
-- **No stack/architecture questions** — defer to stack profiles / project rules and brownfield map
-- If user answers "don't know" on critical point: assume smallest safest scope and document it
+- **Brownfield without map:** `/ns-harness` `bootstrap-brownfield.md` first — never skip via codebase grep
+- **Brownfield with map:** Step 0.4 mandatory — show date; wait `refresh` or `keep`
+- **Human chat:** natural language; deliverables not phase names; never caveman-compress chat
+- **No one-round cap** — no "document reasonable assumptions" without premises + impact
+- **No `requirements.md`** in this workflow
+- **No stack/architecture questions**
+- `"don't know"` on critical: keep unknown **or** premise with impact after human accept — never silent smallest-scope fill
+- `skip clarify`: waiver path in `clarify-strict.md`
 
 ## Integration
 
-```
-planning start → [brownfield + no map?] → /ns-harness bootstrap-brownfield → [brownfield refresh gate] → clarify-requirements → requirements-generator → Gate 1
-```
-
-Brownfield refresh gate: human confirms `refresh` or `keep` after seeing `brownfield-map.md` date.
+1. Planning start. Brownfield + no map: `/ns-harness` `bootstrap-brownfield`.
+2. Brownfield refresh gate. Intake (`source/`). `clarify-strict`. Gate 0.
+3. Gate 0 pass: `requirements-generator`. Gate 1.
 
 ## Related
 
-- `/ns-harness` `bootstrap-brownfield.md` — mandatory prerequisite when code exists and `brownfield-map.md` missing
-- `requirements-generator.md` — next step after clarification
-- `/ns-harness` `architecture-rules-generator.md` — constitution when `architecture-rules.md` still stub (separate from this phase)
-- `/ns-requirements-enricher` — GitLab issue grill-me / execution-readiness (one issue or pasted scope). Clarify does **not** post GitLab comments and does **not** replace per-issue enrichment. Do **not** use this file for that.
+- `clarify-strict.md` — checklist, rounds, escape
+- `/ns-harness` `bootstrap-brownfield.md` — map missing + code exists
+- `requirements-generator.md` — after Gate 0
+- `/ns-harness` `architecture-rules-generator.md` — constitution stub (separate)
+- `/ns-requirements-enricher` — per-issue GitLab grill-me. This file = **version** Clarify-Strict. No GitLab comments here.

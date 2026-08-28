@@ -19,7 +19,7 @@ consumes:
   - artifact:gitlab-issue
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -277,8 +277,8 @@ Do **not** create files, post GitLab, or write version artifacts (`requirements.
 | Layer | Skill | When | Grain | Not this |
 | ----- | ----- | ---- | ----- | -------- |
 | PM clarification | `ns-project-manager` `00-clarification.md` | Intake → RICE | OKR, scale, deadline, stakeholders | Business/OKR — **not** this skill |
-| SDD Clarify | `/ns-spec-driven` Clarify (`ns-spec-driven/references/clarify-requirements.md`) | Before Specify | Version scope (actors, data, in/out) | Chat Q&A → `requirements.md`. No GitLab comments. Does **not** replace per-issue enrichment |
-| Enricher (this) | `/ns-requirements-enricher` | Before autonomous **execution** of one issue / pasted scope | Product/UX gaps vs code | GitLab internal comment **or** inline grill-me → then `ns-execution-gitlab-issue` |
+| SDD Clarify-Strict | `/ns-spec-driven` `clarify-strict.md` (entry `clarify-requirements.md`) | Before Specify, Gate 0 | **Version** scope on disk (`clarify-contract.md`, `unknowns-register.md`, `source/`) | Chat Q&A → version artifacts. No GitLab comments. Does **not** replace this skill |
+| Enricher (this) | `/ns-requirements-enricher` | Before autonomous **execution** of one issue / pasted scope | **Per-issue** GitLab grill-me (or chat inline) | GitLab internal comment **or** inline grill-me → then `ns-execution-gitlab-issue` |
 | Specify | `/ns-spec-driven` Specify | After Clarify | Version `requirements.md` | Not per-issue enrichment |
 | Execute | `ns-execution-gitlab-issue` | After requirements clear | Implements issue | Not enrichment |
 | Review | `ns-reviewer` | After code exists | Diff review | Not enrichment |

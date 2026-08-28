@@ -4,7 +4,7 @@ Pre-execution: plan vs plan before coding.
 
 ## Session boot
 
-See `../../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent.
+`../../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent.
 
 ## When to use
 
@@ -15,6 +15,7 @@ See `../../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/r
 ## Prerequisites
 
 - `docs/versions/{version_san}/requirements.md` exists
+- When `source/` exists: `spec-coverage.md` present; run **Source coverage** group
 
 ## Workflow
 
@@ -33,37 +34,56 @@ Classify each: ✅ OK | ⚠️ Warning | ❌ Blocker
 
 **Feature integrity**
 
-| Check                                                     | Failure level |
-| --------------------------------------------------------- | ------------- |
-| Every feature has title, description, acceptance criteria | ❌ Blocker    |
-| At least 2 acceptance criteria per feature                | ⚠️ Warning    |
-| No circular precedence                                    | ❌ Blocker    |
-| At least one root feature (no precedence)                 | ❌ Blocker    |
-| Frontend features mention test ids when E2E expected      | ⚠️ Warning    |
+| Check | Failure level |
+| ----- | ------------- |
+| Every feature has title, description, acceptance criteria | ❌ Blocker |
+| At least 2 acceptance criteria per feature | ⚠️ Warning |
+| No circular precedence | ❌ Blocker |
+| At least one root feature (no precedence) | ❌ Blocker |
+| Frontend features mention test ids when E2E expected | ⚠️ Warning |
 
 **Test coverage**
 
-| Check                                       | Failure level |
-| ------------------------------------------- | ------------- |
-| Backend features include unit test criteria | ⚠️ Warning    |
-| UI features include E2E criteria            | ⚠️ Warning    |
-| Infra before domain on greenfield           | ⚠️ Warning    |
+| Check | Failure level |
+| ----- | ------------- |
+| Backend features include unit test criteria | ⚠️ Warning |
+| UI features include E2E criteria | ⚠️ Warning |
+| Infra before domain on greenfield | ⚠️ Warning |
 
 **Data model**
 
-| Check                                           | Failure level |
-| ----------------------------------------------- | ------------- |
-| Clear "Data model and APIs" section             | ❌ Blocker    |
-| All entities in features listed in data model   | ❌ Blocker    |
-| FK creation order respected                     | ❌ Blocker    |
-| API endpoints for frontend consumption declared | ❌ Blocker    |
+| Check | Failure level |
+| ----- | ------------- |
+| Clear "Data model and APIs" section | ❌ Blocker |
+| All entities in features listed in data model | ❌ Blocker |
+| FK creation order respected | ❌ Blocker |
+| API endpoints for frontend consumption declared | ❌ Blocker |
 
 **Alignment**
 
-| Check                             | Failure level |
-| --------------------------------- | ------------- |
-| Features support stated objective | ⚠️ Warning    |
-| Out-of-scope features present     | ⚠️ Warning    |
+| Check | Failure level |
+| ----- | ------------- |
+| Features support stated objective | ⚠️ Warning |
+| Out-of-scope features present | ⚠️ Warning |
+
+**Source coverage** (mandatory when `docs/versions/{version_san}/source/` exists)
+
+| Check | Failure level |
+| ----- | ------------- |
+| Every section classified (`source-registry.md`) | ❌ Blocker |
+| Every AC has **Source:** `Sx` (or documented n/a) | ❌ Blocker |
+| Contract value in requirements = source (no paraphrase drift) | ❌ Blocker |
+| Mappable section mapped or out-of-scope with cited reason (`spec-coverage.md`) | ❌ Blocker |
+| `ui-screen` `mapped` without verbatim copy or registered layout SSoT (`spec-coverage.md`) | ❌ Blocker |
+
+**D1 rescan** (`requirements.md` **contract tables only** — limits, timeouts, errors, NFRs, payload constants. **Not** narrative size/volume asides. **Not** `task-*`.)
+
+| Check | Failure level |
+| ----- | ------------- |
+| Token `TBD`, `impl.`, `to be defined`, numeric **range in a constant cell**, table limit adjectives (`short`, `generic`) with no matching `## Assumed premises` row | ❌ Blocker |
+| Leftover D3 (two sides recorded, no resolution or premise) in requirements | ❌ Blocker |
+
+Do **not** scan `task-*` here. Card D1 = `task-generator.md`.
 
 Apply stack-specific checks from harness rules when present (Laravel/React optional).
 
@@ -113,8 +133,6 @@ Rules:
 
 ## Integration
 
-Gate 2 then `analyze-consistency`:
-- **Approved** then `task-generator`
-- **Reproved** then stop; fix requirements
+Gate 2 then `analyze-consistency`. **Approved:** `task-generator`. **Reproved:** stop; fix requirements.
 
 Post-implementation: `ns-reviewer` validates requirements × code — complementary, not substitute.

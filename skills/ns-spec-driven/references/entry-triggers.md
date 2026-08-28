@@ -12,9 +12,9 @@ Skill: `ns-spec-driven`. Host scans after priority 1, before 3–5.
 
 ## Do not use as entry
 
-- Bare quick fix without SDD context → `ns-coder` (priority 5)
-- GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` (priority 1)
-- "Run this plan autonomously" only → `ns-autonomous` (priority 3)
+- Bare quick fix without SDD context: `ns-coder` (priority 5)
+- GitLab `ISSUE_URL`: `ns-execution-gitlab-issue` (priority 1)
+- "Run this plan autonomously" only: `ns-autonomous` (priority 3)
 
 ## Example phrases
 

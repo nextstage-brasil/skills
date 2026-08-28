@@ -1,6 +1,6 @@
 # Generic stack profile
 
-Use when no specific framework confirmed. Keep requirements technology-agnostic where possible; name stacks only when user or brownfield map confirms.
+No specific framework confirmed. Keep requirements technology-agnostic where possible. Name stacks only when user or brownfield map confirms.
 
 ## Setup feature order (greenfield)
 

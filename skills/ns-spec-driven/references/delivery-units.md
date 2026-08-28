@@ -10,7 +10,7 @@ Write `docs/versions/{version_san}/delivery-units.md` from `../templates/deliver
 - Human chose **parallel** unit dispatch (`gate4_mode` = `parallel` after Gate 4), or
 - File **already exists** (resume — never re-create issues).
 
-**Skip** (no algorithm, no file): local sequential default, no GitLab capability, no human ask for GitLab or parallel. Go straight to `execution-handoff.md`; Execute classic (`Unit` column = `—`).
+**Skip** (no algorithm, no file): local sequential default, no GitLab capability, no human ask for GitLab or parallel. Straight to `execution-handoff.md`; Execute classic (`Unit` column = `—`).
 
 **Order:** after **all** `task-*.md` written. Gate 4 **ask first** when GitLab possible (`docs/context/gitlab-sync-config.md`, MCP GitLab in session, or human cited GitLab/parallel). Union-find + write **only after** human confirms publish or parallel. **Before** initial handoff when file required. Do not merge with handoff generation.
 
@@ -38,7 +38,7 @@ Within a slice, connect two tasks when **any** of:
 2. **Write-set collision** — non-empty intersection of concrete paths from `Files to create or modify` (`task-schema.md`).
 3. **Layer consumption** — one task consumes schema/API/migration another task in the slice still creates.
 
-**Layer order tie-break:** when grouping ambiguous, prefer schema/migration → API/backend → frontend → tests in one unit when edges above already connect them.
+**Layer order tie-break:** grouping ambiguous, prefer schema/migration then API/backend then frontend then tests in one unit when edges above already connect them.
 
 ### Split rule
 
@@ -89,11 +89,11 @@ Record resolved branch in `delivery-units.md` header. Every unit MR targets that
 
 ## Gate 4
 
-Ask **before** compute when GitLab capable. After file written (when required) → record answers in header. See `gates.md` + `human-communication.md`.
+Ask **before** compute when GitLab capable. After file written (when required), record answers in header. See `gates.md` + `human-communication.md`.
 
 ## GitLab publish
 
-When human confirms → `mcp-gitlab-usage` flow **SDD delivery-unit publish** (`../../mcp-gitlab-usage/references/flows.md`). Write `issue_iid` back per row.
+Human confirms: `mcp-gitlab-usage` flow **SDD delivery-unit publish** (`../../mcp-gitlab-usage/references/flows.md`). Write `issue_iid` back per row.
 
 ## GitLab status/spent (SSoT)
 
@@ -109,7 +109,7 @@ Forbidden: Flow B when any `issue_iid` filled. G + Flow D on same issue. Per-tas
 
 ## Commit / MR (SSoT)
 
-**Only lookup** for who writes the git commit and draft MR.
+**Only lookup** for who writes git commit and draft MR.
 
 | Condition | Owner |
 | --------- | ----- |
@@ -123,7 +123,7 @@ Apply **GitLab status/spent (SSoT)** above. Coding: G SDD unit mode when publish
 
 ## Compatibility
 
-Version without `delivery-units.md` → **classic default** handoff + optional per-task board sync (Flow B). Normal local sequential path — not legacy-only.
+Version without `delivery-units.md`: **classic default** handoff + optional per-task board sync (Flow B). Normal local sequential path — not legacy-only.
 
 ## References
 

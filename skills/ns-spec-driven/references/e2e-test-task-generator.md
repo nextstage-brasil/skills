@@ -1,8 +1,8 @@
 # E2E Test Task Generator
 
-Planning: produce E2E task markdown. Execution: `ns-e2e-tests`.
+Planning: E2E task markdown. Execution: `ns-e2e-tests`.
 
-Face **MUST** read this file after frontend UI tasks exist (`task-generator.md`). Not catalog skill.
+Face **MUST** read after frontend UI tasks exist (`task-generator.md`). Not catalog skill.
 
 ## Boundary
 
@@ -19,25 +19,25 @@ Load `.nextstage-harness/rules/e2e-tests-rules.mdc` and `frontend-rules.mdc` whe
 
 - Feature to cover
 - Frontend implementation task(s) with **data-testid contract**
-- Contract missing then stop; request frontend task update
+- Contract missing: stop; request frontend task update
 
 ## E2E project location
 
 Default (greenfield): **`tests-e2e/`** — independent Node package; paths below relative to that root.
 
-Brownfield: use detected Cypress root (`tests-e2e/`, legacy `testes-cypress/`, or `frontend/`). Do not plan new specs under `frontend/cypress/` when no E2E exists yet.
+Brownfield: detected Cypress root (`tests-e2e/`, legacy `testes-cypress/`, or `frontend/`). Do not plan new specs under `frontend/cypress/` when no E2E exists yet.
 
 ## Output highlights
 
-Task file must include:
+Task file MUST include:
 
-- Summary and detailed coverage strategy
+- Summary + detailed coverage strategy
 - **E2E root** — `tests-e2e/` (or detected brownfield path)
-- **data-testid contract table** (copied from frontend task — do not invent)
+- **data-testid contract table** (copy from frontend task — do not invent)
 - Spec paths under `tests-e2e/cypress/e2e/device/{desktop|tablet|mobile}/[feature]/` (adjust prefix if brownfield)
 - Command files under `tests-e2e/cypress/support/commands/` — `shared/`, `pages/`, `device/`
-- Bootstrap note when project has no E2E yet: executor must run `ns-e2e-tests` Phase 0 before specs
-- Success, error, and **RBAC by URL** scenarios
+- No E2E yet: executor runs `ns-e2e-tests` Phase 0 before specs
+- Success, error, **RBAC by URL** scenarios
 - Device coverage matrix
 - Validation criteria: no fixed `cy.wait(N)`, commands not DOM in specs, `@smoke`/`@regression` tags
 

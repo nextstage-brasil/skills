@@ -20,12 +20,14 @@ Do **not** re-load full rule corpus per task unless files changed. Fresh worker/
 | Stack constraints | `docs/context/stack-confirmed.md` |
 | GitLab execution | `docs/context/gitlab-sync-config.md` |
 | Active task | Single `tasks/task-NNN-*.md` + `execution-handoff.md` |
+| Source section | Targeted `docs/versions/{version_san}/source/{slug}.md` + cited `Sx` only |
 | Living domain rules | One `docs/specs/{domain}.md` relevant to task |
 | Test fixtures | `grep` / `head` — no full fixture dumps |
 
 ## Never
 
 - Load **two or more** full `requirements.md` from different versions in one session.
+- Load two version trees (`docs/versions/{a}/` and `docs/versions/{b}/`) as working sets.
 - Paste entire living spec corpus into context.
 - Re-read completed task files unless debugging.
 - Mid-version / per-task / mid-batch code review during `run-implementation` (version closure only).

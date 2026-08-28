@@ -23,6 +23,11 @@ docs/specs/          # first living-spec delivery
 | Artifact | Path |
 |----------|------|
 | Requirements | `docs/versions/{version_san}/requirements.md` (trailing `## Consistency` from `ns-spec-driven` Consistency — `references/analyze-consistency.md`) |
+| Clarify contract | `docs/versions/{version_san}/clarify-contract.md` (`ns-spec-driven` Clarify-Strict) |
+| Unknowns register | `docs/versions/{version_san}/unknowns-register.md` |
+| Immutable source | `docs/versions/{version_san}/source/{slug}.md` — verbatim; anchors `S1`, `S3.1`, `S10.4`; never edit after Gate 1 |
+| Spec coverage | `docs/versions/{version_san}/spec-coverage.md` |
+| UI contract | `docs/versions/{version_san}/ui-contract.md` — only when version has UI |
 | Tasks | `docs/versions/{version_san}/tasks/task-NNN-*.md` |
 | Delivery units | `docs/versions/{version_san}/delivery-units.md` (opt-in — after Gate 4 publish/parallel or resume; `ns-spec-driven` → `references/delivery-units.md`) |
 | Execution handoff | `docs/versions/{version_san}/execution-handoff.md` |
@@ -45,6 +50,7 @@ Stable product-wide context outside version folders.
 | `system-reverse-spec.agent.md` | Agent index (prefer when both exist) |
 | `gitlab-sync-config.md` | Project ids, status labels, branches |
 | `ci-cd-notes.md` | Pipeline / deploy notes |
+| `reference-sources.md` | Pointers to version `source/` trees (not a dump of source) |
 
 Other `docs/context/**/*.md` valid — read when task layer/filename relevant.
 
@@ -53,7 +59,7 @@ Other `docs/context/**/*.md` valid — read when task layer/filename relevant.
 Before writing code (ad-hoc, handoff, slice, GitLab issue):
 
 1. `docs/context/` exists → **list** contents (+ one level of subdirs).
-2. **Read** every file for task layer — at min `stack-confirmed.md` when present; `design-brief.md` for UI; `brownfield-map.md` for legacy; prefer `system-reverse-spec.agent.md` over prose body; `gitlab-sync-config.md` for GitLab/branches.
+2. **Read** every file for task layer — at min `stack-confirmed.md` when present; `design-brief.md` for UI; `brownfield-map.md` for legacy; prefer `system-reverse-spec.agent.md` over prose body; `gitlab-sync-config.md` for GitLab/branches; **`reference-sources.md`** when present (then open cited `docs/versions/{version_san}/source/` sections).
 3. Do not skip because path is version/subversion folder.
 
 ## Subversions (optional)

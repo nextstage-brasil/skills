@@ -4,10 +4,7 @@ Orchestrator dispatch exactly one **synchronous (blocking)** worker:
 - **`delivery-units.md` present:** one worker **per unit** (`orchestrator.md` per-unit loop).
 - **Else:** one subagent **per slice**.
 
-**MUST** use harness **`coder-agent`** when available
-(`../../../ns-harness/references/subagent-dispatch.md`); else generic subagent whose
-prompt follows `ns-coder`. Keep context small: pass only what the worker needs,
-never whole roadmap or master requirements.
+**MUST** use harness **`coder-agent`** when available (`../../../ns-harness/references/subagent-dispatch.md`); else generic subagent whose prompt follows `ns-coder`. Keep context small: pass only what worker needs, never whole roadmap or master requirements.
 
 ## Prompt template
 
@@ -21,6 +18,7 @@ Product:     (this repo)
 Version:     {version_san}
 Subversion:  {subversion_san}
 Active path: docs/versions/{version_san}/subversions/{subversion_san}/
+Source:      docs/versions/{version_san}/source/  sections: {S…}
 
 Before coding:
 - Session boot once at slice-worker start per `session-boot.md`
@@ -29,6 +27,8 @@ Before coding:
   Obey orders, including any mandatory product skills named.
 - Load product context from docs/context/ per the Implementation
   boot rule in ns-harness artifact-layout.md (list folder, read layer-relevant files).
+- Read docs/versions/{version_san}/source/ (or listed sections {S…}) before coding.
+  Mandate: open cited anchors; do not implement from memory of paraphrased contracts.
 
 Mandate:
 - Implement ALL tasks in this {slice | unit}, in order, with no confirmation between tasks.
@@ -59,6 +59,7 @@ Parent dispatches **by unit** — not whole slice:
 
 ## Validation checklist (before parent commit)
 
+- [ ] Unit/slice **contract-conformance:** every cited Contract block / `ui-contract.md` element matches implementation (or reported divergence)
 - [ ] Every **unit** task (or every **slice** task when no units file) is `completed` or `waived`
 - [ ] No task left `in_progress` or silently skipped
 - [ ] Changes are confined to `**`
@@ -79,6 +80,4 @@ Then mark unit (or roadmap row) `completed` and advance.
 
 ## When subagent reports blocker
 
-Do not retry blindly. Record blocker in slice handoff and roadmap row, then
-halt loop per `orchestrator.md` stop conditions — human resolves blocker before
-orchestration resumes.
+Do not retry blindly. Record blocker in slice handoff and roadmap row, then halt loop per `orchestrator.md` stop conditions — human resolves blocker before orchestration resumes.

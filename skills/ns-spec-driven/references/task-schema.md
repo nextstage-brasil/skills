@@ -2,7 +2,7 @@
 
 Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 
-**Read rule:** worker reads the **card** (header through Validation criteria). Open `Detailed description` on demand — ambiguity or `blocked`. No new files. No handoff change.
+**Read rule:** worker reads the **card** (header through Validation criteria), **always** the `### Contract` block when present. Open cited `source/` anchors. Open `Detailed description` on demand — ambiguity or `blocked`. No new files. No handoff change.
 
 ```markdown
 # {Imperative task title}
@@ -10,6 +10,7 @@ Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 **Estimate (seconds):** N
 **Related feature:** Feature NNN — {title}
 **Depends on:** task-MMM-slug.md | None
+**Source refs:** {slug}.md Sx [, Sy]
 
 ---
 
@@ -25,6 +26,9 @@ Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 | data-testid | Element | Context |
 |-------------|---------|---------|
 | `form-user-email-input` | Input | User form |
+
+### Contract
+{Verbatim tables/strings from source for API, schema, or screen tasks. Empty only if not API/schema/screen.}
 
 ### Validation criteria
 - [ ] {testable criterion}
@@ -43,6 +47,7 @@ Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 - **Estimate** in seconds (integer) — for GitLab `set_issue_estimate` when synced
 - **Depends on** — explicit task file names for ordering
 - **Related feature** — traceability to requirements
+- **Source refs** — version `source/` file + anchors; required when source exists
 
 ## Naming
 

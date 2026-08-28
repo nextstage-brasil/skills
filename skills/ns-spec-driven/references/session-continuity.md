@@ -21,6 +21,7 @@ Progress on disk — not chat history.
 
 1. Resolve `{version_san}` from user or newest modified folder under `docs/versions/`.
 2. Read `execution-handoff.md` (or slice handoff if orchestrating subversion).
+2b. Re-anchor: `clarify-contract.md`, `unknowns-register.md`, `source/`, `spec-coverage.md`. **Open critical unknowns:** re-enter Clarify-Strict, not Specify.
 3. Skip phases with artifacts **complete + user-approved**:
    - Requirements exist, user not ask rewrite: skip Specify.
    - Tasks exist, no `delivery-units.md`, handoff exists: skip units + Gate 4; go Execute classic.
