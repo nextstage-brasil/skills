@@ -43,10 +43,9 @@ try {
   assert(scheduleMd.includes('python3 ../../scripts/pert_montecarlo.py'), 'PERT path not nested');
   assert(existsSync(join(face, 'scripts', 'pert_montecarlo.py')), 'face pert_montecarlo.py missing');
 
-  const enricher = readFileSync(join(face, 'references', 'ns-requirements-enricher', 'workflow.md'), 'utf8');
   const faceRouter = readFileSync(join(face, 'SKILL.md'), 'utf8');
   assert(faceRouter.includes('references/ns-commercial-budget/workflow.md'), 'face router paths not rewritten');
-  assert(!enricher.includes('../../gitlab/'), 'gitlab skill path leaked');
+  assert(!existsSync(join(face, 'references', 'ns-requirements-enricher')), 'enricher must not be nested under PM export');
 
   const architectDir = join(outDir, 'ns-multi-agent-architect');
   const architectMd = readFileSync(join(architectDir, 'SKILL.md'), 'utf8');

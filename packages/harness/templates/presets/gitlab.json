@@ -1,12 +1,13 @@
 {
   "name": "gitlab",
   "requires_harness": ">=1.0.0",
-  "description": "SDD cycle with GitLab integration (issues, board, CI)",
+  "description": "SDD cycle with GitLab integration (issues, board, CI, requirements enricher)",
   "extends": "spec-driven",
   "includes": [
     "skills/ns-gitlab-board-sync",
     "skills/ns-gitlab-ci-generator",
     "skills/ns-execution-gitlab-issue",
+    "skills/ns-requirements-enricher",
     "skills/mcp-gitlab-usage"
   ]
 }

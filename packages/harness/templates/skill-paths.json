@@ -12,6 +12,7 @@
   "ns-proto-visual-guide": "skills/ns-proto-visual-guide",
   "mcp-gitlab-usage": "skills/mcp-gitlab-usage",
   "ns-execution-gitlab-issue": "skills/ns-execution-gitlab-issue",
+  "ns-requirements-enricher": "skills/ns-requirements-enricher",
   "ns-gitlab-board-sync": "skills/ns-gitlab-board-sync",
   "ns-gitlab-ci-generator": "skills/ns-gitlab-ci-generator",
   "ns-agent-engineering": "skills/ns-agent-engineering",

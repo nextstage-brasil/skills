@@ -2,5 +2,5 @@
   "name": "project-manager",
   "requires_harness": ">=1.0.0",
   "description": "PM workflow — clarify, structure, forecast, budget, delivery schedule",
-  "includes": ["skills/ns-project-manager"]
+  "includes": ["skills/ns-project-manager", "skills/ns-requirements-enricher"]
 }

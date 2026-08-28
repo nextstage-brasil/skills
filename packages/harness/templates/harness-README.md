@@ -270,7 +270,7 @@ Optional complements (UI, docs, security hygiene) — install per skill:
 npx @nextstage-brasil/harness --skill ns-frontend-design --skill ns-docs-writer --skill ns-best-practices --no-scaffold -y
 ```
 
-GitLab execution: preset `gitlab` (alias `spec-driven-gitlab`) or skills like `mcp-gitlab-usage`, `ns-execution-gitlab-issue`, `ns-gitlab-board-sync`.
+GitLab execution: preset `gitlab` (alias `spec-driven-gitlab`) or skills like `mcp-gitlab-usage`, `ns-execution-gitlab-issue`, `ns-gitlab-board-sync`, `ns-requirements-enricher`.
 
 ---
 

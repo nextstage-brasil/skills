@@ -35,7 +35,6 @@ depends:
   - ns-autonomous
   - ns-reviewer
   - ns-living-spec
-  - ns-langgraph-agents
 ---
 ```
 

@@ -2,6 +2,15 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Restore catalog skill `ns-requirements-enricher` (2026-08-28)
+
+`ns-requirements-enricher` is a catalog skill again (`skills/ns-requirements-enricher/`). Issue/chat execution-readiness (grill-me vs code) — **not** folded into PM, **not** merged with SDD Clarify.
+
+- Frontmatter `provides: gate:requirements-enrichment` lives on this skill only (removed from `ns-project-manager`)
+- Catalog `depends`: `ns-harness`, `mcp-gitlab-usage`; GitLab category + `--preset gitlab`
+- Retired: drop `"ns-requirements-enricher": "ns-project-manager"` (live names must not map away). `"requirements-enricher"` → `ns-requirements-enricher`
+- Nested under PM: `ns-commercial-budget`, `ns-delivery-schedule` only
+
 ## Add catalog skill — `ns-postgres-rag` (2026-08-18)
 
 PostgreSQL retrieval doctrine (`pgvector`, hybrid FTS, relational GraphRAG). Frontmatter and catalog `depends`: `ns-harness` (session-boot). **Not** in `alwaysInstall`, **not** in any harness preset (`full` included). Opt-in:
@@ -12,7 +21,7 @@ npx skills add nextstage-brasil/skills@ns-postgres-rag --full-depth -y
 
 ## Fold business skills into `ns-project-manager` (2026-08-14)
 
-`ns-commercial-budget`, `ns-delivery-schedule`, and `ns-requirements-enricher` are no longer catalog skills. They live under `skills/ns-project-manager/references/<id>/` (own `workflow.md` + `references/` / `assets/`; no evals). Invoke `/ns-project-manager`. Retired aliases in `packages/harness/templates/retired-skills.json` redirect installs to `ns-project-manager`.
+`ns-commercial-budget` and `ns-delivery-schedule` are no longer catalog skills. They live under `skills/ns-project-manager/references/<id>/` (own `workflow.md` + `references/` / `assets/`; no evals). Invoke `/ns-project-manager`. `ns-requirements-enricher` was nested in this fold, then restored as a catalog skill on 2026-08-28. Retired aliases in `packages/harness/templates/retired-skills.json` redirect remaining nested-face installs to `ns-project-manager`.
 
 ## Conventions
 

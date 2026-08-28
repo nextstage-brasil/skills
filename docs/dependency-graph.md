@@ -28,8 +28,7 @@ ns-spec-driven
 ├── ns-coder
 ├── ns-autonomous
 ├── ns-reviewer
-├── ns-living-spec
-└── ns-langgraph-agents
+└── ns-living-spec
 ```
 
 Internal SDD phases (clarify, requirements, consistency, partition, tasks, handoff, orchestrator) live in `ns-spec-driven/references/` — not separate catalog skills.
@@ -47,6 +46,8 @@ ns-execution-gitlab-issue ──┬── ns-harness
                               ├── mcp-gitlab-usage
                               ├── ns-reviewer
                               └── ns-autonomous
+ns-requirements-enricher ──┬── ns-harness
+                           └── mcp-gitlab-usage
 ```
 
 ## Frontend prototype
@@ -68,7 +69,7 @@ ns-project-manager ──┬── ns-harness
                      └── mcp-gitlab-usage
 ```
 
-Nested (not catalog skills): `references/ns-commercial-budget`, `references/ns-delivery-schedule`, `references/ns-requirements-enricher`.
+Nested (not catalog skills): `references/ns-commercial-budget`, `references/ns-delivery-schedule`.
 
 ## Labs
 

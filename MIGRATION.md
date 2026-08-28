@@ -12,7 +12,7 @@ npx @nextstage-brasil/harness@1 --preset spec-driven --yes
 1. **Flat layout** — all catalog skills at `skills/<name>/` (domain folders removed 2026-08-14 so cross-skill paths resolve after install).
 2. **Renames** — category prefixes dropped (e.g. `ns-code-coder` → `ns-coder`).
 3. **SDD pipeline consolidated** — seven internal workers plus unit/e2e test-task generators are now `references/` inside `ns-spec-driven`. Invoke only `/ns-spec-driven`.
-4. **Business face consolidated** — `ns-commercial-budget`, `ns-delivery-schedule`, and `ns-requirements-enricher` are nested under `ns-project-manager/references/`. Invoke only `/ns-project-manager`.
+4. **Business face** — `ns-commercial-budget` and `ns-delivery-schedule` nested under `ns-project-manager/references/`. `ns-requirements-enricher` is a catalog skill again (restored 2026-08-28).
 5. **Presets** — declarative JSON in `presets/`; harness reads `presets/index.json` at runtime.
 6. **`nsutil-mcp` removed** — not a catalog skill; generated in the application at use time.
 
@@ -37,7 +37,7 @@ npx @nextstage-brasil/harness@1 --preset spec-driven --yes
 | `ns-prepare` | `ns-harness` |
 | `ns-pm-delivery-schedule` | `ns-project-manager` |
 
-Retired SDD workers redirect to `ns-spec-driven` via `retired-skills.json`. Retired business skills redirect to `ns-project-manager`.
+Retired SDD workers redirect to `ns-spec-driven` via `retired-skills.json`. Nested business faces (`ns-commercial-budget`, `ns-delivery-schedule`) redirect to `ns-project-manager`. Alias `requirements-enricher` redirects to catalog skill `ns-requirements-enricher`.
 
 ## Full history
 

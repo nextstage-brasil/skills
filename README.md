@@ -12,7 +12,7 @@ skills/
 └── <skill-id>/      # Flat catalog — one directory per skill (SKILL.md + references/, evals/)
 ```
 
-Examples: `ns-harness`, `ns-spec-driven`, `ns-coder`, `ns-reviewer`, `mcp-gitlab-usage`, `ns-project-manager`. Nested PM workers live under `ns-project-manager/references/ns-*/workflow.md` (not separate catalog skills).
+Examples: `ns-harness`, `ns-spec-driven`, `ns-coder`, `ns-reviewer`, `mcp-gitlab-usage`, `ns-project-manager`. Nested PM workers (`ns-commercial-budget`, `ns-delivery-schedule`) live under `ns-project-manager/references/ns-*/workflow.md`. `ns-requirements-enricher` is a catalog skill.
 
 Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`).
 
@@ -27,6 +27,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-gitlab-board-sync`               | Sync existing issues (labels, milestone, time)                                                                                                |
 | `ns-gitlab-ci-generator`             | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                                                                                                 |
 | `ns-execution-gitlab-issue`          | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `ns-autonomous`                                              |
+| `ns-requirements-enricher`           | Grill-me / execution-readiness for one GitLab issue or pasted scope (internal comment or inline). Not SDD Clarify, not PM OKR intake. |
 | `ns-coder`                      | Ad-hoc implementation without full SDD cycle                                                                                                  |
 | `ns-autonomous`                 | Harness-aware autonomous execution engine — planning-depth self-decision, doubt resolution, multi-agent dispatch (issue engine or standalone) |
 | `ns-reviewer`                   | SOLID/security/maintainability review + issue gate                                                                                            |
@@ -38,7 +39,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-best-practices`             | Security headers, compatibility, modernization, and Web Interface Guidelines UI pass (code complement)                                          |
 | `ns-proto-creator`                   | Playwright reverse prototyping face — create/evolve single `prototype/` tree (optional; `--preset frontend-prototype`)                        |
 | `ns-proto-visual-guide`              | Normative visual appearance guides (`*-visual.md`) for implementation handoff (optional)                                                      |
-| `ns-project-manager`                 | PM face — gated pipeline; commercial budget, delivery schedule, enricher in `references/ns-*/workflow.md` |
+| `ns-project-manager`                 | PM face — gated pipeline; commercial budget and delivery schedule in `references/ns-*/workflow.md` |
 | `ns-agent-engineering`               | Conceptual agent design — Evaluation → Prompt → RAG → Agent → Fine-Tune; no framework/code (`docs/specs/agent-design.md`)                      |
 | `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
 | `ns-langgraph-agents`                | LangGraph.js runtime — greenfield `agent-api` scaffold, MCP governance, context window, HITL, evals                                           |
@@ -69,7 +70,7 @@ See `packages/harness/README.md` for all flags. Install and migration details: `
 | Preset | What it does |
 | ------ | ------------ |
 | `spec-driven` | SDD face + coder, reviewer, investigator, autonomous, living-spec — and code complements (frontend-design, docs-writer, best-practices, backend/e2e tests) via `ns-coder` `depends`. |
-| `gitlab` | Extends `spec-driven`. Adds GitLab issue execution, board sync, CI generator, MCP usage. Alias: `spec-driven-gitlab`. |
+| `gitlab` | Extends `spec-driven`. Adds GitLab issue execution, board sync, CI generator, MCP usage, requirements enricher. Alias: `spec-driven-gitlab`. |
 | `project-manager` | PM face only (`ns-project-manager`). No SDD or code workers. |
 | `frontend` | UI design, reverse prototyping, visual appearance guides. Alias: `frontend-prototype`. |
 | `agents` | Extends `spec-driven`. Adds agent design + LangGraph labs (`ns-agent-engineering`, `ns-multi-agent-architect`, `ns-langgraph-agents`) plus LangChain/MCP/Vitest/eval externals. Aliases: `agent-creator`, `agents-api`. |

@@ -8,8 +8,7 @@
       "ns-coder",
       "ns-autonomous",
       "ns-reviewer",
-      "ns-living-spec",
-      "ns-langgraph-agents"
+      "ns-living-spec"
     ],
     "ns-frontend-design": ["ns-harness"],
     "ns-docs-writer": ["ns-harness"],
@@ -28,6 +27,7 @@
     "ns-gitlab-board-sync": ["mcp-gitlab-usage"],
     "ns-gitlab-ci-generator": [],
     "ns-execution-gitlab-issue": ["ns-harness", "mcp-gitlab-usage", "ns-reviewer", "ns-autonomous", "ns-coder"],
+    "ns-requirements-enricher": ["ns-harness", "mcp-gitlab-usage"],
     "ns-autonomous": ["ns-harness", "ns-reviewer"],
     "ns-coder": [
       "ns-harness",
@@ -45,8 +45,8 @@
     "ns-investigator": ["ns-harness"],
     "ns-e2e-tests": [],
     "ns-backend-tests": ["ns-harness"],
-    "ns-agent-engineering": [],
-    "ns-multi-agent-architect": [],
+    "ns-agent-engineering": ["ns-harness"],
+    "ns-multi-agent-architect": ["ns-harness", "ns-langgraph-agents"],
     "ns-langgraph-agents": ["ns-harness"],
     "ns-postgres-rag": ["ns-harness"]
   },
@@ -84,6 +84,7 @@
       "label": "GitLab",
       "skills": [
         "mcp-gitlab-usage",
+        "ns-requirements-enricher",
         "ns-gitlab-board-sync",
         "ns-gitlab-ci-generator",
         "ns-execution-gitlab-issue"
