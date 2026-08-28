@@ -6,7 +6,7 @@ description: >-
   user only says "review", "code review", or "review gate". Thin bridge to
   skills/ns-reviewer — loads AGENTS.md then the skill workflow. Not for consumer
   apps (use harness reviewer-agent → ns-reviewer).
-model: grok-4.5[effort=medium,fast=false]
+model: grok-4.6[effort=medium,fast=false]
 readonly: true
 ---
 

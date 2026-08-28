@@ -51,3 +51,5 @@ Start `status` as `pending`.
 ## Integration
 
 After partition then Gate Roadmap (human confirms) then plan each slice (Gates 2–3, tasks) without repeating Gate 1.
+
+**Delivery units:** slice folder = **candidate grouping only** for later `delivery-units.md`. Never merge tasks across slices into one unit. Slice may **split** into multiple units when task graph shows independence — see `delivery-units.md` (authoritative for GitLab publish).

@@ -135,7 +135,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
-Typical delivery: `/ns-spec-driven` (auto-sizes, internal phases in `references/`, resume from disk). Manual brownfield first: `/ns-harness prepare this repo`. Implementation: `ns-coder` / `ns-execution-gitlab-issue` / `ns-autonomous` → `ns-reviewer` → `ns-living-spec`. Code complements (`ns-frontend-design`, `ns-best-practices`, `ns-docs-writer`) install with `--preset spec-driven` and delegate from `ns-coder` / `ns-spec-driven` when relevant.
+Typical delivery: `/ns-spec-driven` (auto-sizes, internal phases in `references/`, resume from disk). After tasks: **Gate 4** and `delivery-units.md` are **opt-in** (GitLab publish or parallel dispatch); default local path goes straight to handoff and classic Execute. Manual brownfield first: `/ns-harness prepare this repo`. Implementation: `ns-coder` / `ns-execution-gitlab-issue` / `ns-autonomous` → `ns-reviewer` → `ns-living-spec`. Code complements (`ns-frontend-design`, `ns-best-practices`, `ns-docs-writer`) install with `--preset spec-driven` and delegate from `ns-coder` / `ns-spec-driven` when relevant.
 
 ## Contributing
 

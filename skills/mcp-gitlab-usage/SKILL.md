@@ -70,6 +70,10 @@ Read label names from `gitlab-sync-config.md` or discover via `list_project_labe
 2. Summarize diff vs agreed base branch.
 3. `add_issue_comment` with `internal: true`.
 
+## SDD delivery units
+
+When `docs/versions/{version_san}/delivery-units.md` exists and Gate 4 publish = yes: flow **SDD delivery-unit publish** in `references/flows.md`. One issue per unit — never per `task-NNN`, never one issue for whole version.
+
 ## Related skills
 
 - **Board sync during implementation:** `ns-gitlab-board-sync` (do not duplicate status sync rules here).

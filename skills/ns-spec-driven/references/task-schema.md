@@ -19,6 +19,8 @@ Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 ### Files to create or modify
 - `{path}` — {purpose}
 
+**Collision input:** list **concrete repo-relative write paths** only (files or directories the task will create or modify). No globs, no "TBD", no layer labels alone — `delivery-units.md` uses path intersection to merge tasks. Omit read-only paths.
+
 ### data-testid contract (Frontend only)
 | data-testid | Element | Context |
 |-------------|---------|---------|

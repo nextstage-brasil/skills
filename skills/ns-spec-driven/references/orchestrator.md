@@ -1,6 +1,6 @@
 # Execution Orchestrator
 
-Drive partitioned version to completion one slice at a time. You do **not** implement application code: dispatch one subagent per slice, keep all state in files + git, advance automatically until every slice done or stop condition forces pause.
+Drive partitioned version to completion. You do **not** implement application code: dispatch one worker per **unit** when `delivery-units.md` exists, else one subagent per **slice**. Keep all state in files + git. Advance until every unit/slice done or a stop condition forces pause.
 
 State in **files + git**, never chat history.
 
@@ -30,16 +30,33 @@ Operate **only** inside repo plus harness infra (`AGENTS.md`, `.nextstage-harnes
 2. Read `docs/versions/{version_san}/version-roadmap.md` — **required**. If missing, stop: version not partitioned; execute tasks directly (non-orchestrated) instead.
 3. Read master `docs/versions/{version_san}/requirements.md` (overview only — do **not** replan).
 4. Load `core-subversions` rule from harness when present.
-5. If `docs/context/gitlab-sync-config.md` exists: ensure work branch created and checked out **before** first slice subagent runs (see `mcp-gitlab-usage`). Never implement on protected branch.
+5. If `docs/context/gitlab-sync-config.md` exists:
+   - **`delivery-units.md` present:** skip version-level `work_branch`. Per-unit `.worktrees/{unit}` + `work/{unit}-{slug}`.
+   - **Else:** ensure work branch created and checked out **before** first slice subagent (see `mcp-gitlab-usage`). Never implement on protected branch.
 
 ## Orchestration mandate
 
-- Execute **all** pending slices in **roadmap DAG order** (respect inter-slice dependencies).
-- **Do not** ask "start next slice?", "continue?", or "commit?" between slices.
-- **Do not** implement tasks in parent session — delegate every slice to subagent.
-- **Do not run tests during slice implementation** (backend or frontend). Execute slice tasks and advance; testing belongs to end-of-version review flow.
+- Execute **all** pending work in **roadmap DAG order** (respect inter-slice dependencies).
+- When `delivery-units.md` exists: dispatch **by unit** — worktree `.worktrees/{unit}`, wave barrier, **one commit/MR per unit**. Parallel only if Gate 4 said so. Failed unit blocks next wave.
+- When no units file: one subagent per **slice**; one Conventional Commit per slice.
+- **Do not** ask "start next slice?", "continue?", or "commit?" between units/slices.
+- **Do not** implement tasks in parent session — delegate every **unit** or **slice** to a worker.
+- **Do not run tests during unit/slice implementation** (backend or frontend). Testing belongs to end-of-version review flow.
 
-## Per-slice loop (synchronous subagent)
+## Per-unit loop (when `delivery-units.md` exists)
+
+For each unit whose `deps` are `completed`, **wave order** (do not start wave N+1 until wave N done or blocked):
+
+1. **Select** next `{unit}` (`pending`/`in_progress`, lowest wave, deps satisfied). Never mix tasks from another unit.
+2. **Mark** unit row → `in_progress`.
+3. **Dispatch** one **blocking** worker:
+   - Published `issue_iid` **and** `ns-execution-gitlab-issue` installed → **G SDD unit mode** (`unit` + `issue_iid`). GitLab writes = G (SSoT).
+   - Else → **`coder-agent`** (**MUST** when available) / `ns-coder` via `slice-dispatch.md` **unit** prompt. Paths: unit tasks only; worktree `.worktrees/{unit}`. GitLab = SSoT (Flow D if published local-only).
+4. **Validate:** all unit tasks `completed` or `waived`; handoff rows updated; unit `status` updated.
+5. **Commit / MR:** `delivery-units.md` **Commit / MR (SSoT)**. Local worker → parent commit+MR. G dispatched → G Phase 3 only; parent records `mr_url` if missing, then advances.
+6. Failed unit → **stop**; do not start next wave.
+
+## Per-slice loop (no `delivery-units.md`)
 
 For each slice whose roadmap `status` is `planned` or `in_progress`:
 
@@ -60,9 +77,9 @@ For each slice whose roadmap `status` is `planned` or `in_progress`:
 6. **Mark** roadmap row → `completed` (if worker did not).
 7. **Advance** to next slice automatically.
 
-## End of version (all slices done)
+## End of version (all units/slices done)
 
-When every slice in `version-roadmap.md` is `completed` (or waived):
+When every unit in `delivery-units.md` (if present) and every slice in `version-roadmap.md` is `completed` (or waived):
 
 1. Present any navigation / semantic grouping menu and **wait for human approval** before applying.
 2. Run post-implementation review: **MUST** dispatch **`reviewer-agent`** when available (else `ns-reviewer`, read-only) over version diff. Do **not** expect `code-review-report.md` — use verdict line and minimal fix map on Rejected. See `../../../ns-harness/references/subagent-dispatch.md`.
@@ -84,8 +101,9 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 
 ## Forbidden
 
-- Do not implement application code in parent session — delegate to slice worker.
-- Do not skip commit after successful slice (orchestrated mode always commits per slice).
+- Do not implement application code in parent session — delegate to unit or slice worker.
+- Do not skip parent commit after successful **local** unit (no G) or classic **slice**. When G SDD unit mode ran, **do not** parent-commit — G Phase 3 already delivered.
+- Do not dispatch a whole slice as one worker when `delivery-units.md` exists — **by unit** only.
 - Do not generate new task files (planning closed by the time you run).
 - Do not access paths outside repo.
 - Do not apply navigation semantic grouping without human approval.
@@ -95,7 +113,7 @@ When every slice in `version-roadmap.md` is `completed` (or waived):
 
 ```
 Version: 3.8.0-feat-payable-payment-workflow
-Resume partitioned implementation — run all pending slices (sync subagent per slice, commit per slice).
+Resume partitioned implementation — `delivery-units.md` present: sync worker per unit, parent commit only if local (G owns commit/MR when published). Else: sync subagent per slice, commit per slice.
 ```
 
 ```
@@ -108,9 +126,12 @@ Continue orchestrating the partitioned implementation of apps/my-product 3.8.0.
 | ----------------------------------------- | ---------------------------- |
 | Partition version → roadmap + subversions | `version-partitioner.md`        |
 | Handoff generation and updates            | `execution-handoff.md` |
-| Slice worker (per-slice implementation)   | `coder-agent` → `ns-coder` |
+| Slice worker (no units file) | `coder-agent` → `ns-coder` |
+| Unit worker (`delivery-units.md`) | G SDD unit mode when `issue_iid`; else `coder-agent` → `ns-coder` |
+| GitLab status/spent | `delivery-units.md` **GitLab status/spent (SSoT)** |
 | End-of-version review gate                | `reviewer-agent` → `ns-reviewer` |
 | Living specs consolidation                | `ns-living-spec`   |
+| Delivery units + waves | `delivery-units.md` |
 | Work branch / GitLab sync                 | `mcp-gitlab-usage`           |
 
 ## References

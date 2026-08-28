@@ -18,6 +18,8 @@
 
 ## Execution sync (per task)
 
+**Gate:** run this section **only** when `../../ns-spec-driven/references/delivery-units.md` **GitLab status/spent (SSoT)** is the Flow B row (legacy 1:1, no published unit `issue_iid`). Published units: **do not** use this section — G Phase 3 or Flow D per SSoT.
+
 ### At task start (before coding)
 
 ```
@@ -52,6 +54,23 @@ add_issue_comment: internal summary
 1. Get issue URL or `project_id` + `issue_iid`
 2. Diff working tree vs base branch
 3. `add_issue_comment` internal=true with concise summary
+
+## SDD delivery-unit publish
+
+When `delivery-units.md` exists and human confirmed Gate 4 publish (`gates.md`):
+
+**Per unit row** (wave order; parallel only when Gate 4 = parallel and `A ∥ B`):
+
+1. Build issue body from `../../ns-spec-driven/templates/gitlab-unit-issue.template.md` (title = unit `title` column).
+2. `generate_issue_payload`(description) — execution task, not RF-from-requirements alone.
+3. `create_issue` — `status_backlog`, milestone from version, labels per project (include `unit_label_format` from `gitlab-sync-config.md` when set).
+4. `set_issue_estimate` — **sum** of task estimates in unit (`estimate_sum` column). Only when new issue estimate empty; never overwrite; never < 60s.
+5. Write `issue_iid` back to `delivery-units.md` row.
+6. Repeat for all units before `execution-handoff.md`.
+
+**At unit completion:** `../../ns-spec-driven/references/delivery-units.md` **GitLab status/spent (SSoT)** — G Phase 3 or Flow D local-only; never both.
+
+**Resume:** reuse existing `issue_iid` — never re-create on session continue.
 
 ## Pre-call checklist
 

@@ -17,7 +17,7 @@ Creation flow (`create_issue` then estimate) is unchanged: new issues start empt
 
 | Variable     | When to set |
 | ------------ | ----------- |
-| `START_TIME` | Immediately **before** the first `ns-autonomous` Engine invoke (Phase 2 start). Not during gates, branch resolution, or worktree setup. |
+| `START_TIME` | **External mode:** immediately before first `ns-autonomous` Engine invoke. **SDD unit mode:** immediately before first task in unit (`run-implementation`). Not during gates, branch resolution, or worktree setup. |
 | `END_TIME`   | At **Phase 3 delivery closure** — the same moment you apply `status_done` (Dev 100%), after Phase 4 returns `Approved`. Never earlier (not at first push). Never if the run stops blocked / review exhausted. |
 
 Use UTC ISO 8601 **and** Unix epoch seconds from the same instant (prefer `date -u +%s` / equivalent) so duration is not guessed.

@@ -14,7 +14,7 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | ---- | ----- | ----- |
 | Front door | Host + descriptions + this file | Fixed priority — not dedicated skill |
 | Central execution | `ns-coder` / `C2` via `coder-agent` (**MUST** when available) | G, A, S converge — `subagent-dispatch.md` |
-| GitLab lifecycle | `ns-execution-gitlab-issue` | Phase 2 → A |
+| GitLab lifecycle | `ns-execution-gitlab-issue` | External Phase 2 → `A`; SDD unit Phase 2 → `run-implementation.md` |
 | Multi-unit engine | `ns-autonomous` | Standalone or engine under G |
 | Spec / version planning | `ns-spec-driven` | → C or A (**MUST** `coder-agent` when available) |
 | Root-cause | `ns-investigator` | Diagnosis only; implement = separate user step |
@@ -30,7 +30,8 @@ Scan **1 → 5**; **first matching signal wins**. Lower beats higher — e.g. `I
 
 | Priority | Signal | Entry skill | Trigger phrases |
 | -------- | ------ | ----------- | ----------------- |
-| 1 | GitLab `ISSUE_URL` or explicit "implement this issue" | `ns-execution-gitlab-issue` | `../ns-execution-gitlab-issue/references/entry-triggers.md` |
+| 1 | External GitLab `ISSUE_URL` or explicit "implement this issue" | `ns-execution-gitlab-issue` | `../ns-execution-gitlab-issue/references/entry-triggers.md` |
+| 1b | *(not entry scan)* SDD `unit` + `issue_iid` from `delivery-units.md` | `ns-execution-gitlab-issue` SDD unit mode | Dispatched by `ns-spec-driven` / `run-implementation.md` — **not** external URL |
 | 2 | Feature / version / SDD / multi-day scope | `ns-spec-driven` | `../ns-spec-driven/references/entry-triggers.md` |
 | 3 | "Run autonomously" with local plan, no issue | `ns-autonomous` | `../ns-autonomous/references/entry-triggers.md` |
 | 4 | Root-cause only — **without** implement request | `ns-investigator` | `../ns-investigator/references/entry-triggers.md` |
@@ -75,21 +76,25 @@ Detail in each `SKILL.md` routing section.
 | `C` | too large / multi-day SDD | `S` |
 | `C` | obscure bug | `I` |
 | `C` | ad-hoc diff | `REV` (`reviewer-agent` → `ns-reviewer` — `../ns-reviewer/references/review-gate-workflow.md` + `subagent-dispatch.md`) |
-| `G` | Phase 2 | `A` (engine mode) |
+| `G` | Phase 2 external | `A` (engine mode) |
+| `G` | Phase 2 SDD unit | `run-implementation.md` (unit tasks; **not** `A`) |
 | `G` | MR / status / time | `mcp-gitlab-usage` |
 | `G` | review gate | `REV` (`reviewer-agent` / `ns-reviewer` only) |
 | `A` | dispatch work units | `C2` (`coder-agent` → `ns-coder` — **MUST** bridge when available) |
 | `C2` | review | `REV` (`reviewer-agent` / `ns-reviewer` only) |
 | `S` | small / quick | `C` via `coder-agent` (**MUST** when available) |
-| `S` | version + handoff | `H` → `C` or `A` (**MUST** `coder-agent` for coding workers when available) |
-| `H` | per-task coding | `C` implement only — no per-task `REV` (SDD handoff) |
+| `S` | version + handoff | `H` → `C` or `A` or `G` unit mode (**MUST** `coder-agent` for coding workers when available) |
+| `H` | delivery units + `issue_iid` | `G` SDD unit mode (`unit` + `issue_iid` — not external URL) |
+| `H` | per-task coding (no unit issues) | `C` implement only — no per-task `REV` (SDD handoff) |
 | `H` | all tasks done | `REV` version closure (`run-implementation` Step 5) |
 | `I` | diagnosis complete | User (no auto-dispatch to `C`) |
 | User | implement proposed fix | Re-enter entry router (usually `C`) |
 
 ## Engine anti-cycle (G ↔ A) {#engine-anti-cycle}
 
-`G` invokes `A` Engine mode: units as `C2` in existing worktree + branch. `A` + `C2` must not re-open `G` — no standalone routing, no GitLab MCP mutations, no new worktree. `ISSUE_URL` in code/comments = context, not signal. `G` owns lifecycle until delivery. Rejection loops (`G → A → C2 → REV`) stay inside.
+**External:** `G` invokes `A` Engine mode: units as `C2` in existing worktree + branch. `A` + `C2` must not re-open `G` — no standalone routing, no GitLab MCP mutations, no new worktree. `ISSUE_URL` in code/comments = context, not signal. `G` owns lifecycle until delivery. Rejection loops (`G → A → C2 → REV`) stay inside.
+
+**SDD unit:** `G` invokes `run-implementation.md` / `Cimpl`. No `A`. Rejection (`G → Cimpl → REV`) stays inside. Status/spent: `delivery-units.md` **GitLab status/spent (SSoT)**.
 
 See `../ns-autonomous/references/routing.md`.
 
@@ -117,7 +122,7 @@ flowchart TD
   C -->|ad-hoc diff| IMPL[Implement + review loop]
   IMPL --> REV[reviewer-agent / ns-reviewer]
 
-  G -->|Phase 2 engine| A
+  G -->|Phase 2 external engine| A
   G -->|MR / status / time| GL[mcp-gitlab-usage]
   G -->|review gate| REV
 
@@ -128,8 +133,11 @@ flowchart TD
   S -->|version + handoff| H[run-implementation.md]
   H -->|per-task SDD| Cimpl[coder implement only]
   Cimpl --> H
+  H -->|delivery units + issue_iid| Gunit[G SDD unit mode]
+  Gunit -->|Phase 2| RI[run-implementation]
+  RI --> Cimpl
   H -->|version closure| REV
-  H --> A
+  H -->|no units / local multi| A
 
   I -->|root cause + fix proposal| U2[User decision]
   U2 -->|implement fix| R

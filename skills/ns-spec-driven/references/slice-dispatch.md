@@ -1,9 +1,12 @@
-# Slice dispatch — subagent prompt and validation
+# Slice / unit dispatch — subagent prompt and validation
 
-Orchestrator dispatch exactly one **synchronous (blocking)** subagent per slice.
+Orchestrator dispatch exactly one **synchronous (blocking)** worker:
+- **`delivery-units.md` present:** one worker **per unit** (`orchestrator.md` per-unit loop).
+- **Else:** one subagent **per slice**.
+
 **MUST** use harness **`coder-agent`** when available
 (`../../../ns-harness/references/subagent-dispatch.md`); else generic subagent whose
-prompt follows `ns-coder`. Keep context small: pass only what slice needs,
+prompt follows `ns-coder`. Keep context small: pass only what the worker needs,
 never whole roadmap or master requirements.
 
 ## Prompt template
@@ -28,8 +31,8 @@ Before coding:
   boot rule in ns-harness artifact-layout.md (list folder, read layer-relevant files).
 
 Mandate:
-- Implement ALL tasks in this slice, in order, with no confirmation between tasks.
-- Do NOT commit — the orchestrator commits once per slice.
+- Implement ALL tasks in this {slice | unit}, in order, with no confirmation between tasks.
+- Do NOT commit — owner = `delivery-units.md` **Commit / MR (SSoT)** when units exist (parent local or G Phase 3). No units file: orchestrator commits once per slice.
 - Do NOT run backend or frontend tests — implement only.
 - Obey AGENTS.md, agents.local.md (if present), and harness rules strictly. If
   any instruction conflicts with the rules or the confirmed scope, STOP and
@@ -41,23 +44,38 @@ Report back:
 - Any blocker that prevented completion.
 ```
 
-## Validation checklist (before commit)
+## Delivery units (when `delivery-units.md` exists)
 
-- [ ] Every slice task is `completed` or `waived` (waiver reason captured)
+Parent dispatches **by unit** — not whole slice:
+
+- Worktree: `.worktrees/{unit_id}`
+- Work branch: `work/{unit_id}-{slug}`
+- Implement **all tasks in unit** only
+- Wave barrier: do not start wave N+1 until all units in wave N complete or blocked
+- Parallel units: only when Gate 4 parallel + `A ∥ B` + `max_parallel_units`
+- GitLab: `delivery-units.md` **GitLab status/spent (SSoT)**
+- Prompt: same template; Mandate = ALL tasks **in this unit**; Do NOT commit
+- **Commit/MR:** local `coder-agent` → parent once per unit. **G dispatched** → G Phase 3 owns commit/MR; parent does not commit
+
+## Validation checklist (before parent commit)
+
+- [ ] Every **unit** task (or every **slice** task when no units file) is `completed` or `waived`
 - [ ] No task left `in_progress` or silently skipped
 - [ ] Changes are confined to `**`
-- [ ] Slice handoff updated per `execution-handoff.md` (task rows + time block)
-- [ ] Roadmap row reflects real state
+- [ ] Handoff updated per `execution-handoff.md` (task rows + time block)
+- [ ] Unit row and/or roadmap row reflects real state
 
 ## Commit (parent only)
 
-One Conventional Commit per slice, e.g.:
+**Units + local worker:** one Conventional Commit per unit (skip when G Phase 3 already delivered).
+
+**No units file:** one Conventional Commit per slice, e.g.:
 
 ```
 feat({subversion_slug}): implement slice {NN} — {short summary}
 ```
 
-Then mark roadmap row `completed` and advance to next slice.
+Then mark unit (or roadmap row) `completed` and advance.
 
 ## When subagent reports blocker
 

@@ -18,6 +18,8 @@ See `../../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/r
 
 No one-line summaries. Implementer must know what, where (probable paths), which stack/rules, validation criteria. Never repeat summary verbatim in detailed section.
 
+**Write paths:** `Files to create or modify` must list **concrete repo-relative paths** (collision input for `delivery-units.md`). No globs, no placeholders — see `task-schema.md`.
+
 ## Decomposition
 
 | Rule | Criteria |
@@ -75,4 +77,5 @@ For subversions: under `subversions/{subversion_san}/tasks/`.
 
 - `unit-test-task-generator.md` — after backend implementation tasks (**MUST** read)
 - `e2e-test-task-generator.md` — after frontend tasks with UI (**MUST** read)
-- `execution-handoff.md` — after **all** version tasks written (planning closure)
+- `execution-handoff.md` — after all tasks (+ Gate 4 + units only when required)
+- `delivery-units.md` — only when Gate 4 requires (publish or parallel); see `gates.md`

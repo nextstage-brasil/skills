@@ -4,7 +4,7 @@ description: '(NS) Spec-driven delivery face — clarify, requirements, tasks (i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.5"
+  version: "1.6"
 depends:
   - ns-harness
   - ns-coder
@@ -60,6 +60,8 @@ flowchart LR
   consist[Consistency]
   part[Partition]
   tasks[Tasks]
+  units[Delivery units]
+  handoff[Handoff]
   exec[Execute]
   close[Close]
   quick[Quick mode]
@@ -71,9 +73,12 @@ flowchart LR
   specify --> consist
   specify --> part
   specify --> tasks
-  tasks --> exec
-  exec --> close
+  tasks --> handoff
+  tasks -.->|Gate 4 opt-in| units
+  units --> handoff
+  handoff --> exec
   quick --> exec
+  exec --> close
 ```
 
 | Phase       | When                         | Reference                                                                                                                                                                            |
@@ -82,7 +87,9 @@ flowchart LR
 | Specify     | Always for Medium+           | `references/requirements-generator.md` (in-session — no v1 bridge)                                                                                                                   |
 | Consistency | Before tasks (Large+)        | `references/analyze-consistency.md` (in-session — no v1 bridge)                                                                                                                      |
 | Partition   | Multi-slice versions         | `references/version-partitioner.md` (in-session — no v1 bridge)                                                                                                                      |
-| Tasks       | Medium+ formal tasks         | `task-writer-agent` → `references/task-generator.md` (**MUST** when available) then `unit-test-task-generator.md` / `e2e-test-task-generator.md` + `references/execution-handoff.md` |
+| Tasks       | Medium+ formal tasks         | `task-writer-agent` → `references/task-generator.md` (**MUST** when available) then `unit-test-task-generator.md` / `e2e-test-task-generator.md` |
+| Delivery units | After all tasks (optional) | Gate 4 when GitLab possible; `references/delivery-units.md` only when publish, parallel, or resume file |
+| Handoff     | After tasks (or Gate 4 when run) | `references/execution-handoff.md` |
 | Execute     | Always                       | See execute routing below                                                                                                                                                            |
 | Close       | After delivery               | `reviewer-agent` → `ns-reviewer` (**MUST** when available) → `ns-living-spec`                                                                                                        |
 | Quick       | ≤3 files, one-sentence scope | `coder-agent` → `ns-coder` (**MUST** when available)                                                                                                                                 |
@@ -120,7 +127,7 @@ Chat short, natural language. **Read `references/human-communication.md` before 
 | Size       | Pipeline                                                                                                        |
 | ---------- | --------------------------------------------------------------------------------------------------------------- |
 | **Small**  | `coder-agent` → `ns-coder` (quick mode — `references/quick-mode.md`)                                            |
-| **Medium** | Clarify (if needed) → Specify → Tasks (**MUST** `task-writer-agent` when available) + handoff → Execute → Close |
+| **Medium** | Clarify (if needed) → Specify → Tasks (**MUST** `task-writer-agent` when available) → optional Gate 4 + units → handoff → Execute → Close |
 | **Large**  | Full chain including Consistency and/or Partition when scope warrants                                           |
 
 **Safety valve:** scope exceeds ~3 files or explodes mid-session → stop, formalize via Medium+ pipeline (requirements + tasks).
@@ -132,12 +139,13 @@ Worker dispatch: **MUST** use harness project agents when available — `../../n
 | Context                                    | Worker                                                                                                                                                                                                                                                                                                                |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Ad-hoc / quick / single task               | `coder-agent` → `ns-coder` (**MUST** bridge when available)                                                                                                                                                                                                                                                           |
-| Version with `execution-handoff.md`        | `../ns-coder/references/run-implementation.md` — classic **batched** dispatch (same-layer consecutive `pending`, prefer 4–7, hard max 7; size 1 = single task) + `coder-agent` (**MUST** when available) / `ns-coder` or `ns-autonomous`; handoff rows stay per task; Progress **Next task** = first id of next batch |
-| Partitioned version (`version-roadmap.md`) | `references/orchestrator.md` (slice workers via `coder-agent` — **MUST** when available; already batched per slice)                                                                                                                                                                                                   |
-| GitLab issue URL + MCP available           | `ns-execution-gitlab-issue` (soft — prefer when GitLab present)                                                                                                                                                                                                                                                       |
+| Version with `delivery-units.md`           | Dispatch **by unit** (wave order); parallel only if Gate 4 parallel + `A ∥ B`. GitLab: `delivery-units.md` **GitLab status/spent (SSoT)**. Published + G present → `ns-execution-gitlab-issue` SDD unit mode; else local unit batches in `run-implementation.md` |
+| Version with `execution-handoff.md` only (no units file) | `../ns-coder/references/run-implementation.md` — classic **batched** dispatch (same-layer consecutive `pending`, prefer 4–7, hard max 7; size 1 = single task) + `coder-agent` (**MUST** when available) / `ns-coder` or `ns-autonomous`; handoff rows stay per task; Progress **Next task** = first id of next batch |
+| Partitioned version (`version-roadmap.md`) | `references/orchestrator.md` — **by unit** when `delivery-units.md` exists (commit/MR per unit); else slice workers via `coder-agent` (**MUST** when available) |
+| External GitLab `ISSUE_URL` + MCP available           | `ns-execution-gitlab-issue` (priority 1 — not SDD unit mode)                                                                                                                                                                                                                                                       |
 | Autonomous multi-step local plan           | `ns-autonomous`                                                                                                                                                                                                                                                                                                       |
 
-**Face = orchestrator** (`ns-spec-driven`); does not implement — drives `run-implementation.md` (classic) or `orchestrator.md` (slices).
+**Face = orchestrator** (`ns-spec-driven`); does not implement — drives `run-implementation.md` (classic) or `orchestrator.md` (units when `delivery-units.md`; else slices).
 
 **Tests while executing version tasks:** unit/integration only. **Forbidden** for agents to run E2E during task/batch loop; human runs E2E at version end (`../ns-coder/references/run-implementation.md`).
 
@@ -185,6 +193,10 @@ When version or quick fix closes, report:
 - Plan or execute agent-api / intelligent SaaS work without loading `ns-langgraph-agents` when detection signals match.
 - Generate requirements/tasks yourself without reading phase references / delegating task files via `task-writer-agent`.
 - Skip `execution-handoff.md` when formal tasks exist for version.
+- Skip `delivery-units.md` + Gate 4 when human chose publish or parallel.
+- Generate `delivery-units.md` on default local sequential path (no GitLab capability, no human ask).
+- Create GitLab issue per `task-NNN` or one issue for whole version.
+- Parallel unit execution without `A ∥ B` or without Gate 4 parallel choice.
 - Address human with internal phase names ("Specify", "Clarify") or bot chrome (`Reply:`, `Premise:`).
 
 ## Invocation examples

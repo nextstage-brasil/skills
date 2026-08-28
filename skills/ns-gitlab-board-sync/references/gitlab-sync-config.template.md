@@ -24,6 +24,11 @@ work_branch: "release/1.0.0"
 protected_branches:
   - main
 mr_target_branch: "develop"
+
+# SDD delivery units (Gate 4 publish)
+mr_per_unit: true              # one draft MR per delivery unit
+max_parallel_units: 1            # 1 = sequential default; raise only when Gate 4 parallel + A∥B
+unit_label_format: "Unit: {unit}"  # e.g. Unit: unit-001
 ```
 
 Validate label strings against `list_project_labels` before first sync.

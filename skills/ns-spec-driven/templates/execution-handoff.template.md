@@ -28,6 +28,7 @@ Planning complete — **execute, do not replan**.
 | Tasks | `docs/versions/{version_san}/tasks/task-NNN-*.md` |
 | Design | `docs/context/design-brief.md` |
 | Stack | `docs/context/stack-confirmed.md` |
+| Delivery units *(if present)* | `docs/versions/{version_san}/delivery-units.md` |
 | GitLab feature map *(if present)* | `docs/versions/{version_san}/gitlab-issue-feature-map.md` |
 | GitLab sync config *(if present)* | `docs/context/gitlab-sync-config.md` |
 | Harness rules | `.nextstage-harness/rules/` |
@@ -44,8 +45,8 @@ Planning complete — **execute, do not replan**.
 8. **Update this file** when starting (`in_progress` on all batch members at batch start), completing (`completed` per task from worker report), or blocking (`blocked`) each task. Tokens: split per task or `~N` estimate.
 9. Update **Version status**, **Progress**, and **Tokens (total)** after each task / batch.
 10. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-reviewer`) before declaring version ready; remind human to run E2E.
-11. **GitLab:** implement only on registered `work_branch`; MR target per config.
-12. **GitLab status:** **per task**, sync `backlog` then `in_progress` then `done` — never skip `in_progress` (`ns-gitlab-board-sync`). Not per batch.
+11. **GitLab:** implement only on registered `work_branch` or per-unit `work/{unit}-{slug}`; MR target per config / `delivery-units.md` `SOURCE_BRANCH`.
+12. **GitLab status/spent:** follow `delivery-units.md` section **GitLab status/spent (SSoT)** — no fourth branch.
 13. Do not stop to replan unless real blocker documented in task **Execution notes**.
 
 **`waived` tasks:** only with explicit human waiver recorded in that task **Execution notes**.
@@ -101,8 +102,8 @@ inspect other products in monorepo unless scope rules allow.
 
 Allowed values: `pending` | `in_progress` | `completed` | `blocked` | `waived`
 
-| Task | Layer | Status | Started at | Finished at | Time (s) | Tokens | Updated at |
-|------|-------|--------|------------|-------------|----------|--------|------------|
+| Task | Unit | Layer | Status | Started at | Finished at | Time (s) | Tokens | Updated at |
+|------|------|-------|--------|------------|-------------|----------|--------|------------|
 {task_rows}
 
 > **Task** = short id only (`task-001`), derived from `task-001-*.md`. Feature and

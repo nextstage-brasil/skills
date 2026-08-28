@@ -40,7 +40,7 @@
     {
       "prompt": "/ns-spec-driven resume — apps/billing version 2.1.0 planning done, generate execution handoff from eight tasks.",
       "id": 7,
-      "expected_output": "Reads references/execution-handoff.md; creates execution-handoff.md with task table, time tracking, progress block. Does not generate new task files.",
+      "expected_output": "Reads references/execution-handoff.md; creates execution-handoff.md with task table (Unit column — when no delivery-units.md), time tracking, progress block. Does not require delivery-units.md or Gate 4 when no GitLab capability. Does not generate new task files.",
       "files": []
     },
     {
@@ -101,6 +101,54 @@
       "prompt": "/ns-spec-driven — greenfield standalone LangGraph agent-api (no Laravel). Plan version 1.0.0 from scratch.",
       "id": 17,
       "expected_output": "Loads ns-langgraph-agents; uses stacks/agent-runtime.md; Feature 001 is bootstrap-agent-runtime.mjs + graph-spec; later features are domain/MCP deltas; first execute task runs the bootstrap script not snippet assembly.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — version 2.5.0 has eight task files, no GitLab config or MCP. Close planning.",
+      "id": 18,
+      "expected_output": "Does not write delivery-units.md or run Gate 4 (no GitLab capability). Reads execution-handoff.md; generates handoff with Unit column —; Execute classic per run-implementation.md.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — version 2.6.0 has eight tasks. docs/context/gitlab-sync-config.md exists. Human says publish units to GitLab.",
+      "id": 25,
+      "expected_output": "Gate 4 ask first (publish, sequential vs parallel, SOURCE_BRANCH) per gates.md and human-communication.md — before writing delivery-units.md. After human confirms publish: reads delivery-units.md algorithm; writes docs/versions/2.6.0/delivery-units.md with unit table; mcp-gitlab-usage publish writes issue_iid per row; then execution-handoff.md.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — after tasks for 2.5.0, create one GitLab issue per task-NNN.",
+      "id": 19,
+      "expected_output": "Refuses: forbidden issue per task-NNN; cites delivery-units.md grain and gates.md Gate 4 forbidden list.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — publish version 2.5.0 as a single GitLab issue for the whole milestone.",
+      "id": 20,
+      "expected_output": "Refuses: version = milestone not issue; one issue per delivery unit only; cites delivery-units.md hard rules.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — Gate 4 yes for 2.5.0. Publish unit-001 (three tasks, estimates 3600+1800+900).",
+      "id": 21,
+      "expected_output": "mcp-gitlab-usage SDD delivery-unit publish: set_issue_estimate = 6300 (sum), not per-task estimates; writes issue_iid to delivery-units.md row.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — unit-001 completed. Post GitLab spent time for each task in the unit.",
+      "id": 22,
+      "expected_output": "Refuses per-task spent when delivery-units.md has issue_iid; applies GitLab status/spent SSoT in delivery-units.md — G Phase 3 when ns-execution-gitlab-issue owns lifecycle, else Flow D local-only; never both, never Flow B.",
+      "files": []
+    },
+    {
+      "prompt": "Implement https://gitlab.example.com/group/app/-/issues/42 for billing refactor.",
+      "id": 23,
+      "expected_output": "Routes to ns-execution-gitlab-issue external ISSUE_URL mode (priority 1) — not SDD unit mode even if delivery-units.md exists elsewhere.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — execute unit-002 from delivery-units.md (issue_iid 517, gate4_mode sequential). task-004 and task-005 both modify src/Api/UserController.php.",
+      "id": 24,
+      "expected_output": "Write-set collision keeps tasks in same unit; refuses parallel with unit-003 without A∥B; sequential default; batch does not cross unit boundary per run-implementation.md.",
       "files": []
     }
   ]

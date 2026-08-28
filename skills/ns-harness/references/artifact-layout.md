@@ -24,6 +24,7 @@ docs/specs/          # first living-spec delivery
 |----------|------|
 | Requirements | `docs/versions/{version_san}/requirements.md` (trailing `## Consistency` from `ns-spec-driven` Consistency — `references/analyze-consistency.md`) |
 | Tasks | `docs/versions/{version_san}/tasks/task-NNN-*.md` |
+| Delivery units | `docs/versions/{version_san}/delivery-units.md` (opt-in — after Gate 4 publish/parallel or resume; `ns-spec-driven` → `references/delivery-units.md`) |
 | Execution handoff | `docs/versions/{version_san}/execution-handoff.md` |
 | Commercial budget (internal) | `docs/versions/{version_san}/pm/commercial-budget-internal.md` (header: Sequência + Gerado em) |
 | Commercial budget (client) | `docs/versions/{version_san}/pm/commercial-budget-costumer.md` (optional; header: `{version_san}-costumer`) |

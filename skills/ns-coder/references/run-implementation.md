@@ -3,11 +3,13 @@
 Guide the implementer through a **planned version** using `execution-handoff.md`
 as entry point and progress tracker.
 
-For partitioned versions (`version-roadmap.md` present), use
-`../../ns-spec-driven/references/orchestrator.md` instead — do not follow this workflow in the parent
-session.
+No `delivery-units.md` = **classic default** (batched same-layer dispatch) — normal local path, not legacy-only.
 
-**Batching:** this file only (classic mode). Partitioned mode already batches per slice — do not re-batch across slices here. Classic batch = same-layer consecutive `pending`, prefer **4–7**, hard **max 7**, fewer OK when fewer remain (size 1 = single-task). Slice **target 4–7** = `version-partitioner.md` only.
+**Unit-scoped run** (stay in this file, step 0b): caller is G SDD unit mode **or** current `unit` is set **or** (`delivery-units.md` exists and this is **not** a top-level partitioned parent with pending slices). Top-level parent + `version-roadmap.md` pending slices + **no** `unit` → `../../ns-spec-driven/references/orchestrator.md`. Do not bounce a unit-scoped run back to orchestrator.
+
+**Batching:** this file only. Classic batch = same-layer consecutive `pending`, prefer **4–7**, hard **max 7**, fewer OK (size 1 = single-task). Slice **target 4–7** = `version-partitioner.md` only. **Unit-scoped:** batch = all tasks in current `unit` only.
+
+**GitLab:** `../../ns-spec-driven/references/delivery-units.md` **GitLab status/spent (SSoT)** — no fourth branch.
 
 ## Prerequisites
 
@@ -21,8 +23,19 @@ before coding.
 ## Routing (step 0)
 
 1. Read `docs/versions/{version_san}/version-roadmap.md` when present
-2. If roadmap has pending slices → stop; use `../../ns-spec-driven/references/orchestrator.md`
-3. Otherwise → classic mode (this workflow)
+2. Read `docs/versions/{version_san}/delivery-units.md` when present
+3. If **unit-scoped run** (definition above) → **step 0b**
+4. Else if roadmap has pending slices → stop; use `../../ns-spec-driven/references/orchestrator.md`
+5. Else → classic mode (this workflow)
+
+### Step 0b — Unit mode
+
+1. Read `delivery-units.md` — waves, deps, `issue_iid`, `gate4_mode`
+2. **Current unit:** if caller set `unit` → use it. Else (local loop only) → lowest wave with `pending`/`in_progress` whose deps are `completed`
+3. **Batch** = all tasks listed in that unit only — never mix units in one dispatch
+4. Worktree per unit: `.worktrees/{unit}`; work branch `work/{unit}-{slug}`
+5. Parallel: only when `gate4_mode` = parallel **and** same-wave units satisfy `A ∥ B`; respect `max_parallel_units`. Caller-set `unit` never stolen by a different wave pick.
+6. **GitLab:** if caller is G → no board writes in this file. Else apply SSoT at **unit** start/end only.
 
 ## Bootstrap (step 1)
 
@@ -31,13 +44,17 @@ before coding.
 3. Validate **Time tracking (seconds)** section exists; add from template if missing
 4. Read `requirements.md` (overview — do not replan); confirm Consistency status is `Approved` when present
 5. Load product context: follow **Implementation boot rule** in `../../../ns-harness/references/artifact-layout.md`
-6. Identify **Next batch** — consecutive `pending` same layer (max 7); Progress **Next task** column = first short id of that batch (or resume `in_progress`)
-7. Load harness rules for the batch layer
+6. **Next batch:**
+   - **Unit mode:** all `pending`/`in_progress` tasks in current unit (step 0b) — ignore layer 4–7 classic cap
+   - **Classic:** consecutive `pending` same layer (max 7); Progress **Next task** = first short id of that batch (or resume `in_progress`)
+7. Load harness rules for the batch layer(s)
 8. If `Implementation — start` is empty, fill with current ISO local timestamp
 
 ### Work branch (step 1.5 — GitLab)
 
-When `docs/context/gitlab-sync-config.md` exists:
+**Unit mode:** skip version-level `work_branch`. Use per-unit `.worktrees/{unit}` + `work/{unit}-{slug}` from `delivery-units.md` / caller (`ns-execution-gitlab-issue`).
+
+**Classic only** — when `docs/context/gitlab-sync-config.md` exists and no unit mode:
 
 1. Read `base_branch`, `work_branch`, `protected_branches`
 2. Stop if branches are missing or current branch is protected
@@ -50,12 +67,13 @@ Until scope done or all tasks complete:
 
 ### Select batch
 
-Next batch = consecutive `pending` tasks, **same layer**, prefer **4–7**, hard **max 7**, fewer OK when fewer remain. Stop before dependency on unfinished task. Size 1 → single-task dispatch (same rules).
+- **Unit mode:** batch = all tasks in current unit row — never tasks from another unit
+- **Classic:** consecutive `pending` tasks, **same layer**, prefer **4–7**, hard **max 7**, fewer OK when fewer remain. Stop before dependency on unfinished task. Size 1 → single-task dispatch.
 
 ### Dispatch
 
 1. **Update handoff — batch start:** each selected row `Status` → `in_progress`; `Started at` → now; `Updated at` → now
-   - **GitLab:** if sync config exists, run `ns-gitlab-board-sync` (task start: backlog → in_progress) **per task** **before** coding
+   - **GitLab batch start:** if caller is `ns-execution-gitlab-issue` → **zero** board writes here. Else apply SSoT at **unit** start only (Flow B per task only when SSoT Flow B row).
 2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). Open `Detailed description` on demand — ambiguity or `blocked`. See `../../ns-spec-driven/references/task-schema.md`.
 3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-batch re-read; never tool-Read `AGENTS.md`)
 4. **Implement** — **one** `coder-agent` dispatch per batch (**MUST** when available; loads `ns-coder`); else `ns-coder` direct. See `../../../ns-harness/references/subagent-dispatch.md`.
@@ -72,7 +90,7 @@ Next batch = consecutive `pending` tasks, **same layer**, prefer **4–7**, hard
    **Forbidden:** `0` on `completed` task that did LLM work
 7. **Update handoff — per task from worker report:** each task `Status` → `completed` (or `blocked`); write `Tokens` (step 6)
    - On `blocked` / waiver / important events: append to task file `## Execution notes` (relevant only)
-   - **GitLab:** sync in_progress → done + spent time **per task** after validation
+   - **GitLab complete:** if caller is G → **zero** board writes here. Else SSoT at **unit** end only (never per-task spent when units published).
 8. **Recalculate (required)** after batch (or after each task if reporting incremental):
    - Row `Time (s)` = `Finished at − Started at`
    - **Tokens (total)** = sum of `Tokens` (integers; `~N` counts as `N`)
@@ -136,7 +154,7 @@ After human confirms (or documented waiver):
 ## Critical rules
 
 - **Always** update `execution-handoff.md` when task status changes — rows stay **per task**; parent owns file
-- **Classic batching only** — same-layer consecutive `pending`, prefer 4–7, hard max 7, fewer OK; size 1 = single-task. Handoff Progress **Next task** = first id of next batch.
+- **Batching:** **unit mode** on **unit-scoped run** (step 0 definition — all tasks in that `unit`). **Classic** only when not unit-scoped — same-layer consecutive `pending`, prefer 4–7, hard max 7.
 - **AGENTS first** — Session boot once in Bootstrap (step 1); no rule re-read per batch unless `agents.local.md` or harness rules changed; never tool-Read `AGENTS.md`
 - **Numeric task order** unless explicit dependency in the task file says otherwise
 - **Minimal diff** — current batch scope only

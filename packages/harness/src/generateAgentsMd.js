@@ -108,6 +108,10 @@ function buildSddChain(installed) {
     items.push(`- [ ] \`${skill}\``);
   }
 
+  if (set.has('ns-spec-driven')) {
+    items.push('- [ ] After tasks: optional Gate 4 + `delivery-units.md` (opt-in publish/parallel); default local → handoff');
+  }
+
   const impl = IMPL_SKILLS.filter((skill) => set.has(skill));
   if (impl.length > 0) {
     items.push(`- [ ] Implementation (${impl.map((s) => `\`${s}\``).join(' / ')})`);

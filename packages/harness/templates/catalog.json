@@ -27,7 +27,7 @@
     "mcp-gitlab-usage": ["ns-harness"],
     "ns-gitlab-board-sync": ["mcp-gitlab-usage"],
     "ns-gitlab-ci-generator": [],
-    "ns-execution-gitlab-issue": ["ns-harness", "mcp-gitlab-usage", "ns-reviewer", "ns-autonomous"],
+    "ns-execution-gitlab-issue": ["ns-harness", "mcp-gitlab-usage", "ns-reviewer", "ns-autonomous", "ns-coder"],
     "ns-autonomous": ["ns-harness", "ns-reviewer"],
     "ns-coder": [
       "ns-harness",

@@ -16,7 +16,8 @@ See `../../../ns-harness/references/session-boot.md` and
 
 | Trigger                                          | Action                                       |
 | ------------------------------------------------ | -------------------------------------------- |
-| End of planning (all `task-NNN-*.md` written)    | **Generate** initial handoff                 |
+| End of planning (all `task-NNN-*.md` written)    | Units needed (Gate 4 publish or parallel, or file exists): Gate 4 then `delivery-units.md` when required; else **generate handoff directly** |
+| Gate 4 complete (when run)                       | **Generate** initial handoff                 |
 | Tasks exist but handoff missing                  | **Generate** before implementation           |
 | Task starts, completes, blocks, or waived        | **Update** status + recalculate times/tokens |
 | All tasks done — review / living specs / closure | **Update** version status + final timestamps |
@@ -35,6 +36,8 @@ size **target 4–7** is `version-partitioner.md` only.
 - `{version_san}` defined
 - `docs/versions/{version_san}/requirements.md` exists
 - At least one `docs/versions/{version_san}/tasks/task-*.md`
+- **New planning closure:** Gate 4 when GitLab possible; `delivery-units.md` only when publish or parallel or resume file exists. Handoff always after tasks (and Gate 4 when run).
+- **Default local (no units file):** classic handoff — `Unit` column `—`; no Gate 4 when GitLab not possible.
 - Template: `../templates/execution-handoff.template.md`
 - Planning timestamps from planning session:
   - `planning_started_at` (ISO local `YYYY-MM-DDTHH:MM:SS`)
@@ -53,6 +56,7 @@ For each `task-NNN-*.md` in numeric order:
 | Field  | Source                                                                                 |
 | ------ | -------------------------------------------------------------------------------------- |
 | Task   | Short id only: `task-NNN` (from `task-NNN-*.md` — drop slug)                           |
+| Unit   | From `delivery-units.md` tasks column — `unit-NNN` or `—` when no delivery units file |
 | Layer  | infer from filename or task body (`backend`, `frontend`, `infra`, `unit-tests`, `e2e`) |
 
 Do **not** put Feature, model tier, or free-form Notes in handoff table —
@@ -111,7 +115,7 @@ mode dispatches a multi-task batch:
 9. Important notes (blockers, waivers): append to task file
    `## Execution notes` — relevant only; never Notes column in handoff
 
-**GitLab sync:** still **per task** (start and complete), not per batch.
+**GitLab sync:** `delivery-units.md` **GitLab status/spent (SSoT)** — no fourth branch.
 
 Version closure (review, living specs, `_done/` move): fill
 `Post-implementation review — end`, `Review — tokens` (or Session history

@@ -34,6 +34,7 @@ How delivery face and workers talk **to human**. Separate from agent-facing file
 | Gate 1 (requirements) | Path + plain-language highlights + clear ask. See **Gate 1 highlights** below. |
 | Gate 2 (scope) | "Here is the feature/scope summary. OK to proceed, or what should change?" — feature titles in words, not only `Feature 00N`. |
 | Gate 3 (tasks) | "Task plan: N backend, M frontend, … (~K worker batches, prefer 4–7 tasks each). Shall I generate the task files?" — always before any `task-*.md` |
+| Gate 4 (delivery units) | Per `gates.md` — **ask before compute**; never say "I grouped N units" before file exists. Skip when GitLab not possible; mention `npx @nextstage-brasil/harness --preset gitlab` once if human cited GitLab. After file written: may summarize unit count from table. |
 | Missing prepare | "This repo still needs `/ns-harness prepare this repo` before we can plan safely. Run that, or say if you want to continue anyway." |
 
 ## Gate 1 highlights

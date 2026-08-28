@@ -6,6 +6,7 @@ Progress on disk — not chat history.
 
 | Signal | Action |
 | ------ | ------ |
+| `docs/versions/{version_san}/delivery-units.md` exists | Read units + `issue_iid` — **never re-create** published issues on resume |
 | `docs/versions/{version_san}/execution-handoff.md` exists | Read handoff first — **source of truth** for task order + status |
 | `version-roadmap.md` + subversions | Check slice handoffs under `subversions/` |
 | User say "continue", "resume", "where we left off" | Locate latest handoff; no restart planning |
@@ -22,9 +23,12 @@ Progress on disk — not chat history.
 2. Read `execution-handoff.md` (or slice handoff if orchestrating subversion).
 3. Skip phases with artifacts **complete + user-approved**:
    - Requirements exist, user not ask rewrite: skip Specify.
-   - Tasks + handoff exist: skip Tasks generation; go Execute.
-4. Delegate Execute per execute routing (`run-implementation.md`, `orchestrator.md`, or GitLab).
-5. On close: review then living spec if not done for this delivery.
+   - Tasks exist, no `delivery-units.md`, handoff exists: skip units + Gate 4; go Execute classic.
+   - Tasks exist, no `delivery-units.md`, no handoff: Gate 4 per `gates.md` when GitLab possible; else classic handoff (no units).
+   - Tasks + `delivery-units.md` + Gate 4 done, handoff exists: skip Tasks generation; go Execute.
+4. **Resume GitLab:** reuse `issue_iid` and open `mr_url` from `delivery-units.md` — forbidden to `create_issue` again for same unit.
+5. Delegate Execute per execute routing (`run-implementation.md`, `orchestrator.md`, `ns-execution-gitlab-issue` unit mode, or external GitLab).
+6. On close: review then living spec if not done for this delivery.
 
 ## Pause
 

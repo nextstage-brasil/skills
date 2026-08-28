@@ -28,9 +28,18 @@ Never block delivery waiting for complements.
 
 ## GitLab (soft)
 
+Three execution modes — GitLab stays optional; no hard `depends` change on this skill.
+
+| Mode | When | Path |
+| ---- | ---- | ---- |
+| **Local** | Default sequential, no units file | `run-implementation.md` classic; unit batches only when `delivery-units.md` present |
+| **Parallel units (no publish)** | Gate 4 publish `no`, `gate4_mode=parallel` — file without `issue_iid` | `run-implementation.md` unit batches per `gates.md` After answers |
+| **Publish units** | Gate 4 publish `yes` — `delivery-units.md` + `issue_iid` per row | `mcp-gitlab-usage` SDD delivery-unit publish. Execute: **G** SDD unit mode when `ns-execution-gitlab-issue` present; else local `run-implementation` + Flow D. Status/spent: `delivery-units.md` **GitLab status/spent (SSoT)** |
+| **External issue** | Human passes `ISSUE_URL` | `ns-execution-gitlab-issue` priority 1 — **not** the same as SDD unit mode |
+
 | Installed | Behavior |
 | --------- | -------- |
-| `mcp-gitlab-usage` + `ns-execution-gitlab-issue` | Prefer issue execution on `ISSUE_URL` |
+| `mcp-gitlab-usage` + `ns-execution-gitlab-issue` | Gate 4 publish + unit mode; external `ISSUE_URL` still priority 1 |
 | MCP only | MCP per `mcp-gitlab-usage`; code via `ns-autonomous` or `ns-coder` |
 | Neither | Local execute; mention `--preset gitlab` once if user cite GitLab |
 

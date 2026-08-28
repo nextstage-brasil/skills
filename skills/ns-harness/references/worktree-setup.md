@@ -60,7 +60,8 @@ git worktree add ".worktrees/{run_id}" {WORK_BRANCH}
 
 | Consumer | `{run_id}` |
 | -------- | ---------- |
-| `ns-execution-gitlab-issue` | `{ISSUE_ID}` (its `references/worktree-setup.md` override) |
+| `ns-execution-gitlab-issue` (external) | `{ISSUE_ID}` — see skill `references/worktree-setup.md` |
+| `ns-execution-gitlab-issue` (SDD unit) | `{unit}` — see skill `references/worktree-setup.md` |
 | `ns-autonomous` standalone | `{version_san}` (`references/standalone-pipeline.md`) |
 
 ## Cleanup

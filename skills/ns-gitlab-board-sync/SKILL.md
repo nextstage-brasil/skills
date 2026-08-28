@@ -4,7 +4,7 @@ description: (NS) Sync existing GitLab issues with local planning and execution 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - mcp-gitlab-usage
 ---
@@ -48,7 +48,11 @@ Per issue in map (excluding `exclude_issues`):
 4. `assign_issue`
 5. `set_issue_estimate` from linked task header (seconds) **only if** `time_stats.time_estimate` is empty — never overwrite; skip values < 60
 
-## Flow B — Per-task execution sync
+## Flow B — Per-task execution sync (legacy 1:1)
+
+**Mutual exclusion:** any `issue_iid` in `delivery-units.md` → **do not** run Flow B. Owner = `../ns-spec-driven/references/delivery-units.md` **GitLab status/spent (SSoT)**.
+
+When task row maps 1:1 to its own GitLab issue (no delivery units file, or unpublished units + legacy `gitlab-issue-feature-map.md`):
 
 ### Task start (before coding)
 
@@ -72,6 +76,33 @@ add_issue_comment (internal=true)
 
 **Never** backlog → done in one step.
 
+## Flow D — Per delivery unit
+
+Run **only** when SSoT row is Flow D (published `issue_iid` + local execute, no G). When G owns lifecycle → **skip entire Flow D**.
+
+### Unit start (before coding unit tasks)
+
+```
+remove: status_backlog
+add: status_in_progress
+```
+
+Record `START_TIME` / `START_EPOCH` when coding starts for unit (wall-clock for unit-level spent).
+
+### Unit complete (after unit validation + review approved)
+
+Only if already `status_in_progress`:
+
+```
+remove: status_in_progress
+add: status_done
+add_issue_comment (internal=true)
+```
+
+**Local-only** (SSoT Flow D row): include `add_issue_spent_time` once per unit (wall-clock, not `estimate_sum`); set `spent_posted` = `yes`.
+
+**Never** backlog → done in one step. **Never** `add_issue_spent_time` per task inside unit. **Never** Flow D when G owns the same issue.
+
 ## Anti-patterns
 
 | Wrong                               | Right                            |
@@ -90,3 +121,4 @@ add_issue_comment (internal=true)
 | ------------------------------------------- | ---------------------- |
 | `references/gitlab-sync-config.template.md` | Bootstrap config       |
 | `mcp-gitlab-usage`                          | Tool schemas and gates |
+| `../ns-spec-driven/references/delivery-units.md` | GitLab status/spent (SSoT) |
