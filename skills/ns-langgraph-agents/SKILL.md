@@ -7,7 +7,6 @@ metadata:
   version: "1.12"
 depends:
   - ns-harness
-  - ns-langgraph-agents
 ---
 
 # LangGraph Agents
