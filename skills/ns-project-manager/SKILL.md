@@ -4,12 +4,11 @@ description: >
   (NS) Gated PM workflow — clarify, structure, RICE/WSJF, sprint plan, PERT/Monte
   Carlo forecast; risk, status, meeting, OKR. Also commercial budget (orçamento,
   Function Points, proposta comercial; COSMIC/CFP only if asked), triple productivity delivery
-  schedule (cronograma P100/P85/P50, prazo, when we deliver), and requirements
-  enricher / grill-me for GitLab issues or chat. Use on transcripts, backlog,
-  timeline, delivery date, status, orçamento, cotação, cronograma, enrich
-  requirements — even if PM is unnamed. On "help" / "exemplos", list example
-  prompts only. Do NOT use for coding, SDD requirements generation, or GitLab
-  issue execution.
+  schedule (cronograma P100/P85/P50, prazo, when we deliver). Use on transcripts,
+  backlog, timeline, delivery date, status, orçamento, cotação, cronograma —
+  even if PM is unnamed. On "help" / "exemplos", list example prompts only. Do
+  NOT use for coding, SDD requirements generation, GitLab issue execution, or
+  per-issue grill-me / requirements enrichment (`/ns-requirements-enricher`).
 license: Apache-2.0
 requires_harness: ">=1.0.0"
 provides:
@@ -17,7 +16,6 @@ provides:
   - artifact:pm/backlog
   - artifact:commercial-budget
   - artifact:delivery-schedule
-  - gate:requirements-enrichment
 consumes: []
 metadata:
   author: nextstage-brasil
@@ -49,7 +47,6 @@ Gated PM pipeline (Phases 0–5) + on-demand modes (6+). One phase per turn unle
 | Informal Slack/email to task/ticket | **10** NL to Workflow | `references/09-nl-to-workflow.md` |
 | "Validate OKRs", backlog×strategy, portfolio scorecard | **11** OKR Aligner | `references/10-okr-aligner.md` |
 | Commercial budget, orçamento, proposta comercial, Function Points, ponto-função, cotação R$ (COSMIC/CFP only if named) | **commercial-budget** (not PM phase) | `references/ns-commercial-budget/workflow.md` then its `references/` + `assets/` |
-| Enrich / grill-me / blocking questions on issue or pasted scope | **requirements-enricher** (not PM phase) | `references/ns-requirements-enricher/workflow.md` then its `references/` |
 
 Modes 6+ skip pipeline. Run direct. Reuse prior phase context when present.
 
@@ -69,7 +66,6 @@ On **help** / what-can-I-do / examples:
 | Delivery forecast (story-level) | `When do we deliver? Three-point estimates: [...].` |
 | Triple productivity schedule | `I have FP and productivity — give me P100/P85/P50 delivery dates.` |
 | Commercial budget | `Need a commercial budget / orçamento for: [...].` |
-| Enrich / grill-me requirements | `Grill-me on this scope before we plan: [...].` |
 | Risk / sprint health | `Are we on track? Here's velocity and WIP: [...].` |
 | Status report | `Write a status report for the board — sprint N, …` |
 | Meeting digest | `Meeting notes — just the action items: '[…transcript…]'` |
@@ -80,7 +76,7 @@ On **help** / what-can-I-do / examples:
 
 Close: one line — paste input or pick row.
 
-**Nested workflows:** router hit `references/ns-*/workflow.md` — read full file, follow it (own `references/`, `assets/`, `scripts/`). No evals.
+**Nested workflows:** router hit `references/ns-commercial-budget/` or `references/ns-delivery-schedule/` `workflow.md` — read full file, follow it (own `references/`, `assets/`, `scripts/`). No evals. Per-issue grill-me = `/ns-requirements-enricher` (catalog), not this skill.
 
 **Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Default = APF (IFPUG CPM latest; SISP latest if CPM does not cover). COSMIC CFP only when human asks. Other methods only when human names them. Phases 1–5 = delivery forecast (RICE / sprint / PERT).
 
@@ -208,4 +204,3 @@ Rules:
 | `assets/dangerfile-gitlab-template.js` | 9 |
 | `references/ns-commercial-budget/workflow.md` | commercial budget |
 | `references/ns-delivery-schedule/workflow.md` | triple delivery schedule |
-| `references/ns-requirements-enricher/workflow.md` | requirements enricher |

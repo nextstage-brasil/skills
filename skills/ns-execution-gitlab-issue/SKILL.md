@@ -65,6 +65,7 @@ See `../../ns-harness/references/session-boot.md`. **Complete Session boot (bloc
 2. Ensure `.worktrees/` is gitignored (see `references/worktree-setup.md`).
 3. Read `mcp-gitlab-usage` before the first MCP call.
 4. **Mode detect:** external `ISSUE_URL` → **external issue mode**. `unit` + `issue_iid` from `delivery-units.md` → **SDD unit mode** — set `WORKTREE_ROOT`, `WORK_BRANCH`, `ISSUE_ID` substitutes below.
+5. **Incomplete acceptance (optional pre-step):** AC missing, conflicting, or too thin for autonomous coding → run `/ns-requirements-enricher` first. Do **not** start Phase 1 (no `status_in_progress`, no coding) until enricher done or human explicitly skips.
 
 ## Phase 1 — Prepare
 
@@ -171,7 +172,7 @@ Canonical rules: `../ns-reviewer/references/review-gate-workflow.md`.
 | Gate 1: `develop` fallback missing on remote                  | Stop — ask once                                   |
 | Gate 1: non-default base (`main`/`master`/`homolog`/…) without express human confirmation this run | Stop — ask once |
 | Worktree conflict (same issue, another run)               | Stop unless explicit resume                       |
-| Ambiguous or conflicting acceptance criteria              | Stop — ask once                                   |
+| Ambiguous or conflicting acceptance criteria              | Stop — `/ns-requirements-enricher` first; do not start Phase 1 coding |
 | MCP unavailable or auth failure                           | Stop — state blocker                              |
 | `project_id` trio not confirmed                           | Stop per `mcp-gitlab-usage`                       |
 | Work on protected/base branch per `gitlab-sync-config.md` | Stop                                              |
@@ -185,6 +186,7 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 
 | Skill               | Role                             |
 | ------------------- | -------------------------------- |
+| `/ns-requirements-enricher` | Optional pre-step when AC incomplete — before Phase 1 |
 | `mcp-gitlab-usage`  | All GitLab tools                 |
 | `ns-gitlab-board-sync` | Status label semantics           |
 | `ns-reviewer`     | Phase 4 gate (**MUST** `reviewer-agent` when available) |

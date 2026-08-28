@@ -1,0 +1,23 @@
+{
+  "skill_name": "ns-requirements-enricher",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Grill-me on this scope before we plan: users need a dashboard filter by club and role, show only active members, paginated list.",
+      "expected_output": "Chat mode: inline verdict icon + numbered product/UX questions. No GitLab comment, no files, no requirements.md, no Specify.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Enrich this GitLab issue before autonomous execution: https://gitlab.example.com/group/app/-/issues/42",
+      "expected_output": "Issue mode: MCP read_issue + list_issue_comments; codebase grill-me; one internal add_issue_comment from comment-template.md with @author.username. No set_issue_status, no code, no branch.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Clarify the next version so we can write requirements.md — actors, data in/out, whole version scope.",
+      "expected_output": "Does not replace Specify. Points to /ns-spec-driven Clarify (version-scope before Specify). Does not post GitLab comments or run per-issue enricher as a substitute for Specify.",
+      "files": []
+    }
+  ]
+}

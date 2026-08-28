@@ -159,3 +159,4 @@ Brownfield refresh gate: human confirms `refresh` or `keep` after seeing `brownf
 - `/ns-harness` `bootstrap-brownfield.md` — mandatory prerequisite when code exists and `brownfield-map.md` missing
 - `requirements-generator.md` — next step after clarification
 - `/ns-harness` `architecture-rules-generator.md` — constitution when `architecture-rules.md` still stub (separate from this phase)
+- `/ns-requirements-enricher` — GitLab issue grill-me / execution-readiness (one issue or pasted scope). Clarify does **not** post GitLab comments and does **not** replace per-issue enrichment. Do **not** use this file for that.

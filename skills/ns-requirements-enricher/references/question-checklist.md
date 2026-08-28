@@ -1,8 +1,8 @@
 # Question checklist (grill-me scan)
 
-Use during Phase 3. Only promote items to numbered questions when issue + comments + code leave **product** gap.
+Phase 3. Promote to numbered questions only when issue + comments + code leave **product** gap.
 
-Rewrite every candidate so **issue author (requester)** can answer in plain language. Technical discovery stays in Assumptions.
+Rewrite every candidate so **issue author (requester)** answers in plain language. Technical discovery stays in Assumptions.
 
 ## Do NOT ask (never promote)
 
