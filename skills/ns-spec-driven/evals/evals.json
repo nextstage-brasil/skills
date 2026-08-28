@@ -150,6 +150,12 @@
       "id": 24,
       "expected_output": "Write-set collision keeps tasks in same unit; refuses parallel with unit-003 without A∥B; sequential default; batch does not cross unit boundary per run-implementation.md.",
       "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — generate backend task for Feature 003. requirements.md asks for new OrderDto for orders table but repo migration builder already emits Order model and DTO.",
+      "id": 26,
+      "expected_output": "task-writer loads task-generator.md Grounding + Backend extras; refuses to name OrderDto in card; marks needs-clarification or omits DTO; cites builder/generator precedent and repo-over-requirements rule.",
+      "files": []
     }
   ]
 }

@@ -30,6 +30,12 @@
       "prompt": "Classic SDD: execution-handoff.md has six consecutive pending backend tasks (task-001..006), same layer, no unfinished deps. Run implementation.",
       "expected_output": "Reads run-implementation.md per-batch loop; selects one batch (same-layer consecutive pending, prefer 4–7 hard max 7 → all six); ONE coder-agent dispatch for the batch in SDD handoff mode (no review, no E2E run). Worker reports per task; parent updates handoff rows per task (in_progress on batch start, completed per task); GitLab sync per task when config exists. Size 1 stays single-task dispatch.",
       "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "SDD handoff: task-012 card says use raw SQL upsert for inventory sync but architecture-rules.md and backend-rules require repository pattern only.",
+      "expected_output": "Implements repository path per rules; annotates card deviation in Execution notes; does not silently follow card SQL upsert.",
+      "files": []
     }
   ]
 }

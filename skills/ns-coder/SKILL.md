@@ -4,7 +4,7 @@ description: "(NS) Ad-hoc coding worker — bug fixes, small refactors, scripts,
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.7"
+  version: "1.8"
 depends:
   - ns-harness
   - ns-investigator
@@ -68,6 +68,13 @@ Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-
 
 See `../../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** before any other step — cold start only; mid-session skip if already booted and files unchanged. Never tool-Read `AGENTS.md`.
 
+After session-boot steps 1–6:
+
+- Load **all** `.nextstage-harness/rules/*.md` marked **always-applicable** in harness `manifest.json`, plus layer rules for target layer.
+- Load **agent-requested** rules when `manifest.json` `description` matches task scope (persistence, auth, tenancy, build). No manifest: scan `rules/*.md`; read files whose scope matches.
+- Unread mandatory rules = **incomplete boot**. Do not pick stack default to fill gap.
+- **Stack signals:** detected stack implies expected sibling rule — `../../ns-harness/references/architecture-rules/stack-signals.md`. Rule present: load. Absent: ask or mark `needs-clarification` — never assume framework default.
+
 ## Session inputs
 
 | Variable | Required |
@@ -99,6 +106,10 @@ Then:
 
 ## Implementation rules
 
+- **Constitution over card:** card prescribes persistence/API/gate/pattern rules forbid — implement rules path; annotate `card deviation: {card} -> {rules}` in `## Execution notes`. Large/ambiguous deviation: `blocked`.
+- **Grounding check before diff:** card names class/command absent from repo and rules — stop and report. Do not implement.
+- **Persistence source:** persistence path from `architecture-rules.md` + mandatory project rules (Session boot). Forbidden to assume ORM or upsert default when rules silent — ask or `blocked`.
+- **Rules + code same turn:** rule request + code delivers diff same turn, not harness text only.
 - **Diff-first** — only required lines; no unrelated formatting
 - **Prefer editing** existing files over new files
 - **Large change gate:** >1 file simultaneously, >20 lines in one file, or public contract change: one-line plan, wait for approval

@@ -4,7 +4,7 @@ description: (NS) Senior Tech Lead code review on SOLID, clean code, performance
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.4"
+  version: "1.5"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -90,6 +90,7 @@ Score **quality of touched module/file after diff**, not hunk-alone correctness.
 | Same resolution block copied in **2+ functions** in diff scope (DRY) | **7** |
 | Predictable extension requires editing **3+ points** in same file (weak OCP, e.g. provider) | **7** |
 | Diff correct, zero Critical, mediocre / inconsistent pattern in file | **7–8** |
+| gate/role helper or domain constant swapped without cited project-rule clause | **6** |
 
 **9:** zero Critical **and** smells above absent or resolved in touched module; predictable extension = one SSoT.
 
@@ -124,6 +125,15 @@ Diff touches `agent-api` (or LangGraph runtime paths): load `../ns-langgraph-age
 - N+1, unnecessary renders, missing validation
 - SQL injection, XSS, sensitive logs
 - Coupling that blocks testing
+
+### Actor and gate semantics (rules-first)
+
+Before proposing change to session gate, middleware, or role check:
+
+- Read project rules for **named actor semantics**. Homonyms not interchangeable.
+- Forbidden to swap helper by label similarity. **Critical** when rules define distinct actors.
+- Diff introducing actor/gate spec never named in rules: **Warning**.
+- Gate/auth fix-map must cite **project-rule clause**.
 
 ## Required output format
 

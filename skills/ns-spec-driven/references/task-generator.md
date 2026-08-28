@@ -6,7 +6,14 @@ Face (**MUST** spawn `task-writer-agent` when bridge exists — `../../../ns-har
 
 ## Session boot
 
-See `../../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent. Read `requirements.md` strict — invent no tables or endpoints.
+See `../../../ns-harness/references/session-boot.md` — finish steps 1–6 there; task-generator adds:
+
+- Load **all** `.nextstage-harness/rules/*.md` marked **always-applicable** in harness `manifest.json`, plus layer rules for target layer.
+- Load **agent-requested** rules when `manifest.json` `description` matches task scope (persistence, auth, tenancy, build). No manifest: scan `rules/*.md`; read files whose scope matches.
+- Unread mandatory rules = **incomplete boot**. Do not pick stack default to fill gap.
+- **Stack signals:** detected stack implies expected sibling rule — `../../../ns-harness/references/architecture-rules/stack-signals.md`. Rule present: load. Absent: ask or mark `needs-clarification` — never assume framework default.
+- Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent.
+- Read `requirements.md` strict — invent no tables or endpoints.
 
 ## Scope
 
@@ -19,6 +26,18 @@ See `../../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/r
 No one-line summaries. Implementer must know what, where (probable paths), which stack/rules, validation criteria. Never repeat summary verbatim in detailed section.
 
 **Write paths:** `Files to create or modify` must list **concrete repo-relative paths** (collision input for `delivery-units.md`). No globs, no placeholders — see `task-schema.md`.
+
+## Grounding (blocking)
+
+Before writing card, every **named symbol** (class, command, helper, DTO, migration path) must be one of:
+
+| Source | OK |
+| ------ | -- |
+| Grep-confirmed in repo | Yes |
+| Named in loaded rules | Yes |
+| Listed under **New artifacts** with command that creates it | Yes |
+
+Any other case: remove symbol or mark `needs-clarification`. Do not dispatch grounded-on-assumption cards.
 
 ## Decomposition
 
@@ -57,9 +76,15 @@ When task touches UI:
 
 ## Backend extras
 
-When `uses_grogoo: false` (default): Sanctum, manual modules — no Grogoo references.
+Persistence, auth, tenancy, clock, ID conventions come from `architecture-rules.md` + mandatory project rules — **not** this file.
 
-When multitenancy: explicit `company_id` / ownership validation in criteria.
+| Rule | Action |
+| ---- | ------ |
+| Name command, base class, helper | Only if seen in loaded rules or repo. Rules silent: mark `needs-clarification` — no default pick. |
+| DTO/class for table | Must not invent when project builder/generator already produces that table. |
+| Migration/builder in repo vs `requirements.md` snippet | Repo wins (types, nullability, timestamps). |
+| Reusable pattern (raw SQL, upsert, custom repository) | Only when card cites existing repo file with same purpose. |
+| `architecture-rules.md` conflict | Card wrong — fix before dispatch. Card never authorizes constitution violation. |
 
 ## Output path
 

@@ -24,6 +24,12 @@
       "prompt": "Review this minimal LLM config patch: resolveProviderApiKey adds an if/else for three providers while baseURL/model stay in a separate preset map; tests pass and ACs are met. Score and verdict?",
       "expected_output": "Agent scores the touched module (not the hunk alone), applies SSoT/DRY/OCP caps → overall ≤8, Executive Summary cites the rubric cap, ends with Code Review: Rejected.",
       "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Review diff that replaces isLicenseOwner() with isTenantAdmin() in gate middleware — author says behavior unchanged.",
+      "expected_output": "Reads project rules for actor semantics; treats swap as Critical when rules define distinct actors; score cap max 6 without cited project-rule clause; fix-map cites project-rule clause; ends with Code Review: Rejected.",
+      "files": []
     }
   ]
 }
