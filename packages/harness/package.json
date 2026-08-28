@@ -1,6 +1,6 @@
 {
   "name": "@nextstage-brasil/harness",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Interactive CLI to install NextStage skills and scaffold SDD project layout",
   "type": "module",
   "bin": {
