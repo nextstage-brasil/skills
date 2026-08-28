@@ -4,7 +4,7 @@ description: "(NS) NextStage harness face — session boot, artifact layout, AND
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.5"
+  version: "1.5.1"
 ---
 
 # NextStage Harness
@@ -38,7 +38,7 @@ Read chosen reference **in full**; follow it. Do not improvise parallel workflow
 | `references/rules-sync.md` | Canonical rules layout, manifest schema, `harness sync` |
 | `references/artifact-layout.md` | SDD artifact paths under `docs/versions/`, living specs, handoff rules |
 | `references/code-skill-routing.md` | Entry priority + handoffs between implementation skills |
-| `references/subagent-dispatch.md` | **MUST** dispatch harness `*-agent` bridges when available |
+| `references/subagent-dispatch.md` | **MUST** spawn exact `{name}` adapter (YAML `model`). **FORBIDDEN** child Task `inherit` |
 | `references/agent-artifact-compress.md` | **Pre-save** on agent-facing drafts only (caveman ultra; never chat) |
 | `references/project-skill-authoring.md` | Author project-local skills — requires Anthropics `skill-creator` + `harness sync` |
 

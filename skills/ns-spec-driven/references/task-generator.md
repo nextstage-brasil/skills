@@ -2,7 +2,7 @@
 
 Convert Features into `task-NNN-slug.md`. Unit = **1 Feature × 1 impl layer = 1 implementation task** (+ capped test tasks — **Decomposition**).
 
-Face (**MUST** spawn `task-writer-agent` when bridge exists — `../../../ns-harness/references/subagent-dispatch.md`). This file = worker body, not invite inline from `ns-spec-driven`.
+Face (**MUST** spawn project agent `task-writer-agent` by exact name when bridge exists — adapter `model`, not parent inherit — `../../../ns-harness/references/subagent-dispatch.md`). This file = worker body, not invite inline from `ns-spec-driven`.
 
 ## Session boot
 

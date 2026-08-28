@@ -991,10 +991,11 @@ Should not land in canonical.
     assert(agentsContent.includes('coder-agent'), 'AGENTS.md should list coder-agent');
     assert(agentsContent.includes('Project subagents'), 'AGENTS.md should have subagents section');
     assert(
-      agentsContent.includes('**MUST** use these bridges when available') &&
+      agentsContent.includes('**MUST** spawn that agent file so YAML') &&
       agentsContent.includes('Inline mapped skill while bridge present = forbidden') &&
-      agentsContent.includes('subagent-dispatch.md'),
-      'AGENTS.md subagents section should MUST-dispatch bridges and forbid inline while present',
+      agentsContent.includes('subagent-dispatch.md') &&
+      agentsContent.includes('FORBIDDEN'),
+      'AGENTS.md subagents section should MUST-spawn named bridges, forbid inherit stand-in, forbid inline',
     );
 
     assert(

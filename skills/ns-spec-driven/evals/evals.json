@@ -22,7 +22,7 @@
     {
       "prompt": "/ns-spec-driven — requirements.md for version 2.1 is approved. Generate the task files now.",
       "id": 4,
-      "expected_output": "Tasks phase: MUST spawn task-writer-agent when available (loads references/task-generator.md). After backend impl tasks MUST read unit-test-task-generator.md; after frontend UI tasks MUST read e2e-test-task-generator.md. Must NOT inline task generation in parent session while task-writer-agent is present.",
+      "expected_output": "Tasks phase: MUST spawn project agent task-writer-agent by exact name (.cursor/agents/task-writer-agent.md) so adapter model applies (subagent-dispatch.md). FORBIDDEN Task inherit / coder / generalPurpose. Loads references/task-generator.md. After backend impl tasks MUST read unit-test-task-generator.md; after frontend UI tasks MUST read e2e-test-task-generator.md. Must NOT inline task generation in parent session while task-writer-agent is present.",
       "files": []
     },
     {
@@ -94,7 +94,7 @@
     {
       "prompt": "/ns-spec-driven — requirements approved for version 2.4. One CRUD Feature needs backend + frontend. Generate tasks.",
       "id": 16,
-      "expected_output": "Gate 3 always before any task-*.md (count by layer/type + estimated batches, prefer 4–7). Decomposition: 1 Feature × 1 impl layer = 1 impl task + at most 1 unit-HTTP + 1 E2E → expect 4 tasks (backend, frontend, unit/HTTP, e2e) — not 1 mega-task, not one task per class. MUST spawn task-writer-agent when available; then unit-test-task-generator.md and e2e-test-task-generator.md.",
+      "expected_output": "Gate 3 always before any task-*.md (count by layer/type + estimated batches, prefer 4–7). Decomposition: 1 Feature × 1 impl layer = 1 impl task + at most 1 unit-HTTP + 1 E2E → expect 4 tasks (backend, frontend, unit/HTTP, e2e) — not 1 mega-task, not one task per class. MUST spawn project agent task-writer-agent by exact name (adapter model; FORBIDDEN Task inherit / coder / generalPurpose); then unit-test-task-generator.md and e2e-test-task-generator.md.",
       "files": []
     },
     {

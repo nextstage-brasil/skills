@@ -10,7 +10,13 @@
     {
       "id": 2,
       "prompt": "Under /ns-spec-driven I need to generate tasks. task-writer-agent exists in .cursor/agents/. Can I just inline task generation in this session?",
-      "expected_output": "Agent cites subagent-dispatch.md: MUST spawn task-writer-agent when available (loads ns-spec-driven/references/task-generator.md); inline task generation while bridge present is forbidden. Rule 4 in-session exception does not apply — Tasks is a child phase under ns-spec-driven. Fallback to reading task-generator.md only if bridge unavailable.",
+      "expected_output": "Agent cites subagent-dispatch.md: MUST spawn the project agent named task-writer-agent (.cursor/agents/task-writer-agent.md or /task-writer-agent) so adapter model applies; loads ns-spec-driven/references/task-generator.md. Inline task generation while bridge present is forbidden. FORBIDDEN: Task inherit / coder / generalPurpose as stand-in (parent model). Rule 4 in-session exception does not apply — Tasks is a child phase under ns-spec-driven. Fallback to reading task-generator.md only if bridge unavailable.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "/ns-spec-driven Tasks: I will Task(inherit) a worker titled task-writer-agent so it stays Grok like this session.",
+      "expected_output": "subagent-dispatch.md: FORBIDDEN. Child must be the named bridge with YAML model from manifest, not inherit. Stop; tell human /task-writer-agent if platform cannot spawn that name.",
       "files": []
     },
     {

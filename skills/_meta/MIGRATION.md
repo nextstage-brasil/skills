@@ -2,6 +2,10 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Subagent spawn binds adapter model (`ns-harness` 1.5.1 / `ns-spec-driven` 1.8.1) (2026-08-28)
+
+`subagent-dispatch.md`: child phase **MUST** spawn project agent by exact `manifest` `name` (`.cursor/agents/{name}.md` / `/{name}`) so YAML `model` applies. **FORBIDDEN:** Task `inherit`, `coder`, `generalPurpose` as stand-in (parent model leak). If platform cannot spawn `{name}`, stop; human invokes `/{name}`. Face `ns-spec-driven` 1.8.1 cites the same rule on Tasks. No new `catalog.json` key.
+
 ## Spec fidelity — Gate 0 detectors (`ns-spec-driven` 1.8) (2026-08-28)
 
 Three generic detectors in `clarify-strict.md` after category checklist, before Gate 0: D1 unresolved value, D2 unanchored external source (+ unreachable-path escape = major premise, no re-block), D3 contradiction/capability. Default hit = major; critical only if public contract, persistence/schema, or feature impossible. D1 rescan on `requirements.md` contract tables at Consistency; D1 on task Contract at `task-generator`; D2 ledger on `ui-screen` mapped. Phase/order tables stay coverage + partition — not Clarify. No new `catalog.json` key.

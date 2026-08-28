@@ -60,7 +60,7 @@ function buildSubagentsSection(projectRoot, installed) {
     return '_No harness subagent bridges (install coder/reviewer/task skills via a preset)._';
   }
 
-  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`, \`/reviewer-agent\`, \`/task-writer-agent\`). Orchestrators (\`ns-spec-driven\`, handoff, autonomous) **MUST** use these bridges when available — see installed \`ns-harness\` → \`references/subagent-dispatch.md\`. Inline mapped skill while bridge present = forbidden. Each bridge obeys this \`AGENTS.md\` (already in context — no tool-Read), boots rules per \`session-boot.md\`, then the mapped skill. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
+  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`, \`/reviewer-agent\`, \`/task-writer-agent\`) — **exact** \`name\` from this table. Orchestrators (\`ns-spec-driven\`, handoff, autonomous) **MUST** spawn that agent file so YAML \`model:\` applies (\`subagent-dispatch.md\`). **FORBIDDEN:** child Task \`inherit\` / \`coder\` / \`generalPurpose\` as stand-in (parent model leaks). Inline mapped skill while bridge present = forbidden. Each bridge obeys this \`AGENTS.md\` (already in context — no tool-Read), boots rules per \`session-boot.md\`, then the mapped skill. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
 
 | Agent | Skill | Model (cursor / claude) |
 | ----- | ----- | ----------------------- |

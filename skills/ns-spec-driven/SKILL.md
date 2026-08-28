@@ -4,7 +4,7 @@ description: '(NS) Spec-driven delivery face — clarify, requirements, tasks (i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.8"
+  version: "1.8.1"
 depends:
   - ns-harness
   - ns-coder
@@ -29,7 +29,7 @@ Entry priority **2** (feature / version / SDD / multi-day / resume). Harness tab
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | Small / quick inside SDD       | `coder-agent` → `ns-coder` (**MUST** bridge when available — `../../ns-harness/references/subagent-dispatch.md`)             |
 | Version + handoff              | `references/execution-handoff.md` + `../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available) |
-| Task file generation           | `task-writer-agent` → `references/task-generator.md` (**MUST** bridge when available)                                        |
+| Task file generation           | **MUST** spawn project agent `task-writer-agent` (exact name; adapter `model`) → `references/task-generator.md`. **FORBIDDEN** Task `inherit` / `coder` / `generalPurpose` (`../../ns-harness/references/subagent-dispatch.md`) |
 | Bare quick fix, no SDD context | Redirect `ns-coder` (priority 5) — if spawning worker: **MUST** `coder-agent` when available                                 |
 
 ## Harness
@@ -92,7 +92,7 @@ flowchart LR
 | Specify     | Always for Medium+           | `references/requirements-generator.md` — also writes `ui-contract.md` when `ui-screen` in source (in-session — no v1 bridge)                                                                 |
 | Consistency | Before tasks (Large+)        | `references/analyze-consistency.md` (in-session — no v1 bridge)                                                                                                                      |
 | Partition   | Multi-slice versions         | `references/version-partitioner.md` (in-session — no v1 bridge)                                                                                                                      |
-| Tasks       | Medium+ formal tasks         | `task-writer-agent` → `references/task-generator.md` (**MUST** when available) then `unit-test-task-generator.md` / `e2e-test-task-generator.md` |
+| Tasks       | Medium+ formal tasks         | **MUST** spawn `task-writer-agent` by exact name (adapter `model`; no Task `inherit`) → `task-generator.md` then unit/e2e generators |
 | Delivery units | After all tasks (optional) | Gate 4 when GitLab possible; `references/delivery-units.md` only when publish, parallel, or resume file |
 | Handoff     | After tasks (or Gate 4 when run) | `references/execution-handoff.md` |
 | Execute     | Always                       | See execute routing below                                                                                                                                                            |
@@ -133,7 +133,7 @@ Chat short, natural language. **Read `references/human-communication.md` before 
 | Size       | Pipeline                                                                                                        |
 | ---------- | --------------------------------------------------------------------------------------------------------------- |
 | **Small**  | `coder-agent` → `ns-coder` (quick mode — `references/quick-mode.md`)                                            |
-| **Medium** | Intake (if source) → Clarify-Strict → Specify → Tasks (**MUST** `task-writer-agent` when available) → optional Gate 4 + units → handoff → Execute → Close |
+| **Medium** | Intake (if source) → Clarify-Strict → Specify → Tasks (**MUST** spawn `task-writer-agent` exact name) → optional Gate 4 + units → handoff → Execute → Close |
 | **Large**  | Full chain including Consistency and/or Partition when scope warrants                                           |
 
 **Safety valve:** scope exceeds ~3 files or explodes mid-session → stop, formalize via Medium+ pipeline (requirements + tasks).

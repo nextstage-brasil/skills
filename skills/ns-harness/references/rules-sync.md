@@ -102,7 +102,7 @@ Cursor subagents use same skill catalog as parent — no `.cursor/skills/` copy.
 | `reviewer-agent` | `ns-reviewer` | `grok-4.5[effort=medium,fast=false]` / `opus` | `true` |
 | `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | `composer-2.5[fast=false]` / `haiku` | `false` |
 
-Presets get bridges on `init` / `sync` / `update`. Bridge body: obey `AGENTS.md` (no tool-Read) → Session boot (`session-boot.md`) → skill. Seeded bridges = **required** dispatch when present — `subagent-dispatch.md`.
+Presets get bridges on `init` / `sync` / `update`. Bridge body: obey `AGENTS.md` (no tool-Read) → Session boot (`session-boot.md`) → skill. Seeded bridges = **required** dispatch by **exact `{name}`** when present — `subagent-dispatch.md` (no child `inherit`).
 
 New canonical rule: manifest entry + `sync`. Prefer:
 
