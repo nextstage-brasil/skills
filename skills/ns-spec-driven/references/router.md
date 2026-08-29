@@ -62,7 +62,7 @@ Map natural-language triggers to **phase** and **reference** (under `references/
 | Trigger phrases | Worker | Order |
 | --------------- | ------ | ----- |
 | "review", "close version", post-implementation | `reviewer-agent` → `ns-reviewer` (**MUST** bridge when available) | First |
-| "update living spec", "consolidate" | `ns-living-spec` | After review passes |
+| "update living spec", "consolidate" | `ns-living-spec` | After `Approved` |
 
 ## Quick (Small)
 

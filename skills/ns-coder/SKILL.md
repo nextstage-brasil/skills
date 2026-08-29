@@ -4,7 +4,7 @@ description: "(NS) Ad-hoc coding worker — bug fixes, small refactors, scripts,
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.9"
+  version: "2.1"
 depends:
   - ns-harness
   - ns-investigator
@@ -26,7 +26,7 @@ Central **execution worker** for ad-hoc diffs (and `C2` under `ns-autonomous`). 
 
 **Fixed workflow**, not loose checklist. Steps in order; handoffs = **named skills** or harness bridges (`coder-agent` / `reviewer-agent` per `../../ns-harness/references/subagent-dispatch.md`). No platform Task personas or improvised review.
 
-Canonical review gate: `../ns-reviewer/references/review-gate-workflow.md` — steps 7–9 **ad-hoc / C2 only**. Review **only** via `reviewer-agent` then `ns-reviewer` (**MUST** bridge when available; else skill direct); max **3** rounds; Critical fix requires **re-review** mandatory; no success without pass or **blocked**. After **Approved**: **Living specs** (8) if match, then **Final report** (9).
+Canonical review gate: `../ns-reviewer/references/review-gate-workflow.md` — steps 7–9 **ad-hoc / C2 only**. Review **only** via `reviewer-agent` then `ns-reviewer` (**MUST** bridge when available; else direct); max **3** rounds; **`Approved` = score 10 only**. Score **9** = `Rejected` (Lift + mandatory re-review). No success without `Approved` or **blocked**. After `Approved`: Living specs (8) if match, then Final report (9).
 
 **Exception — SDD handoff mode:** caller `run-implementation` / `execution-handoff.md` (or dispatch says SDD task mode): **skip** review gate + living specs. Parent owns review at version closure. See **When invoked under execution-handoff**.
 
@@ -61,8 +61,8 @@ Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-
 2. Read each task **card** (header through Validation criteria); open `Detailed description` on demand (ambiguity or `blocked`) — `../ns-spec-driven/references/task-schema.md`.
 3. Implement + unit/integration only. No E2E.
 4. **Forbidden:** `reviewer-agent` / `ns-reviewer`, living-spec consolidator, `Code Review:` verdict line.
-5. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`), `Layout SSoT: {path} read | none registered`. Parent marks rows and runs Step 5 review once all tasks done.
-6. Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
+5. **Before report complete:** public-export grep (**Pre-review**). Still **no** reviewer.
+6. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`), `Layout SSoT: {path} read | none registered`. Parent marks rows and runs Step 5 review once all tasks done (`Approved` = **10**). Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
 
 ## Session boot
 
@@ -141,31 +141,35 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 3. Explore (grep/head large fixtures — no full test dumps)
 4. Identify minimal diff
 5. Apply (or plan if large-change gate)
-6. Run tests if in scope (see **Pre-review**)
+6. Run tests if in scope + public-export grep (**Pre-review**)
 7. **Review loop** — **MUST** `reviewer-agent` when available (else `ns-reviewer`); `../ns-reviewer/references/review-gate-workflow.md`
 8. **Living specs (conditional)** — see below
 9. **Final report** — mandatory fields; never skip verdict or round count
 
-### Pre-review (before step 7)
+### Pre-review (before step 7; also before SDD report complete)
 
 - Tests covering changed files per `AGENTS.md` and `../../ns-harness/references/docker-and-testing.md`.
 - Diff removes exports/constants/env flags/public symbols: search remaining call sites; resolve before review.
+- List **new or newly exported** public names (`return { }`, `module.exports`, `export`, `public`/`public static`, window/global attach).
+- Grep each: **no caller outside defining module** — keep private/unexported. Continue (ad-hoc: review; SDD: report parent). **Forbidden** reviewer in SDD handoff.
+- Internal/private/nested helpers: keep.
 
 ## Review loop (mandatory ad-hoc / C2; skip SDD handoff)
 
 After step 6, run `../ns-reviewer/references/review-gate-workflow.md` before done — **except SDD handoff** (return to parent; no review).
 
 - **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) on working-tree diff (`git diff`) — reviewer bridge/skill begins Session boot at cold start then reviewer workflow; no `ISSUE_URL`, no version-closure path. Ad-hoc diff only.
-- **Max 3 rounds.** Score gate from `ns-reviewer`: pass ≥**9**/10, ideal **10**/10.
-  - **Pass:** zero Critical Issues **and** overall score ≥ **9**/10: proceed step 8.
-  - **Fail** (Criticals **or** score ≤ **8**) with rounds left: apply minimal diff that clears Criticals and lifts quality to ≥9 (`reviewer-agent` / `ns-reviewer` read-only — this skill applies fixes), re-run tests if in scope, then **mandatory re-review** via `reviewer-agent` (**MUST** when available; else `ns-reviewer`).
-  - **Rounds exhausted** still failing gate: **stop, report blocked**. List unresolved Criticals and/or last score. No success. Skip step 8 (living specs).
+- **Max 3 rounds.** `Approved` = score **10** only (`review-gate-workflow.md`).
+  - **Pass:** `Approved` (score **= 10**, zero Criticals) → step 8.
+  - **Lift:** `Rejected` **and** score **= 9**, rounds left: in-scope fix toward **10**, tests if in scope, **mandatory re-review**.
+  - **Fail:** Criticals **or** score ≤ **8**, rounds left: same as Lift (fix + tests + re-review). `reviewer-agent` / `ns-reviewer` read-only — this skill applies fixes. **MUST** `reviewer-agent` when available; else `ns-reviewer`.
+  - **Stop:** `Blocked` or 3 rounds exhausted → **report blocked**. List unresolved Criticals and/or last score. No success. Skip step 8.
 - Fixes within original task scope. Critical (or score-blocking Warning) needs changes outside scope (public contract, cross-product, multi-day): stop, escalate per **Stop conditions**.
-- Suggestions (P2) alone do not block when score already ≥9: carry into final report as follow-ups.
+- Suggestions (P2) alone do **not** block when `Approved`. Score **9** still Lift even if only P2.
 
 ## Living specs (step 8, conditional)
 
-Only after `Code Review: Approved` (not as C2). Invoke **`ns-living-spec`** in **ad-hoc** mode when **all** true:
+Only after `Code Review: Approved` (not as C2). Invoke **`ns-living-spec`** **ad-hoc** when **all** true:
 
 1. `docs/specs/` exists
 2. Diff **behavioral** (API, schema, UX, or domain behavior) — skip cosmetic / rename-only / pure refactor
@@ -173,7 +177,7 @@ Only after `Code Review: Approved` (not as C2). Invoke **`ns-living-spec`** in *
 
 Pass: mode `ad-hoc`, `{task_description}`, approved `git diff`. Read consolidator `SKILL.md`, follow it. No invent `{version_san}` or write under `docs/versions/`.
 
-**Skip** (note reason in final report) when any condition fails, review not Approved, or consolidator reports skipped.
+**Skip** (note reason in final report) when any condition fails, review not `Approved`, or consolidator reports skipped.
 
 ## Final report (step 9)
 
@@ -204,7 +208,7 @@ Then: what changed, follow-ups, blocked Criticals if applicable.
 ## Related skills
 
 - `ns-reviewer` — mandatory review loop after implementation (**Review loop**)
-- `ns-living-spec` — conditional ad-hoc living-spec update after Approved (**Living specs**)
+- `ns-living-spec` — conditional ad-hoc living-spec update after `Approved` (**Living specs**)
 - `ns-investigator` — blocked by unclear bug
 - `ns-autonomous` — autonomous multi-agent execution (GitLab issue or local plan); GitLab issue use `ns-execution-gitlab-issue` instead
 - `ns-frontend-design` — UI/design work (**Complement delegation**)
@@ -219,6 +223,6 @@ Then: what changed, follow-ups, blocked Criticals if applicable.
 - Commits without explicit request
 - Refactors outside task scope
 - **Review substitutes** — Cursor Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or any review not via `reviewer-agent` / `ns-reviewer` `SKILL.md`. Harness `reviewer-agent` **allowed**.
-- **Skipping re-review** — success after fix when previous `ns-reviewer` verdict was `Rejected` or score < 9 without new passing round (ad-hoc / C2)
+- **Skipping re-review** — success after `Rejected` (including score **9**) without a new `Approved` round (ad-hoc / C2)
 - **Success without verdict** — ad-hoc / C2 closure without mandatory **Final report** fields and parseable `Code Review:` line
 - **Per-task / mid-batch review under handoff** — `reviewer-agent` / `ns-reviewer` during `run-implementation` task or batch (parent owns Step 5)

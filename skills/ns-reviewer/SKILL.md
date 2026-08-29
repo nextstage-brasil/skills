@@ -1,10 +1,10 @@
 ---
 name: ns-reviewer
-description: (NS) Senior Tech Lead code review on SOLID, clean code, performance, security, and testability. Use proactively after writing or modifying code, before opening PRs, after implementation closure, or when the user asks for a code review, PR review, or issue review gate — even if they do not name this skill. For GitLab issue execution with ISSUE_URL, use Issue review mode. Do NOT write code-review-report.md. Do NOT use for root-cause debugging (use ns-investigator).
+description: (NS) Senior Tech Lead code review on SOLID, clean code, performance, security, testability. `Approved` only at score 10; score 9 = `Rejected`. Use after code changes, before PRs, at implementation closure, or when user asks for code/PR/issue review gate — even without naming this skill. GitLab `ISSUE_URL`: Issue review mode. Do NOT write code-review-report.md. Do NOT use for root-cause debugging (ns-investigator).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.7"
+  version: "2.0"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -63,25 +63,25 @@ Invoker passes `ISSUE_URL` (or `project_id` + `issue_iid`):
 
 ## Score gate (all modes)
 
-Every review **must** include overall score **1–10**. Callers treat hard pass bar.
+Every review **must** include overall score **1–10**. **`Approved`** = zero Criticals **and** score **= 10** only. Callers close on `Approved` — `references/review-gate-workflow.md`. Score **9** = **`Rejected`** (Lift toward 10).
 
 | Score | Meaning | Verdict impact |
 |-------|---------|----------------|
-| **10** | Ideal — ship as-is | Eligible for `Approved` |
-| **9** | Minimum pass | Eligible for `Approved` |
-| **≤8** | Below bar | **Must** be `Rejected` (even zero Criticals) |
+| **10** | Ship as-is | **`Approved`** (only eligible score) |
+| **9** | Near-bar leftover (redundancy / non-uniform) | **`Rejected`** — Lift |
+| **≤8** | Below bar / score cap | **`Rejected`** |
 
 **`Approved` only when all true:**
 
 1. Zero Critical findings
-2. Overall score **≥ 9**/10 (target **10**/10)
+2. Overall score **= 10**/10
 3. Issue review mode: every AC PASS with behavioral evidence
 
-**`Rejected` when:** any Critical, **or** score ≤ 8, **or** (Issue mode) any AC fails behavioral proof.
+**`Rejected` when:** any Critical, **or** score ≤ **9**, **or** (Issue mode) any AC fails behavioral proof.
 
 ### Scoring unit
 
-Score **quality of touched module/file after diff**, not hunk-alone correctness. Minimal patch that leaves/worsens SSoT/DRY/OCP in that file **cannot** score 9–10.
+Score **quality of touched module/file after diff**, not hunk-alone correctness. Minimal patch leaving/worsening SSoT/DRY/OCP in file **cannot** score 9–10.
 
 ### Score caps (lowest that fits)
 
@@ -90,8 +90,11 @@ Score **quality of touched module/file after diff**, not hunk-alone correctness.
 | New/changed behavior with config/lookup **split across 2+ places** (SSoT) | **7** |
 | Same resolution block copied in **2+ functions** in diff scope (DRY) | **7** |
 | Predictable extension requires editing **3+ points** in same file (weak OCP, e.g. provider) | **7** |
+| New/changed **exported / public** symbol (module `return { }`, `module.exports`, `export`, `public`/`public static`, window/global attach) with **no caller outside defining module** (grep: other files + same-file call sites that are not the export list) | **7** |
 | Diff correct, zero Critical, mediocre / inconsistent pattern in file | **7–8** |
 | gate/role helper or domain constant swapped without cited project-rule clause | **6** |
+
+Internal/private/nested helpers **do not** count. **Do not** cap on function count. Example: 6 exported IP helpers vs 2 caller ops (`validateOriginIpInput`, `originIpMatches`); private `originIpKey` = OK.
 
 **9:** zero Critical **and** smells above absent or resolved in touched module; predictable extension = one SSoT.
 
@@ -102,9 +105,9 @@ Score **quality of touched module/file after diff**, not hunk-alone correctness.
 - **Forbidden:** “minimal diff / tests pass / AC ok ⇒ 10”
 - **Required** in Executive Summary: one sentence justifying score vs rubric (e.g. “cap 7 — apiKey outside preset”)
 
-### Smell severity (SSoT / DRY / weak OCP)
+### Smell severity (SSoT / DRY / weak OCP / orphan public)
 
-Split SSoT or duplicated resolution in touched module ≥ **Warning** (not Suggestion only). Prefer **Warning + score cap** over auto-Critical for these smells. Keep **Critical** for bugs, security, AC failures. Score ≤ 8 already forces `Rejected`.
+Split SSoT, duplicated resolution, **or orphan public/exported surface** in touched module ≥ **Warning**. Prefer **Warning + score cap** over auto-Critical. **Critical** for bugs, security, AC failures. Score ≤ **9** forces `Rejected`.
 
 ## Review priorities
 
@@ -142,7 +145,7 @@ Before proposing change to session gate, middleware, or role check:
 
 ### Executive Summary
 
-- Score 1–10 (**Score gate** — pass ≥9, ideal 10)
+- Score **10** (**Score gate** — `Approved` only at **10**)
 - One sentence justifying score vs score-cap rubric
 - Two-line overall assessment
 

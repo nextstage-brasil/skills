@@ -4,7 +4,7 @@ description: (NS) Execute a GitLab issue end-to-end — status gates, worktree i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.4"
+  version: "1.6"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -159,10 +159,10 @@ Never under `.cursor/`. Abort if a worktree already exists for this id and is in
 Canonical rules: `../ns-reviewer/references/review-gate-workflow.md`.
 
 1. **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) in **Issue review mode** — pass `ISSUE_URL` **or** `project_id` + `issue_iid` (SDD unit mode). Bridge/skill loads `AGENTS.md` then reviewer workflow. Read-only official gate; posts internal GitLab comment. **Forbidden:** Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or substitute unless human explicitly requests this run. **Allowed:** harness `reviewer-agent`. See `../../ns-harness/references/subagent-dispatch.md`.
-2. Loop, max **3** rounds:
-   - `Approved` → return to Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
-   - `Rejected` with rounds remaining → **external mode:** re-invoke `ns-autonomous` (same worktree/branch) with findings as fix work unit. **SDD unit mode:** re-invoke `coder-agent` / `run-implementation` for unit tasks (same worktree). Then **mandatory re-review** via `reviewer-agent` (**MUST** when available; else `ns-reviewer`). Keep original `START_TIME`; do not call spent/Dev 100% yet.
-   - `Blocked`, or rounds exhausted → `status_blocked` (Em Impedimento), post the findings, stop. Do **not** set `END_TIME`, spent time, or Dev 100%.
+2. Loop, max **3** rounds (`review-gate-workflow.md`; `Approved` = **10**):
+   - `Approved` → Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
+   - `Rejected` (score **9** = Lift; or Criticals / score ≤8) with rounds left → **external:** re-invoke `ns-autonomous` (same worktree) with findings as fix unit. **SDD unit:** re-invoke `coder-agent` / `run-implementation` (same worktree). **Mandatory re-review** via `reviewer-agent` (**MUST** when available; else `ns-reviewer`). Keep `START_TIME`; no spent/Dev 100% yet.
+   - `Blocked` or rounds exhausted → `status_blocked` (Em Impedimento), post findings, stop. No `END_TIME`, spent, or Dev 100%.
 3. Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` — exactly the verdict string `ns-reviewer` returned.
 
 ## Stop and ask the human

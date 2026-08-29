@@ -28,7 +28,7 @@
     {
       "id": 5,
       "prompt": "Execute issue #101 — it already has a 2h time estimate on GitLab. Engine returns estimate_seconds=1.",
-      "expected_output": "Agent skips set_issue_estimate (existing estimate preserved; 1s invalid). Records START_TIME at Phase 2 start; END_TIME + add_issue_spent_time only with Dev 100% after Phase 4 Approved (wall-clock epoch delta, not estimate).",
+      "expected_output": "Agent skips set_issue_estimate (existing estimate preserved; 1s invalid). Records START_TIME at Phase 2 start; END_TIME + add_issue_spent_time only with Dev 100% after Phase 4 Approved (score 10; wall-clock epoch delta, not estimate).",
       "files": []
     }
   ]

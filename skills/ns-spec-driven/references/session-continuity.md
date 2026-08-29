@@ -29,7 +29,7 @@ Progress on disk — not chat history.
    - Tasks + `delivery-units.md` + Gate 4 done, handoff exists: skip Tasks generation; go Execute.
 4. **Resume GitLab:** reuse `issue_iid` and open `mr_url` from `delivery-units.md` — forbidden to `create_issue` again for same unit.
 5. Delegate Execute per execute routing (`run-implementation.md`, `orchestrator.md`, `ns-execution-gitlab-issue` unit mode, or external GitLab).
-6. On close: review then living spec if not done for this delivery.
+6. On close: `review-gate-workflow.md` (`Approved` = **10**; **9** = `Rejected` Lift). `ns-living-spec` after `Approved` only.
 
 ## Pause
 

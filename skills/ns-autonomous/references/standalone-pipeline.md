@@ -56,14 +56,14 @@ Identical logic to Engine mode:
 
 ## 5. Internal review loop
 
-Follow `../../ns-reviewer/references/review-gate-workflow.md` exactly.
+Follow `../../ns-reviewer/references/review-gate-workflow.md` (`Approved` = **10**; no second rubric).
 
-- **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) in **version-closure mode** only — bridge/skill loads `AGENTS.md` then reviewer workflow — point at `docs/versions/{version_san}/` when it exists, or at the worktree diff directly for a single-unit run.
-- Enforce the reviewer **Score gate**: `Approved` only with zero Criticals **and** overall score ≥ **9**/10 (ideal **10**/10). Score ≤8 is `Rejected` even without Criticals.
+- **MUST** `reviewer-agent` when available (else `ns-reviewer`) **version-closure mode** — bridge loads `AGENTS.md` then reviewer workflow — point at `docs/versions/{version_san}/` when exists, else worktree diff for single-unit run.
+- Pass = `Approved` (score **= 10**). Score **9** = Lift (`Rejected`). Score ≤8 = Fail.
 - Max 3 rounds:
-  - `Approved` → proceed to closure.
-  - `Rejected` with rounds left → re-run dispatch (`multi-agent-dispatch.md`'s fix-loop re-dispatch) for the findings (Criticals first, then score-lifting fixes), re-run pre-review tests if in scope, then **mandatory re-review** via `ns-reviewer`.
-  - `Blocked`, or rounds exhausted → stop, report as blocked. Do not report success.
+  - Pass → closure.
+  - Lift (**9**) or Fail (Criticals or ≤8) with rounds left → re-dispatch fix-loop toward **10**, tests if in scope, **mandatory re-review**.
+  - Stop (`Blocked` or rounds exhausted) → report blocked. No success claim.
 
 ## 6. Report
 

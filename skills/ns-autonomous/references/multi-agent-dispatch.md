@@ -2,25 +2,25 @@
 
 ## Building the dispatch order
 
-From the single implicit unit, or from `execution-plan.md`'s DAG (see `planning-decision.md`):
+From single implicit unit or `execution-plan.md` DAG (`planning-decision.md`):
 
-1. Group units with no DAG edge between them **and** disjoint file scopes (no unit in the group touches a file another unit in the group also touches) — these can run in parallel.
-2. Anything with a DAG edge, or overlapping file scope with another pending unit, runs sequentially, in dependency order.
-3. When in doubt about scope overlap, prefer sequential — a wrong parallel dispatch causes merge conflicts inside the worktree, which is more expensive to unwind than running one unit at a time.
+1. Parallel group: no DAG edge **and** disjoint file scopes.
+2. DAG edge or overlapping scope → sequential, dependency order.
+3. Scope overlap uncertain → prefer sequential — wrong parallel = merge conflicts in worktree.
 
 ## Dispatching a unit
 
-**Gate before edit:** the dispatching shell / subagent must be operating inside `WORKTREE_ROOT` on `WORK_BRANCH`. If not, refuse the unit — do not silently write into the main checkout.
+**Gate before edit:** shell/subagent inside `WORKTREE_ROOT` on `WORK_BRANCH`. Else refuse unit — no silent main-checkout writes.
 
-Each unit — parallel or sequential — **MUST** use harness **`coder-agent`** when available (`../../../ns-harness/references/subagent-dispatch.md`); else a `ns-coder` focused call that:
+Each unit (**MUST** harness **`coder-agent`** when available — `../../../ns-harness/references/subagent-dispatch.md`; else `ns-coder`):
 
-- Works exclusively inside `WORKTREE_ROOT` (or `.worktrees/{version_san}/` in standalone) — never the main checkout, never `main`/`master`/`SOURCE_BRANCH`.
-- Receives: the unit's scope/acceptance criteria, any resolved Q&A relevant to it, the file scope boundary (so it doesn't drift into another unit's files), and applicable harness rules.
-- Follows `ns-coder`'s own implementation rules (diff-first, read before write, no unrelated refactors).
-- Completes `ns-coder`'s full per-task cycle including the **review gate** (`../../ns-reviewer/references/review-gate-workflow.md`) — **`reviewer-agent` / `ns-reviewer` only**; report unit `blocked` if review rounds exhaust without `Approved`.
-- Escalates any *new* destructive doubt it hits back up through the doubt protocol instead of guessing — it does not resolve destructive doubts on its own.
-- Must not "unblock" a failed worktree by editing files on the product main checkout. Failure to isolate = unit status `blocked`, not a soft continue.
-- In **Engine mode** (invoked by `ns-execution-gitlab-issue`): do **not** route to `ns-execution-gitlab-issue` if an `ISSUE_URL` appears in scope — report through the doubt protocol to the caller instead.
+- Work only inside `WORKTREE_ROOT` (or `.worktrees/{version_san}/` standalone) — never main checkout, never `main`/`master`/`SOURCE_BRANCH`.
+- Receives: scope/AC, resolved Q&A, file boundary, harness rules.
+- Follows `ns-coder` rules (diff-first, read before write, no unrelated refactors).
+- Completes full per-task cycle + **review gate** (`../../ns-reviewer/references/review-gate-workflow.md`) — **`reviewer-agent` / `ns-reviewer` only**; `Approved` = **10**. Score **9** = Lift. Unit `blocked` if rounds exhaust without `Approved`.
+- Escalates new destructive doubt via doubt protocol — does not resolve alone.
+- Failed worktree isolation → unit `blocked`, not soft continue on main checkout.
+- **Engine mode** (`ns-execution-gitlab-issue`): no route to `ns-execution-gitlab-issue` on `ISSUE_URL` in scope — doubt protocol to caller.
 
 ### Subagent prompt template
 
@@ -33,7 +33,7 @@ Scope: {unit description / acceptance criteria}
 File boundary: {files or directories this unit owns — do not touch files outside this boundary}
 Resolved context: {relevant Q&A from the doubt protocol, or "none"}
 Harness rules: {paths to applicable rule files}
-Review gate: after implementation, follow ns-coder + review-gate-workflow.md — MUST reviewer-agent when available (else ns-reviewer), max 3 rounds, mandatory re-review after Critical fixes.
+Review gate: after implementation, follow ns-coder + review-gate-workflow.md — MUST reviewer-agent when available (else ns-reviewer), max 3 rounds, Approved only at score 10, Lift at Rejected+9, mandatory re-review after Criticals or Lift.
 Report: files changed, summary of the diff, review round (1/2/3), score, exact Code Review: verdict line, any new destructive doubt (do not guess on it).
 ```
 
@@ -45,4 +45,4 @@ Report: files changed, summary of the diff, review round (1/2/3), score, exact C
 
 ## Fix-loop re-dispatch
 
-When re-invoked with reviewer findings (`Rejected` verdict), treat the findings as one new unit (or split into several if they span unrelated areas) and run this same dispatch logic for only those units — do not re-dispatch units that already passed review.
+When re-invoked with reviewer findings (`Rejected`), treat as one new unit (or split if unrelated) — dispatch only those units; skip units already `Approved`.

@@ -77,7 +77,7 @@ Until scope done or all tasks complete:
 2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). If `### Contract` present (API/schema/screen), always read it. Open cited `source/` section anchors for the batch. Open `Detailed description` on demand — ambiguity or `blocked`. See `../../ns-spec-driven/references/task-schema.md`.
 3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-batch re-read; never tool-Read `AGENTS.md`)
 4. **Implement** — **one** `coder-agent` dispatch per batch (**MUST** when available; loads `ns-coder`); else `ns-coder` direct. See `../../../ns-harness/references/subagent-dispatch.md`.
-   - **Dispatch must state SDD handoff mode:** this batch only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer`; **do not** run living specs; review = **Step 5** only.
+   - **Dispatch must state SDD handoff mode:** this batch only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer`; **do not** run living specs; review = **Step 5** only. Workers grep new/changed public exports before marking complete (keep unused names unexported).
    - Worker reports per-task outcomes (files, tests, blockers, tokens). Parent owns `execution-handoff.md`.
 5. **Validate** per project rules (Docker **unit/integration** tests, i18n, multitenancy, etc.)
    - **Allowed:** unit/integration only (e.g. PHPUnit in test container)
@@ -132,13 +132,15 @@ have written E2E specs earlier — execution of those suites is human-owned.
 
 ### Step 5 — Code review (required)
 
-1. **MUST** invoke `reviewer-agent` when available (else `ns-reviewer`) at version closure. See `../../../ns-harness/references/subagent-dispatch.md`.
-2. Do **not** require `code-review-report.md`. On `Rejected`/`Blocked`, use reviewer's minimal fix map (agent-oriented) to correct and re-review.
-3. Update handoff:
+Follow `../../ns-reviewer/references/review-gate-workflow.md` (`Approved` = score **10** only).
+
+1. **MUST** `reviewer-agent` when available (else `ns-reviewer`) at version closure. See `../../../ns-harness/references/subagent-dispatch.md`.
+2. No `code-review-report.md`. On `Rejected`/`Blocked` (score **9** = Lift), fix map + re-review until `Approved` or **blocked**.
+3. Update handoff only on Pass or Stop:
    - **Version status:** `completed` | `completed_with_caveats` | `blocked_delivery`
    - `Post-implementation review — end` + recalculate **Total process time (s)**
    - Register **review tokens** in **Time tracking** (`Review — tokens`) or **Session history** (version-level) — **not** last task `Tokens` column
-4. Do not move to `_done/` with unresolved Critical findings without waiver
+4. No `_done/` move with unresolved Criticals without waiver. Score **9** ≠ version close.
 
 ### Step 5.5 — Living specs
 

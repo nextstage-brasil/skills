@@ -4,7 +4,7 @@ description: (NS) Autonomous execution engine — plans depth, resolves doubts f
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.4"
 depends:
   - ns-harness
   - ns-reviewer
@@ -12,19 +12,19 @@ depends:
 
 # Code Autonomous
 
-Harness-aware execution engine: decides planning depth, resolves doubts, dispatches multi-agent work, and closes the loop with a review gate — either as a standalone pipeline or as another skill's execution engine.
+Harness-aware execution engine: planning depth, doubt resolution, multi-agent dispatch, review gate — standalone pipeline or caller's Phase 2 engine.
 
 ## Workflow mode (mandatory)
 
-Fixed workflow — named skill handoffs or harness project bridges (`../../ns-harness/references/subagent-dispatch.md`). Review gate: `../ns-reviewer/references/review-gate-workflow.md`. **MUST** `reviewer-agent` when available (else `ns-reviewer`); no platform Task persona substitutes. `C2` (**MUST** `coder-agent` when available → `ns-coder`) must complete its full per-task cycle including the same review gate before a unit is considered done.
+Fixed workflow — named skill handoffs or harness bridges (`../../ns-harness/references/subagent-dispatch.md`). Review gate: `../ns-reviewer/references/review-gate-workflow.md`. **MUST** `reviewer-agent` when available (else `ns-reviewer`); no Task persona substitutes. `C2` (**MUST** `coder-agent` when available → `ns-coder`) completes full per-task cycle + same review gate before unit done.
 
 ## Isolation invariant (non-negotiable)
 
-This skill **never** writes application code on the main product checkout, and **never** commits to `main`/`master` (or any base/`SOURCE_BRANCH`), unless the human has explicitly instructed "do not create a new branch / work in place on the current branch" for this run.
+Skill **never** writes application code on main product checkout; **never** commits `main`/`master`/base/`SOURCE_BRANCH` unless human explicitly said work in place this run.
 
-- Standalone and Engine mode both require an isolated `WORK_BRANCH` + `WORKTREE_ROOT` before any implementation edit.
-- If worktree creation fails, or CWD/branch is still the main checkout / base branch → **stop**. Do not "continue on main to unlock the plan".
-- Sandbox restrictions (`Operation not permitted`, Cursor agent runtime paths under `.cursor/`) are **not** permission to violate this invariant.
+- Standalone + Engine: isolated `WORK_BRANCH` + `WORKTREE_ROOT` before any implementation edit.
+- Worktree creation fails, or CWD/branch still main checkout / base → **stop**. No "continue on main to unlock plan".
+- Sandbox restrictions (`Operation not permitted`, `.cursor/` paths) **not** permission to violate invariant.
 
 ## Session boot
 
@@ -63,7 +63,7 @@ Same internals as Engine mode, but this skill owns the whole run:
 2. Infer `change_kind` (fix/feat), allocate `{version_san}`, create `docs/versions/{version_san}/`.
 3. **Create its own worktree**: `.worktrees/{version_san}/` + branch `work/{version_san}` from the resolved base branch, following `../../ns-harness/references/worktree-setup.md`. Path is under the **repo root**, never under `.cursor/`. On failure → abort (do not fall back to the main checkout) — see `references/standalone-pipeline.md`.
 4. Planning-depth self-decision, doubt protocol (destructive doubt → chat-only gate, no GitLab actions available), multi-agent dispatch — identical logic to Engine mode.
-5. **Internal review loop** — `../ns-reviewer/references/review-gate-workflow.md`: **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) (version-closure mode) only; max 3 rounds; `Approved` requires score ≥9/10 (ideal 10); fix units on `Rejected` (Criticals or score ≤8), then **mandatory re-review**; stop on `Blocked` or rounds exhausted.
+5. **Internal review loop** — `../ns-reviewer/references/review-gate-workflow.md`: **MUST** `reviewer-agent` when available (else `ns-reviewer`) version-closure mode; max 3 rounds; **`Approved` = 10**. Score **9** = `Rejected` (Lift + re-review). Fail = Criticals or score ≤8. Stop on `Blocked` or rounds exhausted.
 6. Report per `review-gate-workflow.md` **Final report** fields plus `{version_san}`, worktree path, commit(s), and follow-ups. No GitLab board, no MR — unless `docs/context/gitlab-sync-config.md` exists and the human explicitly asked for one (out of scope for v1; standalone stays local-only otherwise).
 
 See `references/standalone-pipeline.md` for the full flow.
@@ -105,5 +105,5 @@ See `references/standalone-pipeline.md` for the full flow.
 ## Forbidden
 
 - Review substitutes (`senior-tech-lead-reviewer`, `bugbot`, `security-review`, or any non-`ns-reviewer` gate) — harness `reviewer-agent` is allowed; see `../ns-reviewer/references/review-gate-workflow.md`
-- Reporting success without a passing `ns-reviewer` verdict or explicit **blocked** state
+- Reporting success without `Approved`, or explicit **blocked** state
 - Skipping re-review after a `Rejected` fix before closure

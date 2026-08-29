@@ -1,16 +1,16 @@
 # Review gate workflow (mandatory)
 
-Fixed workflow for implementation skills that close with a code review. **Not** "run any review" — only the named skill `ns-reviewer` (**MUST** via harness bridge `reviewer-agent` when available — `../../ns-harness/references/subagent-dispatch.md`).
+Fixed workflow for implementation skills closing with code review. **Not** "run any review" — only `ns-reviewer` (**MUST** via `reviewer-agent` when available — `../../ns-harness/references/subagent-dispatch.md`).
 
-Callers: `ns-coder` (ad-hoc / C2), `ns-autonomous` (standalone closure), `ns-execution-gitlab-issue` (Phase 4), `run-implementation` Step 5 (SDD version closure). `C2` under `ns-autonomous` inherits gate from `ns-coder`.
+Callers: `ns-coder` (ad-hoc / C2), `ns-autonomous` (standalone closure), `ns-execution-gitlab-issue` (Phase 4), `run-implementation` Step 5 (SDD version closure). `C2` under `ns-autonomous` inherits `ns-coder` gate.
 
-**Exception — SDD handoff tasks:** `ns-coder` under `execution-handoff` / `run-implementation` **must not** invoke this gate per task. Parent runs **once** at version closure (Step 5).
+**Exception — SDD handoff tasks:** `ns-coder` under `execution-handoff` / `run-implementation` **must not** invoke gate per task. Parent runs **once** at version closure (Step 5).
 
 ## Invocation (only allowed path)
 
-1. **MUST** dispatch harness project agent `reviewer-agent` when available — see `../../ns-harness/references/subagent-dispatch.md`. Bridge completes Session boot at cold start (`../../ns-harness/references/session-boot.md`, then `ns-reviewer`). Inline `Skill(ns-reviewer)` while bridge present = forbidden.
-2. **Else** (bridge missing) read `../SKILL.md` and follow its workflow for the active mode (ad-hoc diff, version closure, or Issue review).
-3. Reviewer run = this skill (via bridge or direct) — not paraphrase, not platform persona that "acts like" reviewer.
+1. **MUST** dispatch `reviewer-agent` when available — `../../ns-harness/references/subagent-dispatch.md`. Bridge Session boot at cold start (`../../ns-harness/references/session-boot.md`, then `ns-reviewer`). Inline `Skill(ns-reviewer)` while bridge present = forbidden.
+2. **Else** (bridge missing) read `../SKILL.md`; follow active mode (ad-hoc diff, version closure, Issue review).
+3. Reviewer run = this skill (bridge or direct) — not paraphrase, not platform persona.
 
 **Forbidden substitutes** (unless the human explicitly requests that substitute for this run):
 
@@ -21,15 +21,22 @@ Callers: `ns-coder` (ad-hoc / C2), `ns-autonomous` (standalone closure), `ns-exe
 
 Substituting with forbidden personas breaks the contract: score gate, verdict line, and (Issue mode) GitLab comment are defined only on `ns-reviewer`.
 
+## Reviewer verdict vs caller close
+
+`ns-reviewer` **`Approved`** = zero Criticals **and** score **= 10**. Caller **close** = `Approved`. Score **9** = `Rejected` (Lift). No second rubric — score caps in `../SKILL.md`.
+
 ## Rounds (max 3)
 
 | After review | Condition | Next action |
 | ------------ | --------- | ----------- |
-| Pass | Zero Criticals **and** score ≥ **9**/10 | Caller may close (`ns-coder`: living specs step if conditional, then final report; others: delivery / `Fatto!`) |
-| Fail | Criticals **or** score ≤ **8**, rounds left | Minimal fix in scope → re-run tests if in scope → **mandatory re-review** via `reviewer-agent` / `ns-reviewer` |
-| Stop | `Blocked`, or 3 rounds exhausted still failing | Report **blocked** — never fabricate success |
+| Pass (ship) | `Approved` (score **= 10**, zero Criticals) | Caller may close (`ns-coder`: living specs if conditional, then final report; others: delivery / `Fatto!`) |
+| Lift | `Rejected` **and** score **= 9**, rounds left | In-scope quality fix toward **10** → tests if in scope → **mandatory re-review** via `reviewer-agent` / `ns-reviewer` |
+| Fail | Criticals **or** score ≤ **8**, rounds left | Minimal fix in scope → tests if in scope → **mandatory re-review** via `reviewer-agent` / `ns-reviewer` |
+| Stop | `Blocked`, or 3 rounds exhausted | Report **blocked** — never fabricate success |
 
-**After fixing a Critical:** new `ns-reviewer` round **required** (**MUST** `reviewer-agent` when available). Fix alone does not clear gate.
+**After Critical fix** (or Lift at 9): new `ns-reviewer` round **required** (**MUST** `reviewer-agent` when available). Fix alone does not clear gate.
+
+P2 suggestions: **do not** block when `Approved` (score **10**). Score **9** still **Lift** even if P2 only.
 
 ## Pre-review (callers with implementation)
 
@@ -40,12 +47,12 @@ Before the first review round:
 
 ## Done gate (non-negotiable)
 
-Do **not** use "done", "concluído", "complete", or success language unless **one** of:
+Do **not** use "done", "concluído", "complete", or success language unless:
 
-1. Last `ns-reviewer` verdict is `Approved` (score ≥ 9, zero Criticals), or
-2. The run is explicitly **blocked** (verdict `Blocked`, or 3 rounds exhausted) with open Criticals and/or last score stated.
+1. Last `ns-reviewer` verdict is `Approved` (score **10**), or
+2. Run explicitly **blocked** (verdict `Blocked`, or 3 rounds exhausted) with open Criticals and/or last score stated.
 
-A `Rejected` verdict followed by a local fix **without** a passing re-review is **not** done.
+Score **9** = `Rejected` — **not** done. `Rejected` + local fix **without** new `Approved` round = **not** done.
 
 ## Final report (callers)
 

@@ -79,7 +79,7 @@ Every unit in `delivery-units.md` (if present) and every slice in `version-roadm
 
 1. Present any navigation / semantic grouping menu and **wait for human approval** before applying.
 2. Post-implementation review: **MUST** dispatch **`reviewer-agent`** when available (else `ns-reviewer`, read-only) over version diff. Do **not** expect `code-review-report.md` — verdict line and minimal fix map on Rejected. See `../../../ns-harness/references/subagent-dispatch.md`.
-3. Consolidate living specs when review is `Approved` — `ns-living-spec`.
+3. Consolidate living specs on `Approved` — `ns-living-spec` (`../../ns-reviewer/references/review-gate-workflow.md`). Score **9** = `Rejected`, not close.
 4. Move version to `_done/` **only** after human confirms or documented waiver exists.
 5. If version `execution-handoff.md` exists, close final delivery block and recompute total process seconds per `execution-handoff.md`.
 
@@ -92,7 +92,7 @@ Every unit in `delivery-units.md` (if present) and every slice in `version-roadm
 | Real environment blocker (Docker/tests impossible) | Stop; note in handoff |
 | Inter-slice dependency not satisfied | Stop; fix roadmap or prior slice |
 | Missing `{version_san}` / roadmap | Ask **once**, then proceed |
-| `Code Review: Rejected`/`Blocked` without waiver | Stop before `_done/` move; apply fix map |
+| `Code Review: Rejected`/`Blocked` (score **9** included) without waiver | Stop before `_done/` move; Lift/fix map then re-review until `Approved` |
 | Human waiver needed (menu apply, `_done/` move) | Stop for that item only |
 
 ## Forbidden
@@ -125,8 +125,8 @@ Continue orchestrating the partitioned implementation of apps/my-product 3.8.0.
 | Slice worker (no units file) | `coder-agent` → `ns-coder` |
 | Unit worker (`delivery-units.md`) | G SDD unit mode when `issue_iid`; else `coder-agent` → `ns-coder` |
 | GitLab status/spent | `delivery-units.md` **GitLab status/spent (SSoT)** |
-| End-of-version review gate | `reviewer-agent` → `ns-reviewer` |
-| Living specs consolidation | `ns-living-spec` |
+| End-of-version review gate | `reviewer-agent` → `ns-reviewer` — `Approved` = **10** (`../../ns-reviewer/references/review-gate-workflow.md`) |
+| Living specs consolidation | `ns-living-spec` after `Approved` |
 | Delivery units + waves | `delivery-units.md` |
 | Work branch / GitLab sync | `mcp-gitlab-usage` |
 

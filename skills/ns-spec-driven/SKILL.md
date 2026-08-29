@@ -4,7 +4,7 @@ description: '(NS) Spec-driven delivery face — clarify, requirements, tasks (i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.8.2"
+  version: "1.8.4"
 depends:
   - ns-harness
   - ns-coder
@@ -96,7 +96,7 @@ flowchart LR
 | Delivery units | After all tasks (optional) | Gate 4 when GitLab possible; `references/delivery-units.md` only when publish, parallel, or resume file |
 | Handoff     | After tasks (or Gate 4 when run) | `references/execution-handoff.md` |
 | Execute     | Always                       | See execute routing below                                                                                                                                                            |
-| Close       | After delivery               | `reviewer-agent` → `ns-reviewer` (**MUST** when available) → `ns-living-spec`                                                                                                        |
+| Close       | After delivery               | `reviewer-agent` → `ns-reviewer` (**MUST** when available); `ns-living-spec` after `Approved` only (`../ns-reviewer/references/review-gate-workflow.md`) |
 | Quick       | ≤3 files, one-sentence scope | `coder-agent` → `ns-coder` (**MUST** when available)                                                                                                                                 |
 
 Details: `references/auto-sizing.md`, `references/router.md`.

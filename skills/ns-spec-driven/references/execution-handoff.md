@@ -114,8 +114,8 @@ Tasks added or removed after generation: **regenerate** preserving statuses by t
 | After task generation | This phase (generate handoff) |
 | Classic implementation | `../../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available) / `ns-coder` |
 | Partitioned implementation | `orchestrator.md` (slice handoffs + master closure) |
-| End-of-version review | `reviewer-agent` (**MUST** when available) / `ns-reviewer` |
-| Living specs | `ns-living-spec` |
+| End-of-version review | `reviewer-agent` (**MUST** when available) / `ns-reviewer` — `Approved` = **10** (`../../ns-reviewer/references/review-gate-workflow.md`) |
+| Living specs | `ns-living-spec` after `Approved` |
 | GitLab board sync | `ns-gitlab-board-sync` (when config exists) |
 
 ## References

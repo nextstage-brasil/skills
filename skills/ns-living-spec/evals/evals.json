@@ -15,14 +15,14 @@
     },
     {
       "id": 3,
-      "prompt": "Consolidate specs but Code Review was not Approved for 2.0.0.",
-      "expected_output": "Agent refuses or defers — Version mode requires Code Review: Approved (no code-review-report.md required).",
+      "prompt": "Consolidate specs but Code Review was Rejected or score 9 for 2.0.0.",
+      "expected_output": "Agent refuses or defers — Version mode requires `Code Review: Approved` (9 = Rejected; no code-review-report.md).",
       "files": []
     },
     {
       "id": 4,
-      "prompt": "Ad-hoc mode from ns-coder: Code Review Approved, docs/specs/ exists, task added cancelled_at to connects — update living specs from task + git diff.",
-      "expected_output": "Agent uses Ad-hoc mode, updates relevant domain spec and INDEX without docs/versions writes, changelog uses adhoc-YYYY-MM-DD, emits consolidation report with Mode: ad-hoc.",
+      "prompt": "Ad-hoc mode from ns-coder: Code Review Approved and score 10, docs/specs/ exists, task added cancelled_at to connects — update living specs from task + git diff.",
+      "expected_output": "Ad-hoc mode after invoker reports `Code Review: Approved`; updates domain spec + INDEX (no docs/versions/), changelog adhoc-YYYY-MM-DD, report Mode: ad-hoc.",
       "files": []
     },
     {

@@ -49,6 +49,8 @@ Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
 - **Related feature** — traceability to requirements
 - **Source refs** — version `source/` file + anchors; required when source exists
 
+**Public surface:** cards must not invent extra **public** functions beyond spec operations. Private helpers OK.
+
 ## Naming
 
 - File: `task-NNN-kebab-slug.md` — `NNN` zero-padded three digits

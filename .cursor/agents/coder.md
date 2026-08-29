@@ -126,9 +126,9 @@ Routing changes in `ns-code-*` → update diagram via `.cursor/skills/code-routi
 
 Before reporting done:
 
-1. Primary: dispatch `.cursor/agents/reviewer.md`on the working-tree diff against `AGENTS.md` + rules. If Task is unavailable, apply the same Score gate in-session.
+1. Primary: dispatch `.cursor/agents/reviewer.md` on working-tree diff vs `AGENTS.md` + rules. Task unavailable → same Score gate in-session.
 2. Rubric: apply the **Score gate** from `skills/ns-reviewer/SKILL.md` (severity + overall 1–10). Do **not** run that skill's harness Session boot, issue mode, or GitLab posting — this is the catalog repo.
-3. **Approved** only when: zero Criticals **and** overall score **≥ 9**/10 (target 10). Score ≤ 8 → Rejected even with zero Criticals.
+3. **Approved** only when: zero Criticals **and** overall score **= 10**/10. Score ≤ **9** → Rejected even with zero Criticals.
 4. On Rejected with rounds left: fix Criticals / score-blockers with minimal diffs; **mandatory re-review**. Max 3 rounds; then report Blocked if still failing.
 5. End with: what changed, validation run, overall score, exact line `Code Review: {Approved|Rejected|Blocked}`, and — when any non-template `.md` got caveman ultra — exact line `CavemanApplied`.
 
@@ -148,5 +148,5 @@ Do not claim success without `Code Review: Approved` or an explicit `Blocked` st
 - Caveman-compressing template MDs (`templates/`, `*.template.md`, `*-template.md`, `*.stub.md`)
 - Omitting exact line `CavemanApplied` after caveman ultra on any non-template `.md`
 - Commits without explicit request
-- Declaring Approved without score ≥ 9 and zero Criticals
+- Declaring Approved without score **10** and zero Criticals
 - Skipping the closure review gate

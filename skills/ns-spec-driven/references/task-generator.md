@@ -25,7 +25,7 @@ Face (**MUST** spawn project agent `task-writer-agent` by exact name when bridge
 
 No one-line summaries. Implementer must know what, where (probable paths), stack/rules, validation. Never repeat summary verbatim in detailed section.
 
-**Write paths:** `Files to create or modify` = **concrete repo-relative paths** (collision input for `delivery-units.md`). No globs, no placeholders — `task-schema.md`.
+**Write paths:** `Files to create or modify` = **concrete repo-relative paths** (collision input for `delivery-units.md`). No globs, placeholders — `task-schema.md`. No extra **public** functions beyond spec operations (private helpers OK).
 
 ## Grounding (blocking)
 
