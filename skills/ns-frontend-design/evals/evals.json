@@ -11,6 +11,12 @@
       "id": 2,
       "expected_output": "Reads design-brief.md, implements button with brief tokens, follows project component conventions.",
       "files": []
+    },
+    {
+      "prompt": "Build a React ops dashboard with KPI cards, error-rate line chart, incident timeline, and a table of top failing services. Include source captions and an alert when error rate exceeds 5%.",
+      "id": 3,
+      "expected_output": "Invokes ns-frontend-design, reads references/react-analytics-ui.md, uses Recharts for bar/line/timeline, project table for services, source captions under plots, alert callout for threshold — not Plotly/Vega unless repo already uses them.",
+      "files": []
     }
   ],
   "skill_name": "ns-frontend-design"

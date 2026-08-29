@@ -23,3 +23,9 @@
 - [ ] Matches existing component library patterns when present
 - [ ] No new global CSS unless justified
 - [ ] Assets optimized (SVG for icons where possible)
+
+## React analytics (when applicable)
+
+- [ ] Recharts for bar/line/timeline unless repo already standardizes another library
+- [ ] KPI row, chart(s), supporting table, source captions, alert callouts when needed
+- [ ] Chart titles, axis units, and legends are self-describing

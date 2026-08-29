@@ -1,10 +1,10 @@
 ---
 name: ns-frontend-design
-description: (NS) Distinctive production UI — layout, typography, motion, and component polish that avoids generic AI-slop aesthetics. Use whenever the user builds or refines pages, components, dashboards, forms, or design-brief work, or asks for better UI/UX — even if they do not say "design". Load docs/context/design-brief.md when present. Do NOT use for backend-only work, requirements writing, or full SDD orchestration (use ns-spec-driven).
+description: (NS) Distinctive production UI — layout, typography, motion, and component polish that avoids generic AI-slop aesthetics. Use whenever the user builds or refines pages, components, dashboards, KPI/analytics views, charts, forms, or design-brief work, or asks for better UI/UX — even if they do not say "design". On React stacks, default chart library is Recharts (see references/react-analytics-ui.md). Load docs/context/design-brief.md when present. Do NOT use for backend-only work, requirements writing, or full SDD orchestration (use ns-spec-driven).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
 ---
@@ -24,8 +24,11 @@ See `../ns-harness/references/session-boot.md`. Read `.nextstage-harness/rules/a
 | `docs/context/design-brief.md` | Always check first — tokens, typography, motion |
 | `docs/context/stack-confirmed.md` | Framework and CSS approach |
 | `.nextstage-harness/rules/*frontend*` | Project conventions |
+| `references/react-analytics-ui.md` | React stack + KPIs, charts, timelines, tables, sources, alerts |
 
 If `design-brief.md` is missing, infer stack from architecture rules and ask **one** focused question on brand direction before large UI work.
+
+When the stack is **React** and the work includes dashboards or analytics UI, read `references/react-analytics-ui.md` before implementing — default chart library: **Recharts**.
 
 ## When to use
 
