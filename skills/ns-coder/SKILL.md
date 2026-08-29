@@ -4,7 +4,7 @@ description: "(NS) Ad-hoc coding worker — bug fixes, small refactors, scripts,
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.8"
+  version: "1.9"
 depends:
   - ns-harness
   - ns-investigator
@@ -61,7 +61,7 @@ Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-
 2. Read each task **card** (header through Validation criteria); open `Detailed description` on demand (ambiguity or `blocked`) — `../ns-spec-driven/references/task-schema.md`.
 3. Implement + unit/integration only. No E2E.
 4. **Forbidden:** `reviewer-agent` / `ns-reviewer`, living-spec consolidator, `Code Review:` verdict line.
-5. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`). Parent marks rows and runs Step 5 review once all tasks done.
+5. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`), `Layout SSoT: {path} read | none registered`. Parent marks rows and runs Step 5 review once all tasks done.
 6. Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
 
 ## Session boot
@@ -125,7 +125,8 @@ Then:
 
 | Signal | Skill | When |
 | ------ | ----- | ---- |
-| `{target_layer}` frontend, new/refined UI, pages, components, `design-brief.md` | `ns-frontend-design` | Before large UI diff (step 4–5) or when task is primarily visual |
+| Frontend UI **without** Layout SSoT registered for screen being built (`reference-sources.md` `role: ui-layout`, or card cites `*-visual.md`) | `ns-frontend-design` | Before large UI diff (step 4–5) or when task is primarily visual |
+| Layout SSoT **registered** for screen being built | *(none — read SSoT)* | Open cited guide/prototype **before** diff; match registered pattern + project UI approach; **do not** invoke `ns-frontend-design` anti-slop |
 | Security headers, CSP/CORS, dep CVE sweep, a11y/Web Interface Guidelines audit | `ns-best-practices` | On explicit request, or after frontend work before review when hygiene was in scope |
 | README / `docs/` guides (not code comments) | `ns-docs-writer` | On explicit request or version/doc closure — not every ad-hoc fix |
 
@@ -188,6 +189,7 @@ Every ad-hoc / C2 closure response **must** include:
 | Score | Last overall score from reviewer |
 | Verdict | Exact line: `Code Review: {Approved\|Rejected\|Blocked}` |
 | Living specs | `updated` \| `skipped: {reason}` \| `n/a` (blocked/rejected) |
+| Layout SSoT | `{path} read` \| `none registered` |
 
 Then: what changed, follow-ups, blocked Criticals if applicable.
 

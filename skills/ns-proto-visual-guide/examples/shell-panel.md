@@ -144,6 +144,4 @@ The panel **does not shrink** when the canvas needs space: the 480px width is pr
 - [ ] Visible only when a card is selected
 - [ ] Fixed header + scrollable content
 - [ ] No fixed action footer
-- [ ] Discreet visual separation from the canvas
-- [ ] Visibility states documented
-- [ ] Cross-links to form and card docs
+- [ ] Vertical divider or border element present between canvas and panel (DOM or computed style)

@@ -4,7 +4,7 @@ description: '(NS) Spec-driven delivery face — clarify, requirements, tasks (i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.8.1"
+  version: "1.8.2"
 depends:
   - ns-harness
   - ns-coder
@@ -166,7 +166,8 @@ Worker dispatch: **MUST** use harness project agents when available — `../../n
 | "quick fix", "just change X"                           | `references/quick-mode.md`                                                        |
 | "resume", "continue version", partial `docs/versions/` | `references/session-continuity.md`                                                |
 | "orchestrate slices", partitioned roadmap              | `references/orchestrator.md`                                                      |
-| UI / design work                                       | `references/skill-integrations.md` → `ns-frontend-design`                         |
+| UI / design work (no Layout SSoT for screen) | `references/skill-integrations.md` → `ns-frontend-design` |
+| UI with Layout SSoT registered (`role: ui-layout`, cited `*-visual.md`) | `ns-coder` Complement delegation — read SSoT; skip `ns-frontend-design` |
 | README / docs                                          | `references/skill-integrations.md` → `ns-docs-writer`                             |
 | security headers / modernize                           | `references/skill-integrations.md` → `ns-best-practices`                          |
 | agent-api / intelligent SaaS / LangGraph scope         | `references/agent-runtime-integration.md` → `ns-langgraph-agents` (**mandatory**) |

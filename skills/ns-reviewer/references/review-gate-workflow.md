@@ -59,5 +59,6 @@ Every closure response **must** include:
 | Score | Last overall score from reviewer |
 | Verdict | Exact parseable line from reviewer: `Code Review: {Approved\|Rejected\|Blocked}` |
 | Living specs | When caller is `ns-coder`: `updated` \| `skipped: {reason}` \| `n/a` |
+| Layout SSoT | When caller is `ns-coder`: `{path} read` \| `none registered` |
 
 Then: summary of changes, follow-ups, and blocked items if applicable.

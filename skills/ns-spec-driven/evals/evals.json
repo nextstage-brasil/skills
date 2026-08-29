@@ -218,6 +218,12 @@
       "files": []
     },
     {
+      "prompt": "/ns-spec-driven — execute unit-002. reference-sources.md registers payable-panel-visual.md (role ui-layout). Worker shipped wireframe DOM with all data-testids; SSoT checklist items (header dismiss trailing, two-column body) unmet. Next wave?",
+      "id": 48,
+      "expected_output": "orchestrator.md 4b: report layout SSoT checklist divergence before next wave; do not flip spec-coverage.md to verified; do not advance wave while layout checklist unmet even if ui-contract testids present.",
+      "files": []
+    },
+    {
       "prompt": "/ns-spec-driven Gate 0 — source names FPA08 for rate-limit. Ask the human about the success-cap gap.",
       "id": 37,
       "expected_output": "human-communication.md + clarify-strict.md: chat asks observable HTTP/when (successful request cap), numbered 1. 2. 3., invites reply by number. Does NOT require human to recall or confirm FPA08. Codes may be written only in clarify-contract.md / source/ after the situation is answered.",

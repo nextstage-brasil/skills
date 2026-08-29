@@ -10,7 +10,8 @@ Once per session: confirm `.agents/skills/<id>/` exists. Present: **delegate** p
 
 | Skill | Delegate when |
 | ----- | ------------- |
-| `ns-frontend-design` | UI, components, pages, dashboards, `design-brief.md` alignment |
+| `ns-frontend-design` | UI without Layout SSoT for screen (`reference-sources.md` `role: ui-layout`, or cited `*-visual.md`) — components, pages, dashboards, `design-brief.md` |
+| *(Layout SSoT registered)* | Read cited guide/prototype per `ns-coder` Complement delegation — **do not** invoke `ns-frontend-design` anti-slop |
 | `ns-docs-writer` | README, `docs/` guides after delivery or on request (not code comments) |
 | `ns-best-practices` | Security headers, CSP, compat/a11y hygiene, Web Interface Guidelines audit — **not** MR/SOLID review |
 

@@ -13,7 +13,7 @@ description: >-
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
   - ns-living-spec
@@ -98,6 +98,8 @@ For design, product, and visual validation. **Does not describe** [explicit limi
 ## Quick visual checklist
 - [ ] ...
 ```
+
+**Checklist rule:** each item **verifiable** by inspecting rendered surface or DOM — no aesthetic judgement. Good: `Dismiss control present in header, aligned to trailing edge`. Bad: `Header looks balanced`.
 
 ### Optional sections (when surface needs)
 

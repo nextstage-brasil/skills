@@ -138,4 +138,5 @@ To choose or change the item, the user selects the card and edits in the panel o
 - [ ] Chip overflow with +N
 - [ ] Footer with create buttons (edit only)
 - [ ] Input and output handles visible
-- [ ] Selection and hover states documented
+- [ ] Selected card shows distinct border or background on card root (inspect DOM/class)
+- [ ] Card root shows distinct border or background on `:hover` (computed style or hover class in DOM)

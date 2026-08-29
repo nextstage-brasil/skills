@@ -79,6 +79,7 @@ When task touches UI:
 - Auth forms: marketing panel, PasswordInput, i18n keys per frontend rules when present
 - i18n: all strings via translation keys; `useFormat()` for dates/currency
 - Navigation: `groupKey` when adding menu items (if nav rules exist)
+- **Layout SSoT (when registered for screen):** `reference-sources.md` row `role: ui-layout`, or card cites `*-visual.md` → **Validation criteria** must include that SSoT's **Quick visual checklist** items (verbatim or equivalent DOM/surface checks). Prose like "copy the visual structure" is **not** a criterion.
 
 ## Backend extras
 

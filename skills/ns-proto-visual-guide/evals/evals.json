@@ -59,6 +59,22 @@
         "Either extends/writes layout technical content or clearly redirects to layout doc type",
         "Does not invent Element|How appearance tables for Item card chrome as the answer"
       ]
+    },
+    {
+      "id": 3,
+      "name": "binary-checklist-from-soft-source",
+      "prompt": "Draft a normative visual guide for the side panel shell from evals/fixtures/shell-panel-soft-source.md. Source tables use soft language (e.g. discreet separation). Produce checkout-ready Quick visual checklist — binary DOM/surface checks only. Save as panel-shell-binary-checklist.md. English.",
+      "expected_output": "Normative guide; Quick visual checklist items are binary DOM/surface checks — no aesthetic judgement like discreet or balanced.",
+      "files": [
+        "evals/fixtures/shell-panel-soft-source.md"
+      ],
+      "assertions": [
+        "Quick visual checklist present",
+        "Checklist items verifiable via rendered surface or DOM inspection",
+        "No checklist items that require aesthetic judgement only (e.g. looks balanced, feels welcoming)",
+        "Soft source language converted to concrete placement/presence checks where applicable",
+        "Contains Does not cover or equivalent scope boundary"
+      ]
     }
   ]
 }

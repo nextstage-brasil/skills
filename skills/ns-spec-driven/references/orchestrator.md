@@ -47,7 +47,7 @@ Each unit whose `deps` are `completed`, **wave order** (do not start wave N+1 un
    - Published `issue_iid` **and** `ns-execution-gitlab-issue` installed → **G SDD unit mode** (`unit` + `issue_iid`). GitLab writes = G (SSoT).
    - Else → **`coder-agent`** (**MUST** when available) / `ns-coder` via `slice-dispatch.md` **unit** prompt. Paths: unit tasks only; worktree `.worktrees/{unit}`. GitLab = SSoT (Flow D if published local-only).
 4. **Validate:** all unit tasks `completed` or `waived`; handoff rows updated; unit `status` updated.
-4b. **Conformance (after step 4):** cited `source/` + Contract blocks. UI: every `ui-contract.md` element/handler. **Report divergence before next wave.** Flip matching `spec-coverage.md` rows to `verified` when evidence exists.
+4b. **Conformance (after step 4):** cited `source/` + Contract blocks. UI: every `ui-contract.md` element/handler **and** Layout SSoT **Quick visual checklist** when SSoT cited (`reference-sources.md` `role: ui-layout`, or task cites `*-visual.md`). **Report divergence before next wave** — layout + contract. Do **not** flip `spec-coverage.md` to `verified` when layout checklist unmet (even if all testids present).
 5. **Commit / MR:** `delivery-units.md` **Commit / MR (SSoT)**. Local worker → parent commit+MR. G dispatched → G Phase 3 only; parent records `mr_url` if missing, then advances.
 6. Failed unit → **stop**; do not start next wave.
 
@@ -68,7 +68,7 @@ Each slice whose roadmap `status` is `planned` or `in_progress`:
    - Every slice task `completed` or `waived` (waiver noted in handoff)
    - Slice handoff updated per `execution-handoff.md` (time block + task rows)
    - Roadmap row updated by worker (or update yourself)
-4b. **Conformance:** same as per-unit 4b (source, UI contract, ledger `verified`, divergence before next slice).
+4b. **Conformance:** same as per-unit 4b — source, Contract, `ui-contract` elements/handlers, Layout SSoT checklist when cited; report layout + contract divergence before next slice; no `spec-coverage` `verified` when layout checklist unmet.
 5. **Commit** (parent only): one Conventional Commit per slice.
 6. **Mark** roadmap row `completed` (if worker did not).
 7. **Advance** to next slice automatically.

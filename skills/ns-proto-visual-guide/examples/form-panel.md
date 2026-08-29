@@ -132,8 +132,7 @@ Form shown in the side panel when the user selects an Item card on the canvas. L
 ## Quick visual checklist
 
 - [ ] Block order: Identification → Members → Settings → Accordion
-- [ ] Members empty state documented
-- [ ] Toggles with on/off/disabled states
-- [ ] Accordion closed by default
-- [ ] Follow-along mode with RO fields
-- [ ] Cross-links to card and shell
+- [ ] Members section shows empty-state copy when member list is empty (DOM text present)
+- [ ] Each named toggle shows `aria-checked` true/false; `disabled` attribute when off-limits (inspect DOM)
+- [ ] Accordion body collapsed on initial render (panel hidden in DOM or `aria-expanded=false`)
+- [ ] Follow-along mode: named form fields carry `readonly` or `disabled` when mode active (inspect DOM)

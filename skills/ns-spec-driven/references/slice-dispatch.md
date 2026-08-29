@@ -60,6 +60,7 @@ Parent dispatches **by unit** — not whole slice:
 ## Validation checklist (before parent commit)
 
 - [ ] Unit/slice **contract-conformance:** every cited Contract block / `ui-contract.md` element matches implementation (or reported divergence)
+- [ ] **Layout SSoT conformance (when cited):** walk cited SSoT **Quick visual checklist** (`reference-sources.md` `role: ui-layout`, or task cites `*-visual.md`); report layout divergence before parent commit — same bar as orchestrator 4b; do not treat bare `prototype/` citation as Layout SSoT
 - [ ] Every **unit** task (or every **slice** task when no units file) is `completed` or `waived`
 - [ ] No task left `in_progress` or silently skipped
 - [ ] Changes are confined to `**`

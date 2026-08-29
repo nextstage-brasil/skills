@@ -4,7 +4,7 @@ description: (NS) Senior Tech Lead code review on SOLID, clean code, performance
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.6"
+  version: "1.7"
 depends:
   - ns-harness
   - mcp-gitlab-usage
@@ -44,7 +44,7 @@ Invoker passes working-tree diff only (no `ISSUE_URL`, no version-closure path):
 ### Version closure
 
 1. Apply **Score gate**; end chat with `Code Review: {Approved|Rejected|Blocked}`.
-2. **Spec-conformance (when version `source/` or `spec-coverage.md` exists):** walk `spec-coverage.md` **row-by-row**; walk `ui-contract.md` when present. Missing ledger evidence → **Rejected**.
+2. **Spec-conformance (when version `source/` or `spec-coverage.md` exists):** walk `spec-coverage.md` **row-by-row**; walk `ui-contract.md` when present; walk Layout SSoT **Quick visual checklist** when cited (`reference-sources.md` `role: ui-layout`, or tasks cite `*-visual.md`). Unmet checklist items = findings at same bar as missing `ui-contract` elements. Missing ledger evidence → **Rejected**.
 3. **Do not** write `code-review-report.md` (or any persistent review report).
 4. `Rejected` / `Blocked`: **minimal fix map** in response (`references/review-fix-map.template.md`) — data another agent needs. No human prose, no positive findings, no history.
 5. `Approved`: Executive Summary + score + verdict line only (no fix map).

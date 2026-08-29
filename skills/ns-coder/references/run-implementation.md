@@ -118,9 +118,11 @@ When all tasks are `completed` or `waived`:
 
 ### Step 4 — UI / nav review
 
-When `docs/versions/{version_san}/ui-contract.md` exists: **mandatory** — every contract element/handler vs implementation; report divergence. Then, if product has frontend navigation changes, present grouping proposals and **wait for human approval** before applying.
+When `docs/versions/{version_san}/ui-contract.md` exists: **mandatory** — every contract element/handler vs implementation; report divergence.
 
-When no `ui-contract.md` but frontend navigation changes: present grouping proposals and **wait for human approval** before applying.
+When Layout SSoT registered for a screen (`reference-sources.md` `role: ui-layout`, or any version task cites `*-visual.md`): open cited SSoT **before** diff walk; report **Quick visual checklist** divergence (independent of whether `ui-contract.md` exists).
+
+If frontend navigation changes: present grouping proposals and **wait for human approval** before applying.
 
 ### Step 4.5 — E2E (human only)
 
