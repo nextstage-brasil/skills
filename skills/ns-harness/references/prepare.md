@@ -105,6 +105,7 @@ Autonomous run: use boot defaults for scope; English for reverse-spec; skip reco
 Refresh AGENTS.md from installed skills and artifacts produced in this session.
 Link to architecture-rules.md, brownfield-map.md, system-reverse-spec.md, and system-reverse-spec.agent.md — do not duplicate their bodies.
 Preserve hand-edited sections unless recon proves them wrong.
+Include Project subagents from manifest (`subagent-dispatch.md`: mapped skill mandatory; Task type/model optional). Do not drop that contract on refresh.
 Before Write: apply ./agent-artifact-compress.md — target ~95–110 lines.
 ```
 

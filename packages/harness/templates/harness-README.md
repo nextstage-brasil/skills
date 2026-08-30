@@ -85,7 +85,7 @@ Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readon
 
 **Project owns `model`.** Edit `manifest.json`, then `harness sync`. `harness update` refreshes adapter bodies but **never** resets your model values.
 
-Orchestrators **MUST** spawn the adapter by **exact** `name` (`.cursor/agents/{name}.md` / `/{name}`) so that YAML `model` applies. Spawning a generic Task with `inherit` (or `coder` / `generalPurpose`) uses the **parent** model — forbidden while the bridge exists (`ns-harness` → `references/subagent-dispatch.md`). If the platform cannot bind `{name}`, stop and ask the human to invoke `/{name}`.
+Orchestrators **MUST** spawn the adapter by **exact** `name` (`.cursor/agents/{name}.md` / `/{name}`) so that YAML `model` applies. Cursor Task types `coder` and `reviewer` are **not** these bridges. Spawning Task with `inherit` (or `coder` / `reviewer` / `generalPurpose`) uses the **parent** model / platform persona — forbidden while the bridge exists (`ns-harness` → `references/subagent-dispatch.md`). If the platform cannot bind `{name}`, stop and ask the human to invoke `/{name}`.
 
 ```json
 "subagents": [

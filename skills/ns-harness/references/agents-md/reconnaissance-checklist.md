@@ -18,7 +18,8 @@ Read-only before drafting project `AGENTS.md`. Skip empty sections.
 - [ ] `.claude/skills/` — Claude symlinks (info; Cursor uses `.agents/skills/`)
 - [ ] `docs/context/`, `docs/specs/`, `docs/versions/`
 - [ ] Legacy only: `.cursor/rules/*.mdc` without `.nextstage-harness/` — migration note
-- [ ] Ignore legacy `.agents/agents/` / persona wrappers — skills replace; no personas in `AGENTS.md`
+- [ ] `.nextstage-harness/manifest.json` `subagents` — name/skill/cursor model → AGENTS.md Project subagents
+- [ ] Ignore legacy `.agents/agents/` wrappers — not a substitute for mapped skills
 
 ## 3. Workflow signals
 

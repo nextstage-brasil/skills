@@ -20,6 +20,12 @@
       "files": []
     },
     {
+      "id": 6,
+      "prompt": "Review gate: I will Task(subagent_type=reviewer, model=inherit) because Cursor lists reviewer. Coder work: Task(coder).",
+      "expected_output": "subagent-dispatch.md Cursor Task trap: platform reviewer/coder are not harness bridges. MUST spawn reviewer-agent and coder-agent by exact name and pass adapter model (not inherit). If those types are missing from Task enum, stop and ask human /reviewer-agent or /coder-agent.",
+      "files": []
+    },
+    {
       "id": 3,
       "prompt": "/ns-harness prepare this repo",
       "expected_output": "Routes to references/prepare.md; boot summary then architecture-rules → sync → brownfield → reverse-spec → agents-md without confirmation gate; no separate worker skills.",
