@@ -126,8 +126,8 @@ Detalhes acordados {source — e.g. na reunião de {date}, transcrição, POC} q
 
 ### {Subsection — e.g. Hoje vs. alvo}
 
-| Aspecto | Hoje ({as-is}) | Alvo ({version or target}) |
-| ------- | -------------- | -------------------------- |
+| Aspecto  | Hoje ({as-is})  | Alvo ({version or target})           |
+| -------- | --------------- | ------------------------------------ |
 | {aspect} | {current state} | {target state} `[confirmado {name}]` |
 
 <!-- Optional pseudocode block — label illustrative; name implementation owner when known. -->
@@ -161,35 +161,35 @@ A unidade de mensuração é a Análise de Pontos de Função (APF).
 A contagem dos pontos de função foi realizada de acordo com o Manual de Práticas de Contagem (Counting Practices Manual - CPM) publicado pelo International Function Point Users Group (IFPUG), na sua versão mais atual ({edition, e.g. CPM 4.3.1}).
 Situações não contempladas pelo CPM foram contadas com o Roteiro de Métricas de Software do SISP, na versão mais atual ({edition, e.g. SISP 3.0}). {Or: nenhuma situação fora do CPM.}
 
-| Campo | Valor |
-|-------|--------|
-| Tipo de contagem | {Desenvolvimento \| Melhoria \| Aplicação} |
+| Campo                  | Valor                                               |
+| ---------------------- | --------------------------------------------------- |
+| Tipo de contagem       | {Desenvolvimento \| Melhoria \| Aplicação}          |
 | Fronteira da aplicação | {inside this product vs users / other applications} |
 
-| Feature | FP | Justificativa |
-|---------|-----|---------------|
-| Feature 001 | {n} | {product-language rationale} |
-| Feature 002 | {n} | {…} |
-| **Total** | **{n}** | |
+| Feature     | FP      | Justificativa                |
+| ----------- | ------- | ---------------------------- |
+| Feature 001 | {n}     | {product-language rationale} |
+| Feature 002 | {n}     | {…}                          |
+| **Total**   | **{n}** |                              |
 
 #### Origem do cálculo (APF)
 
-| Elemento | Tipo | Contribuição | RET/FTR | DET | Complexidade | UFP | Base | Fonte |
-|----------|------|--------------|---------|-----|--------------|-----|------|-------|
-| {…} | {ILF/EIF/EI/EO/EQ} | {ADD/CHG/DEL} | | | {Low/Average/High} | | {CPM\|SISP} | Feature 00N / reuse |
-| **Total UFP** | | | | | | **{n}** | | |
+| Elemento      | Tipo               | Contribuição  | RET/FTR | DET | Complexidade       | UFP     | Base        | Fonte               |
+| ------------- | ------------------ | ------------- | ------- | --- | ------------------ | ------- | ----------- | ------------------- |
+| {…}           | {ILF/EIF/EI/EO/EQ} | {ADD/CHG/DEL} |         |     | {Low/Average/High} |         | {CPM\|SISP} | Feature 00N / reuse |
+| **Total UFP** |                    |               |         |     |                    | **{n}** |             |                     |
 
 <!-- COSMIC (CFP): omit entire subsection unless the human explicitly asked for COSMIC/CFP. See references/cosmic-sizing.md. -->
 
 ### Horas previstas (cálculo)
 
-| Item | Valor |
-|------|-------|
-| Total FP | {n} |
-| Produtividade | {h/PF from human or `[ASSUMPTION]`} |
-| Horas base | {n} FP × {h/PF} = **{n} h** |
-| Margem de segurança | {s}% |
-| **Total com margem** | **{n} h** |
+| Item                 | Valor                               |
+| -------------------- | ----------------------------------- |
+| Total FP             | {n}                                 |
+| Produtividade        | {h/PF from human or `[ASSUMPTION]`} |
+| Horas base           | {n} FP × {h/PF} = **{n} h**         |
+| Margem de segurança  | {s}%                                |
+| **Total com margem** | **{n} h**                           |
 
 ---
 
@@ -197,32 +197,33 @@ Situações não contempladas pelo CPM foram contadas com o Roteiro de Métricas
 
 <!-- Hours = with safety margin. Fixed 7 rows. See references/macro-activities.md. -->
 
-| Macroatividade | PF | Esforço (h) | Custo (R$) |
-|----------------|-----|-------------|------------|
-| Engenharia de requisitos | | | {n or —} |
-| Design / Arquitetura | | | |
-| Implementação | | | |
-| Testes de implementação (unitário e e2e) | | | |
-| Testes de homologação | | | |
-| Homologação | | | |
-| Implantação | | | |
-| **Σ** | **{Total FP}** | **{n}** | **{n or —}** |
+| Macroatividade                           | PF             | Esforço (h) | Custo (R$)   |
+| ---------------------------------------- | -------------- | ----------- | ------------ |
+| Engenharia de requisitos                 |                |             | {n or —}     |
+| Design / Arquitetura                     |                |             |              |
+| Implementação                            |                |             |              |
+| Testes de implementação (unitário e e2e) |                |             |              |
+| Testes de homologação                    |                |             |              |
+| Homologação                              |                |             |              |
+| Implantação                              |                |             |              |
+| **Σ**                                    | **{Total FP}** | **{n}**     | **{n or —}** |
 
-**Notas:**  
-- Base: {h} h · Margem de segurança: {s}% · Total com margem: {h} h  
-- Mix %: {default or adjusted — cite in premissas}  
+**Notas:**
+
+- Base: {h} h · Margem de segurança: {s}% · Total com margem: {h} h
+- Mix %: {default or adjusted — cite in premissas}
 - Custo: só com R$/h e/ou R$/PF informados; senão `—` e `_pending rates_`
 
 ---
 
 ## Riscos e margem de segurança
 
-| Risco | Impacto na estimativa | Mitigação / premissa | Responsável |
-|-------|----------------------|----------------------|-------------|
-| {risk} | {impact} | {mitigation or lacuna} | Cliente / Empresa / Ambos |
+| Risco  | Impacto na estimativa | Mitigação / premissa   | Responsável               |
+| ------ | --------------------- | ---------------------- | ------------------------- |
+| {risk} | {impact}              | {mitigation or lacuna} | Cliente / Empresa / Ambos |
 
-- **Margem de erro estimada:** {p}%  
-- **Margem de segurança aplicada:** {s}%  
+- **Margem de erro estimada:** {p}%
+- **Margem de segurança aplicada:** {s}%
 - **Racional:** {risks → percentages}
 
 ---
