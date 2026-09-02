@@ -16,7 +16,7 @@ Stack/architecture questions = stack detection — not this phase.
 - Resume with open critical unknowns (`session-continuity.md`) — re-enter here, not Specify
 - Intake persisted `source/` — still run checklist vs inventory
 
-Grain: version `docs/versions/{version_san}/`. Per-issue GitLab grill-me = `ns-requirements-enricher` (not this file).
+Grain: version `docs/versions/{version_san}/sdd/`. Per-issue GitLab grill-me = `ns-requirements-enricher` (not this file).
 
 ## Workflow
 
@@ -60,7 +60,7 @@ Want me to re-scan the repo and update it, or keep this one and move on to scope
 
 Also read `docs/context/system-reverse-spec.agent.md` when present (prefer over prose); else `system-reverse-spec.md` after gate.
 
-Allowed reads before Step 1 (brownfield): user scope, `brownfield-map.md`, reverse-spec pair, `.nextstage-harness/rules/architecture-rules.md`, `docs/versions/{version_san}/` for active version (incl. `source/`).
+Allowed reads before Step 1 (brownfield): user scope, `brownfield-map.md`, reverse-spec pair, `.nextstage-harness/rules/architecture-rules.md`, `docs/versions/{version_san}/sdd/` for active version (incl. `source/`).
 
 **Forbidden before Step 1:** ad-hoc grep in `backend/` / `frontend/` / `src/` to "reduce ambiguity"; skip Step 0.4 when map exists.
 
@@ -93,7 +93,7 @@ Tudo sim / all yes = yes on remaining yes/no confirms only.
 
 After answers (or `skip clarify` escape in `clarify-strict.md`):
 
-1. Write `docs/versions/{version_san}/clarify-contract.md` + `unknowns-register.md` from templates.
+1. Write `docs/versions/{version_san}/sdd/clarify-contract.md` + `unknowns-register.md` from templates.
 2. Assumed items = premises **with impact** in clarify-contract. Waivers quoted in unknowns-register.
 3. **Stop.** Gate 0 (`gates.md` `requirements_inputs_confirmed`). Do **not** write `requirements.md`. Do **not** ask "write the requirements document" until Gate 0 passes.
 

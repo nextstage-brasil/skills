@@ -2,6 +2,15 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## SDD nest under `sdd/` (2026-09-02)
+
+Canonical SDD root: `docs/versions/{version_san}/sdd/`. All SDD face outputs (requirements, clarify, source, tasks, handoff, roadmap, subversions, delivery-units, ui-contract, spec-coverage, graph-spec, execution-plan) live there. `pm/` stays sibling under the same version folder. `docs/context/` and `docs/specs/` unchanged.
+
+- SSoT: `skills/ns-harness/references/artifact-layout.md` (legacy read fallback + nest migration gate).
+- Resume: `ns-spec-driven` → `references/session-continuity.md`.
+- PM boundary: `ns-project-manager` → `pm-persist.md` excludes entire `sdd/` subtree.
+- **GitLab MCP follow-up (server-side, out of scope here):** `generate_requirements` / publish defaults should accept explicit `docs/versions/{version_san}/sdd/requirements.md`; align server default away from version root.
+
 ## Remove catalog skill — `mcp-gitlab-usage` (2026-09-02)
 
 `mcp-gitlab-usage` is no longer a harness catalog skill. The GitLab MCP server creates and updates it on first use (`get_mcp_gitlab_skill`). Removed from `catalog.json`, presets (`gitlab`), `skill-paths.json`, and install-time `depends`. Runtime body references remain (agents follow the MCP-written skill). Dropped retired alias `"ns-mcp-gitlab-usage": "mcp-gitlab-usage"` (target no longer in catalog). Do not re-add under `skills/mcp-gitlab-usage/`.
@@ -28,7 +37,7 @@ Three generic detectors in `clarify-strict.md` after category checklist, before 
 
 Version **1.7**. Completeness before fidelity. Clarify-Strict **grill** = Gate 0; confirm gates 1–4 and brownfield 0.4 unchanged.
 
-**Intake** phase: persist verbatim `docs/versions/{version_san}/source/{slug}.md` (anchors `S1`, `S3.1`, `S10.4`); never rewrite; never edit after Gate 1.
+**Intake** phase: persist verbatim `docs/versions/{version_san}/sdd/source/{slug}.md` (anchors `S1`, `S3.1`, `S10.4`); never rewrite; never edit after Gate 1.
 
 New version artifacts: `clarify-contract.md`, `unknowns-register.md`, `source/`, `spec-coverage.md`, `ui-contract.md` (UI only). Product pointer: `docs/context/reference-sources.md`.
 
@@ -90,7 +99,9 @@ See `skills/ns-harness/references/session-boot.md` and `rules-sync.md`.
 | `docs/specs/` | Living domain specs |
 | `docs/context/` | Product-wide context |
 | `{version_san}` | Sanitized version id (e.g. `1.0.0`) |
-| `docs/versions/{version_san}/` | Version planning artifacts |
+| `docs/versions/{version_san}/` | Version folder (`sdd/` + `pm/`) |
+| `docs/versions/{version_san}/sdd/` | SDD planning/delivery artifacts |
+| `docs/versions/{version_san}/pm/` | PM deliverables (commercial budget, schedule, version card) |
 
 ## Skill catalog
 
@@ -268,7 +279,7 @@ Triple productivity delivery schedule: one markdown with PERT + Monte Carlo for 
 
 ## New skill — `ns-commercial-budget` (2026-08-03)
 
-Client-facing commercial budget in **product voice** (PM/client — no fields/classes). Features + Function Points + hours (COSMIC CFP only when asked); macro-activity table; risk margins. Paths `commercial-budget-internal.md` (delivery) and optional `commercial-budget-costumer.md` (client export); header Sequência + Gerado em. Custo (R$) only with rates. Loads reverse-spec/brownfield when present. Presets `project-manager` and `full`. Depends on `ns-harness`.
+Client-facing commercial budget in **product voice** (PM/client — no fields/classes). Features + Function Points + hours (COSMIC CFP only when asked); macro-activity table; risk margins. Paths `{version_san}-commercial-budget-internal.md` (delivery) and optional `{version_san}-commercial-budget-costumer.md` (client export) under `docs/versions/{version_san}/pm/`; header Sequência + Gerado em. Custo (R$) only with rates. Loads reverse-spec/brownfield when present. Presets `project-manager` and `full`. Depends on `ns-harness`.
 
 ## Commercial budget artifact rename (2026-08-05)
 
@@ -278,6 +289,17 @@ Client-facing commercial budget in **product voice** (PM/client — no fields/cl
 | `commercial-budget-cliente.md` | `commercial-budget-costumer.md` |
 
 Client header reference: `{version_san}-costumer`. Regenerate or rename existing version folders; do not use `commercial-budget-full-*` variants.
+
+## Commercial budget version-prefixed filenames (2026-09-02)
+
+Persisted basenames must include `{version_san}-` prefix:
+
+| Old path (under `pm/`) | New path |
+| ---------------------- | -------- |
+| `commercial-budget-internal.md` | `{version_san}-commercial-budget-internal.md` |
+| `commercial-budget-costumer.md` | `{version_san}-commercial-budget-costumer.md` |
+
+Example: `docs/versions/orcamento-api-v1/pm/orcamento-api-v1-commercial-budget-internal.md`. Unprefixed copies: STOP gate via `pm-persist.md` — propose rename, do not silent-write.
 
 ## Rename — `ns-mcp-gitlab-usage` → `mcp-gitlab-usage` (2026-07-27)
 

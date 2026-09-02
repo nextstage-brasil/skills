@@ -4,11 +4,11 @@
     {
       "prompt": "/ns-spec-driven — specify user notification preferences for version 2.1 (email and in-app toggles).",
       "id": 1,
-      "expected_output": "Invokes ns-spec-driven: auto-sizes Medium+, Clarify-Strict mandatory (clarify-requirements.md → clarify-strict.md), Gate 0, then references/requirements-generator.md for docs/versions/2.1/requirements.md (and ui-contract.md if UI / ui-screen in scope). Does not run /ns-harness prepare.",
+      "expected_output": "Invokes ns-spec-driven: auto-sizes Medium+, Clarify-Strict mandatory (clarify-requirements.md → clarify-strict.md), Gate 0, then references/requirements-generator.md for docs/versions/2.1/sdd/requirements.md (and ui-contract.md if UI / ui-screen in scope). Does not run /ns-harness prepare.",
       "files": []
     },
     {
-      "prompt": "/ns-spec-driven — docs/versions/1.0.0/ already has tasks and execution-handoff.md. Implement the next pending task.",
+      "prompt": "/ns-spec-driven — docs/versions/1.0.0/sdd/ already has tasks and execution-handoff.md. Implement the next pending task.",
       "id": 2,
       "expected_output": "Resume path: reads session-continuity.md + execution-handoff.md, skips planning phases, MUST dispatch execute via ../../ns-coder/references/run-implementation.md and coder-agent when available. No new requirements.md. Must not implement by reading ns-coder inline while coder-agent bridge is present.",
       "files": []
@@ -50,15 +50,15 @@
       "files": []
     },
     {
-      "prompt": "/ns-spec-driven — analyze requirements at apps/shop/docs/versions/2.0.0/ before task generation.",
+      "prompt": "/ns-spec-driven — analyze requirements at apps/shop/docs/versions/2.0.0/sdd/ before task generation.",
       "id": 9,
       "expected_output": "Reads analyze-consistency.md; appends Consistency Status to requirements.md; proceed/stop decision. No consistency-report.md.",
       "files": []
     },
     {
-      "prompt": "/ns-spec-driven — master requirements at apps/erp/docs/versions/3.0.0/ has 18 features. Partition into subversions.",
+      "prompt": "/ns-spec-driven — master requirements at apps/erp/docs/versions/3.0.0/sdd/ has 18 features. Partition into subversions.",
       "id": 10,
-      "expected_output": "Reads version-partitioner.md; creates version-roadmap.md and subversion excerpt requirements; no task files.",
+      "expected_output": "Reads version-partitioner.md; creates docs/versions/3.0.0/sdd/version-roadmap.md and sdd/subversions/ excerpt requirements; no task files.",
       "files": []
     },
     {
@@ -112,7 +112,7 @@
     {
       "prompt": "/ns-spec-driven — version 2.6.0 has eight tasks. docs/context/gitlab-sync-config.md exists. Human says publish units to GitLab.",
       "id": 25,
-      "expected_output": "Gate 4 ask first (publish, sequential vs parallel, SOURCE_BRANCH) per gates.md and human-communication.md — before writing delivery-units.md. After human confirms publish: reads delivery-units.md algorithm; writes docs/versions/2.6.0/delivery-units.md with unit table; mcp-gitlab-usage publish writes issue_iid per row; then execution-handoff.md.",
+      "expected_output": "Gate 4 ask first (publish, sequential vs parallel, SOURCE_BRANCH) per gates.md and human-communication.md — before writing delivery-units.md. After human confirms publish: reads delivery-units.md algorithm; writes docs/versions/2.6.0/sdd/delivery-units.md with unit table; mcp-gitlab-usage publish writes issue_iid per row; then execution-handoff.md.",
       "files": []
     },
     {
@@ -190,7 +190,7 @@
     {
       "prompt": "/ns-spec-driven — user pastes 10-section OpenAPI-like table for version 4.2. Start planning.",
       "id": 32,
-      "expected_output": "Intake: persists docs/versions/4.2/source/{slug}.md verbatim with Sx anchors; classifies sections; seeds spec-coverage.md. Auto-size Large min. Does not paraphrase source/.",
+      "expected_output": "Intake: persists docs/versions/4.2/sdd/source/{slug}.md verbatim with Sx anchors; classifies sections; seeds spec-coverage.md. Auto-size Large min. Does not paraphrase source/.",
       "files": []
     },
     {

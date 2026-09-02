@@ -9,7 +9,7 @@ Agent-api or intelligent SaaS: **MUST** load `ns-langgraph-agents` before Clarif
 | `agent-api/` | `agent-api/` |
 | Intelligent SaaS context | `docs/context/intelligent-saas/` |
 | Product class | `intelligent_saas` in `brownfield-map.md`, `AGENTS.md`, version `requirements.md` |
-| Graph spec | `agent-api/graph-spec.md` or `docs/versions/{version_san}/graph-spec.md` |
+| Graph spec | `agent-api/graph-spec.md` or `docs/versions/{version_san}/sdd/graph-spec.md` |
 | Version scope | Request, `requirements.md`, tasks mention agent-api, LangGraph, MCP, graph nodes, agent runtime |
 | Greenfield agent | Empty repo or no `agent-api/package.json`; user wants new LangGraph runtime |
 | Stack profile | Specify uses `stacks/intelligent-saas.md` or `stacks/agent-runtime.md` |

@@ -249,7 +249,7 @@ For existing codebases, run once (and again after major refactors). **Not** part
 
 **Terminal:** `npx @nextstage-brasil/harness prepare` prints full instructions.
 
-Artifacts land under `docs/context/`, `docs/specs/`, `docs/versions/`.
+Artifacts land under `docs/context/`, `docs/specs/`, `docs/versions/{version_san}/sdd/` (PM under `pm/`).
 
 ---
 

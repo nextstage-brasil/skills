@@ -26,7 +26,7 @@ requires_harness: ">=1.0.0"
 provides:
   - gate:requirements-consistency
   - artifact:docs/specs/requirements.md
-  - artifact:docs/versions/*/execution-handoff.md
+  - artifact:docs/versions/*/sdd/execution-handoff.md
 consumes:
   - artifact:docs/context/architecture-rules.md
 depends:

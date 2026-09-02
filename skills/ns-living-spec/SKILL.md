@@ -21,7 +21,7 @@ See `../../ns-harness/references/session-boot.md` and `../../ns-harness/referenc
 
 | Mode | When | Source of truth | Code Review gate |
 | ---- | ---- | --------------- | ---------------- |
-| **Version** (default) | Version closure after delivery | `docs/versions/{version_san}/` artifacts | Required (`Approved` = score **10**) |
+| **Version** (default) | Version closure after delivery | `docs/versions/{version_san}/sdd/` artifacts | Required (`Approved` = score **10**) |
 | **Ad-hoc** | Invoked by `ns-coder` (or human) after `Approved` | `{task_description}` + approved `git diff` | Required (`Approved`) |
 | **Appearance** | Invoked by `ns-proto-creator` or `ns-proto-visual-guide` | Guide/prototype path + short behavioral delta | **None** |
 
@@ -38,9 +38,9 @@ See `../../ns-harness/references/session-boot.md` and `../../ns-harness/referenc
 
 ### Version mode
 
-- `docs/versions/{version_san}/requirements.md`
+- Resolved `requirements.md` — `sdd/` first, else legacy version root (`artifact-layout.md` **Legacy path resolution**)
 - Invoker reports `Code Review: Approved` — no `code-review-report.md` required
-- `docs/versions/{version_san}/execution-handoff.md` (tasks completed)
+- Resolved `execution-handoff.md` — `sdd/` first, else legacy version root (tasks completed)
 
 ### Ad-hoc mode
 

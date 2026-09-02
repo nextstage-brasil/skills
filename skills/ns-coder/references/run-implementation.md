@@ -14,16 +14,15 @@ No `delivery-units.md` = **classic default** (batched same-layer dispatch) — n
 ## Prerequisites
 
 - `{version_san}` defined
-- `docs/versions/{version_san}/execution-handoff.md` exists
-- `docs/versions/{version_san}/tasks/task-*.md` exist
+- Resolved `execution-handoff.md` exists — `docs/versions/{version_san}/sdd/execution-handoff.md` first; legacy `docs/versions/{version_san}/execution-handoff.md` if unmigrated (`artifact-layout.md` **Legacy path resolution**)
+- Resolved `tasks/task-*.md` exist — `sdd/tasks/` first; legacy `tasks/` if unmigrated
 
-If tasks exist but handoff does not: invoke **`execution-handoff.md`** phase (via `ns-spec-driven`)
-before coding.
+If classic artifacts only at version root → nest migration STOP (`session-continuity.md`); no dual-write. If tasks exist but handoff does not: invoke **`execution-handoff.md`** phase (via `ns-spec-driven`) before coding.
 
 ## Routing (step 0)
 
-1. Read `docs/versions/{version_san}/version-roadmap.md` when present
-2. Read `docs/versions/{version_san}/delivery-units.md` when present
+1. Read resolved `version-roadmap.md` — `sdd/` first, else legacy version root (`artifact-layout.md` **Legacy path resolution**) when present
+2. Read resolved `delivery-units.md` — `sdd/` first, else legacy version root when present
 3. If **unit-scoped run** (definition above) → **step 0b**
 4. Else if roadmap has pending slices → stop; use `../../ns-spec-driven/references/orchestrator.md`
 5. Else → classic mode (this workflow)
@@ -42,7 +41,7 @@ before coding.
 1. Read `execution-handoff.md` **in full**
 2. Session boot once at implementer start per `session-boot.md` (obey `AGENTS.md` in context; no tool-Read); obey any mandatory product skills named there
 3. Validate **Time tracking (seconds)** section exists; add from template if missing
-4. Read `requirements.md` (overview — do not replan); confirm Consistency status is `Approved` when present
+4. Read resolved `requirements.md` — `sdd/` first, else legacy version root (overview — do not replan); confirm Consistency status is `Approved` when present
 5. Load product context: follow **Implementation boot rule** in `../../../ns-harness/references/artifact-layout.md`
 6. **Next batch:**
    - **Unit mode:** all `pending`/`in_progress` tasks in current unit (step 0b) — ignore layer 4–7 classic cap
@@ -118,7 +117,7 @@ When all tasks are `completed` or `waived`:
 
 ### Step 4 — UI / nav review
 
-When `docs/versions/{version_san}/ui-contract.md` exists: **mandatory** — every contract element/handler vs implementation; report divergence.
+When resolved `ui-contract.md` exists (`sdd/` first, else legacy version root per `artifact-layout.md` **Legacy path resolution**): **mandatory** — every contract element/handler vs implementation; report divergence.
 
 When Layout SSoT registered for a screen (`reference-sources.md` `role: ui-layout`, or any version task cites `*-visual.md`): open cited SSoT **before** diff walk; report **Quick visual checklist** divergence (independent of whether `ui-contract.md` exists).
 

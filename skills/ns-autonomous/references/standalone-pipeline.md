@@ -11,7 +11,7 @@ Full flow when this skill is the entry point — no `ns-execution-gitlab-issue` 
 
 - Infer `change_kind` (`fix` or `feat`) from the descriptor.
 - Allocate `{version_san}` (sanitized version id — see `../../../ns-harness/references/artifact-layout.md`).
-- Create `docs/versions/{version_san}/` only if the planning-depth decision (`planning-decision.md`) calls for artifacts; a single-unit run doesn't need the folder.
+- Create `docs/versions/{version_san}/sdd/` only if the planning-depth decision (`planning-decision.md`) calls for artifacts; a single-unit run doesn't need the folder.
 
 ## 3. Create the worktree
 
@@ -58,7 +58,7 @@ Identical logic to Engine mode:
 
 Follow `../../ns-reviewer/references/review-gate-workflow.md` (`Approved` = **10**; no second rubric).
 
-- **MUST** `reviewer-agent` when available (else `ns-reviewer`) **version-closure mode** — bridge loads `AGENTS.md` then reviewer workflow — point at `docs/versions/{version_san}/` when exists, else worktree diff for single-unit run.
+- **MUST** `reviewer-agent` when available (else `ns-reviewer`) **version-closure mode** — bridge loads `AGENTS.md` then reviewer workflow — point at `docs/versions/{version_san}/sdd/` when exists, else worktree diff for single-unit run.
 - Pass = `Approved` (score **= 10**). Score **9** = Lift (`Rejected`). Score ≤8 = Fail.
 - Max 3 rounds:
   - Pass → closure.

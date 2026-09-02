@@ -104,7 +104,7 @@ Details: `references/auto-sizing.md`, `references/router.md`.
 ## Boot (mandatory, once per session)
 
 1. Classify request → **Small / Medium / Large** (`references/auto-sizing.md`). Dense source (contract/schema tables or ~8+ sections) → Large min.
-2. **Source detection:** list `docs/versions/{version_san}/source/` and user-pasted specs → Intake (`source-registry.md`) before Clarify.
+2. **Source detection:** list `docs/versions/{version_san}/sdd/source/` first; else legacy `docs/versions/{version_san}/source/` if unmigrated (`artifact-layout.md` **Legacy path resolution**). User-pasted specs → Intake (`source-registry.md`) before Clarify.
 3. Check **resume** signals (`execution-handoff.md`, `version-roadmap.md`, partial version, open unknowns) → `references/session-continuity.md`.
 4. **Agent runtime gate** — agent-api / intelligent SaaS (`references/agent-runtime-integration.md`): **MUST** load `ns-langgraph-agents` in session before any phase; **stop** if skill not installed.
 5. Scan installed complements (soft) → `references/skill-integrations.md`.
@@ -208,7 +208,7 @@ When version or quick fix closes, report:
 - Address human with internal phase names ("Specify", "Clarify") or bot chrome (`Reply:`, `Premise:`).
 - Specify with open critical unknown (no `skip clarify` waiver).
 - Silent assumption from unanswered critical.
-- Edit `docs/versions/{version_san}/source/` after Gate 1.
+- Edit `docs/versions/{version_san}/sdd/source/` after Gate 1.
 - Task cards for unmapped mappable source sections.
 - UI implementation task without `ui-contract.md` when UI in scope.
 
@@ -227,7 +227,7 @@ Quick fix: add nullable email field to the signup form
 ```
 
 ```
-Resume implementation — handoff exists for docs/versions/1.0.0/
+Resume implementation — handoff exists for docs/versions/1.0.0/sdd/
 ```
 
 ```

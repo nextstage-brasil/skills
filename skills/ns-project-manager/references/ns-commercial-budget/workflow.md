@@ -24,7 +24,7 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.27"
+  version: "1.28"
 ---
 
 # Commercial Budget
@@ -114,13 +114,13 @@ Create `pm/` if missing. Before write: `../pm-persist.md` — if the same basena
 **Internal (always):**
 
 ```
-docs/versions/{version_san}/pm/commercial-budget-internal.md
+docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md
 ```
 
 **Client export (when `engineering-split.md` applies or human asks):**
 
 ```
-docs/versions/{version_san}/pm/commercial-budget-costumer.md
+docs/versions/{version_san}/pm/{version_san}-commercial-budget-costumer.md
 ```
 
 Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per file (`document-versioning.md`).

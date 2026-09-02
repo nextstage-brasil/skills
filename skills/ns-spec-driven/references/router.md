@@ -6,7 +6,7 @@ Map natural-language triggers to **phase** and **reference** (under `references/
 
 | Trigger phrases | Reference | Output |
 | --------------- | ------ | ------ |
-| pasted contract/schema, dense spec, "persist source" | `source-registry.md` | `docs/versions/{version_san}/source/{slug}.md`, `spec-coverage.md`, `docs/context/reference-sources.md` |
+| pasted contract/schema, dense spec, "persist source" | `source-registry.md` | `docs/versions/{version_san}/sdd/source/{slug}.md`, `spec-coverage.md`, `docs/context/reference-sources.md` |
 
 ## Clarify
 
@@ -23,7 +23,7 @@ Map natural-language triggers to **phase** and **reference** (under `references/
 
 | Trigger phrases | Reference | Output |
 | --------------- | ------ | ------ |
-| "write requirements", "spec for vX", "define version" | `requirements-generator.md` | `docs/versions/{version_san}/requirements.md` (+ `ui-contract.md` when UI / `ui-screen`) |
+| "write requirements", "spec for vX", "define version" | `requirements-generator.md` | `docs/versions/{version_san}/sdd/requirements.md` (+ `ui-contract.md` when UI / `ui-screen`) |
 
 ## Consistency
 
@@ -39,7 +39,7 @@ Map natural-language triggers to **phase** and **reference** (under `references/
 | --------------- | ------ | ---- |
 | "split version", "slices", "phased delivery", Large multi-team | `version-partitioner.md` | Requirements exist; scope too big for one handoff |
 
-**Output:** `version-roadmap.md`, `subversions/*/`
+**Output:** `docs/versions/{version_san}/sdd/version-roadmap.md`, `sdd/subversions/*/`
 
 ## Tasks
 

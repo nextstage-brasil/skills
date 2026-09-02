@@ -5,6 +5,11 @@ import { resolveSkillDir } from '../src/resolveSkillPath.js';
 const SKILL_ID = 'ns-commercial-budget';
 
 const REQUIRED_ARTIFACTS = [
+  '{version_san}-commercial-budget-internal.md',
+  '{version_san}-commercial-budget-costumer.md',
+];
+
+const LEGACY_UNPREFIXED_ARTIFACTS = [
   'commercial-budget-internal.md',
   'commercial-budget-costumer.md',
 ];
@@ -97,11 +102,20 @@ export function validateCommercialBudgetSkill(skillsDir) {
 
     if (/\bcommercial-budget\.md\b/.test(content)) {
       const allowed =
-        content.includes('commercial-budget-internal.md')
-        || content.includes('commercial-budget-costumer.md');
+        content.includes('{version_san}-commercial-budget-internal.md')
+        || content.includes('{version_san}-commercial-budget-costumer.md');
       if (!allowed && !rel.includes('MIGRATION')) {
         errors.push(
-          `${SKILL_ID}: legacy path commercial-budget.md in ${rel} — use commercial-budget-internal.md`,
+          `${SKILL_ID}: legacy path commercial-budget.md in ${rel} — use {version_san}-commercial-budget-internal.md`,
+        );
+      }
+    }
+
+    for (const legacy of LEGACY_UNPREFIXED_ARTIFACTS) {
+      const legacyPath = new RegExp(`pm/${legacy.replace('.', '\\.')}\\b`);
+      if (legacyPath.test(content)) {
+        errors.push(
+          `${SKILL_ID}: unprefixed persist path pm/${legacy} in ${rel} — use {version_san}-${legacy}`,
         );
       }
     }

@@ -15,7 +15,7 @@ Do **not** copy over an existing runtime. Brownfield → orphan checklist.
 ## Prerequisites
 
 1. Architecture lock — `ns-multi-agent-architect` if framework unlocked; skip if `framework: langgraph` already locked
-2. `graph-spec.md` from `templates/graph-spec.md` (Phase 0) — at `docs/versions/{version_san}/graph-spec.md` and/or `{agent_api_root}/graph-spec.md`
+2. `graph-spec.md` from `templates/graph-spec.md` (Phase 0) — at `docs/versions/{version_san}/sdd/graph-spec.md` and/or `{agent_api_root}/graph-spec.md`
 
 ## Command
 

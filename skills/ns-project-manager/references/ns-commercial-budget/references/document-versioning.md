@@ -4,19 +4,23 @@
 
 ## Paths (immutable names)
 
+Basename **must** start with `{version_san}-` so exports remain identifiable outside the version folder.
+
 **Internal (delivery):**
 
 ```
-docs/versions/{version_san}/pm/commercial-budget-internal.md
+docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md
 ```
 
 **Client export (optional):**
 
 ```
-docs/versions/{version_san}/pm/commercial-budget-costumer.md
+docs/versions/{version_san}/pm/{version_san}-commercial-budget-costumer.md
 ```
 
-Create `pm/` if missing. Overwrite each file on regenerate. Do **not** use timestamped filenames. Do **not** write these files at the version folder root (beside `requirements.md`).
+Create `pm/` if missing. Overwrite each file on regenerate. Do **not** use timestamped filenames. Do **not** write these files at version root. SDD artifacts live under `docs/versions/{version_san}/sdd/` (legacy root `requirements.md` only if unmigrated).
+
+**Legacy unprefixed basenames** (`commercial-budget-internal.md`, `commercial-budget-costumer.md` without `{version_san}-`): follow `../../pm-persist.md` STOP gate — propose rename to the prefixed canonical path above.
 
 **Misplaced copy:** if the file already exists outside `pm/` (or both root and `pm/` exist), follow `../../pm-persist.md` — **STOP gate**. Search references, propose from-path → to-path, ask confirm/decline, **end the turn**. Do not write, move, delete, or duplicate until the human answers that gate explicitly. `proceed` / assumptions / silence are not confirmation.
 
@@ -34,7 +38,7 @@ Each file has **own** Sequência counter — bump independently on regenerate.
 
 ## How to compute Sequência
 
-Apply separately to `commercial-budget-internal.md` and `commercial-budget-costumer.md`:
+Apply separately to `{version_san}-commercial-budget-internal.md` and `{version_san}-commercial-budget-costumer.md`:
 
 1. If the canonical `pm/` file exists: read `**Sequência:**`; next = that value + 1.
 2. Else if only a misplaced copy exists: after the approved move (`../../pm-persist.md`), use that file’s Sequência, then +1 for this regenerate.

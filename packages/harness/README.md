@@ -22,7 +22,7 @@ Interactive wizard. Prefer CI / scripts? Use flags below — every common path i
 | `.nextstage-harness/rules/`                   | **Edit rules here** — single source of truth           |
 | `.cursor/rules/`, `.claude/rules/`            | Generated adapters — do not edit by hand               |
 | `AGENTS.md` + `CLAUDE.md`                     | Project entry for agents                               |
-| `docs/context`, `docs/specs`, `docs/versions` | SDD artifact folders (unless `--no-scaffold`)          |
+| `docs/context`, `docs/specs`, `docs/versions` | SDD folders (`sdd/` + `pm/` per version; unless `--no-scaffold`) |
 
 Every install also pulls **alwaysInstall** skills: `ns-harness` (plus its dependencies). Presets add Spec-Driven, PM, GitLab, and other packs on top.
 

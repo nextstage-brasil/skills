@@ -35,7 +35,7 @@ const LAYOUT_PATHS = [
   { path: '.claude/skills/', purpose: 'Symlinked Claude Code skills (harness sync)' },
   { path: join(AGENTS_HOME, 'docs/'), purpose: 'Agent-oriented project docs' },
   { path: 'docs/context/', purpose: 'Product context (stack, brownfield)' },
-  { path: 'docs/versions/', purpose: 'SDD version artifacts' },
+  { path: 'docs/versions/', purpose: 'Version folders; SDD artifacts under docs/versions/{version_san}/sdd/' },
   { path: 'docs/specs/', purpose: 'Living domain specs' },
 ];
 

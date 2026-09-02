@@ -3,14 +3,14 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Here's my local plan file docs/versions/1.2.0/execution-plan.md — run it autonomously, no GitLab issue involved.",
+      "prompt": "Here's my local plan file docs/versions/1.2.0/sdd/execution-plan.md — run it autonomously, no GitLab issue involved.",
       "expected_output": "Standalone pipeline: own worktree `.worktrees/{version_san}/` (never `.cursor/`), planning depth, doubt protocol, implementation inside worktree only, ns-reviewer loop (max 3; Approved = 10; 9 = Rejected Lift + re-review) — no GitLab MCP. Worktree fail: abort, no main-checkout edits.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "Autonomously implement this pasted spec: add a notifications module with a backend queue worker, a frontend inbox UI, and a DB migration for the notifications table. No issue, just run with it end to end.",
-      "expected_output": "Agent recognizes multi-part scope, generates a light requirements.md + tasks/task-NNN-*.md + execution-plan.md under docs/versions/{version_san}/, dispatches backend/migration and frontend as parallel work units (disjoint file scopes) with the migration sequenced before anything depending on the new table, and reports version_san, worktree path, and review verdict at the end.",
+      "expected_output": "Agent recognizes multi-part scope, generates a light requirements.md + tasks/task-NNN-*.md + execution-plan.md under docs/versions/{version_san}/sdd/, dispatches backend/migration and frontend as parallel work units (disjoint file scopes) with the migration sequenced before anything depending on the new table, and reports version_san, worktree path, and review verdict at the end.",
       "files": []
     },
     {

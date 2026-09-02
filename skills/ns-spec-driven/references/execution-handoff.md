@@ -1,6 +1,6 @@
 # Execution Handoff Generator
 
-Bridge planning to implementation. Maintain `docs/versions/{version_san}/execution-handoff.md` — SSoT for **task order**, **progress**, **tokens**, **elapsed time**.
+Bridge planning to implementation. Maintain `docs/versions/{version_san}/sdd/execution-handoff.md` — SSoT for **task order**, **progress**, **tokens**, **elapsed time**.
 
 > `requirements.md` = **what**; `tasks/task-NNN-*.md` = **how**; `execution-handoff.md` = **order** + **where execution stopped**.
 
@@ -25,8 +25,8 @@ Classic: batch consecutive same-layer `pending` (prefer **4–7**, hard **max 7*
 ## Prerequisites (generation)
 
 - `{version_san}` defined
-- `docs/versions/{version_san}/requirements.md` exists
-- ≥1 `docs/versions/{version_san}/tasks/task-*.md`
+- Resolved `requirements.md` exists — `sdd/` first, else legacy version root (`artifact-layout.md` **Legacy path resolution**)
+- ≥1 resolved `tasks/task-*.md` — `sdd/tasks/` first, else legacy `tasks/` if unmigrated
 - **New planning closure:** Gate 4 when GitLab possible; `delivery-units.md` only when publish or parallel or resume file exists. Handoff always after tasks (and Gate 4 when run).
 - **Default local (no units file):** classic handoff — `Unit` column `—`; no Gate 4 when GitLab not possible.
 - Template: `../templates/execution-handoff.template.md`
@@ -57,7 +57,7 @@ Read `requirements.md` and `docs/context/stack-confirmed.md` when present. ≤10
 
 ### 3. Write file
 
-Save `docs/versions/{version_san}/execution-handoff.md` via `../templates/execution-handoff.template.md`:
+Save `docs/versions/{version_san}/sdd/execution-handoff.md` via `../templates/execution-handoff.template.md`:
 
 - All tasks `Status: pending`, timestamps `—`, `Time (s): 0`, `Tokens: 0`
 - Header **Tokens (total):** `0`

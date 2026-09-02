@@ -20,7 +20,7 @@ Use when the descriptor is multi-part or ambiguous enough that skipping decompos
 - Acceptance criteria are broad or implicit and need to be broken into verifiable pieces.
 - The work has real dependency structure — some pieces must land before others.
 
-Generate, under `docs/versions/{version_san}/` (version allocated as fix/feat from the descriptor content, per `../../../ns-harness/references/artifact-layout.md`):
+Generate, under `docs/versions/{version_san}/sdd/` (version allocated as fix/feat from the descriptor content, per `../../../ns-harness/references/artifact-layout.md`):
 
 - `requirements.md` — light version: scope, acceptance criteria, out-of-scope, one paragraph each — self-approved internal artifact, not the full `ns-spec-driven` Clarify → Specify human-gated chain (`references/clarify-requirements.md` → `references/requirements-generator.md`).
 - `tasks/task-NNN-*.md` — one per work unit, same shape as `ns-spec-driven` → `references/task-generator.md` output but generated internally.

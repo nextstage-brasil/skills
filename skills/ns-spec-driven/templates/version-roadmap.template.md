@@ -1,7 +1,7 @@
 # Version roadmap — {version_san}
 
 **Product:** {product_name}  
-**Master requirements:** `docs/versions/{version_san}/requirements.md`  
+**Master requirements:** `{master_requirements_path}` — `docs/versions/{version_san}/sdd/requirements.md` after nest confirm; `docs/versions/{version_san}/requirements.md` at version root on decline (`version-partitioner.md` nest gate)  
 **Generated:** {date}
 
 ## Subversion plan

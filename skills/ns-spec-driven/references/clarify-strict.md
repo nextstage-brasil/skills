@@ -4,7 +4,7 @@ Highest-priority version-scope grill. Completeness **before** fidelity. Grill st
 
 Entry shell: `clarify-requirements.md` (brownfield Step 0 / 0.4). Body = this file.
 
-Grain: version under `docs/versions/{version_san}/`. **Not** per-issue GitLab (`ns-requirements-enricher`).
+Grain: version under `docs/versions/{version_san}/sdd/`. **Not** per-issue GitLab (`ns-requirements-enricher`).
 
 ## Blocking category checklist
 
@@ -26,7 +26,7 @@ Every category **answered** | **assumed** (accepted premise in `clarify-contract
 
 ## Source inventory
 
-`docs/versions/{version_san}/source/` from Intake: questions from unclassified / thin sections + checklist gaps. Never invent contract values to close gap.
+`docs/versions/{version_san}/sdd/source/` from Intake: questions from unclassified / thin sections + checklist gaps. Never invent contract values to close gap.
 
 **Chat questions:** observable behavior only (when, who, HTTP, copy, numbers). Never ask human recall or confirm source codes (`FPA08`, ticket ids, `§`, `Sx`). Map code to situation in ask. Write codes only in `clarify-contract.md` / `unknowns-register.md` after human answers situation.
 
@@ -81,8 +81,8 @@ Write then **stop** at Gate 0 (`gates.md`):
 
 | File | Role |
 | ---- | ---- |
-| `docs/versions/{version_san}/clarify-contract.md` | Scope, answered categories, assumed premises + impact, sensitive-item table |
-| `docs/versions/{version_san}/unknowns-register.md` | Open / waived / accepted-with-risk |
+| `docs/versions/{version_san}/sdd/clarify-contract.md` | Scope, answered categories, assumed premises + impact, sensitive-item table |
+| `docs/versions/{version_san}/sdd/unknowns-register.md` | Open / waived / accepted-with-risk |
 
 Templates: `templates/clarify-contract.template.md`, `templates/unknowns-register.template.md`.
 

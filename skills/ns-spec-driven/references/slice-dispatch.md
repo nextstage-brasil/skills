@@ -17,8 +17,8 @@ orchestrator. (If you are coder-agent: Session boot once at cold start, then tha
 Product:     (this repo)
 Version:     {version_san}
 Subversion:  {subversion_san}
-Active path: docs/versions/{version_san}/subversions/{subversion_san}/
-Source:      docs/versions/{version_san}/source/  sections: {S…}
+Active path: resolved slice — `docs/versions/{version_san}/sdd/subversions/{subversion_san}/` first, else legacy `subversions/{subversion_san}/` (`artifact-layout.md` Legacy path resolution)
+Source:      resolved `source/` — `sdd/source/` first, else legacy `source/`  sections: {S…}
 
 Before coding:
 - Session boot once at slice-worker start per `session-boot.md`
@@ -27,7 +27,7 @@ Before coding:
   Obey orders, including any mandatory product skills named.
 - Load product context from docs/context/ per the Implementation
   boot rule in ns-harness artifact-layout.md (list folder, read layer-relevant files).
-- Read docs/versions/{version_san}/source/ (or listed sections {S…}) before coding.
+- Read resolved `source/` (or listed sections {S…}) before coding — `sdd/source/` first, else legacy `source/`.
   Mandate: open cited anchors; do not implement from memory of paraphrased contracts.
 
 Mandate:

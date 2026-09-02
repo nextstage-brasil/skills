@@ -24,7 +24,7 @@ HTTP/SSE clients talk to agent-api; no browser-direct secrets in the runtime
 
 ## Additional artifacts
 
-- `docs/versions/{version_san}/graph-spec.md`
+- `docs/versions/{version_san}/sdd/graph-spec.md`
 - `docs/specs/agent-architecture.md` when `ns-multi-agent-architect` ran
 
 `ns-spec-driven` parent: **MUST** load `ns-langgraph-agents` per `agent-runtime-integration.md`.

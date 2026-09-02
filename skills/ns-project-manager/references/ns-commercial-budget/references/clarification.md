@@ -24,7 +24,7 @@ Highest-value gaps for this scope:
 5. **Team experience (prefer when estimating hours)** — seniority of builders; tenure on product/project; involvement depth (core maintainers vs occasional). Goal: calibrate codebase/domain knowledge before hours. Optionally ask house productivity (h/PF) if a standard exists. Ask h/CFP only when COSMIC was requested.
 6. **Rates for Custo (optional)** — R$/h and/or R$/PF **only if** human wants macro Custo column filled; else leave `—` / `_pending rates_`.
 7. **Acceptance depth** — must-have SLAs or volumes stakeholder will commit (do not invent).
-8. **Persist or chat-only** — write/overwrite `docs/versions/{version_san}/pm/commercial-budget-internal.md` (header bumps Sequência + Gerado em)?
+8. **Persist or chat-only** — write/overwrite `docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md` (header bumps Sequência + Gerado em)?
 
 Misplaced-file **STOP gate** (`../../pm-persist.md`) is **not** a clarification question and is **not** skipped by `proceed with assumptions` / `quick mode`. Persist stays blocked until the human explicitly confirms or declines the path action.
 

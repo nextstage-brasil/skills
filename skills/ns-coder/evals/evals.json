@@ -21,7 +21,7 @@
     },
     {
       "id": 4,
-      "prompt": "SDD handoff mode: implement docs/versions/2.8.2/tasks/task-007-*.md under execution-handoff — parent said implement only, review at version closure.",
+      "prompt": "SDD handoff mode: implement docs/versions/2.8.2/sdd/tasks/task-007-*.md under execution-handoff — parent said implement only, review at version closure.",
       "expected_output": "Implement task scope; unit/integration only; NO reviewer-agent / ns-reviewer; NO living-spec consolidator; grep new public exports and keep unused names unexported; report files/tests/blockers and Layout SSoT field to parent; no Code Review: line.",
       "files": []
     },

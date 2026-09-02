@@ -22,7 +22,7 @@ See `../../ns-harness/references/session-boot.md`.
 | In scope | Out of scope |
 | -------- | ------------ |
 | `README.md` at product or repo root | Inline `//` or `/**` code comments |
-| `docs/**/*.md` guides | `docs/versions/*/requirements.md` |
+| `docs/**/*.md` guides | `docs/versions/*/sdd/requirements.md`, `docs/versions/*/requirements.md` (legacy SDD) |
 | Runbooks, install guides, architecture overviews for humans | Living specs in `docs/specs/` (use `ns-living-spec`) |
 | Changelog entries when requested | Marketing copy outside repo |
 
@@ -62,3 +62,4 @@ Agent **why** (reference architecture, agent vs code, trade-offs, topology, HITL
 - Copying full bodies of `brownfield-map.md` or `system-reverse-spec.md` into new docs (link them)
 - English violations when project mandates English docs
 - Auto-generating docs for code that does not exist yet
+- Same version with both `docs/versions/*/sdd/requirements.md` and legacy `docs/versions/*/requirements.md` — link canonical `sdd/` path only; never create or maintain dual trees

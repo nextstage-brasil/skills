@@ -94,8 +94,8 @@ Status values: `pending`, `in_progress`, `done`.
 1. Re-run Phase 3 when backlog deps or narrative scope change — refresh DAG Mermaid and layer table.
 2. After Phase 4 schedule: update layer→sprint map; do not schedule a layer before all predecessor layers complete.
 3. After Phase 5 forecast: fill P50/P85; P85 = committed date for stakeholders.
-4. Persist only at `docs/versions/{version_san}/pm/execution-handoff.md`. Do not edit spec-driven `docs/versions/{version_san}/execution-handoff.md` at version root.
-5. Spec-driven `docs/versions/{version_san}/execution-handoff.md` at version root is not misplaced — never STOP/move/delete it (`pm-persist.md` exception). STOP only for other `execution-handoff.md` paths outside `pm/`.
+4. Persist only at `docs/versions/{version_san}/pm/execution-handoff.md`. Do not edit spec-driven `docs/versions/{version_san}/sdd/execution-handoff.md`.
+5. Entire `docs/versions/{version_san}/sdd/` subtree excluded from PM misplaced search (`pm-persist.md`). Legacy SDD basenames at version root (including `execution-handoff.md`) excluded — nest migration owns root → `sdd/`; PM STOP only for true PM misplaced copies outside `pm/`, outside `sdd/`, and outside the legacy SDD table in `pm-persist.md`.
 
 ---
 

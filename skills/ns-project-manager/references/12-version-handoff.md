@@ -1,10 +1,10 @@
 # Version handoff — execution card (PM)
 
-Version/epic-level handoff for execution. **Not** spec-driven task handoff. No task lines, tokens, or time estimates — those live in spec-driven `docs/versions/{version_san}/tasks/`.
+Version/epic-level handoff for execution. **Not** spec-driven task handoff. No task lines, tokens, or time estimates — those live in spec-driven `docs/versions/{version_san}/sdd/tasks/`.
 
-## Distinct artifact — do not touch spec-driven root file
+## Distinct artifact — do not touch SDD handoff
 
-`docs/versions/{version_san}/execution-handoff.md` at version **root** = spec-driven SDD artifact. **Never** read or write it in this mode. One line in output if it exists: distinct from PM handoff below.
+`docs/versions/{version_san}/sdd/execution-handoff.md` = spec-driven SDD artifact. **Never** read or write it in this mode. One line in output if it exists: distinct from PM handoff below.
 
 ## Persist path
 
@@ -28,7 +28,7 @@ Missing sprint map or forecast dates: field = `—`. Never fabricate.
 ## Workflow
 
 1. Resolve `version_san` from user or `docs/versions/`.
-2. If root `docs/versions/{version_san}/execution-handoff.md` exists: one line — SDD artifact, not updated here. Never read, STOP-move, delete, read-for-merge, or treat as misplaced PM.
+2. If `docs/versions/{version_san}/sdd/execution-handoff.md` **or** legacy `docs/versions/{version_san}/execution-handoff.md` exists: one line — SDD artifact, not updated here. Never read, STOP-move, delete, read-for-merge, or treat as misplaced PM.
 3. Load template `assets/version-handoff.template.md`.
 4. Fill only from produced data; `—` for missing Phase 4/5 fields.
 5. Layer status: `pending` default; `in_progress` / `done` only if human or tracker state provided.
@@ -42,4 +42,4 @@ Filled handoff markdown matching template sections. Gate: "Confirm handoff card,
 
 - Generate only from existing phase outputs — no invented sprints, dates, or scope.
 - Layer order always from Phase 3 DAG — never RICE-only order on dependent pipeline.
-- No mutation of spec-driven root `execution-handoff.md`.
+- No mutation of spec-driven `sdd/execution-handoff.md`.

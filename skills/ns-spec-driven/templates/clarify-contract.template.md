@@ -62,8 +62,8 @@ Chat with the human uses observable behavior only (when, HTTP, copy). Do not put
 
 ## Source inventory
 
-- `docs/versions/{version_san}/source/{slug}.md` — or `none`
-- Coverage ledger: `docs/versions/{version_san}/spec-coverage.md`
+- `docs/versions/{version_san}/sdd/source/{slug}.md` — or `none`
+- Coverage ledger: `docs/versions/{version_san}/sdd/spec-coverage.md`
 
 ## Waiver
 

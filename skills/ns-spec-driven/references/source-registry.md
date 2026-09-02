@@ -8,7 +8,7 @@ Boot / Intake: user pastes or points at contract, schema, narrative spec, API ta
 
 ## Persist
 
-1. Sanitize `{version_san}`. Create `docs/versions/{version_san}/source/`.
+1. Sanitize `{version_san}`. Create `docs/versions/{version_san}/sdd/source/`.
 2. Write `{slug}.md` = **verbatim** copy of source (one file per distinct document). Never paraphrase into `source/`.
 3. Insert heading anchors: `S1`, `S3.1`, `S10.4` matching original structure (keep original titles; add `{#S1}` / HTML comment if heading text must stay).
 4. Classify **every** section:
@@ -35,4 +35,4 @@ Boot / Intake: user pastes or points at contract, schema, narrative spec, API ta
 
 ## Detection (Boot)
 
-List `docs/versions/{version_san}/source/`. Present: load `source-registry.md` + `spec-coverage.md`; Consistency **mandatory** when files exist (`analyze-consistency.md`).
+List `docs/versions/{version_san}/sdd/source/` first; else legacy `docs/versions/{version_san}/source/` if unmigrated (`artifact-layout.md` **Legacy path resolution**). Present: load `source-registry.md` + `spec-coverage.md`; Consistency **mandatory** when files exist (`analyze-consistency.md`).

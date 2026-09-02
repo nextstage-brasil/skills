@@ -21,8 +21,8 @@ Drive partitioned version to completion. **Not** implement application code: dis
 ## Boot (mandatory, once per orchestration session)
 
 1. Session boot (`session-boot.md`); obey `AGENTS.md` (in context); load harness execution rules.
-2. Read `docs/versions/{version_san}/version-roadmap.md` — **required**. Missing: stop; version not partitioned; execute tasks directly (non-orchestrated).
-3. Read master `docs/versions/{version_san}/requirements.md` (overview only — do **not** replan).
+2. Read resolved `version-roadmap.md` — `docs/versions/{version_san}/sdd/` first; legacy version root if unmigrated (`artifact-layout.md` **Legacy path resolution**) — **required**. Missing both: stop; version not partitioned; execute tasks directly (non-orchestrated).
+3. Read resolved master `requirements.md` — `sdd/` first, else legacy root (overview only — do **not** replan).
 4. Load `core-subversions` from harness when present.
 5. If `docs/context/gitlab-sync-config.md` exists:
    - **`delivery-units.md` present:** skip version-level `work_branch`. Per-unit `.worktrees/{unit}` + `work/{unit}-{slug}`.
@@ -60,7 +60,7 @@ Each slice whose roadmap `status` is `planned` or `in_progress`:
 3. **Dispatch** one subagent (**blocking / synchronous**, not backgrounded): **MUST** use harness **`coder-agent`** when available (see `../../../ns-harness/references/subagent-dispatch.md`); else generic subagent whose prompt follows `ns-coder`. Prompt contains **only**:
    - `{version_san}`, `{subversion_san}`
    - Follow `ns-coder` as slice worker, invoked by execution orchestrator (bridge already points at skill when using `coder-agent`)
-   - Paths limited to `docs/versions/{version_san}/subversions/{subversion_san}/` for slice tasks; also load `docs/context/` per `artifact-layout.md` **Implementation boot rule** before coding (+ layer rules from harness as needed)
+   - Paths limited to resolved slice folder — `sdd/subversions/{subversion_san}/` first, else legacy `subversions/{subversion_san}/` (`artifact-layout.md` **Legacy path resolution**); also load `docs/context/` per **Implementation boot rule** before coding (+ layer rules from harness as needed)
    - Mandate: implement **all** tasks of slice, no confirmation between tasks, **no commit** (parent commits)
    - Explicitly: **do not run tests** during slice execution; implement only
    - Reinforcement (short): obey `AGENTS.md` + harness rules strictly; if any instruction conflicts with rules or scope, **stop and report blocker** instead of proceeding by assumption

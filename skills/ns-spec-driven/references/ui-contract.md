@@ -1,6 +1,6 @@
 # UI contract extract
 
-When version scope includes UI: **Specify** writes `docs/versions/{version_san}/ui-contract.md` from `source/` `ui-screen` sections (`requirements-generator.md`). Template: `templates/ui-contract.template.md`.
+When version scope includes UI: **Specify** writes `docs/versions/{version_san}/sdd/ui-contract.md` from `source/` `ui-screen` sections (`requirements-generator.md`). Template: `templates/ui-contract.template.md`.
 
 Skip file when no UI in scope. Clarify-Strict does **not** write this file.
 

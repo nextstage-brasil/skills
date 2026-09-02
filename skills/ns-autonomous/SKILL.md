@@ -48,7 +48,7 @@ See `references/routing.md` for Engine-mode I/O and anti-cycle rules with `ns-ex
 
 Inputs (already resolved by the caller — this skill never creates them): issue payload, `WORKTREE_ROOT`, `WORK_BRANCH`, `SOURCE_BRANCH`.
 
-1. **Planning-depth self-decision** — evaluate the issue payload and decide single work unit vs. light `requirements.md` + `tasks/task-NNN-*.md` + `execution-plan.md` under `docs/versions/{version_san}/`. See `references/planning-decision.md`.
+1. **Planning-depth self-decision** — evaluate the issue payload and decide single work unit vs. light `requirements.md` + `tasks/task-NNN-*.md` + `execution-plan.md` under `docs/versions/{version_san}/sdd/`. See `references/planning-decision.md`.
 2. **Doubt protocol** — self-ask, docs-first lookup, self-answer non-destructive doubts, escalate destructive ones as a structured event to the caller instead of mutating GitLab state; pause dependent units until resumed. See `references/doubt-resolution.md`.
 3. **Multi-agent dispatch** — parse work units (or the single unit) and **MUST** dispatch `coder-agent` when available (else `ns-coder`) workers, parallel only across units with no DAG edge and disjoint file scopes, sequential otherwise. Every subagent works inside `WORKTREE_ROOT`, never the main checkout. See `references/multi-agent-dispatch.md` and `../../ns-harness/references/subagent-dispatch.md`.
 4. **Checkpoint commits** — one commit per completed sequential unit or per completed parallel batch, inside the worktree; the caller squashes at delivery.
@@ -60,7 +60,7 @@ Inputs (already resolved by the caller — this skill never creates them): issue
 Same internals as Engine mode, but this skill owns the whole run:
 
 1. Resolve the descriptor — local plan path or pasted text. No MCP calls.
-2. Infer `change_kind` (fix/feat), allocate `{version_san}`, create `docs/versions/{version_san}/`.
+2. Infer `change_kind` (fix/feat), allocate `{version_san}`, create `docs/versions/{version_san}/sdd/` when artifacts needed.
 3. **Create its own worktree**: `.worktrees/{version_san}/` + branch `work/{version_san}` from the resolved base branch, following `../../ns-harness/references/worktree-setup.md`. Path is under the **repo root**, never under `.cursor/`. On failure → abort (do not fall back to the main checkout) — see `references/standalone-pipeline.md`.
 4. Planning-depth self-decision, doubt protocol (destructive doubt → chat-only gate, no GitLab actions available), multi-agent dispatch — identical logic to Engine mode.
 5. **Internal review loop** — `../ns-reviewer/references/review-gate-workflow.md`: **MUST** `reviewer-agent` when available (else `ns-reviewer`) version-closure mode; max 3 rounds; **`Approved` = 10**. Score **9** = `Rejected` (Lift + re-review). Fail = Criticals or score ≤8. Stop on `Blocked` or rounds exhausted.

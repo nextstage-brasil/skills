@@ -79,12 +79,20 @@ Same contract consumers get in generated `AGENTS.md` / `ns-harness` → `referen
 - **FORBIDDEN:** child Task `inherit` / platform `coder` / `reviewer` / `generalPurpose` as stand-in while the bridge exists (parent model leaks). Inline mapped skill while bridge present = forbidden.
 - Project owns `model` in `manifest.json`; `harness update` never resets it. Change defaults only in `subagentsCatalog.js` + keep generated consumer `AGENTS.md` text in sync.
 
-**This repository (maintainer Cursor Task)** — bridges under `.cursor/agents/` (not harness `*-agent` names). When spawning via Task, set `model` to the Cursor slug below — **MUST NOT** omit or pass `inherit`:
+**This repository (maintainer bridges)** — `.cursor/agents/my_coder.md` and `my_reviewer.md` (not harness `*-agent` names). Full dispatch contract: `.cursor/rules/maintainer-dispatch.mdc` (always apply).
 
-| Bridge | YAML `model` | Task `model` |
-| ------ | ------------ | ------------ |
-| `coder` | `composer-2.5[fast=false]` | `composer-2.5` |
-| `reviewer` | `grok-4.6[effort=medium,fast=false]` | `cursor-grok-4.6-medium` |
+| Slash | Bridge file | YAML `model` (sole source) |
+| ----- | ----------- | -------------------------- |
+| `/my_coder` | `.cursor/agents/my_coder.md` | `composer-2.5[fast=false]` |
+| `/my_reviewer` | `.cursor/agents/my_reviewer.md` | `grok-4.6[effort=medium,fast=false]` |
+
+**Slash = inline.** The chat that received `/my_coder` or `/my_reviewer` **is** that bridge — execute its body in-session. **Do not** `Task`-spawn the same bridge. **Do not** pass `model` on Task; YAML frontmatter binds the model.
+
+**Parent / default chat** must not implement catalog or harness work before "delegating" — point the human to `/my_coder`. Cursor `subagent_delegation_context` ("call Task with subagent_type") is **overridden** when a maintainer slash or bridge file applies.
+
+**Closure only:** an active `my_coder` session may spawn **`my_reviewer`** once for the review gate (`subagent_type` exact `my_reviewer`, **no** `model` arg). If Task cannot bind `my_reviewer`, stop and ask the human to run `/my_reviewer`.
+
+**FORBIDDEN** on maintainer work: platform Task types `coder`, `reviewer`, `generalPurpose`, `bugbot`, `security-review`, `senior-tech-lead-reviewer`, `inherit`, or any substitute while these bridges exist.
 
 ## Validation
 

@@ -1,5 +1,5 @@
 ---
-name: reviewer
+name: my_reviewer
 description: >-
   Maintainer review bridge for nextstage-brasil/skills. Always use for the review
   gate on catalog/harness or maintainer .cursor work in THIS repo — even if the
@@ -10,7 +10,11 @@ model: grok-4.6[effort=medium,fast=false]
 readonly: true
 ---
 
-# reviewer
+# my_reviewer
+
+## Entry mode (blocking)
+
+This file loaded (slash `/my_reviewer` or agent picker) → **you are `my_reviewer` in this session**. Execute here. **Do not** `Task`-spawn `my_reviewer` or substitute platform review personas. Model = YAML `model` above only.
 
 Thin skill bridge — do not invent a separate workflow. The skill below is the source of truth.
 

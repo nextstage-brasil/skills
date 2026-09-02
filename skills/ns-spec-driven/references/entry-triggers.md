@@ -19,5 +19,5 @@ Skill: `ns-spec-driven`. Host scans after priority 1, before 3–5.
 ## Example phrases
 
 - "Specify user notifications for version 2.1"
-- "Implement from tasks in docs/versions/1.0.0/"
+- "Implement from tasks in docs/versions/1.0.0/sdd/"
 - "Resume version 1.0 — handoff exists"

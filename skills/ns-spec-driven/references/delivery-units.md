@@ -4,7 +4,7 @@ Mergeable work packages for GitLab optional publish. **Not** tickets per `task-N
 
 ## When
 
-Write `docs/versions/{version_san}/delivery-units.md` from `../templates/delivery-units.template.md` **only when**:
+Write `docs/versions/{version_san}/sdd/delivery-units.md` from `../templates/delivery-units.template.md` **only when**:
 
 - Human chose **GitLab publish** (`gate4_gitlab` = `yes` after Gate 4), or
 - Human chose **parallel** unit dispatch (`gate4_mode` = `parallel` after Gate 4), or
@@ -14,7 +14,7 @@ Write `docs/versions/{version_san}/delivery-units.md` from `../templates/deliver
 
 **Order:** after **all** `task-*.md` written. Gate 4 **ask first** when GitLab possible (`docs/context/gitlab-sync-config.md`, MCP GitLab in session, or human cited GitLab/parallel). Union-find + write **only after** human confirms publish or parallel. **Before** initial handoff when file required. Do not merge with handoff generation.
 
-Subversions: one file at version root covering all slice tasks (never merge tasks across different partition slices into one unit).
+Subversions: one `delivery-units.md` under `docs/versions/{version_san}/sdd/` for all slice tasks (never merge across partition slices).
 
 ## Grain
 

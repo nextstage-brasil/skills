@@ -6,27 +6,50 @@ All **ns-project-manager** versioned deliverables (commercial budget, delivery s
 docs/versions/{version_san}/pm/
 ```
 
-Not beside `requirements.md` / `tasks/` at the version root. Create `pm/` if missing.
+Not beside SDD artifacts under `sdd/`. Create `pm/` if missing.
 
 ## Canonical names (examples)
 
 | Artifact | Path |
 |----------|------|
-| Commercial budget (internal) | `docs/versions/{version_san}/pm/commercial-budget-internal.md` |
-| Commercial budget (client) | `docs/versions/{version_san}/pm/commercial-budget-costumer.md` |
+| Commercial budget (internal) | `docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md` |
+| Commercial budget (client) | `docs/versions/{version_san}/pm/{version_san}-commercial-budget-costumer.md` |
 | Triple delivery schedule | `docs/versions/{version_san}/pm/05-cronograma-tres-cenarios.md` |
 | PERT configs | `docs/versions/{version_san}/pm/pert-config-p100.json` (and p85 / p50) |
 | PM execution handoff (version card) | `docs/versions/{version_san}/pm/execution-handoff.md` |
 
-## Exception — spec-driven `execution-handoff.md` at version root
+## SDD subtree — excluded from misplaced search
 
-`docs/versions/{version_san}/execution-handoff.md` = spec-driven SDD artifact — **not** misplaced PM. Do **not** STOP, move, delete, or merge on that path. PM handoff persists only at `docs/versions/{version_san}/pm/execution-handoff.md` (`references/12-version-handoff.md`).
+Everything under `docs/versions/{version_san}/sdd/` = spec-driven SDD artifacts — **not** misplaced PM. Do **not** STOP, move, delete, or merge any file under `sdd/`. SDD execution handoff: `docs/versions/{version_san}/sdd/execution-handoff.md`. PM handoff persists only at `docs/versions/{version_san}/pm/execution-handoff.md` (`references/12-version-handoff.md`).
 
-Misplaced STOP still applies to `execution-handoff.md` copies outside `pm/` that are **not** that exact version-root SDD path (e.g. wrong folder), and to all other PM basenames as today.
+## Legacy SDD at version root — excluded from misplaced search
+
+Classic SDD layout (pre-`sdd/` nest) may still leave artifacts at version root. **Never** STOP, move, delete, or merge these when the only outside-`pm/` hit is at version root:
+
+| Basename / dir | Legacy path |
+|----------------|-------------|
+| `requirements.md` | `docs/versions/{version_san}/requirements.md` |
+| `clarify-contract.md` | version root |
+| `unknowns-register.md` | version root |
+| `spec-coverage.md` | version root |
+| `ui-contract.md` | version root |
+| `delivery-units.md` | version root |
+| `execution-handoff.md` | version root |
+| `version-roadmap.md` | version root |
+| `graph-spec.md` | version root |
+| `execution-plan.md` | version root |
+| `gitlab-issue-feature-map.md` | version root |
+| `tasks/` | `docs/versions/{version_san}/tasks/` |
+| `source/` | `docs/versions/{version_san}/source/` |
+| `subversions/` | `docs/versions/{version_san}/subversions/` |
+
+Nest migration (`artifact-layout.md` + `ns-spec-driven` → `session-continuity.md`) owns root → `sdd/` moves — not PM persist.
 
 ## Misplaced file — STOP gate (human must answer)
 
-Before first write/overwrite for a given basename, **look for the same filename outside** `pm/` under `docs/versions/{version_san}/` (typical: version root). Also detect **both** a root copy and a `pm/` copy. **Skip this search** when basename is `execution-handoff.md` and the only outside-`pm/` hit is `docs/versions/{version_san}/execution-handoff.md` (SDD root — exception above).
+**Pre-check:** basename in **Legacy SDD at version root** table, or any hit under `docs/versions/{version_san}/sdd/` → skip gate (not misplaced PM).
+
+Before first write/overwrite for a given basename, **look for the same filename outside** `pm/` under `docs/versions/{version_san}/` (typical: version root). Also detect **both** a root copy and a `pm/` copy. **Exclude entire `sdd/` subtree** and **exclude legacy SDD basenames at version root** (table above) — never propose moving SDD artifacts to `pm/`.
 
 If either case is true: **STOP. Gate. Do not continue persist.**
 
@@ -37,15 +60,15 @@ If either case is true: **STOP. Gate. Do not continue persist.**
 - keep writing to the wrong path
 - treat `proceed`, `quick mode`, `assumptions`, `continue`, or silence as confirmation
 
-**Gate message (human’s language), then end the turn:**
+**Gate message (human's language), then end the turn:**
 
 1. **Search references** in the repo (at least `docs/`, also `README*` and execution/handoff files). Match:
    - full path of the misplaced file
-   - relative links (`../commercial-budget-costumer.md`, `./commercial-budget-internal.md`, markdown `[text](…filename…)`)
+   - relative links (`../{version_san}-commercial-budget-costumer.md`, `./{version_san}-commercial-budget-internal.md`, markdown `[text](…filename…)`)
    - the **basename** when it uniquely identifies the artifact
 2. State **from-path → to-path** (canonical `pm/` path).
 3. List referencing files (path + how cited), or explicitly **no references found**.
-4. If **both** root and `pm/` exist: propose keep `pm/`, update refs that still point at root, then remove the root copy after refs are clean. Do **not** merge contents. Never apply this remove-root step to spec-driven `docs/versions/{version_san}/execution-handoff.md`.
+4. If **both** root and `pm/` exist: propose keep `pm/`, update refs that still point at root, then remove the root copy after refs are clean. Do **not** merge contents. Never touch paths under `sdd/`.
 5. Ask one closed question: **confirm this path action** or **decline**. Do not persist in the same turn.
 
 If the next human message is **not** an explicit confirm or decline of this action: **re-state the gate and STOP again.** Do not persist.
@@ -53,7 +76,7 @@ If the next human message is **not** an explicit confirm or decline of this acti
 **On explicit confirm:**
 
 - Create `pm/` if needed.
-- Move (or, if both exist: keep `pm/`, then remove the root copy after refs are clean). Do not reset Sequência on the move itself. Never move or delete spec-driven `docs/versions/{version_san}/execution-handoff.md`.
+- Move (or, if both exist: keep `pm/`, then remove the root copy after refs are clean). Do not reset Sequência on the move itself. Never touch `sdd/`.
 - Update **every** reference found to the new path (relative links must still resolve).
 - Re-search the same patterns; leftover hits = skill failure — fix before continuing.
 - Then persist the new generation at the canonical path (`document-versioning.md` Sequência bump).

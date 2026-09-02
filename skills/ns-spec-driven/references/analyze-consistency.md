@@ -14,8 +14,8 @@ Pre-execution: plan vs plan before coding.
 
 ## Prerequisites
 
-- `docs/versions/{version_san}/requirements.md` exists
-- When `source/` exists: `spec-coverage.md` present; run **Source coverage** group
+- Resolved `requirements.md` exists — `sdd/` first, else legacy version root (`artifact-layout.md` **Legacy path resolution**)
+- When resolved `source/` exists: `spec-coverage.md` present (resolved same way); run **Source coverage** group
 
 ## Workflow
 
@@ -66,7 +66,7 @@ Classify each: ✅ OK | ⚠️ Warning | ❌ Blocker
 | Features support stated objective | ⚠️ Warning |
 | Out-of-scope features present | ⚠️ Warning |
 
-**Source coverage** (mandatory when `docs/versions/{version_san}/source/` exists)
+**Source coverage** (mandatory when resolved `source/` exists — `sdd/source/` first, else legacy `source/` per **Legacy path resolution**)
 
 | Check | Failure level |
 | ----- | ------------- |

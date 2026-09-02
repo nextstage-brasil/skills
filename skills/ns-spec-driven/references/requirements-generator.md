@@ -1,14 +1,14 @@
 # Requirements Generator
 
-Produce structured `requirements.md` for `docs/versions/{version_san}/`.
+Produce structured `requirements.md` for `docs/versions/{version_san}/sdd/`.
 
 ## Session boot
 
-`../../../ns-harness/references/session-boot.md` + `../../../ns-harness/references/artifact-layout.md`. Create `docs/versions/{version_san}/` before writing.
+`../../../ns-harness/references/session-boot.md` + `../../../ns-harness/references/artifact-layout.md`. Create `docs/versions/{version_san}/sdd/` before writing.
 
 ## Inputs
 
-- **Required:** `docs/versions/{version_san}/clarify-contract.md` after Gate 0 (`requirements_inputs_confirmed`)
+- **Required:** `docs/versions/{version_san}/sdd/clarify-contract.md` after Gate 0 (`requirements_inputs_confirmed`)
 - `unknowns-register.md` (waiver quote if any)
 - `source/` when present — **Contract extraction:** copy tables **verbatim**; never paraphrase contracts
 - Scope description
@@ -19,7 +19,7 @@ Produce structured `requirements.md` for `docs/versions/{version_san}/`.
 
 ## UI contract output
 
-Intake classified any `ui-screen` (or scope has UI): write `docs/versions/{version_san}/ui-contract.md` per `ui-contract.md` + template. Verbatim copy. Skip file if no UI.
+Intake classified any `ui-screen` (or scope has UI): write `docs/versions/{version_san}/sdd/ui-contract.md` per `ui-contract.md` + template. Verbatim copy. Skip file if no UI.
 
 ## Assumed premises
 

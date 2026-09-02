@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "I need to generate requirements for version 2.0.0. Where should requirements.md live and how do I find the project harness?",
-      "expected_output": "Agent reads session-boot and artifact-layout; uses {version_san}; paths under docs/versions/{version_san}/requirements.md.",
+      "expected_output": "Agent reads session-boot and artifact-layout; uses {version_san}; paths under docs/versions/{version_san}/sdd/requirements.md.",
       "files": []
     },
     {

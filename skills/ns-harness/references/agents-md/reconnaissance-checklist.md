@@ -24,8 +24,8 @@ Read-only before drafting project `AGENTS.md`. Skip empty sections.
 ## 3. Workflow signals
 
 - [ ] GitLab: `mcp-gitlab-usage`, `.gitlab-ci.yml`, issue templates, MCP in docs
-- [ ] SDD under `docs/versions/`
-- [ ] `execution-handoff.md` in recent versions
+- [ ] SDD under `docs/versions/{version_san}/sdd/`
+- [ ] `sdd/execution-handoff.md` in recent versions
 - [ ] Brownfield: `brownfield-map.md`, `system-reverse-spec.md`, `.agent.md`
 
 ## 4. Team conventions (evidenced only)

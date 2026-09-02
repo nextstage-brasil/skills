@@ -1,7 +1,7 @@
 # Spec coverage — {version_san}
 
 **Version:** `{version_san}`
-**Source dir:** `docs/versions/{version_san}/source/`
+**Source dir:** `docs/versions/{version_san}/sdd/source/`
 **Date:** {ISO date}
 
 > Every mappable section is `mapped` or `out-of-scope` with a cited reason. Unmapped mappable rows are Blockers.

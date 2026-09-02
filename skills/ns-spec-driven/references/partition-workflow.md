@@ -10,7 +10,7 @@ Present roadmap table. **Stop** until human confirms validation.
 
 For each subversion where `status` not `planned` / `completed`:
 
-1. Set active path: `docs/versions/{version_san}/subversions/{subversion_san}/`
+1. Set active path: resolved slice — `docs/versions/{version_san}/sdd/subversions/{subversion_san}/` first, else legacy `subversions/{subversion_san}/` (`artifact-layout.md` **Legacy path resolution**)
 2. Run Gate 2 on slice requirements
 3. Run `analyze-consistency.md` on slice
 4. Gate 3 (**always** — count by layer/type + estimated batches; see `gates.md`)

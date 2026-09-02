@@ -32,7 +32,7 @@ PT-BR markers in deliverable (default language):
 
 Surface open lacunas in **Premissas / ressalvas**. Budget with open lacunas still deliverable; call them out in chat summary.
 
-Bump header **Sequência** + **Gerado em** every regenerate; keep same `docs/versions/{version_san}/pm/commercial-budget-internal.md` path (`references/document-versioning.md`). No timestamped filenames.
+Bump header **Sequência** + **Gerado em** every regenerate; keep same `docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md` path (`references/document-versioning.md`). No timestamped filenames.
 
 ## Estimates honesty
 

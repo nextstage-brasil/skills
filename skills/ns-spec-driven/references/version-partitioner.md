@@ -8,7 +8,7 @@ See `../../../ns-harness/references/artifact-layout.md` and `../../../ns-harness
 
 ## Scope
 
-- **Read only:** master `docs/versions/{version_san}/requirements.md`
+- **Read only:** master requirements — `docs/versions/{version_san}/sdd/requirements.md` first; legacy `docs/versions/{version_san}/requirements.md` if unmigrated (`artifact-layout.md` **Legacy path resolution**)
 - **Do not:** generate tasks, execution-handoff, or re-run Gate 1
 - **Do not load** product backend/frontend rules — structural partition only
 
@@ -23,9 +23,10 @@ See `../../../ns-harness/references/artifact-layout.md` and `../../../ns-harness
    - ~600k token heuristic
 5. **Consolidate undersized** — merge adjacent slices below ~4 tasks when safe; **slice size target 4–7 tasks** (not classic dispatch batch). Task unit = **1 Feature × 1 impl layer** + capped test tasks (`task-generator.md` Decomposition) — `tasks est.` MUST use that unit so slice target holds
 6. **Topological sort** — folders `01-slug`, `02-slug`, …
-7. **Emit artifacts:**
-   - `version-roadmap.md` at version root
-   - `subversions/{subversion_san}/requirements.md` — **excerpt** + link master `../requirements.md#Feature-ID`
+7. **Nest gate:** classic SDD only at version root → nest migration STOP (`session-continuity.md`) before first emit. On confirm: emit under `sdd/` (step 8). On decline: emit beside legacy master at version root; slice link `../requirements.md#Feature-ID` — no dual tree.
+8. **Emit artifacts** (canonical under `docs/versions/{version_san}/sdd/` after nest confirm; legacy root only on decline):
+   - `version-roadmap.md` — set `{master_requirements_path}` to resolved master path (confirm → `sdd/requirements.md`; decline → version-root `requirements.md`)
+   - `subversions/{subversion_san}/requirements.md` — **excerpt** + link master `../../requirements.md#Feature-ID` when under `sdd/`; `../requirements.md#Feature-ID` when declined beside legacy root
    - Empty `subversions/{subversion_san}/tasks/` per slice
 
 ## Roadmap table columns
@@ -36,7 +37,7 @@ Start `status` as `pending`.
 
 ## Output checklist
 
-- [ ] `version-roadmap.md` saved
+- [ ] `docs/versions/{version_san}/sdd/version-roadmap.md` saved (legacy root only on nest decline)
 - [ ] All subversion folders with excerpt requirements + empty `tasks/`
 - [ ] No `task-*.md` created
 - [ ] Human review before slice planning loop

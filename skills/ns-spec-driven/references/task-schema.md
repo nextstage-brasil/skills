@@ -1,6 +1,6 @@
 # Task file schema
 
-Output path: `docs/versions/{version_san}/tasks/task-NNN-slug.md`
+Output path: `docs/versions/{version_san}/sdd/tasks/task-NNN-slug.md`
 
 **Read rule:** worker reads the **card** (header through Validation criteria), **always** the `### Contract` block when present. Open cited `source/` anchors. Open `Detailed description` on demand — ambiguity or `blocked`. No new files. No handoff change.
 

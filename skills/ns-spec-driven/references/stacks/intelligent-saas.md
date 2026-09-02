@@ -82,7 +82,7 @@ sequenceDiagram
 
 ## Additional artifacts
 
-- `docs/versions/{version_san}/graph-spec.md` when agent graph in scope
+- `docs/versions/{version_san}/sdd/graph-spec.md` when agent graph in scope
 - Agent module features section or dedicated agent requirements merge
 
 ## References in harness

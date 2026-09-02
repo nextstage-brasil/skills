@@ -98,8 +98,8 @@ Do **not** include the APF/CPM/SISP method paragraph, `Origem do cálculo`, or c
 ## Workflow hook (generate step)
 
 1. Size all items; classify each as `negócio` | `engenharia` | `qualidade`.
-2. Write `docs/versions/{version_san}/pm/commercial-budget-internal.md` (always).
-3. If any `engenharia` or `qualidade` items exist **or** human requested client export: derive and write `docs/versions/{version_san}/pm/commercial-budget-costumer.md` from internal doc using `assets/commercial-budget-costumer.template.md`.
+2. Write `docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md` (always).
+3. If any `engenharia` or `qualidade` items exist **or** human requested client export: derive and write `docs/versions/{version_san}/pm/{version_san}-commercial-budget-costumer.md` from internal doc using `assets/commercial-budget-costumer.template.md`.
 4. Report both paths in Stop summary when client file exists.
 
 ## Anti-patterns

@@ -7,7 +7,7 @@ Keep active window focused. Prefer **disk artifacts** over paste large docs into
 1. Parent `ns-spec-driven` SKILL.md (already loaded).
 2. Session boot + artifact-layout — **once** at agent cold start (obey `AGENTS.md` in context; architecture/project rules via `session-boot.md`). Mid-session: no full re-load unless local/rules changed. Never tool-Read `AGENTS.md`.
 3. `.nextstage-harness/rules/architecture-rules.md` when implementing.
-4. **One** version folder: `docs/versions/{version_san}/` for active version only.
+4. **One** version SDD tree: `docs/versions/{version_san}/sdd/` for active version only.
 
 Do **not** re-load full rule corpus per task unless files changed. Fresh worker/subagent = own cold-start boot.
 
@@ -20,7 +20,7 @@ Do **not** re-load full rule corpus per task unless files changed. Fresh worker/
 | Stack constraints | `docs/context/stack-confirmed.md` |
 | GitLab execution | `docs/context/gitlab-sync-config.md` |
 | Active task | Single `tasks/task-NNN-*.md` + `execution-handoff.md` |
-| Source section | Targeted `docs/versions/{version_san}/source/{slug}.md` + cited `Sx` only |
+| Source section | Targeted `docs/versions/{version_san}/sdd/source/{slug}.md` + cited `Sx` only |
 | Living domain rules | One `docs/specs/{domain}.md` relevant to task |
 | Test fixtures | `grep` / `head` — no full fixture dumps |
 

@@ -2,7 +2,7 @@
 
 **Version:** `{version_san}`
 **Date:** {ISO date}
-**Source:** `docs/versions/{version_san}/source/{slug}.md`
+**Source:** `docs/versions/{version_san}/sdd/source/{slug}.md`
 
 > Write this file only when the version includes UI. Copy strings verbatim from source. Do not paraphrase labels or error text.
 

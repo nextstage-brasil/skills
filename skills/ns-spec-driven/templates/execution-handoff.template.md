@@ -24,12 +24,12 @@ Planning complete — **execute, do not replan**.
 |----------|------|
 | AGENTS | `AGENTS.md` |
 | Local agent orders *(if present)* | `agents.local.md` |
-| Requirements | `docs/versions/{version_san}/requirements.md` |
-| Tasks | `docs/versions/{version_san}/tasks/task-NNN-*.md` |
+| Requirements | `docs/versions/{version_san}/sdd/requirements.md` |
+| Tasks | `docs/versions/{version_san}/sdd/tasks/task-NNN-*.md` |
 | Design | `docs/context/design-brief.md` |
 | Stack | `docs/context/stack-confirmed.md` |
-| Delivery units *(if present)* | `docs/versions/{version_san}/delivery-units.md` |
-| GitLab feature map *(if present)* | `docs/versions/{version_san}/gitlab-issue-feature-map.md` |
+| Delivery units *(if present)* | `docs/versions/{version_san}/sdd/delivery-units.md` |
+| GitLab feature map *(if present)* | `docs/versions/{version_san}/sdd/gitlab-issue-feature-map.md` |
 | GitLab sync config *(if present)* | `docs/context/gitlab-sync-config.md` |
 | Harness rules | `.nextstage-harness/rules/` |
 

@@ -2,7 +2,7 @@
 
 Maps every mappable source section to Features / ACs / tasks. Unmapped mappable section without cited out-of-scope reason = **Blocker**.
 
-Path: `docs/versions/{version_san}/spec-coverage.md`. Template: `templates/spec-coverage.template.md`.
+Path: `docs/versions/{version_san}/sdd/spec-coverage.md`. Template: `templates/spec-coverage.template.md`.
 
 ## Schema (one row per section)
 

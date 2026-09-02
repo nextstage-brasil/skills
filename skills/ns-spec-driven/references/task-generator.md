@@ -59,9 +59,9 @@ No mega-task (whole Feature all layers). No one-task-per-class (FormRequest alon
 
 - Feature + layer (from face / Gate 3 plan)
 - Layer type: Backend | Frontend | Infra | unit-tests | e2e
-- `docs/versions/{version_san}/requirements.md`
-- `source/` + `spec-coverage.md` when present — refuse cards for unmapped mappable sections
-- `ui-contract.md` when UI in scope
+- Resolved `requirements.md` — `sdd/` first, else legacy version root (`artifact-layout.md` **Legacy path resolution**)
+- Resolved `source/` + `spec-coverage.md` when present — refuse cards for unmapped mappable sections
+- Resolved `ui-contract.md` when UI in scope
 - **D1 on Contract:** `### Contract` still has `TBD` / `impl.` / `to be defined` / range in constant cell / limit adjectives (`short`, `generic`) and no premise cite: refuse / `needs-clarification`. Do not emit card.
 - Task number `NNN` and dependency tasks
 
@@ -99,7 +99,7 @@ Persistence, auth, tenancy, clock, ID conventions from `architecture-rules.md` +
 
 ## Output path
 
-`docs/versions/{version_san}/tasks/task-NNN-slug.md`
+`docs/versions/{version_san}/sdd/tasks/task-NNN-slug.md`
 
 For subversions: under `subversions/{subversion_san}/tasks/`.
 
