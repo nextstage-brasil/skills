@@ -14,8 +14,61 @@ intelligent_saas
 - agent-api/
 
 ## Architecture rule
-Frontend then Backend then Agent-API (never direct browser to agent-api)
+Conversation hop (canonical) — Application owns chat; browser never calls agent-api directly
 ```
+
+## Conversation hop (canonical)
+
+SoT for `intelligent_saas` chat. Blocking invariant — `agent-runtime-integration.md`, `gates.md`.
+
+```mermaid
+sequenceDiagram
+  participant Op as Operator
+  participant App as Application
+  participant Chat as Chat UI
+  participant Ag as Agent-API
+
+  Op->>App: opens chat (CS session)
+  App->>Chat: mounts UI
+  Chat->>App: POST message SSE
+  App->>App: validates session + permission
+  App->>Ag: POST /threads/:id/message SSE (internal network)
+
+  loop each turn envelope
+    Ag-->>App: thinking | tool_started | tool_finished | response_streaming
+    App-->>Chat: same envelope, immediately
+    Chat-->>Op: shows progress
+  end
+
+  alt HITL
+    Ag-->>App: interrupt
+    App-->>Chat: asks choice
+    Chat->>App: resume
+    App->>Ag: POST /resume
+  end
+
+  Ag-->>App: completed | failed | cancelled
+  App->>App: persists conversation in application PG
+  App-->>Chat: terminal event
+```
+
+### Ownership
+
+| Layer | Owns |
+| ----- | ---- |
+| Application | Conversation SoT — history, CS session, permission, audit, application PG |
+| Agent checkpointer | Turn execution state only — **not** conversation DB |
+| Application | `thread_id` — create, map to session, rehydrate on resume |
+| Agent-API `GET /dev-chat` | Local training UI when `DEV_CHAT_ENABLED` — **not** product chat surface |
+| Application relay | SSE envelope forwarded as-is — relay only, no reinterpret |
+
+### Forbidden
+
+- Browser to agent-api (any route)
+- Agent env or DNS in frontend bundle (`VITE_*`, `NEXT_PUBLIC_*` to runtime)
+- `thread_id` created in browser
+- Conversation persisted only in checkpointer
+- `/dev-chat` exposed as product chat
 
 ## Mandatory setup features (before domain)
 

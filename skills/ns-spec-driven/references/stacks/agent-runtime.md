@@ -28,3 +28,5 @@ HTTP/SSE clients talk to agent-api; no browser-direct secrets in the runtime
 - `docs/specs/agent-architecture.md` when `ns-multi-agent-architect` ran
 
 `ns-spec-driven` parent: **MUST** load `ns-langgraph-agents` per `agent-runtime-integration.md`.
+
+**Contrast (`intelligent_saas`):** standalone `agent_runtime` accepts direct HTTP/SSE client to agent-api; intelligent SaaS **forbids** browser direct — Application relays. See `stacks/intelligent-saas.md` Conversation hop.

@@ -86,14 +86,24 @@ GET  /health
 GET  /dev-chat             → human train/test UI (greenfield streaming_sse MUST)
 ```
 
+### Who is the HTTP client
+
+| `product_class` | Client | Rule |
+| --------------- | ------ | ---- |
+| `agent_runtime` | Direct HTTP client (CLI, Postman, dev-chat, integrator) | Browser may hit agent-api when product is the runtime itself |
+| `intelligent_saas` | **Application** on internal network | Browser **never** calls agent-api; App owns `thread_id`, relays SSE envelope unchanged |
+
+`intelligent_saas` SoT: `ns-spec-driven/references/stacks/intelligent-saas.md` Conversation hop.
+
 ### Dev-chat (greenfield)
 
 | Context | Requirement |
 | ------- | ----------- |
 | Greenfield `streaming_sse` agent-api | **MUST** `GET /dev-chat` + `DEV_CHAT_ENABLED=true` (local-only; prod only with explicit product decision) |
 | Brownfield | **RECOMMENDED** if missing — same SSE as production |
+| `intelligent_saas` product | **FORBIDDEN** — `/dev-chat` is operator training on agent-api, not end-user chat; product chat goes through Application |
 
-Dev-chat = same SSE envelope as `POST /threads/:id/message`. Without it, human MCP iteration impractical.
+Dev-chat = same SSE envelope as `POST /threads/:id/message`. Without it, human MCP iteration impractical. Not a substitute for Application relay in intelligent SaaS.
 
 ### Turn latency budget
 
@@ -108,4 +118,4 @@ Collection synced with routes — executable contract.
 - Tool progress without full JSON dump
 - Planner operator line via `thinking`, not as streamed Markdown
 - Interrupt UI: editable args when safe
-- Client keeps `thread_id` for resume
+- `thread_id` for resume: `agent_runtime` — HTTP client keeps `thread_id`; `intelligent_saas` — Application owns and maps `thread_id` (browser never holds it)

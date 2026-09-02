@@ -4,7 +4,7 @@ description: '(NS) Spec-driven delivery face — clarify, requirements, tasks (i
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.8.4"
+  version: "1.8.5"
 depends:
   - ns-harness
   - ns-coder

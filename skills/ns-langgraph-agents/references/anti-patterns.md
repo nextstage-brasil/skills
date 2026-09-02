@@ -48,6 +48,16 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | Persist locale as eternal thread truth in checkpointer | PT→EN mid-thread keeps old separators | Ephemeral `turnLocale` per turn; clear in guard |
 | Composer invents number/date format without Intl | Separator / fidelity bugs | `formatUserFacing(turnLocale)` in `conversation/locale/` |
 
+## Product topology (`intelligent_saas`)
+
+| Anti-pattern | Why it hurts | Fix |
+| ------------ | ------------ | --- |
+| Browser direct to agent-api | Bypasses auth, audit, conversation SoT | Application relay — `intelligent-saas.md` Conversation hop |
+| Conversation persisted only in checkpointer | No product history, resume, or compliance | Application PG owns conversation; checkpointer = turn state |
+| `thread_id` generated on client | Session hijack, orphan threads | Application creates and maps `thread_id` to CS session |
+| `/dev-chat` exposed as product chat | Training UI in production surface | Product chat via Application; `/dev-chat` local training only |
+| Agent env or DNS in frontend bundle | Leaks internal topology | Frontend calls Application only; runtime stays internal |
+
 ## Bind parity
 
 | Anti-pattern | Why it hurts | Fix |

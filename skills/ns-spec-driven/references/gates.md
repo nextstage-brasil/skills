@@ -28,6 +28,7 @@ Present **plain language** (`human-communication.md` Gate 0 voice):
 - Show **coverage counts** + **out-of-scope list** from `spec-coverage.md` when `source/` exists.
 - Quote `skip clarify` waiver if recorded.
 - Example ask shape: "Requirements are at `{path}`. [plain-language points / open decisions]. Confirm them, or tell me what to change."
+- **`intelligent_saas`:** `requirements.md` without conversation hop (App chat route, SSE relay App to agent-api, HITL resume via App, conversation persistence in Application PG) = **fail** — return to Specify; do not pass Gate 1.
 
 ## Gate 2 — Scope (`scope_confirmed`) {#gate-2-scope}
 
@@ -49,6 +50,7 @@ Present **plain language** (`human-communication.md` Gate 0 voice):
 - Group tasks **by source section** (`Sx`) when `source/` exists.
 - **Stop** until human confirms (`execution_confirmed`).
 - Example ask: "Task plan: N backend, M frontend, … (~K worker batches, prefer 4–7 tasks each). Shall I generate the task files?"
+- **`intelligent_saas`:** task plan without conversation hops table (App endpoints, relay, resume, persistence) = **fail** — do not generate `task-*.md`; return to Specify or fix plan.
 
 ## Gate 4 — Delivery units + GitLab (`delivery_units_confirmed`) {#gate-4-delivery-units}
 
@@ -75,3 +77,5 @@ Present **plain language** (`human-communication.md` Gate 0 voice):
 - **Legacy resume:** tasks + handoff exist, no `delivery-units.md` → Execute classic; do not force retroactive units.
 - When step asks for explicit confirmation, do not proceed without it.
 - GitLab MCP flows have additional gates — `mcp-gitlab-usage` (`requirements_confirmed`, `projects_confirmed`, `issues_creation_confirmed`).
+- **`intelligent_saas`:** never pass Gate 1 without conversation hop in `requirements.md`.
+- **`intelligent_saas`:** never generate `task-*.md` without hops table in Gate 3 task plan.

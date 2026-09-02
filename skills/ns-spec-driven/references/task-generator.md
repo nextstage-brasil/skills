@@ -40,6 +40,8 @@ Before card, every **named symbol** (class, command, helper, DTO, migration path
 
 Else: remove symbol or mark `needs-clarification`. Do not dispatch grounded-on-assumption cards.
 
+**`intelligent_saas` chat grounding:** frontend symbols that call agent-api (`VITE_*` / `NEXT_PUBLIC_*` to runtime, LangGraph SDK import, `EventSource` to agent-api) = **not grounded** — mark `needs-clarification`; chat UI **MUST** cite Application routes only.
+
 ## Decomposition
 
 | Rule | Criteria |
@@ -80,6 +82,8 @@ When task touches UI:
 - i18n: all strings via translation keys; `useFormat()` for dates/currency
 - Navigation: `groupKey` when adding menu items (if nav rules exist)
 - **Layout SSoT (when registered for screen):** `reference-sources.md` row `role: ui-layout`, or card cites `*-visual.md` → **Validation criteria** must include that SSoT's **Quick visual checklist** items (verbatim or equivalent DOM/surface checks). Prose like "copy the visual structure" is **not** a criterion.
+- **`intelligent_saas` chat card:** `Files to create or modify` lists **Application** chat/SSE/resume/history endpoints only — never agent-api URLs, env, or SDK.
+- **`intelligent_saas` forbidden on frontend card:** `VITE_*` / `NEXT_PUBLIC_*` pointing at agent-api; LangGraph SDK import in frontend; `EventSource` or fetch to agent runtime = `needs-clarification`, not dispatch.
 
 ## Backend extras
 

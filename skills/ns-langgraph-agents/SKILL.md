@@ -4,7 +4,7 @@ description: (NS) LangGraph.js agent-api — greenfield scaffold (bootstrap-agen
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.12"
+  version: "1.12.1"
 depends:
   - ns-harness
 ---

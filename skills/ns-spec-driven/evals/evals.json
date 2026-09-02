@@ -288,6 +288,12 @@
       "id": 47,
       "expected_output": "task-generator.md D1 on Contract: refuse / needs-clarification. Does not emit the card.",
       "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven — plan version 4.0 intelligent SaaS with in-app support chat and agent-api assistant.",
+      "id": 49,
+      "expected_output": "Specify: requirements.md documents conversation hop (App chat route, SSE relay to agent-api, HITL resume via App, persistence in Application PG) per stacks/intelligent-saas.md and agent-runtime-integration.md. Gate 1 fails without hops. Tasks: hops table in Gate 3 plan; frontend chat card cites Application endpoints only — fails if card points at agent-api, VITE_/NEXT_PUBLIC_ to runtime, LangGraph SDK in frontend, or EventSource to agent-api. Does not break eval 5 langgraph bootstrap path.",
+      "files": []
     }
   ]
 }

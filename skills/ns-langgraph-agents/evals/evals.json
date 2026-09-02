@@ -188,6 +188,19 @@
         "Rejects assembling the tree from snippets or copying another product",
         "Defers domain/MCP product features to later SDD or ns-coder tasks"
       ]
+    },
+    {
+      "id": 15,
+      "prompt": "intelligent_saas product — where should the frontend connect for chat SSE?",
+      "expected_output": "Frontend connects to Application chat/SSE routes only — never agent-api. Application relays envelope to agent-api on internal network. Application owns thread_id and conversation PG. Cites intelligent-saas.md Conversation hop and streaming-and-hitl.md HTTP client table.",
+      "files": [],
+      "assertions": [
+        "States frontend SSE goes to Application, not agent-api",
+        "States Application relays to agent-api on internal network",
+        "Mentions Application owns thread_id and conversation persistence",
+        "Forbids browser direct to agent-api or agent env in frontend bundle",
+        "Cites intelligent-saas.md and/or streaming-and-hitl.md client table"
+      ]
     }
   ]
 }
