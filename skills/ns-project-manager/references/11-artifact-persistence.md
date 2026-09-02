@@ -22,10 +22,12 @@ Inside confirmed base (default `docs/<project-slug>/`):
 |---|---|---|
 | `00-clarification.md` | Phase 1 gate | Filled context template + `[ASSUMPTION]` markers |
 | `01-requirements.md` | Phase 2 gate | Domain map, stakeholder map, epics, user stories (INVEST+Gherkin) |
-| `02-prioritization.md` | Phase 3 gate | RICE/WSJF tables, combined ranking, flags |
+| `02-prioritization.md` | Phase 3 gate | RICE/WSJF tables (activity list), DAG Mermaid, layer table, topological order, edges, flags |
 | `03-schedule.md` | Phase 4 gate | Sprint-by-sprint plan, dependencies, critical path |
 | `04-forecast.md` | Phase 5 gate | PERT table, Monte Carlo P50/P85/P95, audience translation |
 | `roadmap.md` | Every gate (rewrite, not append) | Living index — template below |
+
+Version handoff card (on-demand, not pipeline phase): `docs/versions/{version_san}/pm/execution-handoff.md` — `references/12-version-handoff.md`, `references/pm-persist.md`.
 
 On-demand modes (6+): append dated files under `docs/<project-slug>/status/` (e.g. `status/2026-07-20-meeting-digest.md`) only if persistence on — ask before create that subfolder first time.
 
@@ -44,7 +46,7 @@ Last updated: <phase just completed>
 |---|---|---|
 | 1 Clarification | Done / In progress / Pending | <one line> |
 | 2 Structuring | ... | ... |
-| 3 Prioritization | ... | ... |
+| 3 Prioritization + Sequencing | ... | ... |
 | 4 Scheduling | ... | ... |
 | 5 Forecast | ... | ... |
 

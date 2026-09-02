@@ -27,6 +27,11 @@ Scan input before any User Story. Each hit: flag `[ANTI-PATTERN: type]` inline; 
 **Problem:** neither enters sprint.
 **Action:** identify real prerequisite vs mockable.
 
+## Value ranking used as execution order
+**Example:** US-03 (export UI) ranked #1 by RICE but depends on US-01 (data pipeline); team builds UI first because score is higher.
+**Problem:** RICE answers "what is worth more"; DAG answers "what is buildable now". Score-only order on dependent pipeline schedules UI before backend that feeds it.
+**Action:** ranking stays valid as value reading — final execution order from DAG (`references/02-prioritization.md`); RICE sorts within each layer only.
+
 ## Ambiguity protocol (never invent value)
 
 | Category | Triggers | Ask for |

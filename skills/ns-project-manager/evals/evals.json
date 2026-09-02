@@ -9,8 +9,8 @@
     },
     {
       "id": 2,
-      "prompt": "OKR: reduce fleet incident response time by 30% by Q3. 200 dispatchers, LGPD applies, MVP deadline September. Now prioritize this backlog by reason not gut feeling: US-01 speed alerts (reach 200, impact high), US-02 maintenance report (reach 50, impact medium), US-03 predictive maintenance (reach 200, impact high, blocked by hardware).",
-      "expected_output": "Runs Phase 3: builds JSON input, calls rice_wsjf.py (or shows script invocation), produces RICE/WSJF tables anchored to the declared OKR. Ends with a gate question before scheduling — does not jump to sprint plan or forecast.",
+      "prompt": "OKR: reduce fleet incident response time by 30% by Q3. 200 dispatchers, LGPD applies, MVP deadline September. Now prioritize this backlog by reason not gut feeling: US-01 speed alerts (reach 200, impact high, 8d), US-02 maintenance report (reach 50, impact medium, 3d), US-03 predictive maintenance (reach 200, impact high, blocked by hardware — depends on US-01 data pipeline, 6d).",
+      "expected_output": "Runs Phase 3: builds JSON input, calls rice_wsjf.py then dag_order.py (or shows script chain), produces RICE/WSJF tables anchored to declared OKR plus DAG Mermaid, layer table, topological order. US-03 (predictive maintenance) appears after US-01 in final order because of hardware/data dependency — not RICE rank alone. Ends with gate question before scheduling — does not jump to sprint plan or forecast.",
       "files": []
     },
     {
@@ -70,7 +70,25 @@
     {
       "id": 12,
       "prompt": "help",
-      "expected_output": "Shows example prompts covering pipeline, commercial budget, delivery schedule, and on-demand modes. Does not list grill-me / enricher. Does not start Phase 0/1, does not ask clarification questions, does not create files.",
+      "expected_output": "Shows example prompts covering pipeline, commercial budget, delivery schedule, version handoff, and on-demand modes. Does not list grill-me / enricher. Does not start Phase 0/1, does not ask clarification questions, does not create files.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "OKR: reduce fleet incident response time by 30% by Q3. GitLab issues US-01 (speed alerts, 8d), US-02 (maintenance report, 3d), US-03 (export, 5d) — no declared dependencies between them. Prioritize and sequence.",
+      "expected_output": "Activity-list path: runs rice_wsjf.py and dag_order.py. RICE ranking defines execution order — single-layer DAG (no invented edges). Produces RICE/WSJF tables plus DAG Mermaid with one layer. Does not force multi-layer graph without declared deps.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "Version narrative for RouteWise v2 — no backlog yet: 'Phase 1 ingest GPS feeds into index; Phase 2 GraphRAG over fleet history; Phase 3 analyst dashboard reads GraphRAG.' Sequence deliverables. Also run RICE on this.",
+      "expected_output": "Narrative-only path: builds DAG from technical prerequisites (ingestion before GraphRAG before dashboard). Runs dag_order.py only — refuses RICE/WSJF with one line explaining missing effort per item + OKR + reach; offers Phase 2 structuring first. No fabricated Reach/Confidence scores.",
+      "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "Fecha a versão routewise-v2 — preciso do card de handoff para execução. Phase 3 DAG já feito; ainda não temos sprint plan nem forecast.",
+      "expected_output": "Reads references/12-version-handoff.md and assets/version-handoff.template.md. Fills version handoff from existing Phase 3 data only. Layer→sprint and P50/P85 fields show — (missing Phase 4/5). Persists to docs/versions/routewise-v2/pm/execution-handoff.md — not spec-driven docs/versions/routewise-v2/execution-handoff.md at version root. If root execution-handoff.md exists, states one line they are distinct and does not touch it.",
       "files": []
     }
   ]

@@ -28,7 +28,7 @@ Sprint length: 2 weeks | Total: 6 sprints (12 weeks)
 Hard constraint: board demo at end of Sprint 3
 ```
 
-Also need: backlog with Effort + blockers (Phase 3, or `references/02-prioritization.md` backlog template if standalone) + known dependencies.
+Also need: Phase 3 output — `topological_order`, layer table, DAG edges with reasons, critical path (`references/02-prioritization.md`). Standalone: backlog fill-in + declared deps. Never schedule item before all DAG predecessors complete.
 
 GitLab MCP configured: offer pull milestones/issues — still ask team/capacity (never in issue tracker).
 
@@ -36,16 +36,18 @@ GitLab MCP configured: offer pull milestones/issues — still ask team/capacity 
 
 ### Rules
 
+- Never schedule item before all DAG predecessors (`references/02-prioritization.md` layers). Sprint order follows `topological_order`, not RICE rank alone.
 - Never allocate same person two stories same sprint if combined Effort > sprint capacity.
 - Flag story pushed later sprint due dependency.
 - Don't ignore implicit deps — same technical component = flag.
 - Story fit no sprint under constraints: "Out of MVP scope" + why.
+- Critical path from Phase 3 DAG (`critical_path` in `dag_order.py` output) — delay on that chain hits final MVP date.
 
 ### Output format
 
 1. **Sprint-by-sprint schedule** — per sprint: story, owner, effort, capacity used (X/Y hours).
 2. **Mapped dependencies** — `[story] depends on [story] because [technical reason]`.
-3. **Critical path** — stories whose delay hit final MVP date.
+3. **Critical path** — from Phase 3 DAG effort-sum chain; stories whose delay hit final MVP date.
 4. **Risk flags ⚠️** — per unresolved blocker/dependency.
 5. **Workaround options** — parallel-track while blockers open.
 
