@@ -869,6 +869,16 @@ Should not land in canonical.
     const agentsShow = runCli(['agents', '--dir', agentsOnlyDir], harnessRoot);
     assert(agentsShow.status === 0, `agents show should pass: ${agentsShow.stderr}${agentsShow.stdout}`);
     assert(agentsShow.stdout.includes('cursor'), 'agents show should list cursor');
+
+    mkdirSync(join(agentsOnlyDir, '.agents', 'skills', 'ns-harness'), { recursive: true });
+    writeFileSync(join(agentsOnlyDir, '.agents', 'skills', 'ns-harness', 'SKILL.md'), '# stub\n', 'utf8');
+    generateAgentsMd(agentsOnlyDir, { force: true });
+    assert(existsSync(join(agentsOnlyDir, 'CLAUDE.md')), 'agents-md still writes CLAUDE.md');
+    pruneExcludedAgentAdapters(agentsOnlyDir, ['cursor']);
+    assert(
+      !existsSync(join(agentsOnlyDir, 'CLAUDE.md')),
+      'cursor-only install must prune CLAUDE.md after agents-md',
+    );
   } finally {
     rmSync(agentsOnlyDir, { recursive: true, force: true });
   }

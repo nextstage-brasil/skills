@@ -5,8 +5,6 @@ license: Apache-2.0
 metadata:
   author: nextstage-brasil
   version: "1.2"
-depends:
-  - mcp-gitlab-usage
 ---
 
 # GitLab Board Sync

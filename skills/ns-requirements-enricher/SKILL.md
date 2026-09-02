@@ -22,7 +22,6 @@ metadata:
   version: "1.3"
 depends:
   - ns-harness
-  - mcp-gitlab-usage
 ---
 
 # Requirements Enricher

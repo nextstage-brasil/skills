@@ -31,4 +31,4 @@ No `.nextstage-harness/`, `.cursor/rules/`, or `AGENTS.md`: standalone — no pr
 
 ## MCP GitLab
 
-GitLab MCP available: follow `mcp-gitlab-usage` for tool contracts. `get_mcp_gitlab_skill` sync = servers that expose it — not this repo's `mcp-gitlab-usage` copy.
+GitLab MCP available: follow `mcp-gitlab-usage` for tool contracts. That skill is **MCP-provisioned** via `get_mcp_gitlab_skill` on first access — not installed from this repo's harness catalog.

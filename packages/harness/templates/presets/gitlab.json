@@ -7,7 +7,6 @@
     "skills/ns-gitlab-board-sync",
     "skills/ns-gitlab-ci-generator",
     "skills/ns-execution-gitlab-issue",
-    "skills/ns-requirements-enricher",
-    "skills/mcp-gitlab-usage"
+    "skills/ns-requirements-enricher"
   ]
 }

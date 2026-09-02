@@ -101,3 +101,9 @@ Run the catalog validator locally before pushing when adding or renaming skills.
 ## Maintainer-only project skills
 
 Skills under `.cursor/skills/` guide work **in this repository** only. They are **not** listed in `catalog.json` and are **not** installed by harness. Example: `code-routing-diagram` — update the code routing Mermaid after changing routing in catalog skills.
+
+## Completion signal
+
+When a task is fully done, end the final reply with exactly `Fatto!` so the human can tell work finished (not mid-step / waiting).
+
+

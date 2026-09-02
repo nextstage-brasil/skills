@@ -7,7 +7,6 @@ metadata:
   version: "1.6"
 depends:
   - ns-harness
-  - mcp-gitlab-usage
   - ns-reviewer
   - ns-autonomous
   - ns-coder

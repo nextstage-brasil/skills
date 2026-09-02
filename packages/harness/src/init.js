@@ -34,6 +34,7 @@ import { writeManifestAgents, manifestPath } from './manifest.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
 import { logResolvedAgents } from './logResolvedAgents.js';
 import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
+import { syncClaudeMd } from './syncClaudeMd.js';
 import { resolveRepoRoot, listPresetDocuments } from './presets.js';
 import { discoverSkillsWithDomain } from './resolveSkillPath.js';
 import { join } from 'node:path';
@@ -155,15 +156,6 @@ export async function runInit(argv = {}) {
     p.log.warn(error instanceof Error ? error.message : String(error));
   }
 
-  try {
-    const prunedAdapters = pruneExcludedAgentAdapters(detection.projectRoot, agents);
-    if (prunedAdapters.removed.length > 0) {
-      p.log.success(`Removed adapters for excluded agents: ${prunedAdapters.removed.length} path(s)`);
-    }
-  } catch (error) {
-    p.log.warn(error instanceof Error ? error.message : String(error));
-  }
-
   let scaffoldRan = false;
   if (!scaffoldOptions.skip) {
     const result = scaffoldProject(detection.projectRoot, scaffoldOptions);
@@ -235,6 +227,24 @@ export async function runInit(argv = {}) {
   try {
     if (existsSync(manifestPath(detection.projectRoot))) {
       writeManifestAgents(detection.projectRoot, agents);
+    }
+  } catch (error) {
+    p.log.warn(error instanceof Error ? error.message : String(error));
+  }
+
+  try {
+    const prunedAdapters = pruneExcludedAgentAdapters(detection.projectRoot, agents);
+    if (prunedAdapters.removed.length > 0) {
+      p.log.success(`Removed adapters for excluded agents: ${prunedAdapters.removed.length} path(s)`);
+    }
+  } catch (error) {
+    p.log.warn(error instanceof Error ? error.message : String(error));
+  }
+
+  try {
+    const claudeMd = syncClaudeMd(detection.projectRoot, { agents });
+    if (claudeMd.written.length > 0) {
+      p.log.success('Created CLAUDE.md (Claude Code boot stub)');
     }
   } catch (error) {
     p.log.warn(error instanceof Error ? error.message : String(error));

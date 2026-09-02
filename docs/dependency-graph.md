@@ -16,7 +16,7 @@ ns-harness
 │              ├── ns-autonomous
 │              └── ns-living-spec
 ├── ns-autonomous ── ns-reviewer
-├── ns-reviewer ── mcp-gitlab-usage
+├── ns-reviewer
 └── ns-investigator
 ```
 
@@ -40,15 +40,15 @@ Folded into `ns-harness` references: `prepare.md`, `architecture-rules-generator
 ## GitLab
 
 ```
-mcp-gitlab-usage ── ns-harness
-ns-gitlab-board-sync ── mcp-gitlab-usage
+ns-gitlab-board-sync ── (runtime) mcp-gitlab-usage [MCP-provisioned]
 ns-execution-gitlab-issue ──┬── ns-harness
-                              ├── mcp-gitlab-usage
                               ├── ns-reviewer
-                              └── ns-autonomous
-ns-requirements-enricher ──┬── ns-harness
-                           └── mcp-gitlab-usage
+                              ├── ns-autonomous
+                              └── ns-coder
+ns-requirements-enricher ── ns-harness
 ```
+
+`mcp-gitlab-usage` is not a catalog skill; GitLab MCP writes it on first use.
 
 ## Frontend prototype
 
@@ -65,8 +65,7 @@ ns-proto-visual-guide ──┬── ns-harness
 ## Business (standalone preset)
 
 ```
-ns-project-manager ──┬── ns-harness
-                     └── mcp-gitlab-usage
+ns-project-manager ── ns-harness
 ```
 
 Nested (not catalog skills): `references/ns-commercial-budget`, `references/ns-delivery-schedule`.

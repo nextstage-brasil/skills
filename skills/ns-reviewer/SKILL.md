@@ -7,7 +7,6 @@ metadata:
   version: "2.0"
 depends:
   - ns-harness
-  - mcp-gitlab-usage
 ---
 
 # Code Reviewer

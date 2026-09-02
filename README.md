@@ -12,7 +12,7 @@ skills/
 └── <skill-id>/      # Flat catalog — one directory per skill (SKILL.md + references/, evals/)
 ```
 
-Examples: `ns-harness`, `ns-spec-driven`, `ns-coder`, `ns-reviewer`, `mcp-gitlab-usage`, `ns-project-manager`. Nested PM workers (`ns-commercial-budget`, `ns-delivery-schedule`) live under `ns-project-manager/references/ns-*/workflow.md`. `ns-requirements-enricher` is a catalog skill.
+Examples: `ns-harness`, `ns-spec-driven`, `ns-coder`, `ns-reviewer`, `ns-project-manager`. Nested PM workers (`ns-commercial-budget`, `ns-delivery-schedule`) live under `ns-project-manager/references/ns-*/workflow.md`. `ns-requirements-enricher` is a catalog skill. GitLab MCP tool contracts (`mcp-gitlab-usage`) are provisioned by the GitLab MCP server on first use — not a harness catalog skill.
 
 Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`).
 
@@ -23,7 +23,6 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-harness`                         | Session boot, artifact layout, AND brownfield prepare (architecture-rules, brownfield map, reverse spec, AGENTS.md) |
 | `ns-spec-driven`                     | Delivery face — clarify → spec → tasks (incl. unit/e2e test tasks in `references/`) → implement → close |
 | `ns-living-spec`    | Merge delivered versions into `docs/specs/` living docs                                                                                       |
-| `mcp-gitlab-usage`                   | GitLab MCP tool contracts, gates, and flows                                                                                                   |
 | `ns-gitlab-board-sync`               | Sync existing issues (labels, milestone, time)                                                                                                |
 | `ns-gitlab-ci-generator`             | Bootstrap `.gitlab-ci.yml` for SaaS monorepos                                                                                                 |
 | `ns-execution-gitlab-issue`          | End-to-end GitLab issue execution — GitLab state owner, delegates coding to `ns-autonomous`                                              |
@@ -71,7 +70,7 @@ See `packages/harness/README.md` for all flags. Install and migration details: `
 | Preset | What it does |
 | ------ | ------------ |
 | `spec-driven` | SDD face + coder, reviewer, investigator, autonomous, living-spec — and code complements (frontend-design, docs-writer, best-practices, backend/e2e tests) via `ns-coder` `depends`. |
-| `gitlab` | Extends `spec-driven`. Adds GitLab issue execution, board sync, CI generator, MCP usage, requirements enricher. Alias: `spec-driven-gitlab`. |
+| `gitlab` | Extends `spec-driven`. Adds GitLab issue execution, board sync, CI generator, requirements enricher. (`mcp-gitlab-usage` comes from GitLab MCP on first use.) Alias: `spec-driven-gitlab`. |
 | `project-manager` | PM face only (`ns-project-manager`). No SDD or code workers. |
 | `frontend` | UI design, reverse prototyping, visual appearance guides. Alias: `frontend-prototype`. |
 | `agents` | Extends `spec-driven`. Adds agent design + LangGraph labs (`ns-agent-engineering`, `ns-multi-agent-architect`, `ns-langgraph-agents`) + `ns-postgres-rag` + `ns-graphrag`, plus LangChain/MCP/Vitest/eval externals. Aliases: `agent-creator`, `agents-api`. |
@@ -93,21 +92,20 @@ Consumer skills declare `depends` in frontmatter. Once the CLI supports it ([ver
 
 ```bash
 npx skills add nextstage-brasil/skills@ns-execution-gitlab-issue --full-depth -y
-# resolves: ns-harness → mcp-gitlab-usage → ns-reviewer → ns-execution-gitlab-issue
+# resolves: ns-harness → ns-reviewer → ns-execution-gitlab-issue
 ```
 
 **Interim (until PR #861 merges):** `depends` is ignored by `skills@1.5.14`. Install peers manually:
 
 ```bash
 npx skills add nextstage-brasil/skills --full-depth -y \
-  --skill ns-harness --skill mcp-gitlab-usage --skill ns-reviewer --skill ns-execution-gitlab-issue
+  --skill ns-harness --skill ns-reviewer --skill ns-execution-gitlab-issue
 ```
 
 **Single skill (project):**
 
 ```bash
 npx skills add nextstage-brasil/skills@ns-harness --full-depth -y
-npx skills add nextstage-brasil/skills@mcp-gitlab-usage --full-depth -y
 npx skills add nextstage-brasil/skills@ns-spec-driven --full-depth -y
 ```
 

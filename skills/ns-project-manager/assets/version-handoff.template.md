@@ -1,8 +1,8 @@
-# Version execution handoff — {{VERSION_NAME}}
+# Version execution handoff — {version_name}
 
-**Version:** {{VERSION_SAN}}
-**Last updated:** {{DATE}}
-**Sequência:** {{SEQUENCIA}}
+**Version:** {version_san}
+**Last updated:** {date}
+**Sequência:** {sequencia}
 
 ---
 
@@ -10,9 +10,9 @@
 
 | Field | Value |
 |-------|-------|
-| Version / epic | {{VERSION_NAME}} |
-| OKR / objective | {{OKR_OBJECTIVE}} |
-| MVP / deadline pressure | {{DEADLINE_OR_MVP}} |
+| Version / epic | {version_name} |
+| OKR / objective | {okr_objective} |
+| MVP / deadline pressure | {deadline_or_mvp} |
 
 ---
 
@@ -20,11 +20,11 @@
 
 ### In scope
 
-{{SCOPE_IN_BULLETS}}
+{scope_in_bullets}
 
 ### Out of scope
 
-{{SCOPE_OUT_BULLETS}}
+{scope_out_bullets}
 
 ---
 
@@ -33,14 +33,14 @@
 ### Mermaid
 
 ```mermaid
-{{DAG_MERMAID}}
+{dag_mermaid}
 ```
 
 ### Layer table
 
 | Layer | Items | Status |
 |-------|-------|--------|
-| {{LAYER_ROW}} | {{LAYER_ITEMS}} | {{LAYER_STATUS}} |
+| {layer_row} | {layer_items} | {layer_status} |
 
 Status values: `pending`, `in_progress`, `done`.
 
@@ -48,11 +48,11 @@ Status values: `pending`, `in_progress`, `done`.
 
 | From | To | Reason |
 |------|-----|--------|
-| {{EDGE_FROM}} | {{EDGE_TO}} | {{EDGE_REASON}} |
+| {edge_from} | {edge_to} | {edge_reason} |
 
 ### Critical path
 
-{{CRITICAL_PATH_SUMMARY}}
+{critical_path_summary}
 
 ---
 
@@ -62,7 +62,7 @@ Status values: `pending`, `in_progress`, `done`.
 
 | Layer | Sprint(s) | Notes |
 |-------|-----------|-------|
-| {{LAYER_SPRINT_ROW}} | {{SPRINT_IDS}} | {{SPRINT_NOTES}} |
+| {layer_sprint_row} | {sprint_ids} | {sprint_notes} |
 
 ---
 
@@ -72,20 +72,20 @@ Status values: `pending`, `in_progress`, `done`.
 
 | Metric | Date |
 |--------|------|
-| P50 | {{P50_DATE}} |
-| P85 | {{P85_DATE}} |
+| P50 | {p50_date} |
+| P85 | {p85_date} |
 
 ---
 
 ## Risks and blockers
 
-{{RISKS_BLOCKERS_BULLETS}}
+{risks_blockers_bullets}
 
 ---
 
 ## Open decisions
 
-{{OPEN_DECISIONS_BULLETS}}
+{open_decisions_bullets}
 
 ---
 
@@ -94,8 +94,8 @@ Status values: `pending`, `in_progress`, `done`.
 1. Re-run Phase 3 when backlog deps or narrative scope change — refresh DAG Mermaid and layer table.
 2. After Phase 4 schedule: update layer→sprint map; do not schedule a layer before all predecessor layers complete.
 3. After Phase 5 forecast: fill P50/P85; P85 = committed date for stakeholders.
-4. Persist only at `docs/versions/{{VERSION_SAN}}/pm/execution-handoff.md`. Do not edit spec-driven `docs/versions/{{VERSION_SAN}}/execution-handoff.md` at version root.
-5. Spec-driven `docs/versions/{{VERSION_SAN}}/execution-handoff.md` at version root is not misplaced — never STOP/move/delete it (`pm-persist.md` exception). STOP only for other `execution-handoff.md` paths outside `pm/`.
+4. Persist only at `docs/versions/{version_san}/pm/execution-handoff.md`. Do not edit spec-driven `docs/versions/{version_san}/execution-handoff.md` at version root.
+5. Spec-driven `docs/versions/{version_san}/execution-handoff.md` at version root is not misplaced — never STOP/move/delete it (`pm-persist.md` exception). STOP only for other `execution-handoff.md` paths outside `pm/`.
 
 ---
 

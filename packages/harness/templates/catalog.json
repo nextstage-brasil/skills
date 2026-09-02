@@ -22,12 +22,11 @@
     ],
     "ns-proto-visual-guide": ["ns-harness", "ns-living-spec"],
     "ns-living-spec": ["ns-harness"],
-    "ns-project-manager": ["ns-harness", "mcp-gitlab-usage"],
-    "mcp-gitlab-usage": ["ns-harness"],
-    "ns-gitlab-board-sync": ["mcp-gitlab-usage"],
+    "ns-project-manager": ["ns-harness"],
+    "ns-gitlab-board-sync": [],
     "ns-gitlab-ci-generator": [],
-    "ns-execution-gitlab-issue": ["ns-harness", "mcp-gitlab-usage", "ns-reviewer", "ns-autonomous", "ns-coder"],
-    "ns-requirements-enricher": ["ns-harness", "mcp-gitlab-usage"],
+    "ns-execution-gitlab-issue": ["ns-harness", "ns-reviewer", "ns-autonomous", "ns-coder"],
+    "ns-requirements-enricher": ["ns-harness"],
     "ns-autonomous": ["ns-harness", "ns-reviewer"],
     "ns-coder": [
       "ns-harness",
@@ -41,7 +40,7 @@
       "ns-autonomous",
       "ns-living-spec"
     ],
-    "ns-reviewer": ["ns-harness", "mcp-gitlab-usage"],
+    "ns-reviewer": ["ns-harness"],
     "ns-investigator": ["ns-harness"],
     "ns-e2e-tests": [],
     "ns-backend-tests": ["ns-harness"],
@@ -84,7 +83,6 @@
     "gitlab": {
       "label": "GitLab",
       "skills": [
-        "mcp-gitlab-usage",
         "ns-requirements-enricher",
         "ns-gitlab-board-sync",
         "ns-gitlab-ci-generator",

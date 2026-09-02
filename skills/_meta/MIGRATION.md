@@ -2,6 +2,10 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Remove catalog skill — `mcp-gitlab-usage` (2026-09-02)
+
+`mcp-gitlab-usage` is no longer a harness catalog skill. The GitLab MCP server creates and updates it on first use (`get_mcp_gitlab_skill`). Removed from `catalog.json`, presets (`gitlab`), `skill-paths.json`, and install-time `depends`. Runtime body references remain (agents follow the MCP-written skill). Dropped retired alias `"ns-mcp-gitlab-usage": "mcp-gitlab-usage"` (target no longer in catalog). Do not re-add under `skills/mcp-gitlab-usage/`.
+
 ## Add catalog skill — `ns-graphrag` (2026-09-02)
 
 GraphRAG **process** doctrine (ontology, schema-locked extract, communities, query routing, cite-or-refuse). Frontmatter and catalog `depends`: `ns-harness`, `ns-postgres-rag`. **Not** in `alwaysInstall`, **not** in any harness preset (`full` included). Opt-in (pulls `ns-postgres-rag` when `depends` resolve):
@@ -35,7 +39,8 @@ Clarify-Strict (`references/clarify-strict.md`) ≠ `ns-requirements-enricher` (
 `ns-requirements-enricher` is a catalog skill again (`skills/ns-requirements-enricher/`). Issue/chat execution-readiness (grill-me vs code) — **not** folded into PM, **not** merged with SDD Clarify.
 
 - Frontmatter `provides: gate:requirements-enrichment` lives on this skill only (removed from `ns-project-manager`)
-- Catalog `depends`: `ns-harness`, `mcp-gitlab-usage`; GitLab category + `--preset gitlab`
+- Catalog `depends`: `ns-harness`; GitLab category + `--preset gitlab`
+- Runtime: follow MCP-provisioned `mcp-gitlab-usage` for tool contracts (not an install `depends`)
 - Retired: drop `"ns-requirements-enricher": "ns-project-manager"` (live names must not map away). `"requirements-enricher"` → `ns-requirements-enricher`
 - Nested under PM: `ns-commercial-budget`, `ns-delivery-schedule` only
 
@@ -99,11 +104,12 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 |-------|-----------|
 | `ns-harness` | — (base dependency) |
 | SDD consumers (`ns-living-spec`, `ns-coder`, `ns-investigator`, `ns-spec-driven`) | `ns-harness` |
-| `mcp-gitlab-usage` | `ns-harness` |
-| `ns-reviewer` | `ns-harness`, `mcp-gitlab-usage` |
-| `ns-execution-gitlab-issue` | `ns-harness`, `mcp-gitlab-usage`, `ns-reviewer`, `ns-autonomous` (calls it internally for Phase 2) |
+| `ns-reviewer` | `ns-harness` |
+| `ns-execution-gitlab-issue` | `ns-harness`, `ns-reviewer`, `ns-autonomous` (calls it internally for Phase 2), `ns-coder` |
 | `ns-autonomous` | `ns-harness`, `ns-reviewer` |
-| `ns-gitlab-board-sync` | `mcp-gitlab-usage` |
+| `ns-gitlab-board-sync` | — (runtime: MCP-provisioned `mcp-gitlab-usage`) |
+| `ns-requirements-enricher` | `ns-harness` |
+| `ns-project-manager` | `ns-harness` |
 | `ns-postgres-rag` | `ns-harness` (not in any preset) |
 | `ns-graphrag` | `ns-harness`, `ns-postgres-rag` (not in any preset) |
 

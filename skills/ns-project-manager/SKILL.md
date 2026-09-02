@@ -23,7 +23,6 @@ metadata:
   version: "1.2"
 depends:
   - ns-harness
-  - mcp-gitlab-usage
 ---
 
 # Project Manager

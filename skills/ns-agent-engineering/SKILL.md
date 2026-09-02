@@ -1,10 +1,10 @@
 ---
 name: ns-agent-engineering
-description: (NS) Language-agnostic conceptual agent design from foundation-model adaptation (Evaluation, Prompt, RAG, Agent, Fine-Tune). Use when designing an agent, deciding agent vs RAG vs prompt vs fine-tune, tool taxonomy, plan/execute separation, agent memory, agent evaluation, guardrails, or observability for agents — even if user never says "AI engineering". Do NOT use for LangGraph/CrewAI choice (`ns-multi-agent-architect`), LangGraph runtime (`ns-langgraph-agents`), Postgres RAG schema (`ns-postgres-rag`), or app coding.
+description: (NS) Language-agnostic conceptual agent design from foundation-model adaptation (Evaluation, Prompt, RAG, Agent, Fine-Tune). Use when designing an agent, deciding agent vs RAG vs prompt vs fine-tune, tool taxonomy, plan/execute separation, agent memory, agent evaluation, guardrails, or observability for agents — even if user never says "AI engineering". Do NOT use for LangGraph/CrewAI choice (`ns-multi-agent-architect`), LangGraph runtime (`ns-langgraph-agents`), Postgres RAG schema (`ns-postgres-rag`), GraphRAG process (`ns-graphrag`), or app coding.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
 ---
@@ -132,16 +132,20 @@ File = design handoff. Self-contained. Not `agent-architecture.md` (`ns-multi-ag
 
 ## Handoffs
 
-| Signal                                       | Action                         |
-| -------------------------------------------- | ------------------------------ |
-| Design locked; need framework / topology ADR | `ns-multi-agent-architect`     |
-| Information-gap / retrieval on Postgres      | `ns-postgres-rag` if installed |
-| Vague product scope                          | `ns-spec-driven` Clarify first |
-| Implementation                               | Stop. Not this skill           |
+| Signal                                       | Action                                                                 |
+| -------------------------------------------- | ---------------------------------------------------------------------- |
+| Design locked; need framework / topology ADR | `ns-multi-agent-architect`                                             |
+| Information-gap / corpus retrieval           | `ns-postgres-rag` if installed (vector / hybrid / GraphRAG mode)       |
+| Multi-hop / entity-rel GraphRAG process      | `ns-graphrag` if installed — after `ns-postgres-rag` mode = GraphRAG   |
+| Vague product scope                          | `ns-spec-driven` Clarify first                                         |
+| Implementation                               | Stop. Not this skill                                                   |
+
+Do not design ontology, extractors, communities, or cite-or-refuse routing here — that is `ns-graphrag`. Do not invent DDL/hop SQL here — that is `ns-postgres-rag`.
 
 ## Related skills (optional — when installed)
 
 - `ns-multi-agent-architect` — after conceptual design locked (`agent-design.md`)
 - `ns-postgres-rag` — Postgres retrieval design when RAG gate locks information path
+- `ns-graphrag` — GraphRAG process (ontology, extract, communities, query routing) after retrieval mode is relational GraphRAG
 - `ns-spec-driven` — Clarify if product scope vague
 - `ns-langgraph-agents` — runtime only after architecture ADR; never from this skill directly

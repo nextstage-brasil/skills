@@ -93,7 +93,7 @@ Ask **before** compute when GitLab capable. After file written (when required), 
 
 ## GitLab publish
 
-Human confirms: `mcp-gitlab-usage` flow **SDD delivery-unit publish** (`../../mcp-gitlab-usage/references/flows.md`). Write `issue_iid` back per row.
+Human confirms: `mcp-gitlab-usage` flow **SDD delivery-unit publish**. Write `issue_iid` back per row.
 
 ## GitLab status/spent (SSoT)
 

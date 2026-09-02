@@ -1,31 +1,27 @@
 ---
-description: mcp-gitlab-usage must never use the ns- skill prefix
+description: mcp-gitlab-usage is MCP-provisioned; never use the ns- skill prefix
 alwaysApply: true
 ---
 
 # Skill naming — `mcp-gitlab-usage`
 
-`mcp-gitlab-usage` is an **intentional exception** to the catalog `ns-` prefix convention.
+`mcp-gitlab-usage` is **not** a harness catalog skill. The GitLab MCP server creates and updates it on first use via `get_mcp_gitlab_skill`. It remains an intentional exception to the catalog `ns-` prefix convention.
 
 ## Canonical name
 
-- Directory: `skills/mcp-gitlab-usage/`
+- Install path (MCP-written): `.agents/skills/mcp-gitlab-usage/` (or agent adapter equivalent)
 - Frontmatter `name`: `mcp-gitlab-usage`
-- Install / slash: `mcp-gitlab-usage` / `/mcp-gitlab-usage`
+- Slash: `/mcp-gitlab-usage`
 
 ## Do not
 
 - Rename to `ns-mcp-gitlab-usage`
-- Add `ns-` to this skill's directory, frontmatter, catalog key, or `depends` entries
-- Reintroduce `ns-mcp-gitlab-usage` except as a **retired** alias pointing at `mcp-gitlab-usage`
+- Re-add `mcp-gitlab-usage` to `packages/harness/templates/catalog.json`, presets, or `skill-paths.json`
+- Add `ns-` to this skill's name, directory, or `depends` entries
+- Reintroduce catalog copies under `skills/mcp-gitlab-usage/`
 
 ## When editing related files
 
-Keep these in sync with the canonical name (no `ns-`):
+Runtime body references to `mcp-gitlab-usage` (tool contracts) stay valid — the MCP provisions the skill. Do **not** declare install-time `depends: mcp-gitlab-usage` in catalog skills.
 
-- `packages/harness/templates/catalog.json` (`depends` + presets)
-- Other skills' `depends` and body references
-- `packages/harness/templates/retired-skills.json`: `"ns-mcp-gitlab-usage": "mcp-gitlab-usage"`
-- Root `README.md` and `skills/_meta/MIGRATION.md`
-
-See `skills/_meta/MIGRATION.md` — Rename `ns-mcp-gitlab-usage` → `mcp-gitlab-usage` (2026-07-27).
+See `skills/_meta/MIGRATION.md` — Remove catalog skill `mcp-gitlab-usage` (MCP-provisioned).

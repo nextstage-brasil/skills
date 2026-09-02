@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Build an agent that answers employee FAQs from our internal wiki and HR PDFs. Just make it an agent so it can be smart.",
-      "expected_output": "Grill one question at a time with recommended answers and product examples; lock Evaluation and failure diagnosis as information-based; push Prompt then RAG before Agent; may conclude explicit non-agent; write docs/specs/agent-design.md with adaptation path and Agent justification = non-agent; no LangGraph/CrewAI/code.",
+      "expected_output": "Grill one question at a time with recommended answers and product examples; lock Evaluation and failure diagnosis as information-based; push Prompt then RAG before Agent; may conclude explicit non-agent; write docs/specs/agent-design.md with adaptation path, Agent justification = non-agent, next handoff ns-postgres-rag; no LangGraph/CrewAI/code.",
       "files": [],
       "assertions": [
         "Wrote docs/specs/agent-design.md under outputs",
@@ -12,6 +12,7 @@
         "Diagnoses failure as information-based (or both with information primary)",
         "Adaptation path pushes Prompt and/or RAG before Agent",
         "Agent justification is explicit non-agent OR Agent rejected as primary approach",
+        "Next handoff names ns-postgres-rag (not ns-graphrag for FAQ/wiki single-doc retrieval)",
         "Does not recommend LangGraph, CrewAI, LangChain, AutoGen, or any framework",
         "Contains no implementation code",
         "Interview used one-question-at-a-time format with recommended answers"
@@ -47,6 +48,21 @@
         "Does not recommend a framework",
         "Contains no implementation code",
         "Agent justification records non-agent Fine-Tune (or Prompt+Fine-Tune) path"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Support needs answers that chain company → contract → invoice → payment across many PDFs; no single document holds the full path. Product wants an agent.",
+      "expected_output": "Diagnoses information-based (multi-hop) failure; Prompt then RAG before Agent; may conclude non-agent RAG; next handoff ns-postgres-rag then ns-graphrag when mode is relational GraphRAG; no ontology/extractor design or framework/code.",
+      "files": [],
+      "assertions": [
+        "Wrote docs/specs/agent-design.md under outputs",
+        "Diagnoses failure as information-based with multi-hop / cross-document chain need",
+        "Adaptation path pushes Prompt and/or RAG before Agent",
+        "Next handoff names ns-postgres-rag and ns-graphrag (GraphRAG process after retrieval mode)",
+        "Does not design ontology, extractors, communities, or DDL/hop SQL in this skill",
+        "Does not recommend a framework",
+        "Contains no implementation code"
       ]
     }
   ]

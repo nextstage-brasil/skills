@@ -56,7 +56,6 @@
   "nextstage-spec-driven": "ns-spec-driven",
   "ns-execution-handoff-generator": "ns-spec-driven",
   "ns-execution-orchestrator": "ns-spec-driven",
-  "ns-mcp-gitlab-usage": "mcp-gitlab-usage",
   "ns-nextstage-harness": "ns-harness",
   "ns-nextstage-spec-driven": "ns-spec-driven",
   "ns-pm-e2e-test-generator": "ns-spec-driven",

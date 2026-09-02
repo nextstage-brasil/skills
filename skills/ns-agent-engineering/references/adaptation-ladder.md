@@ -25,6 +25,7 @@ Both info + behavior: **RAG first** (cheaper), then Fine-Tune. Combine when both
 ## When NOT to Agent
 
 - FAQ / doc Q&A → Prompt + RAG
+- Multi-hop facts across entities/docs (N≥2; no single doc holds chain) → RAG path; hand off `ns-postgres-rag` then `ns-graphrag` when mode is relational GraphRAG
 - Fixed ETL / rule pipeline → rules, not Agent
 - One API call after classify → Prompt + single tool
 - Success needs high reliability on long chains — compound error risk unless HITL / validation / short plans
