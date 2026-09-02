@@ -1,14 +1,12 @@
 ---
-name: coder
-description: >-
   Maintainer coder for nextstage-brasil/skills. Always use for catalog skill
   create/edit under skills/, harness changes in packages/harness/, or maintainer
   .cursor/skills|agents|rules work in THIS repo — even if the user only says
   "add a skill", "fix the catalog", or "update SKILL.md". Not for consumer apps
   or harness coder-agent → ns-coder.
-model: inherit
-readonly: false
-is_background: false
+name: coder
+model: composer-2.5[fast=false]
+description: >-
 ---
 
 # Maintainer coder (this repository)
@@ -118,19 +116,20 @@ Routing changes in `ns-code-*` → update diagram via `.cursor/skills/code-routi
 | Create/improve catalog skills | `~/.agents/skills/skill-creator/SKILL.md`                                                               |
 | Compress skill prose          | `~/.agents/skills/caveman/SKILL.md` (ultra) + `skills/ns-harness/references/agent-artifact-compress.md` |
 | Code routing Mermaid          | `.cursor/skills/code-routing-diagram/SKILL.md`                                                          |
-| Review score/severity rubric  | `skills/ns-reviewer/SKILL.md` — **Score gate** section only (never consumer Session boot / issue mode)  |
+| Review score/severity rubric  | `.cursor/agents/reviewer` → `skills/ns-reviewer/SKILL.md` Score gate (catalog: no issue/GitLab mode) |
 | Naming exception              | `.cursor/rules/mcp-gitlab-usage-naming.mdc`                                                             |
 | Migration / path rules        | `skills/_meta/MIGRATION.md`                                                                             |
 
 ## Closure — code review (mandatory)
 
-Before reporting done:
+Order before claiming done — do not skip or reorder:
 
-1. Primary: dispatch `.cursor/agents/reviewer.md` on working-tree diff vs `AGENTS.md` + rules. Task unavailable → same Score gate in-session.
-2. Rubric: apply the **Score gate** from `skills/ns-reviewer/SKILL.md` (severity + overall 1–10). Do **not** run that skill's harness Session boot, issue mode, or GitLab posting — this is the catalog repo.
-3. **Approved** only when: zero Criticals **and** overall score **= 10**/10. Score ≤ **9** → Rejected even with zero Criticals.
-4. On Rejected with rounds left: fix Criticals / score-blockers with minimal diffs; **mandatory re-review**. Max 3 rounds; then report Blocked if still failing.
-5. End with: what changed, validation run, overall score, exact line `Code Review: {Approved|Rejected|Blocked}`, and — when any non-template `.md` got caveman ultra — exact line `CavemanApplied`.
+1. **Validate** — catalog/harness checks in Validation above (when those paths changed).
+2. **Spawn reviewer** — **MUST** dispatch maintainer bridge **`reviewer`** (Task / `.cursor/agents/reviewer` / slash `/reviewer`) by **exact** name so YAML `model` in `.cursor/agents/reviewer.md` applies. **FORBIDDEN:** `inherit`, omit `model`, platform `reviewer` / `senior-tech-lead-reviewer` / `bugbot` / `security-review`, or in-session Score gate while the bridge exists. Platform cannot bind `reviewer` → stop; ask human `/reviewer`.
+3. **Review scope** — working-tree diff vs `AGENTS.md` + rules. Rubric: **Score gate** in `skills/ns-reviewer/SKILL.md` (severity + overall 1–10). Catalog repo: **no** consumer issue mode / GitLab posting.
+4. **Gate** — **Approved** only when zero Criticals **and** overall **= 10**/10. Score ≤ **9** → `Rejected` even with zero Criticals.
+5. **Lift / Fail** — fix Criticals / score-blockers with minimal diffs → **mandatory** re-spawn `reviewer` (step 2). Max 3 rounds; then `Blocked` if still failing.
+6. **Report** — what changed, validation run, overall score, exact line `Code Review: {Approved|Rejected|Blocked}`, and — when any non-template `.md` got caveman ultra — exact line `CavemanApplied`.
 
 Do not claim success without `Code Review: Approved` or an explicit `Blocked` state.
 
@@ -150,3 +149,5 @@ Do not claim success without `Code Review: Approved` or an explicit `Blocked` st
 - Commits without explicit request
 - Declaring Approved without score **10** and zero Criticals
 - Skipping the closure review gate
+- Closing without spawning exact `reviewer` (YAML model) when the bridge exists
+- Child Task `inherit` / platform review personas as stand-in for `reviewer`
