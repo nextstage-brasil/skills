@@ -56,10 +56,10 @@ Session boot; note `.nextstage-harness/`. **Create** vs **refresh**; read existi
 - **First action** — obey `AGENTS.md` (no tool-Read), then `agents.local.md` when present (case-insensitive), then GitLab MCP from project notes.
 - **How to start** — Planning / Implementation / Ad-hoc table with skill entry points.
 - **Implementation routing** — priority 1–5 from `code-skill-routing.md`; link `ns-harness` for handoffs.
-- **Hard stops / FORBIDDEN** — no invented personas; Task `coder`/`reviewer`/`inherit` only with mapped skill (not platform default); no skip architecture-rules; ISSUE_URL → gitlab-issue; no speculative version folders.
+- **Hard stops / FORBIDDEN** — no invented personas; no skip architecture-rules; ISSUE_URL → gitlab-issue; no speculative version folders.
 - **Local overrides** — `agents.local.md` (case-insensitive) after `AGENTS.md`; mark present/absent in Layout; never inline.
 - **Installed skills** — exact `.agents/skills/` names, **grouped by role**. SDD chain from installed only.
-- **Project subagents** — from `manifest.json` `subagents` when present (name, skill, cursor model). Contract: type/`model` optional; mapped skill mandatory (`subagent-dispatch.md`). Do not omit when bridges exist.
+- **Project subagents** — from `manifest.json` `subagents` when present (name, skill, cursor model). Contract: **MUST** spawn exact `{name}` so YAML `model` applies; **FORBIDDEN** Task `inherit` / platform `coder`/`reviewer` stand-in / inline skill while bridge present (`subagent-dispatch.md`). Do not omit when bridges exist.
 - **Layout** — compact present/absent: rules, skills, local, docs/context|specs|versions.
 - **No Workflows → Implementation** — routing table covers it.
 - **Ownership + Language + Project notes** — ≤5 bullets.

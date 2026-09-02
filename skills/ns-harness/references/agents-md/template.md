@@ -31,13 +31,13 @@ Group by role. Exact names from `.agents/skills/`.
 | ---- | ------ |
 {role_rows}
 
-Invoke via Skills menu / slash **or** Task. **Mandatory:** mapped skill. **Optional:** Task type and model (named bridge or inherit). Not Cursor's default coder/reviewer process.
+Invoke via Skills menu / slash **or** harness project subagents below. Skills = workflow SoT; subagents bind YAML `model`, then run the skill.
 
 ## Project subagents
 
 When `.nextstage-harness/manifest.json` has `subagents`, include this table (name / skill / cursor model). Omit section if none.
 
-Task type/`model` may be the table `name` **or** inherited. Child prompt = Session boot then mapped skill (`ns-harness` → `subagent-dispatch.md`).
+Invoke via Cursor/Claude project agents — **exact** `name` from this table. Orchestrators **MUST** spawn that agent file so YAML `model:` applies (`ns-harness` → `subagent-dispatch.md`). **FORBIDDEN:** child Task `inherit` / `coder` / `reviewer` / `generalPurpose` as stand-in (parent model leaks). Inline mapped skill while bridge present = forbidden.
 
 | Agent | Skill | Model (cursor) |
 | ----- | ----- | -------------- |
@@ -72,7 +72,7 @@ Priority scan **1 → 5**; first match wins. Full handoffs: installed `ns-harnes
 
 ## Hard stops / FORBIDDEN
 
-- Do not invent folders, skills, or agent personas not listed here. Task `coder` / `reviewer` / `inherit` only if the child follows the mapped skill.
+- Do not invent folders, skills, or agent personas not listed here (harness `*-agent` bridges in Project subagents are allowed).
 - Do not skip `architecture-rules.md` before implementation.
 - Do not commit, push, or mutate GitLab state unless the active skill explicitly allows it for this run.
 - GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` — never ad-hoc coder on the main checkout.
