@@ -1,22 +1,22 @@
 # Ingestion pipeline
 
-Shape: **extract → chunk → embed → idempotent upsert**. No application language names. SQL natural keys + hashes = contract.
+Shape: **extract → chunk → embed → idempotent upsert**; graph path adds **resolve → logical edge upsert → evidence append → mention write**. No application language names. SQL natural keys + hashes = contract.
 
 ## Extract
 
-Deterministic text from bytes. Persist extract version. Failure (unreadable, empty, timeout) → **failure queue**, not silent skip. Retry does not duplicate `document` rows.
+Deterministic text from bytes. Persist extract version. Score text quality band. Failure (unreadable, empty, timeout) → **failure queue**, not silent skip. Retry does not duplicate `document` rows.
 
 ## Chunk
 
-Stable ordinals per `document_id`. Chunk identity = document natural key + ordinal **or** content hash of chunk text. Overlap policy in report. Giant chunks forbidden.
+Stable ordinals per `document_id`. Character offsets on each chunk. Chunk identity = document natural key + ordinal **or** content hash of chunk text. Overlap policy in report. Giant chunks forbidden.
 
 ## Embed
 
 Batch with backpressure (bounded in-flight). Model id + dimension on every chunk. Partial batch failure: those rows to failure queue; committed batches stay.
 
-## Idempotent upsert
+## Idempotent upsert (document / chunk)
 
-Natural key on `document` (source URI or business id). **Content hash** of extracted bytes.
+Natural key on `document` = **file identity** (source URI or file id). Optional **`business_record_id`** links the file to its cadastre anchor when file ≠ record. **Content hash** of extracted bytes.
 
 | Hash vs stored | Action |
 | -------------- | ------ |
@@ -25,6 +25,22 @@ Natural key on `document` (source URI or business id). **Content hash** of extra
 | New key | insert |
 
 Upsert = only write path. Rebuild jobs same keys.
+
+## Graph persist (logical edge + evidence + mention)
+
+**Batch writes** — not per-entity single-row statements in a loop.
+
+1. Resolve entities to surviving ids (identity ladder).
+2. **Upsert logical edge** on `(from_id, edge_type, to_id)`:
+   - Set **`review_status`** from relation confidence per `ns-graphrag` structured-extraction mapping (`fact` | `pending_review` | `proposal`); do not rely on column default.
+   - On conflict: `confidence = GREATEST(existing, new)`; do not downgrade `provenance_class`; update `review_status` only when promoting to `fact`.
+   - `RETURNING edge_id`.
+3. **Append evidence** row: `edge_id`, document, unit, quoted span, confidence.
+4. **Upsert mention**: unit, entity, `role_in_context`.
+
+Repeated attestation → one edge row, N evidence rows.
+
+Reprocess document: retire prior units, evidence, mentions for that `document_id`; supersede with new extract.
 
 ## Failure queue
 

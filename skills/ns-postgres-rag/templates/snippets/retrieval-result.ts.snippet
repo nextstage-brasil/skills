@@ -1,20 +1,39 @@
 // Snippet: retrieval-result.ts — illustrative return shape only (not a stack choice)
-// Required: ids, score, path, provenance, confidence, cut_reason, classified error.
+// Required: ids, score, path, provenance, confidence, cut_reason, classified error, telemetry.
 
 export type RetrievalCutReason =
   | "none"
   | "depth"
   | "fanout"
   | "score"
-  | "cycle";
+  | "cycle"
+  | "auth";
 
 export type RetrievalErrorCode =
   | "not_found"
   | "ambiguous_entity"
   | "below_confidence"
   | "cap_hit"
+  | "auth_pruned"
   | "timeout"
   | "index_unavailable";
+
+export type EvidenceRow = {
+  document_id: string;
+  unit_id: string;
+  quoted_text: string;
+  confidence: number;
+};
+
+export type TelemetryEnvelope = {
+  hops_executed: number;
+  nodes_examined: number;
+  nodes_returned: number;
+  edges_examined: number;
+  edges_returned: number;
+  stage_latencies_ms: Record<string, number>;
+  cache_hit: boolean;
+};
 
 export type RetrievalResult = {
   ids: string[];
@@ -24,4 +43,7 @@ export type RetrievalResult = {
   confidence: number;
   cut_reason: RetrievalCutReason;
   error: RetrievalErrorCode | null;
+  candidates?: Array<{ id: string; score: number; label: string }>;
+  evidence?: EvidenceRow[];
+  telemetry: TelemetryEnvelope;
 };

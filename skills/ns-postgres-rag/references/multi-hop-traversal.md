@@ -1,25 +1,37 @@
 # Multi-hop traversal
 
-Recursive SQL over typed `edge` rows. Similarity is not a hop.
+Recursive SQL over typed **fact** `edge` rows. Similarity is not a hop. Exclude `pending_review` and proposals.
 
-**Sole example:** `company → contract → invoice → payment`.
+**Illustration:** `company → contract → invoice → payment` — derive corpus chain in GraphRAG Process Report.
 
 ## Caps (mandatory)
 
 | Cap | Role |
 | --- | ---- |
-| Depth | `N` max hops (report sets N; company…payment is 3 hops) |
+| Depth | `N` max hops (report sets N; illustration chain is 3 hops) |
 | Fanout | max children expanded per node |
 | Cycle guard | visited node set in CTE; no re-expand |
 | Score prune | drop paths below confidence / fused score floor |
 
 Unbounded `WITH RECURSIVE` = anti-pattern.
 
+## Per-hop authorization
+
+Apply the same permission predicates **inside each recursive step** — not only on the seed anchor set. Prune denied nodes before expanding children.
+
+**No-bridge rule:** a denied node cannot appear on a path to reach permitted data, even as an intermediate hop.
+
+## Set-based expansion
+
+One SQL read per hop over the **current frontier set** of node ids. Never N separate queries for N nodes at the same depth.
+
 ## Path as evidence
 
-Each result row: **node id sequence** and **edge ids**. That is `path`. Attach per-edge `provenance` and path-level `confidence` (min or product — pick one in report, keep it).
+Each result row: **node id sequence** and **edge ids**. That is `path`. Attach per-edge `provenance` via `evidence` rows and path-level `confidence` (min or product — pick one in report, keep it).
 
-Snippet: `templates/snippets/multi-hop-cte.sql.snippet`.
+Optional request flag: `include_evidence` → join evidence spans for cited answers.
+
+Snippet: `templates/snippets/multi-hop-cte.sql.snippet` — illustrative CTE with per-hop auth predicate and no-bridge rule.
 
 ## Ranking
 
@@ -31,8 +43,12 @@ Optional SQL/property-graph extension = **alternative**, not default.
 
 **Does not justify itself** when:
 
-- Edge types few and stable (company/contract/invoice/payment class).
+- Edge types few and stable.
 - Recursive CTE with caps meets p95.
 - Team already operates plain Postgres + `pgvector`.
 
-Justify only if mixed labels/properties dominate and CTE fanout cannot cap without dropping recall. Still provenance on every edge. Still never infer edges from vectors.
+Justify only if mixed labels/properties dominate and CTE fanout cannot cap without dropping recall. Still provenance on every edge via evidence. Still never infer edges from vectors.
+
+## No model per hop
+
+Traversal is deterministic SQL. Model roles belong at extract and answer composition only.

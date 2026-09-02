@@ -1,10 +1,10 @@
 ---
 name: ns-graphrag
-description: "(NS) Build a complete GraphRAG process — ontology, semantic text units, schema-locked extraction with citations, entity resolution, typed edges with provenance, communities and reports, vector dual-index, local/global/vector query routing, ACL-before-search, cited answers. Use whenever the user wants GraphRAG, a knowledge graph over documents, multi-hop retrieval, entity/relationship extractors, community summaries, or grounded structured extraction from unstructured files — even if they only say RAG, NER, knowledge graph, or cited Q&A. Do NOT use for Postgres schema/mode choice alone (`ns-postgres-rag` first). Do NOT use for competing vector stores, free graph query languages, or co-occurrence-as-edge designs."
+description: "(NS) Build a complete GraphRAG process — closed ontology, semantic text units, schema-locked extraction with citations, entity resolution, logical edges with evidence and mentions, filtered sets and aggregate answers with per-row citations, path traversal, optional discovery hypotheses, dual embeddings (units + entity descriptions), ACL-before-search, cited answers. Use whenever the user wants GraphRAG, a knowledge graph over documents, multi-hop retrieval, entity/relationship extractors, indirect-link or grouping analytics, or grounded structured extraction from unstructured files — even if they only say RAG, NER, knowledge graph, or cited Q&A. Do NOT use for Postgres schema/mode choice alone (`ns-postgres-rag` first). Do NOT use for competing vector stores, free graph query languages, or co-occurrence-as-edge designs."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
   - ns-postgres-rag
@@ -16,26 +16,26 @@ End-to-end **process knowledge** to construct GraphRAG on the retrieval layer de
 
 **Analyze. Specify the pipeline. No application language or product names.**
 
-Storage, indexes, hybrid rank, recursive hop caps, and the Retrieval Design Report live in `ns-postgres-rag`. This skill owns **how knowledge is extracted, assembled, queried, and cited**.
+Storage, indexes, hybrid rank, recursive hop caps, evidence/mention DDL, and the Retrieval Design Report live in `ns-postgres-rag`. This skill owns **how knowledge is extracted, persisted, queried, and cited**.
 
 ## Central rule
 
-A hop is a **stored typed edge** with provenance. Similarity proposes **candidates**. Co-occurrence does not create edges. Every operator answer cites **verbatim source spans** (or refuses). Denied records are **omitted**, never explained as “no access.”
+A hop is a **stored typed edge** with evidence rows. Similarity proposes **candidates**. Co-occurrence does not create edges. Every operator answer cites **verbatim source spans** (or refuses). Denied records are **omitted**, never explained as “no access.”
 
-Canonical hop (English artifacts only): `company → contract → invoice → payment`.
+Canonical hop (**illustration only**): `company → contract → invoice → payment`. Derive the corpus chain in P0.
 
 ## Split with ns-postgres-rag
 
 | Question | Owner |
 | -------- | ----- |
-| Vector vs hybrid vs GraphRAG? DDL, HNSW, hop CTE, return fields | `ns-postgres-rag` |
-| Ontology, extractor, document typing, communities, query routing, citations, ACL-before-search | **this skill** |
+| Vector vs hybrid vs GraphRAG? DDL, HNSW, hop CTE, evidence/mention tables, return fields | `ns-postgres-rag` |
+| Ontology, extractor contract, document typing, answer shapes, citations, ACL-before-search, discovery gate | **this skill** |
 
 If Gate 2 is not relational GraphRAG, **stop**. Do not invent graph tables “for later.”
 
 ## Language ban
 
-Instructions, reports, and extractor contracts name **concepts** (text unit, surviving identity, community report). Do **not** name programming languages, frameworks, UI kits, container runtimes, or vendor model SKUs. Model **roles** only: `extract`, `embed`, `classify`, `summarize`, `compose`.
+Instructions, reports, and extractor contracts name **concepts** (text unit, surviving identity, logical edge, evidence, mention, answer shape). Do **not** name programming languages, frameworks, UI kits, container runtimes, or vendor model SKUs. Model **roles** only: `extract`, `embed`, `classify`, `summarize`, `compose`.
 
 SQL/DDL shapes stay in `ns-postgres-rag` snippets.
 
@@ -50,26 +50,29 @@ SQL/DDL shapes stay in `ns-postgres-rag` snippets.
 
 ## Flow
 
-boot → **P0** ontology lock → **P1** unstructured → text units → **P2** schema-locked extract → **P3** resolve + assemble graph → **P4** communities + reports → **P5** embed dual index → **P6** query routing + contract → **P7** GraphRAG Process Report → human approve → `ns-spec-driven`.
+boot → **P0** ontology lock → **P1** unstructured → text units + quality gate → **P2** schema-locked extract → **P3** resolve identity → **P4** persist logical edges + evidence + mentions → **P5** embed units + entity descriptions → **P6** answer shapes + graph contract → **P7** GraphRAG Process Report → human approve → `ns-spec-driven`.
+
+Opt-in **discovery** (cited hypotheses, no write-back) only when a declared archetype is outside the six answer shapes — `references/discovery-layer.md`.
 
 Interactive query **preempts** ingest jobs. Ingest is staged, idempotent, retry-per-stage.
 
 ## P0 — Ontology lock (blocking)
 
-Fixed vocabularies. Extractor may not invent types. Detail: `references/ontology.md`.
+Fixed vocabularies. Extractor may not invent types. Derivation procedure (not a canned list): `references/ontology.md`.
 
 Lock before any extract batch:
 
-- Entity types (closed list).
-- Relation types (closed list, directed meaning).
+- Entity types (closed list) aligned to host registry schema.
+- Relation types (closed list, directed meaning) derived from declared question hop chains.
 - Optional claim/covariate types (default **off** until prompts tuned).
-- Surviving-identity keys (cadastre / registry) vs mention-only.
+- Surviving-identity keys per type (identity ladder); mention-only types declared.
+- Ontology version id on every extract batch.
 
-Open vocabularies fragment the graph and poison communities.
+Open vocabularies fragment the graph and break identity merge, traversal, and citation integrity.
 
 ## P1 — Unstructured → text units
 
-Deterministic extract from bytes. Each **text unit** (semantic chunk) keeps `document_id`, ordinal, page/span, content hash. Prefer paragraph / section boundaries over mid-sentence cuts. Overlap exists so relations that straddle units still extract. Giant whole-file units forbidden.
+Deterministic extract from bytes. Each **text unit** keeps `document_id`, ordinal, page/span, **character offsets**, content hash, **text-quality band**. Prefer paragraph / section boundaries over mid-sentence cuts. Overlap exists so relations that straddle units still extract. Giant whole-file units forbidden. Degraded text routes to re-extract or failure queue — never silent index.
 
 Detail: `references/unstructured-to-units.md`. Upsert identity: `../ns-postgres-rag/references/ingestion-pipeline.md`.
 
@@ -77,73 +80,88 @@ Detail: `references/unstructured-to-units.md`. Upsert identity: `../ns-postgres-
 
 Per text unit, one structured pass:
 
-1. Entities: `name`, `type` (ontology), `description`.
-2. Relations: `source`, `target`, `type` (ontology), `description`, **source span**.
+1. Entities: `name`, `type` (ontology), `description`, **role-in-context**, **identifier fields** (per-type; do not invent).
+2. Relations: `source`, `target`, `type` (ontology), `description`, **source span**, provenance class `EXPLICIT` or `INFERRED`, **`confidence` (0–1)**.
 3. Optional document-level fields (title, authors, dates) as **nested** `{ value, sources[], reasoning }` — refuse the field if context is insufficient.
 4. Document class + confidence bands (classified / low / unclassified; tie margin demotes).
+5. Out-of-vocabulary findings → **unmapped-candidate** queue, not nearest-type coercion.
 
-Cap triplets per unit. Validate types against ontology; drop illegal labels. Descriptions feed community reports — bare triples starve global search.
+Extractor instructions are **build artifacts** assembled from the approved ontology — `references/structured-extraction.md`, `templates/extractor-instruction.template.md`.
 
-Detail: `references/structured-extraction.md`.
+Cap triplets per unit. Validate types against ontology; drop illegal labels. Descriptions feed anchor mapping and synthesis — bare triples starve composition.
 
-## P3 — Resolve and assemble
+## P3 — Resolve identity
 
-1. Normalize mentions against taxonomy / dictionary fields when present; empty taxonomy does not block go-live.
-2. Deterministic block, then vector **candidates**, then confirm — `../ns-postgres-rag/references/entity-resolution.md`.
-3. Write `edge` only with provenance (unit ids, page, rule, actor, time, confidence). **No co-occurrence edge.**
-4. Persist `pending_review` on low-confidence extracts. Those rows are **not GraphRAG facts**. Vector search on their text units remains allowed.
-5. Cadastre/key-backed edges skip review; they are facts.
+Deterministic block, then vector **candidates**, then confirm — ordered **identity ladder** per type; normalized name is **never** identity for person-like types. Model **extracts identifiers**; deterministic layer **resolves** them.
+
+Unresolved anchors return **ranked candidates** to the caller — no silent guess.
+
+Detail: `references/graph-assembly.md`, `../ns-postgres-rag/references/entity-resolution.md`.
+
+## P4 — Persist logical edges, evidence, mentions
+
+1. **Logical edge** unique by `source + type + target`. Upsert: strongest confidence wins; provenance class does not downgrade; **`review_status`** from relation confidence mapping — `references/structured-extraction.md` § Relation confidence → review_status (lock numbers in report); on conflict promote to `fact` only.
+2. **Evidence** append per attestation: document, unit, quoted span, confidence. One edge, many evidences — not one row per attestation.
+3. **Mentions**: unit-to-entity with role-in-context — substrate for filtered sets, counts, synthesis; not an edge.
+4. **File vs business record**: distinct anchors; explicit file-to-file refs stored; shared entity = discovered path only.
+5. **Proposals** (proposed records/links) are not facts, not traversable; confirmation policy declared in report.
+6. Persist **`review_status`** from cited mapping; traversal uses **`fact`** only. `DERIVED` paths are query results — never persisted as edges.
 
 Detail: `references/graph-assembly.md`.
 
-## P4 — Communities and reports
-
-Hierarchical modularity clustering on **fact** edges only (exclude pending_review). Recurse until leaf size is operable. Generate a **community report** per cluster (overview + key entities + relations + cited unit ids). Sparse graphs yield singleton junk — fix extraction density before tuning resolution.
-
-Detail: `references/communities.md`.
-
-## P5 — Dual (triple) embeddings
+## P5 — Embeddings
 
 Embed, with model id + dimension on every row:
 
 | Object | Use |
 | ------ | --- |
 | Text unit | Vector / hybrid lookup; local evidence |
-| Entity description | Anchor mapping for local search |
-| Community report | Global / thematic search |
+| Entity description | Anchor mapping for path and set filters |
+
+Reuse existing lexical index for hybrid rank when present — do not propose rebuild without cause.
 
 Versioned re-embed: `../ns-postgres-rag/references/ingestion-pipeline.md`.
 
-## P6 — Query routing
+## P6 — Answer shapes + graph contract
 
-Classify intent; do not send every question through community map-reduce.
+Route by **answer shape**, not a single global/local switch.
 
-| Mode | When |
-| ---- | ---- |
-| **Vector / hybrid** | Topic in one unit; no hop chain |
-| **Local** | Named anchors, “how does A reach B”, N≥2 hops |
-| **Global** | Themes, corpus-wide “what are the main…” |
-| **Explore** | Ambiguous; community then local drill |
+| Shape | When |
+| ----- | ---- |
+| **Unit / vector** | Topic in one unit; no hop chain |
+| **Path** | Named anchors; “how does A reach B”; N≥2 hops |
+| **Filtered set** | Entity set with attribute predicates + optional time window |
+| **Count / aggregate** | Group-by or totals; **per-row** provenance |
+| **Anchor synthesis** | Scoped summary when a record is opened |
+| **Document correlation** | Fresh upload vs registry; includes unregistered mentions |
 
-Local traversal: capped recursive walk (`../ns-postgres-rag/references/multi-hop-traversal.md`). Default **depth ≤ 5**; executor refuses above cap. Return `path` + provenance + confidence.
+**Scope restriction** (collection, import origin, document type) applies with authorization **before** ranking — never after.
 
-**ACL applies before retrieval**, not after. Filtered-out rows look like absence.
+**Temporal predicates** on edge period and record time are first-class filters.
 
-Compose answers only from retrieved units/paths. If evidence missing: refuse. Every field that claims a fact carries citations.
+Traversal: capped recursive walk (`../ns-postgres-rag/references/multi-hop-traversal.md`). Default **depth ≤ 5**. **Per-hop discipline**: authorization, type/confidence filters, top-N, visited set **inside** each step; denied node is **not** a bridge. **Batch expansion**: one read per hop over anchor set — never per-node reads. **No model call per hop** — model at extract and compose only.
+
+Compose answers only from retrieved units/paths/evidence. If evidence missing: refuse. Every asserted fact carries citations.
 
 Canonical graph query (English wire names):
 
 ```
 query_knowledge_graph
-{ anchor_ids[], anchor_type, edge_types[], max_depth (≤ 5), period?, limit? }
-→ { nodes[], edges[] (origin, type, dest, period, source_document_id, page, confidence, created_by), paths[] }
+{ anchor_ids[], anchor_type, edge_types[], max_depth (≤ 5), period?, scope?, limit?, include_evidence? }
+→ { nodes[], edges[], paths[], candidates[]?, telemetry }
 ```
 
-Forbidden: free SQL/Cypher-style tools; unbounded depth; treating pending_review as facts.
+**Telemetry envelope**: hops executed, examined vs returned, cut reason, stage latencies, cache hit.
+
+Forbidden: free SQL/Cypher-style tools; unbounded depth; treating pending_review as facts; denied node as bridge; model per hop.
 
 Operator visualization shows the **query path**, not the whole graph.
 
 Detail: `references/query-modes.md`, `references/access-and-citation.md`.
+
+## Role decomposition
+
+Implementation must separate identity resolver, traversal executor, entity/edge/evidence/mention repositories, authorization service, cache, and telemetry — detail: `references/graph-assembly.md`. Class/module layout = `ns-spec-driven`.
 
 ## P7 — GraphRAG Process Report
 
@@ -153,14 +171,15 @@ Copy `templates/graphrag-process-report.md`. Fill every section. Human approve b
 
 | Reference | Read when |
 | --------- | --------- |
-| `references/ontology.md` | P0; type drift |
-| `references/unstructured-to-units.md` | P1; PDFs, OCR, overlap |
-| `references/structured-extraction.md` | P2; citations nested in fields |
-| `references/graph-assembly.md` | P3; no co-occurrence |
-| `references/communities.md` | P4; global search |
-| `references/query-modes.md` | P6; local vs global vs vector |
-| `references/access-and-citation.md` | ACL, omit-denied, cite-or-refuse |
-| `references/process-eval.md` | Golden set, false-link, p95 |
+| `references/ontology.md` | P0; derivation; unmapped queue |
+| `references/unstructured-to-units.md` | P1; quality gate; offsets |
+| `references/structured-extraction.md` | P2; extractor contract |
+| `templates/extractor-instruction.template.md` | P2; build artifact shape |
+| `references/graph-assembly.md` | P3–P4; evidence; mentions |
+| `references/discovery-layer.md` | Opt-in analytics only |
+| `references/query-modes.md` | P6; six shapes |
+| `references/access-and-citation.md` | ACL, untrusted input, cache |
+| `references/process-eval.md` | Golden set, metrics |
 | `references/anti-patterns.md` | Before marking report done |
 | `../ns-postgres-rag/references/*` | Schema, resolution, hops, scale |
 
@@ -172,11 +191,12 @@ After **human approval** of Retrieval Design Report **and** GraphRAG Process Rep
 ## GraphRAG implementation planning
 - Retrieval report: path (approved)
 - Process report: path (approved)
-- Ontology: entity types / relation types
-- Extract stages: units → extract → resolve → edges → communities → embed
-- Query modes: vector | local | global | explore
-- Graph query: query_knowledge_graph; max_depth cap
-- Eval: citation faithfulness, path precision, false-link, refuse-when-empty
+- Ontology: entity types / relation types / version id
+- Extract stages: units → extract → resolve → persist (edge+evidence+mention) → embed
+- Answer shapes: unit | path | filtered set | count | synthesis | document correlation
+- Discovery: off | on (archetype + gate)
+- Graph query: query_knowledge_graph; max_depth cap; telemetry envelope
+- Eval: evidence precision, path accuracy, set completeness, citation faithfulness, refuse-when-empty
 - Out of scope for this skill: application source code
 ```
 
@@ -195,7 +215,19 @@ After **human approval** of Retrieval Design Report **and** GraphRAG Process Rep
 
 - Application languages, frameworks, vendors, model SKUs
 - Co-occurrence or embedding distance as `edge`
-- Ingest HITL screens as a v1 requirement (flags yes; review UI later)
+- Modularity grouping as a pipeline stage without a declared discovery archetype
+- One edge row per attestation (use logical edge + evidence append)
+- Normalized name as surviving identity for person-like types
+- Persisting derived traversal paths as edges
+- Answering filtered set / count questions by path-walking alone
+- Presenting discovery findings as facts or writing them back as edges
+- Scope restriction after ranking
+- Denied node as intermediate bridge
+- Model call per graph hop
+- Per-node reads during batch expansion
+- Indexing degraded text without a quality band
+- Committing proposed records without declared confirmation policy
+- Cache key without authorization context or graph version
 - Dumping whole documents into generation
 - Answering without citations when a fact is asserted
 - Revealing authorization failures to the caller

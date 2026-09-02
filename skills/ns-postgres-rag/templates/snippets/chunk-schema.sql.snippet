@@ -4,26 +4,34 @@
 CREATE EXTENSION IF NOT EXISTS vector;
 
 CREATE TABLE document (
-  id            bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  natural_key   text NOT NULL UNIQUE,
-  source_uri    text NOT NULL,
-  content_hash  text NOT NULL,
-  mime          text,
-  ingest_version text NOT NULL,
-  created_at    timestamptz NOT NULL DEFAULT now(),
-  updated_at    timestamptz NOT NULL DEFAULT now()
+  id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  natural_key        text NOT NULL UNIQUE,
+  business_record_id text,
+  source_uri         text NOT NULL,
+  content_hash       text NOT NULL,
+  mime               text,
+  ingest_version     text NOT NULL,
+  created_at         timestamptz NOT NULL DEFAULT now(),
+  updated_at         timestamptz NOT NULL DEFAULT now()
 );
 
+CREATE INDEX document_business_record_id_idx ON document (business_record_id)
+  WHERE business_record_id IS NOT NULL;
+
 CREATE TABLE chunk (
-  id               bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  document_id      bigint NOT NULL REFERENCES document (id),
-  ordinal          integer NOT NULL,
-  body             text NOT NULL,
-  embedding        vector(1536) NOT NULL,
+  id                bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  document_id       bigint NOT NULL REFERENCES document (id),
+  ordinal           integer NOT NULL,
+  body              text NOT NULL,
+  char_start        integer NOT NULL,
+  char_end          integer NOT NULL,
+  text_quality_band text NOT NULL CHECK (text_quality_band IN ('good', 'degraded', 'unusable')),
+  embedding         vector(1536) NOT NULL,
   embedding_version text NOT NULL,
-  metadata         jsonb NOT NULL DEFAULT '{}'::jsonb,
-  tsv              tsvector GENERATED ALWAYS AS (to_tsvector('english', body)) STORED,
-  UNIQUE (document_id, ordinal)
+  metadata          jsonb NOT NULL DEFAULT '{}'::jsonb,
+  tsv               tsvector GENERATED ALWAYS AS (to_tsvector('english', body)) STORED,
+  UNIQUE (document_id, ordinal),
+  CHECK (char_end > char_start)
 );
 
 CREATE INDEX chunk_document_id_idx ON chunk (document_id);

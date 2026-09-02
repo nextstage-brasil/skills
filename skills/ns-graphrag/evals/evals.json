@@ -4,39 +4,75 @@
     {
       "id": 1,
       "prompt": "We already decided relational GraphRAG on Postgres for questions like which payments belong to a company through contracts and invoices — the chain is never in one file. Design the full GraphRAG process: how we go from PDFs and cadastre rows to a queryable graph with citations. Do not name programming languages or frameworks. Do not write application code.",
-      "expected_output": "Agent confirms GraphRAG mode, locks a closed ontology, specifies semantic text units with provenance, schema-locked extract with descriptions and cite-or-refuse, resolution then typed edges with no co-occurrence, communities for global questions, dual embeddings, local vs global vs vector routing, ACL-before-search, query_knowledge_graph with max_depth cap, fills a GraphRAG Process Report, hands off to ns-spec-driven after approval.",
+      "expected_output": "Agent confirms GraphRAG mode, derives and locks a closed ontology, specifies semantic text units with quality gate and provenance, schema-locked extract with extractor instruction contract, identity resolution then logical edges with evidence and mentions (no co-occurrence), dual embeddings on units and entity descriptions, six answer shapes with per-hop authorization and telemetry, does not introduce modularity grouping as a mandatory pipeline stage, ACL-before-search, query_knowledge_graph with max_depth cap, fills a GraphRAG Process Report, hands off to ns-spec-driven after approval.",
       "files": [],
       "assertions": [
-        "Locks a closed entity and relation ontology before extraction",
-        "Requires semantic text units with document/page provenance, not whole-file context",
-        "Requires schema-locked extract with descriptions and verbatim citations (cite-or-refuse)",
-        "Refuses co-occurrence and similarity as stored edges; pending_review is not a GraphRAG fact",
-        "Specifies local vs global vs vector query routing and a depth-capped graph query contract",
+        "Derives and locks a closed entity and relation ontology before extraction",
+        "Requires semantic text units with document/page provenance and text quality gate, not whole-file context",
+        "Requires schema-locked extract with descriptions, role-in-context, identifiers, and verbatim citations (cite-or-refuse)",
+        "Specifies logical edge upsert with evidence append and mention persistence; refuses co-occurrence and similarity as stored edges",
+        "Does not mandate modularity grouping or thematic reports as a pipeline stage",
+        "Specifies all six answer shapes (unit, path, filtered set, count, synthesis, document correlation) with depth-capped graph query and per-hop authorization",
         "Does not name application languages or frameworks; does not implement application code"
       ]
     },
     {
       "id": 2,
       "prompt": "We want to pull title, summary, year, and authors from research PDFs into a table, and the answer must quote the PDF text. Is that GraphRAG? How should extraction work?",
-      "expected_output": "Agent treats this as grounded structured extraction (nested value/sources/reasoning) on retrieved units; GraphRAG tables only if N≥2 hop archetypes exist. Still cite-or-refuse. No competing vector store. No application code.",
+      "expected_output": "Agent treats this as grounded structured extraction (nested value/sources/reasoning) on retrieved units; GraphRAG tables only if N≥2 hop archetypes exist. Still cite-or-refuse. No mandatory discovery layer. No application code.",
       "files": [],
       "assertions": [
         "Describes nested structured fields with verbatim sources and reasoning",
         "Requires refuse/unknown when the retrieved units cannot support a field",
-        "Does not force community/global GraphRAG for single-document field extract",
+        "Does not force discovery layer for single-document field extract",
         "Does not write application implementation code"
       ]
     },
     {
       "id": 3,
       "prompt": "Plan says: embed chunks, then INSERT an edge whenever two entity names appear in the same paragraph, and let the model write Cypher. Fix the process.",
-      "expected_output": "Agent rejects co-occurrence-as-edge, free query language, and similarity-as-link; requires ontology, provenance edges, ACL-before-search, depth caps, pending_review excluded from facts.",
+      "expected_output": "Agent rejects co-occurrence-as-edge, free query language, and similarity-as-link; requires ontology, logical edges with evidence, ACL-before-search, depth caps, pending_review excluded from facts, no model per hop.",
       "files": [],
       "assertions": [
         "Rejects co-occurrence as a stored graph fact",
         "Rejects free graph query language / unbounded traversal",
-        "Requires provenance on edges and ACL before retrieval",
+        "Requires provenance on edges (evidence rows) and ACL before retrieval",
         "Points to anti-patterns or process report corrections"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Operators need: (a) all entities of type X matching attribute Y in the last 90 days with a citation per row, (b) count grouped by region with per-bucket evidence, (c) how company A reaches payment P through contracts, (d) a scope limited to import batch B, and (e) mentions in a new upload that do not match the registry. Design query routing and persistence — no code.",
+      "expected_output": "Agent maps each need to an answer shape (filtered set, count, path, scope restriction, document correlation), describes mention and evidence substrate, temporal and scope predicates before ranking, candidate return for unresolved anchors, no path-walk for set/count.",
+      "files": [],
+      "assertions": [
+        "Names filtered set and count shapes with per-row citation requirement",
+        "Scope restriction applied with authorization before ranking",
+        "Mentions and evidence persistence support set and correlation answers",
+        "Does not route set or count questions through multi-hop path walk alone"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Product wants an investigative screen: find indirect links between two anchors and highlight densely connected groups — hypotheses only, never auto-written as edges. When is that allowed in GraphRAG?",
+      "expected_output": "Agent places this in opt-in discovery layer with declared archetype, cited paths and evidence, hypotheses for human validation, no pipeline stage, no write-back.",
+      "files": [],
+      "assertions": [
+        "Discovery is opt-in and gated on archetype outside default answer shapes",
+        "Findings are hypotheses with citations, not persisted as fact edges",
+        "Does not require modularity grouping on every ingest"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "The same contract-to-invoice relation appears in thirty PDFs. Should we INSERT thirty edge rows? Define the persist step.",
+      "expected_output": "Agent specifies one logical edge keyed by source+type+target, append thirty evidence rows, strongest confidence on upsert, provenance class does not downgrade, review_status from relation confidence × provenance_class mapping with promote-to-fact-only on conflict.",
+      "files": [],
+      "assertions": [
+        "Logical edge unique key with upsert not duplicate rows",
+        "Evidence appended per attestation with document and span",
+        "Repeated attestation does not create duplicate logical edges",
+        "review_status from relation confidence × provenance_class mapping (not document-class bands); conflict promotes to fact only"
       ]
     }
   ]

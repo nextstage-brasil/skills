@@ -1,47 +1,81 @@
-# Query modes
+# Query modes — six answer shapes
 
-Route by **intent**. Wrong route: global over-abstracts a fact lookup; local hallucinates themes from a tiny neighborhood.
+Route by **answer shape**. Wrong shape: path walk for a count; synthesis without mention substrate; global theme language when the question is a filtered set.
 
-## Modes
+Default scope = everything the caller may see. **Scope restriction** (collection, import origin, document type) applies **with authorization before ranking** — never after rank fusion.
 
-### Vector / hybrid
+## Shapes
 
-One or few text units answer. Rank fusion when keywords matter (`ns-postgres-rag` hybrid). No hop. Still cite-or-refuse.
+### 1 — Unit / vector
 
-### Local (entity + path)
+One or few text units answer. Hybrid rank when keywords matter (`ns-postgres-rag`). No hop.
 
-1. Map question to anchor entities (description embeddings + aliases).
-2. If file vs process (or two types) is ambiguous, **ask** before restricting.
-3. Walk typed edges with caps: depth (default ≤ 5), fanout, cycle set, score floor.
-4. Pack context: path, neighboring fact edges, supporting text units, optional nearby community snippet.
-5. Compose with citations. Unresolved mentions stay marked as not-on-cadastre when that is product policy.
+**Citation:** verbatim unit span + document/page.
 
-Executor **and** store refuse `max_depth` above the cap. No free query language.
+### 2 — Path
 
-Canonical tool: `query_knowledge_graph` (see SKILL.md). Paths in the payload are the evidence.
+Named anchors; “how does A reach B”; N≥2 hops.
 
-### Global (community map-reduce)
+1. Map question to anchor entities (description embeddings + aliases). Unresolved anchor → **candidate return** (ranked list) — no silent guess.
+2. If file vs business record (or two types) ambiguous, **ask** before restricting.
+3. Walk typed fact edges with per-hop caps: depth (default ≤ 5), fanout, cycle set, score floor, **authorization inside each step**.
+4. **Batch expansion:** one read per hop over the current anchor set — never one read per node.
+5. **No model call per hop** — traversal is deterministic; model only at extract and compose.
+6. Pack context: path, edges with evidence, supporting text units.
+7. Compose with citations.
 
-1. Rank community reports by relevance to the question (report embeddings).
-2. Map: partial answers per report batch, with scores.
-3. Reduce: synthesize, still citing unit ids carried in reports.
+**Citation:** edge chain + evidence rows (document, unit, quoted span, confidence).
 
-Use for corpus-wide themes, “main risks”, “what is this collection about.” Not for “who signed invoice 12.”
+Executor **and** store refuse `max_depth` above the cap. Canonical tool: `query_knowledge_graph` (SKILL.md).
 
-### Explore
+### 3 — Filtered set
 
-Low-confidence intent: start global (or community of mapped entities), then local drill. Costlier; not the default.
+Entity set with attribute predicates and optional **temporal window** (edge period, record time).
 
-## Context mix (local)
+Resolves via mentions + entity attributes — **not** by walking paths until the set appears.
 
-Budget tokens across text units vs community text. Prefer **whole** reports over truncated reports. Too much community prose buries the path; too little loses theme.
+**Citation:** per-row provenance (mention or attribute source unit).
+
+### 4 — Count / aggregate
+
+Group-by or totals over a filtered population. Each result row still carries its own citation substrate — aggregate number without row-level evidence is not done.
+
+**Citation:** per-row unit span or edge evidence supporting membership in the bucket.
+
+### 5 — Anchor synthesis
+
+Scoped summary when a single record is opened (pre-computed or on-demand). Uses mentions and local fact edges around the anchor — not corpus-wide map-reduce.
+
+**Citation:** per-claim verbatim spans from retrieved units.
+
+### 6 — Document correlation
+
+Fresh upload compared to existing registry: explicit edges, resolved entities, and **unregistered mentions** (labeled, not silently promoted).
+
+**Citation:** spans from the new document units + matched registry evidence.
+
+## Temporal predicates
+
+Edge `period` and record timestamps are first-class filters in set, count, and path shapes — not post-hoc trimming.
+
+## Per-hop discipline
+
+At **each** expansion step apply: authorization predicate, allowed edge types, confidence floor, top-N, visited set. A **denied node is not a bridge** to reach permitted data.
+
+## Telemetry envelope
+
+Every answer returns: hops executed, nodes/edges examined vs returned, `cut_reason`, stage latencies, cache hit flag. Aligns with `../../ns-postgres-rag/references/retrieval-contract.md`.
+
+## Discovery (opt-in)
+
+When the discovery gate is on, indirect-link enumeration and grouping run under the same hop caps and cite-or-refuse rules. Output = **hypotheses** — see `discovery-layer.md`. Not a seventh default shape.
 
 ## Streaming and latency
 
-First operator-visible “thinking” should appear quickly; later hops may show the current user-facing intent. Generation **streams** from the composer only. Ingest must not starve this path.
+First operator-visible progress quickly; generation **streams** from the composer only. Ingest must not starve interactive query.
 
-Target families (lock in report): single-tool p95; multi-hop 2–5 p95. Silent waits fail accept.
+Target families (lock in report): single-shape p95; multi-hop 2–5 p95.
 
-## Return contract
+## Operator visualization
 
-Every hit: `ids`, `score`, `path`, `provenance`, `confidence`, `cut_reason`, classified `error` — `../../ns-postgres-rag/references/retrieval-contract.md`.
+Show the **retrieved path or cited subgraph** — not the whole graph. Full-graph views are ops/debug only.

@@ -8,7 +8,7 @@ Migration notes for skills promoted into this repository as the canonical home f
 
 ## Add catalog skill — `ns-graphrag` (2026-09-02)
 
-GraphRAG **process** doctrine (ontology, schema-locked extract, communities, query routing, cite-or-refuse). Frontmatter and catalog `depends`: `ns-harness`, `ns-postgres-rag`. **Not** in `alwaysInstall`, **not** in any harness preset (`full` included). Opt-in (pulls `ns-postgres-rag` when `depends` resolve):
+GraphRAG **process** doctrine (ontology, schema-locked extract, logical edges with evidence and mentions, six answer shapes, cite-or-refuse). Frontmatter and catalog `depends`: `ns-harness`, `ns-postgres-rag`. **Not** in `alwaysInstall`; included in `agents` and `full` presets. Opt-in otherwise (pulls `ns-postgres-rag` when `depends` resolve):
 
 ```bash
 npx skills add nextstage-brasil/skills@ns-graphrag --full-depth -y
@@ -110,8 +110,8 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | `ns-gitlab-board-sync` | — (runtime: MCP-provisioned `mcp-gitlab-usage`) |
 | `ns-requirements-enricher` | `ns-harness` |
 | `ns-project-manager` | `ns-harness` |
-| `ns-postgres-rag` | `ns-harness` (not in any preset) |
-| `ns-graphrag` | `ns-harness`, `ns-postgres-rag` (not in any preset) |
+| `ns-postgres-rag` | `ns-harness` (in `agents` / `full` presets) |
+| `ns-graphrag` | `ns-harness`, `ns-postgres-rag` (in `agents` / `full` presets) |
 
 SDD workflow ordering (internal `ns-spec-driven` phases including unit/e2e test-task references) and execution pairs (`ns-e2e-tests`, `ns-backend-tests`) stay as separate install phases.
 

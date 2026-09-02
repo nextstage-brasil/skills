@@ -1,6 +1,7 @@
--- Snippet: multi-hop-cte.sql — capped recursive walk
--- Sole example: company → contract → invoice → payment
--- Depth / fanout / cycle / score prune are mandatory.
+-- Snippet: multi-hop-cte.sql — capped recursive walk with per-hop auth
+-- Illustration only: company → contract → invoice → payment
+-- Derive corpus chain in GraphRAG Process Report.
+-- Depth / fanout / cycle / score prune / auth prune are mandatory.
 
 WITH RECURSIVE walk AS (
   SELECT
@@ -15,6 +16,9 @@ WITH RECURSIVE walk AS (
   WHERE s.entity_type = 'company'
     AND s.id = $company_id
     AND e.edge_type = 'company_has_contract'
+    AND e.review_status = 'fact'
+    AND auth_can_read_entity(s.id, $caller_ctx)
+    AND auth_can_read_entity(e.to_id, $caller_ctx)
 
   UNION ALL
 
@@ -29,9 +33,12 @@ WITH RECURSIVE walk AS (
   JOIN edge e ON e.from_id = w.node_id
   JOIN entity t ON t.id = e.to_id
   WHERE w.depth < 3
+    AND e.review_status = 'fact'
     AND w.fanout_seen < 32
     AND NOT e.to_id = ANY (w.path_nodes)
     AND LEAST(w.path_confidence, e.confidence) >= 0.5
+    AND auth_can_read_entity(t.id, $caller_ctx)
+    AND NOT auth_is_denied_bridge(w.path_nodes, e.to_id, $caller_ctx)
     AND (
       (w.depth = 1 AND e.edge_type = 'contract_has_invoice')
       OR (w.depth = 2 AND e.edge_type = 'invoice_has_payment')

@@ -140,12 +140,12 @@ File = design handoff. Self-contained. Not `agent-architecture.md` (`ns-multi-ag
 | Vague product scope                          | `ns-spec-driven` Clarify first                                         |
 | Implementation                               | Stop. Not this skill                                                   |
 
-Do not design ontology, extractors, communities, or cite-or-refuse routing here — that is `ns-graphrag`. Do not invent DDL/hop SQL here — that is `ns-postgres-rag`.
+Do not design ontology, extractors, answer-shape routing, or cite-or-refuse here — that is `ns-graphrag`. Do not invent DDL/hop SQL here — that is `ns-postgres-rag`.
 
 ## Related skills (optional — when installed)
 
 - `ns-multi-agent-architect` — after conceptual design locked (`agent-design.md`)
 - `ns-postgres-rag` — Postgres retrieval design when RAG gate locks information path
-- `ns-graphrag` — GraphRAG process (ontology, extract, communities, query routing) after retrieval mode is relational GraphRAG
+- `ns-graphrag` — GraphRAG process (ontology, extract, answer shapes, cite-or-refuse) after retrieval mode is relational GraphRAG
 - `ns-spec-driven` — Clarify if product scope vague
 - `ns-langgraph-agents` — runtime only after architecture ADR; never from this skill directly

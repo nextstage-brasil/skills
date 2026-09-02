@@ -4,13 +4,26 @@ Target DDL for report. Snippets: `templates/snippets/`. Not shipped migration.
 
 ## Core tables
 
-- **`document`** — natural key, source URI, content hash, mime, ingest version, timestamps.
-- **`chunk`** — `document_id`, ordinal, text, `embedding vector(D)`, metadata `jsonb`, `tsv tsvector`, model/version.
-- **`entity`** — surviving identity, type, canonical key, confidence.
+- **`document`** — natural key (file identity: source URI or file id), optional **`business_record_id`** (cadastre anchor when file ≠ record), source URI, content hash, mime, ingest version, timestamps.
+- **`chunk`** (text unit) — `document_id`, ordinal, **`body`**, **char_start**, **char_end**, **text_quality_band**, `embedding vector(D)`, metadata `jsonb`, `tsv tsvector`, model/version.
+- **`entity`** — surviving identity, type, canonical key, confidence, **`description`**, **`embedding vector(D)`**, embedding version (P5 anchor mapping).
 - **`entity_alias`** — surface forms / source keys → surviving `entity_id`.
-- **`edge`** — typed relation, `from_id`, `to_id`, **provenance** (rule id, source keys, document ids), `confidence`, created_at.
+- **`edge`** — logical typed relation: `from_id`, `to_id`, `edge_type`, `confidence`, `provenance_class` (`EXPLICIT` | `INFERRED`), **`review_status`** (`fact` | `pending_review` | `proposal`; traversal uses **`fact` only**), **`valid_from`**, **`valid_to`** (nullable period for temporal filters), created_at. **Unique** on `(from_id, edge_type, to_id)`.
+- **`evidence`** — `edge_id`, `document_id`, `unit_id` (chunk), `quoted_text`, `confidence`, created_at. Many rows per logical edge.
+- **`mention`** — `unit_id`, `entity_id`, `role_in_context`, confidence. Substrate for set/count/synthesis — not an edge.
+- **`document_relation`** — explicit file-to-file refs: `from_document_id`, `to_document_id`, `relation_type`, `provenance_class`, `source_unit_id`, `quoted_text`, confidence. **Unique** on `(from_document_id, to_document_id, relation_type)`.
 
-`chunk` + `document`: `templates/snippets/chunk-schema.sql.snippet`. Entity/edge: `templates/snippets/entity-edge-schema.sql.snippet`.
+Provenance detail lives on **`evidence`**, **`mention`**, and **`document_relation`** — not duplicated inline on every `edge` row beyond class and confidence.
+
+GraphRAG baseline DDL: `templates/snippets/chunk-schema.sql.snippet` + `templates/snippets/entity-edge-schema.sql.snippet`. HNSW: `templates/snippets/hnsw-index.sql.snippet`.
+
+## Logical edge key
+
+```text
+UNIQUE (from_id, edge_type, to_id)
+```
+
+Upsert on conflict: see `../../ns-postgres-rag/references/ingestion-pipeline.md` Graph persist — confidence, provenance class, and **`review_status`** (`fact` | `pending_review` | `proposal`).
 
 ## Vector type and distance
 
@@ -26,11 +39,19 @@ USING hnsw (embedding vector_cosine_ops) WITH (m = 16, ef_construction = 64)
 
 Tune `m` / `ef_construction` up for 1MM+ recall; build cost and RAM rise. Query: `hnsw.ef_search` (start 40–80; raise until recall@k gate passes).
 
-Filtered ANN: **iterative scan** (`hnsw.iterative_scan`) so metadata predicates do not collapse to sequential. Combine btree/GIN on filter columns. Snippet: `templates/snippets/hnsw-index.sql.snippet`.
+Filtered ANN: **iterative scan** (`hnsw.iterative_scan`) so metadata predicates do not collapse to sequential. Combine btree/GIN on filter columns. Snippet: `templates/snippets/hnsw-index.sql.snippet` (chunk + entity description indexes).
+
+## Indexes for graph retrieval
+
+- `evidence(edge_id)`, `evidence(document_id)`, `evidence(unit_id)`
+- `mention(unit_id)`, `mention(entity_id)`, composite for set filters
+- `edge(from_id, edge_type)`, `edge(to_id, edge_type)` partial indexes **`WHERE review_status = 'fact'`** for hop expansion
+- `document_relation(from_document_id)`, `document_relation(to_document_id)`, unique `(from, to, relation_type)`
+- `entity(embedding)` HNSW for anchor mapping (P5)
 
 ## Metadata filter
 
-`jsonb` GIN **or** promoted columns for hot filters (tenant, mime, corpus). Predicate + ANN: iterative scan. Selective filter + cold HNSW = recall cliff — `references/operations-and-scale.md`.
+`jsonb` GIN **or** promoted columns for hot filters (tenant, mime, corpus, import batch). Predicate + ANN: iterative scan. Selective filter + cold HNSW = recall cliff — `references/operations-and-scale.md`.
 
 ## Large-corpus partitioning
 

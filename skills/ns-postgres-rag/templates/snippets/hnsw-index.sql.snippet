@@ -6,6 +6,12 @@ CREATE INDEX chunk_embedding_hnsw
   USING hnsw (embedding vector_cosine_ops)
   WITH (m = 16, ef_construction = 64);
 
+CREATE INDEX entity_embedding_hnsw
+  ON entity
+  USING hnsw (embedding vector_cosine_ops)
+  WITH (m = 16, ef_construction = 64)
+  WHERE embedding IS NOT NULL;
+
 -- Query session (or role default):
 -- SET hnsw.ef_search = 64;
 -- SET hnsw.iterative_scan = strict_order;

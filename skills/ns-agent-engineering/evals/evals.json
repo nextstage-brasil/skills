@@ -60,7 +60,7 @@
         "Diagnoses failure as information-based with multi-hop / cross-document chain need",
         "Adaptation path pushes Prompt and/or RAG before Agent",
         "Next handoff names ns-postgres-rag and ns-graphrag (GraphRAG process after retrieval mode)",
-        "Does not design ontology, extractors, communities, or DDL/hop SQL in this skill",
+        "Does not design ontology, extractors, answer-shape routing, or DDL/hop SQL in this skill",
         "Does not recommend a framework",
         "Contains no implementation code"
       ]
