@@ -49,14 +49,16 @@
   "presets": {
     "agents": {
       "label": "Agents projects",
-      "description": "Spec-driven + LangGraph labs + LangChain/MCP/eval externals",
+      "description": "Spec-driven + LangGraph labs + Postgres RAG + GraphRAG + LangChain/MCP/eval externals",
       "nsSkills": [
         "ns-harness",
         "ns-multi-agent-architect",
         "ns-coder",
         "ns-investigator",
         "ns-reviewer",
-        "ns-langgraph-agents"
+        "ns-langgraph-agents",
+        "ns-postgres-rag",
+        "ns-graphrag"
       ],
       "skills": [
         "langchain-fundamentals",

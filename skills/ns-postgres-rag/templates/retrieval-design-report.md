@@ -77,8 +77,14 @@ Approvable deliverable for `ns-postgres-rag`. Fill every section. No application
 
 -
 
-## 11. Next steps (`ns-spec-driven`)
+## 11. Next steps
 
-Specify / Tasks only after **human approval**. This report = planning input. `ns-postgres-rag` does not implement application code.
+If mode is **relational GraphRAG** and `ns-graphrag` is installed: fill/approve the GraphRAG Process Report next; then Specify / Tasks via `ns-spec-driven` after **both** reports are approved.
+
+If GraphRAG but `ns-graphrag` absent: note process gaps open; retrieval-only handoff to `ns-spec-driven` (or install `ns-graphrag` first).
+
+If vector-only or hybrid: Specify / Tasks via `ns-spec-driven` after **human approval** of this report. N/A for Process Report.
+
+This report = planning input. `ns-postgres-rag` does not implement application code.
 
 **Human approval:** name / date

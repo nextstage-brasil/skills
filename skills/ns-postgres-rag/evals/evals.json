@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "We have about a million contract and invoice files in Postgres. Users ask questions like which payments belong to a company through its contracts and invoices — the chain is never in one file. Design the retrieval layer. Do not write application code.",
-      "expected_output": "Agent runs inventory (or states repo scan + Gate 1 fields), chooses relational GraphRAG because N≥2 hops and no single document contains the chain, fills a Retrieval Design Report (DDL, provenance edges, traversal caps, eval gates), does not implement application code, hands off to ns-spec-driven after approval.",
+      "expected_output": "Agent runs inventory (or states repo scan + Gate 1 fields), chooses relational GraphRAG because N≥2 hops and no single document contains the chain, fills a Retrieval Design Report (DDL, provenance edges, traversal caps, eval gates), does not implement application code. If ns-graphrag is installed: requires GraphRAG Process Report before ns-spec-driven; if absent: retrieval-only handoff with process gaps open.",
       "files": [],
       "assertions": [
         "Chooses relational GraphRAG (entity/edge), not vector-only as the primary mode",
@@ -12,7 +12,7 @@
         "Includes or requires a Corpus Inventory (volume, archetypes, or equivalent Gate 1)",
         "Produces or fills a Retrieval Design Report (or equivalent structured report)",
         "Does not implement application code / refuses to write app workers or HTTP",
-        "Mentions handoff to ns-spec-driven (Specify/Tasks) after human approval"
+        "If ns-graphrag installed: Process Report before ns-spec-driven; if absent: retrieval-only handoff with process gaps noted"
       ]
     },
     {

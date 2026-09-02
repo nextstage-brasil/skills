@@ -1,10 +1,10 @@
 ---
 name: ns-postgres-rag
-description: "(NS) PostgreSQL retrieval layer — pgvector RAG, hybrid FTS+vector, GraphRAG entity/edge tables, entity resolution, multi-hop traversal, million-document scale. Use whenever the user wants RAG or GraphRAG on Postgres, pgvector indexes, hybrid search, document links, entity merge, multi-hop paths, or a retrieval design for 1MM+ files — even if they say search, embeddings, or knowledge graph in SQL. Do NOT use to implement application code (hand off to ns-spec-driven after the Retrieval Design Report is approved). Do NOT use for competing vector databases, CrewAI, or generic web apps."
+description: "(NS) PostgreSQL retrieval layer — pgvector RAG, hybrid FTS+vector, GraphRAG entity/edge tables, entity resolution, multi-hop traversal, million-document scale. Use whenever the user wants RAG or GraphRAG on Postgres, pgvector indexes, hybrid search, document links, entity merge, multi-hop paths, or a retrieval design for 1MM+ files — even if they say search, embeddings, or knowledge graph in SQL. Do NOT use for ontology, schema-locked extract, communities, query routing, or cite-or-refuse process design (`ns-graphrag` when installed). Do NOT use to implement application code (hand off to ns-spec-driven after reports are approved). Do NOT use for competing vector databases, CrewAI, or generic web apps."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
 ---
@@ -13,7 +13,7 @@ depends:
 
 Postgres retrieval doctrine: `pgvector`, FTS, entity/edge, multi-hop.
 
-**Analyze. Recommend. No app code.** Report approved: `ns-spec-driven` (Specify / Tasks).
+**Analyze. Recommend. No app code.** Required reports approved (Retrieval Design Report; plus GraphRAG Process Report when mode is relational GraphRAG and `ns-graphrag` is installed) → `ns-spec-driven` (Specify / Tasks).
 
 ## Central rule
 
@@ -29,7 +29,7 @@ Required: `pgvector`. Timescale: optional — temporal volume, retention, or tim
 | ------- | -------- |
 | Greenfield retrieval on Postgres | **MUST** Gates 1–3 before DDL counts as approved |
 | Brownfield schema / indexes | **MUST** inventory DDL first; diagnose similarity-as-link |
-| Approved report, human wants code | **Stop.** `ns-spec-driven` owns Specify / Tasks |
+| Approved required reports, human wants code | **Stop.** `ns-spec-driven` owns Specify / Tasks (Process Report required first when GraphRAG + `ns-graphrag` installed) |
 
 Read **repo** (DDL, migrations, Postgres version, extensions, source formats). Do not ask human for facts tree already shows.
 
@@ -37,9 +37,10 @@ Read **repo** (DDL, migrations, Postgres version, extensions, source formats). D
 
 | Signal | Action |
 | ------ | ------ |
-| Wants app implementation now | Fill report if missing; else `ns-spec-driven`. **No** app code |
+| Wants app implementation now | Fill required reports if missing (Retrieval Design Report; Process Report when GraphRAG + `ns-graphrag`); else `ns-spec-driven`. **No** app code |
 | Similarity used as stored link | `references/anti-patterns.md` + `references/entity-resolution.md` |
-| Answer needs N≥2 hops; no single document holds chain | GraphRAG — `references/retrieval-decision.md` |
+| Answer needs N≥2 hops; no single document holds chain | GraphRAG mode — `references/retrieval-decision.md`. If `ns-graphrag` is installed: after Retrieval Design Report, continue there for ontology / extract / communities / query routing (Process Report) before `ns-spec-driven` |
+| Ontology, schema-locked extract, communities, cite-or-refuse routing | `ns-graphrag` when installed — not this skill |
 | Topic search, small corpus, no hop chain | Vector-only — refuse graph tables |
 | GitLab `ISSUE_URL` or SDD version scope | Defer `../../ns-harness/references/code-skill-routing.md` |
 
@@ -56,7 +57,7 @@ See `../../ns-harness/references/session-boot.md` — **complete Session boot (b
 
 ## Flow
 
-boot. Gate 1 Corpus Inventory. Gate 2 Retrieval Decision. Vector **or** hybrid RRF **or** GraphRAG in Postgres. Gate 3 Retrieval Design Report. Human approve. `ns-spec-driven` (or loop inventory).
+boot. Gate 1 Corpus Inventory. Gate 2 Retrieval Decision. Vector **or** hybrid RRF **or** GraphRAG in Postgres. Gate 3 Retrieval Design Report. Human approve. If mode is relational GraphRAG **and** `ns-graphrag` is installed: GraphRAG Process Report there (approve) before `ns-spec-driven`. Else `ns-spec-driven` (or loop inventory).
 
 ## Gate 1 — Corpus Inventory (blocking)
 
@@ -90,7 +91,9 @@ Post decision + one-paragraph why **before** full report. Wrong mode = rewrite G
 
 Copy `templates/retrieval-design-report.md`. Fill every section. **No application code.** SQL = target DDL / query shape, not shipped migration.
 
-Human approve before `ns-spec-driven`. Reject: loop Gate 1 or Gate 2.
+Human approve. Reject: loop Gate 1 or Gate 2.
+
+If mode is **relational GraphRAG** and `ns-graphrag` is installed: **do not** jump to `ns-spec-driven` yet — follow `ns-graphrag` through the GraphRAG Process Report (ontology, extract, communities, query routing, cite-or-refuse). Both reports approved → then `ns-spec-driven`. If `ns-graphrag` is absent, say so and hand off with retrieval-only scope (process gaps remain open).
 
 ## Reference map
 
@@ -113,26 +116,27 @@ Snippets (illustrative SQL / one return type): `templates/snippets/`.
 
 ## Handoff to ns-spec-driven
 
-After **human approval** of Retrieval Design Report:
+After **human approval** of Retrieval Design Report — and, when mode is relational GraphRAG and `ns-graphrag` is installed, after **human approval** of the GraphRAG Process Report:
 
 ```markdown
 ## Retrieval implementation planning
 - Report: path/to/retrieval-design-report.md (approved)
+- GraphRAG Process Report: path/to/graphrag-process-report.md (approved | N/A if not GraphRAG or skill absent)
 - Mode: vector-only | hybrid | relational GraphRAG
 - Target DDL: [tables]
 - Indexes: [HNSW / GIN / partition]
 - Ingestion: [idempotent key + hash]
 - Eval gates: [recall@k, path precision, false-link, p95]
-- Out of scope for this skill: application code
+- Out of scope for this skill: application code; GraphRAG process when ns-graphrag owns it
 ```
 
-`ns-spec-driven` owns Specify / Tasks. This skill writes **no** application code.
+`ns-spec-driven` owns Specify / Tasks. This skill writes **no** application code. Do **not** add `ns-graphrag` to this skill’s `depends`.
 
 ## Stop conditions
 
 | Condition | Action |
 | --------- | ------ |
-| Human asks for app implementation | Report first; then `ns-spec-driven` only |
+| Human asks for app implementation | Required reports first (incl. Process Report when GraphRAG + `ns-graphrag`); then `ns-spec-driven` only |
 | Similarity proposed as stored edge | Refuse; candidate + confirm + provenance |
 | Graph mode without N≥2 hop need | Refuse graph; vector or hybrid |
 | Competing vector store as default | Stay Postgres + `pgvector` |

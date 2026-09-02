@@ -2,6 +2,16 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Add catalog skill — `ns-graphrag` (2026-09-02)
+
+GraphRAG **process** doctrine (ontology, schema-locked extract, communities, query routing, cite-or-refuse). Frontmatter and catalog `depends`: `ns-harness`, `ns-postgres-rag`. **Not** in `alwaysInstall`, **not** in any harness preset (`full` included). Opt-in (pulls `ns-postgres-rag` when `depends` resolve):
+
+```bash
+npx skills add nextstage-brasil/skills@ns-graphrag --full-depth -y
+```
+
+Do **not** add `ns-graphrag` to `ns-postgres-rag` depends.
+
 ## Subagent spawn binds adapter model (`ns-harness` 1.5.1 / `ns-spec-driven` 1.8.1) (2026-08-28)
 
 `subagent-dispatch.md`: child phase **MUST** spawn project agent by exact `manifest` `name` (`.cursor/agents/{name}.md` / `/{name}`) so YAML `model` applies. **FORBIDDEN:** Task `inherit`, `coder`, `generalPurpose` as stand-in (parent model leak). If platform cannot spawn `{name}`, stop; human invokes `/{name}`. Face `ns-spec-driven` 1.8.1 cites the same rule on Tasks. No new `catalog.json` key.
@@ -95,6 +105,7 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | `ns-autonomous` | `ns-harness`, `ns-reviewer` |
 | `ns-gitlab-board-sync` | `mcp-gitlab-usage` |
 | `ns-postgres-rag` | `ns-harness` (not in any preset) |
+| `ns-graphrag` | `ns-harness`, `ns-postgres-rag` (not in any preset) |
 
 SDD workflow ordering (internal `ns-spec-driven` phases including unit/e2e test-task references) and execution pairs (`ns-e2e-tests`, `ns-backend-tests`) stay as separate install phases.
 

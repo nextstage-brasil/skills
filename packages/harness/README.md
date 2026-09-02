@@ -221,8 +221,8 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 | `gitlab`             | Everything in `spec-driven`, plus GitLab issues, board sync, CI generator, requirements enricher (alias: `spec-driven-gitlab`) |
 | `project-manager`    | Human PM toolkit — `ns-project-manager` only (**no** SDD/code workers)                                |
 | `frontend`           | UI design, reverse prototype (`ns-proto-creator`), visual guides (alias: `frontend-prototype`)        |
-| `agents`             | `spec-driven` + LangGraph labs + LangChain/MCP/eval externals (aliases: `agent-creator`, `agents-api`) |
-| `full`               | Bundled presets (`gitlab` + `frontend` + `project-manager` + `agents`); does **not** install `ns-postgres-rag` |
+| `agents`             | `spec-driven` + LangGraph labs + `ns-postgres-rag` + `ns-graphrag` + LangChain/MCP/eval externals (aliases: `agent-creator`, `agents-api`) |
+| `full`               | Bundled presets (`gitlab` + `frontend` + `project-manager` + `agents`); includes `ns-postgres-rag` + `ns-graphrag` via `agents` |
 
 ```bash
 npx @nextstage-brasil/harness --preset <name> --yes

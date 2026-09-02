@@ -670,6 +670,8 @@ Should not land in canonical.
   assert(agentsPreset?.skills.includes('postgresql-table-design'), 'agents preset should include postgresql skill');
   assert(agentsPreset?.nsSkills.includes('ns-multi-agent-architect'), 'agents preset should include NS architect skill');
   assert(agentsPreset?.nsSkills.includes('ns-langgraph-agents'), 'agents preset should include ns-langgraph-agents');
+  assert(agentsPreset?.nsSkills.includes('ns-postgres-rag'), 'agents preset should include ns-postgres-rag');
+  assert(agentsPreset?.nsSkills.includes('ns-graphrag'), 'agents preset should include ns-graphrag');
   assert(agentsPreset?.nsSkills.includes('ns-coder'), 'agents preset should include ns-coder');
   assert(agentsPreset?.nsSkills.includes('ns-investigator'), 'agents preset should include ns-investigator');
   assert(getExternalPreset('agents-api')?.id === 'agents', 'agents-api alias should resolve to agents');
@@ -681,8 +683,10 @@ Should not land in canonical.
     agentsDryRun.stdout.includes('langchain-fundamentals') &&
       agentsDryRun.stdout.includes('vitest') &&
       agentsDryRun.stdout.includes('ns-spec-driven') &&
-      agentsDryRun.stdout.includes('ns-langgraph-agents'),
-    'agents dry-run should list spec-driven + labs + external skills',
+      agentsDryRun.stdout.includes('ns-langgraph-agents') &&
+      agentsDryRun.stdout.includes('ns-postgres-rag') &&
+      agentsDryRun.stdout.includes('ns-graphrag'),
+    'agents dry-run should list spec-driven + labs + RAG + external skills',
   );
 
   const agentsAliasDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents-api', '--dir', tempDir], harnessRoot);

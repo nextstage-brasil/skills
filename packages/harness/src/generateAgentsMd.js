@@ -60,7 +60,7 @@ function buildSubagentsSection(projectRoot, installed) {
     return '_No harness subagent bridges (install coder/reviewer/task skills via a preset)._';
   }
 
-  return `Task \`subagent_type\` and \`model\` may be this table's \`name\` **or** inherited — not required. Orchestrators **MUST** follow the mapped skill (\`ns-harness\` → \`subagent-dispatch.md\`), not Cursor's default coder/reviewer process. Named bridges bind YAML \`model\` when used. Any vehicle: prompt = Session boot then that skill. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
+  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`, \`/reviewer-agent\`, \`/task-writer-agent\`) — **exact** \`name\` from this table. Orchestrators (\`ns-spec-driven\`, handoff, autonomous) **MUST** spawn that agent file so YAML \`model:\` applies (\`subagent-dispatch.md\`). **FORBIDDEN:** child Task \`inherit\` / \`coder\` / \`reviewer\` / \`generalPurpose\` as stand-in (parent model leaks). Inline mapped skill while bridge present = forbidden. Each bridge obeys this \`AGENTS.md\` (already in context — no tool-Read), boots rules per \`session-boot.md\`, then the mapped skill. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
 
 | Agent | Skill | Model (cursor / claude) |
 | ----- | ----- | ----------------------- |
@@ -285,7 +285,7 @@ ${layoutRows.join('\n')}
 
 ${buildInstalledSkillsSection(installed)}
 
-Invoke via the Skills menu / slash (e.g. \`/ns-coder\`, \`/ns-reviewer\`), **or** via harness project subagents / Task below. **Mandatory:** the mapped skill. **Optional:** agent type and model (named bridge or inherit). Subagents bind a model when used; they obey this \`AGENTS.md\` (already in context), then run the skill.
+Invoke via the Skills menu / slash (e.g. \`/ns-coder\`, \`/ns-reviewer\`), **or** via harness project subagents below. Skills are the workflow source of truth — subagents are thin bridges that bind a model, obey this \`AGENTS.md\` (already in context), then run the skill.
 
 ## Project subagents
 
@@ -332,7 +332,7 @@ ${buildSkillCreatorSection(installed)}
 
 ## Hard stops / FORBIDDEN
 
-- Do not invent folders, skills, or agent personas not listed here (harness \`*-agent\` bridges in Project subagents are allowed). Cursor Task \`coder\` / \`reviewer\` / \`inherit\` are allowed only if the child follows the mapped skill — not the platform default process.
+- Do not invent folders, skills, or agent personas not listed here (harness \`*-agent\` bridges in Project subagents are allowed).
 - Do not skip \`architecture-rules.md\` or \`project-rules.md\` before implementation.
 - Do not commit, push, or mutate GitLab state unless the active skill explicitly allows it for this run.
 - GitLab \`ISSUE_URL\` → \`ns-execution-gitlab-issue\` — never ad-hoc coder on the main checkout.

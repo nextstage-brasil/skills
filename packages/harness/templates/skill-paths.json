@@ -22,5 +22,6 @@
   "ns-spec-driven": "skills/ns-spec-driven",
   "ns-backend-tests": "skills/ns-backend-tests",
   "ns-e2e-tests": "skills/ns-e2e-tests",
-  "ns-postgres-rag": "skills/ns-postgres-rag"
+  "ns-postgres-rag": "skills/ns-postgres-rag",
+  "ns-graphrag": "skills/ns-graphrag"
 }

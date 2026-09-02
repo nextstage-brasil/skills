@@ -43,7 +43,8 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-agent-engineering`               | Conceptual agent design — Evaluation → Prompt → RAG → Agent → Fine-Tune; no framework/code (`docs/specs/agent-design.md`)                      |
 | `ns-multi-agent-architect`           | Interview for LangGraph vs CrewAI and multi-agent architecture                                                                                |
 | `ns-langgraph-agents`                | LangGraph.js runtime — greenfield `agent-api` scaffold, MCP governance, context window, HITL, evals                                           |
-| `ns-postgres-rag`                    | PostgreSQL retrieval doctrine — pgvector, hybrid FTS, GraphRAG. Opt-in only; **`full` does not install this skill**. Example: `npx skills add nextstage-brasil/skills@ns-postgres-rag --full-depth -y` |
+| `ns-postgres-rag`                    | PostgreSQL retrieval doctrine — pgvector, hybrid FTS, GraphRAG. Included in `agents` / `full`. Example: `npx skills add nextstage-brasil/skills@ns-postgres-rag --full-depth -y` |
+| `ns-graphrag`                        | GraphRAG **process** — ontology, extract, communities, cited query routing. Depends on `ns-postgres-rag`. Included in `agents` / `full`. Example: `npx skills add nextstage-brasil/skills@ns-graphrag --full-depth -y` |
 
 Project-local skill authoring: install Anthropics `skill-creator` (`npx skills add https://github.com/anthropics/skills --skill skill-creator -y`) — see `ns-harness` → `references/project-skill-authoring.md`.
 
@@ -73,8 +74,8 @@ See `packages/harness/README.md` for all flags. Install and migration details: `
 | `gitlab` | Extends `spec-driven`. Adds GitLab issue execution, board sync, CI generator, MCP usage, requirements enricher. Alias: `spec-driven-gitlab`. |
 | `project-manager` | PM face only (`ns-project-manager`). No SDD or code workers. |
 | `frontend` | UI design, reverse prototyping, visual appearance guides. Alias: `frontend-prototype`. |
-| `agents` | Extends `spec-driven`. Adds agent design + LangGraph labs (`ns-agent-engineering`, `ns-multi-agent-architect`, `ns-langgraph-agents`) plus LangChain/MCP/Vitest/eval externals. Aliases: `agent-creator`, `agents-api`. |
-| `full` | Bundled NS presets: `gitlab` + `frontend` + `project-manager` + `agents` (plus leftover skills those presets already list). Does **not** install `ns-postgres-rag` — opt-in only (see catalog table). |
+| `agents` | Extends `spec-driven`. Adds agent design + LangGraph labs (`ns-agent-engineering`, `ns-multi-agent-architect`, `ns-langgraph-agents`) + `ns-postgres-rag` + `ns-graphrag`, plus LangChain/MCP/Vitest/eval externals. Aliases: `agent-creator`, `agents-api`. |
+| `full` | Bundled NS presets: `gitlab` + `frontend` + `project-manager` + `agents` (plus leftover skills those presets already list). Includes `ns-postgres-rag` and `ns-graphrag` via `agents`. |
 
 Aliases: `frontend-prototype` → `frontend`, `spec-driven-gitlab` → `gitlab`, `agent-creator` / `agents-api` → `agents`.
 
