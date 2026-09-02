@@ -6,7 +6,7 @@ Deliverable serves **client first**, also **delivery team**. Client confirms sco
 
 | Section | Client reads | Team needs |
 |---------|--------------|------------|
-| Objetivo (**O que buscamos** / **O que é** / **O que entregamos**), **Valor agregado** (client export), Features (**Descrição detalhada**), fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Three-block Objetivo (`objective-structure.md`); Feature Descrição rich in both docs — client structured, internal prose OK (`feature-description-structure.md`); Objetivo same text internal + client; Valor agregado = locked decision-maker speech (`sales-value-speech.md`) |
+| Objetivo (**O que buscamos** / **O que é** / **O que entregamos**), **Valor agregado** (client export), Features (**Descrição detalhada**), fluxos, RNFs, riscos (narrative) | Plain product/commercial language | Three-block Objetivo (`objective-structure.md`); Feature Descrição = acceptance-contract facts (object, conditions, limits) — client structured, internal compact (`feature-description-structure.md`); Objetivo same text internal + client; Valor agregado = locked decision-maker speech (`sales-value-speech.md`) |
 | Critérios de aceite | Verifiable by stakeholder | Each criterion maps to scoped behavior — no hidden gap |
 | Estimativas (FP, horas; COSMIC only if asked) | Totals + per-Feature FP justification; client table also Esforço (h) / Custo (R$) or `—` | FP origins traceable; hours = formula only; CFP table only when requested |
 | Macroatividades | Lifecycle effort split | Unchanged |
@@ -39,11 +39,11 @@ When scope mixes business capabilities with operational/architectural consequenc
 
 Follow `references/feature-description-structure.md`:
 
-- **Both docs:** rich detail (states, rules, actors, boundaries) — not thin summaries.
-- **Client export:** 1–3 bold-titled subsections + bullets with **Bold lead term:** — never a run-on paragraph.
-- **Internal:** continuous prose OK; same richness as client (structured rewrite on client, not a cut-down).
+- **Both docs:** acceptance-contract facts (object, conditions, limits) — complete, not padded.
+- **Client export:** 1–3 contract-block subsections + **Bold lead term:** bullets — never a run-on paragraph, never a tutorial.
+- **Internal:** compact prose or the same blocks; same facts as client (structured rewrite, not a cut-down, not a longer essay).
 
-Critérios de aceite stay separate — verifiable checks, not a repeat of the narrative.
+Critérios de aceite stay separate — checkboxes the contract signs, not a copy of Descrição.
 
 ## Item classification (before Features)
 

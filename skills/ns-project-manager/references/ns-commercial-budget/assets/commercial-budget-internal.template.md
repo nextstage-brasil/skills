@@ -98,11 +98,11 @@ flowchart TD
 ### Feature 001 — {TÍTULO}
 
 **Descrição detalhada:**  
-{Rich continuous prose OK — who benefits, states, rules, boundaries. Same detail depth as client. See references/feature-description-structure.md.}
+{Acceptance-contract facts: object, conditions, limits. Compact prose OK. Same facts as client. See references/feature-description-structure.md.}
 
 #### Critérios de aceite
 
-- [ ] {product-verifiable — "o administrador consegue…", "o parceiro recebe…"}
+- [ ] {checkbox the contract signs — "o administrador consegue…", "o parceiro recebe…"}
 - [ ] {product-verifiable}
 
 ### Feature 002 — {TÍTULO}

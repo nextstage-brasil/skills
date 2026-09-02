@@ -24,7 +24,7 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.26"
+  version: "1.27"
 ---
 
 # Commercial Budget
@@ -79,7 +79,7 @@ Read `references/clarification.md`.
 2. `references/product-voice.md`
 3. `references/sales-value-speech.md` — when writing `commercial-budget-costumer.md` (Valor agregado)
 4. `references/objective-structure.md` — three-block Objetivo (O que buscamos / O que é / O que entregamos)
-5. `references/feature-description-structure.md` — **Descrição detalhada**: rich in both docs; structured subsections only on client export (internal prose OK)
+5. `references/feature-description-structure.md` — **Descrição detalhada**: acceptance-contract facts (object, conditions, limits) in both docs; structured contract blocks only on client export (internal compact prose OK)
 6. `references/engineering-split.md` — classify each scoped item `negócio` | `engenharia` | `qualidade` before Features
 7. Draft **Features** (numbered) — product voice in narrative; internal may include `engenharia` / `qualidade`
 8. `references/technical-notes.md` — **internal only**, after Features: meeting/transcript/POC implementation detail; omit section if no source; never in client export
@@ -94,7 +94,7 @@ Read `references/clarification.md`.
 | Objetivo principal | Three mandatory subsections (`objective-structure.md`): **O que buscamos** (problem + context/scale/pain), **O que é** (concept definition; optional Camada \| Papel table; optional example), **O que entregamos** (scope + labeled **Resultado esperado:**). Same text in internal and client export. Commercial/product voice — **not** engineering-area framing |
 | Valor agregado (client export only) | After Objetivo in `commercial-budget-costumer.md`. Locked speech to the **decision-maker**. Four headings only (`sales-value-speech.md`). No extra subsections. Gains = measurable ranges; objections = trust / overlap / permission — not quote theater |
 | Fluxos principais | 1–3 Mermaid `flowchart TD`; white init + Palette A/B `classDef` + `linkStyle` edges (`product-voice.md`). Subtitle per diagram; validation chain optional; client-readable PT-BR labels |
-| Features (≤10) | `Feature 001`…; **Descrição detalhada** rich in both docs — client: 1–3 bold-titled subsections + **lead term:** bullets; internal: continuous prose OK (`feature-description-structure.md`). Acceptance criteria client can verify. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema in narrative. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
+| Features (≤10) | `Feature 001`…; **Descrição detalhada** = contract facts in both docs — client: 1–3 blocks (**Objeto e condições** / **Regras** / **Limites desta entrega**) + **lead term:** bullets; internal: compact prose OK (`feature-description-structure.md`). Critérios = signed checks, not a copy of Descrição. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema in narrative. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
 | Notas técnicas (internal only) | After Features, before RNFs. Include only when transcript/meeting/POC/architecture source exists (`technical-notes.md`). Cross-ref Feature numbers; hoje vs. alvo tables, pseudocode, prerequisites OK. **Omit entire section** if no source. **Never** in client export |
 | RNFs | Only if identified — product language |
 | Estimativas — FP | **Same Total PF** in both docs. Internal: APF + CPM/SISP origem. Client: per-Feature FP + **Esforço (h)** + **Custo (R$)** + justificativa — **no** CPM/SISP types (`fp-sizing.md`, `engineering-split.md`). Esforço = `—` if productivity unspecified; Custo = `—` if rates unspecified |
@@ -146,7 +146,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 | `references/product-context.md` | After Session boot — reuse inventory gate |
 | `references/product-voice.md` | Before drafting — dual-audience rules |
 | `references/objective-structure.md` | Before Objetivo — three-block structure |
-| `references/feature-description-structure.md` | Before Features — rich Descrição both docs; structured format on client export only |
+| `references/feature-description-structure.md` | Before Features — acceptance-contract Descrição both docs; structured contract blocks on client export only |
 | `references/sales-value-speech.md` | When writing Valor agregado in `commercial-budget-costumer.md` |
 | `references/engineering-split.md` | Before Features — classify negócio / engenharia / qualidade; client export |
 | `references/technical-notes.md` | After Features — internal-only implementation notes from transcript/POC; omit if no source |

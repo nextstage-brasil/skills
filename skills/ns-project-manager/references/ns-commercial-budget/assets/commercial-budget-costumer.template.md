@@ -73,23 +73,25 @@
 
 **Descrição detalhada:**
 
-<!-- Client only: structured narrative — references/feature-description-structure.md. Never a run-on paragraph. Same richness as internal. -->
+<!-- Client: acceptance-contract blocks — references/feature-description-structure.md. Never a run-on paragraph or tutorial. Same facts as internal. -->
 
-**{Subsection 1 — e.g. Resumo do fluxo de trabalho}**
+**Objeto e condições**
 
-{Optional one-sentence intro.}
+* **{Onde / O quê / Quem / Calibração}:** {One contractual fact — include parent-level product consistency when `engenharia` children were merged.}
+* **{Lead term}:** {One fact.}
 
-* **{Lead term}:** {Explanation — include parent-level product consistency when `engenharia` children were merged.}
-* **{Lead term}:** {Explanation.}
+**Regras** *(omit when already covered above)*
 
-**{Subsection 2 — e.g. Regras de …}** *(omit when narrow scope)*
+* **{Lead term}:** {One binding rule.}
 
-* **{Lead term}:** {Explanation.}
+**Limites desta entrega** *(omit when the Feature has no exclusions)*
+
+* **{Lead term}:** {Exclusion, deferred decision, or mandatory procedure.}
 
 #### Critérios de aceite
 
-- [ ] {product-verifiable — includes merged outcomes from absorbed `engenharia` items}
-- [ ] {product-verifiable}
+- [ ] {checkbox the contract signs — includes merged outcomes from absorbed `engenharia` items}
+- [ ] {checkbox the contract signs}
 
 <!-- Repeat Feature 002…N. -->
 
