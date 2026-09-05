@@ -11,6 +11,7 @@ Operational limits for the agent loop.
 | `max_mcp_calls_per_turn` | 6 | `AGENT_MAX_MCP_CALLS` |
 | `max_duration_seconds` | 120 | `AGENT_MAX_DURATION` |
 | `turn_latency_budget_ms` | 60000 | `TURN_LATENCY_BUDGET_MS` |
+| `max_cost_per_turn` | product-set | `AGENT_MAX_COST_PER_TURN` |
 | `no_progress_repeat_limit` | 3 | — |
 
 ## Sensitive actions
@@ -35,6 +36,7 @@ Stop and report to user when:
 - Circuit breaker trips on invalid planner JSON
 - MCP server unavailable and no fallback
 - Latency budget hit with no evidence to narrate
+- Cost budget (`max_cost_per_turn`) would be exceeded by the next LLM/tool call — reserve check before invoke (`references/observability.md`)
 
 ## Security
 

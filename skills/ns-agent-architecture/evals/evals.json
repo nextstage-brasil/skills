@@ -1,0 +1,41 @@
+{
+  "skill_name": "ns-agent-architecture",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to build a bot for my company. Not sure where to start — maybe LangGraph or CrewAI?",
+      "expected_output": "Agent posts ~200-word summary, writes docs/specs/agent-architecture.md (no path prompt) with Reference Architecture (colored Mermaid: English doctrine title on first line of each box, case prose on second line; component table with English doctrine ids), Subtask Decomposition grid (Type, P1, P2, P3, component per row), Trade-off Budget table (canonical components with throughput axis; per-context rows when interactive vs batch diverge), Orchestration pattern section (pattern per segment), Architecture Change Signal (one sentence), Why this design, interview record, functional requirements, state schema, and LangGraph mermaid. Grill turns include a use-case Example.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I need a multi-agent system that researches competitors, drafts a report, and requires my approval before sending email to clients. We have 2 weeks for MVP but it must not send email without me clicking approve.",
+      "expected_output": "Agent asks ONE question at a time with recommended answers and a use-case Example; after sufficient turns posts ~200-word on-screen recommendation, then writes docs/specs/agent-architecture.md with Reference Architecture, Trade-off Budget (throughput axis; per-context rows when needed), Orchestration pattern section, Architecture Change Signal, LangGraph mermaid, tooling stack, and subtask classification grid.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Three specialist agents — researcher, writer, editor — working in sequence on blog posts. No human review, just fast iteration. Small team, Python okay.",
+      "expected_output": "Agent detects the flow is already broken down, skips decomposition with a one-line reason, fills the subtask grid from the given steps, classifies each row, locks trade-off budget (throughput + per-context rows when needed), Orchestration pattern per segment, and change signal, then writes docs/specs/agent-architecture.md with Reference Architecture, CrewAI team structure table, and tooling stack.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "We already have a LangGraph agent running in production but nobody ever documented why it was designed this way. Can you reconstruct the architecture decisions?",
+      "expected_output": "Agent enters reverse mode: reads graph nodes, tools, interrupts and any docs/context artifacts, drafts Reference Architecture and subtask grid with source=code and status=inferred. Must not map the whole compiled graph to Orchestrator; LLM nodes map to Model. Infers trade-off budget (throughput + per-context rows when needed), Orchestration pattern per segment, and change signal with confirmation when weak, grills only what code cannot prove, then writes docs/specs/agent-architecture.md flagging contradictions such as irreversible actions without a gate.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Three independent extracts — invoice PDF, shipping CSV, CRM notes — then one summary. No step needs another's output; they just all finish before summarize. Small team.",
+      "expected_output": "Agent locks parallel + aggregator for the three extracts (not a sequential chain); sequential only for summarize-after-merge; Orchestration pattern section records per-segment pattern; Trade-off Budget includes throughput axis; writes docs/specs/agent-architecture.md.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Support bot starts in billing, then mid-turn the user asks a medical-device compliance question that billing tools must not touch. Billing agent should stop owning the turn.",
+      "expected_output": "Agent selects handoff (control transfer; originator leaves; context follows) — not a supervisor round-trip that returns to billing; Orchestration pattern section names handoff for the domain-change segment; ADR written.",
+      "files": []
+    }
+  ]
+}

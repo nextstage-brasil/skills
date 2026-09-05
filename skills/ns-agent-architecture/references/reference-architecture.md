@@ -91,24 +91,29 @@ When Approval Gate is not used, keep the first line `Approval Gate`; second line
 
 ## Trade-off budget — Step 5
 
-After subtask classification, assign a trade-off budget **per canonical component** (five rows). One turn per component: ask which axis is **non-negotiable** and propose latency/cost/precision targets from context.
+After subtask classification, assign a trade-off budget **per canonical component** (five components; **N rows** when interactive vs batch or other contexts diverge). One turn per component (or per context row): ask which axis is **non-negotiable** and propose latency/cost/precision/throughput targets from context.
 
 | Axis | Values | Meaning |
 | ---- | ------ | ------- |
 | **Latency** | low / medium / high (or target, e.g. `<3s p95`) | Acceptable response time for this block |
 | **Cost** | low / medium / high (or target, e.g. `<$0.02/turn`) | Token/API spend budget for this block |
 | **Precision** | low / medium / high | Required correctness / recall for this block |
-| **Non-negotiable axis** | latency \| cost \| precision | Which axis must not be sacrificed; others may flex |
+| **Throughput** | low / medium / high (or target, e.g. `≥50 turns/min`) | Acceptable sustained request volume for this block |
+| **Non-negotiable axis** | latency \| cost \| precision \| throughput | Which axis must not be sacrificed; others may flex |
 
 Guidance by block:
 
 | Component | Typical non-negotiable |
 | --------- | ---------------------- |
 | Gateway | Latency (fast reject) or precision (strict validation) |
-| Orchestrator | Latency (predictable routing) |
-| Model + Tools/RAG | Precision (domain) or cost (volume) |
+| Orchestrator | Latency (predictable routing) or throughput (fan-out) |
+| Model + Tools/RAG | Precision (domain), cost (volume), or throughput (batch) |
 | Approval Gate | Precision (human review quality) |
 | Observability | Precision (audit completeness) — never skip in regulated tenants |
+
+### Budget varies by usage context
+
+Same component may need **different** budgets interactive vs batch (or other contexts). When both exist: record **one row per context** (e.g. `Model + Tools/RAG — interactive`, `Model + Tools/RAG — batch`). Do not average into one row.
 
 Record the full table in the report. Do not collapse to a single global budget.
 

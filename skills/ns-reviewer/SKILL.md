@@ -4,7 +4,7 @@ description: (NS) Senior Tech Lead code review on SOLID, clean code, performance
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "2.0"
+  version: "2.1"
 depends:
   - ns-harness
 ---
@@ -117,6 +117,18 @@ Within each section, order by severity:
 3. Suggestion (consider)
 
 Diff touches `agent-api` (or LangGraph runtime paths): load `../ns-langgraph-agents/references/anti-patterns.md`. Placement, Prompt inject, Bind parity, Spec drift, colon wire names = Critical if violated.
+
+### AI / agent diff criteria
+
+Keep anti-patterns delegation above. Extra criteria when diff touches agent/LLM surfaces:
+
+| Finding | Severity |
+| ------- | -------- |
+| Irreversible write reachable without a gate | **Critical** |
+| Prompt body changed without version bump | **Critical** |
+| `UPDATE` / `DELETE` against audit history | **Critical** |
+| Equality assertion on model output (exact string) instead of accepted range / contract | **Warning** + score cap **7–8** |
+| New LLM call with no token/cost accounting | **Warning** (no extra score cap unless combined with other smells) |
 
 ### SOLID and clean code
 

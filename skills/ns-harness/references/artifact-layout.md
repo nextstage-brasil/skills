@@ -40,7 +40,7 @@ New versions: create SDD artifacts only under `sdd/`.
 | Commercial budget (client) | `docs/versions/{version_san}/pm/{version_san}-commercial-budget-costumer.md` (optional; header: `{version_san}-costumer`) |
 | Living spec index | `docs/specs/INDEX.md` |
 | Domain spec | `docs/specs/{domain}.md` |
-| Agent architecture ADR | `docs/specs/agent-architecture.md` (`ns-multi-agent-architect`; living + Changelog — not under `docs/versions/`) |
+| Agent architecture ADR | `docs/specs/agent-architecture.md` (`ns-agent-architecture`; living + Changelog — not under `docs/versions/`) |
 
 ## Legacy path resolution (read)
 

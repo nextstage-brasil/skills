@@ -2,6 +2,29 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Rename — agent pipeline IDs (2026-09-05)
+
+Catalog keys and directories:
+
+| Old | New |
+| --- | --- |
+| `ns-agent-engineering` | `ns-agent-adaptation` |
+| `ns-multi-agent-architect` | `ns-agent-architecture` |
+
+Aliases in `retired-skills.json` (plus legacy `multi-agent-architect`). README lists them as Stage 1 → 2 → 3 with `ns-langgraph-agents`. Scope unchanged — not a merge.
+
+## AI-First doctrine gaps — Wave 4 (`ns-reviewer` 2.1 / `ns-agent-adaptation` 1.2) (2026-09-05)
+
+`ns-reviewer`: AI/agent diff criteria under Review priorities (irreversible write without gate, prompt without version bump, audit UPDATE/DELETE = Critical; exact LLM equality assert = Warning + score cap 7–8; missing token/cost accounting = Warning, no extra cap). `ns-agent-adaptation`: episodic vs semantic external memory, retention liability, Reflection section. No new `catalog.json` key.
+
+## AI-First doctrine gaps — Waves 2–3 (`ns-langgraph-agents` 1.13) (2026-09-05)
+
+Distributed failure: availability vs consistency per block, multi-write compensation, concurrent-turn version checks. `max_cost_per_turn` stop wired to reservation rule. New `model-cascade-and-cache.md` (post-generation escalate; not intent_classify). No new `catalog.json` key.
+
+## AI-First doctrine gaps — Wave 1 (`ns-agent-architecture` 1.18) (2026-09-05)
+
+Orchestration pattern catalog (`orchestration-patterns.md`); throughput trade-off axis; per-context budget rows. No new `catalog.json` key.
+
 ## SDD nest under `sdd/` (2026-09-02)
 
 Canonical SDD root: `docs/versions/{version_san}/sdd/`. All SDD face outputs (requirements, clarify, source, tasks, handoff, roadmap, subversions, delivery-units, ui-contract, spec-coverage, graph-spec, execution-plan) live there. `pm/` stays sibling under the same version folder. `docs/context/` and `docs/specs/` unchanged.
@@ -180,7 +203,7 @@ Catalog skills (except `ns-harness`) moved under domain folders. Several skills 
 | `skills/ns-pm-delivery-schedule` | `skills/business/ns-delivery-schedule` |
 | `skills/ns-commercial-budget` | `skills/business/ns-commercial-budget` |
 | `skills/ns-requirements-enricher` | `skills/business/ns-requirements-enricher` |
-| `skills/ns-multi-agent-architect` | `skills/labs/ns-multi-agent-architect` |
+| `skills/ns-agent-architecture` | `skills/labs/ns-agent-architecture` |
 | `skills/ns-langgraph-agents` | `skills/labs/ns-langgraph-agents` |
 
 **Root (unchanged):** `skills/ns-harness`.

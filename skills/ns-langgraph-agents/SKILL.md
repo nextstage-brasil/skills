@@ -1,10 +1,10 @@
 ---
 name: ns-langgraph-agents
-description: (NS) LangGraph.js agent-api — greenfield scaffold (bootstrap-agent-runtime), StateGraph, MCP tools, skill bind/inject, checkpointers, context-window trim, HITL/SSE, prompt/locale placement. Use for new agent-api from scratch, LangGraph graphs, MCP wiring, orphan layout, system-prompt compose, bind parity, graph-spec sync, or "fix my LangGraph agent" / "wire MCP tools" / "translations in the graph". Feature diffs via ns-coder; version features via ns-spec-driven; LangGraph vs CrewAI via ns-multi-agent-architect. Do NOT use for CrewAI crews, generic web apps, or SDD-only requirements with no agent-api.
+description: (NS) LangGraph.js agent-api — greenfield scaffold (bootstrap-agent-runtime), StateGraph, MCP tools, skill bind/inject, checkpointers, context-window trim, HITL/SSE, prompt/locale placement. Use for new agent-api from scratch, LangGraph graphs, MCP wiring, orphan layout, system-prompt compose, bind parity, graph-spec sync, or "fix my LangGraph agent" / "wire MCP tools" / "translations in the graph". Feature diffs via ns-coder; version features via ns-spec-driven; LangGraph vs CrewAI via ns-agent-architecture. Do NOT use for CrewAI crews, generic web apps, or SDD-only requirements with no agent-api.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.12.1"
+  version: "1.13"
 depends:
   - ns-harness
 ---
@@ -13,7 +13,7 @@ depends:
 
 Production-grade LangGraph.js (Node 24+, TypeScript strict, `@langchain/langgraph`).
 
-Owns **runtime doctrine** — placement, prompt/capability injection, graph-spec sync. Diffs via `ns-coder` or `ns-autonomous`. Framework choice: `ns-multi-agent-architect`.
+Owns **runtime doctrine** — placement, prompt/capability injection, graph-spec sync. Diffs via `ns-coder` or `ns-autonomous`. Framework choice: `ns-agent-architecture`.
 
 ## Applicability
 
@@ -29,8 +29,8 @@ Brownfield open ReAct valid until deliberate topology change. Greenfield MUST = 
 
 | Signal                                                 | Action                                                                                                                     |
 | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| Conceptual design unlocked (agent vs RAG vs fine-tune) | **Stop** → `ns-agent-engineering`                                                                                          |
-| No framework lock / CrewAI requested                   | **Stop** → `ns-multi-agent-architect`                                                                                      |
+| Conceptual design unlocked (agent vs RAG vs fine-tune) | **Stop** → `ns-agent-adaptation`                                                                                          |
+| No framework lock / CrewAI requested                   | **Stop** → `ns-agent-architecture`                                                                                      |
 | Orphan / lost structure / layout unclear               | Run orphan checklist **before** features (`references/orphan-recovery-checklist.md`)                                       |
 | GitLab `ISSUE_URL` or SDD version scope                | **Defer** to harness `../../ns-harness/references/code-skill-routing.md` — do not absorb                                   |
 | Approved placement/inject plan ready for diff          | Hand off to `ns-coder` for implementation — except greenfield **bootstrap copy** (`references/bootstrap-agent-runtime.md`) |
@@ -56,6 +56,7 @@ See `../../ns-harness/references/session-boot.md` — **complete Session boot (b
 | Topology / state / capabilities change                    | **Spec Sync Gate** — update `graph-spec.md` in the same delivery                                           |
 | MCP with many servers/tools                               | Read `references/mcp-complex-access.md` + `references/capability-governance.md`                            |
 | Token blow-up / slow turns                                | Read `references/context-window-and-tokens.md`                                                             |
+| Cost-sensitive high volume / model tier / cache           | Read `references/model-cascade-and-cache.md`                                                               |
 | Provider message/reasoning quirks                         | Read `references/message-content-blocks.md`                                                                |
 | HITL / streaming UX                                       | Read `references/streaming-and-hitl.md`                                                                    |
 | JSON planner / analyst chooses tools                      | Operator-progress channel — `templates/contracts/planner-contract.md` + `references/streaming-and-hitl.md` |
@@ -143,8 +144,9 @@ Load on demand — do not memorize whole files.
 | `templates/snippets/conversation-locale.ts.snippet`  | `resolveConversationLocale` + Intl `formatUserFacing`                                             |
 | `templates/snippets/tool-budget.ts.snippet`          | Per-turn tool/MCP caps, arg fingerprint duplicate-skip                                            |
 | `templates/snippets/prepare-llm-messages.ts.snippet` | `context_manager` helper                                                                          |
-| `references/error-and-reliability.md`                | Tool errors, circuit breaker, retries                                                             |
-| `references/observability.md`                        | Postgres audit, LangSmith, OTel, run context                                                      |
+| `references/error-and-reliability.md`                | Tool errors, circuit breaker, retries, compensation, cost stop                                    |
+| `references/model-cascade-and-cache.md`              | Cheap-first cascade, semantic/prompt cache; not intent_classify                                   |
+| `references/observability.md`                        | Postgres audit, LangSmith, OTel, run context, cost reservation                                    |
 | `references/architectures.md`                        | ReAct, plan_execute (suggested start for most MCP), other topologies; **node id ≠ state channel** |
 | `references/streaming-and-hitl.md`                   | SSE envelopes, operator `thinking` from planner state, `interrupt()`, `Command` resume            |
 | `templates/contracts/planner-contract.md`            | JSON planner hops: `executionPlan` + `userFacingIntent`                                           |
@@ -177,7 +179,7 @@ No new graph nodes or MCP servers until layout + governance baselines pass.
 
 If `graph-spec.md` is missing, create it from `templates/graph-spec.md`. Minimum sections: locked header (`framework`, `architecture`, `interaction_mode`), domain ownership, prompt composition, state schema, nodes table, edges, interrupts, memory, capability bind/inject table, recursion_limit, HTTP routes.
 
-If the user has no architecture decision yet, stop and invoke `ns-multi-agent-architect` first.
+If the user has no architecture decision yet, stop and invoke `ns-agent-architecture` first.
 
 ### Phase 1 — Skeleton
 
@@ -310,8 +312,8 @@ Stay here for diagnosis, spec, placement, governance design, and **greenfield bo
 | `ns-langgraph-agents`      | Doctrine, placement, inject plan, graph-spec, greenfield scaffold                                                        |
 | `ns-coder`                 | Feature diffs + review loop (not initial scaffold copy)                                                                  |
 | `ns-reviewer`              | Verdict; when diff touches `agent-api`, apply placement + inject + wire-name + bind-parity anti-patterns from this skill |
-| `ns-agent-engineering`     | Conceptual adaptation design before architecture                                                                         |
-| `ns-multi-agent-architect` | Framework choice before Phase 0 when unlocked                                                                            |
+| `ns-agent-adaptation`     | Conceptual adaptation design before architecture                                                                         |
+| `ns-agent-architecture` | Framework choice before Phase 0 when unlocked                                                                            |
 | `ns-spec-driven`           | Version features after scaffold exists (or first task = bootstrap)                                                       |
 | `ns-investigator`          | Runtime debug                                                                                                            |
 

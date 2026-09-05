@@ -1,17 +1,17 @@
 ---
-name: ns-agent-engineering
-description: (NS) Language-agnostic conceptual agent design from foundation-model adaptation (Evaluation, Prompt, RAG, Agent, Fine-Tune). Use when designing an agent, deciding agent vs RAG vs prompt vs fine-tune, tool taxonomy, plan/execute separation, agent memory, agent evaluation, guardrails, or observability for agents — even if user never says "AI engineering". Do NOT use for LangGraph/CrewAI choice (`ns-multi-agent-architect`), LangGraph runtime (`ns-langgraph-agents`), Postgres RAG schema (`ns-postgres-rag`), GraphRAG process (`ns-graphrag`), or app coding.
+name: ns-agent-adaptation
+description: (NS) Decide Prompt vs RAG vs Agent vs Fine-Tune before any framework. May lock explicit non-agent. Writes `docs/specs/agent-design.md`. Use when designing an agent, choosing agent vs RAG vs prompt vs fine-tune, tool taxonomy, plan/execute, memory, eval, or guardrails — even if the user never says "adaptation". Do NOT use for LangGraph/CrewAI (`ns-agent-architecture`), LangGraph runtime (`ns-langgraph-agents`), Postgres RAG schema (`ns-postgres-rag`), GraphRAG process (`ns-graphrag`), or app coding.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.3"
 depends:
   - ns-harness
 ---
 
-# Agent Engineering
+# Agent Adaptation
 
-Senior AI engineer. Foundation-model adaptation only. No programming language. No framework. No implementation code.
+Foundation-model adaptation only. No programming language. No framework. No implementation code.
 
 **Analyze. Recommend. Lock design.** Living doc: `docs/specs/agent-design.md`.
 
@@ -95,11 +95,11 @@ Classify each planned tool: **Knowledge augmentation** / **Capability extension*
 
 ### Step 6 — Planning
 
-Plan decoupled from execution. Validate plan before run. Optional parallel plans + judge. Agent reports parameter values. `references/planning-and-memory.md`.
+Plan decoupled from execution. Validate plan before run. Optional parallel plans + judge. Optional Reflection (separate critique call; skip unless quality gate pays). Agent reports parameter values. `references/planning-and-memory.md`.
 
 ### Step 7 — Memory
 
-Internal weights vs context window (short-term) vs external (long-term / RAG). What goes where. `references/planning-and-memory.md`.
+Internal weights vs context window vs episodic vs semantic external. Retention liability; no long-term memory valid. What goes where. `references/planning-and-memory.md`.
 
 ### Step 8 — Agent evaluation
 
@@ -119,7 +119,7 @@ Locked: objective/I/O, Evaluation, failure diagnosis, adaptation path, (if Agent
 
 **Standalone (no project FS):** full report in chat. Tell user save as `docs/specs/agent-design.md`.
 
-File = design handoff. Self-contained. Not `agent-architecture.md` (`ns-multi-agent-architect`).
+File = design handoff. Self-contained. Not `agent-architecture.md` (`ns-agent-architecture`).
 
 ## Critical rules
 
@@ -134,7 +134,7 @@ File = design handoff. Self-contained. Not `agent-architecture.md` (`ns-multi-ag
 
 | Signal                                       | Action                                                                 |
 | -------------------------------------------- | ---------------------------------------------------------------------- |
-| Design locked; need framework / topology ADR | `ns-multi-agent-architect`                                             |
+| Design locked; need framework / topology ADR | `ns-agent-architecture`                                             |
 | Information-gap / corpus retrieval           | `ns-postgres-rag` if installed (vector / hybrid / GraphRAG mode)       |
 | Multi-hop / entity-rel GraphRAG process      | `ns-graphrag` if installed — after `ns-postgres-rag` mode = GraphRAG   |
 | Vague product scope                          | `ns-spec-driven` Clarify first                                         |
@@ -144,7 +144,7 @@ Do not design ontology, extractors, answer-shape routing, or cite-or-refuse here
 
 ## Related skills (optional — when installed)
 
-- `ns-multi-agent-architect` — after conceptual design locked (`agent-design.md`)
+- `ns-agent-architecture` — after conceptual design locked (`agent-design.md`)
 - `ns-postgres-rag` — Postgres retrieval design when RAG gate locks information path
 - `ns-graphrag` — GraphRAG process (ontology, extract, answer shapes, cite-or-refuse) after retrieval mode is relational GraphRAG
 - `ns-spec-driven` — Clarify if product scope vague

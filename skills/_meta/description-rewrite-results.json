@@ -65,7 +65,7 @@
       "delta": -224
     },
     {
-      "name": "ns-multi-agent-architect",
+      "name": "ns-agent-architecture",
       "ok": true,
       "changed": true,
       "before": 582,
@@ -106,7 +106,7 @@
     "ns-spec-driven": "(NS) Spec-driven delivery face — clarify, requirements, tasks, implement or resume a version. Entry priority 2: use for feature specs, version work, or \"let's build X\" with multi-day scope; auto-sizes and delegates to workers. Prefer ns-coder for bare quick fixes. Do NOT use for brownfield onboarding, architecture rules, or /ns-harness-prepare (manual only; never auto-run Prepare).",
     "ns-autonomous": "(NS) Autonomous execution engine — plans depth, resolves doubts from docs/specs, multi-agent work in an isolated worktree. Use for a local/pasted plan or \"run this autonomously\" without GitLab. Also Phase 2 under ns-execution-gitlab-issue (do not run standalone then). Not for single-step edits (ns-coder) or GitLab issues directly (ns-execution-gitlab-issue).",
     "ns-investigator": "(NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, or CI — entry priority 4 when the user wants diagnosis WITHOUT implement (\"why does X break?\"). Use proactively on unclear test/CI failures if they have not asked to fix yet. Do NOT use for implement/fix (ns-coder), version scope (ns-spec-driven), GitLab ISSUE_URL execution, or pre-merge review (ns-reviewer).",
-    "ns-multi-agent-architect": "(NS) Interview to recommend LangGraph vs CrewAI, multi-agent topology, personas, tools, and models. Use when building multi-agent systems, choosing LangGraph/CrewAI, designing crews/graphs, HITL workflows, or \"agents working together\". Do NOT use for general app requirements (/ns-spec-driven Clarify) or coding without architecture intent.",
+    "ns-agent-architecture": "(NS) Interview to recommend LangGraph vs CrewAI, multi-agent topology, personas, tools, and models. Use when building multi-agent systems, choosing LangGraph/CrewAI, designing crews/graphs, HITL workflows, or \"agents working together\". Do NOT use for general app requirements (/ns-spec-driven Clarify) or coding without architecture intent.",
     "ns-execution-gitlab-issue": "(NS) Execute a GitLab issue end-to-end — status gates, worktree isolation, atomic delivery, MR, mandatory review+fix loop. Use for ISSUE_URL or \"implement this GitLab issue\". Not for local ad-hoc coding (ns-coder) or non-GitLab autonomous runs (ns-autonomous). Delegates coding to ns-autonomous; needs mcp-gitlab-usage + ns-reviewer.",
     "ns-requirements-enricher": "(NS) Enrich requirements before autonomous execution from a GitLab issue or chat context. Use when the user asks to enrich/expand requirements, flesh out acceptance criteria, or prepare issue context for coding agents. Do NOT replace /ns-spec-driven Specify for full version requirements.md.",
     "ns-project-manager": "(NS) Gated PM workflow — clarify, structure, RICE/WSJF, sprint plan, PERT/Monte Carlo forecast; risk, status, meeting, OKR. Use on transcripts, backlog, timeline, delivery date, or status requests — even if PM is unnamed. Do NOT use for coding, SDD requirements generation, or GitLab issue execution."

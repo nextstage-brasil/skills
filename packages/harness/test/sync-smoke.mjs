@@ -668,7 +668,7 @@ Should not land in canonical.
   assert(agentsPreset?.skills.length === 6, 'agents preset should include all six external skills');
   assert(agentsPreset?.skills.includes('langgraph-persistence'), 'agents preset should include langgraph skill');
   assert(agentsPreset?.skills.includes('postgresql-table-design'), 'agents preset should include postgresql skill');
-  assert(agentsPreset?.nsSkills.includes('ns-multi-agent-architect'), 'agents preset should include NS architect skill');
+  assert(agentsPreset?.nsSkills.includes('ns-agent-architecture'), 'agents preset should include NS architect skill');
   assert(agentsPreset?.nsSkills.includes('ns-langgraph-agents'), 'agents preset should include ns-langgraph-agents');
   assert(agentsPreset?.nsSkills.includes('ns-postgres-rag'), 'agents preset should include ns-postgres-rag');
   assert(agentsPreset?.nsSkills.includes('ns-graphrag'), 'agents preset should include ns-graphrag');

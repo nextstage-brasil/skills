@@ -1,5 +1,5 @@
 {
-  "skill_name": "ns-agent-engineering",
+  "skill_name": "ns-agent-adaptation",
   "evals": [
     {
       "id": 1,
@@ -21,7 +21,7 @@
     {
       "id": 2,
       "prompt": "We need something that looks up customer orders in SQL, decides whether a refund applies, then sends the customer an email. Multi-step. Must not send mail without approval.",
-      "expected_output": "Locks Evaluation then Agent justification with Tools taxonomy tagging write email as Write actions plus HITL; Planning contract plan≠execute; docs/specs/agent-design.md with tool inventory safety and next handoff ns-multi-agent-architect; no framework pick.",
+      "expected_output": "Locks Evaluation then Agent justification with Tools taxonomy tagging write email as Write actions plus HITL; Planning contract plan≠execute; docs/specs/agent-design.md with tool inventory safety and next handoff ns-agent-architecture; no framework pick.",
       "files": [],
       "assertions": [
         "Wrote docs/specs/agent-design.md under outputs",
@@ -30,7 +30,7 @@
         "Tool inventory tags email send as Write actions",
         "Write-action safety requires HITL / approval before send",
         "Planning contract states plan decoupled from execution (plan≠execute)",
-        "Next handoff names ns-multi-agent-architect",
+        "Next handoff names ns-agent-architecture",
         "Does not pick LangGraph vs CrewAI or name a framework as the solution",
         "Contains no implementation code"
       ]
@@ -61,6 +61,20 @@
         "Adaptation path pushes Prompt and/or RAG before Agent",
         "Next handoff names ns-postgres-rag and ns-graphrag (GraphRAG process after retrieval mode)",
         "Does not design ontology, extractors, answer-shape routing, or DDL/hop SQL in this skill",
+        "Does not recommend a framework",
+        "Contains no implementation code"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Should our support agent remember every past ticket forever so it 'knows the customer'? Legal wants deletion to be possible.",
+      "expected_output": "Splits external memory into episodic vs semantic; treats persistent memory as compliance liability with executable deletion; may lock absence of long-term memory as valid; docs/specs/agent-design.md; no framework/code.",
+      "files": [],
+      "assertions": [
+        "Wrote docs/specs/agent-design.md under outputs OR instructs save as that path",
+        "Distinguishes episodic vs semantic external memory (or equivalent split)",
+        "States persistent memory is a compliance liability and/or deletion must be executable",
+        "Allows absence of long-term memory as a valid design outcome OR documents retention choice",
         "Does not recommend a framework",
         "Contains no implementation code"
       ]

@@ -72,8 +72,11 @@ Sliding window per `tenantId:capabilityId`:
 | ----- | ----------- | ------- |
 | `max_tool_calls_per_turn` | `AGENT_MAX_TOOL_CALLS` (8) | All tool kinds |
 | `max_mcp_calls_per_turn` | `AGENT_MAX_MCP_CALLS` (6) | MCP subset |
+| `max_cost_per_turn` | `AGENT_MAX_COST_PER_TURN` (product-set) | Reserved spend before next LLM/tool — `rules-contract.md` / `error-and-reliability.md` (not tool-count) |
 
-On exceed: stop loop; structured message to model or composer — no silent hang.
+On exceed (tool/MCP **count** budgets): stop loop; structured message to model or composer — no silent hang.
+
+On exceed (`max_cost_per_turn`): **reserve before** next LLM/tool invoke — stop new work; do not treat as the same loop-count path (`error-and-reliability.md`).
 
 ### Arg fingerprint duplicate-skip
 

@@ -85,6 +85,8 @@ Log provider reasoning blocks (redacted) into `llm_logs` or `turn_decisions`. Op
 
 Tenant/turn **budget:** check and reserve **before** the LLM/tool call, same sync step — no `await` between check and debit. After-the-fact sum only documents an overrun.
 
+Wire into stop conditions: `max_cost_per_turn` / `AGENT_MAX_COST_PER_TURN` in `templates/contracts/rules-contract.md` and `references/error-and-reliability.md`. On reservation miss, stop new work (`turn_cost_budget_exceeded`); not a soft log-only signal.
+
 ## LLM instrumentation
 
 Centralize `llm/json-output.ts` (or equivalent):

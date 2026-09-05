@@ -36,6 +36,8 @@ npx @nextstage-brasil/harness@1 --preset spec-driven --yes
 | `ns-harness-bootstrap-brownfield` | `ns-harness` |
 | `ns-prepare` | `ns-harness` |
 | `ns-pm-delivery-schedule` | `ns-project-manager` |
+| `ns-agent-engineering` | `ns-agent-adaptation` |
+| `ns-multi-agent-architect` | `ns-agent-architecture` |
 
 Retired SDD workers redirect to `ns-spec-driven` via `retired-skills.json`. Nested business faces (`ns-commercial-budget`, `ns-delivery-schedule`) redirect to `ns-project-manager`. Alias `requirements-enricher` redirects to catalog skill `ns-requirements-enricher`.
 

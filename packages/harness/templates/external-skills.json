@@ -52,7 +52,7 @@
       "description": "Spec-driven + LangGraph labs + Postgres RAG + GraphRAG + LangChain/MCP/eval externals",
       "nsSkills": [
         "ns-harness",
-        "ns-multi-agent-architect",
+        "ns-agent-architecture",
         "ns-coder",
         "ns-investigator",
         "ns-reviewer",

@@ -90,7 +90,7 @@ agent → tools → critic → (retry | END)
 supervisor → worker_a | worker_b → supervisor → END
 ```
 
-**When:** distinct personas **and** vocab/tools/risk diverge (`ns-multi-agent-architect` one-vs-many). Avoid premature use.
+**When:** distinct personas **and** vocab/tools/risk diverge (`ns-agent-architecture` one-vs-many). Avoid premature use.
 
 **Pattern:** subgraph per worker OR supervisor routes via structured output.
 
@@ -129,6 +129,8 @@ Suggested starting point only — lock the architecture in `graph-spec.md`.
 | Many specialists | Supervisor (later) |
 | Untrusted input | Guardrails + ReAct or plan_execute |
 
+**Cost-sensitive high volume:** lock a topology from the table first (`graph-spec.md` `architecture` enum). Then overlay cheap→strong cascade after confidence — `model-cascade-and-cache.md`. Cascade is **not** an `architecture` value (not `intent_classify`, not a peer of ReAct / `plan_execute`).
+
 ## graph-spec requirements per architecture
 
 Document in `templates/graph-spec.md`:
@@ -139,4 +141,4 @@ Document in `templates/graph-spec.md`:
 - Tools per node bind
 - Eval scenarios proving architecture
 
-Framework comparison (LangGraph vs CrewAI): `ns-multi-agent-architect` — not this file.
+Framework comparison (LangGraph vs CrewAI): `ns-agent-architecture` — not this file.

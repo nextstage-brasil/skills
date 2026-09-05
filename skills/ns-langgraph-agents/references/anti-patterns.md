@@ -91,6 +91,15 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | Full tool JSON in messages | Same | `truncateToolOutput` |
 | Secrets in state/checkpointer | Leak via logs/resume | `configurable` only |
 | Full composed system/persona in `messages` | Sticky persona; checkpoint bloat | Invoke-only `base_invariant + injected` — `prompt-and-capability-injection.md` |
+| Last-write-wins on shared artifact / thread state | Silent data loss under concurrent turns | Optimistic version check; reject + reconcile — `error-and-reliability.md` |
+
+## Reliability (writes and distributed)
+
+| Anti-pattern | Why it hurts | Fix |
+| ------------ | ------------ | --- |
+| Multi-write plan with neither compensation nor sync gate | Partial external side effects stuck | Declare reverse-order idempotent compensations; uncancellable write behind sync gate |
+| Blind retry of non-idempotent write | Duplicate side effects | Idempotency keys or HITL — no blind retry |
+| Global availability choice for all blocks | Wrong block proceeds or blocks | Per-block availability vs consistency on `turnDecisions` |
 
 ## Graph structure
 

@@ -19,11 +19,11 @@ function readEnvNumber(key: string, fallback: number): number {
   return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
-/** @env MAX_TOOL_CALLS_PER_TURN, MAX_MCP_CALLS_PER_TURN */
+/** SoT: AGENT_MAX_TOOL_CALLS / AGENT_MAX_MCP_CALLS only. Defaults match rules-contract (8 / 6). */
 export function resolveToolBudget(): ToolBudgetLimits {
   return {
-    maxToolCallsPerTurn: readEnvNumber("MAX_TOOL_CALLS_PER_TURN", 20),
-    maxMcpCallsPerTurn: readEnvNumber("MAX_MCP_CALLS_PER_TURN", 10),
+    maxToolCallsPerTurn: readEnvNumber("AGENT_MAX_TOOL_CALLS", 8),
+    maxMcpCallsPerTurn: readEnvNumber("AGENT_MAX_MCP_CALLS", 6),
   };
 }
 

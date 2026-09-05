@@ -4,8 +4,8 @@
   "description": "Spec-driven + agent design + LangGraph labs + Postgres RAG + GraphRAG + LangChain/MCP/eval externals",
   "extends": "spec-driven",
   "includes": [
-    "skills/ns-agent-engineering",
-    "skills/ns-multi-agent-architect",
+    "skills/ns-agent-adaptation",
+    "skills/ns-agent-architecture",
     "skills/ns-langgraph-agents",
     "skills/ns-postgres-rag",
     "skills/ns-graphrag"

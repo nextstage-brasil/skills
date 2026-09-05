@@ -76,8 +76,8 @@
       "description": "(NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, CI failures, or obscure bugs — entry priority 4 when the user wants diagnosis WITHOUT an implement request (\"why does X break?\", paste stack trace, CI fail). Use proactively when tests fail or pipelines break if cause is unclear AND the user has not asked to implement the fix yet. Do NOT use when the user asks to implement or fix code directly (ns-coder, priority 5), for multi-day or version scope (ns-spec-driven, priority 2), for GitLab ISSUE_URL execution (ns-execution-gitlab-issue), or for pre-merge code review (ns-reviewer)."
     },
     {
-      "name": "ns-multi-agent-architect",
-      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-multi-agent-architect/SKILL.md",
+      "name": "ns-agent-architecture",
+      "path": "/Users/cristoferbatschauer/apps/nextstage/skills/skills/ns-agent-architecture/SKILL.md",
       "chars": 582,
       "has_use": true,
       "has_not": true,
@@ -91,7 +91,7 @@
       "has_use": true,
       "has_not": true,
       "has_ns": true,
-      "description": "(NS) Production LangGraph.js agent-api — StateGraph, MCP tools, skill bind/inject, checkpointers, context-window trim, HITL/SSE, content blocks, prompt/locale placement. Use whenever the user works on agent-api, LangGraph graphs, MCP wiring, orphan agent layout, system-prompt compose, bind parity, graph-spec sync, or says \"fix my LangGraph agent\", \"wire MCP tools\", or \"where do translations go in the graph\". Code diffs via ns-coder; LangGraph vs CrewAI via ns-multi-agent-architect. Do NOT use for CrewAI crews, generic web apps, or SDD-only requirements."
+      "description": "(NS) Production LangGraph.js agent-api — StateGraph, MCP tools, skill bind/inject, checkpointers, context-window trim, HITL/SSE, content blocks, prompt/locale placement. Use whenever the user works on agent-api, LangGraph graphs, MCP wiring, orphan agent layout, system-prompt compose, bind parity, graph-spec sync, or says \"fix my LangGraph agent\", \"wire MCP tools\", or \"where do translations go in the graph\". Code diffs via ns-coder; LangGraph vs CrewAI via ns-agent-architecture. Do NOT use for CrewAI crews, generic web apps, or SDD-only requirements."
     },
     {
       "name": "ns-execution-gitlab-issue",
@@ -256,7 +256,7 @@
     "ns-spec-driven",
     "ns-autonomous",
     "ns-investigator",
-    "ns-multi-agent-architect",
+    "ns-agent-architecture",
     "ns-langgraph-agents",
     "ns-execution-gitlab-issue"
   ]

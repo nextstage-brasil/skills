@@ -1,4 +1,5 @@
 // Snippet: tool-budget.ts — per-turn tool/MCP budgets and duplicate-skip
+// Cost stop is separate: AGENT_MAX_COST_PER_TURN / max_cost_per_turn — rules-contract.md + error-and-reliability.md
 import { createHash } from "node:crypto";
 
 export type ToolBudgetConfig = {
@@ -6,14 +7,17 @@ export type ToolBudgetConfig = {
   maxMcpCallsPerTurn: number;
 };
 
+function readPreferredEnv(key: string, fallback: number): number {
+  const n = Number(process.env[key]);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
 export function resolveMaxToolCallsPerTurn(): number {
-  const v = Number(process.env.AGENT_MAX_TOOL_CALLS);
-  return Number.isFinite(v) && v > 0 ? v : 8;
+  return readPreferredEnv("AGENT_MAX_TOOL_CALLS", 8);
 }
 
 export function resolveMaxMcpCallsPerTurn(): number {
-  const v = Number(process.env.AGENT_MAX_MCP_CALLS);
-  return Number.isFinite(v) && v > 0 ? v : 6;
+  return readPreferredEnv("AGENT_MAX_MCP_CALLS", 6);
 }
 
 export function resolveToolBudgetConfig(): ToolBudgetConfig {

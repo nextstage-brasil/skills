@@ -55,7 +55,7 @@ Missing hop in requirements or task plan = **stop** — `gates.md`.
 
 Coordinate **features** here. **Skeleton** = `ns-langgraph-agents` bootstrap. Do not invent second tree.
 
-1. Framework unlocked? `ns-multi-agent-architect` then continue
+1. Framework unlocked? `ns-agent-architecture` then continue
 2. Specify first infrastructure feature: copy `templates/agent-runtime/` (`ns-langgraph-agents/references/bootstrap-agent-runtime.md`) + `graph-spec.md`
 3. Later features = deltas only (MCP servers, HITL routes, domain in `conversation/` + `config/`, evals)
 4. Execute: first pending task **runs bootstrap script** (not snippet assembly, not copy from another product). Later tasks: `ns-coder`
@@ -64,7 +64,7 @@ Coordinate **features** here. **Skeleton** = `ns-langgraph-agents` bootstrap. Do
 
 | Phase | Rule |
 | ----- | ---- |
-| Clarify | Graph/MCP/HITL ambiguities; topology via `ns-langgraph-agents`, `ns-multi-agent-architect` only if framework unlocked. `intelligent_saas`: confirm App chat relay, no browser to agent-api |
+| Clarify | Graph/MCP/HITL ambiguities; topology via `ns-langgraph-agents`, `ns-agent-architecture` only if framework unlocked. `intelligent_saas`: confirm App chat relay, no browser to agent-api |
 | Specify | `intelligent-saas.md` or `agent-runtime.md`; version `graph-spec.md` when graph in scope; greenfield Feature 001 = bootstrap; requirements cite placement, bind, spec sync. `intelligent_saas`: requirements **MUST** document conversation hop (App routes, SSE relay, resume via App, persistence in App PG) |
 | Tasks | First greenfield task = bootstrap command + `npm test`. Later: `graph-spec.md` sync, capability plan, or placement block per langgraph pre-change gates. `intelligent_saas`: task plan **MUST** include hops table; frontend chat cards cite App endpoints only |
 | Execute | Bootstrap task: `ns-langgraph-agents` script. Feature tasks: `coder-agent` / `ns-coder`; refs in parent context. `intelligent_saas`: reject direct browser to agent-api or client-side `thread_id` |

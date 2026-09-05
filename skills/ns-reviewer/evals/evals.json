@@ -36,6 +36,12 @@
       "prompt": "Review this JS IIFE: it returns { originIpKey, parseOriginIp, normalizeOriginIp, validateOriginIpInput, originIpMatches, formatOriginIp }. Another controller calls only validateOriginIpInput and originIpMatches. Tests and ACs pass. Score and verdict?",
       "expected_output": "Agent applies orphan public/exported surface cap → overall max 7 (internal originIpKey would be OK if unexported). Executive Summary cites the cap. Ends with Code Review: Rejected. Not auto-Critical.",
       "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Review agent-api diff: new write tool posts to ERP with no interrupt/HITL; prompt markdown edited with no prompt version bump; unit test asserts exact LLM reply string; new invoke has no token log.",
+      "expected_output": "Critical for irreversible write without gate and prompt change without version bump; Warning + score cap 7–8 for equality assertion on model output; Warning (no extra cap alone) for missing token/cost accounting; ends Code Review: Rejected. Loads ns-langgraph-agents anti-patterns when agent-api touched.",
+      "files": []
     }
   ]
 }

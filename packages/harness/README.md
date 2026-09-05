@@ -102,7 +102,7 @@ Standalone Claude export (zip, no harness coupling):
 ```bash
 cd packages/harness && npm run export:external
 # → dist/external/ns-project-manager.zip
-# → dist/external/ns-multi-agent-architect.zip
+# → dist/external/ns-agent-architecture.zip
 ```
 
 ### Frontend reverse prototyping
@@ -120,7 +120,7 @@ Then in your agent: `/ns-proto-creator` (or `/ns-proto-visual-guide` for appeara
 Install a skill + its catalog `depends`. Skips `.nextstage-harness/`, `AGENTS.md`, and `docs/`.
 
 ```bash
-npx @nextstage-brasil/harness --skill ns-multi-agent-architect --no-scaffold -y
+npx @nextstage-brasil/harness --skill ns-agent-architecture --no-scaffold -y
 npx @nextstage-brasil/harness --skill ns-coder --skill ns-reviewer --no-scaffold -y
 ```
 
@@ -301,7 +301,7 @@ npx @nextstage-brasil/harness add-subagent investigator-agent \
 ```bash
 npx @nextstage-brasil/harness init \
   --dir ./my-agent-service \
-  --skill ns-multi-agent-architect \
+  --skill ns-agent-architecture \
   --skill langchain-fundamentals \
   --agent cursor \
   --agent claude-code \

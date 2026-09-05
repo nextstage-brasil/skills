@@ -1,16 +1,16 @@
 ---
-name: ns-multi-agent-architect
-description: (NS) Interview to map the five-block reference architecture, decompose a workflow into subtasks, decide agent vs rule vs approval gate per subtask, assign trade-off budget per component, lock an architecture change signal, then recommend LangGraph vs CrewAI, topology, personas, tools, and models — after conceptual adaptation design from `ns-agent-engineering` when agent vs RAG vs fine-tune is not yet locked. Use when building multi-agent systems, choosing LangGraph/CrewAI, designing crews/graphs, HITL workflows, "agents working together", producing official architecture decision records, or reverse-documenting an agent that already exists. Do NOT use for conceptual Prompt/RAG/Agent/Fine-Tune ladder (`ns-agent-engineering`), general app requirements (`/ns-spec-driven` Clarify), or coding without architecture intent.
+name: ns-agent-architecture
+description: (NS) Lock the agent architecture ADR — five blocks, subtask classification, trade-off budget, orchestration pattern, LangGraph vs CrewAI, topology, HITL. Writes `docs/specs/agent-architecture.md`. If agent vs RAG vs fine-tune is unlocked, stop and run `ns-agent-adaptation` first. Use when choosing LangGraph/CrewAI, designing crews/graphs, HITL, agents working together, producing ADRs, or reverse-documenting an existing agent. Do NOT use for Prompt/RAG/Agent/Fine-Tune ladder (`ns-agent-adaptation`), general app requirements (`/ns-spec-driven` Clarify), or coding without architecture intent.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.17"
+  version: "1.19"
 depends:
   - ns-harness
   - ns-langgraph-agents
 ---
 
-# Multi-Agent Architect
+# Agent Architecture
 
 Senior AI Engineer / Solutions Architect. Grill until every branch locked. Then architecture recommendation.
 
@@ -37,7 +37,7 @@ Once per session: grep or Glob `ns-langgraph-agents/SKILL.md` under `.agents/ski
 
 ## Core behavior (grill-me)
 
-**Prerequisite:** conceptual adaptation locked (`docs/specs/agent-design.md` or equivalent). Agent vs RAG vs Prompt vs Fine-Tune still open → **Stop** → `ns-agent-engineering` first.
+**Prerequisite:** conceptual adaptation locked (`docs/specs/agent-design.md` or equivalent). Agent vs RAG vs Prompt vs Fine-Tune still open → **Stop** → `ns-agent-adaptation` first.
 
 Walk tree depth-first. Resolve A before B.
 
@@ -46,7 +46,7 @@ Walk tree depth-first. Resolve A before B.
 3. **Depth-first.** Finish branch. Dependent B waits for A.
 4. **Probe.** Vague answer: next question narrows. No skip.
 5. **No cheerleading.** Assumptions and gaps only.
-6. **Close** when: five reference blocks mapped, every subtask row classified, trade-off budget locked for all five components, architecture change signal locked, four pillars resolved. Then announce complete. Then final report.
+6. **Close** when: five reference blocks mapped, every subtask row classified, trade-off budget locked for all components (extra rows when interactive vs batch diverge), **Orchestration pattern** locked per segment, architecture change signal locked, four pillars resolved. Then announce complete. Then final report.
 
 AskQuestion / structured tools:
 
@@ -112,7 +112,7 @@ Prior context or code answers: infer. Mark `inferred`. Confirm one line.
 
 ### Step 5 — Trade-off budget (`references/reference-architecture.md`)
 
-One canonical component per turn: latency, cost, precision, **non-negotiable axis**. Propose from domain. User confirm or correct. All five rows locked before Step 6.
+One canonical component per turn: latency, cost, precision, throughput, **non-negotiable axis** (`latency | cost | precision | throughput`). Propose from domain. Interactive vs batch both exist → one row per context. User confirm or correct. All rows locked before Step 6.
 
 ### Step 6 — Architecture change signal
 
@@ -127,7 +127,7 @@ Depth-first remaining tree on agent-classified rows:
 Probes:
 
 - Human approval: next = **where and how** (step, UI, editable fields)
-- "Specialists working together": next = **vocabulary / tools / risk** diverge? Then **autonomy** (fixed handoffs vs emergent)
+- "Specialists working together": next = **vocabulary / tools / risk** diverge? Then **autonomy** (fixed routing vs emergent). Then pattern selector per segment (`references/orchestration-patterns.md` — **Handoff** = control transfer only, not "handoff" as casual synonym)
 - Production or compliance: next = **failure modes, retries, reconstructable audit** (route + reason in logs)
 - Speed or prototype: next = **timeline, team size, acceptable shortcuts**
 - Objective locked, user/success unclear: **who consumes output**, then **one production success metric**
@@ -136,7 +136,7 @@ Pick highest-uncertainty branch. Narrow. Never "tell me more."
 
 ### Step 8 — Final report (two phases)
 
-Locked: reference blocks, subtask rows, trade-off budget, change signal, four pillars.
+Locked: reference blocks, subtask rows, trade-off budget (throughput + per-context rows when needed), **Orchestration pattern** per segment, change signal, four pillars.
 
 1. Announce: shared understanding. Interview complete.
 2. **Phase 1 (chat):** ~200 words on-screen. Framework, topology, main trade-off, top risk, MVP. Decisive. Close trade-off: pick + alternative, one line.
@@ -149,7 +149,8 @@ Required sections (plus architecture):
 - **Problem statement** — original unprompted request
 - **Reference architecture** — colored Mermaid + component mapping table (`references/reference-architecture.md`)
 - **Subtask decomposition** — grid: Type, P1, P2, P3, component per row; agent blueprint derives from it
-- **Trade-off budget** — latency / cost / precision / non-negotiable axis per canonical component
+- **Trade-off budget** — latency / cost / precision / throughput / non-negotiable axis per canonical component (extra rows when interactive vs batch diverge)
+- **Orchestration pattern** — pattern per segment + why (`references/orchestration-patterns.md`)
 - **Architecture change signal** — one sentence, one element, concrete observable threshold
 - **Why this design** — decision record (one vs many, concurrency/orchestration, user, topology, HITL, success metric, out of MVP)
 - **Interview record** — table: question, recommended answer, user reply, locked decision (append sessions)
@@ -180,7 +181,7 @@ Chat ~200 words: no mermaid, no interview table, no full tooling tables.
 
 - No framework pick before interview complete
 - Three questions not on whole product — one classification per subtask row
-- Living ADR only `docs/specs/agent-architecture.md` — must include Reference Architecture (colored Mermaid), Trade-off Budget, Architecture Change Signal, Changelog
+- Living ADR only `docs/specs/agent-architecture.md` — must include Reference Architecture (colored Mermaid), Trade-off Budget (throughput + per-context rows when needed), Orchestration pattern, Architecture Change Signal, Changelog
 - One language: human's opening language. No English headers with other-language cells. Doctrine ids stay English in the Component column and Mermaid first line; not in prose cells or interview sentences
 - Not `docs/specs/agent.md` (behavior; `ns-living-spec`)
 - Reopen this skill only when an architecture decision changes (topology, HITL, MCP contract, change signal). Implementation-only: `ns-langgraph-agents` + `graph-spec.md`; ADR intact
@@ -196,12 +197,12 @@ Trigger: "document why this agent is like this", "we never wrote the architectur
 1. Read runtime: graph nodes/crew tasks, tools, `interrupt` points, conditional routers. Plus `docs/context/system-reverse-spec.md` or `brownfield-map.md` if present, `graph-spec.md` if present.
 2. Draft **reference architecture** (five blocks) + subtask grid from evidence (`references/reference-architecture.md`, `references/task-decomposition.md` — Reverse mode). Every row: `source: code | interview`, `status: inferred | confirmed`.
 3. Grill only what code cannot prove: cost of error, reversibility, real-case coverage, end user, success metric.
-4. Infer trade-off budget + change signal from runtime metrics or defaults. Weak evidence: confirm one line each.
+4. Infer trade-off budget (throughput + per-context rows when needed), Orchestration pattern per segment, and change signal from runtime metrics or defaults. Weak evidence: confirm one line each.
 5. Same Step 8 two-phase close: ~200-word chat first, then `docs/specs/agent-architecture.md` describing what **is**. Flag contradictions (irreversible action, no gate) under Next Steps and Risks.
 
 ## Related skills (optional — when installed in same project)
 
-- `ns-agent-engineering` — if conceptual agent vs RAG vs Prompt vs Fine-Tune not locked, run first (`docs/specs/agent-design.md`)
+- `ns-agent-adaptation` — if conceptual agent vs RAG vs Prompt vs Fine-Tune not locked, run first (`docs/specs/agent-design.md`)
 - `ns-spec-driven` — Clarify first if product scope vague
 - `ns-spec-driven` Specify — product requirements after architecture locked
 - `ns-docs-writer` — README / `docs/` **link** `docs/specs/agent-architecture.md`. Do not rewrite decision record

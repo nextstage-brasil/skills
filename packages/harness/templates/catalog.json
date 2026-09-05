@@ -44,8 +44,8 @@
     "ns-investigator": ["ns-harness"],
     "ns-e2e-tests": [],
     "ns-backend-tests": ["ns-harness"],
-    "ns-agent-engineering": ["ns-harness"],
-    "ns-multi-agent-architect": ["ns-harness", "ns-langgraph-agents"],
+    "ns-agent-adaptation": ["ns-harness"],
+    "ns-agent-architecture": ["ns-harness", "ns-langgraph-agents"],
     "ns-langgraph-agents": ["ns-harness"],
     "ns-postgres-rag": ["ns-harness"],
     "ns-graphrag": ["ns-harness", "ns-postgres-rag"]
@@ -94,8 +94,8 @@
       "skills": ["ns-coder", "ns-autonomous", "ns-frontend-design", "ns-docs-writer", "ns-best-practices", "ns-execution-gitlab-issue", "ns-investigator", "ns-reviewer", "ns-e2e-tests", "ns-backend-tests", "ns-postgres-rag", "ns-graphrag"]
     },
     "labs": {
-      "label": "Labs (multi-agent)",
-      "skills": ["ns-agent-engineering", "ns-multi-agent-architect", "ns-langgraph-agents", "ns-postgres-rag", "ns-graphrag"]
+      "label": "Labs (agents)",
+      "skills": ["ns-agent-adaptation", "ns-agent-architecture", "ns-langgraph-agents", "ns-postgres-rag", "ns-graphrag"]
     },
     "brownfield": {
       "label": "Brownfield",

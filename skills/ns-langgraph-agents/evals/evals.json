@@ -201,6 +201,66 @@
         "Forbids browser direct to agent-api or agent env in frontend bundle",
         "Cites intelligent-saas.md and/or streaming-and-hitl.md client table"
       ]
+    },
+    {
+      "id": 16,
+      "prompt": "Our planner runs three writes — create draft, update CRM, send Slack — and the Slack call fails after the first two succeed. What should the runtime do?",
+      "expected_output": "Compensate earlier writes in reverse order with idempotent compensations; do not blind-replay the whole plan; writes without compensation must sit behind a sync gate; cites error-and-reliability.md.",
+      "files": [],
+      "assertions": [
+        "Requires reverse-order compensation of successful earlier writes",
+        "Rejects blind full-plan replay as the primary recovery",
+        "States uncancellable writes need a sync gate before execute",
+        "Cites error-and-reliability or anti-patterns for multi-write"
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Two concurrent turns on the same thread both edit the same customer record. How should shared-state writes behave?",
+      "expected_output": "Optimistic version check before write; version conflict surfaced and reconciled — not silent last-write-wins; cites error-and-reliability.md.",
+      "files": [],
+      "assertions": [
+        "Requires optimistic version check (or equivalent) before shared write",
+        "Surfaces conflict / reconcile instead of last-write-wins",
+        "Cites error-and-reliability or anti-patterns"
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "High-volume FAQ bot: most questions are routine. We want cheap models by default but escalate when confidence is low. Also some always-scale regulated answers.",
+      "expected_output": "Cascade starts cheap; escalate post-generation on retrieval/answer confidence — no intent_classify hop; always-scale / regulated bypass cheap tier and forbid semantic cache reuse; cites model-cascade-and-cache.md. Does not lock architecture: cascade.",
+      "files": [],
+      "assertions": [
+        "Starts with cheap tier for routine volume",
+        "Escalation is post-generation on confidence signals, not a dedicated intent_classify hop",
+        "Always-scale or regulated paths skip cheap tier and/or semantic cache",
+        "Cites model-cascade-and-cache.md",
+        "Does not treat cascade as a graph-spec architecture enum value"
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Billing MCP is down mid-turn. Orchestrator can still answer FAQ from cache but must not invent invoice totals. How should availability vs consistency work?",
+      "expected_output": "Per-block choice: FAQ block may proceed with explicit gap; invoice totals block for consistency; gap recorded on turnDecisions; cites error-and-reliability.md.",
+      "files": [],
+      "assertions": [
+        "States availability vs consistency is decided per block, not globally",
+        "Requires recorded gap on turnDecisions when proceeding",
+        "Blocks or fails the consistency-sensitive block rather than inventing totals",
+        "Cites error-and-reliability.md"
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Turn already spent most of AGENT_MAX_COST_PER_TURN. Next LLM call would exceed. What happens?",
+      "expected_output": "Stop new LLM/tool work via max_cost_per_turn / reservation check before invoke; composer on existing evidence or failed + turn_cost_budget_exceeded; cites rules-contract and error-and-reliability / observability.",
+      "files": [],
+      "assertions": [
+        "Stops before the next LLM/tool call when cost budget would be exceeded",
+        "Mentions AGENT_MAX_COST_PER_TURN or max_cost_per_turn",
+        "Mentions turn_cost_budget_exceeded or composer-on-evidence path",
+        "Cites rules-contract, error-and-reliability, or observability reservation"
+      ]
     }
   ]
 }

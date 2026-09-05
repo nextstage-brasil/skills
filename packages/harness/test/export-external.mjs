@@ -22,7 +22,7 @@ try {
 
   assert(result.skills.length === 2, `expected 2 skills, got ${result.skills.join(',')}`);
   assert(result.skills.includes('ns-project-manager'), 'missing ns-project-manager');
-  assert(result.skills.includes('ns-multi-agent-architect'), 'missing ns-multi-agent-architect');
+  assert(result.skills.includes('ns-agent-architecture'), 'missing ns-agent-architecture');
 
   const errors = validateExternalDir(outDir);
   assert(errors.length === 0, errors.join('\n'));
@@ -47,7 +47,7 @@ try {
   assert(faceRouter.includes('references/ns-commercial-budget/workflow.md'), 'face router paths not rewritten');
   assert(!existsSync(join(face, 'references', 'ns-requirements-enricher')), 'enricher must not be nested under PM export');
 
-  const architectDir = join(outDir, 'ns-multi-agent-architect');
+  const architectDir = join(outDir, 'ns-agent-architecture');
   const architectMd = readFileSync(join(architectDir, 'SKILL.md'), 'utf8');
   assert(architectMd.includes('Standalone import'), 'standalone delivery note missing');
   assert(existsSync(join(architectDir, 'references', 'reference-architecture.md')), 'reference-architecture.md missing');

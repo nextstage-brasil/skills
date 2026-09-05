@@ -23,7 +23,7 @@ Motor rules live in `base_invariant` (or shared motor fragment), **not** only in
 
 ## System prompt — mandatory layers (order)
 
-Compose via helper outside god-node (`composeSystemPrompt`). Layers feed `base_invariant` and/or `injected`; final string = `base_invariant + injected` per turn. Order matters:
+Compose via helper outside god-node (`composeSystemPrompt`). Layers feed `base_invariant` and/or `injected`; final string = `base_invariant + injected` per turn. Order matters. **Prompt-cache stable prefix** = motor/`base_invariant` content when unchanged — **not** layers 1–2 as a pair (layer 1 persona/`injected` may mode-resolve). Keep the **seven-layer order** fixed; do not reshuffle per turn. Measure reuse via SSE `usage.cached_tokens` (provider prompt-cache / cache_read maps there) — `references/model-cascade-and-cache.md`.
 
 | # | Layer | Source | Bucket | Notes |
 | - | ----- | ------ | ------ | ----- |

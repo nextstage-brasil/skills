@@ -70,12 +70,15 @@ ns-project-manager ── ns-harness
 
 Nested (not catalog skills): `references/ns-commercial-budget`, `references/ns-delivery-schedule`.
 
-## Labs
+## Labs (agent pipeline)
 
 ```
-ns-multi-agent-architect
+ns-agent-adaptation ── ns-harness
+ns-agent-architecture ── ns-harness, ns-langgraph-agents
 ns-langgraph-agents ── ns-harness
 ```
+
+Stage 1 adaptation → Stage 2 architecture ADR → Stage 3 LangGraph runtime. Not interchangeable.
 
 ## Manual peer install (until skills#861)
 

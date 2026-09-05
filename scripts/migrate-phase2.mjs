@@ -19,7 +19,7 @@ const skillsDir = join(repoRoot, 'skills');
 
 /** oldDirName → { domain, newName } */
 const MOVES = [
-  ['ns-multi-agent-architect', 'labs', 'ns-multi-agent-architect'],
+  ['ns-agent-architecture', 'labs', 'ns-agent-architecture'],
   ['ns-langgraph-agents', 'labs', 'ns-langgraph-agents'],
   ['ns-project-manager', 'business', 'ns-project-manager'],
   ['ns-pm-delivery-schedule', 'business', 'ns-delivery-schedule'],

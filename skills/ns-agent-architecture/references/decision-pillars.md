@@ -65,7 +65,7 @@ Ask only if still open after integrations:
 ## 2. State complexity
 
 - Does a failed step require retry from an earlier point, or just rerun the step?
-- Does step B need **A's output**, or only a calendar order? Calendar-only → parallel; real data dependence → sequential. Lock this as **Concurrency / orchestration** in the report (example: “extract cannot start until fetch returns the PDF”).
+- Does step B need **A's output**, or only a calendar order? Calendar-only means parallel; real data dependence means sequential. Domain change mid-flow means handoff (originator leaves). Full catalog: `references/orchestration-patterns.md`. Lock as **Concurrency / orchestration** + **Orchestration pattern** in the report (example: “extract cannot start until fetch returns the PDF”).
 - Do downstream steps depend on accumulated context from many prior steps?
 - Is there branching based on intermediate results (e.g. approve / reject / escalate)?
 
