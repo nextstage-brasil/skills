@@ -1,12 +1,12 @@
 ---
-name: my_reviewer
-description: >-
   Maintainer review bridge for nextstage-brasil/skills. Always use for the review
   gate on catalog/harness or maintainer .cursor work in THIS repo — even if the
   user only says "review", "code review", or "review gate". Thin bridge to
   skills/ns-reviewer — loads AGENTS.md then the skill workflow. Not for consumer
   apps (use harness reviewer-agent → ns-reviewer).
-model: grok-4.6[effort=medium,fast=false]
+name: my_reviewer
+model: claude-opus-5[thinking=true,context=300k,effort=low,fast=false]
+description: >-
 readonly: true
 ---
 

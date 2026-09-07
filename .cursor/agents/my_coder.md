@@ -5,7 +5,7 @@
   "add a skill", "fix the catalog", or "update SKILL.md". Not for consumer apps
   or harness coder-agent → ns-coder.
 name: my_coder
-model: composer-2.5[fast=false]
+model: grok-4.6[effort=low,fast=false]
 description: >-
 ---
 
