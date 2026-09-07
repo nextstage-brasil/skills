@@ -118,7 +118,7 @@ Three bands (business sets numbers). **Always-escalate** (alias **always-scale**
 1. Agent proposes tool call or recommendation
 2. `interrupt({ kind, tool, args, intent_category, always_escalate })`
 3. UI approves/edits/rejects — payload includes `approver_id` + `approver_role`
-4. `Command({ resume: approval })` — always-escalate **MUST** include those two fields or HTTP 400
+4. `Command({ resume: approval })` — always-escalate **MUST** include those two fields or HTTP 400. Gate from **interrupt snapshot**, not client `always_escalate` alone. `hitl_decisions` INSERT fail-closed before invoke.
 
 ## Audit
 

@@ -101,3 +101,4 @@ Same fields in Observability block of ADR when Gateway classifies. HITL human de
 | Borrowed threshold constants | Measure on project embedding + language |
 | Sticky category across domain shift | Re-classify per turn policy |
 | Always-escalate category on cheap tier | Strong tier or gate regardless of score |
+| Client body `always_escalate` as sole HITL gate | Interrupt snapshot (`graph.getState`); body flag insufficient |

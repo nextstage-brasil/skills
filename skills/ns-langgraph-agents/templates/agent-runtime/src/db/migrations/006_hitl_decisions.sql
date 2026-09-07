@@ -3,8 +3,8 @@
 
 CREATE TABLE IF NOT EXISTS hitl_decisions (
   id                UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
-  thread_id         VARCHAR(255) NOT NULL REFERENCES threads(id) ON DELETE CASCADE,
-  checkpoint_id     UUID         REFERENCES agent_checkpoints(id) ON DELETE SET NULL,
+  thread_id         VARCHAR(255) NOT NULL REFERENCES threads(id),
+  checkpoint_id     UUID         REFERENCES agent_checkpoints(id),
   intent_category   VARCHAR(100),
   decision_actor    VARCHAR(20)  NOT NULL DEFAULT 'human',
   approver_id       VARCHAR(255),

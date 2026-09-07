@@ -103,27 +103,22 @@ export async function upsertTurnDecisions(
   decisions: unknown,
 ): Promise<void> {
   const pool = getPool();
-  const existing = await pool.query<{ turn_decisions: unknown }>(
-    `SELECT turn_decisions FROM agent_checkpoints
-     WHERE thread_id = $1
-     ORDER BY step_number DESC
-     LIMIT 1`,
-    [threadId],
-  );
-  const merged = mergeTurnDecisions(
-    existing.rows[0]?.turn_decisions,
-    decisions,
-  );
+  const incoming = mergeTurnDecisions([], decisions);
   await pool.query(
     `UPDATE agent_checkpoints
-     SET turn_decisions = $2::jsonb
+     SET turn_decisions = CASE
+       WHEN turn_decisions IS NULL THEN $2::jsonb
+       WHEN jsonb_typeof(turn_decisions) = 'array' THEN turn_decisions || $2::jsonb
+       ELSE jsonb_build_array(turn_decisions) || $2::jsonb
+     END
      WHERE id = (
        SELECT id FROM agent_checkpoints
        WHERE thread_id = $1
        ORDER BY step_number DESC
        LIMIT 1
+       FOR UPDATE
      )`,
-    [threadId, JSON.stringify(merged)],
+    [threadId, JSON.stringify(incoming)],
   );
 }
 

@@ -284,7 +284,8 @@
         "Refuses always-escalate resume without approver_id and approver_role",
         "Mentions AGENT-HITL-APPROVER-REQUIRED or HTTP 400",
         "Cites capability-governance.md and/or streaming-and-hitl.md",
-        "Does not allow graph.invoke Command resume to proceed without approver identity"
+        "Does not allow graph.invoke Command resume to proceed without approver identity",
+        "Sources always-escalate from interrupt/getState, not the client body flag alone"
       ]
     }
   ]

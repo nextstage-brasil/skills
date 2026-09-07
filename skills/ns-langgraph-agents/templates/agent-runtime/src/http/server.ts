@@ -3,7 +3,9 @@ import { Command } from "@langchain/langgraph";
 import { isDevChatEnabled, renderDevChatHtml } from "./dev-chat.js";
 import {
   assertHitlResumeApprover,
+  alwaysEscalateEffective,
   buildHitlResumePayload,
+  hitlTurnDecisionEvent,
   HitlResumeError,
   type HitlResumeBody,
 } from "./hitl-resume.js";
@@ -17,6 +19,7 @@ import {
   logHitlDecision,
   logThread,
   syncTenant,
+  upsertTurnDecisions,
 } from "../observability/postgres.js";
 import { runStorage } from "../observability/run-context.js";
 import { resolveCheckpointerMode } from "../memory/checkpointer.js";
@@ -119,8 +122,18 @@ export function createAgentServer() {
         } catch {
           return json(res, 400, { error: "invalid_json" });
         }
+
+        const runConfig = buildRunConfig(threadId, {
+          tenant_id: tenantId,
+          op: "resume",
+        });
+        const graphState = await graph.getState(runConfig);
+        const alwaysEscalate = alwaysEscalateEffective(body, graphState);
         try {
-          assertHitlResumeApprover(body);
+          assertHitlResumeApprover({
+            ...body,
+            always_escalate: alwaysEscalate,
+          });
         } catch (err) {
           if (err instanceof HitlResumeError) {
             return json(res, 400, {
@@ -131,32 +144,33 @@ export function createAgentServer() {
           throw err;
         }
 
-        const resumePayload = buildHitlResumePayload(body);
-        const outcome =
-          typeof resumePayload.decision === "string"
-            ? resumePayload.decision
-            : body.decision ?? "approved";
-
-        try {
-          const checkpointId = await getLatestCheckpointId(threadId);
-          await logHitlDecision({
-            threadId,
-            checkpointId,
-            intentCategory: body.intent_category ?? null,
-            approverId: body.approver_id ?? null,
-            approverRole: body.approver_role ?? null,
-            decisionOutcome: outcome,
-            alwaysEscalate: body.always_escalate === true,
-            resumePayload,
-          });
-        } catch {
-          // Observability must not fail the turn in template stub.
-        }
+        const resumePayload = buildHitlResumePayload(body, alwaysEscalate);
+        const decidedAt = new Date();
+        const outcome = String(resumePayload.decision);
+        const checkpointId = await getLatestCheckpointId(threadId);
+        await logHitlDecision({
+          threadId,
+          checkpointId,
+          intentCategory:
+            typeof resumePayload.intent_category === "string"
+              ? resumePayload.intent_category
+              : body.intent_category ?? null,
+          approverId: body.approver_id ?? null,
+          approverRole: body.approver_role ?? null,
+          decidedAt,
+          decisionOutcome: outcome,
+          alwaysEscalate,
+          resumePayload,
+        });
+        await upsertTurnDecisions(
+          threadId,
+          hitlTurnDecisionEvent(body, alwaysEscalate, decidedAt),
+        );
 
         const result = await runStorage.run({ threadId, tenantId }, async () =>
           invokeWithLatencyBudget(async (signal) =>
             graph.invoke(new Command({ resume: resumePayload }), {
-              ...buildRunConfig(threadId, { tenant_id: tenantId, op: "resume" }),
+              ...runConfig,
               signal,
             }),
           ),

@@ -72,8 +72,9 @@ Requirements:
 - Compiled graph + **checkpointer**
 - `thread_id` in config
 - Resume: `graph.stream(new Command({ resume: approval }), config)`
-- Always-escalate: HTTP body **MUST** include `approver_id` + `approver_role` or `AGENT-HITL-APPROVER-REQUIRED`
-- Persist INSERT `hitl_decisions`; merge `turn_decisions` — **FORBIDDEN** clobber pre-interrupt flush
+- Always-escalate SoT = `graph.getState` interrupt payload (`always_escalate: true`). Body flag **MUST NOT** be the sole gate
+- Always-escalate: HTTP body **MUST** include `approver_id` + `approver_role` or `AGENT-HITL-APPROVER-REQUIRED` — **no** `Command` invoke
+- Persist INSERT `hitl_decisions` **before** invoke (fail closed); merge `turn_decisions` — **FORBIDDEN** clobber pre-interrupt flush
 
 Resume JSON (minimum):
 
