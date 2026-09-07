@@ -5,6 +5,7 @@ import {
   assertHitlResumeApprover,
   buildHitlResumePayload,
   canonicalDecisionOutcome,
+  hitlTurnDecisionEvent,
   HitlResumeError,
   interruptRequiresApprover,
 } from "../../src/http/hitl-resume.js";
@@ -95,6 +96,21 @@ describe("buildHitlResumePayload", () => {
     expect(payload.approver_role).toBe("regulatory-reviewer");
     expect(payload.always_escalate).toBe(true);
     expect(payload.foo).toBe(1);
+  });
+
+  it("uses outer body.decision as SoT when nested resume disagrees", () => {
+    const body = {
+      decision: "reject",
+      approver_id: "user-123",
+      approver_role: "regulatory-reviewer",
+      resume: { decision: "approve" },
+    };
+    const payload = buildHitlResumePayload(body, true);
+    expect(payload.decision).toBe("rejected");
+    expect(
+      hitlTurnDecisionEvent(body, true, new Date("2026-09-07T00:00:00.000Z"))
+        .decision_outcome,
+    ).toBe("rejected");
   });
 });
 

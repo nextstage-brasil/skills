@@ -88,17 +88,19 @@ export function assertHitlResumeApprover(body: HitlResumeBody): void {
   }
 }
 
+export function resolveHitlDecision(body: HitlResumeBody): string {
+  return canonicalDecisionOutcome(body.decision);
+}
+
 export function buildHitlResumePayload(
   body: HitlResumeBody,
   alwaysEscalate: boolean,
 ): Record<string, unknown> {
   const nested = asRecord(body.resume) ?? {};
-  const decisionRaw =
-    (typeof nested.decision === "string" ? nested.decision : body.decision) ??
-    "approved";
+  const decision = resolveHitlDecision(body);
   return {
     ...nested,
-    decision: canonicalDecisionOutcome(decisionRaw),
+    decision,
     approver_id: body.approver_id ?? nested.approver_id ?? null,
     approver_role: body.approver_role ?? nested.approver_role ?? null,
     intent_category: body.intent_category ?? nested.intent_category ?? null,
@@ -117,7 +119,7 @@ export function hitlTurnDecisionEvent(
     approver_id: body.approver_id ?? null,
     approver_role: body.approver_role ?? null,
     decided_at: decidedAt.toISOString(),
-    decision_outcome: canonicalDecisionOutcome(body.decision),
+    decision_outcome: resolveHitlDecision(body),
     always_escalate: alwaysEscalate,
     intent_category: body.intent_category ?? null,
   };
