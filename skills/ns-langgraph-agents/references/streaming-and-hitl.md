@@ -61,15 +61,31 @@ const approval = interrupt({
   kind: "tool_approval",
   tool: call.name,
   args: call.args,
+  intent_category: categoryId,
+  always_escalate: alwaysEscalate,
 });
-// resume value becomes `approval`
+// resume value = approval payload (decision + approver_id + approver_role)
 ```
 
 Requirements:
 
 - Compiled graph + **checkpointer**
 - `thread_id` in config
-- Resume: `graph.stream(new Command({ resume: userInput }), config)`
+- Resume: `graph.stream(new Command({ resume: approval }), config)`
+- Always-escalate: HTTP body **MUST** include `approver_id` + `approver_role` or `AGENT-HITL-APPROVER-REQUIRED`
+- Persist INSERT `hitl_decisions`; merge `turn_decisions` — **FORBIDDEN** clobber pre-interrupt flush
+
+Resume JSON (minimum):
+
+```json
+{
+  "decision": "approve",
+  "approver_id": "user-123",
+  "approver_role": "regulatory-reviewer",
+  "always_escalate": true,
+  "intent_category": "regulated_publish"
+}
+```
 
 ## Detecting interrupts
 
@@ -82,7 +98,7 @@ Requirements:
 ```
 POST /threads              → create thread_id
 POST /threads/:id/message  → run graph (sync or SSE)
-POST /threads/:id/resume   → HITL resume with Command
+POST /threads/:id/resume   → HITL resume with Command; always-escalate requires approver_id + approver_role
 GET  /health
 GET  /dev-chat             → human train/test UI (greenfield streaming_sse MUST)
 ```

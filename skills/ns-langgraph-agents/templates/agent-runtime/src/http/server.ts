@@ -1,9 +1,23 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
+import { Command } from "@langchain/langgraph";
 import { isDevChatEnabled, renderDevChatHtml } from "./dev-chat.js";
+import {
+  assertHitlResumeApprover,
+  buildHitlResumePayload,
+  HitlResumeError,
+  type HitlResumeBody,
+} from "./hitl-resume.js";
+import { readJsonBody } from "./read-json-body.js";
 import { getGraph } from "../graph/graph.js";
 import { buildRunConfig, initLangSmith } from "../observability/langsmith.js";
 import { initOtel } from "../observability/otel.js";
-import { initDb, logThread, syncTenant } from "../observability/postgres.js";
+import {
+  getLatestCheckpointId,
+  initDb,
+  logHitlDecision,
+  logThread,
+  syncTenant,
+} from "../observability/postgres.js";
 import { runStorage } from "../observability/run-context.js";
 import { resolveCheckpointerMode } from "../memory/checkpointer.js";
 import { bootstrapSkillsRegistry } from "../skills/registry.js";
@@ -89,6 +103,66 @@ export function createAgentServer() {
         );
 
         return json(res, 201, { thread_id: threadId, state: result });
+      }
+
+      if (
+        _req.method === "POST" &&
+        parts[0] === "threads" &&
+        parts[2] === "resume" &&
+        parts.length === 3
+      ) {
+        const threadId = parts[1];
+        const tenantId = "1";
+        let body: HitlResumeBody;
+        try {
+          body = (await readJsonBody(_req)) as HitlResumeBody;
+        } catch {
+          return json(res, 400, { error: "invalid_json" });
+        }
+        try {
+          assertHitlResumeApprover(body);
+        } catch (err) {
+          if (err instanceof HitlResumeError) {
+            return json(res, 400, {
+              error: err.code,
+              error_code: err.code,
+            });
+          }
+          throw err;
+        }
+
+        const resumePayload = buildHitlResumePayload(body);
+        const outcome =
+          typeof resumePayload.decision === "string"
+            ? resumePayload.decision
+            : body.decision ?? "approved";
+
+        try {
+          const checkpointId = await getLatestCheckpointId(threadId);
+          await logHitlDecision({
+            threadId,
+            checkpointId,
+            intentCategory: body.intent_category ?? null,
+            approverId: body.approver_id ?? null,
+            approverRole: body.approver_role ?? null,
+            decisionOutcome: outcome,
+            alwaysEscalate: body.always_escalate === true,
+            resumePayload,
+          });
+        } catch {
+          // Observability must not fail the turn in template stub.
+        }
+
+        const result = await runStorage.run({ threadId, tenantId }, async () =>
+          invokeWithLatencyBudget(async (signal) =>
+            graph.invoke(new Command({ resume: resumePayload }), {
+              ...buildRunConfig(threadId, { tenant_id: tenantId, op: "resume" }),
+              signal,
+            }),
+          ),
+        );
+
+        return json(res, 200, { thread_id: threadId, state: result });
       }
 
       return json(res, 404, { error: "not_found" });

@@ -127,7 +127,7 @@ flowchart TD
 
 | Node | Trigger | Payload | Resume |
 | ---- | ------- | ------- | ------ |
-| {{node}} | {{tool class / policy}} | {{json shape}} | user approval / edit |
+| {{node}} | {{tool class / policy}} | `{ kind, tool, args, intent_category, always_escalate }` | `{ decision, approver_id, approver_role, edited_args? }` — always-escalate **MUST** include approver_id + approver_role |
 
 ## Memory
 

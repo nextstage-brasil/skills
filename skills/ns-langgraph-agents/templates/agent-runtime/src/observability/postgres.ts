@@ -1,5 +1,6 @@
 import { getPool } from "../db/client.js";
 import { runMigrations } from "../db/migrate.js";
+import { mergeTurnDecisions } from "./merge-turn-decisions.js";
 
 let dbReady = false;
 
@@ -94,13 +95,25 @@ export async function logLlmCall(params: {
 }
 
 /**
- * UPDATE turn_decisions on the latest checkpoint row for the thread (turn anchor).
+ * Merge incoming events onto the latest checkpoint `turn_decisions` array.
+ * Resume after interrupt MUST append — never replace the pre-interrupt flush.
  */
 export async function upsertTurnDecisions(
   threadId: string,
   decisions: unknown,
 ): Promise<void> {
   const pool = getPool();
+  const existing = await pool.query<{ turn_decisions: unknown }>(
+    `SELECT turn_decisions FROM agent_checkpoints
+     WHERE thread_id = $1
+     ORDER BY step_number DESC
+     LIMIT 1`,
+    [threadId],
+  );
+  const merged = mergeTurnDecisions(
+    existing.rows[0]?.turn_decisions,
+    decisions,
+  );
   await pool.query(
     `UPDATE agent_checkpoints
      SET turn_decisions = $2::jsonb
@@ -110,7 +123,41 @@ export async function upsertTurnDecisions(
        ORDER BY step_number DESC
        LIMIT 1
      )`,
-    [threadId, JSON.stringify(decisions)],
+    [threadId, JSON.stringify(merged)],
+  );
+}
+
+export async function logHitlDecision(params: {
+  threadId: string;
+  checkpointId?: string | null;
+  intentCategory?: string | null;
+  decisionActor?: string;
+  approverId?: string | null;
+  approverRole?: string | null;
+  decidedAt?: Date;
+  decisionOutcome: string;
+  alwaysEscalate: boolean;
+  resumePayload: unknown;
+}): Promise<void> {
+  const pool = getPool();
+  await pool.query(
+    `INSERT INTO hitl_decisions
+       (thread_id, checkpoint_id, intent_category, decision_actor,
+        approver_id, approver_role, decided_at, decision_outcome,
+        always_escalate, resume_payload)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+    [
+      params.threadId,
+      params.checkpointId ?? null,
+      params.intentCategory ?? null,
+      params.decisionActor ?? "human",
+      params.approverId ?? null,
+      params.approverRole ?? null,
+      params.decidedAt ?? new Date(),
+      params.decisionOutcome,
+      params.alwaysEscalate,
+      JSON.stringify(params.resumePayload),
+    ],
   );
 }
 

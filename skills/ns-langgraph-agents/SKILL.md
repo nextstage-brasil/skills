@@ -229,7 +229,7 @@ Apply `references/capability-governance.md` and `references/prompt-and-capabilit
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `sync_json`     | `POST /threads`, `POST /threads/:id/message`                                                                                                                                                                              |
 | `streaming_sse` | SSE envelope per `references/streaming-and-hitl.md`; **greenfield MUST** ship `GET /dev-chat` gated by `DEV_CHAT_ENABLED` (local-only); JSON planner hops **MUST** emit operator `thinking` from state `userFacingIntent` |
-| HITL            | `interrupt()` + `POST /threads/:id/resume` with `Command({ resume })`                                                                                                                                                     |
+| HITL            | `interrupt()` + `POST /threads/:id/resume` with `Command({ resume })`; always-escalate **MUST** send `approver_id` + `approver_role` |
 
 Brownfield missing dev-chat: recommend add — not Critical. Postman synced with live routes.
 

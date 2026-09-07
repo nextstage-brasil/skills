@@ -65,7 +65,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"approve\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"approve\",\n  \"approver_id\": \"user-123\",\n  \"approver_role\": \"regulatory-reviewer\",\n  \"always_escalate\": true,\n  \"intent_category\": \"regulated_publish\"\n}" },
             "url": {
               "raw": "{{baseUrl}}/threads/{{thread_id}}/resume",
               "host": ["{{baseUrl}}"],
@@ -79,7 +79,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"reject\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"reject\",\n  \"approver_id\": \"user-123\",\n  \"approver_role\": \"regulatory-reviewer\",\n  \"always_escalate\": true,\n  \"intent_category\": \"regulated_publish\"\n}" },
             "url": {
               "raw": "{{baseUrl}}/threads/{{thread_id}}/resume",
               "host": ["{{baseUrl}}"],
