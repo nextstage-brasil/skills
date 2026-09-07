@@ -1,0 +1,13 @@
+{
+  "eval_id": 6,
+  "eval_name": "tool-schema",
+  "prompt": "Agent tools: one named search and another also basically search, both take free-text status. Lock the tool design.",
+  "assertions": [
+    "Applies schema checklist before locking tools (or cites tool-schema-design)",
+    "Rejects or renames generic tool name when a similar sibling exists",
+    "Demands enum (or closed set) where free text was proposed for fixed values",
+    "Requires declared return shape",
+    "Does not recommend a framework",
+    "Contains no implementation code"
+  ]
+}

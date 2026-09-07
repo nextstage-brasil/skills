@@ -1,0 +1,26 @@
+{
+  "expectations": [
+    {
+      "text": "Locks data-egress axis before cost",
+      "passed": true,
+      "evidence": "PASS"
+    },
+    {
+      "text": "Prefers local or VPC-bound hosting when corpus cannot leave",
+      "passed": true,
+      "evidence": "PASS"
+    },
+    {
+      "text": "ADR tooling stack records provider, hosting mode, data-egress note, failover provider",
+      "passed": true,
+      "evidence": "PASS"
+    },
+    {
+      "text": "Cites or applies provider-selection doctrine",
+      "passed": true,
+      "evidence": "PASS"
+    }
+  ],
+  "pass_rate": 1.0,
+  "summary": "4/4 assertions passed"
+}

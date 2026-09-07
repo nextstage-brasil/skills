@@ -1,0 +1,12 @@
+{
+  "eval_id": 10,
+  "eval_name": "defense-decline-adr-locks",
+  "prompt": "Multi-agent compliance filing: researcher + filer + HITL. After ADR I decline the stakeholder defense pack \u2014 we only need the implementation handoff.",
+  "assertions": [
+    "ADR includes Failure contract with timeout/retries/exhaustion and idempotent-on-duplicate",
+    "ADR includes Compensation with who triggers",
+    "ADR includes Inter-agent events with transport and delivery guarantee",
+    "Does not write agent-architecture-defense.md",
+    "Cites or applies inter-agent-transport doctrine"
+  ]
+}

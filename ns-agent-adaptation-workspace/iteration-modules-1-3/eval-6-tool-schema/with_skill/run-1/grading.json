@@ -1,0 +1,36 @@
+{
+  "expectations": [
+    {
+      "text": "Applies schema checklist before locking tools (or cites tool-schema-design)",
+      "passed": true,
+      "evidence": "PASS"
+    },
+    {
+      "text": "Rejects or renames generic tool name when a similar sibling exists",
+      "passed": true,
+      "evidence": "PASS"
+    },
+    {
+      "text": "Demands enum (or closed set) where free text was proposed for fixed values",
+      "passed": true,
+      "evidence": "PASS"
+    },
+    {
+      "text": "Requires declared return shape",
+      "passed": true,
+      "evidence": "PASS"
+    },
+    {
+      "text": "Does not recommend a framework",
+      "passed": true,
+      "evidence": "PASS"
+    },
+    {
+      "text": "Contains no implementation code",
+      "passed": true,
+      "evidence": "PASS"
+    }
+  ],
+  "pass_rate": 1.0,
+  "summary": "6/6 assertions passed"
+}

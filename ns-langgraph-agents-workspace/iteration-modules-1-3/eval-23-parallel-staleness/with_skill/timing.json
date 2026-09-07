@@ -1,0 +1,8 @@
+{
+  "eval_id": 23,
+  "eval_name": "parallel-staleness",
+  "mode": "with_skill",
+  "started_at": "2026-09-07T14:55:30Z",
+  "completed_at": "2026-09-07T14:56:00Z",
+  "duration_ms": 30000
+}

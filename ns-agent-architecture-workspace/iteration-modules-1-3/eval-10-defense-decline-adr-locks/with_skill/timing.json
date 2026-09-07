@@ -1,0 +1,11 @@
+{
+  "eval_id": 10,
+  "eval_name": "defense-decline-adr-locks",
+  "mode": "with_skill",
+  "started_at": "2026-09-07T14:56:02Z",
+  "completed_at": "2026-09-07T14:58:30Z",
+  "duration_ms": 148000,
+  "total_duration_seconds": 148.0,
+  "total_tokens": 0,
+  "note": "Simulated grill-me interview with auto-accepted recommended answers; Step 9 declined defense pack."
+}
