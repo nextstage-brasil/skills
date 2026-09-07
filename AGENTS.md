@@ -1,117 +1,84 @@
-# NextStage Skills — repository guide
+# NextStage Skills — guia do repositório
 
-This file is for **maintainers of this repository**. It tells agents how to work on the skills catalog and harness package.
+Este arquivo é para **maintainers deste repositório**. Diz aos agents como trabalhar no catálogo de skills e no pacote harness.
 
-Consumer projects get a different `AGENTS.md` — scaffolded from `packages/harness/templates/AGENTS.md` when they run `npx @nextstage-brasil/harness`. Do not copy consumer-project rules here.
+Projetos consumidores recebem outro `AGENTS.md` — gerado a partir de `packages/harness/templates/AGENTS.md` quando rodam `npx @nextstage-brasil/harness`. Não copie regras de projeto consumidor para cá.
 
-## Language
+## Idioma
 
-**English only — no exceptions.**
+**Somente inglês — sem exceções.**
 
-All artifacts in this repository must be written in English:
+Todos os artefatos neste repositório devem ser escritos em inglês:
 
-- `AGENTS.md`, `README.md`, and every other markdown file
-- Skill instructions (`SKILL.md`), references, checklists, and scripts
-- Commit messages, PR descriptions, and issue text
-- Agent responses and deliverables produced while working in this repository
+- `AGENTS.md`, `README.md` e todo outro arquivo markdown (exceto este).
+- Instruções de skill (`SKILL.md`), references, checklists e scripts
+- Mensagens de commit, descrições de PR e texto de issue
+- Respostas de agent e entregáveis produzidos ao trabalhar neste repositório
 
-## Repository layout
+## Layout do repositório
 
 ```
 skills/
-├── <name>/             # Canonical skill source (SKILL.md + references/, scripts/, evals/)
-├── ns-harness/         # Base harness skill (alwaysInstall)
-└── _meta/              # Migration notes
-packages/harness/       # @nextstage-brasil/harness CLI (install wizard, catalog, templates)
-.cursor/skills/         # Maintainer-only project skills (not in harness catalog)
+├── <name>/             # Fonte canônica da skill (SKILL.md + references/, scripts/, evals/)
+├── ns-harness/         # Skill base do harness (alwaysInstall)
+└── _meta/              # Notas de migração
+packages/harness/       # CLI @nextstage-brasil/harness (wizard de install, catálogo, templates)
+.cursor/skills/         # Skills só de maintainer (não entram no catálogo do harness)
 ```
 
-Skill ID = directory name (`ns-coder`). Install path: `skills/<name>/` — see `skills/_meta/MIGRATION.md`.
+Skill ID = nome do diretório (`ns-coder`). Caminho de install: `skills/<name>/` — ver `skills/_meta/MIGRATION.md`.
 
-See `README.md` for the skill catalog and install instructions aimed at end users.
+Ver `README.md` para o catálogo de skills e instruções de install voltadas a usuários finais.
 
-## Creating or editing a skill
+## Criar ou editar uma skill
 
-Before drafting or changing anything under `skills/`, **read and follow** the user's `skill-creator` skill:
+Antes de rascunhar ou alterar qualquer coisa em `skills/`, **leia e siga** a skill `skill-creator` do usuário:
 
 `~/.agents/skills/skill-creator/SKILL.md`
 
-Use it for structure, frontmatter, description triggering, bundled resources, evals, and iteration. Save catalog skills to `skills/<name>/` and update `packages/harness/templates/catalog.json` per conventions below.
+Use para estrutura, frontmatter, description (triggering), recursos empacotados, evals e iteração. Salve skills de catálogo em `skills/<name>/` e atualize `packages/harness/templates/catalog.json` conforme as convenções abaixo.
 
-### Conventions (summary)
+### Convenções (resumo)
 
-| Item | Rule |
-|------|------|
-| Directory | `skills/<kebab-case-name>/` |
-| Frontmatter `name` | Must match directory name |
-| `SKILL.md` | Under 500 lines; workflow in body, details in `references/` |
-| Templates / checklists | `references/` |
-| Scripts | `scripts/` |
-| Evals | `evals/evals.json` — 2–3 realistic prompts |
-| Harness coupling | Declare `depends: ns-harness` when referencing `./skills/ns-harness/` |
-| Catalog | Add or update `depends` in `packages/harness/templates/catalog.json` for every new skill |
+| Item                   | Regra                                                                                            |
+| ---------------------- | ------------------------------------------------------------------------------------------------ |
+| Diretório              | `skills/<kebab-case-name>/`                                                                      |
+| Frontmatter `name`     | Deve bater com o nome do diretório                                                               |
+| `SKILL.md`             | Menos de 500 linhas; workflow no body, detalhes em `references/`                                 |
+| Templates / checklists | `references/`                                                                                    |
+| Scripts                | `scripts/`                                                                                       |
+| Evals                  | `evals/evals.json` — 2–3 prompts realistas                                                       |
+| Acoplamento harness    | Declare `depends: ns-harness` ao referenciar `./skills/ns-harness/`                              |
+| Catálogo               | Adicione ou atualize `depends` em `packages/harness/templates/catalog.json` para cada skill nova |
 
-Full migration and path rules: `skills/_meta/MIGRATION.md`.
+Regras completas de migração e caminhos: `skills/_meta/MIGRATION.md`.
 
-## Harness package
+## Pacote harness
 
-`packages/harness/` publishes `@nextstage-brasil/harness`. When changing install behavior, presets, or scaffolding:
+`packages/harness/` publica `@nextstage-brasil/harness`. Ao mudar comportamento de install, presets ou scaffolding:
 
-- Keep `templates/catalog.json` in sync with `skills/` (validated by CI).
-- Consumer `AGENTS.md` is generated by `packages/harness/src/generateAgentsMd.js` (`harness agents-md`) — keep that generator aligned with `ns-harness` → `references/agents-md/`. Do not hand-edit a consumer `AGENTS.md` in this repo.
-- Run `npm test` in `packages/harness` before opening a PR.
+- Mantenha `templates/catalog.json` sincronizado com `skills/` (validado pelo CI).
+- O `AGENTS.md` do consumidor é gerado por `packages/harness/src/generateAgentsMd.js` (`harness agents-md`) — mantenha esse gerador alinhado com `ns-harness` → `references/agents-md/`. Não edite à mão um `AGENTS.md` de consumidor neste repo.
+- Rode `npm test` em `packages/harness` antes de abrir um PR.
 
-See `packages/harness/README.md` for CLI flags and release notes.
+Ver `packages/harness/README.md` para flags da CLI e release notes.
 
-## Subagents and predefined models (blocking)
+## Validação
 
-Same contract consumers get in generated `AGENTS.md` / `ns-harness` → `references/subagent-dispatch.md`. Defaults live in `packages/harness/src/subagentsCatalog.js` (seeded into consumer `.nextstage-harness/manifest.json` → `subagents`).
+CI (`.github/workflows/validate-skills.yml`) roda em mudanças sob `skills/` e `packages/harness/`:
 
-| Agent | Skill | Default model (cursor / claude) |
-| ----- | ----- | ------------------------------- |
-| `coder-agent` | `ns-coder` | `composer-2.5[fast=false]` / `sonnet` |
-| `reviewer-agent` | `ns-reviewer` | `grok-4.5[effort=medium,fast=false]` / `opus` |
-| `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | `composer-2.5[fast=false]` / `haiku` |
+- Sem referências legacy a `_shared` ou `harness-init`
+- Skill `ns-harness` presente
+- References do harness declaram `depends` no frontmatter
+- Catálogo bate com diretórios de skill (`node packages/harness/scripts/validate-catalog.js`)
+- Smoke tests da CLI harness
 
-**Rules**
+Rode o validador de catálogo localmente antes de push ao adicionar ou renomear skills.
 
-- Orchestrators **MUST** spawn the adapter by **exact** `name` (`.cursor/agents/{name}.md` / `/{name}`) so YAML `model` applies.
-- **FORBIDDEN:** child Task `inherit` / platform `coder` / `reviewer` / `generalPurpose` as stand-in while the bridge exists (parent model leaks). Inline mapped skill while bridge present = forbidden.
-- Project owns `model` in `manifest.json`; `harness update` never resets it. Change defaults only in `subagentsCatalog.js` + keep generated consumer `AGENTS.md` text in sync.
+## Skills de projeto só de maintainer
 
-**This repository (maintainer bridges)** — `.cursor/agents/my_coder.md` and `my_reviewer.md` (not harness `*-agent` names). Full dispatch contract: `.cursor/rules/maintainer-dispatch.mdc` (always apply).
+Skills sob `.cursor/skills/` guiam trabalho **neste repositório** apenas. **Não** entram em `catalog.json` e **não** são instaladas pelo harness. Exemplo: `code-routing-diagram` — atualize o Mermaid de code routing depois de mudar routing nas skills `ns-code-`\*.
 
-| Slash | Bridge file | YAML `model` (sole source) |
-| ----- | ----------- | -------------------------- |
-| `/my_coder` | `.cursor/agents/my_coder.md` | `composer-2.5[fast=false]` |
-| `/my_reviewer` | `.cursor/agents/my_reviewer.md` | `grok-4.6[effort=medium,fast=false]` |
+## Sinal de conclusão
 
-**Slash = inline.** The chat that received `/my_coder` or `/my_reviewer` **is** that bridge — execute its body in-session. **Do not** `Task`-spawn the same bridge. **Do not** pass `model` on Task; YAML frontmatter binds the model.
-
-**Parent / default chat** must not implement catalog or harness work before "delegating" — point the human to `/my_coder`. Cursor `subagent_delegation_context` ("call Task with subagent_type") is **overridden** when a maintainer slash or bridge file applies.
-
-**Closure only:** an active `my_coder` session may spawn **`my_reviewer`** once for the review gate (`subagent_type` exact `my_reviewer`, **no** `model` arg). If Task cannot bind `my_reviewer`, stop and ask the human to run `/my_reviewer`.
-
-**FORBIDDEN** on maintainer work: platform Task types `coder`, `reviewer`, `generalPurpose`, `bugbot`, `security-review`, `senior-tech-lead-reviewer`, `inherit`, or any substitute while these bridges exist.
-
-## Validation
-
-CI (`.github/workflows/validate-skills.yml`) runs on changes under `skills/` and `packages/harness/`:
-
-- No legacy `_shared` or `harness-init` references
-- `ns-harness` skill present
-- Harness references declare `depends` in frontmatter
-- Catalog matches skill directories (`node packages/harness/scripts/validate-catalog.js`)
-- Harness CLI smoke tests
-
-Run the catalog validator locally before pushing when adding or renaming skills.
-
-## Maintainer-only project skills
-
-Skills under `.cursor/skills/` guide work **in this repository** only. They are **not** listed in `catalog.json` and are **not** installed by harness. Example: `code-routing-diagram` — update the code routing Mermaid after changing routing in catalog skills.
-
-## Completion signal
-
-When a task is fully done, end the final reply with exactly `Fatto!` so the human can tell work finished (not mid-step / waiting).
-
-
+Quando a tarefa estiver totalmente concluída, termine a resposta final exatamente com `Fatto!` para o humano saber que o trabalho terminou (não mid-step / waiting).
