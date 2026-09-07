@@ -46,7 +46,13 @@
     {
       "id": 8,
       "prompt": "High-volume support bot: Gateway must route billing vs FAQ vs compliance filing. We want cheap models for FAQ and strong tier for filing. No LLM router hop — rule or embedding classifier at the edge. Lock the ADR.",
-      "expected_output": "Agent grills Gateway probes in Step 2 (classifies intent yes, category list, deterministic mechanism). Step 7 locks model tier per category with P2 justification and always-escalate list for filing. ADR includes Gateway calibration section with threshold source measured on project data — not borrowed constants. Refuses dedicated LLM intent_classify hop.",
+      "expected_output": "Agent grills Gateway probes in Step 2 (classifies intent yes, category list, deterministic mechanism). Step 7 locks model tier per category with P2 justification, always-escalate list for filing, and Approval authority table (approver role per always-escalate category). ADR includes Gateway calibration section with threshold source measured on project data — not borrowed constants. Refuses dedicated LLM intent_classify hop.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "ADR already lists always-escalate for compliance filing but has no Approval authority table — anyone on the ops team can click resume. Fix the architecture lock before we ship.",
+      "expected_output": "Agent treats always-escalate without Approval authority as incomplete ADR: requires per-category approver role, sync vs async, and named compensation if async. Canonical audit fields include decision_actor, approver_id, approver_role, decided_at. Cites gateway-calibration.md. Does not treat product-wide single approver as sufficient.",
       "files": []
     }
   ]

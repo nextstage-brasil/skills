@@ -274,6 +274,18 @@
         "States cascade escalation is post-generation on confidence, not pre-gen LLM router",
         "Cites model-cascade-and-cache.md and/or gateway-calibration / anti-patterns"
       ]
+    },
+    {
+      "id": 22,
+      "prompt": "POST /threads/:id/resume for always-escalate filing comes in as { decision: approve } with no approver_id. Product wants to let the graph continue.",
+      "expected_output": "Agent refuses the resume: always-escalate HITL MUST include approver_id and approver_role or return AGENT-HITL-APPROVER-REQUIRED. Cites capability-governance.md and/or streaming-and-hitl.md. Does not invoke Command resume without those fields.",
+      "files": [],
+      "assertions": [
+        "Refuses always-escalate resume without approver_id and approver_role",
+        "Mentions AGENT-HITL-APPROVER-REQUIRED or HTTP 400",
+        "Cites capability-governance.md and/or streaming-and-hitl.md",
+        "Does not allow graph.invoke Command resume to proceed without approver identity"
+      ]
     }
   ]
 }
