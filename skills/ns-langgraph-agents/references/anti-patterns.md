@@ -32,7 +32,7 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | Anti-pattern | Why it hurts | Fix |
 | ------------ | ------------ | --- |
 | Open ReAct as **only** analytical path over open MCP catalog without a spec lock | Token blow-up / ungoverned tools | Suggest `plan_execute` or lock another architecture in `graph-spec.md` — `architectures.md` |
-| Dedicated `intent_classify` hop | Extra LLM; skips executor on fake chitchat | Analyst JSON + `routeAfterAnalyst` |
+| Dedicated **LLM** `intent_classify` hop | Extra LLM; skips executor on fake chitchat | Analyst JSON + `routeAfterAnalyst`. Deterministic Gateway routing (rule / cheap non-LLM classifier / embedding) from ADR categories is **allowed** — not this row |
 | Gather emits final user-facing answer | SSE flicker; polluted history | Composer sole-writer |
 | JSON planner hop without `userFacingIntent` on state | Operator sees only generic “model started” or silence | Persist + emit `thinking` at next hop entry — `planner-contract.md` |
 | `userFacingIntent` on `response_streaming` or in `messages` as the answer | Dual-writer; looks like the reply | SSE `thinking` only |

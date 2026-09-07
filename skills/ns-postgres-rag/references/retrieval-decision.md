@@ -21,7 +21,8 @@ Else refuse graph. Topic search, small base = vector-only.
 
 - File or chunk count near 1MM+ **or** HNSW build / vacuum cost dominates ops.
 - Query filters always hit partition key (tenant, corpus, time window).
-- Distinct vocabularies / document types contaminate one index (separate indexes or partitions per domain).
+- Distinct vocabularies / document types contaminate one index (separate indexes or partitions per domain) — **physical split** (tenant, time, retention). Use declarative partition when filter key is tenant/time/retention.
+- **Multi-Index augmentation** (`retrieval-augmentations.md`) — same contamination symptom but **logical** split by ADR Gateway intent category. Partition = ops/retention key; Multi-Index = Gateway category routing key. Do not double-apply both without distinct keys.
 - Retention: drop old partitions, not mass `DELETE`.
 
 Declarative partition aligned to filter + retention. One giant HNSW for whole corpus = `references/anti-patterns.md`.

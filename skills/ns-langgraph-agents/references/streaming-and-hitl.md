@@ -19,7 +19,7 @@ Typical turn order:
 | `accessing_data` | Optional progress |
 | `tool_started` | Tool name + args summary (executor) |
 | `tool_finished` | Truncated result summary (executor) |
-| `response_streaming` | Cumulative markdown (replace prior) — **composer only** |
+| `response_streaming` | Cumulative markdown (replace prior) — **composer only**; **draft** until Approval Gate clears when HITL applies |
 | `completed` | Terminal success |
 | `failed` | Terminal error |
 | `cancelled` | Client abort |
@@ -28,6 +28,7 @@ Rules:
 
 - Terminal status **last** event
 - `response_streaming` full cumulative text each tick
+- Streamed text pending Approval Gate = **draft** — UI must not present as validated output until gate clears
 - No raw reasoning in user stream
 - Operator progress is `thinking` (or `tool_*`), never `response_streaming`
 

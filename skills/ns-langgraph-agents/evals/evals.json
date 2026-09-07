@@ -120,11 +120,11 @@
     {
       "id": 10,
       "prompt": "We're designing a new LangGraph agent with Postgres + Slack + internal REST MCP. Open query space, streaming SSE. Which architecture should graph-spec lock?",
-      "expected_output": "Agent suggests plan_execute (guard → context_manager → mcp_catalog → analyst ⇄ executor → composer → respond) as the usual start for MCP, not a hard rule; lock in graph-spec; not open ReAct as unexamined default and not intent_classify unless spec says so; composer sole-writer if that topology is chosen.",
+      "expected_output": "Agent suggests plan_execute (guard → context_manager → mcp_catalog → analyst ⇄ executor → composer → respond) as the usual start for MCP, not a hard rule; lock in graph-spec; not open ReAct as unexamined default; dedicated LLM intent_classify hop FORBIDDEN even if spec asks — deterministic Gateway routing allowed; composer sole-writer if that topology is chosen.",
       "files": [],
       "assertions": [
         "Suggests plan_execute analyst/executor as a starting topology for MCP tool-heavy open query space, not as a mandatory rule",
-        "Does not recommend a dedicated intent_classify / intent hop",
+        "Does not recommend a dedicated LLM intent_classify / intent hop before generation",
         "States composer (or single node) is sole user-facing writer",
         "Mentions tool budgets or MAX_ANALYST_ITERATIONS / executor loop cap",
         "References architectures.md or graph-spec evidence channels",
@@ -260,6 +260,19 @@
         "Mentions AGENT_MAX_COST_PER_TURN or max_cost_per_turn",
         "Mentions turn_cost_budget_exceeded or composer-on-evidence path",
         "Cites rules-contract, error-and-reliability, or observability reservation"
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "We locked ADR Gateway categories with embedding classifier at the edge — FAQ cheap, billing strong, filing always-escalate. Runtime still has an LLM intent_classify node before analyst. Fix the doctrine.",
+      "expected_output": "Agent accepts deterministic Gateway routing from ADR categories; removes or refuses LLM intent_classify hop; requires tool_executions audit fields (prompt_version, model_id, threshold_applied, score_obtained, decision_outcome); cascade escalation stays post-generation; cites model-cascade-and-cache reconciliation and gateway-calibration.",
+      "files": [],
+      "assertions": [
+        "Accepts deterministic Gateway intent routing (rule, cheap classifier, or embedding)",
+        "Refuses or removes dedicated LLM intent_classify hop before generation",
+        "Requires audit fields: prompt_version, model_id/version, threshold_applied, score_obtained, decision_outcome",
+        "States cascade escalation is post-generation on confidence, not pre-gen LLM router",
+        "Cites model-cascade-and-cache.md and/or gateway-calibration / anti-patterns"
       ]
     }
   ]

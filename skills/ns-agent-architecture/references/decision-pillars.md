@@ -47,7 +47,7 @@ Applies only to rows already classified as agents. Split only if **two or more**
 - Tool set
 - Risk / reflection depth
 
-One generalist is cheaper to coordinate, harder to audit. Specialists cost protocol and shared state.
+Specialists on table: lock three dimensions in interview. ADR **Why this design** = One vs many **one line**. Full Boundary canvas only in defense pack (`architecture-defense-template.md`) — never paste into `agent-architecture.md`. One generalist: cheap coordinate, hard audit. Specialists: protocol + shared state cost.
 
 ## Error handling & governance
 
@@ -55,6 +55,8 @@ Ask only if still open after integrations:
 
 - Per-turn token/latency cap — hard stop vs degrade-to-partial?
 - Must a third party reconstruct route + tool + reason from logs (regulated → yes)?
+- Per agent-node on failure: timeout, max retries, Consistency (block) vs Availability (proceed with gap)?
+- Multi-write / multi-produce chain: compensating action per step; who triggers (Supervisor / orchestrator / HITL)?
 
 ## 1. Control vs autonomy
 
@@ -97,7 +99,7 @@ Ask only if still open after integrations:
 
 When user locks **LangGraph** and scope includes **MCP or many external tools**:
 
-- **Suggest** `plan_execute` (`guard → context_manager → mcp_catalog → analyst ⇄ executor → composer → respond`) as the usual start for MCP — not a rule; lock in the ADR / `graph-spec.md`. Do not invent `intent_classify` unless spec says so
+- **Suggest** `plan_execute` (`guard → context_manager → mcp_catalog → analyst ⇄ executor → composer → respond`) as the usual start for MCP — not a rule; lock in the ADR / `graph-spec.md`. Dedicated **LLM** `intent_classify` hop **FORBIDDEN** — deterministic Gateway routing only (`references/gateway-calibration.md`)
 - Sequential only when the next worker needs the previous **output** — calendar order is not a reason to serialize
 - Note greenfield MUST items from `ns-langgraph-agents`: dev-chat, tool budgets, evidence channels, JSON-planner `userFacingIntent` + SSE `thinking` when the gather/analyst hop is structured plan (no `bindTools`)
 - Simple local-tools MVP may still use open ReAct — do not over-prescribe topology for trivial tool count

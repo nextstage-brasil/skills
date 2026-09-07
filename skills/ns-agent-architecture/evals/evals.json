@@ -36,6 +36,18 @@
       "prompt": "Support bot starts in billing, then mid-turn the user asks a medical-device compliance question that billing tools must not touch. Billing agent should stop owning the turn.",
       "expected_output": "Agent selects handoff (control transfer; originator leaves; context follows) — not a supervisor round-trip that returns to billing; Orchestration pattern section names handoff for the domain-change segment; ADR written.",
       "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "After you finish the architecture ADR for our compliance review bot (specialists + human approve before filing), I need material to defend the design with the client's architects — boundary, failure/saga, events, why not the alternatives.",
+      "expected_output": "Agent completes ADR first (or uses locked ADR). Then Step 9 asks whether to generate the architecture defense pack with recommended answer. On yes: writes docs/specs/agent-architecture-defense.md with Decision defense, Boundary canvas, Orchestration selector, Distributed failure/saga, Inter-agent events, Slide seed — grilling any missing CAP/saga/event locks first; does not invent cells; does not merge into agent-architecture.md.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "High-volume support bot: Gateway must route billing vs FAQ vs compliance filing. We want cheap models for FAQ and strong tier for filing. No LLM router hop — rule or embedding classifier at the edge. Lock the ADR.",
+      "expected_output": "Agent grills Gateway probes in Step 2 (classifies intent yes, category list, deterministic mechanism). Step 7 locks model tier per category with P2 justification and always-escalate list for filing. ADR includes Gateway calibration section with threshold source measured on project data — not borrowed constants. Refuses dedicated LLM intent_classify hop.",
+      "files": []
     }
   ]
 }

@@ -4,7 +4,7 @@ description: (NS) LangGraph.js agent-api — greenfield scaffold (bootstrap-agen
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.13"
+  version: "1.14"
 depends:
   - ns-harness
 ---
@@ -145,7 +145,7 @@ Load on demand — do not memorize whole files.
 | `templates/snippets/tool-budget.ts.snippet`          | Per-turn tool/MCP caps, arg fingerprint duplicate-skip                                            |
 | `templates/snippets/prepare-llm-messages.ts.snippet` | `context_manager` helper                                                                          |
 | `references/error-and-reliability.md`                | Tool errors, circuit breaker, retries, compensation, cost stop                                    |
-| `references/model-cascade-and-cache.md`              | Cheap-first cascade, semantic/prompt cache; not intent_classify                                   |
+| `references/model-cascade-and-cache.md`              | Cheap-first cascade, semantic/prompt cache; not LLM intent_classify hop; deterministic Gateway allowed |
 | `references/observability.md`                        | Postgres audit, LangSmith, OTel, run context, cost reservation                                    |
 | `references/architectures.md`                        | ReAct, plan_execute (suggested start for most MCP), other topologies; **node id ≠ state channel** |
 | `references/streaming-and-hitl.md`                   | SSE envelopes, operator `thinking` from planner state, `interrupt()`, `Command` resume            |

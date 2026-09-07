@@ -4,7 +4,7 @@ description: "(NS) PostgreSQL retrieval layer — pgvector RAG, hybrid FTS+vecto
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 depends:
   - ns-harness
 ---
@@ -75,7 +75,7 @@ No skip. Missing inventory = no Gate 2.
 
 ## Gate 2 — Retrieval Decision (blocking)
 
-Pick **exactly one** mode. Matrix: `references/retrieval-decision.md`.
+Pick **exactly one base mode**. Matrix: `references/retrieval-decision.md`.
 
 | Mode | When |
 | ---- | ---- |
@@ -83,9 +83,11 @@ Pick **exactly one** mode. Matrix: `references/retrieval-decision.md`.
 | Hybrid (`tsvector` + vector, rank fusion) | Keyword + semantic; one document often answers |
 | Relational GraphRAG | N≥2 hops **and** no single document contains chain |
 
+**Augmentations** (additive — base mode unchanged): `none` | `multi-index` | `agentic` | `both`. Each non-`none` choice needs measured symptom that justifies it. Doctrine: `references/retrieval-augmentations.md`. Default `none`. Refuse stacking without symptom.
+
 Extensions: `pgvector` always. Timescale only `references/operations-and-scale.md` — not default.
 
-Post decision + one-paragraph why **before** full report. Wrong mode = rewrite Gate 2, not paper over in DDL.
+Post base mode + augmentation lock + one-paragraph why **before** full report. Wrong mode = rewrite Gate 2, not paper over in DDL.
 
 ## Gate 3 — Retrieval Design Report
 
@@ -102,7 +104,8 @@ Load on demand.
 | Reference | Read when |
 | --------- | --------- |
 | `references/corpus-assessment.md` | Gate 1; 1MM+ projection |
-| `references/retrieval-decision.md` | Gate 2 mode + partition / Timescale |
+| `references/retrieval-decision.md` | Gate 2 base mode + partition / Timescale |
+| `references/retrieval-augmentations.md` | Gate 2 augmentations (multi-index, agentic); symptom lock |
 | `references/schema-and-indexes.md` | Target DDL, HNSW, filters, partition |
 | `references/entity-resolution.md` | Merge, aliases, no edge without evidence |
 | `references/ingestion-pipeline.md` | Extract, chunk, embed, idempotent upsert |

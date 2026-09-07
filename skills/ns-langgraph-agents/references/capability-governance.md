@@ -103,13 +103,15 @@ Redact secrets in audit + fingerprints.
 
 ## Human-in-the-loop
 
-Three bands (business sets numbers). **Always-scale** categories (official publish, irreversible write) skip the high band — gate even at high score.
+Three bands (business sets numbers). **Always-escalate** (alias **always-scale** — official publish, irreversible write) skip high band — gate even at high score. Same list as ADR Gateway always-escalate.
+
+**Recalibration:** re-measure HITL bands on model version change or audit category-distribution drift vs calibration set.
 
 | Band | Behavior |
 | ---- | -------- |
 | High confidence, not always-scale | Run |
 | Mid | `interrupt` |
-| Low, **or** always-scale / `destructive` / `sensitive_tools` | `interrupt` — **sync** if undo is impossible; async if reversible |
+| Low, **or** always-escalate (always-scale) / `destructive` / `sensitive_tools` | `interrupt` — **sync** if undo is impossible; async if reversible |
 
 1. Agent proposes tool call or recommendation
 2. `interrupt({ tool, args, reason })`
@@ -118,8 +120,10 @@ Three bands (business sets numbers). **Always-scale** categories (official publi
 
 ## Audit
 
-Every execution → `tool_executions`:
+Every execution → `tool_executions`. Gateway rows: same canonical fields (`ns-agent-architecture` `gateway-calibration.md`):
 
+- `intent_category`, `model_tier`, `model_id`, `prompt_version`
+- `threshold_applied`, `score_obtained`, `decision_outcome`, `always_escalate`
 - `capability_id`, `tenant_id`, `thread_id`
 - `fingerprint` (redacted args hash)
 - `duration_ms`, `status`, truncated `result`

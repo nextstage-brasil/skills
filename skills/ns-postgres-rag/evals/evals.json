@@ -38,6 +38,33 @@
         "Mentions false-link rate or path precision (or equivalent eval gates)",
         "Cites anti-patterns, entity-resolution, or evaluation-and-gates doctrine"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "Two million documents split across legal contracts and engineering runbooks — one pgvector index returns wrong-domain neighbors on half our queries. We still need hybrid search within each domain. Design retrieval. No app code.",
+      "expected_output": "Agent runs Gate 1 inventory, locks hybrid as base mode, enables multi-index augmentation with measured symptom (domain contamination), requires deterministic index-routing key aligned to ADR Gateway intent categories, cross-index fan-out only as explicit fallback tier; fills Retrieval Design Report with augmentation fields; refuses agentic or both without separate symptom.",
+      "files": [],
+      "assertions": [
+        "Chooses hybrid as base mode (not vector-only or GraphRAG as primary)",
+        "Enables multi-index augmentation with domain-contamination symptom",
+        "Requires deterministic index-routing key (not fan-out every query)",
+        "Links routing key to Gateway intent category (same taxonomy, not second taxonomy)",
+        "Does not stack agentic augmentation without its own measured symptom",
+        "Fills or requires Retrieval Design Report with augmentation lock fields"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Our RAG team wants multi-index, agentic retrieval loops, and GraphRAG tables on a 5k-note FAQ — no measured symptoms yet, just future-proofing. What do you recommend?",
+      "expected_output": "Agent refuses unjustified stacking: vector-only base mode, augmentations none, no GraphRAG tables; cites retrieval-augmentations anti-patterns (all patterns for later without symptom); still requires Gate 1 inventory at appropriate scale.",
+      "files": [],
+      "assertions": [
+        "Recommends vector-only base mode for small FAQ topic search",
+        "Sets augmentations to none — refuses multi-index and agentic without measured symptoms",
+        "Refuses GraphRAG / entity-edge tables for this case",
+        "Cites anti-pattern of enabling augmentations for later without symptom",
+        "Does not write application implementation code"
+      ]
     }
   ]
 }

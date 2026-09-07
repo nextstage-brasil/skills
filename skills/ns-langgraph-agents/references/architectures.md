@@ -32,7 +32,7 @@ agent → tools? → agent → … → END
 
 Starting suggestion, not a rule. Lock the real topology in `graph-spec.md` (architect interview may pick ReAct, HITL-heavy, supervisor, etc.).
 
-**No `intent` / `intent_classify` hop** on this suggestion. Retired names (`intent_node`, `context_compact`, `gather` as the greenfield default) stay retired unless `graph-spec.md` explicitly restores a different compile.
+**No dedicated LLM `intent` / `intent_classify` hop** on this suggestion. Retired names (`intent_node`, `context_compact`, `gather` as the greenfield default) stay retired. Deterministic Gateway routing (rule / cheap non-LLM classifier / embedding) lives at Gateway per ADR — not an LLM node in the graph.
 
 ```
 START → guard → context_manager → mcp_catalog → analyst
@@ -64,7 +64,7 @@ composer → respond → END
 
 **State channels:** `analysis`, `executionPlan`, `executionResults`, `analystStatus`, `mcpCatalog`, `summary`, `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions`, ephemeral `turnLocale` — `templates/snippets/state.ts.snippet`.
 
-`react_bounded` in old specs = this motor. Do not implement speechAct `intent_classify` as a node.
+`react_bounded` in old specs = this motor. Do not implement speechAct **LLM** `intent_classify` as a node. Deterministic Gateway routing is not a graph node here.
 
 ## Plan-Execute (generic)
 

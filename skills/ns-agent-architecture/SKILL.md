@@ -1,10 +1,10 @@
 ---
 name: ns-agent-architecture
-description: (NS) Lock the agent architecture ADR — five blocks, subtask classification, trade-off budget, orchestration pattern, LangGraph vs CrewAI, topology, HITL. Writes `docs/specs/agent-architecture.md`. If agent vs RAG vs fine-tune is unlocked, stop and run `ns-agent-adaptation` first. Use when choosing LangGraph/CrewAI, designing crews/graphs, HITL, agents working together, producing ADRs, or reverse-documenting an existing agent. Do NOT use for Prompt/RAG/Agent/Fine-Tune ladder (`ns-agent-adaptation`), general app requirements (`/ns-spec-driven` Clarify), or coding without architecture intent.
+description: (NS) Lock the agent architecture ADR — five blocks, subtask classification, trade-off budget, orchestration pattern, LangGraph vs CrewAI, topology, HITL. Writes `docs/specs/agent-architecture.md`. After the ADR, optionally offers a stakeholder defense pack (`docs/specs/agent-architecture-defense.md`: boundary, orchestration, failure/saga, events, A-vs-B). If agent vs RAG vs fine-tune is unlocked, stop and run `ns-agent-adaptation` first. Use when choosing LangGraph/CrewAI, designing crews/graphs, HITL, agents working together, producing ADRs, reverse-documenting an agent, or preparing architecture defense for stakeholders. Do NOT use for Prompt/RAG/Agent/Fine-Tune ladder (`ns-agent-adaptation`), general app requirements (`/ns-spec-driven` Clarify), or coding without architecture intent.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.19"
+  version: "1.21"
 depends:
   - ns-harness
   - ns-langgraph-agents
@@ -22,7 +22,7 @@ Decide **per subtask**, not whole product. Decompose first. Then agent vs rule v
 
 Lock **one** language for the whole run: the language of the human's **first** message. They may start in any language. Default = theirs.
 
-Interview turns, ~200-word chat summary, and `docs/specs/agent-architecture.md` (titles, table headers, cell prose, changelog) = that language only. No mixed-language tables.
+Interview turns, ~200-word chat summary, `docs/specs/agent-architecture.md`, and optional `docs/specs/agent-architecture-defense.md` (titles, table headers, cell prose, changelog) = that language only. No mixed-language tables.
 
 **Doctrine ids** (Gateway, Orchestrator, Model + Tools/RAG, Approval Gate, Observability) stay English — never translate. They appear in the Component column **and** as the first line of each Mermaid box. Role / description cells and the Mermaid second line = product prose in the locked language. Do not drop doctrine names into interview sentences or role cells. Do not strip the doctrine title from the box.
 
@@ -96,6 +96,14 @@ No future-question list. After objective: **end-to-end journey**, one sentence (
 
 Five blocks, one question per turn: Gateway, Orchestrator, Model + Tools/RAG, Approval Gate, Observability. All locked: colored Mermaid once; confirm **second-line** labels only (doctrine titles stay). LangGraph: compiled graph = container; map parts in **LangGraph container vs doctrine blocks** (`references/reference-architecture.md`).
 
+**Gateway probes** (Gateway block active — one question per turn):
+
+- Classify intent? yes / no
+- If yes: category names only (detail in calibration table)
+- Mechanism: rule | embedding | other non-LLM — **not** LLM `intent_classify` hop
+
+If classifies: lock categories + mechanism before leave Step 2. Detail: `references/gateway-calibration.md`.
+
 Reverse mode: infer from routes, graph entry, LLM nodes, `interrupt` points, audit stores. Grill unproven mapping only.
 
 ### Step 3 — Decomposition (`references/task-decomposition.md`)
@@ -127,8 +135,10 @@ Depth-first remaining tree on agent-classified rows:
 Probes:
 
 - Human approval: next = **where and how** (step, UI, editable fields)
-- "Specialists working together": next = **vocabulary / tools / risk** diverge? Then **autonomy** (fixed routing vs emergent). Then pattern selector per segment (`references/orchestration-patterns.md` — **Handoff** = control transfer only, not "handoff" as casual synonym)
-- Production or compliance: next = **failure modes, retries, reconstructable audit** (route + reason in logs)
+- "Specialists working together": next = vocab / tools / risk diverge? Lock three-dimension boundary. Then **autonomy** (fixed vs emergent). Then pattern per segment (`references/orchestration-patterns.md` — **Handoff** = control transfer only)
+- Production or compliance: next = failure modes, retries, reconstructable audit. Per node: timeout / max retries / **Consistency (block) vs Availability (proceed with gap)**. Multi-write chain: compensate per step + **who triggers** (Supervisor / orchestrator / HITL)
+- Multi-agent locked: next = **inter-agent events** (name, emitter, payload, listeners, pattern) when more than single request/response
+- Gateway classifies (Step 2): next = **model tier per category** (cheap vs strong; P2) + **always-escalate** list (score-independent). Threshold + re-classify: `references/gateway-calibration.md`
 - Speed or prototype: next = **timeline, team size, acceptable shortcuts**
 - Objective locked, user/success unclear: **who consumes output**, then **one production success metric**
 
@@ -142,7 +152,7 @@ Locked: reference blocks, subtask rows, trade-off budget (throughput + per-conte
 2. **Phase 1 (chat):** ~200 words on-screen. Framework, topology, main trade-off, top risk, MVP. Decisive. Close trade-off: pick + alternative, one line.
 3. **Phase 2 (file):** living ADR **`docs/specs/agent-architecture.md`**. Create `docs/specs/` if missing. Canonical path. Do not ask. Do not write under `docs/architecture/` or `docs/versions/`. **Missing file:** create full report. **Exists:** update current-state sections; **append** `## Changelog` (`**{version_san}** — {ISO date}: {summary}` or `**adhoc-YYYY-MM-DD**` if no version) and **append** this session to Interview Record. Never blind-replace (drops history). Legacy `docs/architecture/multi-agent-report.md`: move content here once, then stop writing the old path. **Standalone import (Claude Web, no project FS):** full report in chat. Tell user save as `docs/specs/agent-architecture.md`.
 
-File = **developer handoff**. Self-contained. No chat history needed. Dev with file only can start implementation.
+File = **developer handoff**. Self-contained. No chat history needed. Dev with file only can start implementation. Schema: `references/report-template.md`.
 
 Required sections (plus architecture):
 
@@ -177,11 +187,31 @@ Chat ~200 words: no mermaid, no interview table, no full tooling tables.
 
 **During interview:** log every question, recommended answer, user reply, locked decision. Needed for report file.
 
+### Step 9 — Architecture defense pack (opt-in)
+
+**After** ADR Phase 2 (or standalone ADR in chat). One question. Wait.
+
+```markdown
+**Q[n]:** Generate architecture defense pack for stakeholder / contractor presentation (boundary, orchestration, failure/saga, events, A-vs-B)?
+
+**Recommended answer:** [yes if must defend design; no if implement-only] — [one-sentence rationale]
+
+**Example (this use case):** [who challenges — e.g. client tech lead, compliance, delivery partner]
+```
+
+| Answer | Action |
+| ------ | ------ |
+| **No** | Stop. ADR = SoT. No defense file. |
+| **Yes** | CAP / saga / event unlocked: grill **those gaps only**, one turn each. Then write **`docs/specs/agent-architecture-defense.md`** from `references/architecture-defense-template.md`. Create `docs/specs/` if missing. **Exists:** update; append Changelog. Never blind-replace. Standalone: full pack in chat + save path. |
+
+Defense pack = **presentation seed**. Not implementation handoff. Never merge into `agent-architecture.md`. Runtime compensation = `ns-langgraph-agents` (`error-and-reliability.md`); pack locks architecture (who triggers, what undoes what).
+
 ## Critical rules
 
 - No framework pick before interview complete
 - Three questions not on whole product — one classification per subtask row
 - Living ADR only `docs/specs/agent-architecture.md` — must include Reference Architecture (colored Mermaid), Trade-off Budget (throughput + per-context rows when needed), Orchestration pattern, Architecture Change Signal, Changelog
+- Defense pack only after explicit human **yes** on Step 9; path `docs/specs/agent-architecture-defense.md`; never invent CAP / saga / event cells
 - One language: human's opening language. No English headers with other-language cells. Doctrine ids stay English in the Component column and Mermaid first line; not in prose cells or interview sentences
 - Not `docs/specs/agent.md` (behavior; `ns-living-spec`)
 - Reopen this skill only when an architecture decision changes (topology, HITL, MCP contract, change signal). Implementation-only: `ns-langgraph-agents` + `graph-spec.md`; ADR intact
@@ -189,6 +219,19 @@ Chat ~200 words: no mermaid, no interview table, no full tooling tables.
 - LangGraph node flowchart: `subgraph` per doctrine block (Orchestrator / Model / Gate clusters) = forbidden — paint nodes, do not wrap them
 - Not requirements generation — architecture + agent design only
 - Rich context upfront: lock those branches, skip, start at highest-uncertainty gap
+- Gateway intent routing: deterministic at Gateway only — rule / cheap non-LLM classifier / embedding; **FORBIDDEN** LLM `intent_classify` hop in runtime (`references/gateway-calibration.md`, `ns-langgraph-agents`)
+
+## Reference map
+
+| Reference | Read when |
+| --------- | --------- |
+| `references/reference-architecture.md` | Step 2 five blocks; LangGraph container mapping |
+| `references/task-decomposition.md` | Step 3 grid; reverse mode |
+| `references/decision-pillars.md` | Step 4–7 probes |
+| `references/orchestration-patterns.md` | Step 7 pattern selector |
+| `references/gateway-calibration.md` | Gateway classifies intent — categories, tier, thresholds, always-escalate |
+| `references/report-template.md` | Step 8 ADR schema |
+| `references/architecture-defense-template.md` | Step 9 defense pack (opt-in) |
 
 ## Reverse mode (agent already built)
 
@@ -199,12 +242,13 @@ Trigger: "document why this agent is like this", "we never wrote the architectur
 3. Grill only what code cannot prove: cost of error, reversibility, real-case coverage, end user, success metric.
 4. Infer trade-off budget (throughput + per-context rows when needed), Orchestration pattern per segment, and change signal from runtime metrics or defaults. Weak evidence: confirm one line each.
 5. Same Step 8 two-phase close: ~200-word chat first, then `docs/specs/agent-architecture.md` describing what **is**. Flag contradictions (irreversible action, no gate) under Next Steps and Risks.
+6. Step 9 opt-in — same as forward; infer CAP/saga/events from code; grill gaps.
 
 ## Related skills (optional — when installed in same project)
 
 - `ns-agent-adaptation` — if conceptual agent vs RAG vs Prompt vs Fine-Tune not locked, run first (`docs/specs/agent-design.md`)
 - `ns-spec-driven` — Clarify first if product scope vague
 - `ns-spec-driven` Specify — product requirements after architecture locked
-- `ns-docs-writer` — README / `docs/` **link** `docs/specs/agent-architecture.md`. Do not rewrite decision record
+- `ns-docs-writer` — README / `docs/` **link** `docs/specs/agent-architecture.md` (and defense pack if present). Do not rewrite decision record
 - `ns-living-spec` — owns `docs/specs/agent.md` (behavior). Does not overwrite this ADR
-- `ns-langgraph-agents` — grep/Glob skill file. Present: read before LangGraph recommendations (includes JSON-planner operator progress). Implementation after report
+- `ns-langgraph-agents` — grep/Glob skill file. Present: read before LangGraph recommendations (includes JSON-planner operator progress). Implementation after report; compensation runtime doctrine

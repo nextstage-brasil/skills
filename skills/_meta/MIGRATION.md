@@ -2,6 +2,22 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Module 4 — AI-specific patterns coverage wave (2026-09-05)
+
+Gateway intent routing = deterministic only (rule / cheap non-LLM / embedding). LLM `intent_classify` hop **FORBIDDEN**. Cascade escalate = post-generation confidence.
+
+| Skill | Version | Change |
+| ----- | ------- | ------ |
+| `ns-postgres-rag` | 1.2 → 1.3 | `retrieval-augmentations.md` — Multi-Index + agentic additive Gate 2; routing key = ADR Gateway category |
+| `ns-agent-architecture` | 1.20 → 1.21 | `gateway-calibration.md` — categories, tier, thresholds, always-escalate; conditional ADR section |
+| `ns-langgraph-agents` | 1.13 → 1.14 | Cascade allows deterministic Gateway; `tool_executions` audit fields; measured semantic-cache thresholds; draft SSE pending HITL |
+
+No new `catalog.json` key. Stacks on 1.20 defense pack; `architecture-defense-template.md` untouched.
+
+## Architecture defense pack opt-in (`ns-agent-architecture` 1.20) (2026-09-05)
+
+Step 9 after ADR: opt-in `docs/specs/agent-architecture-defense.md` (boundary, orchestration, failure/saga, events, A-vs-B, slide seed). Schema: `architecture-defense-template.md`. Grill CAP/saga/event gaps; never invent. ADR = implementation handoff. No new `catalog.json` key.
+
 ## Rename — agent pipeline IDs (2026-09-05)
 
 Catalog keys and directories:

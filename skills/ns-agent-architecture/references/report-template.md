@@ -10,6 +10,8 @@ After the interview, post a concise recommendation in the conversation **before*
 
 Then write the living ADR to **`docs/specs/agent-architecture.md`** (create `docs/specs/` if missing). Do not ask for a path. Do not write `docs/architecture/` or `docs/versions/`. Missing: create. Exists: update current-state sections; append Changelog + this Interview Record session. Never blind-replace.
 
+**After** ADR (or standalone in chat): **Step 9** in `SKILL.md` — opt-in defense pack. Schema: `architecture-defense-template.md`. Path: `docs/specs/agent-architecture-defense.md`. Never merge into this ADR.
+
 ## Phase 2 — Full report file (developer handoff)
 
 The file must be **self-contained**: a developer who never saw the interview can read it and start implementation. Include every question asked, the recommended answer offered, the user's actual reply, and the locked decision derived from it. Also include the user's initial unprompted context.
@@ -76,6 +78,22 @@ flowchart LR
 | Model + Tools/RAG | [what it does] | yes / no / partial |
 | Approval Gate | [what it does or none + reason] | yes / no / partial / n/a |
 | Observability | [what is recorded and why] | yes / no / partial |
+
+## Gateway calibration
+
+**Only** when Gateway classifies intent (Step 2). Else **omit entire section** — no stub, no "N/A".
+
+| Category | Example request | Target agent / index | Model tier | Why (P2 cost-of-error) |
+| -------- | ----------------- | -------------------- | ---------- | ---------------------- |
+| [category id] | [example] | [agent or index] | cheap \| strong | [one line] |
+
+- **Deterministic mechanism:** rule | embedding | [other non-LLM] — not LLM `intent_classify` hop
+- **Threshold source:** [eval set, embedding model id, language, calibration date]
+- **Re-classify policy:** [per-turn | window | sticky-until-shift]
+- **Always-escalate categories:** [list — score-independent; HITL **always-scale** = same list]
+- **Audit fields (canonical):** intent_category, model_tier, model_id, prompt_version, threshold_applied, score_obtained, decision_outcome, always_escalate
+
+Multi-Index routing key (`ns-postgres-rag` multi-index): **same category ids**.
 
 ## Subtask Decomposition
 

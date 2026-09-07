@@ -41,6 +41,7 @@ New versions: create SDD artifacts only under `sdd/`.
 | Living spec index | `docs/specs/INDEX.md` |
 | Domain spec | `docs/specs/{domain}.md` |
 | Agent architecture ADR | `docs/specs/agent-architecture.md` (`ns-agent-architecture`; living + Changelog — not under `docs/versions/`) |
+| Agent architecture defense pack | `docs/specs/agent-architecture-defense.md` (`ns-agent-architecture` Step 9 opt-in — stakeholder canvases; not under `docs/versions/`) |
 
 ## Legacy path resolution (read)
 

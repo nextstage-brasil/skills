@@ -20,7 +20,11 @@ Approvable deliverable for `ns-postgres-rag`. Fill every section. No application
 
 ## 2. Chosen mode (Gate 2)
 
-- Mode: vector-only | hybrid (`tsvector` + vector, rank fusion) | relational GraphRAG
+- Base mode: vector-only | hybrid (`tsvector` + vector, rank fusion) | relational GraphRAG
+- Augmentations: none | multi-index | agentic | both
+- Symptom per augmentation (required when not `none`):
+- Multi-Index routing key (when multi-index): intent category from ADR Gateway — same taxonomy, not a second one
+- Agentic iteration budget (when agentic): max iterations; widening strategy per iteration; escalate target on budget exhaust
 - Justification (one paragraph; GraphRAG only if N≥2 hops and no single document contains chain):
 - Extensions: `pgvector` (required). Timescale: yes/no — trigger evidence:
 
