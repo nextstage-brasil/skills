@@ -138,7 +138,7 @@ Probes:
 - "Specialists working together": next = vocab / tools / risk diverge? Lock three-dimension boundary. Then **autonomy** (fixed vs emergent). Then pattern per segment (`references/orchestration-patterns.md` — **Handoff** = control transfer only)
 - Production or compliance: next = failure modes, retries, reconstructable audit. Per node: timeout / max retries / **Consistency (block) vs Availability (proceed with gap)**. Multi-write chain: compensate per step + **who triggers** (Supervisor / orchestrator / HITL)
 - Multi-agent locked: next = **inter-agent events** (name, emitter, payload, listeners, pattern) when more than single request/response
-- Gateway classifies (Step 2): next = **model tier per category** (cheap vs strong; P2) + **always-escalate** list (score-independent). Threshold + re-classify: `references/gateway-calibration.md`
+- Gateway classifies (Step 2): next = **model tier per category** (cheap vs strong; P2) + **always-escalate** list (score-independent) + **Approval authority** table (approver role per category; sync vs async + named compensation if async). Threshold + re-classify: `references/gateway-calibration.md`
 - Speed or prototype: next = **timeline, team size, acceptable shortcuts**
 - Objective locked, user/success unclear: **who consumes output**, then **one production success metric**
 
@@ -229,7 +229,7 @@ Defense pack = **presentation seed**. Not implementation handoff. Never merge in
 | `references/task-decomposition.md` | Step 3 grid; reverse mode |
 | `references/decision-pillars.md` | Step 4–7 probes |
 | `references/orchestration-patterns.md` | Step 7 pattern selector |
-| `references/gateway-calibration.md` | Gateway classifies intent — categories, tier, thresholds, always-escalate |
+| `references/gateway-calibration.md` | Gateway classifies intent — categories, tier, thresholds, always-escalate, approval authority |
 | `references/report-template.md` | Step 8 ADR schema |
 | `references/architecture-defense-template.md` | Step 9 defense pack (opt-in) |
 

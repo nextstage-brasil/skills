@@ -67,9 +67,15 @@ Cost/latency breakdown without LangSmith.
 
 ### turn_decisions
 
-Required in prod. Ephemeral `turnDecisions[]` → `turn_decisions` JSONB on checkpoint anchor (UPDATE turn end). Route, bypass reason, budget hit, error codes, planner `raciocinio` when present.
+Required in prod. Ephemeral `turnDecisions[]` flushes into `turn_decisions` JSONB on checkpoint anchor via **merge/append**. Route, bypass reason, budget hit, error codes, planner `raciocinio` when present. HITL resume appends; does not replace.
 
-Acceptance: a reviewer with Postgres only can reconstruct **what ran and why** — nodes, tools, route, stop/HITL, **model id**, **prompt version**, **confidence score + threshold**, retrieved RAG ids when used. Truncate bodies; keep the decision fields. Audit rows are **append-only** — corrections are new events, never UPDATE/DELETE of history. Regulated tenants: no opt-out. MVP: document the skip in `graph-spec.md`.
+Acceptance: a reviewer with Postgres only can reconstruct **what ran and why** — nodes, tools, route, stop/HITL, **who approved**, **model id**, **prompt version**, **confidence score + threshold**, retrieved RAG ids when used. Truncate bodies; keep the decision fields. `llm_logs`, `tool_executions`, `hitl_decisions` = **INSERT-only**. Corrections = new events, never UPDATE/DELETE of history.
+
+`turn_decisions` JSONB on the turn checkpoint is a **flush of an event array**. Resume after `interrupt()` **MUST merge/append** — **FORBIDDEN** replace of the pre-interrupt array (clobber). See `mergeTurnDecisions`.
+
+Canonical HITL / Gateway fields: `ns-agent-architecture` `gateway-calibration.md` (`decision_actor`, `approver_id`, `approver_role`, `decided_at` plus prior set).
+
+Regulated tenants: no audit opt-out. Legal WORM / e-sign / 21 CFR Part 11 / EU AI Act Art. 12 storage = **external SoT** — this runtime reconstructs the turn; it does not claim legal immutability. MVP skip: document in `graph-spec.md`.
 
 Prod metadata: copy `decision_record` from `graph-spec.md` (`docs/specs/agent-architecture.md`) onto invoke `metadata` / tags. Runtime audit explains the turn; that path explains **why this graph exists**. Do not dump the Why table into Postgres.
 

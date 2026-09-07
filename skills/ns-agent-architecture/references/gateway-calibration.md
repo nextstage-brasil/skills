@@ -58,9 +58,22 @@ Independent of classifier score — gate or strong tier first:
 
 List locked categories in ADR. Runtime audit must record category + always-escalate flag (see `ns-langgraph-agents` `capability-governance.md`).
 
+## Approval authority
+
+Always-escalate rows **MUST** name who may approve — per category, not one product-wide role. Incomplete ADR if list exists without this table.
+
+| Category | Gate | Approver role | Async compensation |
+| -------- | ---- | ------------- | ------------------ |
+| [always-escalate id] | sync \| async | [job title / group] | [named reverse path, or n/a if sync] |
+
+- **sync** — pause before side effect (`interrupt()`). Undo impossible.
+- **async** — proceed only with named compensation (orchestrator or compensating tool). Review queue may reject later. **FORBIDDEN:** async with no reverse path.
+
+HITL resume on always-escalate **MUST** carry `approver_id` + `approver_role` matching this table (`ns-langgraph-agents` `streaming-and-hitl.md`).
+
 ## Mandatory audit fields (runtime alignment)
 
-Canonical list — copy identically to ADR Gateway calibration, `tool_executions`, and routing/`turn_decisions` rows when Gateway classifies intent:
+Canonical list — copy identically to ADR Gateway calibration, `tool_executions`, routing/`turn_decisions`, and HITL resume events:
 
 | Field | Content |
 | ----- | ------- |
@@ -72,8 +85,12 @@ Canonical list — copy identically to ADR Gateway calibration, `tool_executions
 | `score_obtained` | Classifier score or confidence that triggered the decision |
 | `decision_outcome` | `ran` \| `approved` \| `rejected` \| `escalated` |
 | `always_escalate` | yes / no — Gateway always-escalate category (HITL: same list as **always-scale**) |
+| `decision_actor` | `gateway` \| `model` \| `human` |
+| `approver_id` | Human actor id on HITL resume; null when `decision_actor` is not `human` |
+| `approver_role` | Role from Approval authority table |
+| `decided_at` | Timestamp of this decision event (ISO-8601) |
 
-Same fields in Observability block of ADR when Gateway classifies.
+Same fields in Observability block of ADR when Gateway classifies. HITL human decision = **new event** — never overwrite pre-interrupt `turn_decisions` (`observability.md`).
 
 ## Anti-patterns
 

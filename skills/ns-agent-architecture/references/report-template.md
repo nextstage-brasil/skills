@@ -91,7 +91,13 @@ flowchart LR
 - **Threshold source:** [eval set, embedding model id, language, calibration date]
 - **Re-classify policy:** [per-turn | window | sticky-until-shift]
 - **Always-escalate categories:** [list — score-independent; HITL **always-scale** = same list]
-- **Audit fields (canonical):** intent_category, model_tier, model_id, prompt_version, threshold_applied, score_obtained, decision_outcome, always_escalate
+- **Audit fields (canonical):** intent_category, model_tier, model_id, prompt_version, threshold_applied, score_obtained, decision_outcome, always_escalate, decision_actor, approver_id, approver_role, decided_at
+
+**Approval authority** (required when always-escalate list is non-empty):
+
+| Category | Gate | Approver role | Async compensation |
+| -------- | ---- | ------------- | ------------------ |
+| [category id] | sync \| async | [role] | [named reverse path, or n/a if sync] |
 
 Multi-Index routing key (`ns-postgres-rag` multi-index): **same category ids**.
 
@@ -149,7 +155,7 @@ Readable without the interview table. One line per row.
 | Concurrency / orchestration | [pattern(s) per segment — data dependence vs calendar vs handoff; rejected alternative in one clause] |
 | Who uses the output | [role + what a wrong or slow answer costs them] |
 | Topology / framework | [choice + rejected alternative in one clause] |
-| HITL | [where recommendation stays until approve; sync vs async] |
+| HITL | [where recommendation stays until approve; sync vs async; approver role per always-escalate category] |
 | Success in production | [metric that is not exact LLM-text equality] |
 | Out of MVP | [one line] |
 
@@ -207,10 +213,10 @@ Cover at minimum: inputs, outputs, error behavior, human interaction, pipeline c
 | Constraint | Decision |
 | ---------- | -------- |
 | Eval / acceptance | Thresholds or structured contracts — not exact LLM text equality |
-| HITL | Where output stays a recommendation until human approve (3 bands; always-scale categories even at high score; sync vs async) |
+| HITL | Where output stays a recommendation until human approve (3 bands; always-scale categories even at high score; sync vs async; approver role per category) |
 | End user | Who consumes the result; impact of error or delay |
 | Success metric | Production signal that the architecture delivered value inside risk/cost/latency |
-| Audit | Reconstruct route + tool + reason from persistence (yes/no + store) |
+| Audit | Reconstruct route + tool + reason + who approved from persistence (yes/no + store); HITL resume is a new event |
 | Cost / latency | Per-turn cap and what happens on exceed |
 | Degrade | Fallback when model/MCP/confidence fails — reduced function, not hard crash |
 

@@ -103,7 +103,7 @@ Redact secrets in audit + fingerprints.
 
 ## Human-in-the-loop
 
-Three bands (business sets numbers). **Always-escalate** (alias **always-scale** — official publish, irreversible write) skip high band — gate even at high score. Same list as ADR Gateway always-escalate.
+Three bands (business sets numbers). **Always-escalate** (alias **always-scale** — official publish, irreversible write) skip high band — gate even at high score. Same list as ADR Gateway always-escalate. Approver role per category: ADR **Approval authority** table (`gateway-calibration.md`).
 
 **Recalibration:** re-measure HITL bands on model version change or audit category-distribution drift vs calibration set.
 
@@ -113,21 +113,24 @@ Three bands (business sets numbers). **Always-escalate** (alias **always-scale**
 | Mid | `interrupt` |
 | Low, **or** always-escalate (always-scale) / `destructive` / `sensitive_tools` | `interrupt` — **sync** if undo is impossible; async if reversible |
 
+**sync:** pause before side effect. **async:** proceed only with **named compensation**; review queue may reject later. **FORBIDDEN:** async with no reverse path.
+
 1. Agent proposes tool call or recommendation
-2. `interrupt({ tool, args, reason })`
-3. UI approves/edits/rejects
-4. `Command({ resume: approval })`
+2. `interrupt({ kind, tool, args, intent_category, always_escalate })`
+3. UI approves/edits/rejects — payload includes `approver_id` + `approver_role`
+4. `Command({ resume: approval })` — always-escalate **MUST** include those two fields or HTTP 400
 
 ## Audit
 
-Every execution → `tool_executions`. Gateway rows: same canonical fields (`ns-agent-architecture` `gateway-calibration.md`):
+Every execution → `tool_executions`. Gateway / HITL rows: same canonical fields (`ns-agent-architecture` `gateway-calibration.md`):
 
 - `intent_category`, `model_tier`, `model_id`, `prompt_version`
 - `threshold_applied`, `score_obtained`, `decision_outcome`, `always_escalate`
+- `decision_actor`, `approver_id`, `approver_role`, `decided_at`
 - `capability_id`, `tenant_id`, `thread_id`
 - `fingerprint` (redacted args hash)
 - `duration_ms`, `status`, truncated `result`
 
-Postgres = SoT; OTel/LangSmith optional.
+HITL human decision → INSERT `hitl_decisions` (append-only). Postgres = SoT; OTel/LangSmith optional.
 
 Snippet: `capability-wire-names.ts.snippet`, `mcp-policy.example.yaml`.
