@@ -100,6 +100,8 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | Multi-write plan with neither compensation nor sync gate | Partial external side effects stuck | Declare reverse-order idempotent compensations; uncancellable write behind sync gate |
 | Blind retry of non-idempotent write | Duplicate side effects | Idempotency keys or HITL — no blind retry |
 | Global availability choice for all blocks | Wrong block proceeds or blocks | Per-block availability vs consistency on `turnDecisions` |
+| Parallel producers, no start/finish version record | Stale success undetectable | Two-version record + post-join check — `error-and-reliability.md` |
+| Fan-out discards sibling on first rejection | Good result lost; retry both | Settle-all; retry failed branch only |
 
 ## Graph structure
 

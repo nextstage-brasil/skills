@@ -54,6 +54,18 @@
       "prompt": "ADR already lists always-escalate for compliance filing but has no Approval authority table — anyone on the ops team can click resume. Fix the architecture lock before we ship.",
       "expected_output": "Agent treats always-escalate without Approval authority as incomplete ADR: requires per-category approver role, sync vs async, and named compensation if async. Canonical audit fields include decision_actor, approver_id, approver_role, decided_at. Cites gateway-calibration.md. Does not treat product-wide single approver as sufficient.",
       "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Multi-agent compliance filing: researcher + filer + HITL. After ADR I decline the stakeholder defense pack — we only need the implementation handoff.",
+      "expected_output": "ADR still includes Failure contract (timeout/retries/exhaustion + idempotent-on-duplicate), Compensation with who triggers, and Inter-agent events with transport + delivery guarantee. No agent-architecture-defense.md. Cites inter-agent-transport.md doctrine.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Corpus of patient notes cannot leave our VPC. Pick provider and hosting for the Model block; we also care about cost.",
+      "expected_output": "Data-egress axis locked before cost; local or VPC-bound hosting preferred when corpus cannot leave; ADR Recommended Tooling Stack records provider, hosting mode, data-egress note, failover provider yes/no. Cites provider-selection.md.",
+      "files": []
     }
   ]
 }

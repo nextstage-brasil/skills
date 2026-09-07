@@ -57,9 +57,9 @@ Write the complete report to `docs/specs/agent-design.md` using the **section sc
 
 ## Tool inventory (taxonomy tagged)
 
-| Tool | Purpose | Category | Safety (if Write) |
-| ---- | ------- | -------- | ----------------- |
-| … | … | Knowledge augmentation / Capability extension / Write actions | … |
+| Tool | Purpose | Category | Typed schema? | Safety (if Write) |
+| ---- | ------- | -------- | ------------- | ----------------- |
+| … | … | Knowledge augmentation / Capability extension / Write actions | yes — name/desc/enum/return locked per `tool-schema-design.md` | … |
 
 ## Planning contract
 

@@ -11,6 +11,7 @@ Every planned tool gets **exactly one** primary tag.
 ## Inventory rules
 
 - List tool name, purpose, inputs, outputs, category tag
+- **Typed schema per tool** — name, description, args (`enum` on fixed sets), return shape. Checklist: `references/tool-schema-design.md`
 - Knowledge ≠ write. Read-only fetch = Knowledge (or Capability if heavy compute)
 - Ambiguous: pick primary by side effect — any durable external change = Write
 

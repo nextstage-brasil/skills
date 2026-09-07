@@ -89,6 +89,7 @@ flowchart LR
 
 - **Deterministic mechanism:** rule | embedding | [other non-LLM] — not LLM `intent_classify` hop
 - **Threshold source:** [eval set, embedding model id, language, calibration date]
+- **Threshold owner (business):** [role / named owner — not engineering alone]
 - **Re-classify policy:** [per-turn | window | sticky-until-shift]
 - **Always-escalate categories:** [list — score-independent; HITL **always-scale** = same list]
 - **Audit fields (canonical):** intent_category, model_tier, model_id, prompt_version, threshold_applied, score_obtained, decision_outcome, always_escalate, decision_actor, approver_id, approver_role, decided_at
@@ -137,6 +138,30 @@ Pattern per segment — not one global pick. Catalog: sequential, parallel, supe
 | Segment | Pattern | Why (dependency signal) | Rejected alternative |
 | ------- | ------- | ----------------------- | -------------------- |
 | [segment name] | [pattern] | [dependency type / observable] | [one clause] |
+
+## Failure contract
+
+**Only** when multi-agent locked. Else **omit entire section** — no stub, no "N/A".
+
+| Agent | Timeout | Max retries | On exhaustion | Idempotent on duplicate |
+| ----- | ------- | ----------- | ------------- | ----------------------- |
+| [agent] | [ms/s] | [n] | consistency (block) \| availability (proceed) | yes \| no + how |
+
+## Compensation
+
+**Only** when multi-agent locked. Else **omit**.
+
+| Step | Produces | Compensating action | Who triggers |
+| ---- | -------- | ------------------- | ------------ |
+| [step] | [artifact/side effect] | [undo] | Supervisor \| orchestrator \| HITL \| [named] |
+
+## Inter-agent events
+
+**Only** when multi-agent locked. Else **omit**. Transport doctrine: `references/inter-agent-transport.md`.
+
+| Event | Emitted by | Payload | Listeners | Pattern | Transport | Delivery guarantee |
+| ----- | ---------- | ------- | --------- | ------- | --------- | ------------------ |
+| `[domain]:[past-tense]` or `none` | [agent] | `{ … }` | [agents] | Sequential \| Parallel \| Supervisor \| Hierarchical \| Group Chat \| Handoff \| Saga \| n/a | in-process \| broker | at-most-once \| at-least-once |
 
 ## Architecture Change Signal
 
@@ -283,20 +308,26 @@ Include this heading and table **only** if CrewAI is the chosen framework. If La
 
 ## Agent Design (Persona Blueprint)
 
-One entry per subtask row classified as agent. Rules and gates are not agents — they belong to the orchestrator.
+One entry per subtask row classified as agent. Rules and gates are not agents — they belong to the orchestrator. Repeat the block for each agent/node.
 
-1. **[Agent / node name]** `[MVP | production]`
-   - **Subtask row:** [row name from Subtask Decomposition]
-   - **Role / responsibility:** [What it does]
-   - **Why this agent (not code / not a sibling):** [one sentence tracing back to P1/P2/P3]
-   - **Sizing:** memory [short only | long-term + why] · planning [direct | chain-of-thought | reflection + why the extra call pays] · tools [count + why each] · action [reversible | behind gate]
-   - **Inputs:** [What it reads from state]
-   - **Outputs:** [What it writes to state]
-   - **Agent tools:** [LLM-callable tools]
-   - **Recommended model:** [Model + brief why]
-   - **Acceptance criteria:** [How to know this node is done correctly]
+### [Agent / node name] `[MVP | production]`
 
-[Repeat for each agent/node]
+- **Subtask row:** [row name from Subtask Decomposition]
+- **Role / responsibility:** [What it does]
+- **Why this agent (not code / not a sibling):** [one sentence tracing back to P1/P2/P3]
+
+| Component | Sizing | Why |
+| --------- | ------ | --- |
+| Memory | short only \| long-term | [one line] |
+| Planning | direct \| chain-of-thought \| reflection | [why the extra call pays, or why not] |
+| Tools | [count] | [why each / why this count] |
+| Action | reversible \| behind gate | [one line] |
+
+- **Inputs:** [What it reads from state]
+- **Outputs:** [What it writes to state]
+- **Agent tools:** [LLM-callable tools]
+- **Recommended model:** [Model + brief why]
+- **Acceptance criteria:** [How to know this node is done correctly]
 
 ## Recommended Tooling Stack
 
@@ -311,13 +342,17 @@ One entry per subtask row classified as agent. Rules and gates are not agents �
 | Category | Recommendation | Why |
 |----------|----------------|-----|
 | Orchestration | [e.g. LangGraph SDK] | [fit] |
+| Provider | [vendor] | [fit] |
+| Hosting mode | local \| API | [prototype \| production — which] |
+| Data egress | never leaves machine \| to provider API | [compliance note if any] |
+| Failover provider | [vendor or none] | [tool surface survives switch? yes/no] |
 | State / persistence | [e.g. SQLite → Postgres] | [why] |
 | Vector / RAG | [tool or N/A] | [why] |
 | Document parsing | [tools] | [why] |
 | Observability | [tools] | [why] |
 | Output generation | [tools] | [why] |
 
-Add domain-specific rows (OCR, ERP connectors, etc.) as needed.
+Add domain-specific rows (OCR, ERP connectors, etc.) as needed. Provider axes: `references/provider-selection.md`.
 
 ## Implementation Plan
 

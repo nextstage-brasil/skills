@@ -4,7 +4,7 @@ description: (NS) Decide Prompt vs RAG vs Agent vs Fine-Tune before any framewor
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.3"
+  version: "1.4"
 depends:
   - ns-harness
 ---
@@ -93,6 +93,8 @@ Non-agent path valid outcome — record explicit non-agent decision. Still finis
 
 Classify each planned tool: **Knowledge augmentation** / **Capability extension** / **Write actions**. Write actions require safety (HITL, isolation, approval). `references/tool-taxonomy.md`.
 
+Before lock: schema checklist (`references/tool-schema-design.md`) — domain description, `enum` on fixed sets, declared return, Write gate only if P2. One probe per tool when schema incomplete.
+
 ### Step 6 — Planning
 
 Plan decoupled from execution. Validate plan before run. Optional parallel plans + judge. Optional Reflection (separate critique call; skip unless quality gate pays). Agent reports parameter values. `references/planning-and-memory.md`.
@@ -100,6 +102,8 @@ Plan decoupled from execution. Validate plan before run. Optional parallel plans
 ### Step 7 — Memory
 
 Internal weights vs context window vs episodic vs semantic external. Retention liability; no long-term memory valid. What goes where. `references/planning-and-memory.md`.
+
+Before close Agent path: **reality-test gate** (five checks) in `references/planning-and-memory.md`.
 
 ### Step 8 — Agent evaluation
 
@@ -129,6 +133,18 @@ File = design handoff. Self-contained. Not `agent-architecture.md` (`ns-agent-ar
 - One language: human opening. Doctrine labels English
 - Not product Clarify — vague product scope → `ns-spec-driven` first
 - Not implementation — never this skill
+- No tool lock without typed schema checklist (`references/tool-schema-design.md`)
+
+## Reference map
+
+| Reference | Read when |
+| --------- | --------- |
+| `references/adaptation-ladder.md` | Steps 3–4 failure + ladder gates |
+| `references/tool-taxonomy.md` | Step 5 category tags |
+| `references/tool-schema-design.md` | Step 5 typed schema before tool lock |
+| `references/planning-and-memory.md` | Steps 6–7 + reality-test gate |
+| `references/agent-evaluation.md` | Steps 2 / 8 |
+| `references/report-template.md` | Step 10 living design schema |
 
 ## Handoffs
 

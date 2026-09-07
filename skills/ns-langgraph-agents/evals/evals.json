@@ -287,6 +287,18 @@
         "Does not allow graph.invoke Command resume to proceed without approver identity",
         "Sources always-escalate from interrupt/getState, not the client body flag alone"
       ]
+    },
+    {
+      "id": 23,
+      "prompt": "Two parallel extract producers join into a summary. One finished on an older invoice version; the other is current. Both tool calls succeeded. What do we compensate?",
+      "expected_output": "Only the stale producer is compensated/re-run; sibling result preserved via settle-all fan-out; requires start+finish input version records or divergence is undetectable; cites error-and-reliability.md Parallel producer staleness.",
+      "files": [],
+      "assertions": [
+        "Compensates only the stale producer",
+        "Preserves sibling result (settle-all / does not discard on first rejection)",
+        "Requires start and finish input version records",
+        "Cites error-and-reliability.md or parallel producer staleness doctrine"
+      ]
     }
   ]
 }

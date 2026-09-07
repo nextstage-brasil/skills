@@ -4,7 +4,7 @@ description: (NS) LangGraph.js agent-api — greenfield scaffold (bootstrap-agen
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.14"
+  version: "1.15"
 depends:
   - ns-harness
 ---
@@ -144,10 +144,10 @@ Load on demand — do not memorize whole files.
 | `templates/snippets/conversation-locale.ts.snippet`  | `resolveConversationLocale` + Intl `formatUserFacing`                                             |
 | `templates/snippets/tool-budget.ts.snippet`          | Per-turn tool/MCP caps, arg fingerprint duplicate-skip                                            |
 | `templates/snippets/prepare-llm-messages.ts.snippet` | `context_manager` helper                                                                          |
-| `references/error-and-reliability.md`                | Tool errors, circuit breaker, retries, compensation, cost stop                                    |
+| `references/error-and-reliability.md`                | Tool errors, circuit breaker, retries, compensation, parallel staleness, cost stop |
 | `references/model-cascade-and-cache.md`              | Cheap-first cascade, semantic/prompt cache; not LLM intent_classify hop; deterministic Gateway allowed |
-| `references/observability.md`                        | Postgres audit, LangSmith, OTel, run context, cost reservation                                    |
-| `references/architectures.md`                        | ReAct, plan_execute (suggested start for most MCP), other topologies; **node id ≠ state channel** |
+| `references/observability.md`                        | Postgres audit, LangSmith, OTel, run context, cost reservation, iteration trace |
+| `references/architectures.md`                        | ReAct, plan_execute (suggested start for most MCP), Reflection levels, other topologies; **node id ≠ state channel** |
 | `references/streaming-and-hitl.md`                   | SSE envelopes, operator `thinking` from planner state, `interrupt()`, `Command` resume            |
 | `templates/contracts/planner-contract.md`            | JSON planner hops: `executionPlan` + `userFacingIntent`                                           |
 | `references/evals-and-gates.md`                      | Architecture, tool-selection, memory evals                                                        |

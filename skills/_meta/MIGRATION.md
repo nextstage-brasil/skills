@@ -2,6 +2,18 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Modules 1–3 coverage wave (2026-09-07)
+
+Build-grade gaps from fundamentos / single-agent / multi-agent modules. Module 5 out of scope.
+
+| Skill | Version | Change |
+| ----- | ------- | ------ |
+| `ns-agent-adaptation` | 1.3 → 1.4 | `tool-schema-design.md`; typed schema inventory; reality-test gate; report Typed schema column |
+| `ns-agent-architecture` | 1.21 → 1.22 | `inter-agent-transport.md`, `provider-selection.md`; multi-agent Failure/Compensation/Events in ADR (not defense-only); provider/hosting + threshold owner probes; sizing table |
+| `ns-langgraph-agents` | 1.14 → 1.15 | Parallel producer staleness + settle-all; Reflection surface/content + blocking eligibility; iteration trace; escalate on non-convergence |
+
+No new `catalog.json` key.
+
 ## Module 4 — AI-specific patterns coverage wave (2026-09-05)
 
 Gateway intent routing = deterministic only (rule / cheap non-LLM / embedding). LLM `intent_classify` hop **FORBIDDEN**. Cascade escalate = post-generation confidence.

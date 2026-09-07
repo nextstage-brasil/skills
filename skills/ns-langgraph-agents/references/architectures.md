@@ -78,11 +78,26 @@ agent → tools → critic → (retry | END)
 
 **Signals:** `critic.md` — `aprovado`, `nota`, `max_reflexoes`. Named error categories, not “revise this.” If none found, say so — no generic praise. High-stakes facts: flag + HITL, do not auto-correct. Optional critic on a different model family.
 
-**Cost:** one extra LLM invoke per turn. Skip unless the quality gate pays for it.
+### Levels
 
-**When:** quality-sensitive outputs.
+| Level | Checks | Cost | When |
+| ----- | ------ | ---- | ---- |
+| **Surface** | Format, completeness, internal consistency | Low | Always when Reflection on |
+| **Content** | Factual alignment vs external source | High | High-risk documents only |
+
+Do not mix surface + content in one call. Surface always-on makes Reflection affordable; content stays rare.
+
+### Blocking eligibility
+
+Reflection told to hunt problems can invent one. **Only objectively verifiable findings may auto-block.** Debatable findings → surface to human; must not block alone.
+
+**Cost:** Surface cheap; content = extra invoke. Skip content unless quality gate pays.
+
+**When:** quality-sensitive outputs. Surface default; content opt-in.
 
 **Graph:** critic before END; conditional on approval threshold.
+
+**Anti-patterns:** auto-block on subjective finding; single call mixing surface + content.
 
 ## Supervisor / multi-agent (advanced)
 

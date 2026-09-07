@@ -73,6 +73,27 @@ Acceptance: a reviewer with Postgres only can reconstruct **what ran and why** �
 
 `turn_decisions` JSONB on the turn checkpoint is a **flush of an event array**. Resume after `interrupt()` **MUST merge/append** — **FORBIDDEN** replace of the pre-interrupt array (clobber). See `mergeTurnDecisions`.
 
+### Iteration trace shape
+
+Looping agent turns: `turn_decisions` carries per-iteration rows:
+
+| Field | Meaning |
+| ----- | ------- |
+| `iteration` | Loop index |
+| `thought` | Planner reasoning |
+| `action` | Tool / step chosen |
+| `observation` | Tool / env result |
+| `continue?` | Whether loop continues |
+
+**Warning signals:**
+
+| Signal | Means |
+| ------ | ----- |
+| Repeated observation, no change | Non-convergence |
+| Action with no corresponding thought | Prompt mis-calibration — not model failure |
+
+Iteration limit on must-complete task → escalate Approval Gate (`error-and-reliability.md` Stop conditions).
+
 Canonical HITL / Gateway fields: `ns-agent-architecture` `gateway-calibration.md` (`decision_actor`, `approver_id`, `approver_role`, `decided_at` plus prior set).
 
 Regulated tenants: no audit opt-out. Legal WORM / e-sign / 21 CFR Part 11 / EU AI Act Art. 12 storage = **external SoT** — this runtime reconstructs the turn; it does not claim legal immutability. MVP skip: document in `graph-spec.md`.

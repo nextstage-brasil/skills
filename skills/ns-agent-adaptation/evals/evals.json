@@ -78,6 +78,20 @@
         "Does not recommend a framework",
         "Contains no implementation code"
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "Agent tools: one named search and another also basically search, both take free-text status. Lock the tool design.",
+      "expected_output": "Applies tool-schema-design checklist: demands disambiguated names, enum on fixed status set, declared return shape; Write gate only if P2; docs/specs/agent-design.md Typed schema column; no framework/code.",
+      "files": [],
+      "assertions": [
+        "Applies schema checklist before locking tools (or cites tool-schema-design)",
+        "Rejects or renames generic tool name when a similar sibling exists",
+        "Demands enum (or closed set) where free text was proposed for fixed values",
+        "Requires declared return shape",
+        "Does not recommend a framework",
+        "Contains no implementation code"
+      ]
     }
   ]
 }

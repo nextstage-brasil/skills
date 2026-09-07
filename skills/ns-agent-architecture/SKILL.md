@@ -4,7 +4,7 @@ description: (NS) Lock the agent architecture ADR — five blocks, subtask class
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.21"
+  version: "1.22"
 depends:
   - ns-harness
   - ns-langgraph-agents
@@ -137,7 +137,9 @@ Probes:
 - Human approval: next = **where and how** (step, UI, editable fields)
 - "Specialists working together": next = vocab / tools / risk diverge? Lock three-dimension boundary. Then **autonomy** (fixed vs emergent). Then pattern per segment (`references/orchestration-patterns.md` — **Handoff** = control transfer only)
 - Production or compliance: next = failure modes, retries, reconstructable audit. Per node: timeout / max retries / **Consistency (block) vs Availability (proceed with gap)**. Multi-write chain: compensate per step + **who triggers** (Supervisor / orchestrator / HITL)
-- Multi-agent locked: next = **inter-agent events** (name, emitter, payload, listeners, pattern) when more than single request/response
+- Multi-agent locked: next = **inter-agent events** (name, emitter, payload, listeners, pattern). Then **transport** (in-process vs broker). Then **delivery guarantee** (at-most-once / at-least-once). One question per turn. Detail: `references/inter-agent-transport.md`
+- Model block: next = **provider** then **hosting** (local vs API). Compliance / corpus-boundary named earlier → **data egress** before cost. Detail: `references/provider-selection.md`
+- Approval Gate band or Gateway confidence threshold locked: next = **who on the business side owns that number** — record owner next to threshold in ADR
 - Gateway classifies (Step 2): next = **model tier per category** (cheap vs strong; P2) + **always-escalate** list (score-independent) + **Approval authority** table (approver role per category; sync vs async + named compensation if async). Threshold + re-classify: `references/gateway-calibration.md`
 - Speed or prototype: next = **timeline, team size, acceptable shortcuts**
 - Objective locked, user/success unclear: **who consumes output**, then **one production success metric**
@@ -171,6 +173,12 @@ Required sections (plus architecture):
 - **State schema** and **error contract** — concrete structures
 - **Implementation plan** — phased checklist
 
+**When multi-agent locked** (omit entirely otherwise — no "N/A" stub):
+
+- **Failure contract** — `Agent | Timeout | Max retries | On exhaustion: consistency (block) or availability (proceed) | Idempotent on duplicate`
+- **Compensation** — step, what it produces, compensating action, **who triggers**
+- **Inter-agent events** — Event | Emitted by | Payload | Listeners | Pattern | Transport | Delivery guarantee (`references/inter-agent-transport.md`)
+
 File-only extras — **chosen framework only**. Omit the other heading. No "N/A" / "does not apply" stub. Why the other was rejected lives in **Framework Recommendation → Alternative considered** (one line). That line is enough.
 
 | Framework     | Extra (include iff chosen)                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -201,7 +209,7 @@ Chat ~200 words: no mermaid, no interview table, no full tooling tables.
 
 | Answer | Action |
 | ------ | ------ |
-| **No** | Stop. ADR = SoT. No defense file. |
+| **No** | Stop defense file. ADR = SoT. Multi-agent locks (Failure contract, Compensation, Inter-agent events) stay in ADR — not opt-in with the pack. |
 | **Yes** | CAP / saga / event unlocked: grill **those gaps only**, one turn each. Then write **`docs/specs/agent-architecture-defense.md`** from `references/architecture-defense-template.md`. Create `docs/specs/` if missing. **Exists:** update; append Changelog. Never blind-replace. Standalone: full pack in chat + save path. |
 
 Defense pack = **presentation seed**. Not implementation handoff. Never merge into `agent-architecture.md`. Runtime compensation = `ns-langgraph-agents` (`error-and-reliability.md`); pack locks architecture (who triggers, what undoes what).
@@ -230,6 +238,8 @@ Defense pack = **presentation seed**. Not implementation handoff. Never merge in
 | `references/decision-pillars.md` | Step 4–7 probes |
 | `references/orchestration-patterns.md` | Step 7 pattern selector |
 | `references/gateway-calibration.md` | Gateway classifies intent — categories, tier, thresholds, always-escalate, approval authority |
+| `references/inter-agent-transport.md` | Multi-agent locked — transport, delivery, MCP vs A2A |
+| `references/provider-selection.md` | Step 7 Model — provider, hosting, data egress, failover |
 | `references/report-template.md` | Step 8 ADR schema |
 | `references/architecture-defense-template.md` | Step 9 defense pack (opt-in) |
 

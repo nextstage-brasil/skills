@@ -29,6 +29,8 @@ Three eval types before production-ready.
 
 **When:** overlapping MCP tools (GitLab + Jira + internal).
 
+`wrong_tool_rate` / `argument_accuracy` fail → fix **schema authoring** (`ns-agent-adaptation` → `references/tool-schema-design.md`), not more prompt.
+
 Cheaper than full benchmark — CI on every prompt change.
 
 JSON planner hops: also assert `userFacingIntent` present, language matches last human message, and line ≠ `intent`.

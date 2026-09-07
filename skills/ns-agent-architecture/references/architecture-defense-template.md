@@ -3,6 +3,8 @@
 **Audience:** stakeholder / contractor presentation seed (slides later).  
 **Not** implementation ADR. Never merge into `docs/specs/agent-architecture.md`.
 
+**ADR is source of truth.** This pack restates failure / compensation / event tables for presentation. Do not invent cells the ADR lacks.
+
 Write **`docs/specs/agent-architecture-defense.md`** only after Step 9 **yes**. Same locked language (`SKILL.md`). English headings below = agent schema; **written file** translates headings/cells (pattern ids Sequential, Parallel, Supervisor, Hierarchical, Group Chat, Handoff, CAP / Saga stay English labels).
 
 Fill from locked decisions. CAP / saga / event gaps: grill one turn each — **never invent**.

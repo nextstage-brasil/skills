@@ -42,6 +42,7 @@ Model returns JSON plans:
 - `max_cost_per_turn` / `AGENT_MAX_COST_PER_TURN` — reserved spend before next LLM/tool call (`observability.md` Costs by thread)
 - No progress (same tool+args repeated)
 - Human denies sensitive tools
+- Iteration limit on task that **must complete** → **escalate to Approval Gate** with last observation — not silent partial / `failed`
 
 ### Turn latency budget
 
@@ -96,6 +97,22 @@ Two turns may race on shared state or artifact.
 
 Version field on shared records/artifacts. Surface conflict to operator — do not overwrite.
 
+## Parallel producer staleness
+
+Two parallel agents both succeed; one started on stale input — divergence silent without version records.
+
+| Rule | Behavior |
+| ---- | -------- |
+| Two-version record | Each producer stores **input version at start** and **version current at completion** |
+| Mismatch | Output stale even if call succeeded |
+| Consistency check | After fan-out joins, **per producer** |
+| Compensate | **Only** the stale producer — re-run consistent sibling = waste + new divergence risk |
+| Undetectable without both versions | Whole point of the record |
+
+### Fan-out aggregation
+
+Reject-on-first-failure discards sibling good result. **Settle-all** preserves siblings → retry = failed branch only, not both. Doctrine name: settle-all. JS form: `Promise.allSettled`.
+
 ## Graceful degradation
 
 | Failure | Degrade to |
@@ -108,6 +125,8 @@ Version field on shared records/artifacts. Surface conflict to operator — do n
 | Turn latency budget hit | Composer on current channels; `failed` only if nothing to narrate |
 | Turn cost budget hit | Same as latency budget; code `turn_cost_budget_exceeded` |
 | Partial multi-write fail | Compensate prior writes; do not blind-replay whole plan |
+| Iteration limit, task must complete | Escalate Approval Gate + last observation — not silent partial |
+| Parallel producer stale | Compensate stale producer only |
 
 ## Idempotency
 
@@ -122,5 +141,7 @@ Version field on shared records/artifacts. Surface conflict to operator — do n
 - Integration: circuit breaker after N invalid planner outputs
 - Integration: last write fails: earlier writes compensated (not full plan replay)
 - Unit/integration: concurrent edit: version conflict, not silent overwrite
+- Integration: two parallel producers, one stale — only stale compensated
+- Integration: fan-out one branch fails — sibling result survives (settle-all)
 
 Snippet: `tool-error-handling.ts.snippet`.

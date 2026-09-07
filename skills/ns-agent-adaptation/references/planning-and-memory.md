@@ -43,3 +43,17 @@ Document per design: what lives in weights vs window vs episodic vs semantic vs 
 ## Reflection
 
 Critique in a **separate** call after draft — ideally different model family. Cost = one extra invoke. Skip unless a quality gate pays for it. Runtime shape: see `ns-langgraph-agents` `references/architectures.md` (Reflection).
+
+## Reality-test gate
+
+Before design locks (Agent path). All five:
+
+| Check | Ask |
+| ----- | --- |
+| Long-term memory off | What breaks? |
+| Planning halved | What breaks? |
+| Every tool | Frequent real use case? |
+| Final action | Reversible? |
+| Whole design | Fits locked latency + cost budget? |
+
+Fail any → cut before lock. Anti-over-engineering gate.
