@@ -1,6 +1,6 @@
 ---
 name: ns-docs-writer
-description: (NS) Write and edit human-facing project documentation — README, docs/ guides, runbooks, and contributor-facing markdown. Use whenever the user asks for documentation, README updates, how-to guides, or docs/ content — even if they say "explain how to use" instead of "write docs". Stack-agnostic; follow project layout from AGENTS.md. Do NOT use for code comments, API docblocks in source, requirements.md, or SDD version artifacts (use PM skills).
+description: "(NS) Human-facing project docs — README, docs/ guides, runbooks, contributor markdown. Use whenever the user asks for documentation, README updates, how-to guides, or docs/ content — even if they say \"explain how to use\" instead of \"write docs\". Do NOT use for code comments, API docblocks, requirements.md, or SDD version artifacts (use PM skills)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

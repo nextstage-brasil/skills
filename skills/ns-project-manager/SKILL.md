@@ -1,15 +1,6 @@
 ---
 name: ns-project-manager
-description: >
-  (NS) Gated PM workflow — clarify, structure, RICE/WSJF, DAG sequencing, sprint plan,
-  PERT/Monte Carlo forecast; version handoff / version card; risk, status, meeting, OKR.
-  Also commercial budget (orçamento, Function Points, proposta comercial; COSMIC/CFP only
-  if asked), triple productivity delivery schedule (cronograma P100/P85/P50, prazo, when we
-  deliver). Use on transcripts, backlog, timeline, delivery date, status, orçamento,
-  cotação, cronograma, handoff, fecha a versão — even if PM is unnamed. On "help" /
-  "exemplos", list example prompts only. Do NOT use for coding, SDD requirements generation,
-  GitLab issue execution, or per-issue grill-me / requirements enrichment
-  (`/ns-requirements-enricher`).
+description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, orçamento, cotação, cronograma, handoff, fecha a versão — even if PM unnamed. Do NOT use for coding, SDD, GitLab issue execution, or `/ns-requirements-enricher`."
 license: Apache-2.0
 requires_harness: ">=1.0.0"
 provides:

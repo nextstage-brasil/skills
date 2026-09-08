@@ -1,10 +1,10 @@
 ---
 name: ns-agent-architecture
-description: (NS) Lock the agent architecture ADR — five blocks, subtask classification, trade-off budget, orchestration pattern, LangGraph vs CrewAI, topology, HITL. Writes `docs/specs/agent-architecture.md`. After the ADR, optionally offers a stakeholder defense pack (`docs/specs/agent-architecture-defense.md`: boundary, orchestration, failure/saga, events, A-vs-B). If agent vs RAG vs fine-tune is unlocked, stop and run `ns-agent-adaptation` first. Use when choosing LangGraph/CrewAI, designing crews/graphs, HITL, agents working together, producing ADRs, reverse-documenting an agent, or preparing architecture defense for stakeholders. Do NOT use for Prompt/RAG/Agent/Fine-Tune ladder (`ns-agent-adaptation`), general app requirements (`/ns-spec-driven` Clarify), or coding without architecture intent.
+description: "(NS) Lock agent architecture ADR — LangGraph vs CrewAI, topology, HITL. Writes docs/specs/agent-architecture.md. Agent vs RAG vs fine-tune unlocked: stop; run ns-agent-adaptation first. Use for LangGraph/CrewAI, crews/graphs, HITL, multi-agent, ADRs, reverse-documenting agent, architecture defense. Do NOT: Prompt/RAG/Agent/Fine-Tune (ns-agent-adaptation), /ns-spec-driven Clarify, non-arch coding."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.22"
+  version: "1.23"
 depends:
   - ns-harness
   - ns-langgraph-agents
@@ -152,9 +152,9 @@ Locked: reference blocks, subtask rows, trade-off budget (throughput + per-conte
 
 1. Announce: shared understanding. Interview complete.
 2. **Phase 1 (chat):** ~200 words on-screen. Framework, topology, main trade-off, top risk, MVP. Decisive. Close trade-off: pick + alternative, one line.
-3. **Phase 2 (file):** living ADR **`docs/specs/agent-architecture.md`**. Create `docs/specs/` if missing. Canonical path. Do not ask. Do not write under `docs/architecture/` or `docs/versions/`. **Missing file:** create full report. **Exists:** update current-state sections; **append** `## Changelog` (`**{version_san}** — {ISO date}: {summary}` or `**adhoc-YYYY-MM-DD**` if no version) and **append** this session to Interview Record. Never blind-replace (drops history). Legacy `docs/architecture/multi-agent-report.md`: move content here once, then stop writing the old path. **Standalone import (Claude Web, no project FS):** full report in chat. Tell user save as `docs/specs/agent-architecture.md`.
+3. **Phase 2 (file):** living ADR **`docs/specs/agent-architecture.md`**. Create `docs/specs/` if missing. Canonical path. Do not ask. Do not write under `docs/architecture/` or `docs/versions/`. **Missing file:** run `scripts/scaffold-report.py` per `references/report-section-index.md` (extracts ADR skeleton from `report-template.md`; template file stays untouched). Then fill from that index. **Do not** read `report-template.md` into context. **Exists:** update current-state sections; **append** `## Changelog` (`**{version_san}** — {ISO date}: {summary}` or `**adhoc-YYYY-MM-DD**` if no version) and **append** this session to Interview Record. Never re-scaffold; never blind-replace (drops history). Legacy `docs/architecture/multi-agent-report.md`: move content here once, then stop writing the old path. **Standalone import (Claude Web, no project FS):** full report in chat. Tell user save as `docs/specs/agent-architecture.md`.
 
-File = **developer handoff**. Self-contained. No chat history needed. Dev with file only can start implementation. Schema: `references/report-template.md`.
+File = **developer handoff**. Self-contained. No chat history needed. Dev with file only can start implementation. Fill map: `references/report-section-index.md`.
 
 Required sections (plus architecture):
 
@@ -183,7 +183,7 @@ File-only extras — **chosen framework only**. Omit the other heading. No "N/A"
 
 | Framework     | Extra (include iff chosen)                                                                                                                                                                                                                                                                                                                                                                                  |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **LangGraph** | Mermaid `flowchart TB`: every node, one-column happy path, dashed error/interrupt edges; paint **nodes** with the same `classDef` as the five-block diagram; compact node→block legend. Layout MUST: `references/report-template.md` (LangGraph flow diagram). Forbidden: `subgraph` per doctrine block on this flowchart (`references/reference-architecture.md` — LangGraph container vs doctrine blocks) |
+| **LangGraph** | Mermaid `flowchart TB`: every node, one-column happy path, dashed error/interrupt edges; paint **nodes** with the same `classDef` as the five-block diagram; compact node→block legend. Layout MUST: `references/report-section-index.md` (LangGraph node flowchart). Forbidden: `subgraph` per doctrine block on this flowchart (`references/reference-architecture.md` — LangGraph container vs doctrine blocks) |
 | **CrewAI**    | Team structure table: crew names, agents per crew, process type, task handoffs                                                                                                                                                                                                                                                                                                                              |
 
 Always in file:
@@ -240,7 +240,8 @@ Defense pack = **presentation seed**. Not implementation handoff. Never merge in
 | `references/gateway-calibration.md` | Gateway classifies intent — categories, tier, thresholds, always-escalate, approval authority |
 | `references/inter-agent-transport.md` | Multi-agent locked — transport, delivery, MCP vs A2A |
 | `references/provider-selection.md` | Step 7 Model — provider, hosting, data egress, failover |
-| `references/report-template.md` | Step 8 ADR schema |
+| `references/report-section-index.md` | Step 8 fill map (after scaffold) |
+| `scripts/scaffold-report.py` | Missing ADR only — extracts inner skeleton; do not load template |
 | `references/architecture-defense-template.md` | Step 9 defense pack (opt-in) |
 
 ## Reverse mode (agent already built)

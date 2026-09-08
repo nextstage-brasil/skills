@@ -1,6 +1,6 @@
 ---
 name: ns-spec-driven
-description: '(NS) Spec-driven delivery face — clarify, requirements, tasks (including unit/e2e test tasks), implement, resume or continue a version from disk artifacts. Entry priority 2: feature specs, version work, multi-day scope, or "continue" / "resume version" when partial artifacts exist under docs/versions/. Auto-sizes and runs internal phases via references/. Prefer ns-coder for bare quick fixes. Do NOT use for brownfield onboarding, architecture rules, or /ns-harness prepare (manual only; never auto-run Prepare).'
+description: '(NS) Spec-driven delivery — clarify, requirements, tasks (incl. unit/e2e), implement, resume/continue version from disk. Entry priority 2: feature specs, version work, multi-day scope, or "continue" / "resume version" when docs/versions/ has partial artifacts. Bare quick fixes: ns-coder. Do NOT: brownfield onboarding, architecture rules, /ns-harness prepare (never auto-run Prepare).'
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -165,7 +165,7 @@ Worker dispatch: **MUST** use harness project agents when available — `../../n
 | "implement", "build version", tasks exist              | `references/session-continuity.md` + Execute                                      |
 | "quick fix", "just change X"                           | `references/quick-mode.md`                                                        |
 | "resume", "continue version", partial `docs/versions/` | `references/session-continuity.md`                                                |
-| "orchestrate slices", partitioned roadmap              | `references/orchestrator.md`                                                      |
+| "orchestrate slices", partitioned roadmap              | `references/orchestrator.md` (hot path); all units/slices done → `references/orchestrator-closure.md` |
 | UI / design work (no Layout SSoT for screen) | `references/skill-integrations.md` → `ns-frontend-design` |
 | UI with Layout SSoT registered (`role: ui-layout`, cited `*-visual.md`) | `ns-coder` Complement delegation — read SSoT; skip `ns-frontend-design` |
 | README / docs                                          | `references/skill-integrations.md` → `ns-docs-writer`                             |

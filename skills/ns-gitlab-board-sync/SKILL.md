@@ -1,6 +1,6 @@
 ---
 name: ns-gitlab-board-sync
-description: (NS) Sync existing GitLab issues with local planning and execution — milestone, RF labels, status transitions, assignee, estimates, spent time. Use during implementation when tasks link to GitLab issues or after plan-version-from-gitlab sync — not for creating new issues (use mcp-gitlab-usage). Always use atomic set_issue_labels and three-step status cycle. Read mcp-gitlab-usage for tool contracts.
+description: "(NS) Sync existing GitLab issues with local planning/execution — milestone, RF labels, status, assignee, estimates, spent time. Use during implementation when tasks link to GitLab issues or after plan-version-from-gitlab sync — not for creating new issues (use mcp-gitlab-usage). Always atomic set_issue_labels and three-step status cycle."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

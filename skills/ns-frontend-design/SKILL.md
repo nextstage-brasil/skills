@@ -1,6 +1,6 @@
 ---
 name: ns-frontend-design
-description: (NS) Distinctive production UI — layout, typography, motion, and component polish that avoids generic AI-slop aesthetics. Use whenever the user builds or refines pages, components, dashboards, KPI/analytics views, charts, forms, or design-brief work, or asks for better UI/UX — even if they do not say "design". On React stacks, default chart library is Recharts (see references/react-analytics-ui.md). Load docs/context/design-brief.md when present. Do NOT use for backend-only work, requirements writing, or full SDD orchestration (use ns-spec-driven).
+description: "(NS) Distinctive production UI — layout, typography, motion, polish; avoids AI-slop aesthetics. Use when building/refining pages, components, dashboards, KPI/analytics views, charts, forms, design-brief work, or better UI/UX — even if they do not say \"design\". Load docs/context/design-brief.md when present. Do NOT use for backend-only, requirements writing, or full SDD (ns-spec-driven)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

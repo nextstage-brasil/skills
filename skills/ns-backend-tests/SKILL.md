@@ -1,6 +1,6 @@
 ---
 name: ns-backend-tests
-description: (NS) Create and maintain PHPUnit unit and integration tests in the backend package (bootstrap tests/ when missing). Mandatory Docker-only execution with phpunit --testdox --stop-on-failure --stop-on-error and 120s timeout. Use when writing or refactoring PHPUnit tests, implementing unit-test tasks, or scaffolding backend tests on greenfield Laravel/PHP projects — not when planning test task markdown (ns-spec-driven references/unit-test-task-generator.md). Read harness backend-tests rules when present.
+description: "(NS) PHPUnit unit/integration in backend package (bootstrap tests/ when missing). Docker-only: phpunit --testdox --stop-on-failure --stop-on-error, 120s. Use when writing/refactoring PHPUnit, unit-test tasks, or scaffolding backend tests on greenfield Laravel/PHP — not when planning test task markdown (ns-spec-driven references/unit-test-task-generator.md)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

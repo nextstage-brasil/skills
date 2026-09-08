@@ -1,6 +1,6 @@
 ---
 name: ns-agent-adaptation
-description: (NS) Decide Prompt vs RAG vs Agent vs Fine-Tune before any framework. May lock explicit non-agent. Writes `docs/specs/agent-design.md`. Use when designing an agent, choosing agent vs RAG vs prompt vs fine-tune, tool taxonomy, plan/execute, memory, eval, or guardrails — even if the user never says "adaptation". Do NOT use for LangGraph/CrewAI (`ns-agent-architecture`), LangGraph runtime (`ns-langgraph-agents`), Postgres RAG schema (`ns-postgres-rag`), GraphRAG process (`ns-graphrag`), or app coding.
+description: "(NS) Prompt vs RAG vs Agent vs Fine-Tune before framework. Writes `docs/specs/agent-design.md`. Use for agent design, agent vs RAG vs prompt vs fine-tune, plan/execute, memory, eval, guardrails — even without \"adaptation\". Do NOT: LangGraph/CrewAI ADR (`ns-agent-architecture`), LangGraph runtime (`ns-langgraph-agents`), Postgres RAG (`ns-postgres-rag`), GraphRAG (`ns-graphrag`), app coding."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

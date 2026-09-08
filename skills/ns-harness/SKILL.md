@@ -1,6 +1,6 @@
 ---
 name: ns-harness
-description: "(NS) NextStage harness face — session boot, artifact layout, AND brownfield prepare. Use whenever the user says /ns-harness, prepare this repo, harness prepare, generate architecture rules, architecture-rules.md, write AGENTS.md, reverse-engineer the codebase, engenharia reversa, brownfield map, or bootstrap brownfield — even if they name ns-harness-prepare, ns-architecture-rules, ns-agent-generator, ns-codebase-reverse-spec, or ns-bootstrap-brownfield. Route to references/prepare.md (full chain) or the matching worker reference. Do NOT use for coding, SDD versions, or GitLab issue execution."
+description: "(NS) Harness boot + brownfield prepare. Triggers: /ns-harness, prepare this repo, harness prepare, generate architecture rules, architecture-rules.md, write AGENTS.md, reverse-engineer codebase, engenharia reversa, brownfield map, bootstrap brownfield, ns-harness-prepare, ns-architecture-rules, ns-agent-generator, ns-codebase-reverse-spec, ns-bootstrap-brownfield. Do NOT: coding, SDD, GitLab."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

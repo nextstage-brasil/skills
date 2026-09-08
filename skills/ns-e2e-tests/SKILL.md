@@ -1,6 +1,6 @@
 ---
 name: ns-e2e-tests
-description: (NS) Create and maintain Cypress E2E tests in an independent tests-e2e/ Node package at repo root (bootstrap when missing). DRY device-aware command architecture (shared/pages/device). Use when writing or refactoring Cypress specs, custom commands, scaffolding E2E on greenfield projects, or implementing E2E tasks — not when planning E2E task markdown (ns-spec-driven references/e2e-test-task-generator.md). Read harness e2e rules when present. Mandatory discovery before writing specs.
+description: "(NS) Cypress E2E in independent tests-e2e/ at repo root (bootstrap when missing). DRY device-aware commands (shared/pages/device). Use when writing/refactoring Cypress specs, custom commands, scaffolding E2E, or implementing E2E tasks — not when planning E2E task markdown (ns-spec-driven references/e2e-test-task-generator.md). Mandatory discovery before specs."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

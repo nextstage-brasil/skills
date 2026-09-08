@@ -1,13 +1,6 @@
 ---
 name: ns-best-practices
-description: >-
-  (NS) Security/compat/a11y hygiene + Vercel Web Interface Guidelines review
-  (headers, CSP, deps, accessibility). Use when hardening security, fixing
-  CSP/CORS/headers, reviewing UI / checking a11y / auditing UX, or applying
-  Web Interface Guidelines — even without saying "best practices"; also at
-  ns-proto-creator close-out. Do NOT use for MR/SOLID review
-  (ns-reviewer), visual redesign (ns-frontend-design), or feature
-  implementation (ns-coder / ns-spec-driven).
+description: "(NS) Security/compat/a11y + Vercel Web Interface Guidelines. Use when hardening security, fixing CSP/CORS/headers, reviewing UI / checking a11y / auditing UX, or Web Interface Guidelines — even without saying \"best practices\"; also ns-proto-creator close-out. Do NOT use for MR/SOLID (ns-reviewer), visual redesign (ns-frontend-design), or features (ns-coder / ns-spec-driven)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

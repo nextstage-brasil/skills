@@ -91,11 +91,15 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["ns-coder", "ns-autonomous", "ns-frontend-design", "ns-docs-writer", "ns-best-practices", "ns-execution-gitlab-issue", "ns-investigator", "ns-reviewer", "ns-e2e-tests", "ns-backend-tests", "ns-postgres-rag", "ns-graphrag"]
+      "skills": ["ns-coder", "ns-autonomous", "ns-frontend-design", "ns-docs-writer", "ns-best-practices", "ns-execution-gitlab-issue", "ns-investigator", "ns-reviewer", "ns-e2e-tests", "ns-backend-tests"]
+    },
+    "retrieval": {
+      "label": "Retrieval (RAG)",
+      "skills": ["ns-postgres-rag", "ns-graphrag"]
     },
     "labs": {
       "label": "Labs (agents)",
-      "skills": ["ns-agent-adaptation", "ns-agent-architecture", "ns-langgraph-agents", "ns-postgres-rag", "ns-graphrag"]
+      "skills": ["ns-agent-adaptation", "ns-agent-architecture", "ns-langgraph-agents"]
     },
     "brownfield": {
       "label": "Brownfield",

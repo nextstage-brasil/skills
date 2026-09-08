@@ -1,6 +1,6 @@
 ---
 name: ns-postgres-rag
-description: "(NS) PostgreSQL retrieval layer — pgvector RAG, hybrid FTS+vector, GraphRAG entity/edge/evidence/mention tables, entity resolution, multi-hop traversal, million-document scale. Use whenever the user wants RAG or GraphRAG on Postgres, pgvector indexes, hybrid search, document links, entity merge, multi-hop paths, or a retrieval design for 1MM+ files — even if they say search, embeddings, or knowledge graph in SQL. Do NOT use for ontology, schema-locked extract, answer-shape routing, or cite-or-refuse process design (`ns-graphrag` when installed). Do NOT use to implement application code (hand off to ns-spec-driven after reports are approved). Do NOT use for competing vector databases, CrewAI, or generic web apps."
+description: "(NS) PostgreSQL retrieval — pgvector, hybrid FTS+vector, GraphRAG tables, multi-hop, 1MM+ scale. Use for RAG or GraphRAG on Postgres, pgvector, hybrid search, document links, entity merge, multi-hop, or 1MM+ retrieval — even if they say search, embeddings, or knowledge graph in SQL. Do NOT use for ontology/cite-or-refuse (`ns-graphrag`), app code, competing vector DBs, CrewAI, or generic web apps."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

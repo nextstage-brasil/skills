@@ -1,15 +1,6 @@
 ---
 name: ns-proto-visual-guide
-description: >-
-  (NS) Normative visual appearance guides for UI surfaces (card/form/shell/overlay):
-  block order, states, palette, Action|What-changes tables. MUST use for
-  descrição normativa, guia visual, aparência, visual QA checklist, "how this
-  looks", docs named *-visual.md / *-painel-visual.md / *-appearance.md (and
-  kin), or shell vs content / card vs form / carcaça vs formulário. Prefer
-  prototype/ as source of truth when present; after behavioral UX guides, offer
-  ns-living-spec appearance mode. Do NOT use for business
-  rules, ERDs, layout/grid math, API/auth, e2e, or prototype create/evolve
-  (ns-proto-creator).
+description: "(NS) Normative visual appearance guides (card/form/shell/overlay). MUST use for descrição normativa, guia visual, aparência, visual QA checklist, \"how this looks\", *-visual.md / *-painel-visual.md / *-appearance.md, or shell vs content / card vs form / carcaça vs formulário. Do NOT use for business rules, ERDs, layout math, API/auth, e2e, or ns-proto-creator."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

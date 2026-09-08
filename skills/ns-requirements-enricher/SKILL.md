@@ -1,17 +1,6 @@
 ---
 name: ns-requirements-enricher
-description: >
-  (NS) Enrich requirements before autonomous execution from a GitLab issue or chat
-  context. Use when the user asks to enrich/expand requirements, flesh out
-  acceptance criteria, prepare issue context for coding agents, run grill-me, or
-  generate blocking product questions — with or without a GitLab issue. Issue
-  mode: ISSUE_URL → MCP read + codebase grill-me → one internal comment with
-  numbered questions for the issue author. Chat mode: pasted/described scope →
-  same analysis, numbered questions inline only (no files, no GitLab). Do NOT
-  replace `/ns-spec-driven` Specify for version `requirements.md`. Do NOT use
-  for full issue execution (`ns-execution-gitlab-issue`), code review
-  (`ns-reviewer`), version planning (`start_execution_planning`), PM intake
-  (`00-clarification.md` OKR/RICE), or SDD Clarify (version-scope before Specify).
+description: "(NS) Enrich requirements before autonomous execution. Use to enrich/expand requirements, grill-me, blocking product questions — GitLab ISSUE_URL or chat. Modes: Issue mode, Chat mode. Do NOT replace `/ns-spec-driven` Specify. Do NOT: ISSUE_URL execution (`ns-execution-gitlab-issue`), code review (`ns-reviewer`), start_execution_planning, PM intake, SDD Clarify."
 license: Apache-2.0
 provides:
   - gate:requirements-enrichment

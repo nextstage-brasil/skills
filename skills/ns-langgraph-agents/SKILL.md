@@ -1,6 +1,6 @@
 ---
 name: ns-langgraph-agents
-description: (NS) LangGraph.js agent-api — greenfield scaffold (bootstrap-agent-runtime), StateGraph, MCP tools, skill bind/inject, checkpointers, context-window trim, HITL/SSE, prompt/locale placement. Use for new agent-api from scratch, LangGraph graphs, MCP wiring, orphan layout, system-prompt compose, bind parity, graph-spec sync, or "fix my LangGraph agent" / "wire MCP tools" / "translations in the graph". Feature diffs via ns-coder; version features via ns-spec-driven; LangGraph vs CrewAI via ns-agent-architecture. Do NOT use for CrewAI crews, generic web apps, or SDD-only requirements with no agent-api.
+description: "(NS) LangGraph.js agent-api — bootstrap-agent-runtime, StateGraph, MCP, skill bind/inject, checkpointers, HITL/SSE. Use for new agent-api, LangGraph graphs, MCP wiring, orphan layout, bind parity, graph-spec sync, or \"fix my LangGraph agent\" / \"wire MCP tools\" / \"translations in the graph\". Do NOT use for CrewAI, generic web apps, or SDD-only with no agent-api."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -119,7 +119,7 @@ Full matrix: `references/placement-and-domains.md`.
 - Spec paths to sync: […]
 ```
 
-Full doctrine: `references/prompt-and-capability-injection.md`.
+Full doctrine: `references/prompt-and-capability-injection.md`. Plan/mode-resolve: `references/prompt-and-capability-injection-plan-execute.md`.
 
 ### 3. Spec Sync Gate
 
@@ -136,6 +136,7 @@ Load on demand — do not memorize whole files.
 | `references/runtime-layout.md`                       | Scaffolding, refactors, layer violations                                                          |
 | `references/placement-and-domains.md`                | Where to put files; domain vs graph vs config                                                     |
 | `references/prompt-and-capability-injection.md`      | System prompt layers, bind vs inject, bind parity                                                 |
+| `references/prompt-and-capability-injection-plan-execute.md` | Prompt/Capability plan; `plan_execute` gather vs composer; mode-resolved `injected` |
 | `references/message-content-blocks.md`               | AIMessage/HumanMessage/ToolMessage across providers                                               |
 | `references/context-window-and-tokens.md`            | trim, summarize, tool vs skill body caps, `context_manager`                                       |
 | `references/mcp-complex-access.md`                   | Multi-server MCP, discovery, transport, lifecycle                                                 |
@@ -151,7 +152,8 @@ Load on demand — do not memorize whole files.
 | `references/streaming-and-hitl.md`                   | SSE envelopes, operator `thinking` from planner state, `interrupt()`, `Command` resume            |
 | `templates/contracts/planner-contract.md`            | JSON planner hops: `executionPlan` + `userFacingIntent`                                           |
 | `references/evals-and-gates.md`                      | Architecture, tool-selection, memory evals                                                        |
-| `references/anti-patterns.md`                        | Review gate before marking done                                                                   |
+| `references/anti-patterns.md`                        | Review gate before marking done — hot path                                                        |
+| `references/anti-patterns-extended.md`               | Dead prompt copies, state/memory, reliability, graph, MCP, LLM, ops, process                      |
 
 Templates: `templates/agent-runtime/` (greenfield tree), `templates/graph-spec.md`, `templates/contracts/`, `templates/snippets/` (brownfield patches).
 

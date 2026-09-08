@@ -1,13 +1,6 @@
 ---
 name: ns-proto-creator
-description: >-
-  (NS) Playwright reverse-prototyping face — capture live UI, then create or
-  evolve a single prototype/ tree (git history; never v1/v2 copies). Use when
-  prototyping from a URL, reversing a screen into prototype/, evolving an
-  existing prototype, AS-IS flows/fields, or "prototype this app/page". Do NOT
-  use for normative appearance MDs only (ns-proto-visual-guide), full SDD
-  (ns-spec-driven), bare code fixes (ns-coder), or brownfield prepare
-  (/ns-harness prepare).
+description: "(NS) Playwright reverse-prototyping — capture live UI; create/evolve single prototype/ (git history; never v1/v2). Use when prototyping from a URL, reversing a screen into prototype/, evolving a prototype, AS-IS flows/fields, or \"prototype this app/page\". Do NOT use for appearance MDs only (ns-proto-visual-guide), full SDD (ns-spec-driven), bare code fixes (ns-coder), or /ns-harness prepare."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

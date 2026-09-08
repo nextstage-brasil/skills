@@ -100,6 +100,9 @@ jobs:
       - name: Catalog sync with skills
         run: node packages/harness/scripts/validate-catalog.js
 
+      - name: Token budget (report-only)
+        run: node packages/harness/scripts/token-budget.js
+
       - name: Skills CLI can parse all SKILL.md frontmatter
         run: |
           set -euo pipefail

@@ -1,15 +1,14 @@
 # Run implementation (classic mode)
 
-Guide the implementer through a **planned version** using `execution-handoff.md`
-as entry point and progress tracker.
+Planned version via `execution-handoff.md` as entry + progress tracker.
 
-No `delivery-units.md` = **classic default** (batched same-layer dispatch) — normal local path, not legacy-only.
+No `delivery-units.md` = **classic default** (batched same-layer dispatch) — not legacy-only.
 
 **Unit-scoped run** (stay in this file, step 0b): caller is G SDD unit mode **or** current `unit` is set **or** (`delivery-units.md` exists and this is **not** a top-level partitioned parent with pending slices). Top-level parent + `version-roadmap.md` pending slices + **no** `unit` → `../../ns-spec-driven/references/orchestrator.md`. Do not bounce a unit-scoped run back to orchestrator.
 
 **Batching:** this file only. Classic batch = same-layer consecutive `pending`, prefer **4–7**, hard **max 7**, fewer OK (size 1 = single-task). Slice **target 4–7** = `version-partitioner.md` only. **Unit-scoped:** batch = all tasks in current `unit` only.
 
-**GitLab:** `../../ns-spec-driven/references/delivery-units.md` **GitLab status/spent (SSoT)** — no fourth branch.
+**GitLab:** `../../ns-spec-driven/references/delivery-units.md` **status/spent (SSoT)** — no fourth branch.
 
 ## Prerequisites
 
@@ -67,7 +66,7 @@ Until scope done or all tasks complete:
 ### Select batch
 
 - **Unit mode:** batch = all tasks in current unit row — never tasks from another unit
-- **Classic:** consecutive `pending` tasks, **same layer**, prefer **4–7**, hard **max 7**, fewer OK when fewer remain. Stop before dependency on unfinished task. Size 1 → single-task dispatch.
+- **Classic:** consecutive `pending`, **same layer**, prefer **4–7**, hard **max 7**. Stop before unfinished dependency. Size 1 → single-task. Numeric order unless the task file names a dependency.
 
 ### Dispatch
 
@@ -82,11 +81,7 @@ Until scope done or all tasks complete:
    - **Allowed:** unit/integration only (e.g. PHPUnit in test container)
    - **Forbidden:** run E2E (Cypress or equivalent) during any task — including `e2e`-layer tasks. Writing E2E specs OK; **running** them not. Human runs E2E after all tasks complete.
    - **Forbidden:** per-task / mid-version / mid-batch code review — wait for Step 5
-6. **Collect Tokens** (required before each `completed`). Sources (priority):
-   1. Usage/tokens from Task result / UI of `coder-agent` + other subagents — **split per task** from worker report, or `~N` estimate per task
-   2. Parent tokens attributable to that task if platform surfaces them
-   3. Nothing exposed: ask human once; if declined, `~N` estimate + task `## Execution notes` line `tokens: ~N (estimated)`
-   **Forbidden:** `0` on `completed` task that did LLM work
+6. **Collect Tokens** before each `completed`. Prefer worker/UI usage split per task; else parent tokens; else ask once then `~N` + `tokens: ~N (estimated)` in task Execution notes. **Forbidden:** `0` on `completed` LLM work.
 7. **Update handoff — per task from worker report:** each task `Status` → `completed` (or `blocked`); write `Tokens` (step 6)
    - On `blocked` / waiver / important events: append to task file `## Execution notes` (relevant only)
    - **GitLab complete:** if caller is G → **zero** board writes here. Else SSoT at **unit** end only (never per-task spent when units published).
@@ -98,77 +93,14 @@ Until scope done or all tasks complete:
    - `Total process time (s)` per handoff formula
    - `Last recalculated` = now
    - **Progress** and **Next task**
-9. Advance to next batch
-
-See `../../ns-spec-driven/references/execution-handoff.md` for status-update rules and version
-status transitions.
+9. Advance to next batch. Status rules: `../../ns-spec-driven/references/execution-handoff.md`.
 
 ## Session end (step 3)
 
-When pausing mid-version:
-
-1. Ensure handoff reflects current progress and session history (ultra-short Notes)
-2. If implementation finished this session, fill `Implementation — end` and recalculate totals
-3. Report: tasks done this session, next batch/task, blockers, accumulated seconds and tokens
+Pause: handoff matches progress; ultra-short Notes. Impl finished this session: fill `Implementation — end`, totals. Report: tasks done, next batch, blockers, seconds, tokens.
 
 ## Closure (steps 4–6)
 
-When all tasks are `completed` or `waived`:
+When all tasks are `completed` or `waived`: read `references/run-implementation-closure.md` (steps 4–6 + critical rules). Do not load that file during the per-batch loop.
 
-### Step 4 — UI / nav review
-
-When resolved `ui-contract.md` exists (`sdd/` first, else legacy version root per `artifact-layout.md` **Legacy path resolution**): **mandatory** — every contract element/handler vs implementation; report divergence.
-
-When Layout SSoT registered for a screen (`reference-sources.md` `role: ui-layout`, or any version task cites `*-visual.md`): open cited SSoT **before** diff walk; report **Quick visual checklist** divergence (independent of whether `ui-contract.md` exists).
-
-If frontend navigation changes: present grouping proposals and **wait for human approval** before applying.
-
-### Step 4.5 — E2E (human only)
-
-Do **not** run E2E as the agent. Tell the human that E2E is their gate at version
-end (after tasks complete; before or alongside review as they prefer). Agents may
-have written E2E specs earlier — execution of those suites is human-owned.
-
-### Step 5 — Code review (required)
-
-Follow `../../ns-reviewer/references/review-gate-workflow.md` (`Approved` = score **10** only).
-
-1. **MUST** `reviewer-agent` when available (else `ns-reviewer`) at version closure. See `../../../ns-harness/references/subagent-dispatch.md`.
-2. No `code-review-report.md`. On `Rejected`/`Blocked` (score **9** = Lift), fix map + re-review until `Approved` or **blocked**.
-3. Update handoff only on Pass or Stop:
-   - **Version status:** `completed` | `completed_with_caveats` | `blocked_delivery`
-   - `Post-implementation review — end` + recalculate **Total process time (s)**
-   - Register **review tokens** in **Time tracking** (`Review — tokens`) or **Session history** (version-level) — **not** last task `Tokens` column
-4. No `_done/` move with unresolved Criticals without waiver. Score **9** ≠ version close.
-
-### Step 5.5 — Living specs
-
-When status is `completed` or `completed_with_caveats` and review is `Approved`:
-
-1. Invoke `ns-living-spec`
-2. Note in handoff; fill `Living specs — end`; recalculate totals
-
-### Step 6 — Version archive
-
-After human confirms (or documented waiver):
-
-1. Move `{version_san}/` → `_done/{version_san}/` when project workflow requires it
-2. Fill `Final delivery — end`; recalculate **Total process time (s)**
-
-## Critical rules
-
-- **Always** update `execution-handoff.md` when task status changes — rows stay **per task**; parent owns file
-- **Batching:** **unit mode** on **unit-scoped run** (step 0 definition — all tasks in that `unit`). **Classic** only when not unit-scoped — same-layer consecutive `pending`, prefer 4–7, hard max 7.
-- **AGENTS first** — Session boot once in Bootstrap (step 1); no rule re-read per batch unless `agents.local.md` or harness rules changed; never tool-Read `AGENTS.md`
-- **Numeric task order** unless explicit dependency in the task file says otherwise
-- **Minimal diff** — current batch scope only
-- **No commits** unless human explicitly asks
-- On real blocker: `blocked` + task **Execution notes**, stop
-- **No E2E runs** during tasks — unit/integration only; human runs E2E at end
-- **No per-task / mid-batch review** — `coder-agent` / `ns-coder` must not call review gate; **only** Step 5 invokes `reviewer-agent` / `ns-reviewer`
-
-## References
-
-- Handoff generation and updates: `../../ns-spec-driven/references/execution-handoff.md`
-- Handoff template: `../../ns-spec-driven/templates/execution-handoff.template.md`
-- Orchestrated mode: `../../ns-spec-driven/references/orchestrator.md`
+Partitioned parent: `../../ns-spec-driven/references/orchestrator.md`.

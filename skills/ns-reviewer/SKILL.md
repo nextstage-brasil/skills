@@ -1,6 +1,6 @@
 ---
 name: ns-reviewer
-description: (NS) Senior Tech Lead code review on SOLID, clean code, performance, security, testability. `Approved` only at score 10; score 9 = `Rejected`. Use after code changes, before PRs, at implementation closure, or when user asks for code/PR/issue review gate — even without naming this skill. GitLab `ISSUE_URL`: Issue review mode. Do NOT write code-review-report.md. Do NOT use for root-cause debugging (ns-investigator).
+description: "(NS) Senior Tech Lead review: SOLID, clean code, performance, security, testability. `Approved` only at score 10; score 9 = `Rejected`. Use after code changes, before PRs, at implementation closure, or code/PR/issue review gate — even without naming this skill. GitLab `ISSUE_URL`: Issue review mode. Do NOT write code-review-report.md. Do NOT use for root-cause debugging (ns-investigator)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

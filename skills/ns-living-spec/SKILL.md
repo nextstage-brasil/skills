@@ -1,6 +1,6 @@
 ---
 name: ns-living-spec
-description: (NS) Consolidate delivered deltas into living domain specs under docs/specs/ — INDEX.md and per-domain markdown. Use after version closure when requirements, `Code Review: Approved`, and execution-handoff exist; ad-hoc when ns-coder (or human) passes Approved behavioral diff and docs/specs/ exists; appearance mode from ns-proto-creator / ns-proto-visual-guide (no Code Review gate) for product-visible UX. Incremental updates only; never overwrite unrelated content. Do NOT run Version/Ad-hoc before `Code Review: Approved`; appearance mode excepted for prototype/visual handoff.
+description: "(NS) Living domain specs under docs/specs/. Use after version closure when requirements, `Code Review: Approved`, and execution-handoff exist; ad-hoc when Approved behavioral diff + docs/specs/; appearance mode from ns-proto-creator / ns-proto-visual-guide (no Code Review gate). Incremental only. Do NOT run Version/Ad-hoc before `Code Review: Approved` (appearance mode excepted)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

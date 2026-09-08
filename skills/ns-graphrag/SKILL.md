@@ -1,6 +1,6 @@
 ---
 name: ns-graphrag
-description: "(NS) Build a complete GraphRAG process — closed ontology, semantic text units, schema-locked extraction with citations, entity resolution, logical edges with evidence and mentions, filtered sets and aggregate answers with per-row citations, path traversal, optional discovery hypotheses, dual embeddings (units + entity descriptions), ACL-before-search, cited answers. Use whenever the user wants GraphRAG, a knowledge graph over documents, multi-hop retrieval, entity/relationship extractors, indirect-link or grouping analytics, or grounded structured extraction from unstructured files — even if they only say RAG, NER, knowledge graph, or cited Q&A. Do NOT use for Postgres schema/mode choice alone (`ns-postgres-rag` first). Do NOT use for competing vector stores, free graph query languages, or co-occurrence-as-edge designs."
+description: "(NS) GraphRAG process. Use for GraphRAG, knowledge graph over documents, multi-hop retrieval, entity/relationship extractors, indirect-link analytics, or grounded structured extraction — even if they only say RAG, NER, knowledge graph, or cited Q&A. Do NOT use for Postgres schema/mode alone (`ns-postgres-rag` first). Do NOT use for competing vector stores, free graph QL, or co-occurrence-as-edge."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil

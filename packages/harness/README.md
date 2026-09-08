@@ -244,6 +244,8 @@ Choose **one** of:
 
 Skill ids match directory names under `skills/<skill-id>/` in the [skills repo](https://github.com/nextstage-brasil/skills). External ids come from `external-skills.json` (see `harness list`).
 
+Interactive wizard groups catalog skills by `catalog.json` **categories**. `implementation` is code workers (no RAG). Pick **Retrieval (RAG)** for `ns-postgres-rag` / `ns-graphrag`. **Labs (agents)** is `ns-agent-adaptation`, `ns-agent-architecture`, `ns-langgraph-agents` only. `--preset agents` still installs RAG + labs together.
+
 ---
 
 ## Commands & flags (reference)

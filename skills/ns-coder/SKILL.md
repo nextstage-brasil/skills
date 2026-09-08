@@ -1,6 +1,6 @@
 ---
 name: ns-coder
-description: "(NS) Ad-hoc coding worker — bug fixes, small refactors, scripts, migrations — without full SDD. Entry priority 5: use for \"just implement this\", \"quick fix\", or concrete coding without execution-handoff (also C2 under ns-autonomous). Do NOT use for GitLab ISSUE_URL (ns-execution-gitlab-issue), multi-day/version scope (ns-spec-driven), diagnosis-only (ns-investigator), or when execution-handoff.md exists. Do NOT generate requirements/tasks/handoff."
+description: "(NS) Ad-hoc coding — bug fixes, refactors, scripts, migrations — without full SDD. Entry priority 5: \"just implement this\", \"quick fix\", or coding without execution-handoff (C2 under ns-autonomous). Do NOT: ISSUE_URL (ns-execution-gitlab-issue), multi-day/version (ns-spec-driven), diagnosis-only (ns-investigator), when execution-handoff.md exists. Do NOT generate requirements/tasks/handoff."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -62,7 +62,7 @@ Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-
 3. Implement + unit/integration only. No E2E.
 4. **Forbidden:** `reviewer-agent` / `ns-reviewer`, living-spec consolidator, `Code Review:` verdict line.
 5. **Before report complete:** public-export grep (**Pre-review**). Still **no** reviewer.
-6. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`), `Layout SSoT: {path} read | none registered`. Parent marks rows and runs Step 5 review once all tasks done (`Approved` = **10**). Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
+6. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`), `Layout SSoT: {path} read | none registered`. Parent marks rows. Version closure (steps 4–6): `references/run-implementation-closure.md` — not the per-batch file. Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
 
 ## Session boot
 
