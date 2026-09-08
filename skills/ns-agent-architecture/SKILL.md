@@ -4,7 +4,7 @@ description: "(NS) Lock agent architecture ADR — LangGraph vs CrewAI, topology
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.23"
+  version: "1.24"
 depends:
   - ns-harness
   - ns-langgraph-agents
@@ -263,3 +263,4 @@ Trigger: "document why this agent is like this", "we never wrote the architectur
 - `ns-docs-writer` — README / `docs/` **link** `docs/specs/agent-architecture.md` (and defense pack if present). Do not rewrite decision record
 - `ns-living-spec` — owns `docs/specs/agent.md` (behavior). Does not overwrite this ADR
 - `ns-langgraph-agents` — grep/Glob skill file. Present: read before LangGraph recommendations (includes JSON-planner operator progress). Implementation after report; compensation runtime doctrine
+- `ns-agent-platform` — after ADR: compute topology, tenant/platform, LLM-gateway-as-product (`docs/specs/agent-platform.md`). Not a `depends` of this skill

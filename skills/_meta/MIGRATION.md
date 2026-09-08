@@ -2,6 +2,17 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Module 5 — agent platform + runtime remainder (2026-09-08)
+
+| Skill | Version | Change |
+| ----- | ------- | ------ |
+| `ns-agent-platform` | 1.0 | New. Compute topology, multi-tenant, onboarding, LLM-gateway-as-product. `docs/specs/agent-platform.md`. Catalog + `skill-paths.json` + `agents` preset + `external-skills.json` `nsSkills` |
+| `ns-agent-architecture` | 1.23 → 1.24 | Pointer only: Related skills + Gateway line (API entry ≠ LLM gateway product). No `depends: ns-agent-platform` |
+| `ns-langgraph-agents` | 1.15 → 1.16 | `guardrail-and-adversarial.md`; cascade OR both signals; golden-set promotion; audit retention/query |
+| `ns-agent-adaptation` | 1.4 → 1.5 | Malformed-arg self-validation in `tool-schema-design.md` |
+
+Do not restate Wave 4 ADR/transport/provider (already 1.22/1.23). Parallel-producer already 1.15. New `catalog.json` key: `ns-agent-platform`.
+
 ## Modules 1–3 coverage wave (2026-09-07)
 
 Build-grade gaps from fundamentos / single-agent / multi-agent modules. Module 5 out of scope.

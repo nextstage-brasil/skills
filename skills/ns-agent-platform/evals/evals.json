@@ -1,0 +1,42 @@
+{
+  "skill_name": "ns-agent-platform",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "ADR is locked. Gateway is a bursty HTTP webhook; the Model block is a long-running GPU worker; Observability is Postgres in our VPC. Put the whole agent on serverless so we only pay when it runs.",
+      "expected_output": "Gate 0 confirms ADR. Gate 1 refuses one system-wide hosting answer; table has mixed modes (serverless Gateway vs dedicated/K8s Model vs central Observability). Names cold-start on serverless rows. Break-even is example + measure-your-own. Writes docs/specs/agent-platform.md.",
+      "files": [],
+      "assertions": [
+        "Confirms or requires docs/specs/agent-architecture.md before compute lock",
+        "Refuses a single system-wide hosting/serverless answer",
+        "Produces a per-five-block compute table with mixed modes",
+        "Names cold-start on serverless rows",
+        "Writes docs/specs/agent-platform.md or instructs save as that path"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "New hospital tenant tomorrow. Copy our default HITL and cascade thresholds from the platform so they can go live. Skip the onboarding review; legal will catch up later.",
+      "expected_output": "Flags inherited thresholds as not a measured lock. Names who approves, what is reviewed, and skip consequence. Does not treat copied defaults as tenant-calibrated. Writes/updates docs/specs/agent-platform.md.",
+      "files": [],
+      "assertions": [
+        "Flags inherited thresholds (copy ≠ measured lock)",
+        "Names an approver role for onboarding",
+        "States skip consequence if onboarding is skipped",
+        "Writes or updates docs/specs/agent-platform.md"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Intent and models can just be an Express route on the API. We'll classify at the edge and skip central audit for latency. LLM gateway is that same route.",
+      "expected_output": "Separates ADR Gateway (API entry) from LLM-gateway-as-product. Edge does not waive central audit. Failover is hosting/gateway product, not a second tool schema. Cites reference-architecture Gateway vs this skill. Writes docs/specs/agent-platform.md.",
+      "files": [],
+      "assertions": [
+        "Treats LLM gateway as a product, not only an API route",
+        "Requires central audit even if classifier or Gateway is at the edge",
+        "Does not copy provider-selection / tool-schema failover as the platform failover lock",
+        "Writes or updates docs/specs/agent-platform.md"
+      ]
+    }
+  ]
+}

@@ -46,6 +46,7 @@
     "ns-backend-tests": ["ns-harness"],
     "ns-agent-adaptation": ["ns-harness"],
     "ns-agent-architecture": ["ns-harness", "ns-langgraph-agents"],
+    "ns-agent-platform": ["ns-harness", "ns-agent-architecture"],
     "ns-langgraph-agents": ["ns-harness"],
     "ns-postgres-rag": ["ns-harness"],
     "ns-graphrag": ["ns-harness", "ns-postgres-rag"]
@@ -99,7 +100,7 @@
     },
     "labs": {
       "label": "Labs (agents)",
-      "skills": ["ns-agent-adaptation", "ns-agent-architecture", "ns-langgraph-agents"]
+      "skills": ["ns-agent-adaptation", "ns-agent-architecture", "ns-langgraph-agents", "ns-agent-platform"]
     },
     "brownfield": {
       "label": "Brownfield",

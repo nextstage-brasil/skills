@@ -71,7 +71,8 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 
 | Anti-pattern | Why it hurts | Fix |
 | ------------ | ------------ | --- |
-| Live graph differs from `graph-spec.md` (edges, recursion_limit, wires) | Spec becomes a lie | Spec Sync Gate — update spec in same delivery |
+| Live graph differs from `graph-spec.md` (edges, recursion_limit, wires, `guard_fail_mode`) | Spec becomes a lie | Spec Sync Gate — update spec in same delivery |
+| Scaffold `guard.node.ts` fail-open shipped as production lock | Template default ≠ doctrine | Lock `guard_fail_mode` in `graph-spec.md`; cite `guardrail-and-adversarial.md` |
 | "Fix code to match archive" when archive is stale | Reverts intentional runtime | Sync spec to intended graph; then implement |
 
 ## Extended anti-patterns

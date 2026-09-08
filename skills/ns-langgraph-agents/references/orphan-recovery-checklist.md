@@ -23,7 +23,7 @@ Score each item: ✅ pass | ⚠️ partial | ❌ fail
 
 - [ ] `graph-spec.md` exists and matches compiled nodes/edges/capabilities/wire names
 - [ ] Spec includes domain ownership, prompt composition, bind/inject table, `recursion_limit`
-- [ ] Locked header: `framework`, `architecture`, `interaction_mode`
+- [ ] Locked header: `framework`, `architecture`, `interaction_mode`, `guard_fail_mode`
 - [ ] Postman collection matches HTTP routes
 - [ ] Spec Sync Gate understood: stale archive ≠ force-fit code
 

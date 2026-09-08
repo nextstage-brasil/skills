@@ -12,6 +12,7 @@
 | `interaction_mode` | sync_json \| streaming_sse |
 | `recursion_limit` | {{number}} |
 | `decision_record` | `docs/specs/agent-architecture.md` (or `n/a` + reason if architect skipped) |
+| `guard_fail_mode` | `fail-open` \| `fail-closed` — **lock here**. Scaffold `src/graph/nodes/guard.node.ts` defaults to **fail-open**. Template default is not doctrine. See `references/guardrail-and-adversarial.md`. Fail-closed: deny / safe `respond` when the scope classifier is unavailable or returns an invalid enum. Fail-open: proceed to agent and record the gap on `turnDecisions`. |
 
 ## Objective
 

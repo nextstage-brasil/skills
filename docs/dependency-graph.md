@@ -75,10 +75,11 @@ Nested (not catalog skills): `references/ns-commercial-budget`, `references/ns-d
 ```
 ns-agent-adaptation ── ns-harness
 ns-agent-architecture ── ns-harness, ns-langgraph-agents
+ns-agent-platform ── ns-harness, ns-agent-architecture
 ns-langgraph-agents ── ns-harness
 ```
 
-Stage 1 adaptation → Stage 2 architecture ADR → Stage 3 LangGraph runtime. Not interchangeable.
+Stage 1 adaptation, Stage 2 architecture ADR, Stage 3 LangGraph runtime, Stage 4 platform. Not interchangeable. Architecture does not depend on platform (cycle).
 
 ## Manual peer install (until skills#861)
 

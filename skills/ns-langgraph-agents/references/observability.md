@@ -158,3 +158,19 @@ Minimum KPIs:
 - Anonymize PII when required
 - Truncate bodies in `llm_logs`
 - Separate retention checkpoints vs audit
+
+## Retention and query (doctrine)
+
+Retention clock = **tenant regulatory** obligation (named policy / statute), not a SQL default.
+
+`retention_days` in a migration or `DELETE` job = **implementation**. Not doctrine. Do not copy a number from scaffold SQL into the platform lock.
+
+**Query shape** a reviewer must run:
+
+| Axis | Required |
+| ----- | -------- |
+| Tenant | `tenant_id` (or equivalent) |
+| Period | closed time range |
+| One decision | one `thread_id` / turn / `turn_decisions` row (or `hitl_decisions` id) |
+
+Cannot reconstruct **one** decision for **one** tenant in **one** period = audit fail. Dashboards that only sum tokens are not this query.

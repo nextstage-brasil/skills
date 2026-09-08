@@ -100,6 +100,20 @@ Optional LangSmith datasets. Postgres audit canonical for tenant data.
 
 Structured planner JSON (`templates/contracts/planner-contract.md`) — auto grade without LLM-as-judge.
 
+## Golden-set promotion
+
+Mirror `ns-postgres-rag` `evaluation-and-gates.md` (rerun full set before cutover; no silent in-place replace).
+
+Promote a case into the frozen golden set only when: prompt + **pinned context docs** (ids/versions) + expected tool/args or answer rubric are recorded.
+
+| Change | Gate |
+| ------ | ---- |
+| Prompt / topology / bind list | Rerun full golden set before merge |
+| Config drop of a context doc (RAG id, skill body, tenant file) | Must **fail** cases that pinned that doc — else suite is not catching regression |
+| Dual-run | Keep prior golden until new set ≥ prior (or accepted delta in report) |
+
+Dropped context with still-green suite = **config regression**, not a model win.
+
 ## Pre-release checklist
 
 - [ ] Architecture benchmark suite green
@@ -107,4 +121,5 @@ Structured planner JSON (`templates/contracts/planner-contract.md`) — auto gra
 - [ ] Memory suite if long-term memory enabled
 - [ ] Golden `tools/list` + mock alignment if MCP bound
 - [ ] Playwright/dev-chat if `streaming_sse` (greenfield MUST)
+- [ ] Golden-set promotion: pinned context ids; dropped-doc case fails
 - [ ] No eval uses live secrets — mocks or staging MCP

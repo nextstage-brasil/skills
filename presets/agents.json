@@ -6,6 +6,7 @@
   "includes": [
     "skills/ns-agent-adaptation",
     "skills/ns-agent-architecture",
+    "skills/ns-agent-platform",
     "skills/ns-langgraph-agents",
     "skills/ns-postgres-rag",
     "skills/ns-graphrag"

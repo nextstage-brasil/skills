@@ -4,7 +4,7 @@ description: "(NS) LangGraph.js agent-api — bootstrap-agent-runtime, StateGrap
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.15"
+  version: "1.16"
 depends:
   - ns-harness
 ---
@@ -53,9 +53,10 @@ See `../../ns-harness/references/session-boot.md` — **complete Session boot (b
 | Brownfield / orphaned runtime                             | Run **Orphan recovery** (`references/orphan-recovery-checklist.md`) before features                        |
 | New file / unclear folder                                 | **Placement Decision Block** + `references/placement-and-domains.md`                                       |
 | System prompt / skill inject / bind                       | **Prompt/Capability plan** + `references/prompt-and-capability-injection.md`                               |
-| Topology / state / capabilities change                    | **Spec Sync Gate** — update `graph-spec.md` in the same delivery                                           |
+| Topology / state / capabilities / `guard_fail_mode` change | **Spec Sync Gate** — update `graph-spec.md` in the same delivery |
 | MCP with many servers/tools                               | Read `references/mcp-complex-access.md` + `references/capability-governance.md`                            |
 | Token blow-up / slow turns                                | Read `references/context-window-and-tokens.md`                                                             |
+| Untrusted input / injection / claimed authority           | Read `references/guardrail-and-adversarial.md` — scope classifier; scaffold fail-open ≠ doctrine             |
 | Cost-sensitive high volume / model tier / cache           | Read `references/model-cascade-and-cache.md`                                                               |
 | Provider message/reasoning quirks                         | Read `references/message-content-blocks.md`                                                                |
 | HITL / streaming UX                                       | Read `references/streaming-and-hitl.md`                                                                    |
@@ -123,7 +124,7 @@ Full doctrine: `references/prompt-and-capability-injection.md`. Plan/mode-resolv
 
 ### 3. Spec Sync Gate
 
-**Nodes, edges, state, capabilities, recursion_limit, or wire names** change: update `graph-spec.md` **same** delivery. Stale archive ≠ SoT — sync spec to intended runtime; do not force-fit live code to stale archive.
+**Nodes, edges, state, capabilities, recursion_limit, wire names, or `guard_fail_mode`** change: update `graph-spec.md` **same** delivery. Stale archive ≠ SoT — sync spec to intended runtime; do not force-fit live code to stale archive.
 
 ## Reference map
 
@@ -146,12 +147,13 @@ Load on demand — do not memorize whole files.
 | `templates/snippets/tool-budget.ts.snippet`          | Per-turn tool/MCP caps, arg fingerprint duplicate-skip                                            |
 | `templates/snippets/prepare-llm-messages.ts.snippet` | `context_manager` helper                                                                          |
 | `references/error-and-reliability.md`                | Tool errors, circuit breaker, retries, compensation, parallel staleness, cost stop |
-| `references/model-cascade-and-cache.md`              | Cheap-first cascade, semantic/prompt cache; not LLM intent_classify hop; deterministic Gateway allowed |
-| `references/observability.md`                        | Postgres audit, LangSmith, OTel, run context, cost reservation, iteration trace |
+| `references/model-cascade-and-cache.md`              | Cheap-first cascade, both signals OR-escalate, semantic/prompt cache; not LLM intent_classify hop |
+| `references/observability.md`                        | Postgres audit, retention = tenant clock, query tenant+period+one decision, cost reservation |
 | `references/architectures.md`                        | ReAct, plan_execute (suggested start for most MCP), Reflection levels, other topologies; **node id ≠ state channel** |
+| `references/guardrail-and-adversarial.md`           | Scope/safety classifier; fail-open scaffold ≠ `graph-spec` lock; not Gateway routing                          |
 | `references/streaming-and-hitl.md`                   | SSE envelopes, operator `thinking` from planner state, `interrupt()`, `Command` resume            |
 | `templates/contracts/planner-contract.md`            | JSON planner hops: `executionPlan` + `userFacingIntent`                                           |
-| `references/evals-and-gates.md`                      | Architecture, tool-selection, memory evals                                                        |
+| `references/evals-and-gates.md`                      | Architecture, tool-selection, memory evals; golden-set promotion |
 | `references/anti-patterns.md`                        | Review gate before marking done — hot path                                                        |
 | `references/anti-patterns-extended.md`               | Dead prompt copies, state/memory, reliability, graph, MCP, LLM, ops, process                      |
 
@@ -179,7 +181,7 @@ No new graph nodes or MCP servers until layout + governance baselines pass.
 
 ### Phase 0 — Spec gate
 
-If `graph-spec.md` is missing, create it from `templates/graph-spec.md`. Minimum sections: locked header (`framework`, `architecture`, `interaction_mode`), domain ownership, prompt composition, state schema, nodes table, edges, interrupts, memory, capability bind/inject table, recursion_limit, HTTP routes.
+If `graph-spec.md` is missing, create it from `templates/graph-spec.md`. Minimum sections: locked header (`framework`, `architecture`, `interaction_mode`, `guard_fail_mode`), domain ownership, prompt composition, state schema, nodes table, edges, interrupts, memory, capability bind/inject table, recursion_limit, HTTP routes.
 
 If the user has no architecture decision yet, stop and invoke `ns-agent-architecture` first.
 

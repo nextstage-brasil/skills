@@ -4,7 +4,7 @@ Cost-sensitive high-volume turns. Not a substitute for topology choice (`archite
 
 ## Cascade
 
-Cheapest eligible tier answers first. Escalate only on **post-generation** confidence signals already in doctrine:
+Cheapest eligible tier answers first. **Both** post-generation signals **every** call. Escalate if **either** is below its threshold.
 
 | Signal | Source |
 | ------ | ------ |
@@ -13,6 +13,10 @@ Cheapest eligible tier answers first. Escalate only on **post-generation** confi
 
 | Rule | Meaning |
 | ---- | ------- |
+| Both signals every call | Skip one signal = incomplete cascade |
+| Escalate if **either** below threshold | OR-rule. Fluent answer + weak retrieval still escalates |
+| Fluent-wrong-source | High answer fluency, wrong or missing evidence — named failure. Answer-only confidence hides it |
+| Too-tight miscalibration | Thresholds so high that cheap tier never sticks — cascade does not pay. Recalibrate on project data; do not copy course numbers |
 | Always-escalate categories (HITL: always-scale) | Bypass cascade; strong tier first |
 | Escalation | Deterministic after generation — **no** pre-generation LLM hop |
 | Worst-case cost/latency | **Sum** of tiers tried — when cascade stops paying, lock strong-only |

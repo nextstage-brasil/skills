@@ -4,7 +4,7 @@ description: "(NS) Prompt vs RAG vs Agent vs Fine-Tune before framework. Writes 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.4"
+  version: "1.5"
 depends:
   - ns-harness
 ---
@@ -93,7 +93,7 @@ Non-agent path valid outcome — record explicit non-agent decision. Still finis
 
 Classify each planned tool: **Knowledge augmentation** / **Capability extension** / **Write actions**. Write actions require safety (HITL, isolation, approval). `references/tool-taxonomy.md`.
 
-Before lock: schema checklist (`references/tool-schema-design.md`) — domain description, `enum` on fixed sets, declared return, Write gate only if P2. One probe per tool when schema incomplete.
+Before lock: schema checklist (`references/tool-schema-design.md`) — domain description, `enum` on fixed sets, declared return, Write gate only if P2, malformed args typed failure (no throw). One probe per tool when schema incomplete.
 
 ### Step 6 — Planning
 
@@ -133,7 +133,7 @@ File = design handoff. Self-contained. Not `agent-architecture.md` (`ns-agent-ar
 - One language: human opening. Doctrine labels English
 - Not product Clarify — vague product scope → `ns-spec-driven` first
 - Not implementation — never this skill
-- No tool lock without typed schema checklist (`references/tool-schema-design.md`)
+- No tool lock without typed schema checklist (`references/tool-schema-design.md`) — includes malformed-arg typed failure, no throw to caller
 
 ## Reference map
 

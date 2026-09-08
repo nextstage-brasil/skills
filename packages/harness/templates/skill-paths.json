@@ -17,6 +17,7 @@
   "ns-agent-adaptation": "skills/ns-agent-adaptation",
   "ns-langgraph-agents": "skills/ns-langgraph-agents",
   "ns-agent-architecture": "skills/ns-agent-architecture",
+  "ns-agent-platform": "skills/ns-agent-platform",
   "ns-living-spec": "skills/ns-living-spec",
   "ns-spec-driven": "skills/ns-spec-driven",
   "ns-backend-tests": "skills/ns-backend-tests",

@@ -92,6 +92,19 @@
         "Does not recommend a framework",
         "Contains no implementation code"
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "Lookup tool: if the model sends a status string that is not in the enum, the implementer wants to throw so the graph fails fast.",
+      "expected_output": "Rejects throw to caller. Tool self-validates malformed args and returns typed failure (`ToolMessage` status error / declared error shape). Cites tool-schema-design and langgraph error-and-reliability. No framework/code.",
+      "files": [],
+      "assertions": [
+        "Rejects throw / uncaught exception on malformed args",
+        "Requires typed failure to the model (ToolMessage status error or declared error shape)",
+        "Cites tool-schema-design.md and/or error-and-reliability.md",
+        "Does not recommend a framework",
+        "Contains no implementation code"
+      ]
     }
   ]
 }

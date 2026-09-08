@@ -129,7 +129,7 @@ safeguard → agent → tools → END
 
 **When:** user-facing; injection risk.
 
-**Pattern:** classifier node before main LLM — not system prompt alone.
+**Pattern:** classifier node before main LLM — not system prompt alone. Doctrine: `guardrail-and-adversarial.md` (scope/safety, not routing). Scaffold `guard.node.ts` fail-open ≠ production lock.
 
 ## Selection guide
 
@@ -155,5 +155,6 @@ Document in `templates/graph-spec.md`:
 - Interrupt points (HITL)
 - Tools per node bind
 - Eval scenarios proving architecture
+- `guard_fail_mode` (`fail-open` | `fail-closed`) — scaffold default ≠ doctrine
 
 Framework comparison (LangGraph vs CrewAI): `ns-agent-architecture` — not this file.

@@ -6,7 +6,7 @@ Map every case to the same AI-first reference diagram before subtask decompositi
 
 | Block | Role | Typical implementation |
 | ----- | ---- | ---------------------- |
-| **Gateway** | Single entry: auth, rate limit, format validation, initial routing | API route, webhook receiver, queue consumer |
+| **Gateway** | Single entry: auth, rate limit, format validation, initial routing | API route, webhook, queue consumer — **not** LLM-gateway-as-product (`ns-agent-platform`) |
 | **Orchestrator** | Deterministic brain: step sequence, when to call the model, output checks | LangGraph edges + deterministic nodes (not LLM nodes), CrewAI process, workflow engine |
 | **Model + Tools/RAG** | Only non-deterministic block: reasoning, retrieval, tool calls | LLM node(s), RAG pipeline, MCP tools |
 | **Approval Gate** | Human pause when proposed action crosses business risk threshold | `interrupt()`, review UI, async review queue |
