@@ -5,6 +5,7 @@ __pycache__/
 node_modules/
 /docs/skills/*-workspace/
 skills/*-workspace/
+/*-workspace/
 .skill-workspaces/
 local/
 dist/
