@@ -34,6 +34,7 @@ depends:
   - ns-coder
   - ns-autonomous
   - ns-reviewer
+  - ns-judge
   - ns-living-spec
 ---
 ```

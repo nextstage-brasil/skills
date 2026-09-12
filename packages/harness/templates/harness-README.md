@@ -263,7 +263,8 @@ Typical worker chain (invoke via slash in your agent):
 /ns-spec-driven
   → internal phases (references/clarify-requirements.md … task-generator.md)
   → ns-coder (execute)
-  → ns-reviewer (close)
+  → ns-reviewer (code close)
+  → ns-judge (delivery close)
 ```
 
 Optional complements (UI, docs, security hygiene) — install per skill:

@@ -12,6 +12,7 @@ Declarative preset format for `@nextstage-brasil/harness` **1.x**. Presets refer
   "includes": [
     "skills/ns-coder",
     "skills/ns-reviewer",
+    "skills/ns-judge",
     "skills/ns-investigator",
     "skills/ns-autonomous",
     "skills/ns-spec-driven",

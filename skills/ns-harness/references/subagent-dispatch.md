@@ -38,6 +38,8 @@ Parent face (`ns-spec-driven`, handoff, orchestrator, autonomous, gitlab) needs 
 
 Clarify / Specify / Consistency / Partition: no v1 bridge — in-session OK.
 
+**Delivery judge (v1):** no `judge-agent`. After `reviewer-agent` returns `Code Review: Approved`, **parent** reads `ns-judge/SKILL.md` in-session. Human `/ns-judge` only as session face. Reviewer **MUST NOT** dispatch judge.
+
 ## Dispatch rules
 
 1. Bridge **available**: **MUST** dispatch that `{name}` for its child phase. Inline `Skill(ns-*)` / bare follow while bridge present = **forbidden**.
@@ -69,3 +71,4 @@ Cite when dispatching:
 - `ns-coder` (review loop)
 - `ns-execution-gitlab-issue` (Phase 4)
 - `../ns-reviewer/references/review-gate-workflow.md`
+- `../ns-judge/SKILL.md`

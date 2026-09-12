@@ -1,10 +1,10 @@
 ---
 name: ns-living-spec
-description: "(NS) Living domain specs under docs/specs/. Use after version closure when requirements, `Code Review: Approved`, and execution-handoff exist; ad-hoc when Approved behavioral diff + docs/specs/; appearance mode from ns-proto-creator / ns-proto-visual-guide (no Code Review gate). Incremental only. Do NOT run Version/Ad-hoc before `Code Review: Approved` (appearance mode excepted)."
+description: "(NS) Living domain specs under docs/specs/. Use after version closure when requirements, `Code Review: Approved`, `Delivery Review: Approved`, and execution-handoff exist; ad-hoc when both Approved + behavioral diff + docs/specs/; appearance mode from ns-proto-creator / ns-proto-visual-guide (no review gates). Incremental only. Do NOT run Version/Ad-hoc before both Approved (appearance mode excepted)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.7"
+  version: "1.8"
 depends:
   - ns-harness
 ---
@@ -19,33 +19,33 @@ See `../../ns-harness/references/session-boot.md` and `../../ns-harness/referenc
 
 ## Modes
 
-| Mode | When | Source of truth | Code Review gate |
-| ---- | ---- | --------------- | ---------------- |
-| **Version** (default) | Version closure after delivery | `docs/versions/{version_san}/sdd/` artifacts | Required (`Approved` = score **10**) |
-| **Ad-hoc** | Invoked by `ns-coder` (or human) after `Approved` | `{task_description}` + approved `git diff` | Required (`Approved`) |
+| Mode | When | Source of truth | Code + delivery gates |
+| ---- | ---- | --------------- | --------------------- |
+| **Version** (default) | Version closure after delivery | `docs/versions/{version_san}/sdd/` artifacts | Required (`Code Review: Approved` and `Delivery Review: Approved`, each score **10**) |
+| **Ad-hoc** | Invoked by `ns-coder` (or human) after both Approved | `{task_description}` + approved `git diff` | Required (both `Approved`) |
 | **Appearance** | Invoked by `ns-proto-creator` or `ns-proto-visual-guide` | Guide/prototype path + short behavioral delta | **None** |
 
 **Appearance** if invoker pass mode `appearance` (or equivalent: guide/prototype path + behavioral delta, no review verdict). **Ad-hoc** if mode `ad-hoc` (or equivalent: no `{version_san}`, task description + approved diff). Else **Version**.
 
 ## When invoked
 
-- Version closure post `Code Review: Approved` — **Version**
-- Ad-hoc coding, review **Approved**, `docs/specs/` exists — **Ad-hoc**
+- Version closure post `Code Review: Approved` **and** `Delivery Review: Approved` — **Version**
+- Ad-hoc coding, both reviews **Approved**, `docs/specs/` exists — **Ad-hoc**
 - Prototype create/evolve or normative visual guides documenting behavioral UX — **Appearance**
-- **Not** Version/Ad-hoc before `Code Review: Approved`
+- **Not** Version/Ad-hoc before both `Approved`
 
 ## Prerequisites
 
 ### Version mode
 
 - Resolved `requirements.md` — `sdd/` first, else legacy version root (`artifact-layout.md` **Legacy path resolution**)
-- Invoker reports `Code Review: Approved` — no `code-review-report.md` required
+- Invoker reports `Code Review: Approved` and `Delivery Review: Approved` — no `code-review-report.md` required
 - Resolved `execution-handoff.md` — `sdd/` first, else legacy version root (tasks completed)
 
 ### Ad-hoc mode
 
 - `docs/specs/` already exists (**not** create tree from scratch)
-- Invoker reports `Code Review: Approved`
+- Invoker reports `Code Review: Approved` and `Delivery Review: Approved`
 - `{task_description}` + approved working-tree diff (behavioral change)
 - **Skip** (no writes) if diff non-behavioral: cosmetic, rename-only, pure refactor with no API/schema/UX/domain behavior change — report skipped
 
@@ -149,5 +149,6 @@ Reason: {missing docs/specs/|non-behavioral diff|chrome polish only}
 
 - `ns-spec-driven` — reads living specs when planning (`references/requirements-generator.md`)
 - `ns-reviewer` — prerequisite `Code Review: Approved` for Version/Ad-hoc
-- `ns-coder` — may invoke ad-hoc after `Approved`
+- `ns-judge` — prerequisite `Delivery Review: Approved` for Version/Ad-hoc
+- `ns-coder` — may invoke ad-hoc after both `Approved`
 - `ns-proto-creator` / `ns-proto-visual-guide` — may invoke appearance mode

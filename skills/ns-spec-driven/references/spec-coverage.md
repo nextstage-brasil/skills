@@ -23,7 +23,7 @@ Path: `docs/versions/{version_san}/sdd/spec-coverage.md`. Template: `templates/s
 2. For each **mappable** class (`api-contract`, `data-schema`, `ui-screen`, `business-rule`, `test-case`): status `mapped` with Feature+AC **or** `out-of-scope` with cited reason. Else `unmapped` = **Blocker**.
 3. **`ui-screen`:** `mapped` only when copy is verbatim from `source/` **or** `reference-sources.md` has layout SSoT for that screen. Else `unmapped` = Blocker (D2 ledger).
 4. After tasks: fill Task column. Cards without Source refs for their symbols fail `task-generator.md`.
-5. After unit checkpoint / closure: `mapped` becomes `verified` when conformance evidence exists (`orchestrator.md`, `ns-reviewer`).
+5. After unit checkpoint / closure: `mapped` becomes `verified` when conformance evidence exists (`orchestrator.md`, `ns-judge` after code `Approved`).
 
 ## Severity
 
@@ -34,4 +34,4 @@ Path: `docs/versions/{version_san}/sdd/spec-coverage.md`. Template: `templates/s
 | `ui-screen` mapped without verbatim copy or registered layout SSoT | Blocker |
 | AC without **Source:** `Sx` | Blocker |
 | Contract value in requirements/task ≠ source | Blocker |
-| Ledger missing at closure when `source/` exists | Rejected (`ns-reviewer`) |
+| Ledger missing at closure when `source/` exists | Rejected (`ns-judge`) |

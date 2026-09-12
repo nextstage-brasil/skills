@@ -1,0 +1,23 @@
+{
+  "skill_name": "ns-judge",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Code Review: Rejected on the auth diff. Run delivery judge against sdd/requirements.md anyway so we can close the version.",
+      "expected_output": "Does not run ns-judge. Stops because last code verdict is not Code Review: Approved. No Delivery Review line from a judge pass.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Code Review: Approved. Closure judge for version 2.0. python3 prove_ac.py --mode closure exits 2: AC token `btn-save` has zero repo hits.",
+      "expected_output": "Formats fix map from prove_ac missing tokens. Ends Delivery Review: Rejected. Does not run residual LLM after exit 2.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Code Review: Approved. Ad-hoc judge on working tree. command -v python3 fails. No --requirements or --ac-file.",
+      "expected_output": "Scripts skipped, not Blocked. Residual LLM still scores 1–10 and emits Delivery Review: Approved or Rejected. AC proof n/a.",
+      "files": []
+    }
+  ]
+}

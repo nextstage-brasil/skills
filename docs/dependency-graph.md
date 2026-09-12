@@ -13,10 +13,12 @@ ns-harness
 │              ├── ns-e2e-tests
 │              ├── ns-docs-writer
 │              ├── ns-reviewer
+│              ├── ns-judge
 │              ├── ns-autonomous
 │              └── ns-living-spec
-├── ns-autonomous ── ns-reviewer
+├── ns-autonomous ── ns-reviewer, ns-judge
 ├── ns-reviewer
+├── ns-judge
 └── ns-investigator
 ```
 
@@ -28,6 +30,7 @@ ns-spec-driven
 ├── ns-coder
 ├── ns-autonomous
 ├── ns-reviewer
+├── ns-judge
 └── ns-living-spec
 ```
 
@@ -43,6 +46,7 @@ Folded into `ns-harness` references: `prepare.md`, `architecture-rules-generator
 ns-gitlab-board-sync ── (runtime) mcp-gitlab-usage [MCP-provisioned]
 ns-execution-gitlab-issue ──┬── ns-harness
                               ├── ns-reviewer
+                              ├── ns-judge
                               ├── ns-autonomous
                               └── ns-coder
 ns-requirements-enricher ── ns-harness

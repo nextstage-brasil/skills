@@ -17,4 +17,4 @@ One screen or modal group = **one** frontend task when **≥6** elements (`task-
 
 ## Execution
 
-UI task without this file when UI in scope = forbidden (`SKILL.md`). Unit checkpoint: every contract element + handler present; report divergence before next wave (`orchestrator.md`). Closure: `ns-reviewer` walks this file when present.
+UI task without this file when UI in scope = forbidden (`SKILL.md`). Unit checkpoint: every contract element + handler present; report divergence before next wave (`orchestrator.md`). Closure: `ns-judge` walks this file when present (`prove_ac.py`).

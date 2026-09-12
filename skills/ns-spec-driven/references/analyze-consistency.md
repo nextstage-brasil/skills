@@ -135,4 +135,4 @@ Rules:
 
 Gate 2 then `analyze-consistency`. **Approved:** `task-generator`. **Reproved:** stop; fix requirements.
 
-Post-implementation: `ns-reviewer` validates requirements × code — complementary, not substitute.
+Post-implementation: `ns-reviewer` validates code quality; `ns-judge` validates requirements × code after `Code Review: Approved` — complementary, not substitute.

@@ -4,10 +4,11 @@ description: (NS) Autonomous execution engine — plans depth, resolves doubts f
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.4"
+  version: "1.5"
 depends:
   - ns-harness
   - ns-reviewer
+  - ns-judge
 ---
 
 # Code Autonomous
@@ -16,7 +17,7 @@ Harness-aware execution engine: planning depth, doubt resolution, multi-agent di
 
 ## Workflow mode (mandatory)
 
-Fixed workflow — named skill handoffs or harness bridges (`../../ns-harness/references/subagent-dispatch.md`). Review gate: `../ns-reviewer/references/review-gate-workflow.md`. **MUST** `reviewer-agent` when available (else `ns-reviewer`); no Task persona substitutes. `C2` (**MUST** `coder-agent` when available → `ns-coder`) completes full per-task cycle + same review gate before unit done.
+Fixed workflow — named skill handoffs or harness bridges (`../../ns-harness/references/subagent-dispatch.md`). Review gate: `../ns-reviewer/references/review-gate-workflow.md`. **MUST** `reviewer-agent` when available (else `ns-reviewer`); then `ns-judge` in-session only if `Code Review: Approved`. No Task persona substitutes. `C2` (**MUST** `coder-agent` when available → `ns-coder`) completes full per-task cycle + same pair before unit done.
 
 ## Isolation invariant (non-negotiable)
 
@@ -63,7 +64,7 @@ Same internals as Engine mode, but this skill owns the whole run:
 2. Infer `change_kind` (fix/feat), allocate `{version_san}`, create `docs/versions/{version_san}/sdd/` when artifacts needed.
 3. **Create its own worktree**: `.worktrees/{version_san}/` + branch `work/{version_san}` from the resolved base branch, following `../../ns-harness/references/worktree-setup.md`. Path is under the **repo root**, never under `.cursor/`. On failure → abort (do not fall back to the main checkout) — see `references/standalone-pipeline.md`.
 4. Planning-depth self-decision, doubt protocol (destructive doubt → chat-only gate, no GitLab actions available), multi-agent dispatch — identical logic to Engine mode.
-5. **Internal review loop** — `../ns-reviewer/references/review-gate-workflow.md`: **MUST** `reviewer-agent` when available (else `ns-reviewer`) version-closure mode; max 3 rounds; **`Approved` = 10**. Score **9** = `Rejected` (Lift + re-review). Fail = Criticals or score ≤8. Stop on `Blocked` or rounds exhausted.
+5. **Internal review loop** — `../ns-reviewer/references/review-gate-workflow.md`: **MUST** `reviewer-agent` when available (else `ns-reviewer`) version-closure **code** mode; max 3 rounds; **`Code Review: Approved` = 10**. Score **9** = `Rejected` (Lift + re-review). Fail = Criticals or score ≤8. Stop on `Blocked` or rounds exhausted. **Do not** run `ns-judge` until code `Approved`. Then in-session `../ns-judge/SKILL.md` (`closure`). `Delivery Review: Approved` = 10. Product files changed after judge Rejected: code review again then judge again.
 6. Report per `review-gate-workflow.md` **Final report** fields plus `{version_san}`, worktree path, commit(s), and follow-ups. No GitLab board, no MR — unless `docs/context/gitlab-sync-config.md` exists and the human explicitly asked for one (out of scope for v1; standalone stays local-only otherwise).
 
 See `references/standalone-pipeline.md` for the full flow.
@@ -88,7 +89,8 @@ See `references/standalone-pipeline.md` for the full flow.
 | ---------------------- | ------------------------------------------------------------ |
 | `ns-execution-gitlab-issue` | GitLab flow owner — calls this skill for Phase 2             |
 | `ns-coder`           | Subagent implementation via `coder-agent` (**MUST** when available) |
-| `ns-reviewer`        | Review gate via `reviewer-agent` (**MUST** when available) |
+| `ns-reviewer`        | Code gate via `reviewer-agent` (**MUST** when available) |
+| `ns-judge`           | Delivery proof in-session after `Code Review: Approved` |
 | `ns-harness`    | Artifact layout, worktree mechanics, discovery               |
 
 ## References
@@ -104,6 +106,7 @@ See `references/standalone-pipeline.md` for the full flow.
 
 ## Forbidden
 
-- Review substitutes (`senior-tech-lead-reviewer`, `bugbot`, `security-review`, or any non-`ns-reviewer` gate) — harness `reviewer-agent` is allowed; see `../ns-reviewer/references/review-gate-workflow.md`
-- Reporting success without `Approved`, or explicit **blocked** state
+- Review substitutes (`senior-tech-lead-reviewer`, `bugbot`, `security-review`, or any non-`ns-reviewer` code gate) — harness `reviewer-agent` is allowed; see `../ns-reviewer/references/review-gate-workflow.md`
+- `ns-judge` before `Code Review: Approved`
+- Reporting success without both `Approved`, or explicit **blocked** state
 - Skipping re-review after a `Rejected` fix before closure

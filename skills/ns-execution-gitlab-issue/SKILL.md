@@ -1,13 +1,14 @@
 ---
 name: ns-execution-gitlab-issue
-description: (NS) Execute a GitLab issue end-to-end — status gates, worktree isolation, atomic delivery, MR, mandatory review+fix loop. Use for external ISSUE_URL or SDD delivery unit (unit + issue_iid). External mode delegates coding to ns-autonomous; SDD unit mode uses ns-coder run-implementation. Needs mcp-gitlab-usage + ns-reviewer.
+description: (NS) Execute a GitLab issue end-to-end — status gates, worktree isolation, atomic delivery, MR, mandatory code then judge loop. Use for external ISSUE_URL or SDD delivery unit (unit + issue_iid). External mode delegates coding to ns-autonomous; SDD unit mode uses ns-coder run-implementation. Needs mcp-gitlab-usage + ns-reviewer + ns-judge.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.6"
+  version: "1.7"
 depends:
   - ns-harness
   - ns-reviewer
+  - ns-judge
   - ns-autonomous
   - ns-coder
 ---
@@ -25,7 +26,7 @@ Entry priority **1**. Harness table: `../../ns-harness/references/code-skill-rou
 | Phase 2 execution (external) | `ns-autonomous` (Engine mode) |
 | Phase 2 execution (SDD unit) | `../../ns-coder/references/run-implementation.md` (unit tasks only) |
 | MR / status / time / comments | `mcp-gitlab-usage` |
-| Phase 4 review gate | `reviewer-agent` → `ns-reviewer` |
+| Phase 4 review gate | `reviewer-agent` → `ns-reviewer`; then `ns-judge` in-session only if `Code Review: Approved` |
 | Rejected fix loop (external) | `ns-autonomous` → `C2` subagents (same worktree; no re-entry to this skill from `A`/`C2`) |
 | Rejected fix loop (SDD unit) | `coder-agent` → `ns-coder` / `run-implementation` (same worktree; no `ns-autonomous`) |
 
@@ -146,7 +147,7 @@ Never under `.cursor/`. Abort if a worktree already exists for this id and is in
 
 1. **Squash to one Conventional Commit** before push (`<type>(#{issue_iid}): <imperative description in English>`, types: feat/fix/refactor/test/docs/chore). External mode may use `ISSUE_ID` in message when that is the issue identifier. Squash internal checkpoint commits to preserve one-commit-per-delivery atomicity. See `../../ns-harness/references/agent-git-identity.md` for attribution.
 2. Push `WORK_BRANCH`.
-3. Run Phase 4 (review gate). Do **not** set `END_TIME`, spent time, or Dev 100% until Phase 4 returns `Approved`.
+3. Run Phase 4 (review gate). Do **not** set `END_TIME`, spent time, or Dev 100% until Phase 4 returns **both** `Code Review: Approved` and `Delivery Review: Approved`.
 4. **On `Approved` only — close the clock and board** (same instant):
    - Set `END_TIME` / `END_EPOCH` **now**.
    - `add_issue_spent_time` with `duration = ELAPSED_SECONDS` from `references/time-tracking.md` (epoch delta minus `PAUSED_SECONDS`). **Never** use `estimate_seconds` or any plan estimate as `duration`. **Single spent owner** when this skill runs full lifecycle — set `spent_posted` = `yes` on `delivery-units.md` row; Flow D must not double-post.
@@ -157,12 +158,13 @@ Never under `.cursor/`. Abort if a worktree already exists for this id and is in
 
 Canonical rules: `../ns-reviewer/references/review-gate-workflow.md`.
 
-1. **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) in **Issue review mode** — pass `ISSUE_URL` **or** `project_id` + `issue_iid` (SDD unit mode). Bridge/skill loads `AGENTS.md` then reviewer workflow. Read-only official gate; posts internal GitLab comment. **Forbidden:** Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or substitute unless human explicitly requests this run. **Allowed:** harness `reviewer-agent`. See `../../ns-harness/references/subagent-dispatch.md`.
-2. Loop, max **3** rounds (`review-gate-workflow.md`; `Approved` = **10**):
-   - `Approved` → Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
-   - `Rejected` (score **9** = Lift; or Criticals / score ≤8) with rounds left → **external:** re-invoke `ns-autonomous` (same worktree) with findings as fix unit. **SDD unit:** re-invoke `coder-agent` / `run-implementation` (same worktree). **Mandatory re-review** via `reviewer-agent` (**MUST** when available; else `ns-reviewer`). Keep `START_TIME`; no spent/Dev 100% yet.
-   - `Blocked` or rounds exhausted → `status_blocked` (Em Impedimento), post findings, stop. No `END_TIME`, spent, or Dev 100%.
-3. Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` — exactly the verdict string `ns-reviewer` returned.
+1. **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) in **Issue review mode** — pass `ISSUE_URL` **or** `project_id` + `issue_iid` (SDD unit mode). Bridge/skill loads `AGENTS.md` then reviewer workflow. Read-only **code** gate; posts internal GitLab comment. **Does not** parse ACs / `requirements.md`. **Forbidden:** Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or substitute unless human explicitly requests this run. **Allowed:** harness `reviewer-agent`. See `../../ns-harness/references/subagent-dispatch.md`. Reviewer **MUST NOT** dispatch judge.
+2. Code loop, max **3** rounds (`Approved` = **10**):
+   - `Code Review: Rejected` (score **9** = Lift; or Criticals / score ≤8) with rounds left → **external:** re-invoke `ns-autonomous` (same worktree) with findings as fix unit. **SDD unit:** re-invoke `coder-agent` / `run-implementation` (same worktree). **Mandatory re-review** via `reviewer-agent` (**MUST** when available; else `ns-reviewer`). Keep `START_TIME`; no spent/Dev 100% yet. **No judge.**
+   - `Blocked` or rounds exhausted → `status_blocked` (Em Impedimento), post findings, stop. No `END_TIME`, spent, or Dev 100%. No judge.
+3. On `Code Review: Approved` only: read `../ns-judge/SKILL.md` in-session (`--mode issue --ac-file` from synthesis). Python optional. `Delivery Review: Approved` only at 10. Judge Rejected: fix map; product files changed → code review again (must Approved) then judge again. Max 3 judge rounds.
+4. Both Approved → Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
+5. Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` + `Delivery Review: {verdict}` — exact strings returned.
 
 ## Stop and ask the human
 
@@ -188,7 +190,8 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 | `/ns-requirements-enricher` | Optional pre-step when AC incomplete — before Phase 1 |
 | `mcp-gitlab-usage`  | All GitLab tools                 |
 | `ns-gitlab-board-sync` | Status label semantics           |
-| `ns-reviewer`     | Phase 4 gate (**MUST** `reviewer-agent` when available) |
+| `ns-reviewer`     | Phase 4 code gate (**MUST** `reviewer-agent` when available) |
+| `ns-judge`        | Phase 4 delivery proof in-session after `Code Review: Approved` |
 | `ns-autonomous`   | Phase 2 execution engine         |
 | `ns-coder`        | SDD unit mode coding; non-GitLab ad-hoc |
 

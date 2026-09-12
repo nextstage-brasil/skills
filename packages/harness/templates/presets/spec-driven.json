@@ -1,10 +1,11 @@
 {
   "name": "spec-driven",
   "requires_harness": ">=1.0.0",
-  "description": "SDD face, coder, review, investigator, autonomous, living-spec",
+  "description": "SDD face, coder, review, judge, investigator, autonomous, living-spec",
   "includes": [
     "skills/ns-coder",
     "skills/ns-reviewer",
+    "skills/ns-judge",
     "skills/ns-investigator",
     "skills/ns-autonomous",
     "skills/ns-spec-driven",

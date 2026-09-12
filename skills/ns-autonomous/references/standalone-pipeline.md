@@ -56,13 +56,14 @@ Identical logic to Engine mode:
 
 ## 5. Internal review loop
 
-Follow `../../ns-reviewer/references/review-gate-workflow.md` (`Approved` = **10**; no second rubric).
+Follow `../../ns-reviewer/references/review-gate-workflow.md` (each `Approved` = **10**; judge copies reviewer table).
 
-- **MUST** `reviewer-agent` when available (else `ns-reviewer`) **version-closure mode** — bridge loads `AGENTS.md` then reviewer workflow — point at `docs/versions/{version_san}/sdd/` when exists, else worktree diff for single-unit run.
-- Pass = `Approved` (score **= 10**). Score **9** = Lift (`Rejected`). Score ≤8 = Fail.
-- Max 3 rounds:
-  - Pass → closure.
-  - Lift (**9**) or Fail (Criticals or ≤8) with rounds left → re-dispatch fix-loop toward **10**, tests if in scope, **mandatory re-review**.
+- **MUST** `reviewer-agent` when available (else `ns-reviewer`) **version-closure code mode** — bridge loads `AGENTS.md` then reviewer workflow — point at `docs/versions/{version_san}/sdd/` when exists, else worktree diff for single-unit run. Reviewer **MUST NOT** dispatch judge.
+- Pass code = `Code Review: Approved` (score **= 10**). Score **9** = Lift (`Rejected`). Score ≤8 = Fail. **No judge** until code Approved.
+- Then in-session `../../ns-judge/SKILL.md` (`closure`). Pass delivery = `Delivery Review: Approved` (score **= 10**).
+- Max 3 rounds **per gate**:
+  - Code Pass → judge. Judge Pass → closure.
+  - Lift (**9**) or Fail with rounds left → fix-loop toward **10**, tests if in scope, **mandatory re-review** on that gate. Product files after judge Rejected: code review again then judge again.
   - Stop (`Blocked` or rounds exhausted) → report blocked. No success claim.
 
 ## 6. Report

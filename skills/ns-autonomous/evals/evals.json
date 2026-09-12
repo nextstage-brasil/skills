@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Here's my local plan file docs/versions/1.2.0/sdd/execution-plan.md — run it autonomously, no GitLab issue involved.",
-      "expected_output": "Standalone pipeline: own worktree `.worktrees/{version_san}/` (never `.cursor/`), planning depth, doubt protocol, implementation inside worktree only, ns-reviewer loop (max 3; Approved = 10; 9 = Rejected Lift + re-review) — no GitLab MCP. Worktree fail: abort, no main-checkout edits.",
+      "expected_output": "Standalone pipeline: own worktree `.worktrees/{version_san}/` (never `.cursor/`), planning depth, doubt protocol, implementation inside worktree only, ns-reviewer then ns-judge (judge only if Code Review: Approved; each Approved = 10; 9 = Rejected Lift + re-review) — no GitLab MCP. Worktree fail: abort, no main-checkout edits.",
       "files": []
     },
     {

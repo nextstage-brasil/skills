@@ -101,7 +101,7 @@ Version closure (review, living specs, `_done/` move): fill `Post-implementation
 `pending` | `in_progress` | `completed` | `blocked` | `waived`
 
 - **`waived`:** human waiver in task **Execution notes**. Do not waive P0 test tasks (tenant isolation, URL RBAC, auth rate limits) without documented risk acceptance.
-- **Forbidden:** mark version `completed` without `Code Review: Approved`
+- **Forbidden:** mark version `completed` without `Code Review: Approved` **and** `Delivery Review: Approved`
 - **Forbidden:** reorder tasks or rewrite base prompt without human approval
 - **Forbidden:** delete session history — append only
 
@@ -114,8 +114,8 @@ Tasks added or removed after generation: **regenerate** preserving statuses by t
 | After task generation | This phase (generate handoff) |
 | Classic implementation | `../../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available) / `ns-coder` |
 | Partitioned implementation | `orchestrator.md` (slice handoffs + master closure) |
-| End-of-version review | `reviewer-agent` (**MUST** when available) / `ns-reviewer` — `Approved` = **10** (`../../ns-reviewer/references/review-gate-workflow.md`) |
-| Living specs | `ns-living-spec` after `Approved` |
+| End-of-version review | `reviewer-agent` (**MUST** when available) / `ns-reviewer` then `ns-judge` after `Code Review: Approved` — each `Approved` = **10** (`../../ns-reviewer/references/review-gate-workflow.md`) |
+| Living specs | `ns-living-spec` after `Delivery Review: Approved` |
 | GitLab board sync | `ns-gitlab-board-sync` (when config exists) |
 
 ## References

@@ -178,8 +178,9 @@ Declared in frontmatter `depends` (install-time) and referenced in skill bodies 
 | `ns-harness` | — (base dependency) |
 | SDD consumers (`ns-living-spec`, `ns-coder`, `ns-investigator`, `ns-spec-driven`) | `ns-harness` |
 | `ns-reviewer` | `ns-harness` |
-| `ns-execution-gitlab-issue` | `ns-harness`, `ns-reviewer`, `ns-autonomous` (calls it internally for Phase 2), `ns-coder` |
-| `ns-autonomous` | `ns-harness`, `ns-reviewer` |
+| `ns-judge` | `ns-harness`, `ns-reviewer` |
+| `ns-execution-gitlab-issue` | `ns-harness`, `ns-reviewer`, `ns-judge`, `ns-autonomous` (calls it internally for Phase 2), `ns-coder` |
+| `ns-autonomous` | `ns-harness`, `ns-reviewer`, `ns-judge` |
 | `ns-gitlab-board-sync` | — (runtime: MCP-provisioned `mcp-gitlab-usage`) |
 | `ns-requirements-enricher` | `ns-harness` |
 | `ns-project-manager` | `ns-harness` |

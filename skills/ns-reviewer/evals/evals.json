@@ -10,13 +10,13 @@
     {
       "id": 2,
       "prompt": "Issue review gate for https://gitlab.example.com/group/project/-/issues/88 — MR is on branch work/88-fix-login.",
-      "expected_output": "Agent uses issue review mode, diffs correct branches, traces ACs, posts internal comment, ends with Code Review: verdict line.",
+      "expected_output": "Agent uses issue review mode, diffs correct branches, SOLID/security/orphan-export score gate (no requirements.md AC proof — that is ns-judge after Approved), posts internal comment, ends with Code Review: verdict line.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Version closure review for 2.0.0 — report what fails.",
-      "expected_output": "Agent does not write code-review-report.md. On Rejected/Blocked emits minimal fix map for the next agent; ends with Code Review: verdict line.",
+      "expected_output": "Agent does not write code-review-report.md. Does not walk spec-coverage/ui-contract (ns-judge after Approved). On Rejected/Blocked emits minimal fix map for the next agent; ends with Code Review: verdict line.",
       "files": []
     },
     {

@@ -41,10 +41,10 @@ Planning complete — **execute, do not replan**.
 4. Implement **only** inside repo (code) and harness rules (read-only). **One** `coder-agent` / `ns-coder` dispatch **per batch** in **SDD handoff mode** (implement + unit/integration; **no** per-task / mid-batch review). Parent owns handoff; rows stay **per task**.
 5. Validate all **validation criteria** before marking `completed`.
 6. **Tests during task execution:** unit/integration only (e.g. PHPUnit). **Forbidden:** run any E2E suite (Cypress/`cypress:run`/`cypress:open`/equivalent). E2E is **human-only at version end** after all tasks complete.
-7. **Forbidden during tasks:** `reviewer-agent` / `ns-reviewer` — review **once** after all tasks (rule 10).
+7. **Forbidden during tasks:** `reviewer-agent` / `ns-reviewer` / `ns-judge` — review **once** after all tasks (rule 10).
 8. **Update this file** when starting (`in_progress` on all batch members at batch start), completing (`completed` per task from worker report), or blocking (`blocked`) each task. Tokens: split per task or `~N` estimate.
 9. Update **Version status**, **Progress**, and **Tokens (total)** after each task / batch.
-10. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-reviewer`) before declaring version ready; remind human to run E2E.
+10. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-reviewer`, then `ns-judge` only if `Code Review: Approved`) before declaring version ready; remind human to run E2E.
 11. **GitLab:** implement only on registered `work_branch` or per-unit `work/{unit}-{slug}`; MR target per config / `delivery-units.md` `SOURCE_BRANCH`.
 12. **GitLab status/spent:** follow `delivery-units.md` section **GitLab status/spent (SSoT)** — no fourth branch.
 13. Do not stop to replan unless real blocker documented in task **Execution notes**.

@@ -208,7 +208,7 @@
     {
       "prompt": "Close version 4.2 — spec-coverage.md missing while source/ exists. Reviewer?",
       "id": 35,
-      "expected_output": "ns-reviewer Version closure spec-conformance: missing ledger evidence → Rejected. Not Approved.",
+      "expected_output": "ns-judge closure: missing ledger evidence while source/ exists → Delivery Review: Rejected. Not Approved. ns-reviewer is code-only and does not walk spec-coverage.md.",
       "files": []
     },
     {

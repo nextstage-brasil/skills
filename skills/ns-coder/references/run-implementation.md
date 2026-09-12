@@ -75,12 +75,12 @@ Until scope done or all tasks complete:
 2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). If `### Contract` present (API/schema/screen), always read it. Open cited `source/` section anchors for the batch. Open `Detailed description` on demand — ambiguity or `blocked`. See `../../ns-spec-driven/references/task-schema.md`.
 3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-batch re-read; never tool-Read `AGENTS.md`)
 4. **Implement** — **one** `coder-agent` dispatch per batch (**MUST** when available; loads `ns-coder`); else `ns-coder` direct. See `../../../ns-harness/references/subagent-dispatch.md`.
-   - **Dispatch must state SDD handoff mode:** this batch only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer`; **do not** run living specs; review = **Step 5** only. Workers grep new/changed public exports before marking complete (keep unused names unexported).
+   - **Dispatch must state SDD handoff mode:** this batch only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer` / `ns-judge`; **do not** run living specs; review = **Step 5** only. Workers grep new/changed public exports before marking complete (keep unused names unexported).
    - Worker reports per-task outcomes (files, tests, blockers, tokens). Parent owns `execution-handoff.md`.
 5. **Validate** per project rules (Docker **unit/integration** tests, i18n, multitenancy, etc.)
    - **Allowed:** unit/integration only (e.g. PHPUnit in test container)
    - **Forbidden:** run E2E (Cypress or equivalent) during any task — including `e2e`-layer tasks. Writing E2E specs OK; **running** them not. Human runs E2E after all tasks complete.
-   - **Forbidden:** per-task / mid-version / mid-batch code review — wait for Step 5
+   - **Forbidden:** per-task / mid-version / mid-batch code review or judge — wait for Step 5
 6. **Collect Tokens** before each `completed`. Prefer worker/UI usage split per task; else parent tokens; else ask once then `~N` + `tokens: ~N (estimated)` in task Execution notes. **Forbidden:** `0` on `completed` LLM work.
 7. **Update handoff — per task from worker report:** each task `Status` → `completed` (or `blocked`); write `Tokens` (step 6)
    - On `blocked` / waiver / important events: append to task file `## Execution notes` (relevant only)

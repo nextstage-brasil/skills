@@ -17,7 +17,7 @@ const SDD_PLANNING = [
 ];
 
 const IMPL_SKILLS = ['ns-coder', 'ns-autonomous', 'ns-execution-gitlab-issue'];
-const CLOSE_SKILLS = ['ns-reviewer', 'ns-living-spec'];
+const CLOSE_SKILLS = ['ns-reviewer', 'ns-judge', 'ns-living-spec'];
 
 const COMPLEMENT_SKILLS = ['ns-frontend-design', 'ns-docs-writer', 'ns-best-practices'];
 
@@ -285,7 +285,7 @@ ${layoutRows.join('\n')}
 
 ${buildInstalledSkillsSection(installed)}
 
-Invoke via the Skills menu / slash (e.g. \`/ns-coder\`, \`/ns-reviewer\`), **or** via harness project subagents below. Skills are the workflow source of truth — subagents are thin bridges that bind a model, obey this \`AGENTS.md\` (already in context), then run the skill.
+Invoke via the Skills menu / slash (e.g. \`/ns-coder\`, \`/ns-reviewer\`, \`/ns-judge\`), **or** via harness project subagents below. Skills are the workflow source of truth — subagents are thin bridges that bind a model, obey this \`AGENTS.md\` (already in context), then run the skill.
 
 ## Project subagents
 

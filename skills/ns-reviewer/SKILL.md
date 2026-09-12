@@ -1,17 +1,17 @@
 ---
 name: ns-reviewer
-description: "(NS) Senior Tech Lead review: SOLID, clean code, performance, security, testability. `Approved` only at score 10; score 9 = `Rejected`. Use after code changes, before PRs, at implementation closure, or code/PR/issue review gate — even without naming this skill. GitLab `ISSUE_URL`: Issue review mode. Do NOT write code-review-report.md. Do NOT use for root-cause debugging (ns-investigator)."
+description: "(NS) Code quality gate: SOLID, clean code, performance, security, testability. `Approved` only at score 10; score 9 = `Rejected`. Use after code changes, before PRs, at implementation closure, or code/PR/issue review — even without naming this skill. Delivery proof is ns-judge after Code Review: Approved. GitLab `ISSUE_URL`: Issue review mode. Do NOT parse requirements.md. Do NOT write code-review-report.md. Do NOT debug root-cause (ns-investigator)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "2.1"
+  version: "2.2"
 depends:
   - ns-harness
 ---
 
 # Code Reviewer
 
-Deep constructive review vs project rules + acceptance criteria.
+Deep constructive review vs project rules. **Code only.** Delivery proof (`requirements.md` ACs, ledger, ui-contract, visual checklist) = `ns-judge` **after** `Code Review: Approved`. This skill **MUST NOT** dispatch `ns-judge`.
 
 ## Caller contract (workflow callers)
 
@@ -42,11 +42,11 @@ Invoker passes working-tree diff only (no `ISSUE_URL`, no version-closure path):
 
 ### Version closure
 
-1. Apply **Score gate**; end chat with `Code Review: {Approved|Rejected|Blocked}`.
-2. **Spec-conformance (when version `source/` or `spec-coverage.md` exists):** walk `spec-coverage.md` **row-by-row**; walk `ui-contract.md` when present; walk Layout SSoT **Quick visual checklist** when cited (`reference-sources.md` `role: ui-layout`, or tasks cite `*-visual.md`). Unmet checklist items = findings at same bar as missing `ui-contract` elements. Missing ledger evidence → **Rejected**.
+1. Apply **Score gate** (SOLID, security, orphan export, actor/rules). End chat with `Code Review: {Approved|Rejected|Blocked}`.
+2. **Do not** parse `requirements.md`. **Do not** walk `spec-coverage.md` / `ui-contract.md` / visual checklist — parent runs `ns-judge` after `Approved` (`../ns-judge/SKILL.md`).
 3. **Do not** write `code-review-report.md` (or any persistent review report).
 4. `Rejected` / `Blocked`: **minimal fix map** in response (`references/review-fix-map.template.md`) — data another agent needs. No human prose, no positive findings, no history.
-5. `Approved`: Executive Summary + score + verdict line only (no fix map).
+5. `Approved`: Executive Summary + score + verdict line only (no fix map). Parent may then invoke `ns-judge`.
 
 ### Issue review mode
 
@@ -54,7 +54,7 @@ Invoker passes `ISSUE_URL` (or `project_id` + `issue_iid`):
 
 1. Delegate issue context to `ns-execution-gitlab-issue` context flow or `gitlab-issue-context-agent` — no `read_issue` if synthesis block provided.
 2. Diff `origin/<target>...origin/<source>` from synthesis — never wrong branch.
-3. **Requirement proof gate:** every AC needs behavioral evidence; producer-only code without consumer = Critical.
+3. **Code only.** Do not run Requirement proof / AC token scan — `ns-judge` **issue** mode after `Approved` (`--ac-file`). Producer-only unused **export** still uses orphan-export cap below.
 4. **Verdict (exactly one):** `Approved` | `Rejected` | `Blocked` — **Score gate** below.
 5. Post internal GitLab comment via `mcp-gitlab-usage` — first line: `Code Review | YYYY-MM-DD HH:MM (UTC) | Verdict: {Approved|Rejected|Blocked}`
 6. Last line to parent: `Code Review: {Approved|Rejected|Blocked}`
@@ -74,9 +74,8 @@ Every review **must** include overall score **1–10**. **`Approved`** = zero Cr
 
 1. Zero Critical findings
 2. Overall score **= 10**/10
-3. Issue review mode: every AC PASS with behavioral evidence
 
-**`Rejected` when:** any Critical, **or** score ≤ **9**, **or** (Issue mode) any AC fails behavioral proof.
+**`Rejected` when:** any Critical, **or** score ≤ **9**. AC / ledger / ui-contract proof is **not** this skill.
 
 ### Scoring unit
 
@@ -106,7 +105,7 @@ Internal/private/nested helpers **do not** count. **Do not** cap on function cou
 
 ### Smell severity (SSoT / DRY / weak OCP / orphan public)
 
-Split SSoT, duplicated resolution, **or orphan public/exported surface** in touched module ≥ **Warning**. Prefer **Warning + score cap** over auto-Critical. **Critical** for bugs, security, AC failures. Score ≤ **9** forces `Rejected`.
+Split SSoT, duplicated resolution, **or orphan public/exported surface** in touched module ≥ **Warning**. Prefer **Warning + score cap** over auto-Critical. **Critical** for bugs, security. Score ≤ **9** forces `Rejected`. AC failures belong to `ns-judge`.
 
 ## Review priorities
 
@@ -194,3 +193,4 @@ Then: `Code Review: Rejected` or `Code Review: Blocked`
 | `references/review-fix-map.template.md` | Rejected/Blocked response body |
 | `../../ns-harness/references/artifact-layout.md` | Artifact paths |
 | `mcp-gitlab-usage` | Posting internal review comments |
+| `../ns-judge/SKILL.md` | Delivery proof after this skill returns `Approved` |

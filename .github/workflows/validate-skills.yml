@@ -119,3 +119,12 @@ jobs:
         run: |
           npm install
           npm test
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: ns-judge script tests
+        run: |
+          python3 skills/ns-judge/scripts/test_prove_ac.py
+          python3 skills/ns-judge/scripts/mutate_prove_ac.py

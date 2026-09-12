@@ -18,6 +18,7 @@
 | `C2` | `ns-coder` subagent under `A` |
 | `H` | `run-implementation.md` (ns-coder) |
 | `REV` | `ns-reviewer` |
+| `JUDGE` | `ns-judge` (in-session after `Code Review: Approved`) |
 | `GL` | `mcp-gitlab-usage` |
 | `U2` / User decision | Investigator human gate before re-entry |
 | `IMPL` | Implement + review loop inside coder |
@@ -45,6 +46,10 @@
 **Spec-driven:**
 
 - `S → C`, `S → H → C`, `H → A`
+
+**Review then judge:**
+
+- `REV → JUDGE` when `Approved` only
 
 **Investigator loop:**
 

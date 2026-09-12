@@ -14,7 +14,7 @@ skills/
 
 Examples: `ns-harness`, `ns-spec-driven`, `ns-coder`, `ns-reviewer`, `ns-project-manager`. Nested PM workers (`ns-commercial-budget`, `ns-delivery-schedule`) live under `ns-project-manager/references/ns-*/workflow.md`. `ns-requirements-enricher` is a catalog skill. GitLab MCP tool contracts (`mcp-gitlab-usage`) are provisioned by the GitLab MCP server on first use — not a harness catalog skill.
 
-Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`).
+Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`, `/ns-judge`).
 
 ## Skill catalog
 
@@ -29,7 +29,8 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-requirements-enricher`           | Grill-me / execution-readiness for one GitLab issue or pasted scope (internal comment or inline). Not SDD Clarify, not PM OKR intake. |
 | `ns-coder`                      | Ad-hoc implementation without full SDD cycle                                                                                                  |
 | `ns-autonomous`                 | Harness-aware autonomous execution engine — planning-depth self-decision, doubt resolution, multi-agent dispatch (issue engine or standalone) |
-| `ns-reviewer`                   | SOLID/security/maintainability review + issue gate                                                                                            |
+| `ns-reviewer`                   | SOLID/security/maintainability code gate (`Approved` = 10). Delivery proof is `ns-judge` after Approved |
+| `ns-judge`                      | Delivery proof vs ACs / ledger / ui-contract after `Code Review: Approved` (`Approved` = 10) |
 | `ns-investigator`               | Root-cause analysis and minimal fixes                                                                                                         |
 | `ns-e2e-tests`                  | Implement/refactor Cypress specs (execution phase)                                                                                            |
 | `ns-backend-tests`              | Implement/refactor PHPUnit tests in Docker (execution phase)                                                                                  |
@@ -149,7 +150,7 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.
 
-Typical delivery: `/ns-spec-driven` (auto-sizes, internal phases in `references/`, resume from disk). After tasks: **Gate 4** and `delivery-units.md` are **opt-in** (GitLab publish or parallel dispatch); default local path goes straight to handoff and classic Execute. Manual brownfield first: `/ns-harness prepare this repo`. Implementation: `ns-coder` / `ns-execution-gitlab-issue` / `ns-autonomous` → `ns-reviewer` → `ns-living-spec`. Code complements (`ns-frontend-design`, `ns-best-practices`, `ns-docs-writer`) install with `--preset spec-driven` and delegate from `ns-coder` / `ns-spec-driven` when relevant.
+Typical delivery: `/ns-spec-driven` (auto-sizes, internal phases in `references/`, resume from disk). After tasks: **Gate 4** and `delivery-units.md` are **opt-in** (GitLab publish or parallel dispatch); default local path goes straight to handoff and classic Execute. Manual brownfield first: `/ns-harness prepare this repo`. Implementation: `ns-coder` / `ns-execution-gitlab-issue` / `ns-autonomous` → `ns-reviewer` → `ns-judge` → `ns-living-spec`. Code complements (`ns-frontend-design`, `ns-best-practices`, `ns-docs-writer`) install with `--preset spec-driven` and delegate from `ns-coder` / `ns-spec-driven` when relevant.
 
 ## Contributing
 

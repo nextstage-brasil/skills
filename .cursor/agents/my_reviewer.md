@@ -5,7 +5,7 @@
   skills/ns-reviewer — loads AGENTS.md then the skill workflow. Not for consumer
   apps (use harness reviewer-agent → ns-reviewer).
 name: my_reviewer
-model: claude-opus-5[thinking=true,context=300k,effort=low,fast=false]
+model: grok-4.6[effort=medium,fast=false]
 description: >-
 readonly: true
 ---

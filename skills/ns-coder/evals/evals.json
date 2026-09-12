@@ -4,25 +4,25 @@
     {
       "id": 1,
       "prompt": "Product apps/billing-api/ — add nullable cancelled_at timestamp column to connects table via migration.",
-      "expected_output": "Agent does Session boot once per session-boot.md on cold start (obeys AGENTS.md already in context — no tool-Read; loads agents.local.md + rules); mid-session no full re-read unless local/rules changed; reads existing migrations/models, creates minimal migration, no SDD version artifacts, no commit unless asked, invokes ns-reviewer only (no Task review substitutes), runs mandatory review loop up to 3 rounds with re-review after Criticals and after score 9 (Rejected/Lift); after Approved (score 10), conditionally invokes ns-living-spec ad-hoc only if docs/specs/ exists and diff is behavioral; reports skill/reviewer/round/score, Code Review: verdict, Living specs field, and Layout SSoT: none registered.",
+      "expected_output": "Agent does Session boot once per session-boot.md on cold start (obeys AGENTS.md already in context — no tool-Read; loads agents.local.md + rules); mid-session no full re-read unless local/rules changed; reads existing migrations/models, creates minimal migration, no SDD version artifacts, no commit unless asked, invokes ns-reviewer only for code (no Task review substitutes), then ns-judge in-session only if Code Review: Approved; runs mandatory loops up to 3 rounds per gate; after Delivery Review: Approved (score 10), conditionally invokes ns-living-spec ad-hoc only if docs/specs/ exists and diff is behavioral; reports Code Review: and Delivery Review: lines, Living specs field, and Layout SSoT: none registered.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "Fix N+1 on user list — relationship loaded inside loop in UserController.",
-      "expected_output": "Agent loads rules and file, applies eager loading fix with minimal diff, invokes ns-reviewer only, runs review loop (up to 3 rounds, Approved only at score 10, score 9 = Rejected Lift + mandatory re-review); after Approved may skip living specs if non-behavioral or docs/specs/ missing; final report includes round/score, Code Review: verdict, Living specs field, and Layout SSoT: none registered.",
+      "expected_output": "Agent loads rules and file, applies eager loading fix with minimal diff, invokes ns-reviewer only for code, then ns-judge only if Code Review: Approved (up to 3 rounds per gate, Approved only at score 10, score 9 = Rejected Lift + mandatory re-review); after Delivery Review: Approved may skip living specs if non-behavioral or docs/specs/ missing; final report includes Code Review: and Delivery Review: lines, Living specs field, and Layout SSoT: none registered.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Add CPF mask to the registration form UserForm in the frontend module.",
-      "expected_output": "Agent reads UserForm and project frontend rules, implements mask with data-testid if conventions require, minimal scope, invokes ns-reviewer only, review loop up to 3 rounds (Approved only at score 10; score 9 = Rejected Lift + re-review); after Approved, conditionally runs ns-living-spec ad-hoc if docs/specs/ exists; final report with mandatory verdict, Living specs, and Layout SSoT fields (none registered unless SSoT cited).",
+      "expected_output": "Agent reads UserForm and project frontend rules, implements mask with data-testid if conventions require, minimal scope, invokes ns-reviewer then ns-judge after Code Review: Approved, loops up to 3 rounds per gate (Approved only at score 10; score 9 = Rejected Lift + re-review); after Delivery Review: Approved, conditionally runs ns-living-spec ad-hoc if docs/specs/ exists; final report with both verdict lines, Living specs, and Layout SSoT fields (none registered unless SSoT cited).",
       "files": []
     },
     {
       "id": 4,
       "prompt": "SDD handoff mode: implement docs/versions/2.8.2/sdd/tasks/task-007-*.md under execution-handoff — parent said implement only, review at version closure.",
-      "expected_output": "Implement task scope; unit/integration only; NO reviewer-agent / ns-reviewer; NO living-spec consolidator; grep new public exports and keep unused names unexported; report files/tests/blockers and Layout SSoT field to parent; no Code Review: line.",
+      "expected_output": "Implement task scope; unit/integration only; NO reviewer-agent / ns-reviewer / ns-judge; NO living-spec consolidator; grep new public exports and keep unused names unexported; report files/tests/blockers and Layout SSoT field to parent; no Code Review: or Delivery Review: line.",
       "files": []
     },
     {
@@ -46,7 +46,7 @@
     {
       "id": 8,
       "prompt": "Implement origin-IP validate + match on a Federated Peoples IIFE. Callers need validateOriginIpInput and originIpMatches only.",
-      "expected_output": "Does not export unused IP helpers. Greps callers. Keeps originIpKey (or equivalent) private/unexported. Ad-hoc: then review loop (Approved only at score 10). SDD handoff: report to parent without reviewer-agent / ns-reviewer.",
+      "expected_output": "Does not export unused IP helpers. Greps callers. Keeps originIpKey (or equivalent) private/unexported. Ad-hoc: then code review then judge after Approved (Approved only at score 10). SDD handoff: report to parent without reviewer-agent / ns-reviewer / ns-judge.",
       "files": []
     }
   ]
