@@ -10,13 +10,19 @@
     {
       "id": 2,
       "prompt": "Autonomously implement this pasted spec: add a notifications module with a backend queue worker, a frontend inbox UI, and a DB migration for the notifications table. No issue, just run with it end to end.",
-      "expected_output": "Agent recognizes multi-part scope, generates a light requirements.md + tasks/task-NNN-*.md + execution-plan.md under docs/versions/{version_san}/sdd/, dispatches backend/migration and frontend as parallel work units (disjoint file scopes) with the migration sequenced before anything depending on the new table, and reports version_san, worktree path, and review verdict at the end.",
+      "expected_output": "Agent recognizes multi-part scope, generates a light requirements.md + tasks/task-NNN-*.md + execution-plan.md under docs/versions/{version_san}/sdd/, dispatches backend/migration and frontend via coder-agent (≥2 units; implement only, no per-unit review), migration sequenced before dependents; parent runs reviewer-agent once at closure; reports version_san, worktree path, and review verdict at the end.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Act as the Phase 2 execution engine for ns-execution-gitlab-issue on issue #482 — worktree at .worktrees/482/, branch work/482-fix-login-timeout already checked out from origin/develop. Implement the fix and report back.",
-      "expected_output": "Agent runs Engine mode only: does not create a worktree or branch (uses the ones given), does not call any GitLab-mutating MCP tool, dispatches the work unit(s) inside the given worktree, makes checkpoint commits, and returns a structured result (unit statuses, files changed, doubt: null or an escalation event, estimate_seconds on first call) instead of a chat-facing final report.",
+      "expected_output": "Agent runs Engine mode only: does not create a worktree or branch (uses the ones given), does not call any GitLab-mutating MCP tool. Single-unit login fix → follow ns-coder in A session (MUST NOT extra coder-agent spawn); implement only, defer review to G. Returns structured result (unit statuses, files changed, doubt: null or escalation, estimate_seconds on first call).",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Engine mode for issue #500 — execution-plan.md has three work units (backend, frontend, migration) in the given worktree. Dispatch them.",
+      "expected_output": "≥2 units → MUST coder-agent per unit when available; implement only (no per-unit reviewer-agent); checkpoint commits; return to caller for Phase 4 review.",
       "files": []
     }
   ]

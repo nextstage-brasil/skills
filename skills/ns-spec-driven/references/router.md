@@ -52,10 +52,10 @@ Map natural-language triggers to **phase** and **reference** (under `references/
 
 | Trigger phrases | Reference |
 | --------------- | ------ |
-| "implement", "build it", "run tasks" | See parent SKILL.md execute routing + `../../../ns-harness/references/subagent-dispatch.md` (**MUST** `coder-agent` when available) |
+| "implement", "build it", "run tasks" | See parent SKILL.md execute routing + spawn gate `../../../ns-harness/references/subagent-dispatch.md` (heavy → `coder-agent`; cheap → in-session) |
 | GitLab issue URL | `ns-execution-gitlab-issue` (if installed + MCP) |
 | subversion / slice | `orchestrator.md` |
-| handoff present | `../../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available) / `ns-coder` / `ns-autonomous` |
+| handoff present | `../../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available — heavy) / `ns-coder` / `ns-autonomous` |
 
 ## Close
 
@@ -68,7 +68,7 @@ Map natural-language triggers to **phase** and **reference** (under `references/
 
 | Trigger phrases | Worker |
 | --------------- | ------ |
-| "quick fix", "just change", "hotfix", ≤3 files | `coder-agent` → `ns-coder` (**MUST** bridge when available) |
+| "quick fix", "just change", "hotfix", ≤3 files | In-session `ns-coder` (cheap — **MUST NOT** spawn `coder-agent`) |
 
 See `quick-mode.md` — skip PM chain.
 

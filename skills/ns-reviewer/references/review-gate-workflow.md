@@ -6,13 +6,13 @@ Fixed close for implementation skills. **Two sequential gates.** Code first (`ns
 
 `ns-reviewer` is **read-only** and **MUST NOT** dispatch `ns-judge`.
 
-Callers: `ns-coder` (ad-hoc / C2), `ns-autonomous` (standalone closure), `ns-execution-gitlab-issue` (Phase 4), `run-implementation` Step 5 (SDD version closure). `C2` under `ns-autonomous` inherits `ns-coder` gate.
+Callers: `ns-coder` (ad-hoc), `ns-autonomous` (standalone closure), `ns-execution-gitlab-issue` (Phase 4), `run-implementation` Step 5 (SDD version closure).
 
-**Exception — SDD handoff tasks:** `ns-coder` under `execution-handoff` / `run-implementation` **must not** invoke reviewer **or** judge per task. Parent runs **once** at version closure (Step 5).
+**Exception — SDD handoff / engine C2 / G single-unit defer:** `ns-coder` under `execution-handoff` / `run-implementation` / Engine defer **must not** invoke reviewer **or** judge per task/unit. Parent runs **once** at closure.
 
 `ns-spec-driven` Close does **not** run a second pair if Step 5 already did.
 
-Not a version (no `docs/versions/` task list): `ns-coder` ad-hoc / C2, and `ns-execution-gitlab-issue` Phase 4, still close **that unit** with the same pair (code then judge).
+Not a version (no `docs/versions/` task list): `ns-coder` **ad-hoc** (session face), and `ns-execution-gitlab-issue` Phase 4, still close **that unit** with same pair (code then judge). Engine C2 does **not** run the pair.
 
 ## Who calls ns-judge
 
@@ -22,7 +22,7 @@ Same parent that already calls `ns-reviewer`. Only after last code verdict is `C
 | ------ | ---- | ------------------------------------- |
 | `run-implementation` Step 5 | all version tasks done | `ns-judge` closure (`requirements.md`) |
 | `ns-autonomous` | standalone version closure | same |
-| `ns-coder` ad-hoc / C2 | that implementation finished (no version tasks) | `ns-judge` adhoc; skip AC proof if no `--requirements` / `--ac-file` |
+| `ns-coder` ad-hoc | that implementation finished (no version tasks; not engine defer) | `ns-judge` adhoc; skip AC proof if no `--requirements` / `--ac-file` |
 | `ns-execution-gitlab-issue` Phase 4 | that issue delivered | `ns-judge` issue (`--ac-file`) |
 
 Sequence: tests; `ns-reviewer`; `ns-judge` only if `Code Review: Approved`; `ns-living-spec` only if `Delivery Review: Approved`.

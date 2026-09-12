@@ -13,10 +13,10 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | Role | Skill | Notes |
 | ---- | ----- | ----- |
 | Front door | Host + descriptions + this file | Fixed priority — not dedicated skill |
-| Central execution | `ns-coder` / `C2` via `coder-agent` (**MUST** when available) | G, A, S converge — `subagent-dispatch.md` |
-| GitLab lifecycle | `ns-execution-gitlab-issue` | External Phase 2 → `A`; SDD unit Phase 2 → `run-implementation.md` |
-| Multi-unit engine | `ns-autonomous` | Standalone or engine under G |
-| Spec / version planning | `ns-spec-driven` | → C or A (**MUST** `coder-agent` when available) |
+| Central execution | `ns-coder` / `C2` via spawn gate (`coder-agent` when heavy) | G, A, S converge — `subagent-dispatch.md` |
+| GitLab lifecycle | `ns-execution-gitlab-issue` | External Phase 2 single-unit → `coder-agent`; multi-unit → `A`; SDD unit → `run-implementation.md` |
+| Multi-unit engine | `ns-autonomous` | Standalone or Engine under G when multi-unit |
+| Spec / version planning | `ns-spec-driven` | Quick cheap in-session; heavy → `coder-agent` when available |
 | Root-cause | `ns-investigator` | Diagnosis only; implement = separate user step |
 | Review gate | `ns-reviewer` via `reviewer-agent` (**MUST** when available) | Code path — `../ns-reviewer/references/review-gate-workflow.md` |
 | Delivery gate | `ns-judge` in-session after `Code Review: Approved` | Same parent; no `judge-agent` v1 — `../ns-judge/SKILL.md` |
@@ -77,14 +77,16 @@ Detail in each `SKILL.md` routing section.
 | `C` | too large / multi-day SDD | `S` |
 | `C` | obscure bug | `I` |
 | `C` | ad-hoc diff | `REV` then `JUDGE` if `Code Review: Approved` (`reviewer-agent` → `ns-reviewer`; parent reads `ns-judge`) |
-| `G` | Phase 2 external | `A` (engine mode) |
+| `G` | Phase 2 external, single unit | `coder-agent` / `ns-coder` in worktree (**skip** `A`) |
+| `G` | Phase 2 external, multi-unit | `A` (engine mode) |
 | `G` | Phase 2 SDD unit | `run-implementation.md` (unit tasks; **not** `A`) |
 | `G` | MR / status / time | `mcp-gitlab-usage` |
 | `G` | review gate | `REV` then `JUDGE` if Approved (`reviewer-agent` / `ns-reviewer` only for code) |
-| `A` | dispatch work units | `C2` (`coder-agent` → `ns-coder` — **MUST** bridge when available) |
-| `C2` | review | `REV` then `JUDGE` if Approved (`reviewer-agent` / `ns-reviewer` only for code) |
-| `S` | small / quick | `C` via `coder-agent` (**MUST** when available) |
-| `S` | version + handoff | `H` → `C` or `A` or `G` unit mode (**MUST** `coder-agent` for coding workers when available) |
+| `A` | 1 work unit | In-session `ns-coder` (worktree); defer `REV` to parent |
+| `A` | ≥2 work units | `C2` (`coder-agent` → `ns-coder` — **MUST** when available); implement only |
+| `C2` | implement done | Parent `REV` at closure — **no** per-unit review |
+| `S` | small / quick | In-session `C` (cheap — **MUST NOT** spawn `coder-agent`) |
+| `S` | version + handoff | `H` → `C` or `A` or `G` unit mode (**MUST** `coder-agent` for heavy coding workers when available) |
 | `H` | delivery units + `issue_iid` | `G` SDD unit mode (`unit` + `issue_iid` — not external URL) |
 | `H` | per-task coding (no unit issues) | `C` implement only — no per-task `REV` / `JUDGE` (SDD handoff) |
 | `H` | all tasks done | `REV` version closure (`run-implementation` Step 5) then `JUDGE` if Approved |
@@ -94,7 +96,7 @@ Detail in each `SKILL.md` routing section.
 
 ## Engine anti-cycle (G ↔ A) {#engine-anti-cycle}
 
-**External:** `G` invokes `A` Engine mode: units as `C2` in existing worktree + branch. `A` + `C2` must not re-open `G` — no standalone routing, no GitLab MCP mutations, no new worktree. `ISSUE_URL` in code/comments = context, not signal. `G` owns lifecycle until delivery. Rejection loops (`G → A → C2 → REV`) stay inside.
+**External:** `G` invokes `A` Engine **only** when multi-unit (`planning-decision.md`). Single-unit external: `coder-agent` in existing worktree — no A. When A runs: units as `C2` (or in-session for 1 unit) in existing worktree + branch. `A` + `C2` must not re-open `G` — no standalone routing, no GitLab MCP mutations, no new worktree. `ISSUE_URL` in code/comments = context, not signal. `G` owns lifecycle until delivery. Rejection loops stay inside (`G → A → C2 → REV` or `G → Cimpl → REV`).
 
 **SDD unit:** `G` invokes `run-implementation.md` / `Cimpl`. No `A`. Rejection (`G → Cimpl → REV`) stays inside. Status/spent: `delivery-units.md` **GitLab status/spent (SSoT)**.
 
@@ -125,16 +127,18 @@ flowchart TD
   IMPL --> REV[reviewer-agent / ns-reviewer]
   REV -->|Approved| JUDGE[ns-judge]
 
-  G -->|Phase 2 external engine| A
+  G -->|Phase 2 external single| Cimpl[coder implement only]
+  G -->|Phase 2 external multi| A
   G -->|MR / status / time| GL[mcp-gitlab-usage]
   G -->|review gate| REV
 
-  A -->|dispatch work units| C2[coder-agent / ns-coder]
-  C2 --> REV
+  A -->|1 unit in-session| Cimpl
+  A -->|2+ units| C2[coder-agent / ns-coder]
+  C2 -->|defer review| REV
 
-  S -->|small / quick| C
+  S -->|small / quick cheap| C
   S -->|version + handoff| H[run-implementation.md]
-  H -->|per-task SDD| Cimpl[coder implement only]
+  H -->|per-task SDD| Cimpl
   Cimpl --> H
   H -->|delivery units + issue_iid| Gunit[G SDD unit mode]
   Gunit -->|Phase 2| RI[run-implementation]

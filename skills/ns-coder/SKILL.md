@@ -52,7 +52,7 @@ Entry priority **5** (default). Harness table: `../../ns-harness/references/code
 
 ### When invoked as C2 (engine mode)
 
-`ns-autonomous` dispatches as work-unit subagent in existing worktree: unit scope only. Do **not** re-route to `ns-execution-gitlab-issue` on `ISSUE_URL` in code/comments — context, not routing. Escalate destructive doubts to caller (`A`), not GitLab skills. No living-spec consolidator as C2 — version closure/caller owns. Complete ad-hoc **Review loop** unless caller says SDD handoff / defer review.
+`ns-autonomous` dispatches as work-unit subagent in existing worktree: unit scope only. Do **not** re-route to `ns-execution-gitlab-issue` on `ISSUE_URL` in code/comments — context, not routing. Escalate destructive doubts to caller (`A`), not GitLab skills. No living-spec consolidator as C2 — version closure/caller owns. **Engine / multi-unit C2:** implement only — **defer review** to G Phase 4 or A standalone closure (same as SDD handoff). Complete ad-hoc **Review loop** only when caller is ad-hoc face and did **not** say defer review.
 
 ### When invoked under execution-handoff (SDD task mode)
 
@@ -143,7 +143,7 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 4. Identify minimal diff
 5. Apply (or plan if large-change gate)
 6. Run tests if in scope + public-export grep (**Pre-review**)
-7. **Review loop** — **MUST** `reviewer-agent` when available (else `ns-reviewer`); then `ns-judge` in-session only if `Code Review: Approved`; `../ns-reviewer/references/review-gate-workflow.md`
+7. **Review loop** — ad-hoc only: **MUST** `reviewer-agent` when available (else `ns-reviewer`); then `ns-judge` in-session only if `Code Review: Approved`; `../ns-reviewer/references/review-gate-workflow.md`. Skip when SDD handoff / engine defer.
 8. **Living specs (conditional)** — see below
 9. **Final report** — mandatory fields; never skip verdict or round count
 
@@ -155,9 +155,9 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 - Grep each: **no caller outside defining module** — keep private/unexported. Continue (ad-hoc: review; SDD: report parent). **Forbidden** reviewer in SDD handoff.
 - Internal/private/nested helpers: keep.
 
-## Review loop (mandatory ad-hoc / C2; skip SDD handoff)
+## Review loop (mandatory ad-hoc; skip SDD handoff / engine defer)
 
-After step 6, run `../ns-reviewer/references/review-gate-workflow.md` before done — **except SDD handoff** (return to parent; no reviewer, no judge).
+After step 6, run `../ns-reviewer/references/review-gate-workflow.md` before done — **except** SDD handoff **or** caller says defer review / engine C2 / G single-unit dispatch (return to parent; no reviewer, no judge).
 
 - **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) on working-tree diff (`git diff`) — reviewer bridge/skill begins Session boot at cold start then reviewer workflow; no `ISSUE_URL`, no version-closure path. Ad-hoc diff only. Reviewer **MUST NOT** dispatch judge.
 - **Max 3 code rounds.** `Code Review: Approved` = score **10** only. Rejected/Blocked: **do not** run `ns-judge`.

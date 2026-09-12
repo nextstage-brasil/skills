@@ -112,7 +112,7 @@ Tasks added or removed after generation: **regenerate** preserving statuses by t
 | Stage | Skill / reference |
 | ----- | ----------------- |
 | After task generation | This phase (generate handoff) |
-| Classic implementation | `../../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available) / `ns-coder` |
+| Classic implementation | `../../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available — heavy) / `ns-coder` |
 | Partitioned implementation | `orchestrator.md` (slice handoffs + master closure) |
 | End-of-version review | `reviewer-agent` (**MUST** when available) / `ns-reviewer` then `ns-judge` after `Code Review: Approved` — each `Approved` = **10** (`../../ns-reviewer/references/review-gate-workflow.md`) |
 | Living specs | `ns-living-spec` after `Delivery Review: Approved` |

@@ -28,10 +28,10 @@ Entry priority **2** (feature / version / SDD / multi-day / resume). Harness tab
 
 | Handoff                        | Target                                                                                                                       |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Small / quick inside SDD       | `coder-agent` → `ns-coder` (**MUST** bridge when available — `../../ns-harness/references/subagent-dispatch.md`)             |
-| Version + handoff              | `references/execution-handoff.md` + `../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available) |
+| Small / quick inside SDD       | In-session `ns-coder` (cheap execute — **MUST NOT** spawn `coder-agent`; `../../ns-harness/references/subagent-dispatch.md`) |
+| Version + handoff              | `references/execution-handoff.md` + `../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available — heavy) |
 | Task file generation           | **MUST** spawn project agent `task-writer-agent` (exact name; adapter `model`) → `references/task-generator.md`. **FORBIDDEN** Task `inherit` / `coder` / `generalPurpose` (`../../ns-harness/references/subagent-dispatch.md`) |
-| Bare quick fix, no SDD context | Redirect `ns-coder` (priority 5) — if spawning worker: **MUST** `coder-agent` when available                                 |
+| Bare quick fix, no SDD context | Redirect `ns-coder` (priority 5) — cheap; in-session; **MUST NOT** spawn `coder-agent`                                      |
 
 ## Harness
 
@@ -98,7 +98,7 @@ flowchart LR
 | Handoff     | After tasks (or Gate 4 when run) | `references/execution-handoff.md` |
 | Execute     | Always                       | See execute routing below                                                                                                                                                            |
 | Close       | After delivery               | `reviewer-agent` → `ns-reviewer` (**MUST** when available); `ns-judge` in-session only if `Code Review: Approved`; `ns-living-spec` after `Delivery Review: Approved` only (`../ns-reviewer/references/review-gate-workflow.md`). Skip second pair if Step 5 already ran both. |
-| Quick       | ≤3 files, one-sentence scope | `coder-agent` → `ns-coder` (**MUST** when available)                                                                                                                                 |
+| Quick       | ≤3 files, one-sentence scope | In-session `ns-coder` (cheap — **MUST NOT** spawn `coder-agent`)                                                                                                                      |
 
 Details: `references/auto-sizing.md`, `references/router.md`.
 
@@ -122,7 +122,7 @@ Chat short, natural language. **Read `references/human-communication.md` before 
 
 ## Orchestration mandate
 
-- **Delegate** = spawn bridge when available (else read phase reference in-session). Not "skip reference" while bridge present. See `../../ns-harness/references/subagent-dispatch.md`.
+- **Delegate** = spawn gate in `../../ns-harness/references/subagent-dispatch.md`. Cheap execute / Quick = in-session `ns-coder`. Heavy / Tasks / Review = spawn bridge when available.
 - **Read** phase reference before that phase — never improvise from memory.
 - **Do not** ask "continue to next phase?" between phases in same sized pipeline.
 - **Do not** invoke `/ns-harness prepare` or brownfield prepare references.
@@ -133,7 +133,7 @@ Chat short, natural language. **Read `references/human-communication.md` before 
 
 | Size       | Pipeline                                                                                                        |
 | ---------- | --------------------------------------------------------------------------------------------------------------- |
-| **Small**  | `coder-agent` → `ns-coder` (quick mode — `references/quick-mode.md`)                                            |
+| **Small**  | In-session `ns-coder` (quick mode — `references/quick-mode.md`; cheap execute)                                  |
 | **Medium** | Intake (if source) → Clarify-Strict → Specify → Tasks (**MUST** spawn `task-writer-agent` exact name) → optional Gate 4 + units → handoff → Execute → Close |
 | **Large**  | Full chain including Consistency and/or Partition when scope warrants                                           |
 
@@ -141,14 +141,14 @@ Chat short, natural language. **Read `references/human-communication.md` before 
 
 ## Execute routing
 
-Worker dispatch: **MUST** use harness project agents when available — `../../ns-harness/references/subagent-dispatch.md`. Inline mapped skill while bridge present = forbidden.
+Worker dispatch: spawn gate — `../../ns-harness/references/subagent-dispatch.md`. Cheap = in-session; heavy / review / tasks = named bridge when available.
 
 | Context                                    | Worker                                                                                                                                                                                                                                                                                                                |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ad-hoc / quick / single task               | `coder-agent` → `ns-coder` (**MUST** bridge when available)                                                                                                                                                                                                                                                           |
+| Ad-hoc / quick / single task               | In-session `ns-coder` (cheap — **MUST NOT** spawn `coder-agent`)                                                                                                                                                                                                                                                      |
 | Version with `delivery-units.md`           | Dispatch **by unit** (wave order); parallel only if Gate 4 parallel + `A ∥ B`. GitLab: `delivery-units.md` **GitLab status/spent (SSoT)**. Published + G present → `ns-execution-gitlab-issue` SDD unit mode; else local unit batches in `run-implementation.md` |
-| Version with `execution-handoff.md` only (no units file) | `../ns-coder/references/run-implementation.md` — classic **batched** dispatch (same-layer consecutive `pending`, prefer 4–7, hard max 7; size 1 = single task) + `coder-agent` (**MUST** when available) / `ns-coder` or `ns-autonomous`; handoff rows stay per task; Progress **Next task** = first id of next batch |
-| Partitioned version (`version-roadmap.md`) | `references/orchestrator.md` — **by unit** when `delivery-units.md` exists (commit/MR per unit); else slice workers via `coder-agent` (**MUST** when available) |
+| Version with `execution-handoff.md` only (no units file) | `../ns-coder/references/run-implementation.md` — classic **batched** dispatch (same-layer consecutive `pending`, prefer 4–7, hard max 7; size 1 = single task) + `coder-agent` (**MUST** when available — heavy) / `ns-coder` or `ns-autonomous`; handoff rows stay per task; Progress **Next task** = first id of next batch |
+| Partitioned version (`version-roadmap.md`) | `references/orchestrator.md` — **by unit** when `delivery-units.md` exists (commit/MR per unit); else slice workers via `coder-agent` (**MUST** when available — heavy) |
 | External GitLab `ISSUE_URL` + MCP available           | `ns-execution-gitlab-issue` (priority 1 — not SDD unit mode)                                                                                                                                                                                                                                                       |
 | Autonomous multi-step local plan           | `ns-autonomous`                                                                                                                                                                                                                                                                                                       |
 

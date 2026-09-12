@@ -74,7 +74,7 @@ Until scope done or all tasks complete:
    - **GitLab batch start:** if caller is `ns-execution-gitlab-issue` → **zero** board writes here. Else apply SSoT at **unit** start only (Flow B per task only when SSoT Flow B row).
 2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). If `### Contract` present (API/schema/screen), always read it. Open cited `source/` section anchors for the batch. Open `Detailed description` on demand — ambiguity or `blocked`. See `../../ns-spec-driven/references/task-schema.md`.
 3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-batch re-read; never tool-Read `AGENTS.md`)
-4. **Implement** — **one** `coder-agent` dispatch per batch (**MUST** when available; loads `ns-coder`); else `ns-coder` direct. See `../../../ns-harness/references/subagent-dispatch.md`.
+4. **Implement** — **one** `coder-agent` dispatch per batch (**MUST** when available — heavy; loads `ns-coder`); else `ns-coder` direct. See `../../../ns-harness/references/subagent-dispatch.md`. **MUST NOT** split batch to size-1 to skip spawn.
    - **Dispatch must state SDD handoff mode:** this batch only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer` / `ns-judge`; **do not** run living specs; review = **Step 5** only. Workers grep new/changed public exports before marking complete (keep unused names unexported).
    - Worker reports per-task outcomes (files, tests, blockers, tokens). Parent owns `execution-handoff.md`.
 5. **Validate** per project rules (Docker **unit/integration** tests, i18n, multitenancy, etc.)

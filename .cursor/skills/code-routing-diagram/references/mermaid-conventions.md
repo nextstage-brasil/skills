@@ -39,13 +39,14 @@
 
 **GitLab lifecycle:**
 
-- `G → A` (Phase 2 engine)
+- `G → Cimpl` (Phase 2 external single)
+- `G → A` (Phase 2 external multi)
 - `G → GL`, `G → REV`
-- `A → C2 → REV`
+- `A → Cimpl` (1 unit) or `A → C2` (2+); `C2` defers to parent `REV`
 
 **Spec-driven:**
 
-- `S → C`, `S → H → C`, `H → A`
+- `S → C` (cheap quick), `S → H → Cimpl`, `H → A`
 
 **Review then judge:**
 

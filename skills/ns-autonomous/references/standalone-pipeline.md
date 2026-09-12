@@ -52,7 +52,7 @@ Identical logic to Engine mode:
 
 - `planning-decision.md` for depth.
 - `doubt-resolution.md` for doubts — destructive ones pause and ask **in chat only** (no GitLab actions available in this mode).
-- `multi-agent-dispatch.md` for parallel/sequential dispatch and checkpoint commits.
+- `multi-agent-dispatch.md` for unit-count gate (1 = in-session; ≥2 = spawn), parallel/sequential dispatch, checkpoint commits. Workers implement only — review = step 5.
 
 ## 5. Internal review loop
 

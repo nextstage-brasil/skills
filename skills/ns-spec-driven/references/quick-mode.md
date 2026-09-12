@@ -14,7 +14,7 @@ Bypass PM planning chain for **tight, local changes**.
 1. Read `architecture-rules.md`.
 2. Load `docs/context/` files relevant to layer (UI: `design-brief.md` if present).
 3. Soft-check complements (`skill-integrations.md`) — UI/docs/security signals only.
-4. **MUST** dispatch **`coder-agent`** when available (loads `ns-coder`); else read/follow **`ns-coder`** with explicit `{task_description}`. See `../../../ns-harness/references/subagent-dispatch.md`. Inline `Skill(ns-coder)` while bridge present = forbidden.
+4. **Cheap execute** — follow **`ns-coder`** in-session with `{task_description}`. **MUST NOT** spawn `coder-agent` (spawn gate — `../../../ns-harness/references/subagent-dispatch.md`).
 5. Optional: user asks for review — **MUST** `reviewer-agent` when available (else `ns-reviewer`). Not automatic.
 
 ## Do not

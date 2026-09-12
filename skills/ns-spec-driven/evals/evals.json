@@ -10,13 +10,13 @@
     {
       "prompt": "/ns-spec-driven — docs/versions/1.0.0/sdd/ already has tasks and execution-handoff.md. Implement the next pending task.",
       "id": 2,
-      "expected_output": "Resume path: reads session-continuity.md + execution-handoff.md, skips planning phases, MUST dispatch execute via ../../ns-coder/references/run-implementation.md and coder-agent when available. No new requirements.md. Must not implement by reading ns-coder inline while coder-agent bridge is present.",
+      "expected_output": "Resume path: reads session-continuity.md + execution-handoff.md, skips planning phases, MUST dispatch execute via ../../ns-coder/references/run-implementation.md and coder-agent when available (heavy). No new requirements.md. Must not implement by reading ns-coder inline while coder-agent bridge is present for heavy batch.",
       "files": []
     },
     {
       "prompt": "/ns-spec-driven quick fix: add a maxlength attribute to the profile name input — one file.",
       "id": 3,
-      "expected_output": "Quick mode: MUST dispatch coder-agent when available, skips PM chain and /ns-harness prepare. Must not Skill(ns-coder) inline while coder-agent present.",
+      "expected_output": "Quick mode: cheap execute — follow ns-coder in-session; MUST NOT spawn coder-agent even when bridge present (subagent-dispatch.md spawn gate). Skips PM chain and /ns-harness prepare.",
       "files": []
     },
     {

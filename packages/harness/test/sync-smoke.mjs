@@ -1005,11 +1005,13 @@ Should not land in canonical.
     assert(agentsContent.includes('coder-agent'), 'AGENTS.md should list coder-agent');
     assert(agentsContent.includes('Project subagents'), 'AGENTS.md should have subagents section');
     assert(
-      agentsContent.includes('**MUST** spawn that agent file so YAML') &&
-      agentsContent.includes('Inline mapped skill while bridge present = forbidden') &&
+      agentsContent.includes('spawn gate') &&
       agentsContent.includes('subagent-dispatch.md') &&
-      agentsContent.includes('FORBIDDEN'),
-      'AGENTS.md subagents section should MUST-spawn named bridges, forbid inherit stand-in, forbid inline',
+      agentsContent.includes('FORBIDDEN') &&
+      agentsContent.includes('Cheap execute') &&
+      (agentsContent.includes('Inline mapped skill while bridge present') ||
+        agentsContent.includes('gate requires spawn')),
+      'AGENTS.md subagents section should cite spawn gate, forbid inherit stand-in',
     );
 
     assert(

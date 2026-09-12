@@ -4,7 +4,13 @@
     {
       "id": 1,
       "prompt": "Implement GitLab issue https://gitlab.example.com/acme/app/-/issues/55 — backend only fix.",
-      "expected_output": "Agent sets up worktree for backend, AFFECTED_PROJECTS=[backend], MCP in progress, implements, commits, review gate.",
+      "expected_output": "Agent sets up worktree for backend, AFFECTED_PROJECTS=[backend], MCP in progress. Planning-depth: single-unit backend fix → MUST coder-agent in worktree (skip ns-autonomous); implements; commits; Phase 4 review gate (defer per-unit review).",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Execute issue https://gitlab.example.com/acme/app/-/issues/200 — add notifications queue worker, frontend inbox, and DB migration (multi-part).",
+      "expected_output": "Planning-depth multi-unit → invoke ns-autonomous Engine (not direct single coder-agent for whole issue). Engine dispatches C2 per unit with defer review; G owns Phase 4 reviewer-agent once.",
       "files": []
     },
     {
@@ -22,7 +28,7 @@
     {
       "id": 4,
       "prompt": "Execute issue https://gitlab.example.com/acme/app/-/issues/90 — it says to delete the legacy `user_sessions` table as part of the cleanup, but doesn't say what to do with existing rows.",
-      "expected_output": "Agent applies first-act status Em andamento, resolves SOURCE_BRANCH via milestone/version discovery (develop fallback when no version branch), worktree/branch, delegates to ns-autonomous. Engine flags destructive doubt; agent blocks, comments @author, resumes on answer.",
+      "expected_output": "Agent applies first-act status Em andamento, resolves SOURCE_BRANCH via milestone/version discovery (develop fallback when no version branch), worktree/branch. Planning-depth gate: destructive/multi-part → ns-autonomous Engine; contained single-unit → coder-agent in worktree (skip A). Engine flags destructive doubt; agent blocks, comments @author, resumes on answer.",
       "files": []
     },
     {

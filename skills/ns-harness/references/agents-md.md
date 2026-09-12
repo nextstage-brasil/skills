@@ -59,7 +59,7 @@ Session boot; note `.nextstage-harness/`. **Create** vs **refresh**; read existi
 - **Hard stops / FORBIDDEN** — no invented personas; no skip architecture-rules; ISSUE_URL → gitlab-issue; no speculative version folders.
 - **Local overrides** — `agents.local.md` (case-insensitive) after `AGENTS.md`; mark present/absent in Layout; never inline.
 - **Installed skills** — exact `.agents/skills/` names, **grouped by role**. SDD chain from installed only.
-- **Project subagents** — from `manifest.json` `subagents` when present (name, skill, cursor model). Contract: **MUST** spawn exact `{name}` so YAML `model` applies; **FORBIDDEN** Task `inherit` / platform `coder`/`reviewer` stand-in / inline skill while bridge present (`subagent-dispatch.md`). Do not omit when bridges exist.
+- **Project subagents** — from `manifest.json` `subagents` when present (name, skill, cursor model). Contract: spawn gate in `subagent-dispatch.md` — **MUST** spawn exact `{name}` when gate requires so YAML `model` applies; cheap execute = in-session; **FORBIDDEN** Task `inherit` / platform `coder`/`reviewer` stand-in / inline skill while bridge present **and** gate requires spawn. Do not omit when bridges exist.
 - **Layout** — compact present/absent: rules, skills, local, docs/context|specs|versions.
 - **No Workflows → Implementation** — routing table covers it.
 - **Ownership + Language + Project notes** — ≤5 bullets.

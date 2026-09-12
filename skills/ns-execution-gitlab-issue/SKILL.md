@@ -1,6 +1,6 @@
 ---
 name: ns-execution-gitlab-issue
-description: (NS) Execute a GitLab issue end-to-end — status gates, worktree isolation, atomic delivery, MR, mandatory code then judge loop. Use for external ISSUE_URL or SDD delivery unit (unit + issue_iid). External mode delegates coding to ns-autonomous; SDD unit mode uses ns-coder run-implementation. Needs mcp-gitlab-usage + ns-reviewer + ns-judge.
+description: (NS) Execute a GitLab issue end-to-end — status gates, worktree isolation, atomic delivery, MR, mandatory code then judge loop. Use for external ISSUE_URL or SDD delivery unit (unit + issue_iid). External Phase 2: single-unit → coder-agent in worktree; multi-unit → ns-autonomous Engine. SDD unit mode uses ns-coder run-implementation. Needs mcp-gitlab-usage + ns-reviewer + ns-judge.
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
@@ -23,14 +23,16 @@ Entry priority **1**. Harness table: `../../ns-harness/references/code-skill-rou
 
 | Handoff | Target |
 | ------- | ------ |
-| Phase 2 execution (external) | `ns-autonomous` (Engine mode) |
+| Phase 2 execution (external, single unit) | `coder-agent` → `ns-coder` in existing worktree — **skip** `ns-autonomous` (`planning-decision.md` single-unit; spawn gate) |
+| Phase 2 execution (external, multi-unit) | `ns-autonomous` (Engine mode) |
 | Phase 2 execution (SDD unit) | `../../ns-coder/references/run-implementation.md` (unit tasks only) |
 | MR / status / time / comments | `mcp-gitlab-usage` |
 | Phase 4 review gate | `reviewer-agent` → `ns-reviewer`; then `ns-judge` in-session only if `Code Review: Approved` |
-| Rejected fix loop (external) | `ns-autonomous` → `C2` subagents (same worktree; no re-entry to this skill from `A`/`C2`) |
+| Rejected fix loop (external, single unit) | `coder-agent` / `ns-coder` (same worktree; no A) |
+| Rejected fix loop (external, multi-unit) | `ns-autonomous` → `C2` (same worktree; no re-entry to this skill from `A`/`C2`) |
 | Rejected fix loop (SDD unit) | `coder-agent` → `ns-coder` / `run-implementation` (same worktree; no `ns-autonomous`) |
 
-`G` remains the single GitLab lifecycle owner until delivery completes. External work units under `A` must not re-open this skill. SDD unit Phase 2 uses `run-implementation.md` — not `A`.
+`G` remains single GitLab lifecycle owner until delivery. External multi-unit under `A` must not re-open this skill. External single-unit + SDD unit Phase 2 skip `A`.
 
 ## Session boot
 
@@ -123,17 +125,19 @@ Never under `.cursor/`. Abort if a worktree already exists for this id and is in
 
 ### External issue mode
 
-1. Read the full issue payload via MCP (title, description, comments, attachments). Note `time_stats.time_estimate` for the estimate gate below.
-2. Set `START_TIME` / `START_EPOCH` **now** (UTC + Unix epoch) — immediately before the first Engine invoke. See `references/time-tracking.md`.
-3. Invoke the `ns-autonomous` skill in **Engine mode**, passing: issue payload, `WORKTREE_ROOT`, `WORK_BRANCH`, `SOURCE_BRANCH`. The engine self-decides planning depth, runs its doubt protocol, and dispatches implementation (single- or multi-agent) inside `WORKTREE_ROOT` — see `ns-autonomous`'s `references/routing.md` for what "Engine mode" means and what it returns.
-4. **Estimate (first invocation only):** call `set_issue_estimate` **only if** `time_stats.time_estimate` is empty (`0` / missing) **and** the engine returned `estimate_seconds` ≥ 60. If an estimate already exists, or the engine value is < 60 — **skip**; never overwrite, never write a 1-second estimate. Full rules: `references/time-tracking.md`.
-5. **Doubt escalation contract** — the engine never mutates GitLab state itself. When it returns a destructive-doubt event instead of (or alongside) unit results:
+1. Read full issue payload via MCP (title, description, comments, attachments). Note `time_stats.time_estimate` for estimate gate below.
+2. Set `START_TIME` / `START_EPOCH` **now** (UTC + Unix epoch) — immediately before first coding invoke. See `references/time-tracking.md`.
+3. **Planning-depth gate** — apply `../ns-autonomous/references/planning-decision.md` heuristic on issue payload **before** calling A:
+   - **Single unit** (≤5 files / one-paragraph AC, no real DAG): **skip** `ns-autonomous`. **MUST** dispatch `coder-agent` when available (else `ns-coder`) inside `WORKTREE_ROOT` / `WORK_BRANCH`. Dispatch: implement only; **defer review** to Phase 4 (`../../ns-harness/references/subagent-dispatch.md` Review once per closure).
+   - **Multi-unit** (Requirements+tasks path): invoke `ns-autonomous` **Engine mode**, passing issue payload, `WORKTREE_ROOT`, `WORK_BRANCH`, `SOURCE_BRANCH`. Engine plans depth, doubt protocol, dispatches units — see `ns-autonomous` `references/routing.md`.
+4. **Estimate (first invocation only):** call `set_issue_estimate` **only if** `time_stats.time_estimate` empty (`0` / missing) **and** worker/engine returned `estimate_seconds` ≥ 60. Estimate already exists, or value < 60 — **skip**; never overwrite, never write 1-second estimate. Full rules: `references/time-tracking.md`.
+5. **Doubt escalation contract** — engine never mutates GitLab state. When Engine returns destructive-doubt event (multi-unit path only):
    - Record `PAUSE_START` epoch (exclude wait from spent time).
    - Apply `status_blocked` (Em Impedimento).
-   - Post a comment **mentioning the issue author** (`@{author.username}` from `read_issue`) with the questions, options, and recommended default.
-   - Mirror the same question in the interactive chat and wait.
-   - On answer (chat and/or issue comment): add pause duration to `PAUSED_SECONDS`, set status back to `status_in_progress` (Em andamento), and re-invoke the engine with the resolved doubt appended to its context.
-6. No intermediate confirmations otherwise — this loop is the only pause point until Phase 4's review gate.
+   - Post comment **mentioning issue author** (`@{author.username}` from `read_issue`) with questions, options, recommended default.
+   - Mirror same question in interactive chat and wait.
+   - On answer (chat and/or issue comment): add pause duration to `PAUSED_SECONDS`, set status back to `status_in_progress` (Em andamento), re-invoke engine with resolved doubt appended.
+6. No intermediate confirmations otherwise — this loop only pause until Phase 4 review gate.
 
 ### SDD unit mode
 
@@ -160,7 +164,7 @@ Canonical rules: `../ns-reviewer/references/review-gate-workflow.md`.
 
 1. **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) in **Issue review mode** — pass `ISSUE_URL` **or** `project_id` + `issue_iid` (SDD unit mode). Bridge/skill loads `AGENTS.md` then reviewer workflow. Read-only **code** gate; posts internal GitLab comment. **Does not** parse ACs / `requirements.md`. **Forbidden:** Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or substitute unless human explicitly requests this run. **Allowed:** harness `reviewer-agent`. See `../../ns-harness/references/subagent-dispatch.md`. Reviewer **MUST NOT** dispatch judge.
 2. Code loop, max **3** rounds (`Approved` = **10**):
-   - `Code Review: Rejected` (score **9** = Lift; or Criticals / score ≤8) with rounds left → **external:** re-invoke `ns-autonomous` (same worktree) with findings as fix unit. **SDD unit:** re-invoke `coder-agent` / `run-implementation` (same worktree). **Mandatory re-review** via `reviewer-agent` (**MUST** when available; else `ns-reviewer`). Keep `START_TIME`; no spent/Dev 100% yet. **No judge.**
+   - `Code Review: Rejected` (score **9** = Lift; or Criticals / score ≤8) with rounds left → **external single-unit:** re-invoke `coder-agent` / `ns-coder` (same worktree). **external multi-unit:** re-invoke `ns-autonomous` (same worktree) with findings as fix unit. **SDD unit:** re-invoke `coder-agent` / `run-implementation` (same worktree). **Mandatory re-review** via `reviewer-agent` (**MUST** when available; else `ns-reviewer`). Keep `START_TIME`; no spent/Dev 100% yet. **No judge.**
    - `Blocked` or rounds exhausted → `status_blocked` (Em Impedimento), post findings, stop. No `END_TIME`, spent, or Dev 100%. No judge.
 3. On `Code Review: Approved` only: read `../ns-judge/SKILL.md` in-session (`--mode issue --ac-file` from synthesis). Python optional. `Delivery Review: Approved` only at 10. Judge Rejected: fix map; product files changed → code review again (must Approved) then judge again. Max 3 judge rounds.
 4. Both Approved → Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
@@ -192,8 +196,8 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 | `ns-gitlab-board-sync` | Status label semantics           |
 | `ns-reviewer`     | Phase 4 code gate (**MUST** `reviewer-agent` when available) |
 | `ns-judge`        | Phase 4 delivery proof in-session after `Code Review: Approved` |
-| `ns-autonomous`   | Phase 2 execution engine         |
-| `ns-coder`        | SDD unit mode coding; non-GitLab ad-hoc |
+| `ns-autonomous`   | Phase 2 Engine when multi-unit only |
+| `ns-coder`        | External single-unit + SDD unit coding; non-GitLab ad-hoc |
 
 ## References
 

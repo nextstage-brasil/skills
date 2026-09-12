@@ -22,13 +22,19 @@
     {
       "id": 6,
       "prompt": "Review gate: I will Task(subagent_type=reviewer, model=inherit) because Cursor lists reviewer. Coder work: Task(coder).",
-      "expected_output": "subagent-dispatch.md Cursor Task trap: platform reviewer/coder are not harness bridges. MUST spawn reviewer-agent and coder-agent by exact name and pass adapter model (not inherit). If those types are missing from Task enum, stop and ask human /reviewer-agent or /coder-agent.",
+      "expected_output": "subagent-dispatch.md Cursor Task trap: platform reviewer/coder are not harness bridges. Review gate MUST spawn reviewer-agent by exact name (adapter model, not inherit). Coder spawn follows spawn gate — heavy execute MUST coder-agent; cheap execute MUST NOT spawn coder-agent (in-session ns-coder). If required bridge types missing from Task enum, stop and ask human /reviewer-agent or /coder-agent.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "/ns-harness prepare this repo",
       "expected_output": "Routes to references/prepare.md; boot summary then architecture-rules → sync → brownfield → reverse-spec → agents-md without confirmation gate; no separate worker skills.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "/ns-spec-driven Quick: fix one typo in README — one file. coder-agent bridge exists.",
+      "expected_output": "Spawn gate cheap execute: follow ns-coder in-session; MUST NOT spawn coder-agent even when bridge present. Reviewer still MUST spawn reviewer-agent only if user asks review.",
       "files": []
     },
     {
