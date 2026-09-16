@@ -45,10 +45,11 @@ Missing field → `—` or omit the bullet/row. Prefer omit empty §2 modules an
 1. Confirm this is **product/project** roadmap (multi-version), not SDD version partition.
 2. Load `assets/product-roadmap.template.md`.
 3. Gather sources (chat, `docs/`, tracker list if MCP available and authorized). Do not invent IDs.
-4. Fill project definitions then sections 1-5. `—` for unknown people/dates.
-5. Present compact summary (version counts in 4.1 / 4.2 / icebox themes).
-6. Persist to `docs/roadmap.md` when persistence on — honor Existing file STOP gate above.
-7. Gate: "Confirm product roadmap, or adjust versions / icebox before sharing?"
+4. Fill project definitions then sections 1-5. `—` for unknown people/dates. Sort §4.1 and §4.2 rows: SemVer ascending; name-only versions after numbered, keep given order among name-only.
+5. Set **Last updated** = date + time + author (ask author once if unknown — never invent a person). Prepend one **Update timeline** row (newest first): one-line summary of this edit.
+6. Present compact summary (version counts in 4.1 / 4.2 / icebox themes).
+7. Persist to `docs/roadmap.md` when persistence on — honor Existing file STOP gate above.
+8. Gate: "Confirm product roadmap, or adjust versions / icebox before sharing?"
 
 ## Output
 
@@ -57,6 +58,7 @@ Filled markdown matching the template. Language matching applies (`SKILL.md`).
 ## Behavioral constraints
 
 - Do not create `version-roadmap.md` or touch `sdd/`.
+- §4.1 and §4.2: always SemVer ascending; name-only rows after SemVer rows (given order). Never sort by period, status, or RICE.
 - Do not invent commercial numbers, FP, or sprint forecasts here — point to commercial-budget / delivery-schedule / Phase 5 when asked.
 - Triple P85 dates stay in the delivery-schedule artifact — do not merge them into this file unless human asks.
 - Close drafts with human-language equivalent of: "⚠️ Requires human review before treating as the official product roadmap."

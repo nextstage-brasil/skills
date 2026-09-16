@@ -1,8 +1,17 @@
 # Consolidated product roadmap — {product_name}
 
-**Last updated:** {month_year}
-**Product / platform:** {product_name}
+**Last updated:** {YYYY-MM-DD HH:MM} ({timezone_or_local}) — by {author_name_or_handle}  
+**Product / platform:** {product_name}  
 **Tracker card (optional):** {tracker_url_or_id} — when present, must mirror this file.
+
+### Update timeline
+
+Newest first. One line per change — what changed, not a full changelog.
+
+| When | By | Change |
+|------|----|--------|
+| {YYYY-MM-DD HH:MM} | {author} | {one-line summary of this edit} |
+| {YYYY-MM-DD HH:MM} | {author} | {one-line summary} |
 
 ---
 
@@ -62,6 +71,8 @@
 
 Committed roadmap. Ideas without a version stay in §5.
 
+**Row order (mandatory in §4.1 and §4.2):** SemVer ascending on the version id (`1.20.1` → `1.20.2` → `1.21.0`). Name-only rows (no numeric version) after all SemVer rows, keeping the order they were given.
+
 ### 4.1 Delivered
 
 | Version | Objective | Period | Detail link | Source |
@@ -90,10 +101,12 @@ Candidates without a version (icebox). Do not enter §4 until a version is commi
 
 ## How to update
 
+- On every edit: set **Last updated** to date + time + author; prepend one row to **Update timeline** (newest first).
+- **§4.1 / §4.2 sort:** SemVer ascending; name-only (no number) after numbered, in given order. Re-sort after add/move.
 - **§4.1:** delivered versions. **§4.2:** future (in progress, review, to start, blocked).
 - **Detail link:** version detail document or tracker card when it exists; otherwise `—`. **Source:** mandatory (tracker, milestone, PM artifact, or human statement) — never a §4 row without it.
-- **On version complete:** move row from 4.2 to 4.1; compress Objective to one line.
-- **On versioning backlog:** add a 4.2 row; remove the matching §5 block.
+- **On version complete:** move row from 4.2 to 4.1; compress Objective to one line; re-sort both tables.
+- **On versioning backlog:** add a 4.2 row; remove the matching §5 block; re-sort §4.2.
 - Align tracker milestones to version ids in this file when the team uses them.
 - When a tracker card mirrors this file: update that card after every edit to this document.
 
