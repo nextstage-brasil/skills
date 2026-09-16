@@ -46,7 +46,7 @@
     {
       "id": 8,
       "prompt": "Discovery transcript for project RouteWise: [...]. Also, save everything as markdown as we go.",
-      "expected_output": "Confirms the docs base folder (default docs/routewise/) once in Phase 1. After the Phase 1 gate, writes docs/routewise/00-clarification.md and docs/routewise/roadmap.md with the same content as the chat summary before asking the gate question. Does not re-ask about the docs path in later phases.",
+      "expected_output": "Confirms the docs base folder (default docs/routewise/) once in Phase 1. After the Phase 1 gate, writes docs/routewise/00-clarification.md with the same content as the chat summary before asking the gate question. Does not write or rewrite docs/roadmap.md (or docs/routewise/roadmap.md). Does not re-ask about the docs path in later phases.",
       "files": []
     },
     {
@@ -64,13 +64,13 @@
     {
       "id": 11,
       "prompt": "Preciso do prazo P50/P85/P95 e dos três cenários de produtividade. Só tenho FP e produtividade — não quero orçamento em R$ nem forecast por user story.",
-      "expected_output": "Reads references/ns-delivery-schedule/workflow.md. Asks only for missing hours/day, business days/week, and start date. Runs pert_montecarlo.py. No R$. Does not run story-only Phase 5.",
+      "expected_output": "Reads references/ns-delivery-schedule/workflow.md. Asks only for missing hours/day, business days/week, and start date. Runs pert_montecarlo.py. No R$. Does not run story-only Phase 5. Does not patch docs/roadmap.md — dates live in 05-cronograma-tres-cenarios.md only.",
       "files": []
     },
     {
       "id": 12,
       "prompt": "help",
-      "expected_output": "Shows example prompts covering pipeline, commercial budget, delivery schedule, version handoff, and on-demand modes. Does not list grill-me / enricher. Does not start Phase 0/1, does not ask clarification questions, does not create files.",
+      "expected_output": "Shows example prompts covering pipeline, commercial budget, delivery schedule, version handoff, product roadmap, and on-demand modes. Does not list grill-me / enricher. Does not start Phase 0/1, does not ask clarification questions, does not create files.",
       "files": []
     },
     {
@@ -89,6 +89,12 @@
       "id": 15,
       "prompt": "Fecha a versão routewise-v2 — preciso do card de handoff para execução. Phase 3 DAG já feito; ainda não temos sprint plan nem forecast.",
       "expected_output": "Reads references/12-version-handoff.md and assets/version-handoff.template.md. Fills version handoff from existing Phase 3 data only. Layer→sprint and P50/P85 fields show — (missing Phase 4/5). Persists to docs/versions/routewise-v2/pm/execution-handoff.md — not spec-driven docs/versions/routewise-v2/sdd/execution-handoff.md (or legacy root copy). If sdd/ or legacy root SDD handoff exists, states one line they are distinct and does not touch it.",
+      "files": []
+    },
+    {
+      "id": 16,
+      "prompt": "Draft the consolidated product roadmap for this product — vision, modules, delivered vs planned versions, and icebox. Persist under docs.",
+      "expected_output": "Reads references/13-product-roadmap.md and assets/product-roadmap.template.md. Routes to product-roadmap (not SDD version-roadmap.md). Same route for 'roadmap do projeto' or bare 'roadmap' in product/project sense. Prompt has no sourced versions/icebox: vision/modules only if present in input; omit or mark — on §3–§5; list gaps; does not invent tracker ids or version numbers. Persists to docs/roadmap.md when persistence on (not under docs/<project-slug>/). Does not write product-roadmap.md. If docs/roadmap.md already exists and is not the product template (missing ## 4. Versions), STOP gate — no silent overwrite.",
       "files": []
     }
   ]

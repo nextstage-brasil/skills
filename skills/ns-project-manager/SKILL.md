@@ -1,6 +1,6 @@
 ---
 name: ns-project-manager
-description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, orçamento, cotação, cronograma, handoff, fecha a versão — even if PM unnamed. Do NOT use for coding, SDD, GitLab issue execution, or `/ns-requirements-enricher`."
+description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; product/project roadmap (multi-version); version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, roadmap, roadmap do projeto, roadmap de produto, versões entregues/planejadas, orçamento, cotação, cronograma, handoff, fecha a versão — even if PM unnamed. Do NOT use for coding, SDD, GitLab issue execution, or `/ns-requirements-enricher`."
 license: Apache-2.0
 requires_harness: ">=1.0.0"
 provides:
@@ -8,10 +8,11 @@ provides:
   - artifact:pm/backlog
   - artifact:commercial-budget
   - artifact:delivery-schedule
+  - artifact:product-roadmap
 consumes: []
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 depends:
   - ns-harness
 ---
@@ -30,6 +31,7 @@ Gated PM pipeline (Phases 0–5) + on-demand modes (6+). One phase per turn unle
 | "Prioritize", "rank backlog", RICE, WSJF, "what to build first", activity list with effort | **3** Prioritization + Sequencing | `references/02-prioritization.md` |
 | Version narrative, no activity list — "sequence the version", epic deps only | **3** DAG-only sequencing (no RICE) | `references/02-prioritization.md` narrative path |
 | "card de versão", "handoff", "fecha a versão", "o que entregar para execução", version card | **version-handoff** | `references/12-version-handoff.md` |
+| "product roadmap", "roadmap de produto", "roadmap do projeto", "roadmap consolidado" / "consolidated roadmap", bare "roadmap" (product/project), multi-version / icebox | **product-roadmap** | `references/13-product-roadmap.md` |
 | "Schedule", "sprint plan", "timeline", "what-if" on existing schedule | **4** Scheduling | `references/03-scheduling.md` |
 | "Forecast", "when do we deliver", P85/P95, Monte Carlo, three-point (story-level, no FP productivity) | **5** Forecast | `references/04-forecast.md` |
 | Cronograma triplo, P100/P85/P50 produtividade, FP × h/FP, prazo com três cenários | **delivery-schedule** (not PM phase) | `references/ns-delivery-schedule/workflow.md` then its `references/` |
@@ -57,6 +59,7 @@ On **help** / what-can-I-do / examples:
 | Prioritize backlog (RICE/WSJF + DAG) | `Prioritize this backlog with RICE/WSJF against OKR: [...].` |
 | Sequence version narrative (DAG only) | `Version narrative only — sequence deliverables by technical deps, no RICE: [...].` |
 | Version handoff card | `Fecha a versão — handoff card for execution: version orcamento-api-v1.` |
+| Product roadmap (multi-version) | `Draft the consolidated product roadmap — delivered, planned, and icebox.` |
 | Sprint schedule | `We've confirmed ranking. Build the sprint schedule.` |
 | Delivery forecast (story-level) | `When do we deliver? Three-point estimates: [...].` |
 | Triple productivity schedule | `I have FP and productivity — give me P100/P85/P50 delivery dates.` |
@@ -79,6 +82,8 @@ Close: one line — paste input or pick row.
 
 **Version handoff card:** `references/12-version-handoff.md`. On-demand like commercial-budget — not pipeline phase 6+.
 
+**Product roadmap (multi-version):** `references/13-product-roadmap.md` + `assets/product-roadmap.template.md`. On-demand. Persist `docs/roadmap.md` (repo root under `docs/`, not project-slug). Not SDD `version-roadmap.md`.
+
 ## Phase 0 — Intake
 
 User paste unstructured input (transcript, email, voice note):
@@ -92,7 +97,7 @@ User paste unstructured input (transcript, email, voice note):
 After pipeline phase 1–5:
 
 1. **Compact summary** — 5–10 bullets.
-2. **Persist** — if enabled (Phase 0/1), write/update matching `docs/<project-slug>/*.md` + `roadmap.md` (`references/11-artifact-persistence.md`).
+2. **Persist** — if enabled (Phase 0/1), write/update matching phase file from `references/11-artifact-persistence.md` File map. Do not write `docs/roadmap.md` on pipeline gates.
 3. **Gate question** — one ask:
    - Phase 1: "Ready to structure requirements, or should I clarify anything else?"
    - Phase 2: "Confirm to proceed to prioritization, or adjust stories?"
@@ -123,7 +128,7 @@ Read `references/0N-*.md` at phase start.
 
 ## On-demand modes (Phases 6+)
 
-Distinct phrases (router table). Self-contained — read reference, run. Reuse pipeline data when present; never invent metrics. Version handoff is on-demand (like commercial-budget), not a Phase 6+ row — `references/12-version-handoff.md`.
+Distinct phrases (router table). Self-contained — read reference, run. Reuse pipeline data when present; never invent metrics. Version handoff and product roadmap are on-demand (like commercial-budget), not Phase 6+ rows — `references/12-version-handoff.md`, `references/13-product-roadmap.md`.
 
 | Mode | Script |
 |---|---|
@@ -157,7 +162,7 @@ Detect language of **human's latest message** (not skill files, not pasted Engli
 
 - Chat replies, gate questions, clarifications, fill-in templates
 - Phase summaries + on-demand reports
-- Persisted `docs/<project-slug>/*.md` / `roadmap.md`
+- Persisted `docs/<project-slug>/*.md` and product/project `docs/roadmap.md`
 
 Rules:
 
@@ -188,6 +193,8 @@ Rules:
 | `references/02-prioritization.md` | 3 |
 | `references/12-version-handoff.md` | version handoff |
 | `assets/version-handoff.template.md` | version handoff |
+| `references/13-product-roadmap.md` | product roadmap |
+| `assets/product-roadmap.template.md` | product roadmap |
 | `references/03-scheduling.md` | 4 |
 | `references/04-forecast.md` | 5 |
 | `references/05-risk-monitor.md` | 6 |

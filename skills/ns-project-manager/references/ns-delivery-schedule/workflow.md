@@ -100,7 +100,8 @@ Before write: `../pm-persist.md` — if the same basename already exists outside
 | `pert-config-p100.json` | MC input P100 |
 | `pert-config-p85.json` | MC input P85 |
 | `pert-config-p50.json` | MC input P50 |
-| `roadmap.md` | Update with three calendar-P85 dates |
+
+Dates live in `05-cronograma-tres-cenarios.md` only. Do not patch `docs/roadmap.md`.
 
 Chat-only only if human says so. Confirm path once if persistence not yet agreed.
 
