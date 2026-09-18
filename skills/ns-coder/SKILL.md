@@ -1,13 +1,14 @@
 ---
 name: ns-coder
-description: "(NS) Ad-hoc coding — bug fixes, refactors, scripts, migrations — without full SDD. Entry priority 5: \"just implement this\", \"quick fix\", or coding without execution-handoff (C2 under ns-autonomous). Do NOT: ISSUE_URL (ns-execution-gitlab-issue), multi-day/version (ns-spec-driven), diagnosis-only (ns-investigator), when execution-handoff.md exists. Do NOT generate requirements/tasks/handoff."
+description: "(NS) Ad-hoc coding — bug fixes, refactors, scripts, migrations — without full SDD. Entry priority 5: \"just implement this\", \"quick fix\", or coding without execution-handoff (C2 under ns-autonomous). Do NOT: ISSUE_URL (ns-execution-gitlab-issue), multi-day/version (ns-spec-driven), product bug report / screen expected-vs-actual (ns-bug-report-diagnosis), diagnosis-only stack/CI (ns-investigator), when execution-handoff.md exists. Do NOT generate requirements/tasks/handoff."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "2.2"
+  version: "2.3"
 depends:
   - ns-harness
   - ns-investigator
+  - ns-bug-report-diagnosis
   - ns-frontend-design
   - ns-best-practices
   - ns-backend-tests
@@ -37,7 +38,8 @@ Canonical review gate: `../ns-reviewer/references/review-gate-workflow.md` — s
 | ------ | -------- |
 | GitLab `ISSUE_URL` detected | **Stop** — `ns-execution-gitlab-issue` |
 | Multi-day / version / SDD scope | `ns-spec-driven` |
-| Obscure bug, root cause unclear | `ns-investigator` |
+| Product bug report / screen expected vs actual | `ns-bug-report-diagnosis` |
+| Obscure bug, root cause unclear (stack/CI) | `ns-investigator` |
 | Ad-hoc diff ready | `reviewer-agent` then `ns-reviewer`; `ns-judge` only if `Code Review: Approved` |
 
 Entry priority **5** (default). Harness table: `../../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
@@ -201,7 +203,8 @@ Then: what changed, follow-ups, blocked Criticals if applicable.
 - `ns-reviewer` — code quality gate after implementation (**Review loop**)
 - `ns-judge` — delivery proof in-session after `Code Review: Approved`
 - `ns-living-spec` — conditional ad-hoc living-spec update after `Delivery Review: Approved` (**Living specs**)
-- `ns-investigator` — blocked by unclear bug
+- `ns-investigator` — blocked by unclear stack/CI bug
+- `ns-bug-report-diagnosis` — product report / screen story, no implement
 - `ns-autonomous` — autonomous multi-agent execution (GitLab issue or local plan); GitLab issue use `ns-execution-gitlab-issue` instead
 - `ns-frontend-design` — UI/design work (**Complement delegation**)
 - `ns-best-practices` — security/CSP/a11y hygiene pass (**Complement delegation**)

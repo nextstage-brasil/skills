@@ -16,12 +16,13 @@ Skill: `ns-coder`. Host scans after priorities 1–4; also **fallback** when no 
 - GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` (priority 1)
 - Feature / version / SDD / multi-day → `ns-spec-driven` (priority 2)
 - Autonomous multi-step local plan → `ns-autonomous` (priority 3)
-- Diagnosis only, no implement words → `ns-investigator` (priority 4)
+- Product report / screen expected vs actual, no implement words → `ns-bug-report-diagnosis` (priority 4a)
+- Diagnosis only (stack/CI/log), no implement words → `ns-investigator` (priority 4b)
 - Version with `execution-handoff.md` → `references/run-implementation.md` via `ns-spec-driven`
 
-## vs priority 4 (`ns-investigator`)
+## vs priority 4a / 4b
 
-See `../../ns-investigator/references/entry-triggers.md`. **Heuristic:** code change requested → this skill; understanding only → investigator.
+See `../../ns-bug-report-diagnosis/references/entry-triggers.md` and `../../ns-investigator/references/entry-triggers.md`. **Heuristic:** code change requested → this skill; screen story → 4a; stack/CI → 4b.
 
 ## Fallback
 

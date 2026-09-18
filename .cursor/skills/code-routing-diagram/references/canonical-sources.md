@@ -7,6 +7,7 @@ skills/ns-harness/references/code-skill-routing.md
 skills/ns-execution-gitlab-issue/references/entry-triggers.md
 skills/ns-spec-driven/references/entry-triggers.md
 skills/ns-autonomous/references/entry-triggers.md
+skills/ns-bug-report-diagnosis/references/entry-triggers.md
 skills/ns-investigator/references/entry-triggers.md
 skills/ns-coder/references/entry-triggers.md
 ```

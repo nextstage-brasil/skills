@@ -13,6 +13,7 @@
 | `G` | `ns-execution-gitlab-issue` |
 | `S` | `ns-spec-driven` |
 | `A` | `ns-autonomous` |
+| `BRD` | `ns-bug-report-diagnosis` |
 | `I` | `ns-investigator` |
 | `C` | `ns-coder` |
 | `C2` | `ns-coder` subagent under `A` |
@@ -20,7 +21,7 @@
 | `REV` | `ns-reviewer` |
 | `JUDGE` | `ns-judge` (in-session after `Code Review: Approved`) |
 | `GL` | `mcp-gitlab-usage` |
-| `U2` / User decision | Investigator human gate before re-entry |
+| `U2` / User decision | Diagnosis human gate (investigator or bug-report) before re-entry |
 | `IMPL` | Implement + review loop inside coder |
 
 ## Required edges (minimum)
@@ -30,12 +31,13 @@
 - `R → G` (1 ISSUE_URL)
 - `R → S` (2 feature / version / SDD)
 - `R → A` (3 autonomous local)
-- `R → I` (4 root-cause only)
+- `R → BRD` (4a product report)
+- `R → I` (4b stack / CI)
 - `R → C` (5 default)
 
 **Coder escalations:**
 
-- `C → G`, `C → S`, `C → I`, `C → IMPL → REV`
+- `C → G`, `C → S`, `C → BRD`, `C → I`, `C → IMPL → REV`
 
 **GitLab lifecycle:**
 
@@ -52,9 +54,10 @@
 
 - `REV → JUDGE` when `Approved` only
 
-**Investigator loop:**
+**Investigator / bug-report loop:**
 
 - `I → U2 → R` (implement fix) — no direct `I → C`
+- `BRD → U2 → R` (implement fix) — no direct `BRD → C`
 
 ## Do not draw
 

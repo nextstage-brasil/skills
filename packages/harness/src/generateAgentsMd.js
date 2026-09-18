@@ -130,7 +130,8 @@ function buildImplementationRoutingTable(installed) {
     { priority: 1, signal: 'GitLab `ISSUE_URL` or "implement this issue"', skill: 'ns-execution-gitlab-issue' },
     { priority: 2, signal: 'Feature / version / SDD / multi-day scope', skill: 'ns-spec-driven' },
     { priority: 3, signal: 'Autonomous local plan, no issue', skill: 'ns-autonomous' },
-    { priority: 4, signal: 'Root-cause only — no implement request', skill: 'ns-investigator' },
+    { priority: '4a', signal: 'Product bug report — screen story, no implement', skill: 'ns-bug-report-diagnosis' },
+    { priority: '4b', signal: 'Root-cause only — stack/CI/log, no implement', skill: 'ns-investigator' },
     { priority: 5, signal: 'Default — quick fix, small ad-hoc diff', skill: 'ns-coder' },
   ];
 

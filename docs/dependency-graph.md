@@ -7,6 +7,7 @@ Skill IDs match directory names. Install paths: `skills/<name>/` — see `skills
 ```
 ns-harness
 ├── ns-coder ──┬── ns-investigator
+│              ├── ns-bug-report-diagnosis
 │              ├── ns-frontend-design
 │              ├── ns-best-practices
 │              ├── ns-backend-tests

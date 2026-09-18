@@ -12,7 +12,8 @@ Skill: `ns-execution-gitlab-issue`. Host scans this row before priorities 2–5.
 
 - Local ad-hoc coding without an issue → `ns-coder` (priority 5)
 - Autonomous local plan without issue → `ns-autonomous` (priority 3)
-- Diagnosis-only without execution intent → `ns-investigator` (priority 4)
+- Product report / screen story without execution intent → `ns-bug-report-diagnosis` (priority 4a)
+- Stack/CI diagnosis-only without execution intent → `ns-investigator` (priority 4b)
 
 ## Example phrases
 
