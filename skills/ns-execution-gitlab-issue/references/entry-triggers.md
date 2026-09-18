@@ -7,12 +7,14 @@ Skill: `ns-execution-gitlab-issue`. Host scans this row before priorities 2–5.
 - User provides a GitLab `ISSUE_URL`
 - "Implement this issue" / "execute issue #123" with GitLab context
 - Issue reference (`#123`) when MCP GitLab is available and execution is intended
+- BRD dispatch with `ISSUE_URL` + `diagnosis_complete: true`
 
 ## Do not use as entry
 
 - Local ad-hoc coding without an issue → `ns-coder` (priority 5)
 - Autonomous local plan without issue → `ns-autonomous` (priority 3)
-- Product report / screen story without execution intent → `ns-bug-report-diagnosis` (priority 4a)
+- Product report / screen story without execution intent **and** without BRD `diagnosis_complete` → `ns-bug-report-diagnosis` (priority 4a)
+- BRD dispatch with `ISSUE_URL` + `diagnosis_complete: true` → **this skill** (execution). Do not return to 4a.
 - Stack/CI diagnosis-only without execution intent → `ns-investigator` (priority 4b)
 
 ## Example phrases

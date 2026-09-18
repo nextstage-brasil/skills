@@ -52,7 +52,7 @@ Priority scan **1 → 5**; first match wins. Full handoffs: installed `ns-harnes
 | 1 | GitLab `ISSUE_URL` or "implement this issue" | `ns-execution-gitlab-issue` |
 | 2 | Feature / version / SDD / multi-day scope | `ns-spec-driven` |
 | 3 | Autonomous local plan, no issue | `ns-autonomous` |
-| 4a | Product bug report — screen story, no implement | `ns-bug-report-diagnosis` |
+| 4a | Product bug report — screen story; then `G` (URL) or `C`, unless diagnose-only | `ns-bug-report-diagnosis` |
 | 4b | Root-cause only — stack/CI/log, no implement | `ns-investigator` |
 | 5 | Default — quick fix, small ad-hoc diff | `ns-coder` |
 

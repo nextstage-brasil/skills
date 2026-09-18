@@ -57,7 +57,9 @@
 **Investigator / bug-report loop:**
 
 - `I → U2 → R` (implement fix) — no direct `I → C`
-- `BRD → U2 → R` (implement fix) — no direct `BRD → C`
+- `BRD → C` (no URL + `diagnosis_complete`)
+- `BRD → G` (`ISSUE_URL` + `diagnosis_complete`)
+- `BRD → U2` only on diagnose-only opt-out
 
 ## Do not draw
 

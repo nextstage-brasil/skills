@@ -42,10 +42,12 @@ One sentence per location saying its role in the bug. No diff, no new code.}
 the story. If no useful excerpt, describe the observed fact (API response, on-screen text).}
 
 ## 8. Handoff to the fixing agent
+- diagnosis_complete: true
 - Symptom:
 - Likely layer:
 - Files / symbols:
 - Do not:
+- Confidence:
 ```
 
 ## Simple-language rules (sections 2 and 3)

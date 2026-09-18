@@ -16,7 +16,19 @@
     {
       "id": 3,
       "prompt": "The list shows one status and the detail screen shows another for the same record. Diagnose so someone else can fix it later.",
-      "expected_output": "Eight-section report. Traces UI entry through HTTP client into the handler when both layers exist in architecture-rules / overlay. Does not stop at the first similar folder. Section 3 is a manual check from the screen, not a unit-suite command. No product edits. Handoff Do-not cites a write-boundary only if consumer rules name one.",
+      "expected_output": "Eight-section report. Traces UI entry through HTTP client into the handler when both layers exist in architecture-rules / overlay. Does not stop at the first similar folder. Section 3 is a manual check from the screen, not a unit-suite command. No product edits. Handoff Do-not cites a write-boundary only if consumer rules name one. Prompt asks to diagnose so someone else can fix later — treat as diagnose-only; does not dispatch ns-coder.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "When I publish, the screen hangs with no error. I expected it to leave draft.",
+      "expected_output": "Agent writes the eight-section chat report. Section 8 includes diagnosis_complete: true plus symptom, likely layer, files/symbols, Do not, confidence. Then dispatches ns-coder with that payload. Does not wait for a second human message. Does not write the product patch inside this skill. Does not bounce the coder back to 4a.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "When I publish, the UI hangs with no error. https://gitlab.example.com/group/project/-/issues/482",
+      "expected_output": "Eight-section report with diagnosis_complete: true. Then dispatches ns-execution-gitlab-issue (not ns-coder) with the URL and the diagnosis payload. Treats that call as execution intent. Does not return to 4a. Does not mutate GitLab from this skill. Does not wait for a human gate between report and G.",
       "files": []
     }
   ]

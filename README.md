@@ -32,7 +32,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-reviewer`                   | SOLID/security/maintainability code gate (`Approved` = 10). Delivery proof is `ns-judge` after Approved |
 | `ns-judge`                      | Delivery proof vs ACs / ledger / ui-contract after `Code Review: Approved` (`Approved` = 10) |
 | `ns-investigator`               | Root-cause analysis and minimal fixes                                                                                                         |
-| `ns-bug-report-diagnosis`       | Product bug-report diagnosis (screen story) — chat only, no patch; traces every consumer layer before claiming one side                        |
+| `ns-bug-report-diagnosis`       | Product bug-report diagnosis (screen story) — chat only, no patch here; then continues to `ns-execution-gitlab-issue` or `ns-coder` unless diagnose-only |
 | `ns-e2e-tests`                  | Implement/refactor Cypress specs (execution phase)                                                                                            |
 | `ns-backend-tests`              | Implement/refactor PHPUnit tests in Docker (execution phase)                                                                                  |
 | `ns-frontend-design`            | Distinctive production UI; anti–generic AI aesthetics (code complement — installed with `spec-driven` via `ns-coder`)                         |
