@@ -14,7 +14,8 @@ const ENTRY_SKILLS = [
   { priority: 1, name: 'ns-execution-gitlab-issue' },
   { priority: 2, name: 'ns-spec-driven' },
   { priority: 3, name: 'ns-autonomous' },
-  { priority: 4, name: 'ns-investigator' },
+  { priority: '4a', name: 'ns-bug-report-diagnosis' },
+  { priority: '4b', name: 'ns-investigator' },
   { priority: 5, name: 'ns-coder' },
 ];
 

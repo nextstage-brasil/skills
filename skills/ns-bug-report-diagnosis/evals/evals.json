@@ -1,0 +1,35 @@
+{
+  "skill_name": "ns-bug-report-diagnosis",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "When I publish, the screen hangs with no error. I expected it to leave draft. Diagnose this — do not fix it.",
+      "expected_output": "Agent writes the eight-section chat report in the prompt language. Sections 2–3 have no engineering jargon (no HTTP, payload, ORM, test runner, file paths, class names). No patch and no Suggested Code. When the discovered stack has both UI and API, the trace covers both before claiming one side. Section 6/8 cite real files from the eval workspace. Ends at the user; does not dispatch ns-coder.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I saved the record as principal, closed it, and reopened — another one is marked principal. What is happening? Don't change code.",
+      "expected_output": "Eight sections; same language as the prompt; facts vs hypotheses labeled; confidence High/Medium/Low. Simple-language sections stay jargon-free. Handoff names where to look (client state vs persist) using workspace paths that exist, not invented product paths. No diff.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "The list shows one status and the detail screen shows another for the same record. Diagnose so someone else can fix it later.",
+      "expected_output": "Eight-section report. Traces UI entry through HTTP client into the handler when both layers exist in architecture-rules / overlay. Does not stop at the first similar folder. Section 3 is a manual check from the screen, not a unit-suite command. No product edits. Handoff Do-not cites a write-boundary only if consumer rules name one. Prompt asks to diagnose so someone else can fix later — treat as diagnose-only; does not dispatch ns-coder.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "When I publish, the screen hangs with no error. I expected it to leave draft.",
+      "expected_output": "Agent writes the eight-section chat report. Section 8 includes diagnosis_complete: true plus symptom, likely layer, files/symbols, Do not, confidence. Then dispatches ns-coder with that payload. Does not wait for a second human message. Does not write the product patch inside this skill. Does not bounce the coder back to 4a.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "When I publish, the UI hangs with no error. https://gitlab.example.com/group/project/-/issues/482",
+      "expected_output": "Eight-section report with diagnosis_complete: true. Then dispatches ns-execution-gitlab-issue (not ns-coder) with the URL and the diagnosis payload. Treats that call as execution intent. Does not return to 4a. Does not mutate GitLab from this skill. Does not wait for a human gate between report and G.",
+      "files": []
+    }
+  ]
+}

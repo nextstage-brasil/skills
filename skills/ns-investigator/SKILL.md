@@ -1,17 +1,17 @@
 ---
 name: ns-investigator
-description: (NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, or CI — entry priority 4 when the user wants diagnosis WITHOUT implement ("why does X break?"). Use proactively on unclear test/CI failures if they have not asked to fix yet. Do NOT use for implement/fix (ns-coder), version scope (ns-spec-driven), GitLab ISSUE_URL execution, or pre-merge review (ns-reviewer).
+description: (NS) Root-cause diagnosis from errors, logs, stack traces, failing tests, or CI — entry priority 4b when the user wants diagnosis WITHOUT implement ("why does X break?"). Use proactively on unclear test/CI failures if they have not asked to fix yet. Do NOT use for implement/fix (ns-coder), product bug reports / screen expected-vs-actual (ns-bug-report-diagnosis), version scope (ns-spec-driven), GitLab ISSUE_URL execution, or pre-merge review (ns-reviewer).
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 depends:
   - ns-harness
 ---
 
 # Code Investigator
 
-Root-cause diagnosis and minimal fix **proposal** — not implementation. Entry priority **4**. Full routing: `../../ns-harness/references/code-skill-routing.md`.
+Root-cause diagnosis and minimal fix **proposal** — not implementation. Entry priority **4b**. Full routing: `../../ns-harness/references/code-skill-routing.md`.
 
 ## Session boot
 
@@ -19,13 +19,13 @@ See `../../ns-harness/references/session-boot.md`. Load rules from `.nextstage-h
 
 ## Routing (read first)
 
-### Entry (priority 4)
+### Entry (priority 4b)
 
 Trigger phrases: `references/entry-triggers.md`. Harness priority table: `../../ns-harness/references/code-skill-routing.md`.
 
-Use when the user wants diagnosis only — stack trace, CI fail, obscure bug, "why does X break?" — **without** asking to implement the fix.
+Use when the user wants diagnosis only — stack trace, CI fail, obscure bug, "why does X break?" — **without** asking to implement the fix, and **without** a product screen story.
 
-Do **not** enter when the user asks to implement or fix code → `ns-coder` (priority 5). Do **not** enter for GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` (priority 1). Do **not** enter for multi-day / version scope → `ns-spec-driven` (priority 2).
+Do **not** enter when the user asks to implement or fix code → `ns-coder` (priority 5). Do **not** enter for a product bug report / expected vs actual on a screen → `ns-bug-report-diagnosis` (priority 4a). Do **not** enter for GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` (priority 1). Do **not** enter for multi-day / version scope → `ns-spec-driven` (priority 2).
 
 ### Handoff out
 
@@ -110,7 +110,7 @@ Regression test, dependency pin, guard, logging, documentation.
 | File                         | When                             |
 | ---------------------------- | -------------------------------- |
 | `references/rca-template.md` | Optional structured RCA document |
-| `references/entry-triggers.md` | Priority 4 entry phrases vs coder |
+| `references/entry-triggers.md` | Priority 4b entry phrases vs 4a and coder |
 | `../../ns-harness/references/code-skill-routing.md` | Entry priority and investigator handoff |
 
 ## Constraints

@@ -32,6 +32,7 @@
     "ns-coder": [
       "ns-harness",
       "ns-investigator",
+      "ns-bug-report-diagnosis",
       "ns-frontend-design",
       "ns-best-practices",
       "ns-backend-tests",
@@ -45,6 +46,7 @@
     "ns-reviewer": ["ns-harness"],
     "ns-judge": ["ns-harness", "ns-reviewer"],
     "ns-investigator": ["ns-harness"],
+    "ns-bug-report-diagnosis": ["ns-harness"],
     "ns-e2e-tests": [],
     "ns-backend-tests": ["ns-harness"],
     "ns-agent-adaptation": ["ns-harness"],
@@ -95,7 +97,7 @@
     },
     "implementation": {
       "label": "Implementation",
-      "skills": ["ns-coder", "ns-autonomous", "ns-frontend-design", "ns-docs-writer", "ns-best-practices", "ns-execution-gitlab-issue", "ns-investigator", "ns-reviewer", "ns-judge", "ns-e2e-tests", "ns-backend-tests"]
+      "skills": ["ns-coder", "ns-autonomous", "ns-frontend-design", "ns-docs-writer", "ns-best-practices", "ns-execution-gitlab-issue", "ns-investigator", "ns-bug-report-diagnosis", "ns-reviewer", "ns-judge", "ns-e2e-tests", "ns-backend-tests"]
     },
     "retrieval": {
       "label": "Retrieval (RAG)",
