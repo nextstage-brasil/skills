@@ -10,3 +10,5 @@ Tracks `docs/coder-skill-routing.md` (generated) and canonical skill sources.
 | 1.3 | 2026-07-28 | skills routing session | Multi-signal rule and tie-breakers in harness reference |
 | 1.5 | 2026-09-12 | code then judge | `REV → JUDGE` after `Code Review: Approved`; `ns-judge` delivery gate |
 | 1.6 | 2026-09-12 | spawn gate | Cheap vs heavy execute; G single-unit skips A; C2 defer per-unit REV |
+| 1.7 | 2026-09-18 | product-report diagnosis | Priority **4a** `ns-bug-report-diagnosis` (screen story); **4b** `ns-investigator` (stack/CI); scan 1→5 intact |
+| 1.8 | 2026-09-18 | BRD auto-handoff | After the eight-section report, `BRD → G` (`ISSUE_URL`) or `BRD → C` (else), payload `diagnosis_complete`. Diagnose-only opt-out keeps `BRD → U2`. `C`/`G` must not bounce to 4a with that payload. |

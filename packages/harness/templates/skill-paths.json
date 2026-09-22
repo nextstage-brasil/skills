@@ -4,6 +4,7 @@
   "ns-autonomous": "skills/ns-autonomous",
   "ns-coder": "skills/ns-coder",
   "ns-investigator": "skills/ns-investigator",
+  "ns-bug-report-diagnosis": "skills/ns-bug-report-diagnosis",
   "ns-reviewer": "skills/ns-reviewer",
   "ns-judge": "skills/ns-judge",
   "ns-best-practices": "skills/ns-best-practices",

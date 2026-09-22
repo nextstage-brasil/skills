@@ -683,10 +683,11 @@ Should not land in canonical.
     agentsDryRun.stdout.includes('langchain-fundamentals') &&
       agentsDryRun.stdout.includes('vitest') &&
       agentsDryRun.stdout.includes('ns-spec-driven') &&
+      agentsDryRun.stdout.includes('ns-bug-report-diagnosis') &&
       agentsDryRun.stdout.includes('ns-langgraph-agents') &&
       agentsDryRun.stdout.includes('ns-postgres-rag') &&
       agentsDryRun.stdout.includes('ns-graphrag'),
-    'agents dry-run should list spec-driven + labs + RAG + external skills',
+    'agents dry-run should list spec-driven + bug-report diagnosis + labs + RAG + external skills',
   );
 
   const agentsAliasDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents-api', '--dir', tempDir], harnessRoot);
