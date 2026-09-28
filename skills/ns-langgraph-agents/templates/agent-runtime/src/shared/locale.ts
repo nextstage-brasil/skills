@@ -9,6 +9,15 @@ export const LOCALE_HINT_KEY = "locale_hint";
 
 export const DEFAULT_FALLBACK_LOCALE = "pt-BR";
 
+/** True when locale (or DEFAULT_FALLBACK_LOCALE when null/empty) is Portuguese. */
+export function isPtLocale(locale?: string | null): boolean {
+  const resolved =
+    typeof locale === "string" && locale.trim().length > 0
+      ? locale
+      : DEFAULT_FALLBACK_LOCALE;
+  return resolved.startsWith("pt");
+}
+
 export type TurnLocaleResolution = {
   locale: string;
   currency?: string;

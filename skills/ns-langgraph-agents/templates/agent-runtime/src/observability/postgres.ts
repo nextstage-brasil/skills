@@ -70,6 +70,7 @@ export async function logLlmCall(params: {
   completionTokens: number;
   latencyMs: number;
   stage?: string | null;
+  promptVersion?: string | null;
 }): Promise<string> {
   const pool = getPool();
   const hideInputs = process.env.LANGCHAIN_HIDE_INPUTS === "true";
@@ -77,8 +78,8 @@ export async function logLlmCall(params: {
   const responseRaw = hideInputs ? "[REDACTED]" : params.responseRaw;
   const result = await pool.query<{ id: string }>(
     `INSERT INTO llm_logs
-       (checkpoint_id, model_name, prompt_raw, response_raw, prompt_tokens, completion_tokens, latency_ms, stage)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       (checkpoint_id, model_name, prompt_raw, response_raw, prompt_tokens, completion_tokens, latency_ms, stage, prompt_version)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
      RETURNING id`,
     [
       params.checkpointId,
@@ -89,6 +90,7 @@ export async function logLlmCall(params: {
       params.completionTokens,
       params.latencyMs,
       params.stage ?? null,
+      params.promptVersion ?? null,
     ],
   );
   return result.rows[0].id;

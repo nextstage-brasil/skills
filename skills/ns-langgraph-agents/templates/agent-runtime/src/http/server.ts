@@ -1,6 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { Command } from "@langchain/langgraph";
-import { isDevChatEnabled, renderDevChatHtml } from "./dev-chat.js";
+import { HumanMessage } from "@langchain/core/messages";
+import { isDevChatEnabled, renderDevChatHtml, serveDevChatApp } from "./dev-chat.js";
 import {
   assertHitlResumeApprover,
   alwaysEscalateEffective,
@@ -9,7 +10,10 @@ import {
   HitlResumeError,
   type HitlResumeBody,
 } from "./hitl-resume.js";
+import { extractPendingInterrupt } from "./pending-interrupt.js";
 import { readJsonBody } from "./read-json-body.js";
+import { streamGraphTurn, type CompiledGraph } from "./stream-turn.js";
+import { wantsSse } from "./sse.js";
 import { getGraph } from "../graph/graph.js";
 import { buildRunConfig, initLangSmith } from "../observability/langsmith.js";
 import { initOtel } from "../observability/otel.js";
@@ -24,22 +28,14 @@ import {
 import { runStorage } from "../observability/run-context.js";
 import { resolveCheckpointerMode } from "../memory/checkpointer.js";
 import { bootstrapSkillsRegistry } from "../skills/registry.js";
-import { AGENT_ERROR } from "../shared/error-codes.js";
+import { readLatencyBudgetMs } from "../shared/latency-budget.js";
+import { AGENT_ERROR, errorCodeOf } from "../shared/error-codes.js";
 
 initLangSmith();
 
 function json(res: ServerResponse, status: number, data: unknown) {
   res.writeHead(status, { "Content-Type": "application/json" });
   res.end(JSON.stringify(data));
-}
-
-function readLatencyBudgetMs(): number {
-  const raw = process.env.TURN_LATENCY_BUDGET_MS?.trim();
-  if (!raw) {
-    return 60_000;
-  }
-  const n = Number(raw);
-  return Number.isFinite(n) && n > 0 ? n : 60_000;
 }
 
 async function invokeWithLatencyBudget<T>(
@@ -65,6 +61,11 @@ async function invokeWithLatencyBudget<T>(
   }
 }
 
+/** Scaffold default tenant — product forks resolve from auth. */
+function resolveTenantId(): string {
+  return "1";
+}
+
 export function createAgentServer() {
   return createServer(async (_req: IncomingMessage, res: ServerResponse) => {
     const url = new URL(_req.url ?? "/", "http://localhost");
@@ -77,7 +78,7 @@ export function createAgentServer() {
         return json(res, 200, { status: "ok" });
       }
 
-      if (_req.method === "GET" && parts[0] === "dev-chat") {
+      if (_req.method === "GET" && parts[0] === "dev-chat" && parts.length === 1) {
         if (!isDevChatEnabled()) {
           return json(res, 404, { error: "not_found" });
         }
@@ -86,9 +87,18 @@ export function createAgentServer() {
         return;
       }
 
+      if (
+        _req.method === "GET" &&
+        parts[0] === "dev-chat" &&
+        parts[1] === "app.js" &&
+        parts.length === 2
+      ) {
+        return serveDevChatApp(res);
+      }
+
       if (_req.method === "POST" && parts[0] === "threads" && parts.length === 1) {
         const threadId = `thread_${Date.now()}`;
-        const tenantId = "1";
+        const tenantId = resolveTenantId();
 
         await syncTenant(tenantId, tenantId);
         await logThread(threadId, tenantId);
@@ -111,11 +121,60 @@ export function createAgentServer() {
       if (
         _req.method === "POST" &&
         parts[0] === "threads" &&
+        parts[2] === "message" &&
+        parts.length === 3
+      ) {
+        const threadId = parts[1];
+        let body: Record<string, unknown>;
+        try {
+          body = (await readJsonBody(_req)) as Record<string, unknown>;
+        } catch {
+          return json(res, 400, { error: "invalid_json" });
+        }
+        const message =
+          typeof body.message === "string" ? body.message.trim() : "";
+        if (!message) {
+          return json(res, 400, { error: "message_required" });
+        }
+        const tenantId = resolveTenantId();
+        await syncTenant(tenantId, tenantId);
+        await logThread(threadId, tenantId);
+
+        const runConfig = buildRunConfig(threadId, {
+          tenant_id: tenantId,
+          op: "message",
+        });
+        const input = { messages: [new HumanMessage(message)] };
+
+        if (wantsSse(_req)) {
+          await runStorage.run({ threadId, tenantId }, async () =>
+            streamGraphTurn({
+              req: _req,
+              res,
+              graph: graph as CompiledGraph,
+              input,
+              runConfig,
+            }),
+          );
+          return;
+        }
+
+        const result = await runStorage.run({ threadId, tenantId }, async () =>
+          invokeWithLatencyBudget(async (signal) =>
+            graph.invoke(input, { ...runConfig, signal }),
+          ),
+        );
+        return json(res, 200, { thread_id: threadId, state: result });
+      }
+
+      if (
+        _req.method === "POST" &&
+        parts[0] === "threads" &&
         parts[2] === "resume" &&
         parts.length === 3
       ) {
         const threadId = parts[1];
-        const tenantId = "1";
+        const tenantId = resolveTenantId();
         let body: HitlResumeBody;
         try {
           body = (await readJsonBody(_req)) as HitlResumeBody;
@@ -128,6 +187,12 @@ export function createAgentServer() {
           op: "resume",
         });
         const graphState = await graph.getState(runConfig);
+        if (!extractPendingInterrupt(graphState)) {
+          return json(res, 409, {
+            error: AGENT_ERROR.HITL_NOT_PENDING,
+            error_code: AGENT_ERROR.HITL_NOT_PENDING,
+          });
+        }
         const alwaysEscalate = alwaysEscalateEffective(body, graphState);
         try {
           assertHitlResumeApprover({
@@ -146,30 +211,49 @@ export function createAgentServer() {
 
         const resumePayload = buildHitlResumePayload(body, alwaysEscalate);
         const decidedAt = new Date();
-        const outcome = String(resumePayload.decision);
+        const decisionEvent = hitlTurnDecisionEvent(resumePayload, decidedAt);
         const checkpointId = await getLatestCheckpointId(threadId);
         await logHitlDecision({
           threadId,
           checkpointId,
           intentCategory:
-            typeof resumePayload.intent_category === "string"
-              ? resumePayload.intent_category
-              : body.intent_category ?? null,
-          approverId: body.approver_id ?? null,
-          approverRole: body.approver_role ?? null,
+            typeof decisionEvent.intent_category === "string"
+              ? decisionEvent.intent_category
+              : null,
+          approverId:
+            typeof decisionEvent.approver_id === "string"
+              ? decisionEvent.approver_id
+              : null,
+          approverRole:
+            typeof decisionEvent.approver_role === "string"
+              ? decisionEvent.approver_role
+              : null,
           decidedAt,
-          decisionOutcome: outcome,
-          alwaysEscalate,
+          decisionOutcome: String(decisionEvent.decision_outcome),
+          alwaysEscalate: decisionEvent.always_escalate === true,
           resumePayload,
         });
-        await upsertTurnDecisions(
-          threadId,
-          hitlTurnDecisionEvent(body, alwaysEscalate, decidedAt),
-        );
+        await upsertTurnDecisions(threadId, decisionEvent);
+
+        const command = new Command({ resume: resumePayload });
+
+        if (wantsSse(_req)) {
+          await runStorage.run({ threadId, tenantId }, async () =>
+            streamGraphTurn({
+              req: _req,
+              res,
+              graph: graph as CompiledGraph,
+              input: command,
+              runConfig,
+            }),
+          );
+          return;
+        }
 
         const result = await runStorage.run({ threadId, tenantId }, async () =>
           invokeWithLatencyBudget(async (signal) =>
-            graph.invoke(new Command({ resume: resumePayload }), {
+            // Command resume — LangGraph Command generics are wider than node-id union
+            graph.invoke(command as never, {
               ...runConfig,
               signal,
             }),
@@ -181,10 +265,7 @@ export function createAgentServer() {
 
       return json(res, 404, { error: "not_found" });
     } catch (err) {
-      const code =
-        err && typeof err === "object" && "code" in err
-          ? String((err as { code: unknown }).code)
-          : undefined;
+      const code = errorCodeOf(err);
       if (code === AGENT_ERROR.LATENCY_BUDGET) {
         return json(res, 504, {
           error: AGENT_ERROR.LATENCY_BUDGET,
@@ -192,12 +273,6 @@ export function createAgentServer() {
         });
       }
       const message = err instanceof Error ? err.message : "unknown_error";
-      if (message === AGENT_ERROR.LATENCY_BUDGET) {
-        return json(res, 504, {
-          error: AGENT_ERROR.LATENCY_BUDGET,
-          error_code: AGENT_ERROR.LATENCY_BUDGET,
-        });
-      }
       return json(res, 500, { error: message });
     }
   });

@@ -1,4 +1,5 @@
-import { assertConfigurableSecret } from "./governance.js";
+import { assertConfigurableSecret } from "../capability/governance.js";
+import { loadRolePrompt } from "./load-role-prompt.js";
 
 /** Canonical configurable keys — never mirror these into graph state / checkpointer. */
 export const PRODUCT_SYSTEM_PROMPT_KEY = "product_system_prompt";
@@ -8,15 +9,12 @@ export const COMPOSER_PRODUCT_PROMPT_KEY = "composer_product_prompt";
 export type SystemPromptRole = "analyst" | "composer";
 
 /**
- * Motor-owned invariants. Not overridable by the application.
+ * Motor invariants = conversation/prompts/{role}.md (SSoT).
  * Product persona is appended via composeSystemPrompt — never replaces these.
  */
-export const MOTOR_INVARIANTS: Record<SystemPromptRole, string> = {
-  analyst:
-    "JSON planner hop: emit executionPlan + userFacingIntent (same language as the current user message). Do not bind tools. Do not emit user-facing Markdown. Machine intent stays English for audit only.",
-  composer:
-    "You are the sole writer of user-facing Markdown. Narrate evidence channels in state only — never invent numbers, entities, or tool outcomes. If externalError is set, explain it; do not ask for data the tools already failed to fetch. Match the user's language this turn; present numbers and dates for the conversation-observed locale — do not invent thousand/decimal separators (formatting is applied in code).",
-};
+export function motorInvariant(role: SystemPromptRole): string {
+  return loadRolePrompt(role);
+}
 
 /**
  * Reads product persona from RunnableConfig.configurable.
@@ -50,7 +48,7 @@ export function composeSystemPrompt(params: {
   productPrompt?: string | null;
   configurable?: Record<string, unknown>;
 }): string {
-  const invariant = MOTOR_INVARIANTS[params.role];
+  const invariant = motorInvariant(params.role);
   const injected =
     (typeof params.productPrompt === "string" && params.productPrompt.trim().length > 0
       ? params.productPrompt.trim()

@@ -11,6 +11,10 @@ When using analyst/executor + MCP: LLM prose **never** SoT for numbers, entities
 | State channels | Composer reads channels; no analytics recompute |
 | Composer | Narrate only what channels prove |
 
+## Paint / refs (RECOMMENDED)
+
+Server may attach optional `render_spec` / `paint` on terminal `completed` for client paint slots. **RECOMMENDED**, not required. No hydrate engine in scaffold. Never on `interrupted`.
+
 ## Evidence channels
 
 | Channel | Set by | Composer |

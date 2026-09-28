@@ -18,21 +18,23 @@ agent-api/
 ├── skills/                 # *.md procedure files (auto-discovered)
 ├── src/                    # production only — no *.test.ts
 │   ├── catalog/            # optional: search/summary helpers
-│   ├── conversation/       # domain: turns, schemas, contact flows
-│   │   ├── prompts/        # canonical system prompt markdown + scope helpers
+│   ├── conversation/       # domain: turns, schemas; system-prompt.ts; prompts/; locale/; presentation/
+│   │   ├── prompts/        # analyst.md, composer.md + product persona markdown
 │   │   ├── locale/         # resolveConversationLocale, Intl formatters, humanize (conversation-observed)
-│   │   └── presentation/   # charts, mermaid sanitize, display adapters
+│   │   └── presentation/   # progress copy, charts, mermaid sanitize, display adapters
 │   ├── graph/              # wiring only — no locale/copy/domain heuristics
 │   │   ├── graph.ts        # StateGraph compile + getGraph
 │   │   ├── factory.ts      # LangGraph Studio export
 │   │   ├── guards.ts
+│   │   ├── analyst/        # payload + plan-actions parsers
+│   │   ├── composer/       # payload builders
 │   │   └── nodes/*.node.ts # thin orchestrators; one file per node
-│   ├── http/               # server, sse.ts, dev-chat (greenfield streaming_sse MUST)
+│   ├── http/               # server, sse, stream-turn, hitl-resume, dev-chat shell + dev-chat-app/
 │   ├── db/                 # client, migrate, migrations/
 │   ├── llm/                # config, provider, json-output — infra only
 │   ├── memory/             # checkpointer, store, context-window, summarizer
 │   ├── observability/      # postgres, run-context, langsmith, otel
-│   ├── capability/         # types, allowlist, rate limit, fingerprint
+│   ├── capability/         # types, allowlist, rate limit, fingerprint, tool-budget, tool-names
 │   ├── mcp/                # client, registry, discovery, governance, adapter
 │   ├── skills/             # registry, loader, to-langchain-tool (no domain heuristics)
 │   ├── tools/              # local StructuredTools
@@ -40,8 +42,12 @@ agent-api/
 │   ├── state.ts
 │   └── index.ts
 ├── tests/                  # mirrors src/ + setup.ts
+├── scripts/                # build-dev-chat, copy-migrations
+├── Dockerfile              # multi-stage node:24-slim
+├── docker-compose.yml      # agent-api only
 ├── package.json
 ├── tsconfig.json
+├── tsconfig.dev-chat.json
 └── vitest.config.ts
 ```
 

@@ -35,6 +35,11 @@ export async function guardNode(
     analystStatus: null,
     analystIteration: 0,
     analystNarration: [],
+    analysis: null,
+    dataBundle: null,
+    discoveryBrief: null,
+    paint: null,
+    render_spec: null,
     turnLocale: localeRes.locale,
     turnCurrency: localeRes.currency ?? null,
   };

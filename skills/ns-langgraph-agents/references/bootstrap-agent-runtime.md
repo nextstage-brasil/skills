@@ -38,7 +38,7 @@ node skills/ns-langgraph-agents/scripts/bootstrap-agent-runtime.mjs --dest ./age
 ## After copy
 
 1. `cd {agent_api_root} && npm install && npm test`
-2. Confirm DoD in `templates/agent-runtime/README.md` (dev-chat, tool-budget, MCP normalize-before-truncate, composeSystemPrompt, locale, db, sse, postman)
+2. Confirm DoD in `templates/agent-runtime/README.md` (styled React dev-chat, Docker, tool-budget, MCP normalize-before-truncate, composeSystemPrompt in conversation/, locale, db, sse `/message`+`/resume`, postman)
 3. Align `src/graph/` with locked `graph-spec.md` (template scaffold is a starting suggestion)
 4. Domain: `src/conversation/`, `config/`, `skills/*.md` — via `ns-coder` / spec-driven **feature** tasks, not a second scaffold
 

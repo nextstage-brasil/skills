@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "factory-agent-api-{{PRODUCT_SLUG}}",
     "name": "{{PRODUCT_DISPLAY_NAME}} — agent-api",
-    "description": "HTTP API do runtime LangGraph (`agent-api`).\n\n**Fábrica:** manter esta collection alinhada a cada rota em `src/api/` ou `src/http/`. Base URL padrão: `http://localhost:3100`.\n\n## Contrato padrão (HITL)\n\n| Método | Path | Descrição |\n|--------|------|------------|\n| POST | `/threads` | Cria thread e executa intake |\n| POST | `/threads/:thread_id/message` | Mensagem do usuário |\n| POST | `/threads/:thread_id/resume` | Retoma após `interrupt()` (`approve` / `reject`) |\n\nAdicione requests extras (health, tenants, webhooks) conforme o produto.\n\n## Resposta típica\n\n```json\n{ \"thread_id\": \"thread_…\", \"state\": { … } }\n```\n\n## Erros\n\n- `404` `{ \"error\": \"not_found\" }`\n- `500` `{ \"error\": \"<message>\" }`",
+    "description": "LangGraph agent-api HTTP contract.\n\nKeep this collection aligned with `src/http/` routes. Base URL: `http://localhost:3100`.\n\n| Method | Path | Notes |\n|--------|------|-------|\n| POST | `/threads` | Create thread |\n| POST | `/threads/:id/message` | `{ message }`; `Accept: text/event-stream` → SSE |\n| POST | `/threads/:id/resume` | HITL; same SSE when Accept SSE; `{ decision }` |\n| GET | `/dev-chat` | Styled React bench (DEV only) |\n\nTerminal SSE: `completed` | `failed` | `cancelled` | `interrupted`.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -38,13 +38,58 @@
               "raw": "{{baseUrl}}/threads",
               "host": ["{{baseUrl}}"],
               "path": ["threads"]
-            },
-            "description": "Ajuste o body conforme `graph-spec.md` e contratos do produto."
+            }
           },
           "response": []
         },
         {
-          "name": "Send message",
+          "name": "Send message (SSE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "text/event-stream" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Follow-up message\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/threads/{{thread_id}}/message",
+              "host": ["{{baseUrl}}"],
+              "path": ["threads", "{{thread_id}}", "message"]
+            },
+            "description": "Streams progress then terminal completed|failed|cancelled|interrupted."
+          },
+          "response": [
+            {
+              "name": "interrupted example",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept", "value": "text/event-stream" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"Please approve the write\"\n}"
+                },
+                "url": "{{baseUrl}}/threads/{{thread_id}}/message"
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream; charset=utf-8"
+                }
+              ],
+              "body": "event: thinking\ndata: {\"status\":\"thinking\",\"message\":\"Planning…\",\"error_code\":null,\"usage\":null}\n\nevent: interrupted\ndata: {\"status\":\"interrupted\",\"message\":\"Allow write?\",\"error_code\":null,\"usage\":null,\"interrupt\":{\"kind\":\"tool_approval\",\"question\":\"Allow write?\",\"options\":[{\"id\":\"approved\",\"label\":\"Yes\"},{\"id\":\"rejected\",\"label\":\"No\"}]}}\n\n"
+            }
+          ]
+        },
+        {
+          "name": "Send message (JSON)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -61,11 +106,35 @@
           "response": []
         },
         {
-          "name": "Resume HITL — approve",
+          "name": "Resume HITL — option decision (SSE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "text/event-stream" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"decision\": \"approved\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/threads/{{thread_id}}/resume",
+              "host": ["{{baseUrl}}"],
+              "path": ["threads", "{{thread_id}}", "resume"]
+            },
+            "description": "Maps interrupt option.id → decision. Always-escalate still requires approver_id + approver_role from getState gate."
+          },
+          "response": []
+        },
+        {
+          "name": "Resume HITL — always-escalate approve",
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"approve\",\n  \"approver_id\": \"user-123\",\n  \"approver_role\": \"regulatory-reviewer\",\n  \"always_escalate\": true,\n  \"intent_category\": \"regulated_publish\"\n}" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"decision\": \"approve\",\n  \"approver_id\": \"user-123\",\n  \"approver_role\": \"regulatory-reviewer\",\n  \"always_escalate\": true,\n  \"intent_category\": \"regulated_publish\"\n}"
+            },
             "url": {
               "raw": "{{baseUrl}}/threads/{{thread_id}}/resume",
               "host": ["{{baseUrl}}"],
@@ -79,7 +148,10 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"reject\",\n  \"approver_id\": \"user-123\",\n  \"approver_role\": \"regulatory-reviewer\",\n  \"always_escalate\": true,\n  \"intent_category\": \"regulated_publish\"\n}" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"decision\": \"reject\",\n  \"approver_id\": \"user-123\",\n  \"approver_role\": \"regulatory-reviewer\",\n  \"always_escalate\": true,\n  \"intent_category\": \"regulated_publish\"\n}"
+            },
             "url": {
               "raw": "{{baseUrl}}/threads/{{thread_id}}/resume",
               "host": ["{{baseUrl}}"],

@@ -350,6 +350,55 @@
         "Rejects tokens-only dashboard as the audit query",
         "Cites observability.md"
       ]
+    },
+    {
+      "id": 28,
+      "prompt": "Greenfield streaming_sse agent-api. We need a local train UI that looks like a real bench — not bare HTML — and can resume when the graph pauses for HITL. What must ship?",
+      "expected_output": "Styled React dev-chat (pico + IBM Plex shell, esbuild bundle at /dev-chat/app.js); interrupted terminal with interrupt options; resume SSE; cites streaming-and-hitl.",
+      "files": [],
+      "assertions": [
+        "Requires styled / React dev-chat (pico or IBM Plex or build:dev-chat)",
+        "Mentions interrupted status or interrupt options for HITL pause",
+        "Mentions resume SSE or POST resume with Accept text/event-stream",
+        "Cites streaming-and-hitl.md or bootstrap README Docker/dev-chat deliverables"
+      ]
+    },
+    {
+      "id": 29,
+      "prompt": "Dev-chat got interrupted with question + Approve/Reject. How does the operator continue the same turn from the bench?",
+      "expected_output": "Click option → POST /threads/:id/resume with decision=option.id and Accept SSE; always_escalate still needs approver fields from getState gate; cites streaming-and-hitl.",
+      "files": [],
+      "assertions": [
+        "Maps option id to resume decision body",
+        "Uses POST /threads/:id/resume (SSE when Accept event-stream)",
+        "Always-escalate still requires approver_id/approver_role from interrupt/getState",
+        "Cites streaming-and-hitl.md"
+      ]
+    },
+    {
+      "id": 30,
+      "prompt": "We want summarize on lmstudio locally and composer/analyst on openai in the same process. Also a self-hosted vllm for analyst overnight. How do LLM env and reasoning work?",
+      "expected_output": "Per-stage LLM_*_PROVIDER/MODEL/BASE_URL/REASONING; any provider any stage including vllm (BASE_URL required, key EMPTY); reasoning mapped openai/openrouter only; cites .env.example or llm config doctrine.",
+      "files": [],
+      "assertions": [
+        "Allows mixed providers per stage (LLM_ANALYST_*, LLM_COMPOSER_*, LLM_SUMMARIZE_*)",
+        "Includes vllm with BASE_URL required",
+        "Mentions LLM_REASONING or per-stage REASONING (none|low|medium|high)",
+        "States lmstudio/vllm omit or ignore reasoning effort mapping"
+      ]
+    },
+    {
+      "id": 31,
+      "prompt": "Greenfield streaming_sse. Composer LLM still uses invoke and the UI only shows Markdown on completed — clients see the whole reply at once. What must the runtime lock?",
+      "expected_output": "Composer reply hop MUST model.stream / streamJsonSchema; peel cumulative markdown from incomplete JSON; emit response_streaming ticks via custom writer; graph streamMode values+custom; SSE leave-now (X-Accel-Buffering, setNoDelay, flush); dev-chat flushSync per tick; completed repeats final message not first appearance; forbid invoke-dump, buffered SSE, client typewriter. Cites streaming-and-hitl.",
+      "files": [],
+      "assertions": [
+        "Requires composer model.stream or streamJsonSchema (forbids invoke on reply hop)",
+        "Requires cumulative response_streaming ticks before completed",
+        "Requires SSE leave-now flush (X-Accel-Buffering or setNoDelay or flush after write)",
+        "Requires flushSync or equivalent per-tick paint (forbids client typewriter / timer hide)",
+        "Cites streaming-and-hitl.md"
+      ]
     }
   ]
 }

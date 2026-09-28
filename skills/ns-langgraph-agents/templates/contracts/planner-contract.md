@@ -66,6 +66,9 @@ Rules:
 - SSE: emit `thinking` with that string at **planner node entry** of the **next** hop (before the next LLM invoke). Hop 0: generic copy from `src/conversation/presentation/` (or locale), not LLM text
 - Never put this line in `response_streaming` or durable `messages` as the answer — composer remains sole Markdown writer
 - Executor emits `tool_started` / `tool_finished` (generic progress copy in presentation/, not the planner JSON)
+- Plan `actions[]` entries are exactly `{ "tool", "args" }` — reject `name` / `arguments` / `params` / `parameters`
+- `status: complete` carries **no** fetch actions; route on structural fields (`analystStatus`, action length), not domain word lists
+- Stop fetching once analytical evidence satisfies the plan
 
 ## Validation
 

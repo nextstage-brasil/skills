@@ -32,12 +32,3 @@ export {
   parseWireToolName,
   type ParsedWireToolName,
 } from "./tool-names.js";
-export {
-  PRODUCT_SYSTEM_PROMPT_KEY,
-  GATHER_PRODUCT_PROMPT_KEY,
-  COMPOSER_PRODUCT_PROMPT_KEY,
-  MOTOR_INVARIANTS,
-  readProductSystemPrompt,
-  composeSystemPrompt,
-  type SystemPromptRole,
-} from "./system-prompt.js";

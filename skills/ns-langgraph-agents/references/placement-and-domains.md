@@ -1,8 +1,8 @@
 # Placement and domains
 
-Decide **where** an artifact lives before writing code. Wrong folders become permanent debt: locale under `graph/`, domain heuristics in skill loaders, orphan prompt copies.
+Pick path before code. Wrong folder = debt (locale in `graph/`, heuristics in skill loaders, orphan prompts).
 
-Read this before any new file under `{agent_api_root}`. Emit a **Placement Decision Block** (see `SKILL.md`) and refuse paths outside the matrix.
+Read before any new file under `{agent_api_root}`. Emit **Placement Decision Block** (`SKILL.md`). Refuse paths outside matrix.
 
 ## Artifact → path matrix
 
@@ -10,32 +10,36 @@ Read this before any new file under `{agent_api_root}`. Emit a **Placement Decis
 | ------------- | -------------- | ----- |
 | Control flow, edges, compile | `src/graph/` (`graph.ts`, `factory.ts`, `guards.ts`) | graph |
 | Node orchestration (thin) | `src/graph/nodes/*.node.ts` | graph |
+| Analyst payload / plan-action parser (wiring helpers, no copy/locale) | `src/graph/analyst/` | graph |
+| Composer payload builders (wiring helpers, no copy/locale) | `src/graph/composer/` | graph |
 | System prompt markdown + scope helpers | `src/conversation/prompts/` | conversation |
+| Motor compose (`system-prompt.ts`, `load-role-prompt.ts`) | `src/conversation/` | conversation |
 | Turn schemas, reply copy, contact flows | `src/conversation/` | conversation |
 | Locale formatters, humanize, month/date labels | `src/conversation/locale/` | conversation |
 | `resolveConversationLocale` / `formatUserFacing` (conversation-observed) | `src/conversation/locale/` | conversation |
-| Presentation (charts, mermaid sanitize, display adapters) | `src/conversation/presentation/` | conversation |
+| Presentation (progress copy, charts, mermaid sanitize) | `src/conversation/presentation/` | conversation |
 | Versioned tenant / product domain data | `config/tenants/{id}/` | config |
 | Local `StructuredTool`s | `src/tools/` | tools |
 | MCP client, discovery, adapters, governance glue | `src/mcp/` | mcp |
 | Capability types, allowlist, rate limit, fingerprint | `src/capability/` | capability |
-| Skill procedure markdown | `skills/*.md` (repo root of agent-api) | skills-data |
+| Skill procedure markdown | `skills/*.md` (agent-api root) | skills-data |
 | Skill loader / registry / wire-to-tool | `src/skills/` | skills-runtime |
 | Checkpointer, store, trim, summarize | `src/memory/` | memory |
 | Provider config, JSON output helpers | `src/llm/` | llm-infra |
-| HTTP server, SSE, routes | `src/http/` | http |
+| HTTP server, SSE, routes, stream-turn, HITL resume | `src/http/` | http |
+| Dev-chat React bench | `src/http/dev-chat-app/` | http |
 | Audit / LangSmith / OTel | `src/observability/` | observability |
 
-Do not invent ad-hoc folders because the product has one tenant — still use this matrix.
+One-tenant product still uses this matrix — no ad-hoc folders.
 
 ## Ownership rules
 
-- **`src/graph/`** — wiring only. Nodes call into conversation/tools/mcp; they do not own locale, copy, or domain regex.
-- **`src/conversation/`** — prompts, schemas, locale, presentation. One canonical prompt path: `conversation/prompts/`.
-- **`src/skills/`** — loader, registry, and LangChain tool adapters only. No domain heuristics, no domain-specific regex, no auto-inject policy that embeds product rules in TypeScript.
-- **`src/mcp/`** — generic client + governance adapters. No hardcoded vendor/domain policy tables in adapters; policy lives in config or capability allowlists.
-- **`config/`** — versioned domain and tenant data. Code may reference only paths that exist on disk (and vice versa).
-- **`src/llm/`** — provider/infra only. Never domain prompts or qualify copy.
+- **`src/graph/`** — wiring only. Nodes call conversation/tools/mcp. Payload/plan helpers: `graph/analyst/` + `graph/composer/` — no locale/copy. No domain regex in nodes.
+- **`src/conversation/`** — prompts, schemas, locale, presentation. Prompt SSoT: `conversation/prompts/`.
+- **`src/skills/`** — loader, registry, LangChain adapters only. No domain heuristics/regex; no product rules in TS auto-inject.
+- **`src/mcp/`** — generic client + governance. No hardcoded vendor/domain policy; config or capability allowlists.
+- **`config/`** — versioned domain/tenant data. Code refs must exist on disk (and vice versa).
+- **`src/llm/`** — provider/infra only. No domain prompts or qualify copy.
 
 ## Anti-patterns (placement)
 
@@ -49,8 +53,8 @@ Do not invent ad-hoc folders because the product has one tenant — still use th
 | Domain regex / heuristics in `src/skills/*-auto-inject.ts` | `conversation/` or `config/` |
 | Vendor/domain policy hardcoded in `src/mcp/` adapters | allowlist + `config/` + `capability/` |
 | Orphan `src/prompts/` plus dead `* copy.md` duplicates | Single canonical path; delete dead copies |
-| `config/*` paths imported in code but missing on disk | Create config files in the same change (or remove refs) |
-| Fat god-node with compose + bind + routing inline | Thin `*.node.ts` + helpers outside the node |
+| `config/*` paths imported in code but missing on disk | Create config files same change (or remove refs) |
+| Fat god-node with compose + bind + routing inline | Thin `*.node.ts` + helpers outside node |
 
 ## Placement Decision Block (required shape)
 
@@ -64,4 +68,4 @@ Do not invent ad-hoc folders because the product has one tenant — still use th
 - do_not_create_under: [list forbidden roots, e.g. graph/, llm/, src/prompts/]
 ```
 
-If the requested path is not in the matrix, stop and propose the closest legal path — do not invent a new top-level folder.
+Path not in matrix → stop; propose closest legal path. Do not invent new top-level folder.

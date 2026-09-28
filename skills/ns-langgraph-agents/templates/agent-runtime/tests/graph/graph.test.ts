@@ -44,12 +44,12 @@ describe("plan_execute graph", () => {
     expect(routeAfterAnalyst(state)).toBe("executor");
   });
 
-  it("routes need_more_data + empty actions back to analyst", () => {
+  it("routes need_more_data + empty actions to composer", () => {
     const state = {
       analystStatus: "need_more_data",
       executionPlan: { status: "need_more_data", actions: [] },
     } as AgentStateType;
-    expect(routeAfterAnalyst(state)).toBe("analyst");
+    expect(routeAfterAnalyst(state)).toBe("composer");
   });
 
   it("routes complete to composer", () => {
@@ -64,5 +64,34 @@ describe("plan_execute graph", () => {
     expect(routeAfterGuard({ guardRoute: "agent" } as AgentStateType)).toBe(
       "context_manager",
     );
+  });
+
+  it("resets turn channels between invocations on same thread", async () => {
+    const graph = await getGraph();
+    const cfg = { configurable: { thread_id: "test-turn-reset" } };
+    const turn1 = await graph.invoke(
+      { messages: [new HumanMessage("hello")] },
+      cfg,
+    );
+    // Simulate product nodes writing paint/evidence that must not leak.
+    await graph.updateState(cfg, {
+      paint: { kind: "stale" },
+      render_spec: { kind: "stale" },
+      dataBundle: { kind: "prior", payload: 1 },
+      discoveryBrief: { found: true, summary: "prior" },
+      analysis: { intent: "prior", userFacingIntent: "stale intent" },
+    });
+    expect(turn1.responseMarkdown).toBeTruthy();
+
+    const turn2 = await graph.invoke(
+      { messages: [new HumanMessage("next turn")] },
+      cfg,
+    );
+    expect(turn2.paint).toBeNull();
+    expect(turn2.render_spec).toBeNull();
+    expect(turn2.dataBundle).toBeNull();
+    expect(turn2.discoveryBrief).toBeNull();
+    // analysis is rewritten by analyst this turn — must not keep prior intent
+    expect(turn2.analysis?.intent).not.toBe("prior");
   });
 });

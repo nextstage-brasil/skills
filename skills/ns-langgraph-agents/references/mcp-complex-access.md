@@ -79,6 +79,15 @@ Two servers expose `search` or `read_file`:
 - Propagate `AbortSignal` from HTTP when supported
 - Timeout: `ToolMessage` `status: "error"` — model retry or escalate
 
+## Business errors vs transport failures
+
+Read tools exposed to the agent **MUST** return expected business errors **in the tool payload** (`found: false`, `message`, `error: true`) — **MUST NOT** throw them as JSON-RPC errors.
+
+| Failure class | Executor |
+| ------------- | -------- |
+| Transport / JSON-RPC protocol fail | `externalError` channel |
+| Payload `error` / `found: false` | Tool result — trips tool-error breaker (analyst completes; no blind re-plan) |
+
 ## Complex servers (GitLab, DB, CRM)
 
 | Challenge | Mitigation |

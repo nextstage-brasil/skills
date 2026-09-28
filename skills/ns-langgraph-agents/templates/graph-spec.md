@@ -85,7 +85,7 @@ Optional when modes vary per turn — mode table (`mode | injected source | outp
 | `userFacingIntent` (or `analysis.userFacingIntent`) | JSON planner/analyst hop | Operator language = current user message. **Not** composer Markdown — HTTP emits SSE `thinking` from this field |
 | `executionPlan` | Same hop | Executor reads actions |
 
-**Sole writer:** exactly one node (`composer`) emits user-facing Markdown / `response_streaming`. Analyst/executor may emit tool calls and **operator progress via SSE `thinking` from state** — never Markdown answers.
+**Sole writer:** exactly one node (`composer`) emits user-facing Markdown / `response_streaming` via `model.stream()` ticks (not `invoke` dump). Analyst/executor may emit tool calls and **operator progress via SSE `thinking` from state** — never Markdown answers.
 
 ### Node id vs state channel
 
@@ -99,7 +99,7 @@ Example `plan_execute` mapping:
 | ------- | ----------------- | ----- |
 | `guard` | `guardRoute`, `turnLocale` | Block → `respond`; else `context_manager` |
 | `context_manager` | `messages`, `summary` | Compact; summary not inside messages |
-| `mcp_catalog` | `mcpCatalog` | `{name, description}[]` only; no-op on version match |
+| `mcp_catalog` | `mcpCatalog` | `{name, description, inputSchema?}[]` only; no-op on version match |
 | `analyst` | `executionPlan`, `analysis`, `analystStatus` | No `bindTools`; JSON plan |
 | `executor` | `dataBundle`, `executionResults` | Tools/MCP; optional `interrupt()` if HITL locked |
 | `composer` | `responseMarkdown` / `messages` | Sole user-facing writer |

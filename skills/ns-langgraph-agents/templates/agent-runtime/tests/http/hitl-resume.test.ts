@@ -108,7 +108,7 @@ describe("buildHitlResumePayload", () => {
     const payload = buildHitlResumePayload(body, true);
     expect(payload.decision).toBe("rejected");
     expect(
-      hitlTurnDecisionEvent(body, true, new Date("2026-09-07T00:00:00.000Z"))
+      hitlTurnDecisionEvent(payload, new Date("2026-09-07T00:00:00.000Z"))
         .decision_outcome,
     ).toBe("rejected");
   });

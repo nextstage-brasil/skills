@@ -1,10 +1,31 @@
-import type { AgentStateType } from "../../state.js";
+import type { AgentStateType, McpCatalogTool } from "../../state.js";
+import type { McpToolDescriptor } from "../../mcp/client.js";
 
 const STUB_VERSION = "stub";
 
 /**
- * Persist MCP tool names+descriptions on state. No-op when catalogVersion matches.
- * Never store bound StructuredTool or secrets.
+ * Map MCP descriptors → durable catalog entries.
+ * Always pass `inputSchema` when the descriptor has one (truncated later in analyst payload).
+ */
+export function toCatalogTools(
+  descriptors: ReadonlyArray<McpToolDescriptor>,
+): McpCatalogTool[] {
+  return descriptors.map((d) => {
+    const entry: McpCatalogTool = {
+      name: d.name,
+      description: d.description ?? "",
+    };
+    if (d.inputSchema !== undefined) {
+      entry.inputSchema = d.inputSchema;
+    }
+    return entry;
+  });
+}
+
+/**
+ * Persist MCP tool names + descriptions + inputSchema on state.
+ * No-op when catalogVersion matches. Never store bound StructuredTool or secrets.
+ * Stub returns empty catalog; product forks replace with discoverMcpTools → toCatalogTools.
  */
 export async function mcpCatalogNode(
   state: AgentStateType,
@@ -14,7 +35,7 @@ export async function mcpCatalogNode(
   }
   return {
     mcpCatalog: {
-      tools: [],
+      tools: toCatalogTools([]),
       catalogVersion: STUB_VERSION,
       discoveredAt: new Date().toISOString(),
     },

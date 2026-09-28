@@ -2,17 +2,17 @@ import { describe, expect, it } from "vitest";
 import {
   COMPOSER_PRODUCT_PROMPT_KEY,
   GATHER_PRODUCT_PROMPT_KEY,
-  MOTOR_INVARIANTS,
   PRODUCT_SYSTEM_PROMPT_KEY,
   composeSystemPrompt,
+  motorInvariant,
   readProductSystemPrompt,
-} from "../../src/capability/system-prompt.js";
+} from "../../src/conversation/system-prompt.js";
 
 describe("composeSystemPrompt", () => {
   it("returns motor invariant alone when no product prompt", () => {
-    expect(composeSystemPrompt({ role: "analyst" })).toBe(MOTOR_INVARIANTS.analyst);
+    expect(composeSystemPrompt({ role: "analyst" })).toBe(motorInvariant("analyst"));
     expect(composeSystemPrompt({ role: "composer", configurable: {} })).toBe(
-      MOTOR_INVARIANTS.composer,
+      motorInvariant("composer"),
     );
   });
 
@@ -21,7 +21,7 @@ describe("composeSystemPrompt", () => {
       role: "composer",
       productPrompt: "You are Acme support. Reply in pt-BR.",
     });
-    expect(out.startsWith(MOTOR_INVARIANTS.composer)).toBe(true);
+    expect(out.startsWith(motorInvariant("composer"))).toBe(true);
     expect(out.endsWith("You are Acme support. Reply in pt-BR.")).toBe(true);
     expect(out).toContain("\n\n");
   });
@@ -31,7 +31,7 @@ describe("composeSystemPrompt", () => {
       role: "analyst",
       configurable: { [PRODUCT_SYSTEM_PROMPT_KEY]: "Persona A" },
     });
-    expect(out).toBe(`${MOTOR_INVARIANTS.analyst}\n\nPersona A`);
+    expect(out).toBe(`${motorInvariant("analyst")}\n\nPersona A`);
   });
 
   it("prefers role-specific override over shared product prompt", () => {
@@ -44,7 +44,7 @@ describe("composeSystemPrompt", () => {
     expect(readProductSystemPrompt(configurable, "composer")).toBe("Composer-only");
     expect(
       composeSystemPrompt({ role: "analyst", configurable }),
-    ).toBe(`${MOTOR_INVARIANTS.analyst}\n\nAnalyst-only`);
+    ).toBe(`${motorInvariant("analyst")}\n\nAnalyst-only`);
   });
 
   it("explicit productPrompt wins over configurable", () => {
@@ -53,12 +53,12 @@ describe("composeSystemPrompt", () => {
       productPrompt: "Explicit",
       configurable: { [PRODUCT_SYSTEM_PROMPT_KEY]: "From config" },
     });
-    expect(out).toBe(`${MOTOR_INVARIANTS.analyst}\n\nExplicit`);
+    expect(out).toBe(`${motorInvariant("analyst")}\n\nExplicit`);
   });
 
   it("trims whitespace-only injection to invariant-only", () => {
     expect(composeSystemPrompt({ role: "analyst", productPrompt: "   " })).toBe(
-      MOTOR_INVARIANTS.analyst,
+      motorInvariant("analyst"),
     );
   });
 });

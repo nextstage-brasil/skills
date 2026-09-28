@@ -5,7 +5,7 @@
 | Mode | HTTP | Graph |
 | ---- | ---- | ----- |
 | `sync_json` | JSON after `invoke` | standard |
-| `streaming_sse` | `text/event-stream` | `stream` / `streamEvents` v3 |
+| `streaming_sse` | `text/event-stream` | `stream` modes `values` + `custom` |
 
 Lock in `graph-spec.md` header.
 
@@ -20,19 +20,40 @@ Typical turn order:
 | `tool_started` | Tool name + args summary (executor) |
 | `tool_finished` | Truncated result summary (executor) |
 | `response_streaming` | Cumulative markdown (replace prior) — **composer only**; **draft** until Approval Gate clears when HITL applies |
-| `completed` | Terminal success |
+| `completed` | Terminal success — repeats final message; optional `render_spec` / `paint` |
+| `interrupted` | Terminal pause — HITL pending. Payload `interrupt: { kind, question, options: [{ id, label }], always_escalate? }`. No `render_spec`/`paint` |
 | `failed` | Terminal error |
 | `cancelled` | Client abort |
 
 Rules:
 
-- Terminal status **last** event
-- `response_streaming` full cumulative text each tick
+- Terminal status **last** event (`completed` \| `failed` \| `cancelled` \| `interrupted`)
+- Tick = one `response_streaming` emit from composer stream chunk (custom writer)
+- `response_streaming` full cumulative text each tick — **not** first appear only on `completed`
+- Progress envelopes **MUST** carry human-readable `message` (from `conversation/presentation/`); UI never shows raw status name
 - Streamed text pending Approval Gate = **draft** — UI must not present as validated output until gate clears
 - No raw reasoning in user stream
 - Operator progress is `thinking` (or `tool_*`), never `response_streaming`
+- After stream: `graph.getState` pending interrupt → emit `interrupted` (not `completed`)
 
 Snippet: `sse-envelope.ts.snippet`.
+
+## Composer token stream (MUST)
+
+| Rule | Detail |
+| ---- | ------ |
+| LLM reply hop | `streamJsonSchema` → `model.stream()` — **FORBIDDEN** `model.invoke` on composer reply |
+| Partial JSON | Peel growing `"markdown"` from incomplete buffer; `onPartialMarkdown` each growth |
+| Tick | Custom writer `{ status: "response_streaming", message }` per growth |
+| Graph stream | `streamMode: ["values", "custom"]` — HTTP forwards custom ticks as they arrive |
+| Stub (no LLM) | May emit **one** `response_streaming` then `completed` |
+| `completed` | Repeats final message — **not** first place text appears when LLM streamed |
+| SSE leave now | `X-Accel-Buffering: no`, `socket.setNoDelay(true)`, `flush()` after each write |
+| Dev-chat paint | Each `response_streaming` before next SSE read (`flushSync`) |
+
+**FORBIDDEN:** single `response_streaming` only on `respond` with full text; buffered SSE; client timer/debounce hide Markdown; client typewriter fake stream; coalesce many ticks into one paint.
+
+Analyst/planner JSON hops may keep `invokeJsonSchema` — not user-facing stream.
 
 ## Operator progress (JSON planner hops)
 
@@ -44,7 +65,7 @@ Greenfield `streaming_sse` + planner/analyst structured JSON (no `bindTools` on 
    - hop 0 (`analystIteration === 0` or equivalent): emit `thinking` with generic copy from `conversation/presentation/` (product language)
    - later hops: emit `thinking` with `state` `userFacingIntent` (or `analysis.userFacingIntent`) from the **previous** hop
 4. After tools run, executor emits `tool_started` then `tool_finished` (presentation copy, not tool JSON dump).
-5. Composer remains the only writer of `response_streaming`.
+5. Composer remains the only writer of `response_streaming` — via stream ticks, not invoke dump.
 
 Open ReAct + `ToolNode`: skip `userFacingIntent`; `tool_started` / `tool_finished` is enough.
 
@@ -98,10 +119,11 @@ Resume JSON (minimum):
 
 ```
 POST /threads              → create thread_id
-POST /threads/:id/message  → run graph (sync or SSE)
-POST /threads/:id/resume   → HITL resume with Command; always-escalate requires approver_id + approver_role
+POST /threads/:id/message  → body { message, ...extra }; Accept text/event-stream → SSE else JSON
+POST /threads/:id/resume   → HITL resume; same SSE when Accept SSE; option → { decision: option.id }
 GET  /health
-GET  /dev-chat             → human train/test UI (greenfield streaming_sse MUST)
+GET  /dev-chat             → styled shell + React bench (greenfield streaming_sse MUST)
+GET  /dev-chat/app.js      → esbuild bundle (503 if missing — run build:dev-chat)
 ```
 
 ### Who is the HTTP client
@@ -117,11 +139,13 @@ GET  /dev-chat             → human train/test UI (greenfield streaming_sse MUS
 
 | Context | Requirement |
 | ------- | ----------- |
-| Greenfield `streaming_sse` agent-api | **MUST** `GET /dev-chat` + `DEV_CHAT_ENABLED=true` (local-only; prod only with explicit product decision) |
+| Greenfield `streaming_sse` agent-api | **MUST** styled bench: pico + IBM Plex shell, React in `src/http/dev-chat-app/`, `DEV_CHAT_ENABLED=true` local-only |
 | Brownfield | **RECOMMENDED** if missing — same SSE as production |
-| `intelligent_saas` product | **FORBIDDEN** — `/dev-chat` is operator training on agent-api, not end-user chat; product chat goes through Application |
+| `intelligent_saas` product | **FORBIDDEN** — `/dev-chat` is operator training on agent-api, not end-user chat |
 
-Dev-chat = same SSE envelope as `POST /threads/:id/message`. Without it, human MCP iteration impractical. Not a substitute for Application relay in intelligent SaaS.
+**UI rules:** one status slot overwritten in place (`thinking`/`tool_*`); never progress-as-bubbles; first `response_streaming` or any terminal clears slot; paint **each** `response_streaming` before next SSE event (`flushSync`) — **FORBIDDEN** timer delay, coalesce ticks, client typewriter; `interrupted` shows question + option buttons (+ approver fields when `always_escalate`) then `POST .../resume` SSE; Enter send / Shift+Enter newline; send hidden while turn open; auto-scroll; Markdown via bundled `marked`+`dompurify`. Unstyled DOM = fail.
+
+Dev-chat = same SSE envelope as `POST /threads/:id/message` (+ resume). Not a substitute for Application relay in intelligent SaaS.
 
 ### Turn latency budget
 

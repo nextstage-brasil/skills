@@ -43,6 +43,9 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | Silent `break` on LLM failure in gather | User sees empty or stale reply | Set `errorCode` on state; route to composer or `failed` |
 | Generic clarify when `externalError` already in state | Credential/MCP failure reads as "send me data" | Branch composer on `externalError` channel |
 | Greenfield agent-api without `/dev-chat` | No human train loop for MCP/SSE | `GET /dev-chat` + `DEV_CHAT_ENABLED` |
+| Unstyled / bare DOM `/dev-chat` | Fail greenfield UX gate | pico + IBM Plex shell + React bench |
+| Progress rendered as chat bubbles | Stacks status rows; looks like answers | One status slot overwritten in place |
+| `completed` used for a paused HITL turn | Client cannot resume | Terminal `interrupted` + `interrupt` payload |
 | Numeric `null` from tools treated as `0` | Invented totals | Hydrate evidence bundle in code — `evidence-and-fidelity.md` |
 | Bootstrap / `.env` / `configurable.locale` as primary locale SoT | Ignores turn language; sticky wrong format | Conversation-observed `turnLocale` — `evidence-and-fidelity.md` |
 | Persist locale as eternal thread truth in checkpointer | PT→EN mid-thread keeps old separators | Ephemeral `turnLocale` per turn; clear in guard |
@@ -74,6 +77,16 @@ Review before done. Diff touches `agent-api`: Placement, Prompt inject, Bind par
 | Live graph differs from `graph-spec.md` (edges, recursion_limit, wires, `guard_fail_mode`) | Spec becomes a lie | Spec Sync Gate — update spec in same delivery |
 | Scaffold `guard.node.ts` fail-open shipped as production lock | Template default ≠ doctrine | Lock `guard_fail_mode` in `graph-spec.md`; cite `guardrail-and-adversarial.md` |
 | "Fix code to match archive" when archive is stale | Reverts intentional runtime | Sync spec to intended graph; then implement |
+
+## Composer / SSE stream
+
+| Anti-pattern | Why it hurts | Fix |
+| ------------ | ------------ | --- |
+| `model.invoke` on composer reply hop | Full reply only at end; no ticks | `streamJsonSchema` + `model.stream()` — `streaming-and-hitl.md` |
+| One `response_streaming` on `respond` with full text | Client sees dump at terminal | Emit ticks from composer stream chunks; `completed` repeats final |
+| Buffered SSE (no `X-Accel-Buffering` / `setNoDelay` / `flush`) | Proxy holds body; whole turn at `end` | Flush headers + flush after each write |
+| Delayed client paint / debounce / `setTimeout` hide Markdown | Hides real ticks | `flushSync` (or equiv) per `response_streaming` before next SSE read |
+| Client typewriter to fake server stream | Lies about latency; masks broken server stream | Paint cumulative `message` as received |
 
 ## Extended anti-patterns
 

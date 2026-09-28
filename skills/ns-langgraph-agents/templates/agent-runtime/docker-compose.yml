@@ -1,0 +1,8 @@
+services:
+  agent-api:
+    build: .
+    env_file: .env
+    ports:
+      - "${PORT:-3100}:3100"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

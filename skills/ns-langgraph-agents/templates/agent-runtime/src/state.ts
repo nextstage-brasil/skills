@@ -1,9 +1,15 @@
 import { Annotation, messagesStateReducer } from "@langchain/langgraph";
 import type { BaseMessage } from "@langchain/core/messages";
 
-/** Durable MCP catalog — names + descriptions only; never bound tools or secrets. */
+/** Durable MCP catalog — names + descriptions + inputSchema; never bound tools or secrets. */
+export type McpCatalogTool = {
+  name: string;
+  description: string;
+  inputSchema?: unknown;
+};
+
 export type McpCatalogState = {
-  tools: { name: string; description: string }[];
+  tools: McpCatalogTool[];
   catalogVersion: string;
   discoveredAt?: string;
 } | null;
@@ -123,6 +129,16 @@ export const AgentState = Annotation.Root({
     default: () => null,
   }),
   responseMarkdown: Annotation<string | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  /** Optional UI paint payload for SSE completed.paint */
+  paint: Annotation<unknown | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  /** Optional render_spec for SSE completed.render_spec */
+  render_spec: Annotation<unknown | null>({
     reducer: (_prev, next) => next,
     default: () => null,
   }),

@@ -1,40 +1,35 @@
 import type { ServerResponse } from "node:http";
+import type {
+  AgentStreamEnvelope,
+  AgentStreamStatus,
+  InterruptPayload,
+  InterruptOption,
+  AgentStreamUsage,
+} from "./stream-types.js";
 
-export type AgentStreamStatus =
-  | "thinking"
-  | "accessing_data"
-  | "tool_started"
-  | "tool_finished"
-  | "response_streaming"
-  | "completed"
-  | "failed"
-  | "cancelled";
-
-export interface AgentStreamUsage {
-  prompt_tokens: number;
-  /** Prompt tokens served from provider prompt cache (cache_read). */
-  cached_tokens: number;
-  completion_tokens: number;
-  total_tokens: number;
-}
-
-export interface AgentStreamEnvelope {
-  status: AgentStreamStatus;
-  message: string;
-  error_code: string | null;
-  usage: AgentStreamUsage | null;
-  tool_name?: string;
-  tool_kind?: "local" | "mcp" | "skill";
-}
+export type {
+  AgentStreamEnvelope,
+  AgentStreamStatus,
+  InterruptPayload,
+  InterruptOption,
+  AgentStreamUsage,
+} from "./stream-types.js";
 
 const TERMINAL: ReadonlySet<AgentStreamStatus> = new Set([
   "completed",
   "failed",
   "cancelled",
+  "interrupted",
 ]);
 
 export function isTerminalStatus(status: AgentStreamStatus): boolean {
   return TERMINAL.has(status);
+}
+
+/** Flush nginx/proxy + Nagle so each SSE tick leaves immediately. */
+function flushSse(res: ServerResponse): void {
+  const flushable = res as ServerResponse & { flush?: () => void };
+  flushable.flush?.();
 }
 
 export function initSse(res: ServerResponse): void {
@@ -42,7 +37,11 @@ export function initSse(res: ServerResponse): void {
     "Content-Type": "text/event-stream; charset=utf-8",
     "Cache-Control": "no-cache, no-transform",
     Connection: "keep-alive",
+    "X-Accel-Buffering": "no",
   });
+  if (typeof res.socket?.setNoDelay === "function") {
+    res.socket.setNoDelay(true);
+  }
 }
 
 export function writeSseEvent(
@@ -51,6 +50,7 @@ export function writeSseEvent(
 ): void {
   res.write(`event: ${envelope.status}\n`);
   res.write(`data: ${JSON.stringify(envelope)}\n\n`);
+  flushSse(res);
 }
 
 export function endSse(
@@ -69,12 +69,32 @@ export function envelope(
   message = "",
   extra?: Partial<Omit<AgentStreamEnvelope, "status" | "message">>,
 ): AgentStreamEnvelope {
-  return {
+  const out: AgentStreamEnvelope = {
     status,
     message,
     error_code: extra?.error_code ?? null,
     usage: extra?.usage ?? null,
-    tool_name: extra?.tool_name,
-    tool_kind: extra?.tool_kind,
   };
+  if (extra?.tool_name !== undefined) {
+    out.tool_name = extra.tool_name;
+  }
+  if (extra?.tool_kind !== undefined) {
+    out.tool_kind = extra.tool_kind;
+  }
+  if (extra?.interrupt !== undefined) {
+    out.interrupt = extra.interrupt;
+  }
+  if (extra?.render_spec !== undefined) {
+    out.render_spec = extra.render_spec;
+  }
+  if (extra?.paint !== undefined) {
+    out.paint = extra.paint;
+  }
+  return out;
+}
+
+export function wantsSse(req: { headers: { accept?: string | string[] } }): boolean {
+  const raw = req.headers.accept;
+  const accept = Array.isArray(raw) ? raw.join(",") : (raw ?? "");
+  return accept.includes("text/event-stream");
 }

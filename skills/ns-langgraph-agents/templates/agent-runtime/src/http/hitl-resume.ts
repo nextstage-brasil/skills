@@ -1,4 +1,9 @@
 import { AGENT_ERROR } from "../shared/error-codes.js";
+import { asRecord } from "../shared/records.js";
+import {
+  collectInterruptBuckets,
+  interruptValue,
+} from "./pending-interrupt.js";
 
 export type HitlResumeBody = {
   decision?: string;
@@ -31,42 +36,16 @@ export function canonicalDecisionOutcome(decision: string | undefined): string {
   return raw;
 }
 
-function asRecord(value: unknown): Record<string, unknown> | null {
-  if (value && typeof value === "object" && !Array.isArray(value)) {
-    return value as Record<string, unknown>;
-  }
-  return null;
-}
-
-function payloadAlwaysEscalate(value: unknown): boolean {
-  const rec = asRecord(value);
-  if (!rec) {
-    return false;
-  }
-  const inner = rec.value ?? rec;
-  const innerRec = asRecord(inner) ?? rec;
-  return innerRec.always_escalate === true;
+function payloadAlwaysEscalate(item: unknown): boolean {
+  const value = interruptValue(item);
+  return value?.always_escalate === true;
 }
 
 /** Interrupt snapshot is SoT. Client `always_escalate` flag is not sufficient. */
 export function interruptRequiresApprover(state: unknown): boolean {
-  const rec = asRecord(state);
-  if (!rec) {
-    return false;
-  }
-  const buckets: unknown[] = [];
-  if (Array.isArray(rec.interrupts)) {
-    buckets.push(...rec.interrupts);
-  }
-  if (Array.isArray(rec.tasks)) {
-    for (const task of rec.tasks) {
-      const t = asRecord(task);
-      if (t && Array.isArray(t.interrupts)) {
-        buckets.push(...t.interrupts);
-      }
-    }
-  }
-  return buckets.some((item) => payloadAlwaysEscalate(item));
+  return collectInterruptBuckets(state).some((item) =>
+    payloadAlwaysEscalate(item),
+  );
 }
 
 export function alwaysEscalateEffective(
@@ -110,17 +89,16 @@ export function buildHitlResumePayload(
 }
 
 export function hitlTurnDecisionEvent(
-  body: HitlResumeBody,
-  alwaysEscalate: boolean,
+  resumePayload: Record<string, unknown>,
   decidedAt: Date,
 ): Record<string, unknown> {
   return {
     decision_actor: "human",
-    approver_id: body.approver_id ?? null,
-    approver_role: body.approver_role ?? null,
+    approver_id: resumePayload.approver_id ?? null,
+    approver_role: resumePayload.approver_role ?? null,
     decided_at: decidedAt.toISOString(),
-    decision_outcome: resolveHitlDecision(body),
-    always_escalate: alwaysEscalate,
-    intent_category: body.intent_category ?? null,
+    decision_outcome: resumePayload.decision ?? null,
+    always_escalate: resumePayload.always_escalate === true,
+    intent_category: resumePayload.intent_category ?? null,
   };
 }

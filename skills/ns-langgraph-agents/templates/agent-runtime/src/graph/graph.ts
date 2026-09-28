@@ -10,12 +10,13 @@ import {
   mcpCatalogNode,
   respondNode,
   routeAfterAnalyst,
+  routeAfterExecutor,
   routeAfterGuard,
 } from "./nodes/index.js";
 
 /**
  * Suggested greenfield scaffold (`plan_execute`). Change compile to match locked graph-spec.
- * guard → context_manager → mcp_catalog → analyst ⇄ (executor | composer | analyst) → composer → respond → END
+ * guard → context_manager → mcp_catalog → analyst ⇄ (executor | composer) → composer → respond → END
  *
  * HITL `interrupt()` is optional inside executor/analyst when graph-spec locks it —
  * default compile has no interrupt node.
@@ -39,9 +40,11 @@ async function compileGraph() {
     .addConditionalEdges("analyst", routeAfterAnalyst, {
       executor: "executor",
       composer: "composer",
-      analyst: "analyst",
     })
-    .addEdge("executor", "analyst")
+    .addConditionalEdges("executor", routeAfterExecutor, {
+      analyst: "analyst",
+      composer: "composer",
+    })
     .addEdge("composer", "respond")
     .addEdge("respond", END);
 

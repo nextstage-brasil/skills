@@ -1,4 +1,4 @@
-// Snippet: sse-envelope.ts
+// Snippet: sse-envelope.ts — keep in sync with templates/agent-runtime/src/http/sse.ts
 export type AgentStreamStatus =
   | "thinking"
   | "accessing_data"
@@ -7,20 +7,62 @@ export type AgentStreamStatus =
   | "response_streaming"
   | "completed"
   | "failed"
-  | "cancelled";
+  | "cancelled"
+  | "interrupted";
+
+export type InterruptPayload = {
+  kind: string;
+  question: string;
+  options: { id: string; label: string }[];
+  always_escalate?: boolean;
+};
 
 export type AgentStreamEnvelope = {
   status: AgentStreamStatus;
-  thread_id: string;
-  text?: string;
-  tool?: { name: string; args?: unknown };
-  error?: string;
+  message: string;
+  error_code: string | null;
+  usage: {
+    prompt_tokens: number;
+    cached_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  } | null;
+  tool_name?: string;
+  tool_kind?: "local" | "mcp" | "skill";
+  interrupt?: InterruptPayload;
+  render_spec?: unknown;
+  paint?: unknown;
 };
 
-export function writeSse(res: import("node:http").ServerResponse, env: AgentStreamEnvelope): void {
-  res.write(`data: ${JSON.stringify(env)}\n\n`);
+function flushSse(res: import("node:http").ServerResponse): void {
+  const flushable = res as import("node:http").ServerResponse & {
+    flush?: () => void;
+  };
+  flushable.flush?.();
 }
 
-// response_streaming: send cumulative markdown in `text` each tick — composer only
-// thinking: operator progress from state.userFacingIntent (or hop-0 presentation copy), not raw reasoning
-// completed | failed | cancelled: must be last event
+export function initSse(res: import("node:http").ServerResponse): void {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    Connection: "keep-alive",
+    "X-Accel-Buffering": "no",
+  });
+  res.socket?.setNoDelay?.(true);
+}
+
+export function writeSse(
+  res: import("node:http").ServerResponse,
+  env: AgentStreamEnvelope,
+): void {
+  res.write(`event: ${env.status}\n`);
+  res.write(`data: ${JSON.stringify(env)}\n\n`);
+  flushSse(res);
+}
+
+// thinking / tool_*: human-readable message from conversation/presentation/
+// response_streaming tick = one composer stream chunk; cumulative markdown replace prior
+// completed: repeats final message (not first place text appears when LLM streamed)
+// interrupted: interrupt payload only — no paint
+// completed | failed | cancelled | interrupted: must be last event
+// SSE MUST leave immediately: X-Accel-Buffering: no + setNoDelay + flush after write

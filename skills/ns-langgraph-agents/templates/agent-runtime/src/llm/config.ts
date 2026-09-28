@@ -1,21 +1,60 @@
-export type LlmProvider = "lmstudio" | "openai" | "openrouter";
+export type ReasoningStyle = "openai" | "modelKwargs" | "none";
 
-/** Profiles: main/light + named stages that fall back to main or light. */
-export type LlmRole =
-  | "main"
-  | "light"
-  | "analyst"
-  | "composer"
-  | "summarize"
-  | "guard";
+const PROVIDER_PRESETS = {
+  lmstudio: {
+    baseURL: "http://127.0.0.1:1234/v1",
+    defaultModel: "google/gemma-4-e4b",
+    defaultApiKey: "lm-studio",
+    requiresApiKey: false,
+    requiresBaseUrl: false,
+    reasoningStyle: "none" as ReasoningStyle,
+  },
+  openai: {
+    baseURL: "https://api.openai.com/v1",
+    defaultModel: "gpt-4o-mini",
+    defaultApiKey: "",
+    requiresApiKey: true,
+    requiresBaseUrl: false,
+    reasoningStyle: "openai" as ReasoningStyle,
+  },
+  openrouter: {
+    baseURL: "https://openrouter.ai/api/v1",
+    defaultModel: "anthropic/claude-sonnet-5",
+    defaultApiKey: "",
+    requiresApiKey: true,
+    requiresBaseUrl: false,
+    reasoningStyle: "modelKwargs" as ReasoningStyle,
+  },
+  vllm: {
+    baseURL: "",
+    defaultModel: "default",
+    defaultApiKey: "EMPTY",
+    requiresApiKey: false,
+    requiresBaseUrl: true,
+    reasoningStyle: "none" as ReasoningStyle,
+  },
+} as const;
 
-export type LlmStage =
-  | "analyst"
-  | "composer"
-  | "summarize"
-  | "main"
-  | "light"
-  | "guard";
+export type LlmProvider = keyof typeof PROVIDER_PRESETS;
+
+export function getProviderPreset(provider: LlmProvider) {
+  return PROVIDER_PRESETS[provider];
+}
+
+/** One row per resolvable role — env prefix + fallback profile. */
+const STAGES = {
+  main: { envPrefix: null as string | null, fallback: null as null },
+  light: { envPrefix: "LLM_LIGHT", fallback: "main" as const },
+  analyst: { envPrefix: "LLM_ANALYST", fallback: "main" as const },
+  composer: { envPrefix: "LLM_COMPOSER", fallback: "main" as const },
+  summarize: { envPrefix: "LLM_SUMMARIZE", fallback: "light" as const },
+  guard: { envPrefix: "LLM_GUARD", fallback: "light" as const },
+} as const;
+
+export type LlmRole = keyof typeof STAGES;
+export type LlmStage = LlmRole;
+
+export type LlmReasoningEffort = "none" | "low" | "medium" | "high";
 
 export type LlmConfig = {
   role: LlmRole;
@@ -26,6 +65,8 @@ export type LlmConfig = {
   temperature: number;
   /** Persisted on llm_logs.stage */
   stage: LlmStage;
+  /** unset/none omitted by provider; openai/openrouter map effort */
+  reasoning?: LlmReasoningEffort;
 };
 
 export type LlmProfiles = {
@@ -33,43 +74,50 @@ export type LlmProfiles = {
   light: LlmConfig;
 };
 
-const PROVIDER_PRESETS: Record<
-  LlmProvider,
-  { baseURL: string; defaultModel: string; defaultApiKey: string }
-> = {
-  lmstudio: {
-    baseURL: "http://127.0.0.1:1234/v1",
-    defaultModel: "google/gemma-4-e4b",
-    defaultApiKey: "lm-studio",
-  },
-  openai: {
-    baseURL: "https://api.openai.com/v1",
-    defaultModel: "gpt-4o-mini",
-    defaultApiKey: "",
-  },
-  openrouter: {
-    baseURL: "https://openrouter.ai/api/v1",
-    defaultModel: "anthropic/claude-sonnet-5",
-    defaultApiKey: "",
-  },
+const ENV_SUFFIXES = [
+  "PROVIDER",
+  "MODEL",
+  "API_KEY",
+  "TEMPERATURE",
+  "BASE_URL",
+  "REASONING",
+] as const;
+
+type EnvSuffix = (typeof ENV_SUFFIXES)[number];
+
+const MAIN_ENV_KEYS: Record<EnvSuffix, string[]> = {
+  PROVIDER: ["LLM_PROVIDER"],
+  MODEL: ["LLM_MODEL", "OPENAI_MODEL"],
+  API_KEY: ["LLM_API_KEY"],
+  TEMPERATURE: ["LLM_TEMPERATURE"],
+  BASE_URL: ["LLM_BASE_URL"],
+  REASONING: ["LLM_REASONING"],
 };
 
-const STAGE_ENV_PREFIX: Partial<Record<LlmRole, string>> = {
-  analyst: "LLM_ANALYST",
-  composer: "LLM_COMPOSER",
-  summarize: "LLM_SUMMARIZE",
-  light: "LLM_LIGHT",
-  guard: "LLM_GUARD",
-};
-
-function parseProvider(raw: string | undefined): LlmProvider {
+function parseProvider(raw: string | undefined): LlmProvider | null {
   const value = (raw ?? "lmstudio").trim().toLowerCase();
-  if (value === "lmstudio" || value === "openai" || value === "openrouter") {
+  if (value in PROVIDER_PRESETS) {
+    return value as LlmProvider;
+  }
+  return null;
+}
+
+function parseReasoning(
+  raw: string | undefined,
+): LlmReasoningEffort | null | undefined {
+  if (!raw) {
+    return undefined;
+  }
+  const value = raw.trim().toLowerCase();
+  if (
+    value === "none" ||
+    value === "low" ||
+    value === "medium" ||
+    value === "high"
+  ) {
     return value;
   }
-  throw new Error(
-    `Unsupported LLM provider: ${raw}. Use lmstudio, openai, or openrouter.`,
-  );
+  return null;
 }
 
 function readEnv(key: string): string | undefined {
@@ -77,125 +125,93 @@ function readEnv(key: string): string | undefined {
   return value || undefined;
 }
 
-function hasLightRoleOverrides(): boolean {
-  return Boolean(
-    readEnv("LLM_LIGHT_PROVIDER") ||
-      readEnv("LLM_LIGHT_MODEL") ||
-      readEnv("LLM_LIGHT_API_KEY") ||
-      readEnv("LLM_LIGHT_TEMPERATURE"),
-  );
-}
-
 function hasStageOverrides(prefix: string): boolean {
-  return Boolean(
-    readEnv(`${prefix}_PROVIDER`) ||
-      readEnv(`${prefix}_MODEL`) ||
-      readEnv(`${prefix}_API_KEY`) ||
-      readEnv(`${prefix}_TEMPERATURE`),
-  );
+  return ENV_SUFFIXES.some((suffix) => Boolean(readEnv(`${prefix}_${suffix}`)));
 }
 
-function stageForRole(role: LlmRole): LlmStage {
-  if (
-    role === "analyst" ||
-    role === "composer" ||
-    role === "summarize" ||
-    role === "light" ||
-    role === "main" ||
-    role === "guard"
-  ) {
-    return role;
-  }
-  return "main";
-}
-
-function fallbackRole(role: LlmRole): "main" | "light" {
-  if (role === "summarize" || role === "light" || role === "guard") {
-    return "light";
-  }
-  return "main";
-}
-
-function readRoleEnv(role: LlmRole, suffix: string): string | undefined {
-  const prefix = STAGE_ENV_PREFIX[role];
-  if (prefix) {
-    const staged = readEnv(`${prefix}_${suffix}`);
+function readRoleEnv(role: LlmRole, suffix: EnvSuffix): string | undefined {
+  const { envPrefix, fallback } = STAGES[role];
+  if (envPrefix) {
+    const staged = readEnv(`${envPrefix}_${suffix}`);
     if (staged) {
       return staged;
     }
-    if (role === "light") {
-      return readRoleEnv("main", suffix);
+    if (fallback) {
+      return readRoleEnv(fallback, suffix);
     }
-    const fb = fallbackRole(role);
-    return readRoleEnv(fb, suffix);
   }
-  if (suffix === "PROVIDER") {
-    return readEnv("LLM_PROVIDER");
-  }
-  if (suffix === "MODEL") {
-    return readEnv("LLM_MODEL") ?? readEnv("OPENAI_MODEL");
-  }
-  if (suffix === "API_KEY") {
-    return readEnv("LLM_API_KEY");
-  }
-  if (suffix === "TEMPERATURE") {
-    return readEnv("LLM_TEMPERATURE");
+  for (const key of MAIN_ENV_KEYS[suffix]) {
+    const v = readEnv(key);
+    if (v) {
+      return v;
+    }
   }
   return undefined;
+}
+
+function resolveFallbackConfig(role: LlmRole): LlmConfig | null {
+  const fb = STAGES[role].fallback;
+  if (!fb) {
+    return null;
+  }
+  return resolveLlmConfigForRole(fb) ?? resolveFallbackConfig(fb);
 }
 
 export function resolveLlmConfigForRole(role: LlmRole): LlmConfig | null {
   if (process.env.LLM_DISABLED === "true") {
     return null;
   }
-  if (role === "light" && !hasLightRoleOverrides()) {
-    return null;
-  }
-  const prefix = STAGE_ENV_PREFIX[role];
-  if (
-    prefix &&
-    role !== "light" &&
-    role !== "main" &&
-    !hasStageOverrides(prefix)
-  ) {
-    const fb = fallbackRole(role);
-    const base =
-      fb === "light"
-        ? resolveLlmConfigForRole("light") ?? resolveLlmConfigForRole("main")
-        : resolveLlmConfigForRole("main");
+  const stage = STAGES[role];
+  if (stage.envPrefix && !hasStageOverrides(stage.envPrefix)) {
+    if (role === "light") {
+      return null;
+    }
+    const base = resolveFallbackConfig(role);
     if (!base) {
       return null;
     }
-    return { ...base, role, stage: stageForRole(role) };
+    return { ...base, role, stage: role };
   }
 
-  let provider: LlmProvider;
-  try {
-    provider = parseProvider(readRoleEnv(role, "PROVIDER"));
-  } catch {
+  const provider = parseProvider(readRoleEnv(role, "PROVIDER"));
+  if (!provider) {
+    return null;
+  }
+
+  const reasoning = parseReasoning(readRoleEnv(role, "REASONING"));
+  if (reasoning === null) {
     return null;
   }
 
   const preset = PROVIDER_PRESETS[provider];
   const model = readRoleEnv(role, "MODEL") ?? preset.defaultModel;
-  const baseURL = preset.baseURL;
+  const baseURLOverride = readRoleEnv(role, "BASE_URL");
+  const baseURL = baseURLOverride ?? preset.baseURL;
   const apiKey = readRoleEnv(role, "API_KEY") ?? preset.defaultApiKey;
 
-  if ((provider === "openai" || provider === "openrouter") && !apiKey) {
+  if (preset.requiresBaseUrl && !baseURL) {
+    return null;
+  }
+
+  if (preset.requiresApiKey && !apiKey) {
     return null;
   }
 
   const temperature = Number(readRoleEnv(role, "TEMPERATURE") ?? "0.3");
 
-  return {
+  const config: LlmConfig = {
     role,
     provider,
-    apiKey: apiKey || preset.defaultApiKey,
+    apiKey,
     model,
     baseURL,
     temperature,
-    stage: stageForRole(role),
+    stage: role,
   };
+  if (reasoning !== undefined) {
+    config.reasoning = reasoning;
+  }
+  return config;
 }
 
 /** Main profile — reasoning, extraction, offer presentation. */

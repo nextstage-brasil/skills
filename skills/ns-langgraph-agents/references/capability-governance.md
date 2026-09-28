@@ -78,6 +78,10 @@ On exceed (tool/MCP **count** budgets): stop loop; structured message to model o
 
 On exceed (`max_cost_per_turn`): **reserve before** next LLM/tool invoke — stop new work; do not treat as the same loop-count path (`error-and-reliability.md`).
 
+### Read-tool business errors
+
+Read tools on the allowlist **MUST** return expected business failures in the **payload** (`found: false`, `message`, `error: true`). **MUST NOT** throw those as JSON-RPC errors. Executor: transport/JSON-RPC → `externalError`; payload `error` → tool result (breaker). See `mcp-complex-access.md`.
+
 ### Arg fingerprint duplicate-skip
 
 Hash redacted `(toolName, args)` per turn. **Skip** identical repeat. Entire gather round duplicates **and** analytical evidence in state: **break** loop.

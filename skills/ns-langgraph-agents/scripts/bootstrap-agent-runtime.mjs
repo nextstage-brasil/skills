@@ -65,7 +65,18 @@ cpSync(TEMPLATE, dest, {
 });
 
 const productDisplay = displayName(slug);
-const textExt = new Set(['.ts', '.json', '.md', '.sql', '.example', '.gitignore', '']);
+const textExt = new Set([
+  '.ts',
+  '.tsx',
+  '.json',
+  '.md',
+  '.sql',
+  '.example',
+  '.gitignore',
+  '.yml',
+  '.dockerignore',
+  '',
+]);
 
 for (const file of walkFiles(dest)) {
   const ext = file.includes('.') ? file.slice(file.lastIndexOf('.')) : '';

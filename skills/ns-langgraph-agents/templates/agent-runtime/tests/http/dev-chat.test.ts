@@ -1,11 +1,17 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { isDevChatEnabled, renderDevChatHtml } from "../../src/http/dev-chat.js";
+import {
+  isDevChatEnabled,
+  renderDevChatHtml,
+  serveDevChatApp,
+} from "../../src/http/dev-chat.js";
+import type { ServerResponse } from "node:http";
 
 describe("dev-chat", () => {
   afterEach(() => {
     delete process.env.DEV_CHAT_ENABLED;
     delete process.env.AGENT_SERVICE_BEARER_TOKEN;
     delete process.env.DEV_CHAT_SHOW_PROGRESS;
+    delete process.env.DEV_CHAT_INITIAL_MESSAGE;
   });
 
   it("is disabled by default", () => {
@@ -17,66 +23,53 @@ describe("dev-chat", () => {
     expect(isDevChatEnabled()).toBe(true);
   });
 
-  it("renders a self-contained HTML page calling /threads", () => {
+  it("renders styled shell with pico layout and DEV ONLY banner", () => {
     const html = renderDevChatHtml();
     expect(html).toContain("<html");
-    expect(html).toContain("/threads");
-    expect(html).toContain("text/event-stream");
-    expect(html).toContain('class="layout"');
-    expect(html).toContain("clearStorageBtn");
     expect(html).toContain("@picocss/pico");
-    expect(html).toContain("threadUsage");
-    expect(html).toContain("marked@");
-    expect(html).toContain("Planejando");
-    expect(html).toContain("Analisando");
-    expect(html).toContain("Coletando dados");
-    expect(html).toContain("md-body");
-    expect(html).toContain("clearDraftAssistant");
-    expect(html).toContain("var SHOW_PROGRESS = true;");
+    expect(html).toContain('class="layout"');
+    expect(html).toContain("DEV ONLY");
+    expect(html).toContain("IBM Plex");
+    expect(html).toContain('id="dev-chat-root"');
+    expect(html).toContain("/dev-chat/app.js");
+    expect(html).toContain(".chat-head .usage");
   });
 
-  it("demotes non-empty reasoning drafts to a lightweight note instead of erasing them", () => {
+  it("does not embed bearer token in HTML", () => {
+    process.env.AGENT_SERVICE_BEARER_TOKEN = "dev-secret";
     const html = renderDevChatHtml();
-    // Ghost-bubble guard only discards empty streaming drafts; text becomes a muted note.
-    expect(html).toContain("has-content");
-    expect(html).toContain("function mountAssistantIfNeeded()");
-    expect(html).toContain(".msg.assistant.streaming:not(.has-content)");
+    expect(html).not.toContain("dev-secret");
+    expect(html).not.toContain("data-bearer");
   });
 
-  it("clears reasoning notes once the turn reaches a terminal status", () => {
+  it("exposes cost rates as data attributes and banner", () => {
+    process.env.DEV_CHAT_COST_PER_M_IN = "1";
+    process.env.DEV_CHAT_COST_PER_M_OUT = "10";
     const html = renderDevChatHtml();
-    expect(html).toContain("function clearReasoningNotes()");
-    expect(html).toContain("clearReasoningNotes();");
+    expect(html).toContain('data-cost-in="1"');
+    expect(html).toContain('data-cost-out="10"');
+    expect(html).toContain("$1.00 / $10.00");
   });
 
-  it("renders a spinner icon next to the progress status label", () => {
-    const html = renderDevChatHtml();
-    expect(html).toContain(".msg.status .spinner");
-    expect(html).toContain("@keyframes status-spin");
-    expect(html).toContain("spinner.setAttribute('aria-busy', 'true');");
+  it("defaults initial message to Good morning", () => {
+    expect(renderDevChatHtml()).toContain('data-initial-message="Good morning"');
   });
 
-  it("prefills Bearer from AGENT_SERVICE_BEARER_TOKEN", () => {
-    process.env.AGENT_SERVICE_BEARER_TOKEN = 'dev-secret"&<>';
-    const html = renderDevChatHtml();
-    expect(html).toContain(
-      'id="token" type="text" value="dev-secret&quot;&amp;&lt;&gt;"',
-    );
+  it("allows blank initial message when env is empty string", () => {
+    process.env.DEV_CHAT_INITIAL_MESSAGE = "";
+    expect(renderDevChatHtml()).toContain('data-initial-message=""');
   });
 
-  it("renders a stop control that swaps with send while a turn is in flight", () => {
-    const html = renderDevChatHtml();
-    expect(html).toContain('id="stopBtn"');
-    expect(html).toContain("function setComposerBusy(busy)");
-    expect(html).toContain("function abortActiveTurn()");
-    expect(html).toContain("signal: turnAbort.signal");
-    expect(html).toContain("stopBtn.addEventListener('click', abortActiveTurn)");
-  });
-
-  it("injects SHOW_PROGRESS from DEV_CHAT_SHOW_PROGRESS", () => {
-    delete process.env.DEV_CHAT_SHOW_PROGRESS;
-    expect(renderDevChatHtml()).toContain("var SHOW_PROGRESS = true;");
-    process.env.DEV_CHAT_SHOW_PROGRESS = "false";
-    expect(renderDevChatHtml()).toContain("var SHOW_PROGRESS = false;");
+  it("returns 404 for app.js when disabled", () => {
+    delete process.env.DEV_CHAT_ENABLED;
+    let status = 0;
+    const res = {
+      writeHead: (s: number) => {
+        status = s;
+      },
+      end: () => undefined,
+    } as unknown as ServerResponse;
+    serveDevChatApp(res);
+    expect(status).toBe(404);
   });
 });

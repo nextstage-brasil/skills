@@ -36,18 +36,20 @@ Starting suggestion, not a rule. Lock the real topology in `graph-spec.md` (arch
 
 ```
 START → guard → context_manager → mcp_catalog → analyst
-analyst → executor | composer | analyst
-executor → analyst
+analyst → executor | composer
+executor → analyst | composer
 composer → respond → END
 ```
 
 `routeAfterGuard`: `agent` → `context_manager`; block → `respond`.
 
-`routeAfterAnalyst`: `need_more_data` + non-empty `executionPlan.actions` → `executor`; `need_more_data` + empty actions → `analyst` (directive hop, cap iterations); else → `composer`.
+`routeAfterAnalyst`: `need_more_data` + non-empty `executionPlan.actions` → `executor`; else → `composer`. **No** analyst self-loop.
+
+`routeAfterExecutor`: still `need_more_data` with remaining actions and under `AGENT_MAX_ANALYST_ITERATIONS` → `analyst`; else → `composer`.
 
 **HITL:** optional `interrupt()` **inside** executor (or analyst) when `graph-spec.md` locks HITL / destructive tools. Resume → continue executor or composer. Default greenfield graph **does not** compile an `interrupt` node.
 
-**Signals:** JSON analyst (no `bindTools`); deterministic executor; composer sole-writer; persisted `mcpCatalog` (name+description only); durable `summary` off `messages`.
+**Signals:** JSON analyst (no `bindTools`); deterministic executor; composer sole-writer; persisted `mcpCatalog` (name+description+inputSchema); durable `summary` off `messages`.
 
 **When:** typical MCP / open query space — **suggested start**. Not mandatory. Simple local-tool MVP may stay open ReAct; HITL-heavy or specialist graphs may differ.
 
@@ -60,7 +62,9 @@ composer → respond → END
 - `context_manager` compact + durable `summary` — `context-window-and-tokens.md`
 - Locale: `guard` clears ephemeral fields then `resolveConversationLocale` same hop
 - Budgets: `tool-budget.ts.snippet`; evidence: `templates/graph-spec.md`
-- Cap analyst↔executor loops (`MAX_ANALYST_ITERATIONS`)
+- Cap analyst↔executor loops (`AGENT_MAX_ANALYST_ITERATIONS`, default 3)
+- Tool-error breaker: any `executionResults` entry with `error` → complete + empty actions
+- Plan actions exactly `{ tool, args }` — reject aliases
 
 **State channels:** `analysis`, `executionPlan`, `executionResults`, `analystStatus`, `mcpCatalog`, `summary`, `dataBundle`, `discoveryBrief`, `externalError`, `turnDecisions`, ephemeral `turnLocale` — `templates/snippets/state.ts.snippet`.
 
