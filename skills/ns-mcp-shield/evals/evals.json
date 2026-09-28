@@ -1,0 +1,23 @@
+{
+  "skill_name": "ns-mcp-shield",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're exposing our internal billing API as an MCP server over HTTPS. Sketch auth, tool design, and the minimum security bar before we ship.",
+      "expected_output": "Invokes ns-mcp-shield: requires OAuth 2.1/OIDC, no token passthrough, schema-validated tools, HITL for high-risk actions; walks minimum-bar checklist; cites controls sections.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Review this MCP tool that shells out with unsanitized model input and stores the user's API key in a process-global dict.",
+      "expected_output": "Invokes ns-mcp-shield as a review: findings for injection and isolation failures mapped to vulnerability landscape risks, with concrete controls; unmet minimum-bar items treated as findings.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Audit CSP and security headers on our Next.js app — no MCP involved.",
+      "expected_output": "Does not use ns-mcp-shield as primary; routes to ns-best-practices instead.",
+      "files": []
+    }
+  ]
+}

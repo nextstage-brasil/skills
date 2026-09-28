@@ -25,5 +25,6 @@
   "ns-backend-tests": "skills/ns-backend-tests",
   "ns-e2e-tests": "skills/ns-e2e-tests",
   "ns-postgres-rag": "skills/ns-postgres-rag",
-  "ns-graphrag": "skills/ns-graphrag"
+  "ns-graphrag": "skills/ns-graphrag",
+  "ns-mcp-shield": "skills/ns-mcp-shield"
 }

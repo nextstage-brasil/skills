@@ -54,7 +54,8 @@
     "ns-agent-platform": ["ns-harness", "ns-agent-architecture"],
     "ns-langgraph-agents": ["ns-harness"],
     "ns-postgres-rag": ["ns-harness"],
-    "ns-graphrag": ["ns-harness", "ns-postgres-rag"]
+    "ns-graphrag": ["ns-harness", "ns-postgres-rag"],
+    "ns-mcp-shield": []
   },
   "categories": {
     "foundation": {
@@ -105,7 +106,13 @@
     },
     "labs": {
       "label": "Labs (agents)",
-      "skills": ["ns-agent-adaptation", "ns-agent-architecture", "ns-langgraph-agents", "ns-agent-platform"]
+      "skills": [
+        "ns-agent-adaptation",
+        "ns-agent-architecture",
+        "ns-langgraph-agents",
+        "ns-agent-platform",
+        "ns-mcp-shield"
+      ]
     },
     "brownfield": {
       "label": "Brownfield",

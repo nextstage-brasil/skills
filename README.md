@@ -47,6 +47,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-agent-platform`                  | Stage 4 — compute topology, tenant/platform, LLM-gateway-as-product. `docs/specs/agent-platform.md` |
 | `ns-postgres-rag`                    | PostgreSQL retrieval doctrine — pgvector, hybrid FTS, GraphRAG. Included in `agents` / `full`. Example: `npx skills add nextstage-brasil/skills@ns-postgres-rag --full-depth -y` |
 | `ns-graphrag`                        | GraphRAG **process** — ontology, extract, evidence/mentions, six answer shapes, cited routing. Depends on `ns-postgres-rag`. Included in `agents` / `full`. Example: `npx skills add nextstage-brasil/skills@ns-graphrag --full-depth -y` |
+| `ns-mcp-shield`                      | Secure MCP server design/review (OWASP GenAI guide) — tools, OAuth/OIDC, isolation, minimum bar. Opt-in: `npx skills add nextstage-brasil/skills@ns-mcp-shield --full-depth -y` |
 
 ### Agent pipeline (install order)
 

@@ -2,6 +2,16 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Add catalog skill — `ns-mcp-shield` (2026-09-28)
+
+Secure MCP server development/review (OWASP GenAI Practical Guide v1.0). Catalog `depends`: none (standalone — no `ns-harness`). **Not** in `alwaysInstall` or presets — opt-in:
+
+```bash
+npx skills add nextstage-brasil/skills@ns-mcp-shield --full-depth -y
+```
+
+Category: `labs`. Progressive disclosure: `references/vulnerability-landscape.md`, `controls.md`, `minimum-bar.md`. License: CC-BY-SA-4.0 (OWASP attribution).
+
 ## Module 5 — agent platform + runtime remainder (2026-09-08)
 
 | Skill | Version | Change |

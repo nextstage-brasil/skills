@@ -117,9 +117,12 @@ Then in your agent: `/ns-proto-creator` (or `/ns-proto-visual-guide` for appeara
 
 ### Only one skill (no scaffold)
 
-Install a skill + its catalog `depends`. Skips `.nextstage-harness/`, `AGENTS.md`, and `docs/`.
+Install a skill + its catalog `depends`. Skills with `depends: []` (e.g. `ns-mcp-shield`) install alone — no `ns-harness`. Skips `.nextstage-harness/`, `AGENTS.md`, and `docs/`.
+
+`npx skills add owner/repo@skill` does **not** resolve catalog depends; use this CLI when you need the dependency graph.
 
 ```bash
+npx @nextstage-brasil/harness --skill ns-mcp-shield --no-scaffold -y
 npx @nextstage-brasil/harness --skill ns-agent-architecture --no-scaffold -y
 npx @nextstage-brasil/harness --skill ns-coder --skill ns-reviewer --no-scaffold -y
 ```

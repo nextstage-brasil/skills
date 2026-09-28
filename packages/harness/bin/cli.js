@@ -66,7 +66,7 @@ Usage:
 Options:
   --dir <path>           Target project directory (default: current)
   --preset <name>        Preset from presets/index.json (+ legacy brownfield, external presets)
-  --skill <name>         Install specific skill (repeatable)
+  --skill <name>         Install skill + catalog depends (repeatable). Empty depends = that skill only
   --all                  Install every skill in the catalog
   --global, -g           Install skills globally (passed to skills CLI)
   --agent <name>         Target agent (repeatable; default from manifest or cursor + claude-code)
@@ -83,9 +83,16 @@ Options:
   --dry-run              Show resolved skills without installing
   --help, -h             Show this help
 
+Notes:
+  --skill resolves catalog.json depends (e.g. ns-coder pulls complements). Skills with depends: []
+  install alone (e.g. ns-mcp-shield — no ns-harness). npx skills add owner/repo@skill does NOT
+  resolve depends; use this CLI when you need the dependency graph.
+
 Examples:
   npx @nextstage-brasil/harness
 ${presetExamples}
+  npx @nextstage-brasil/harness --skill ns-mcp-shield --no-scaffold -y
+  npx @nextstage-brasil/harness --skill ns-coder --no-scaffold -y
   npx @nextstage-brasil/harness sync
   npx @nextstage-brasil/harness sync --check
   npx @nextstage-brasil/harness add-rule api-conventions --description "API conventions"
