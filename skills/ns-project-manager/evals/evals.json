@@ -96,6 +96,12 @@
       "prompt": "Draft the consolidated product roadmap for this product — vision, modules, delivered vs planned versions, and icebox. Persist under docs.",
       "expected_output": "Reads references/13-product-roadmap.md and assets/product-roadmap.template.md. Routes to product-roadmap (not SDD version-roadmap.md). Same route for 'roadmap do projeto' or bare 'roadmap' in product/project sense. Prompt has no sourced versions/icebox: vision/modules only if present in input; omit or mark — on §3–§5; list gaps; does not invent tracker ids or version numbers. Persists to docs/roadmap.md when persistence on (not under docs/<project-slug>/). Does not write product-roadmap.md. If docs/roadmap.md already exists and is not the product template (missing ## 4. Versions), STOP gate — no silent overwrite.",
       "files": []
+    },
+    {
+      "id": 17,
+      "prompt": "Gera o PRD da versão routewise-v1: 'Carlos: dispatchers need a real-time alert when a driver exceeds the speed limit, so we cut incident response. Priya: predictive maintenance is later — we do not have the sensor. Marcus: monthly maintenance report can ship in the MVP.' Persist under docs. Do not write the engineering spec.",
+      "expected_output": "Reads references/14-prd.md and assets/prd.template.md. On-demand PRD, not Phase 1 and not Phase 2. Profile small-feature (default): only sections 1, 2, 3, 4, 6, 11, 13, 14. No HTML comments, no {placeholders}, no [REQUIRED]/[OPTIONAL] tags. Section 6 is RF-01 style blocks with Given/When/Then (Portuguese: Dado/Quando/Então) for happy path and an error or edge — not a one-line acceptance column. Speed alert and monthly maintenance report are in scope; predictive maintenance is a non-goal, sourced from Priya. Missing baselines and targets are A DEFINIR and listed in open questions. No invented P0 and no invented numbers. Story persona is the dispatcher, not a generic user. Persists to docs/versions/routewise-v1/pm/prd.md. Does not write docs/routewise/01-requirements.md, docs/versions/**/sdd/requirements.md, or a commercial quote.",
+      "files": []
     }
   ]
 }

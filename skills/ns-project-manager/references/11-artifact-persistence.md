@@ -32,6 +32,8 @@ Phases 1–5 **never** write or rewrite `docs/roadmap.md`.
 
 Version handoff card (on-demand, not pipeline phase): `docs/versions/{version_san}/pm/execution-handoff.md` — `references/12-version-handoff.md`, `references/pm-persist.md`.
 
+PRD (on-demand, not pipeline phase): `docs/versions/{version_san}/pm/prd.md` — `references/14-prd.md`, `assets/prd.template.md`. Not written on the Phase 2 gate. Not `01-requirements.md`.
+
 On-demand modes (6+): append dated files under `docs/<project-slug>/status/` (e.g. `status/2026-07-20-meeting-digest.md`) only if persistence on — ask before create that subfolder first time.
 
 ## Rules

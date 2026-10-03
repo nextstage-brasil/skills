@@ -1,6 +1,6 @@
 ---
 name: ns-project-manager
-description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; product/project roadmap (multi-version); version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, roadmap, roadmap do projeto, roadmap de produto, versões entregues/planejadas, orçamento, cotação, cronograma, handoff, fecha a versão — even if PM unnamed. Do NOT use for coding, SDD, GitLab issue execution, or `/ns-requirements-enricher`."
+description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; PRD (product discovery doc); product/project roadmap (multi-version); version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, roadmap, roadmap do projeto, roadmap de produto, PRD, product requirements document, documento de requisitos de produto, versões entregues/planejadas, orçamento, cotação, cronograma, handoff, fecha a versão — even if PM unnamed. Do NOT use for coding, SDD requirements.md, GitLab issue execution, or `/ns-requirements-enricher`."
 license: Apache-2.0
 requires_harness: ">=1.0.0"
 provides:
@@ -30,6 +30,7 @@ Gated PM pipeline (Phases 0–5) + on-demand modes (6+). One phase per turn unle
 | Clarification done / user confirm / "proceed with assumptions" | **2** Structuring | `references/01-structuring.md` |
 | "Prioritize", "rank backlog", RICE, WSJF, "what to build first", activity list with effort | **3** Prioritization + Sequencing | `references/02-prioritization.md` |
 | Version narrative, no activity list — "sequence the version", epic deps only | **3** DAG-only sequencing (no RICE) | `references/02-prioritization.md` narrative path |
+| "PRD", "product requirements document", "documento de requisitos de produto" | **prd** | `references/14-prd.md` |
 | "card de versão", "handoff", "fecha a versão", "o que entregar para execução", version card | **version-handoff** | `references/12-version-handoff.md` |
 | "product roadmap", "roadmap de produto", "roadmap do projeto", "roadmap consolidado" / "consolidated roadmap", bare "roadmap" (product/project), multi-version / icebox | **product-roadmap** | `references/13-product-roadmap.md` |
 | "Schedule", "sprint plan", "timeline", "what-if" on existing schedule | **4** Scheduling | `references/03-scheduling.md` |
@@ -58,6 +59,7 @@ On **help** / what-can-I-do / examples:
 | Clarify + structure from transcript | `Here's our discovery call transcript: [...]. Structure the requirements.` |
 | Prioritize backlog (RICE/WSJF + DAG) | `Prioritize this backlog with RICE/WSJF against OKR: [...].` |
 | Sequence version narrative (DAG only) | `Version narrative only — sequence deliverables by technical deps, no RICE: [...].` |
+| PRD | `Write the PRD from this discovery transcript: [...].` |
 | Version handoff card | `Fecha a versão — handoff card for execution: version orcamento-api-v1.` |
 | Product roadmap (multi-version) | `Draft the consolidated product roadmap — delivered, planned, and icebox.` |
 | Sprint schedule | `We've confirmed ranking. Build the sprint schedule.` |
@@ -79,6 +81,8 @@ Close: one line — paste input or pick row.
 **Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Default = APF (IFPUG CPM latest; SISP latest if CPM does not cover). COSMIC CFP only when human asks. Other methods only when human names them. Phases 1–5 = delivery forecast (RICE / sprint / PERT).
 
 **Triple productivity schedule (FP × h/FP, P100/P85/P50):** `references/ns-delivery-schedule/workflow.md`. Phase 5 = story-level PERT only.
+
+**PRD:** `references/14-prd.md` + `assets/prd.template.md`. Lean version PRD (required vs optional sections, profile `small-feature` by default). Acceptance criteria on each `RF-NN`. Persist `docs/versions/{version_san}/pm/prd.md`. Not Phase 2 `01-requirements.md`. Not SDD `requirements.md`.
 
 **Version handoff card:** `references/12-version-handoff.md`. On-demand like commercial-budget — not pipeline phase 6+.
 
@@ -128,7 +132,7 @@ Read `references/0N-*.md` at phase start.
 
 ## On-demand modes (Phases 6+)
 
-Distinct phrases (router table). Self-contained — read reference, run. Reuse pipeline data when present; never invent metrics. Version handoff and product roadmap are on-demand (like commercial-budget), not Phase 6+ rows — `references/12-version-handoff.md`, `references/13-product-roadmap.md`.
+Distinct phrases (router table). Self-contained — read reference, run. Reuse pipeline data when present; never invent metrics. PRD, version handoff, and product roadmap are on-demand (like commercial-budget), not Phase 6+ rows — `references/14-prd.md`, `references/12-version-handoff.md`, `references/13-product-roadmap.md`.
 
 | Mode | Script |
 |---|---|
@@ -191,6 +195,8 @@ Rules:
 | `references/01-structuring.md` | 2 |
 | `references/anti-patterns.md` | 2 (helper) |
 | `references/02-prioritization.md` | 3 |
+| `references/14-prd.md` | PRD |
+| `assets/prd.template.md` | PRD |
 | `references/12-version-handoff.md` | version handoff |
 | `assets/version-handoff.template.md` | version handoff |
 | `references/13-product-roadmap.md` | product roadmap |

@@ -17,6 +17,7 @@ Not beside SDD artifacts under `sdd/`. Create `pm/` if missing.
 | Triple delivery schedule | `docs/versions/{version_san}/pm/05-cronograma-tres-cenarios.md` |
 | PERT configs | `docs/versions/{version_san}/pm/pert-config-p100.json` (and p85 / p50) |
 | PM execution handoff (version card) | `docs/versions/{version_san}/pm/execution-handoff.md` |
+| PRD (version requirements + acceptance) | `docs/versions/{version_san}/pm/prd.md` |
 
 ## SDD subtree — excluded from misplaced search
 
