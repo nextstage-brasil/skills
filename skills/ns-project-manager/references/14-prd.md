@@ -33,7 +33,7 @@ Pick from the request. Unstated = `small-feature`.
 | `ai-data` | AI, model, agent, or analytics in scope. | Add 9. Combines with the base profile. |
 | `client-project` | Client delivery, contract, approvers. | Add 10. Combines with the base profile. |
 
-Optional sections (5, 7, 8, 12) render only when the input has something to put there, and only outside `small-feature` — except 9, 10, and 15, which follow their profile.
+Optional sections (5, 7, 8, 12) render only when the input has something to put there, and only outside `small-feature` — except 9, 10, and 15, which follow their profile. Section 16 (Glossary) may render in any profile when the input uses domain terms an implementer could misread.
 
 `small-feature` still names the persona inside the RF story. It does not add section 5.
 
@@ -44,7 +44,13 @@ Missing required fact: do not guess.
 - English document: `TO BE DEFINED`
 - Portuguese document: `A DEFINIR`
 
-Each gap token becomes one open-question row (section 13).
+Each gap token becomes one open-question row (section 13). Fill **Blocks** with the RF or OBJ ids that cannot be built or measured until it is answered, else `—`.
+
+## Ids and traceability
+
+- `OBJ-NN` objectives (section 3), `RF-NN` functional requirements (section 6), `NFR-NN` non-functional (section 7), `Q-NN` open questions (section 13).
+- Each in-scope line in section 4 names its RF ids. Each RF names the OBJ ids it supports and its source in the input.
+- Header **Ready for build**: `no — blocked by Q-NN` when any open question blocks an in-scope RF; else `yes`. Computed, not guessed.
 
 ## Prerequisites
 
@@ -68,14 +74,17 @@ Never invent stakeholders, systems, metrics, dates, baselines, priorities, or sc
 ## Validation (before the gate)
 
 - Every required section for the active profile is present and non-empty.
-- Every `RF-NN` has a story and at least two acceptance checks (happy path and error or edge).
+- Every `RF-NN` has a story, a source, and at least two acceptance checks (happy path and error or edge).
+- Every in-scope item in section 4 maps to an RF, and every RF appears in section 4.
+- Every gap token has a `Q-NN` row; **Ready for build** matches the `Blocks` column.
+- Guardrail metrics appear only when the input names one.
 - No HTML comment left. No `{field}` left.
 - No number, date, name, or priority that the input did not state.
 - Section 10 does not compute price, hours, or function points.
 
 ## Output
 
-Filled PRD for the active profile. Close with the draft warning and one gate: "Confirm this PRD, or adjust scope, requirements, or acceptance criteria?"
+Filled PRD for the active profile. State **Ready for build** in one line (and the blocking `Q-NN` ids, if any). Close with the draft warning and one gate: "Confirm this PRD, or adjust scope, requirements, or acceptance criteria?"
 
 ## Behavioral constraints
 

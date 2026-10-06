@@ -1,7 +1,7 @@
 <!--
 TEMPLATE METADATA (skill only — strip this whole comment from the final document)
 template: prd
-template_version: 1.0
+template_version: 1.1
 profiles: [small-feature, new-product, ai-data, client-project]
 
 FILL RULES
@@ -18,7 +18,9 @@ FILL RULES
 - new-product: required sections plus any optional section that has sourced data, plus section 15.
 - ai-data: include section 9.
 - client-project: include section 10.
+- Section 16 (Glossary): any profile, only when the input uses domain terms an implementer could misread.
 - Profiles combine. Example: client project with AI = client-project + ai-data.
+- Stable ids: OBJ-NN (objectives), RF-NN (functional requirements), NFR-NN (non-functional), Q-NN (open questions).
 -->
 
 # PRD: {product_or_feature_name}
@@ -27,16 +29,19 @@ FILL RULES
 |---|---|
 | **Owner (PM/PO)** | {owner} |
 | **Status** | {draft \| in review \| approved \| in development \| delivered} |
+| **Ready for build** | {yes \| no — blocked by Q-NN} |
 | **Version** | {version_san} |
+| **Target release** | {date_or_milestone} |
 | **Last updated** | {YYYY-MM-DD} |
 | **Stakeholders** | {names and roles} |
+| **Approvers** | {names and roles who sign off} |
 | **Links** | {epic/issue, prototype, doc folder} |
 
 ---
 
 ## 1. Overview [REQUIRED]
 
-<!-- hint: 2–3 sentences. What it is, for whom, and why it matters now. No solution design. -->
+<!-- hint: 2–3 sentences. What it is, for whom, and why now. No solution design. -->
 
 {executive_summary}
 
@@ -48,6 +53,7 @@ FILL RULES
 
 - **Problem:** {problem}
 - **Who is affected:** {affected_audience}
+- **Current workaround:** {how it is handled today, or gap token}
 - **Evidence:** {data, quotes, ticket volume, research}
 - **Impact of not solving:** {consequence}
 
@@ -55,19 +61,26 @@ FILL RULES
 
 ## 3. Objectives and success metrics [REQUIRED]
 
-<!-- hint: each objective needs one metric. Missing baseline, target, or date = gap token, not a guessed number. -->
+<!-- hint: each objective needs one metric. Type = primary (what must move) or guardrail (what must not get worse).
+     Guardrail rows only when the input names one. Missing baseline, target, date, or measurement source = gap token, not a guessed value. -->
 
-| Objective | Metric | Baseline | Target | Due |
-|---|---|---|---|---|
-| {objective_1} | {metric} | {current_value} | {target} | {date} |
+| ID | Objective | Metric | Type | Baseline | Target | Due | Measured by |
+|---|---|---|---|---|---|---|---|
+| OBJ-01 | {objective_1} | {metric} | {primary \| guardrail} | {current_value} | {target} | {date} | {data source or event} |
 
 ---
 
-## 4. Non-goals [REQUIRED]
+## 4. Scope [REQUIRED]
 
-<!-- hint: explicitly out of this version. Stops scope creep. Do not invent extras. -->
+<!-- hint: In scope = one line per capability, mapped to RF ids. Out of scope = explicit non-goals for this version, with the reason when the input gives one. Do not invent extras. -->
 
-- {out_of_scope_1}
+**In scope**
+
+- {capability_1} — RF-01
+
+**Out of scope (non-goals)**
+
+- {out_of_scope_1} — {reason_or_later_version}
 
 ---
 
@@ -83,21 +96,25 @@ FILL RULES
 
 ## 6. Functional requirements [REQUIRED]
 
-<!-- hint: priority P0 (must), P1 (should), P2 (could) only when the input states it. Otherwise gap token on the priority, not a default P0.
+<!-- hint: one observable behavior per RF; independently testable.
+     Priority P0 (must), P1 (should), P2 (could) only when the input states it. Otherwise gap token on the priority, not a default P0.
      Every requirement has testable acceptance in Given / When / Then (Portuguese output: Dado / Quando / Então).
-     Stable ids RF-01, RF-02 for QA and issues.
-     Happy path plus one error or edge scenario. Then is observable. Never "correctly" or "properly". -->
+     Happy path plus at least one error or edge scenario (no permission, empty, invalid input, limit, duplicate) — only edges the input supports or the gap token.
+     Then is observable (screen state, message, record, notification). Never "correctly" or "properly".
+     Supports = OBJ ids. Source = who or what in the input stated it. -->
 
 ### RF-01: {title} — {P0 | P1 | P2 | gap token}
 
 **Story:** As a {persona}, I want {action}, so that {benefit}.
 
+**Supports:** {OBJ-01} · **Source:** {stakeholder, transcript, ticket}
+
 **Acceptance criteria:**
 
 - [ ] **Given** {context}, **when** {action}, **then** {expected_result}.
-- [ ] **Given** {error_context}, **when** {action}, **then** {error_behavior}.
+- [ ] **Given** {error_or_edge_context}, **when** {action}, **then** {error_or_edge_behavior}.
 
-**Notes:** {business_rules_or_exceptions_or_gap_token}
+**Business rules:** {rules_or_exceptions_or_gap_token}
 
 <!-- repeat the RF-NN block per in-scope capability -->
 
@@ -105,16 +122,17 @@ FILL RULES
 
 ## 7. Non-functional requirements [OPTIONAL]
 
-<!-- hint: only categories that appear in the input. Measurable value when the input has one. Do not invent latency, SLA, or legal basis. -->
+<!-- hint: only categories that appear in the input; delete the other rows. Measurable value when the input has one. Do not invent latency, SLA, or legal basis. -->
 
-| Category | Requirement |
-|---|---|
-| Performance | {example: p95 response under a stated bound} |
-| Security and access | {roles, authentication, audit} |
-| Privacy / LGPD | {personal data, legal basis, retention} |
-| Accessibility | {standard named in the input} |
-| Integrations | {systems and APIs named in the input} |
-| Availability and support | {SLA, monitoring} |
+| ID | Category | Requirement |
+|---|---|---|
+| NFR-01 | Performance | {example: p95 response under a stated bound} |
+| NFR-02 | Security and access | {roles, authentication, audit} |
+| NFR-03 | Privacy / LGPD | {personal data, legal basis, retention} |
+| NFR-04 | Accessibility | {standard named in the input} |
+| NFR-05 | Integrations and constraints | {systems, APIs, mandated platform or stack named in the input} |
+| NFR-06 | Observability and analytics | {events, logs, or dashboards needed to measure section 3} |
+| NFR-07 | Availability and support | {SLA, monitoring} |
 
 ---
 
@@ -165,11 +183,17 @@ FILL RULES
 
 ---
 
-## 12. Delivery plan [OPTIONAL]
+## 12. Release plan [OPTIONAL]
+
+<!-- hint: rollout, flag, rollback, and migration only when the input states them. -->
 
 | Phase / milestone | Scope (RF ids) | Target date | Done when |
 |---|---|---|---|
 | {phase_or_mvp} | {RF-01, RF-02} | {date} | {criterion} |
+
+- **Rollout:** {feature flag, pilot group, percentage, or big bang}
+- **Rollback:** {how to revert}
+- **Data migration:** {existing data affected}
 
 **Launch criteria (go/no-go):**
 
@@ -179,21 +203,28 @@ FILL RULES
 
 ## 13. Open questions [REQUIRED]
 
-<!-- hint: every gap token in the sections above gets one row here. -->
+<!-- hint: every gap token in the sections above gets one row here. Blocks = RF/OBJ ids that cannot be built or measured until answered; "—" when none.
+     Any open row that blocks an in-scope RF sets "Ready for build" to "no". -->
 
-| # | Question | Owner | Due | Status |
-|---|---|---|---|---|
-| 1 | {question} | {who} | {date} | open |
+| ID | Question | Blocks | Owner | Due | Status |
+|---|---|---|---|---|---|
+| Q-01 | {question} | {RF-01 \| OBJ-01 \| —} | {who} | {date} | open |
 
 ---
 
-## 14. Decision and version log [REQUIRED]
+## 14. Decisions and version log [REQUIRED]
 
 **Decisions**
 
 | Date | Decision | Reason | Decided by |
 |---|---|---|---|
 | {date} | {decision} | {reason} | {person} |
+
+**Approvals**
+
+| Role | Name | Date | Status |
+|---|---|---|---|
+| {role} | {name} | {date} | {pending \| approved \| changes requested} |
 
 **Version history**
 
@@ -212,3 +243,13 @@ FILL RULES
 - **Market context:** {who buys and why now}
 - **Alternatives:** {competitor or current workaround named in the input}
 - **Go-to-market:** {channel, audience, launch constraint}
+
+---
+
+## 16. Glossary [OPTIONAL]
+
+<!-- hint: domain terms, acronyms, and status names an engineer or coding agent could misread. Definitions from input only. -->
+
+| Term | Definition |
+|---|---|
+| {term} | {definition} |
