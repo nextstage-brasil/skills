@@ -2,6 +2,7 @@
 import { RemoveMessage } from "@langchain/core/messages";
 import { REMOVE_ALL_MESSAGES } from "@langchain/langgraph";
 import {
+  compactTargetTokens,
   resolveContextConfig,
   trimMessagesForLlm,
   countMessagesTokens,
@@ -10,18 +11,18 @@ import {
 import { summarizeOlderMessages } from "../memory/summarizer.js";
 
 export async function buildLlmMessages(state, model) {
-  const cfg = resolveContextConfig();
+  const window = resolveContextConfig().maxTokens;
   const total = await countMessagesTokens(state.messages, model);
   let working = state.messages;
 
   let summary = null;
-  if (shouldSummarize(total, cfg.maxTokens, cfg.summarizeMultiplier)) {
-    const trimmed = await trimMessagesForLlm(working, cfg.maxTokens, model);
+  if (shouldSummarize(total, window)) {
+    const trimmed = await trimMessagesForLlm(working, compactTargetTokens(window), model);
     summary = await summarizeOlderMessages(working, trimmed, model);
     if (summary) working = [summary, ...trimmed];
   }
 
-  const forLlm = await trimMessagesForLlm(working, cfg.maxTokens, model);
+  const forLlm = await trimMessagesForLlm(working, window, model);
   return { forLlm, summary, tailAfterSummary: summary ? forLlm.slice(1) : null };
 }
 

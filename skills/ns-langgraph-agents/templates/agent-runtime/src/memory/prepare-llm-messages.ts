@@ -1,6 +1,7 @@
 import type { BaseMessage } from "@langchain/core/messages";
 import type { BaseLanguageModel } from "@langchain/core/language_models/base";
 import {
+  compactTargetTokens,
   countMessagesTokens,
   resolveContextConfig,
   shouldSummarize,
@@ -22,15 +23,17 @@ export async function prepareLlmMessages(
   messages: BaseMessage[],
   model: BaseLanguageModel,
 ): Promise<PrepareLlmMessagesResult> {
-  const cfg = resolveContextConfig();
+  const window = resolveContextConfig().maxTokens;
   const pruned = pruneStaleToolMessages(messages);
-  const trimmed = await trimMessagesForLlm(pruned, cfg.maxTokens, model);
   const totalTokens = await countMessagesTokens(pruned, model);
 
-  if (!shouldSummarize(totalTokens, cfg.maxTokens, cfg.summarizeMultiplier)) {
+  if (!shouldSummarize(totalTokens, window)) {
+    const trimmed = await trimMessagesForLlm(pruned, window, model);
     return { messages: trimmed, summarized: false, summary: null };
   }
 
+  const target = compactTargetTokens(window);
+  const trimmed = await trimMessagesForLlm(pruned, target, model);
   const keepFromIndex = Math.max(0, pruned.length - trimmed.length);
   const summary = await summarizeOlderMessages(pruned, keepFromIndex);
   if (!summary) {

@@ -2,12 +2,19 @@ import { trimMessages, type BaseMessage } from "@langchain/core/messages";
 import type { BaseLanguageModel } from "@langchain/core/language_models/base";
 
 export type ContextConfig = {
+  /** Model raw context window (`CONTEXT_MAX_TOKENS`). Ratios below are not env. */
   maxTokens: number;
-  summarizeMultiplier: number;
   toolOutputMaxChars: number;
   /** Skill procedure body — MUST stay independent of tool/MCP wire cap. */
   skillBodyMaxChars: number;
 };
+
+/** Prompt + history over this share of the window → compact. */
+export const SUMMARIZE_AT_RATIO = 0.8;
+/** Compaction lands here so the next one is many turns away. */
+export const COMPACT_TO_RATIO = 0.5;
+/** Ceiling for the rolling summary so it cannot eat the room compaction frees. */
+export const SUMMARY_MAX_RATIO = 0.1;
 
 function readEnvNumber(key: string, fallback: number): number {
   const raw = process.env[key]?.trim();
@@ -19,16 +26,22 @@ function readEnvNumber(key: string, fallback: number): number {
 }
 
 /**
- * @env CONTEXT_MAX_TOKENS, CONTEXT_SUMMARIZE_MULTIPLIER,
- * CONTEXT_TOOL_OUTPUT_MAX_CHARS, CONTEXT_SKILL_BODY_MAX_CHARS
+ * @env CONTEXT_MAX_TOKENS, CONTEXT_TOOL_OUTPUT_MAX_CHARS, CONTEXT_SKILL_BODY_MAX_CHARS
  */
 export function resolveContextConfig(): ContextConfig {
   return {
     maxTokens: readEnvNumber("CONTEXT_MAX_TOKENS", 12000),
-    summarizeMultiplier: readEnvNumber("CONTEXT_SUMMARIZE_MULTIPLIER", 2),
     toolOutputMaxChars: readEnvNumber("CONTEXT_TOOL_OUTPUT_MAX_CHARS", 4000),
     skillBodyMaxChars: readEnvNumber("CONTEXT_SKILL_BODY_MAX_CHARS", 16000),
   };
+}
+
+export function compactTargetTokens(window = resolveContextConfig().maxTokens): number {
+  return Math.floor(window * COMPACT_TO_RATIO);
+}
+
+export function summaryMaxTokens(window = resolveContextConfig().maxTokens): number {
+  return Math.floor(window * SUMMARY_MAX_RATIO);
 }
 
 /** Sum of `model.getNumTokens` across messages — same approximation trimMessages uses internally. */
@@ -72,13 +85,12 @@ export async function trimMessagesForLlm(
   return lastHumanIndex === -1 ? trimmed : messages.slice(lastHumanIndex);
 }
 
-/** True once history tokens exceed `maxTokens * multiplier` — trigger for summarization. */
+/** True once used tokens exceed 80% of the raw context window. */
 export function shouldSummarize(
-  totalTokens: number,
-  maxTokens: number,
-  multiplier: number,
+  usedTokens: number,
+  window = resolveContextConfig().maxTokens,
 ): boolean {
-  return totalTokens > maxTokens * multiplier;
+  return usedTokens > window * SUMMARIZE_AT_RATIO;
 }
 
 /** Truncates MCP/tool output before it enters `state.messages`. */

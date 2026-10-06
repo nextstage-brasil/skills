@@ -2,9 +2,12 @@
 import { trimMessages, type BaseMessage } from "@langchain/core/messages";
 import type { BaseLanguageModel } from "@langchain/core/language_models/base";
 
+export const SUMMARIZE_AT_RATIO = 0.8;
+export const COMPACT_TO_RATIO = 0.5;
+export const SUMMARY_MAX_RATIO = 0.1;
+
 export type ContextConfig = {
   maxTokens: number;
-  summarizeMultiplier: number;
   toolOutputMaxChars: number;
   skillBodyMaxChars: number;
 };
@@ -16,7 +19,6 @@ export function resolveContextConfig(): ContextConfig {
   };
   return {
     maxTokens: n("CONTEXT_MAX_TOKENS", 12000),
-    summarizeMultiplier: n("CONTEXT_SUMMARIZE_MULTIPLIER", 2),
     toolOutputMaxChars: n("CONTEXT_TOOL_OUTPUT_MAX_CHARS", 4000),
     skillBodyMaxChars: n("CONTEXT_SKILL_BODY_MAX_CHARS", 12000),
   };
@@ -71,10 +73,14 @@ export function truncateToolOutput(output: string, maxChars: number): string {
   return `${output.slice(0, maxChars)}\n…[truncated ${output.length - maxChars} chars]`;
 }
 
-export function shouldSummarize(
-  totalTokens: number,
-  maxTokens: number,
-  multiplier: number,
-): boolean {
-  return totalTokens > maxTokens * multiplier;
+export function shouldSummarize(usedTokens: number, window: number): boolean {
+  return usedTokens > window * SUMMARIZE_AT_RATIO;
+}
+
+export function compactTargetTokens(window: number): number {
+  return Math.floor(window * COMPACT_TO_RATIO);
+}
+
+export function summaryMaxTokens(window: number): number {
+  return Math.floor(window * SUMMARY_MAX_RATIO);
 }

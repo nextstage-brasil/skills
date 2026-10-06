@@ -136,7 +136,7 @@ flowchart TD
 | ----- | --------- |
 | Short | LangGraph checkpointer (`postgres` prod, `memory` tests) |
 | Long | {{**none** (default) \| store namespace \| RAG}} — enable store only if the same user/context repeats across sessions |
-| Context window | trim + optional summarize — tool cap vs skill-body cap |
+| Context window | trim; summarize above 80% of `CONTEXT_MAX_TOKENS`, compact to 50%, summary cap 10% — tool cap vs skill-body cap |
 
 ## Capabilities — bind / inject
 

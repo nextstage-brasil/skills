@@ -217,7 +217,8 @@ Implement per `references/context-window-and-tokens.md`:
 - `trimMessagesForLlm` before every LLM call.
 - `normalizeMcpToolResult` then `truncateToolOutput` before `ToolMessage` enters state.
 - Separate `CONTEXT_SKILL_BODY_MAX_CHARS` for skill bodies (snippet `skillBodyMaxChars`).
-- Optional `summarizeOlderMessages` with **persisted compaction** (`RemoveMessage` + rewrite) in the same agent-node return.
+- Summarize when used tokens exceed **80%** of `CONTEXT_MAX_TOKENS` (raw window). Ratios are constants: trigger `0.8`, compact to `0.5`, summary cap `0.1`. No summarize multiplier env.
+- `summarizeOlderMessages` with **persisted compaction** (`RemoveMessage` + rewrite) in the same agent-node return.
 
 Never pass raw `state.messages` to the model.
 

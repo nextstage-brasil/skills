@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  compactTargetTokens,
   resolveContextConfig,
+  shouldSummarize,
+  summaryMaxTokens,
   truncateSkillBody,
   truncateToolOutput,
 } from "../../src/memory/context-window.js";
@@ -17,6 +20,14 @@ describe("context-window caps", () => {
     const out = truncateSkillBody(long);
     expect(out.length).toBeLessThan(long.length);
     expect(out).toContain("[truncated");
+  });
+
+  it("summarizes above 80% of the raw window and compacts to 50%", () => {
+    const window = 12000;
+    expect(shouldSummarize(window * 0.8, window)).toBe(false);
+    expect(shouldSummarize(window * 0.8 + 1, window)).toBe(true);
+    expect(compactTargetTokens(window)).toBe(6000);
+    expect(summaryMaxTokens(window)).toBe(1200);
   });
 
   it("tool truncate does not use skill cap", () => {
