@@ -20,7 +20,7 @@ export const DEFAULT_SUBAGENTS = [
     description:
       '(NS) Thin bridge to ns-reviewer. Invoke for the review gate — loads AGENTS.md then the skill workflow.',
     model: {
-      cursor: 'grok-4.5[effort=medium,fast=false]',
+      cursor: 'grok-4.7[effort=medium,fast=false]',
       claude: 'opus',
     },
     readonly: true,
