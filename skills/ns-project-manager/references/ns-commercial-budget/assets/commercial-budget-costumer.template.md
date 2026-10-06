@@ -117,7 +117,7 @@
 | **Total** | **{total}** | **{Horas base or —}** | **{sum or —}** | Contagem **delta** |
 
 <!-- Esforço (h) = that row’s FP × team productivity (h/PF). Same productivity as Horas previstas. No safety margin in this column (margin stays in Horas previstas). If productivity was not given: every Esforço cell is `—` (including totals). -->
-<!-- Custo (R$) = Esforço × R$/h, or FP × R$/PF when that rate was given. If no rate: every Custo cell is `—`. Never invent R$. -->
+<!-- Custo (R$) = Esforço × R$/h, or FP × R$/PF when that rate was given or the human accepted the same-day PF suggestion (references/pf-unit-price.md). If no accepted rate: every Custo cell is `—`. Never invent R$. -->
 
 <!-- COSMIC (CFP): omit entire subsection unless the human explicitly asked for COSMIC/CFP. -->
 

@@ -146,7 +146,7 @@ When `engineering-split.md` applies:
 
 **Esforço (h)** — row FP × team productivity (h/PF used in Horas previstas). No safety margin here. If productivity was **not specified**: `—` in every Esforço cell (including subtotal/total). Do not invent h/PF.
 
-**Custo (R$)** — Esforço × R$/h, or row FP × R$/PF when that rate was given. If **no rate** was specified: `—` in every Custo cell. Never invent R$. R$/PF can fill Custo even when Esforço is `—`.
+**Custo (R$)** — Esforço × R$/h, or row FP × R$/PF when that rate was given **or** the human accepted the same-day local conversion of the USD anchor (`pf-unit-price.md`). If **no rate** was accepted: `—` in every Custo cell. Never invent R$. R$/PF can fill Custo even when Esforço is `—`.
 
 - No method statement, Tipo, RET/DET, UFP, ADD/CHG/DEL, ILF/EIF/EI/EO/EQ, SISP chapter names.
 - Do **not** copy the internal origem table.
@@ -168,4 +168,4 @@ When `engineering-split.md` applies:
 - Counting files/tables/APIs instead of logical files and elementary processes — but **do** count the user function those APIs serve.
 - CPM/SISP origem in `commercial-budget-costumer.md`.
 - Different Total PF (or hours) between internal and client docs.
-- Invented Esforço or Custo in the client FP table when productivity or rates were not specified.
+- Invented Esforço or Custo in the client FP table when productivity or rates were not specified (accepted `pf-unit-price.md` conversion counts as a rate; the unaccepted suggestion does not).

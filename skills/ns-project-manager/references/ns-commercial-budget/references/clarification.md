@@ -22,13 +22,13 @@ Highest-value gaps for this scope:
 3a. **Value-speech context (client export, optional)** — segment, main reported pain, alternatives under evaluation, only if missing and a question slot remains. **Not** a blocker. Valor agregado is always addressed to the **decision-maker** (`sales-value-speech.md`); do not ask “who do we pitch to?” as if the operator were the addressee.
 4. **Constraints** — deadline, compliance (e.g. LGPD), brownfield vs greenfield, known stack — skip stack if `brownfield-map` / `stack-confirmed` already covers.
 5. **Team experience (prefer when estimating hours)** — seniority of builders; tenure on product/project; involvement depth (core maintainers vs occasional). Goal: calibrate codebase/domain knowledge before hours. Optionally ask house productivity (h/PF) if a standard exists. Ask h/CFP only when COSMIC was requested.
-6. **Rates for Custo (optional)** — R$/h and/or R$/PF **only if** human wants macro Custo column filled; else leave `—` / `_pending rates_`.
+6. **Rates for Custo (optional)** — R$/h and/or R$/PF **only if** human wants macro Custo column filled or asks the PF price / says they do not know it. Unknown PF price: read `pf-unit-price.md`, convert the USD anchor with the day's local FX, and **offer** the mean (plus band). Fill Custo only after they accept. Else leave `—` / `_pending rates_`.
 7. **Acceptance depth** — must-have SLAs or volumes stakeholder will commit (do not invent).
 8. **Persist or chat-only** — write/overwrite `docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md` (header bumps Sequência + Gerado em)?
 
 Misplaced-file **STOP gate** (`../../pm-persist.md`) is **not** a clarification question and is **not** skipped by `proceed with assumptions` / `quick mode`. Persist stays blocked until the human explicitly confirms or declines the path action.
 
-Do **not** invent rates. Skip rates question when human already said ignore pricing.
+Do **not** invent rates. The Floripa suggestion is an offer, not a silent fill. Skip rates question when human already said ignore pricing. A price-only question is answered from `pf-unit-price.md` and does not open a budget.
 
 ## Framing
 

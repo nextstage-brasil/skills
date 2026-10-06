@@ -1,6 +1,6 @@
 ---
 name: ns-project-manager
-description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; PRD (product discovery doc); product/project roadmap (multi-version); version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, roadmap, roadmap do projeto, roadmap de produto, PRD, product requirements document, documento de requisitos de produto, versões entregues/planejadas, orçamento, cotação, cronograma, handoff, fecha a versão — even if PM unnamed. Do NOT use for coding, SDD requirements.md, GitLab issue execution, or `/ns-requirements-enricher`."
+description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; PRD (product discovery doc); product/project roadmap (multi-version); version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial, preço do ponto de função, quanto custa o PF; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, roadmap, roadmap do projeto, roadmap de produto, PRD, product requirements document, documento de requisitos de produto, versões entregues/planejadas, orçamento, cotação, cronograma, handoff, fecha a versão, valor do PF, não sei o preço do ponto de função — even if PM unnamed. Do NOT use for coding, SDD requirements.md, GitLab issue execution, or `/ns-requirements-enricher`."
 license: Apache-2.0
 requires_harness: ">=1.0.0"
 provides:
@@ -42,7 +42,7 @@ Gated PM pipeline (Phases 0–5) + on-demand modes (6+). One phase per turn unle
 | "Deploy checklist", "compliance", "before we ship" | **9** Compliance | `references/08-compliance-checklist.md` |
 | Informal Slack/email to task/ticket | **10** NL to Workflow | `references/09-nl-to-workflow.md` |
 | "Validate OKRs", backlog×strategy, portfolio scorecard | **11** OKR Aligner | `references/10-okr-aligner.md` |
-| Commercial budget, orçamento, proposta comercial, Function Points, ponto-função, cotação R$ (COSMIC/CFP only if named) | **commercial-budget** (not PM phase) | `references/ns-commercial-budget/workflow.md` then its `references/` + `assets/` |
+| Commercial budget, orçamento, proposta comercial, Function Points, ponto-função, cotação R$, preço/valor do PF (COSMIC/CFP only if named) | **commercial-budget** (not PM phase) | `references/ns-commercial-budget/workflow.md` then its `references/` + `assets/`; PF unit price → `references/pf-unit-price.md` |
 
 Modes 6+ skip pipeline. Run direct. Reuse prior phase context when present.
 
@@ -78,7 +78,7 @@ Close: one line — paste input or pick row.
 
 **Nested workflows:** router hit `references/ns-commercial-budget/` or `references/ns-delivery-schedule/` `workflow.md` — read full file, follow it (own `references/`, `assets/`, `scripts/`). No evals. Per-issue grill-me = `/ns-requirements-enricher` (catalog), not this skill.
 
-**Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Default = APF (IFPUG CPM latest; SISP latest if CPM does not cover). COSMIC CFP only when human asks. Other methods only when human names them. Phases 1–5 = delivery forecast (RICE / sprint / PERT).
+**Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Default = APF (IFPUG CPM latest; SISP latest if CPM does not cover). COSMIC CFP only when human asks. Other methods only when human names them. PF unit price unknown or asked: `references/ns-commercial-budget/references/pf-unit-price.md` (USD anchor, same-day local FX; fill Custo only after accept). Phases 1–5 = delivery forecast (RICE / sprint / PERT).
 
 **Triple productivity schedule (FP × h/FP, P100/P85/P50):** `references/ns-delivery-schedule/workflow.md`. Phase 5 = story-level PERT only.
 

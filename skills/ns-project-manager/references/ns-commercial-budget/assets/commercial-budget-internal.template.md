@@ -212,7 +212,7 @@ Situações não contempladas pelo CPM foram contadas com o Roteiro de Métricas
 
 - Base: {h} h · Margem de segurança: {s}% · Total com margem: {h} h
 - Mix %: {default or adjusted — cite in premissas}
-- Custo: só com R$/h e/ou R$/PF informados; senão `—` e `_pending rates_`
+- Custo: só com R$/h e/ou R$/PF informados, ou com a sugestão de PF aceita (pf-unit-price.md, câmbio do dia); senão `—` e `_pending rates_`
 
 ---
 
@@ -232,7 +232,7 @@ Situações não contempladas pelo CPM foram contadas com o Roteiro de Métricas
 
 - {assumptions — team knowledge, delta-on-known-product, macro mix, margins, out-of-scope, lacunas}
 - Este artefato **não** contém lista de tarefas (`tasks/`), issues GitLab nem handoff SDD.
-- Custo em R$ só com taxas fornecidas; margem de segurança = contingência de estimativa, não markup comercial.
+- Custo em R$ só com taxas fornecidas ou sugestão de PF aceita (câmbio do dia); margem de segurança = contingência de estimativa, não markup comercial.
 
 ---
 

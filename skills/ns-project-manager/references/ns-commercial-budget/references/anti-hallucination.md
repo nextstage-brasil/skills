@@ -5,7 +5,7 @@ Every Feature, RNF, estimate premise, macro-row figure, margin % must trace to h
 ## Forbidden
 
 1. **Invented SLAs / volumes** — No latency, uptime, concurrency, record counts stakeholder did not state. Prefer qualitative acceptance + `[LACUNA: métrica não fornecida]`.
-2. **Invented R$** — No R$/h, R$/PF, Custo totals without human rates. Use `—` / `_pending rates_` in macro table.
+2. **Invented R$** — No R$/h, R$/PF, or Custo totals without a human rate or an **accepted** same-day conversion of the USD PF anchor (`pf-unit-price.md`). Offering the suggestion is not a rate. Until they accept: `—` / `_pending rates_`. Never reuse the anchor-day BRL 700.
 3. **Gold plating** — No dashboards, RBAC, audits, integrations not requested. Optional ideas under **Sugestões fora de escopo (não implementar)** — never inside Feature acceptance.
 4. **Silent architecture decisions** — ML, OCR, heavy sync, multi-region: record intent + `[DECISÃO DE ARQUITETURA: …]`; do not pretend design settled.
 5. **Fake integration readiness** — External systems need contract hints (API/protocol/format) or `[LACUNA: contrato de integração não definido]`.

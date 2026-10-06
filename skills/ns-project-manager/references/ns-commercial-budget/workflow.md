@@ -9,12 +9,15 @@ description: >
   explicitly asks (COSMIC, CFP, cosmic functions).
   Header Sequência + Gerado em on regenerate. When docs/context exists, full
   read reverse-spec + brownfield-map, reuse inventory, size delta not greenfield.
-  Never invent R$. Optional engineering split: internal commercial-budget-internal.md
+  Never invent R$. If the human asks the PF unit price or does not know it,
+  offer the Floripa market mean stored in USD and convert with the day's
+  local FX (pf-unit-price.md) — fill Custo only after they accept.
+  Optional engineering split: internal commercial-budget-internal.md
   (includes optional Notas técnicas from transcript/POC — internal only)
   plus client export commercial-budget-costumer.md when scope mixes business
   capabilities with operational/architectural consequences. Use for orçamento,
   proposta comercial, cotação, budget proposal, ponto-função, Function Points,
-  COSMIC, CFP, precificar escopo.
+  COSMIC, CFP, precificar escopo, preço do ponto de função, quanto custa o PF.
   NOT for SDD requirements.md/tasks/GitLab issues, RICE/sprint/PERT, factory
   token/USD cost.
 license: Apache-2.0
@@ -24,7 +27,7 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.28"
+  version: "1.29"
 ---
 
 # Commercial Budget
@@ -35,7 +38,7 @@ Client-facing commercial budget from free-form scope: **Features**, **Mermaid fl
 
 **Product context:** full-read reverse-spec + brownfield-map when present; reuse inventory; size **delta**, not greenfield. Block sizing if context exists and inventory missing.
 
-**Pricing:** Custo (R$) only when human supplies rates. Never invent.
+**Pricing:** Custo only from a human rate, or from the accepted PF market suggestion in `references/pf-unit-price.md` (USD anchor, same-day local FX). Never invent a rate. Price-only questions: offer the suggestion; do not open a budget.
 
 Not SDD, not tasks/, not GitLab issues, not RICE/sprint/PERT.
 
@@ -97,7 +100,7 @@ Read `references/clarification.md`.
 | Features (≤10) | `Feature 001`…; **Descrição detalhada** = contract facts in both docs — client: 1–3 blocks (**Objeto e condições** / **Regras** / **Limites desta entrega**) + **lead term:** bullets; internal: compact prose OK (`feature-description-structure.md`). Critérios = signed checks, not a copy of Descrição. **No Precedência.** No `RF`. Delta-on-existing. No fields/classes/API schema in narrative. Internal doc may list `engenharia` / `qualidade` as separate Features for traceability; client export lists `negócio` only (`engineering-split.md`) |
 | Notas técnicas (internal only) | After Features, before RNFs. Include only when transcript/meeting/POC/architecture source exists (`technical-notes.md`). Cross-ref Feature numbers; hoje vs. alvo tables, pseudocode, prerequisites OK. **Omit entire section** if no source. **Never** in client export |
 | RNFs | Only if identified — product language |
-| Estimativas — FP | **Same Total PF** in both docs. Internal: APF + CPM/SISP origem. Client: per-Feature FP + **Esforço (h)** + **Custo (R$)** + justificativa — **no** CPM/SISP types (`fp-sizing.md`, `engineering-split.md`). Esforço = `—` if productivity unspecified; Custo = `—` if rates unspecified |
+| Estimativas — FP | **Same Total PF** in both docs. Internal: APF + CPM/SISP origem. Client: per-Feature FP + **Esforço (h)** + **Custo (R$)** + justificativa — **no** CPM/SISP types (`fp-sizing.md`, `engineering-split.md`). Esforço = `—` if productivity unspecified; Custo = `—` unless the human gave a rate or accepted the same-day PF suggestion (`pf-unit-price.md`) |
 | Estimativas — COSMIC | **Omit by default.** If human asked: summary table + method reference line only — **no** rationale prose |
 | Estimativas — Horas | **Calculation only:** FP × productivity; base; margin; total. Cite productivity source |
 | Macroatividades | 7-row table unchanged (`macro-activities.md`) |
@@ -153,6 +156,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 | `assets/commercial-budget-costumer.template.md` | When writing `commercial-budget-costumer.md` |
 | `references/clarification.md` | Before generating |
 | `references/fp-sizing.md` | Before FP tables — APF default (CPM then SISP) |
+| `references/pf-unit-price.md` | When the human asks the PF price or does not know R$/PF — USD anchor, convert with the day's local FX |
 | `references/cosmic-sizing.md` | Only when human asked for COSMIC/CFP (agent sizing; doc = table only) |
 | `references/macro-activities.md` | Before lifecycle table |
 | `references/risk-margin.md` | Before risks / margin % |

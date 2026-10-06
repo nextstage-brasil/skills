@@ -110,7 +110,7 @@ Do **not** include the APF/CPM/SISP method paragraph, `Origem do cálculo`, or c
 - `engenharia` criteria only in client doc with no parent Feature — orphan boundaries.
 - Removing `engenharia` FP from Total to “simplify” pricing — roll up, do not drop.
 - Copying APF origem (Tipo, Complexidade, UFP, SISP) into `commercial-budget-costumer.md`.
-- Client FP table without Esforço (h) / Custo (R$) columns, or invented hours/R$ instead of `—` when productivity/rates were not given.
+- Client FP table without Esforço (h) / Custo (R$) columns, or invented hours/R$ instead of `—` when productivity/rates were not given (accepted `pf-unit-price.md` conversion counts as a rate).
 - Objetivo without three subsections (**O que buscamos** / **O que é** / **O que entregamos** + **Resultado esperado:**) or missing **Resultado esperado:** label (`objective-structure.md`).
 - Client Feature **Descrição detalhada** as a run-on paragraph, tutorial, or padded restatement of the title; or missing object/conditions/limits (`feature-description-structure.md`).
 - **Notas técnicas** in client export, or internal section with invented technical detail and no source (`technical-notes.md`).

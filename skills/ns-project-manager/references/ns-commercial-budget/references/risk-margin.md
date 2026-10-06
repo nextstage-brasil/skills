@@ -52,7 +52,7 @@ hours_base = Total FP × productivity (h/PF)   # or stated h/CFP rule
 hours_budget = hours_base × (1 + s/100)
 ```
 
-Allocate `hours_budget` across macro rows. Custo only when rates given.
+Allocate `hours_budget` across macro rows. Custo only when the human gave a rate or accepted the same-day PF suggestion (`pf-unit-price.md`).
 
 ## Forbidden
 

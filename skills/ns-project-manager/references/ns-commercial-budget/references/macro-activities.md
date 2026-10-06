@@ -23,7 +23,7 @@ Do **not** rename, merge, or drop rows. Do **not** add extra macro rows unless h
 | Macroatividade | Exact labels above |
 | PF | Function-point **share** of version total (may be fractional; sum = Total FP) |
 | Esforço (h) | Hours for that row (one decimal ok) |
-| Custo (R$) | Fill **only** if human gave R$/h and/or R$/PF; else `—` for every row and one footnote `_pending rates_` |
+| Custo (R$) | Fill **only** if human gave R$/h and/or R$/PF, or accepted the same-day PF suggestion (`pf-unit-price.md`); else `—` for every row and one footnote `_pending rates_` |
 
 **Σ row:** sum of PF (= Total FP), sum of esforço, sum of Custo when rates exist.
 
