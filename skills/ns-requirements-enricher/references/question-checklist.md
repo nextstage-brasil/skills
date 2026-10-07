@@ -6,7 +6,7 @@ Zero such gaps → ready. No filler.
 
 Rewrite every candidate so **issue author (requester)** answers in plain language. Technical discovery stays in the implementation brief.
 
-Open question shape (chat only — never the GitLab comment): relevant code facts first, then `Q{n} — title`, one or two sentences (code vs request), line `Recommended: {default}`. Closer: reply by number (`1: …`) or "all yes" / "all recommended". Then close requirements in chat. Not a PRD. Accepted defaults move into What changes, Acceptance, or Assumptions. The posted comment has no question list.
+Open question shape (chat only — never the GitLab comment): relevant code facts first, then `Q{n} — title`, one or two sentences (code vs request), then its own line `➡️ Recommended: {default}`. Never on the same line as the question. Closer: reply by number (`1: …`) or "all yes" / "all recommended". Then close requirements in chat. Not a PRD. Accepted defaults move into What changes, Acceptance, or Assumptions. The posted comment has no question list.
 
 Technique (not version Clarify): numbered batch; blocking vs assumed vs drop; unresolved-value and contradiction detectors. Never write version artifacts.
 

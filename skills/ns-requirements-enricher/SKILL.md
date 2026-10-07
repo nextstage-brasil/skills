@@ -181,8 +181,10 @@ Order:
 ```text
 Q{n} — {short title}
 {What the code does vs what the request says. One or two sentences.}
-Recommended: {concrete default. Name what changes and what stays.}
+➡️ Recommended: {concrete default. Name what changes and what stays.}
 ```
+
+`➡️ Recommended:` is its **own line**. Never append it to the question sentence.
 
 3. Closer, same language as the human: reply by number (`1: …`, `2: …`). Yes/no items accept "all yes" or "all recommended". Then close the requirements in this chat. Do **not** say PRD, version, or PO.
 
@@ -208,7 +210,13 @@ Recommended: {concrete default. Name what changes and what stays.}
 | Missing `Team: *` | Do **not** ask |
 | Endpoint / SQL join | "When Federation and Role both selected, must a person match both or either?" |
 
-**Good:** `Q1 — When the filter applies` / Today the date filter runs only after Search. / `Recommended:` same — checkbox applies only after Search.
+**Good:**
+
+```text
+Q1 — When the filter applies
+Today the date filter runs only after Search.
+➡️ Recommended: same — checkbox applies only after Search.
+```
 
 **Never ask:** Missing Team label; which `develop_*` branch; which SQL relation.
 
@@ -281,7 +289,7 @@ Do **not** use `set_issue_status`, `update_issue`, `create_issue`, `start_execut
 - Public (non-internal) comment
 - `requirements.md` / `start_execution_planning` / version Clarify artifacts
 - Implementation or branches
-- Open question with no **Recommended** line
+- `Recommended` on the same line as the question, or with no `➡️`
 - Calling the closed brief a PRD
 - Filler questions; generic "How should this work?"
 - Re-asking facts already in comments
@@ -309,7 +317,7 @@ Do **not** use `set_issue_status`, `update_issue`, `create_issue`, `start_execut
 - [ ] Chat: synthesize from user message; no MCP issue load
 - [ ] Codebase check first: exists / extends / new
 - [ ] Questions only if implementing agent would guess; else ready
-- [ ] Each open question: code fact + **Recommended**. Closer: reply by number, then close requirements in chat. Not a PRD
+- [ ] Each open question: code fact, then its own line `➡️ Recommended:`. Closer: reply by number, then close requirements in chat. Not a PRD
 - [ ] After answers: closed brief (decisions in What changes / Acceptance / Assumptions)
 - [ ] GitLab body has no questions. Issue: post that closed draft only after human yes. Chat: never offer post
 - [ ] No version framing, no status change, no code, no one-by-one Q&A
