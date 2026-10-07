@@ -91,7 +91,7 @@ npx @nextstage-brasil/harness --preset gitlab --yes
 
 ### Project Manager (no code execution)
 
-Human PM workflow only — `ns-project-manager` (commercial budget, delivery schedule nested in `workflow.md`). Per-issue grill-me is catalog skill `ns-requirements-enricher` (GitLab preset). Does **not** install SDD or coding skills.
+Human PM workflow only — `ns-project-manager` (commercial budget, delivery schedule nested in `workflow.md`). Per-issue implementation brief is catalog skill `ns-requirements-enricher` (also in `gitlab` and `full`). Does **not** install SDD or coding skills.
 
 ```bash
 npx @nextstage-brasil/harness --preset project-manager --yes
@@ -220,9 +220,9 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 
 | Preset               | Use when you want…                                                                                    |
 | -------------------- | ----------------------------------------------------------------------------------------------------- |
-| `spec-driven`        | SDD face + coder, review, investigator, autonomous, living-spec + code complements via `ns-coder`   |
+| `spec-driven`        | SDD face + coder, review, investigator, autonomous, living-spec + code complements via `ns-coder` |
 | `gitlab`             | Everything in `spec-driven`, plus GitLab issues, board sync, CI generator, requirements enricher (alias: `spec-driven-gitlab`) |
-| `project-manager`    | Human PM toolkit — `ns-project-manager` only (**no** SDD/code workers)                                |
+| `project-manager`    | Human PM toolkit — `ns-project-manager` + `ns-requirements-enricher` (**no** SDD/code workers) |
 | `frontend`           | UI design, reverse prototype (`ns-proto-creator`), visual guides (alias: `frontend-prototype`)        |
 | `agents`             | `spec-driven` + LangGraph labs + `ns-postgres-rag` + `ns-graphrag` + LangChain/MCP/eval externals (aliases: `agent-creator`, `agents-api`) |
 | `full`               | Bundled presets (`gitlab` + `frontend` + `project-manager` + `agents`); includes `ns-postgres-rag` + `ns-graphrag` via `agents` |

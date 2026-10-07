@@ -3,20 +3,20 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Grill-me on this scope before we plan: users need a dashboard filter by club and role, show only active members, paginated list.",
-      "expected_output": "Chat mode: inline verdict icon + numbered product/UX questions. No GitLab comment, no files, no requirements.md, no Specify.",
+      "prompt": "Enrich this GitLab issue before coding: https://gitlab.example.com/group/app/-/issues/88 — people names on existing IPEN screens should show in uppercase; one screen must not wrap date/time columns. Codebase already has those screens.",
+      "expected_output": "Issue mode: codebase check first. If a real blocking gap exists, chat shows relevant code facts, then each question as Qn with a Recommended default, then ask to reply by number (or all recommended). Questions never go into the GitLab comment. After answers, close requirements in chat (decisions in what changes / acceptance / assumptions). Preview that closed brief with no Questions section. Do not call it a PRD. Do not add_issue_comment until the human validates that closed draft. No requirements.md, no Specify, no status change.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Enrich this GitLab issue before autonomous execution: https://gitlab.example.com/group/app/-/issues/42",
-      "expected_output": "Issue mode: MCP read_issue + list_issue_comments; codebase grill-me; one internal add_issue_comment from comment-template.md with @author.username. No set_issue_status, no code, no branch.",
+      "prompt": "Here is the scope (no GitLab): on the existing People Search screen, add a club filter that lists only active members. Write the implementation brief.",
+      "expected_output": "Chat mode: if a real gap exists, question batch with Recommended and reply-by-number closer, then close requirements on screen after answers. If no gap, ready brief. No offer to post. No 'want me to post?'. No GitLab comment. No files. No requirements.md. Not a PRD.",
       "files": []
     },
     {
       "id": 3,
-      "prompt": "Clarify the next version so we can write requirements.md — actors, data in/out, whole version scope.",
-      "expected_output": "Does not replace Specify. Points to /ns-spec-driven Clarify (version-scope before Specify). Does not post GitLab comments or run per-issue enricher as a substitute for Specify.",
+      "prompt": "This issue is already clear: Visitas realizadas must not wrap date/time cells; names on Colegas de cela, Visitas realizadas, and Visitas recebidas in uppercase like the rest of the person card. Code matches those screens. Enrich for the coding agent.",
+      "expected_output": "Ready implementation brief (✅). Current behavior + delta + verifiable acceptance + assumptions + files/areas. No Questions section. Zero filler questions. Issue URL present → preview only, no post until human yes; chat-only → no post offer. Do not run version Clarify or Specify. Not a PRD.",
       "files": []
     }
   ]
