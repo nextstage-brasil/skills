@@ -165,11 +165,16 @@ Order:
 
 ```text
 Q{n} — {short title}
-{What the code does vs what the request says. One or two sentences.}
+{What the screen does vs what the request says. One or two sentences.}
+
 ➡️ Recommended: {concrete default. Name what changes and what stays.}
 ```
 
-`➡️ Recommended:` is its **own line**. Never append it to the question sentence. Translate the label with the rest of the reply (Portuguese user: `➡️ Recomendado:`).
+**Hard stop.** Three blocks: title line, body line, then a **blank line**, then `➡️` on the next line. `➡️` after a period on the same line is invalid. Do not ship a question until the arrow is on its own line.
+
+Invalid: `Q1 — Title The screen hides lines. ➡️ Recommended: show them again.`
+
+Translate the label with the rest of the reply (Portuguese user: `➡️ Recomendado:`).
 
 3. Closer, same language as the human: reply by number (`1: …`, `2: …`). Yes/no items accept "all yes" or "all recommended". Then close the requirements in this chat. Do **not** say PRD, version, or PO.
 
@@ -200,6 +205,7 @@ Q{n} — {short title}
 ```text
 Q1 — When the filter applies
 Today the date filter runs only after Search.
+
 ➡️ Recommended: same — checkbox applies only after Search.
 ```
 
@@ -274,7 +280,7 @@ Template in `references/comment-template.md` is the English skeleton. Translate 
 - Public (non-internal) comment
 - `requirements.md` / `start_execution_planning` / version Clarify artifacts
 - Implementation or branches
-- `Recommended` on the same line as the question, or with no `➡️`
+- `➡️` on the same line as the question body (`sentence. ➡️`), or no blank line before it
 - Calling the closed brief a PRD
 - Filler questions; generic "How should this work?"
 - Re-asking facts already in comments
@@ -302,7 +308,7 @@ Template in `references/comment-template.md` is the English skeleton. Translate 
 - [ ] Chat: synthesize from user message; no MCP issue load
 - [ ] Codebase check first: exists / extends / new
 - [ ] Questions only if implementing agent would guess; else ready
-- [ ] Each open question: screen fact (no path), then its own line `➡️ Recommended:`. Closer: reply by number, then close requirements in chat. Not a PRD
+- [ ] Each open question: title line, body line, blank line, then `➡️` on the next line. Same-line `sentence. ➡️` is invalid. Closer: reply by number, then close requirements in chat. Not a PRD
 - [ ] After answers: closed brief (decisions in What changes / Acceptance / Assumptions). No Files / areas
 - [ ] Whole reply in the user's language, headings included. No English/Portuguese mix
 - [ ] GitLab body has no questions and no code paths. Issue: post that closed draft only after human yes. Chat: never offer post

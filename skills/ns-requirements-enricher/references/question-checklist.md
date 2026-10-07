@@ -6,7 +6,18 @@ Zero such gaps → ready. No filler.
 
 Rewrite every candidate so **issue author (requester)** answers in plain language. Technical discovery stays in your notes. The brief and the questions state requirements only — no paths, classes, or files.
 
-Open question shape (chat only — never the GitLab comment): relevant screen facts first, then `Q{n} — title`, one or two sentences (what the screen does vs the request), then its own line `➡️ Recommended: {default}` translated with the user's language (`➡️ Recomendado:` in Portuguese). Never on the same line as the question. Same language as the brief headings. No English/Portuguese mix. Closer: reply by number (`1: …`) or "all yes" / "all recommended". Then close requirements in chat. Not a PRD. Accepted defaults move into What changes, Acceptance, or Assumptions. The posted comment has no question list.
+Open questions: chat only. Never the GitLab comment. Screen facts first. Then each question in **three blocks**. The arrow line is a new line. A period then `➡️` on the same line is invalid.
+
+```text
+Q1 — Short title
+One or two sentences: what the screen does vs the request.
+
+➡️ Recommended: concrete default. What changes and what stays.
+```
+
+Blank line before `➡️`. Label in the user's language (`➡️ Recomendado:` in Portuguese). Same language as the brief. No mix.
+
+Closer: reply by number (`1: …`) or "all yes" / "all recommended". Then close requirements in chat. Not a PRD. Accepted defaults move into What changes, Acceptance, or Assumptions. Posted comment has no question list.
 
 Technique (not version Clarify): numbered batch; blocking vs assumed vs drop; unresolved-value and contradiction detectors. Never write version artifacts.
 
