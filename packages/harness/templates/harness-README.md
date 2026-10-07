@@ -80,7 +80,7 @@ Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readon
 | Agent file | Skill | Default model (cursor / claude) | `readonly` |
 |------------|-------|----------------------------------|------------|
 | `coder-agent.md` | `ns-coder` | `composer-2.5[fast=false]` / `sonnet` | `false` |
-| `reviewer-agent.md` | `ns-reviewer` | `grok-4.7[effort=medium,fast=false]` / `opus` | `true` |
+| `reviewer-agent.md` | `ns-reviewer` | `grok-4.7[context=256k,reasoning_effort=medium,fast=false]` / `opus` | `true` |
 | `task-writer-agent.md` | `ns-spec-driven` (`references/task-generator.md`) | `composer-2.5[fast=false]` / `haiku` | `false` |
 
 **Project owns `model`.** Edit `manifest.json`, then `harness sync`. `harness update` refreshes adapter bodies but **never** resets your model values.
@@ -94,7 +94,7 @@ Orchestrators follow spawn gate in `ns-harness` → `references/subagent-dispatc
     "canonical": "agents/reviewer-agent.md",
     "skill": "ns-reviewer",
     "description": "(NS) Thin bridge…",
-    "model": { "cursor": "grok-4.7[effort=medium,fast=false]", "claude": "opus" },
+    "model": { "cursor": "grok-4.7[context=256k,reasoning_effort=medium,fast=false]", "claude": "opus" },
     "readonly": true
   }
 ]

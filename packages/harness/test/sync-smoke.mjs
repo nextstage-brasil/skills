@@ -924,7 +924,7 @@ Should not land in canonical.
       );
       assert(cursorReviewer.includes('readonly: true'), 'reviewer-agent must be readonly');
       assert(
-        cursorReviewer.includes('grok-4.7[effort=medium,fast=false]'),
+        cursorReviewer.includes('grok-4.7[context=256k,reasoning_effort=medium,fast=false]'),
         'reviewer-agent default cursor model',
       );
 

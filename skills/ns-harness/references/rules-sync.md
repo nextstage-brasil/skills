@@ -99,7 +99,7 @@ Cursor subagents use same skill catalog as parent — no `.cursor/skills/` copy.
 | Name | Skill | Default model (cursor / claude) | `readonly` |
 | ---- | ----- | ------------------------------- | ---------- |
 | `coder-agent` | `ns-coder` | `composer-2.5[fast=false]` / `sonnet` | `false` |
-| `reviewer-agent` | `ns-reviewer` | `grok-4.7[effort=medium,fast=false]` / `opus` | `true` |
+| `reviewer-agent` | `ns-reviewer` | `grok-4.7[context=256k,reasoning_effort=medium,fast=false]` / `opus` | `true` |
 | `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | `composer-2.5[fast=false]` / `haiku` | `false` |
 
 Presets get bridges on `init` / `sync` / `update`. Bridge body: obey `AGENTS.md` (no tool-Read) → Session boot (`session-boot.md`) → skill. Seeded bridges: spawn by **exact `{name}`** when spawn gate requires — `subagent-dispatch.md` (no child `inherit`). Cheap execute = in-session.
