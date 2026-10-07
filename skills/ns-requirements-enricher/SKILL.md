@@ -8,7 +8,7 @@ consumes:
   - artifact:gitlab-issue
 metadata:
   author: nextstage-brasil
-  version: "1.5"
+  version: "1.8"
 depends:
   - ns-harness
 ---
@@ -42,11 +42,10 @@ GitLab MCP after boot: follow `mcp-gitlab-usage` (`get_mcp_gitlab_skill` version
 
 Posted comment (when allowed):
 
-1. `@mention` issue **author** (`author.username` from `read_issue` only)
-2. First line `✅` — requirements already closed
-3. Full **implementation brief** (decisions already folded in). **No Questions section. No Recommended list. No reply-by-number footer.**
+1. First line `✅` — requirements already closed. **No `@mention`.**
+2. Full **implementation brief** (decisions already folded in). **No Questions section. No Recommended list. No reply-by-number footer.**
 
-**Chat mode** — same question batch, then closed brief **inline**. No @mention. No GitLab offer. Not a PRD.
+**Chat mode** — same question batch, then closed brief **inline**. No GitLab offer. Not a PRD.
 
 Do **not** implement, commit, change issue status, create files, write `requirements.md`, or call `start_execution_planning`.
 
@@ -81,24 +80,10 @@ No auto-post. `DRY_RUN` obsolete — preview always; post only after human valid
 
 **Mandatory reads:**
 
-1. `read_issue` — title, description, labels, milestone, **author** (`username`, `name`), assignees, related links.
+1. `read_issue` — title, description, labels, milestone, assignees, related links.
 2. `list_issue_comments` — full thread; comment bodies = requirements source.
 
-### Author username (mandatory — do not guess)
-
-`@mention` first line **must** be GitLab login from `read_issue`. Only when a comment is **actually posted**.
-
-**Source of truth (only):** `author.username` from `read_issue` — who **opened** issue.
-
-**Immediately after `read_issue`, record:**
-
-```text
-author_username = <author.username>   # literal string from MCP; case-sensitive
-```
-
-**Never use for `@mention`:** `author.name`; slug from display name; assignee (unless assignee **is** author); comment usernames; email; memory; lowercasing unless GitLab returned that casing.
-
-**If `author` or `author.username` missing:** stop + report — no assignee substitute, no guess.
+Do **not** `@mention` anyone in the comment. Not the opener, not an assignee, not a login copied from an existing bot comment. Missing `author.username` is not a stop.
 
 **Synthesize** (internal; not posted yet):
 
@@ -115,7 +100,7 @@ User claimed issue mode but no `ISSUE_URL`: stop one line — URL missing. Do no
 
 Determine whether requested behavior **already exists** in application code, **extends** existing screens/flows/modules, or is **new**.
 
-Scope to what issue/scope touches. Technical findings stay in brief (**Current behavior**, **Files/areas**, **Assumptions**) — not in question list.
+Scope to what issue/scope touches. Code is **internal evidence only**. Paths, classes, files, SQL, controllers stay in your notes. The brief states **requirements**: screens, columns, what the user sees, what must change.
 
 **Read when relevant:**
 
@@ -130,9 +115,9 @@ Scope to what issue/scope touches. Technical findings stay in brief (**Current b
 
 | Finding | Brief use |
 | ------- | --------- |
-| Behavior already in code | State where. Questions only if request **changes** that behavior and product intent still ambiguous |
-| Extension of existing screen/flow | Name screen/module. Brief says what stays vs what changes |
-| Not found | Brief says greenfield-in-this-area. Still no version framing |
+| Behavior already in code | Say what the **screen** does today. No path. Questions only if the request **changes** that behavior and product intent is still ambiguous |
+| Extension of existing screen/flow | Name the screen the user opens. Brief says what stays vs what changes |
+| Not found | Brief says the behavior is new on that screen. Still no version framing |
 
 Do **not** run version Clarify. Do **not** write `requirements.md`, `clarify-contract.md`, `unknowns-register.md`, `source/`, task files, PO, milestone-as-version, Gate 0 version scope.
 
@@ -148,10 +133,10 @@ Cross **issue/chat text + comments + code**. Each gap: _would implementing agent
 
 ### Audience
 
-Questions for **who opened issue** (`author` from `read_issue`) — not developer/tech lead/ops. Chat: human who pasted scope.
+Questions for the human in this chat — product language, not developer/tech lead/ops. Do not `@` them.
 
 - Language: **common product/UX** (screen, button, filter, what appears, when)
-- Schema, SQL, class, branch, labels, file paths → brief sections — never the question list
+- Schema, SQL, class, branch, labels, file paths → internal notes only. Never the question list. Never the brief.
 
 ### Promote vs assume vs drop
 
@@ -175,7 +160,7 @@ Chat first. Not a PRD. Each question carries the default the coding agent will a
 
 Order:
 
-1. **Relevant facts** — codebase vs request, before the list. Screens, columns, behavior that already exists. No version / PO.
+1. **Relevant facts** — what the screen shows today vs the request, before the list. Columns and behavior the user sees. No paths, classes, or files. No version / PO.
 2. Each question:
 
 ```text
@@ -184,7 +169,7 @@ Q{n} — {short title}
 ➡️ Recommended: {concrete default. Name what changes and what stays.}
 ```
 
-`➡️ Recommended:` is its **own line**. Never append it to the question sentence.
+`➡️ Recommended:` is its **own line**. Never append it to the question sentence. Translate the label with the rest of the reply (Portuguese user: `➡️ Recomendado:`).
 
 3. Closer, same language as the human: reply by number (`1: …`, `2: …`). Yes/no items accept "all yes" or "all recommended". Then close the requirements in this chat. Do **not** say PRD, version, or PO.
 
@@ -203,8 +188,8 @@ Q{n} — {short title}
 
 ### Translate technical gaps
 
-| Keep in brief | Ask requester |
-| ------------- | ------------- |
+| Internal note (never publish) | Ask requester, then write the answer as a requirement |
+| ----------------------------- | ------------------------------------------------------ |
 | Table/column / class | "Does filtering by Club mean only people linked to that club today?" |
 | Base branch / `develop-*` | Do **not** ask |
 | Missing `Team: *` | Do **not** ask |
@@ -234,13 +219,12 @@ Fill `references/comment-template.md`. Required sections:
 
 | Section | Content |
 | ------- | ------- |
-| Current behavior in code | What exists today (screens/flows/modules). Evidence from Phase 2 |
-| What changes | Delta vs current. Stays-the-same if extension |
-| Acceptance | Steps/outcomes agent can verify (screen or test), not OKR/RICE |
+| Current behavior | What the user sees today on the named screens. No files, classes, or paths |
+| What changes | Requirement delta. What stays the same |
+| Acceptance | Steps/outcomes the agent can verify on the screen, not OKR/RICE |
 | Assumptions | Decisions and safe defaults already accepted. Impact if wrong |
-| Files/areas | Paths/modules for the implementer |
 
-No **Questions** heading. Unanswered gaps stay in the chat batch until folded in. Not a version PRD. Not PM OKR/RICE. Not SDD Specify.
+No **Files / areas**. No **Questions** heading. Unanswered gaps stay in the chat batch until folded in. Not a version PRD. Not PM OKR/RICE. Not SDD Specify.
 
 ## Phase 5 — Close requirements, then GitLab gate
 
@@ -263,11 +247,9 @@ Then paste the **closed** brief (template). Zero questions in that body.
 
 **N = 0:** no question batch. Paste the ready brief, then the same gate.
 
-**Posted / previewed body** starts `✅ @{author_username} — implementation brief. **Ready.**` Chat preview of that body: same line, **no** `@mention`.
+**Posted / previewed body** starts with `✅` and a ready line in the **user's language** (Portuguese: `✅ Brief de implementação. **Pronto.**`). No `@`. Do not leave that line in English when the body is Portuguese.
 
 Do not post while any question is still open. There is no `❌` GitLab variant.
-
-**Mention author:** only on **posted** issue comment. `author_username` = literal `author.username`. Re-read `read_issue` if unsure.
 
 After a real post: chat with link or `project_id` + `issue_iid`.
 
@@ -275,13 +257,16 @@ Do **not** use `set_issue_status`, `update_issue`, `create_issue`, `start_execut
 
 ## Language
 
-- GitLab comment: **English** unless user or project docs require another language for stakeholders
-- Chat: match user language unless they request otherwise
-- **Chat questions:** no file paths, class names, SQL, env vars. Those questions never appear in the GitLab body
-- **Current behavior / Assumptions / Files/areas / What changes:** code paths OK
+One language for the whole user-facing output: questions, `➡️ Recommended` label, closer, brief headings, first line, footer. Match the **user's language**. Portuguese in, Portuguese out — headings included (`Comportamento atual`, `O que muda`, `Aceite`, `Premissas`). Do not mix English titles with a Portuguese body.
+
+Template in `references/comment-template.md` is the English skeleton. Translate every heading and the footer before showing or posting. Do not copy the English headings verbatim unless the user writes in English.
+
+- **Chat and brief:** no file paths, class names, SQL, env vars, controllers. Requirements only (screen, column, behavior)
 
 ## Anti-patterns
 
+- Mixed language in one reply (English headings, Portuguese body, or the reverse)
+- File paths, class names, controllers, or a **Files / areas** section in chat or in the GitLab comment
 - Putting the question batch, `Recommended:` lines, or "reply by number" into the GitLab comment
 - Auto-post without human validation of the closed brief
 - Chat mode: offering GitLab post
@@ -293,7 +278,7 @@ Do **not** use `set_issue_status`, `update_issue`, `create_issue`, `start_execut
 - Calling the closed brief a PRD
 - Filler questions; generic "How should this work?"
 - Re-asking facts already in comments
-- `@mention` from anything except `author.username`
+- `@mention` in the brief or the GitLab comment (opener, assignee, or a login copied from another comment)
 - Dev questions (table, branch, label, GATE, test path, JSON)
 - Version / PO / milestone-as-version / "full version" framing
 - Using this skill for PM OKR/RICE or SDD version Specify / Clarify-Strict
@@ -313,13 +298,14 @@ Do **not** use `set_issue_status`, `update_issue`, `create_issue`, `start_execut
 ## Quick checklist
 
 - [ ] Mode: issue vs chat
-- [ ] Issue: `read_issue` + `list_issue_comments`; record `author.username`
+- [ ] Issue: `read_issue` + `list_issue_comments`. No `@mention` in the brief
 - [ ] Chat: synthesize from user message; no MCP issue load
 - [ ] Codebase check first: exists / extends / new
 - [ ] Questions only if implementing agent would guess; else ready
-- [ ] Each open question: code fact, then its own line `➡️ Recommended:`. Closer: reply by number, then close requirements in chat. Not a PRD
-- [ ] After answers: closed brief (decisions in What changes / Acceptance / Assumptions)
-- [ ] GitLab body has no questions. Issue: post that closed draft only after human yes. Chat: never offer post
+- [ ] Each open question: screen fact (no path), then its own line `➡️ Recommended:`. Closer: reply by number, then close requirements in chat. Not a PRD
+- [ ] After answers: closed brief (decisions in What changes / Acceptance / Assumptions). No Files / areas
+- [ ] Whole reply in the user's language, headings included. No English/Portuguese mix
+- [ ] GitLab body has no questions and no code paths. Issue: post that closed draft only after human yes. Chat: never offer post
 - [ ] No version framing, no status change, no code, no one-by-one Q&A
 
 ## References

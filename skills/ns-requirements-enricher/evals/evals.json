@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Enrich this GitLab issue before coding: https://gitlab.example.com/group/app/-/issues/88 — people names on existing IPEN screens should show in uppercase; one screen must not wrap date/time columns. Codebase already has those screens.",
-      "expected_output": "Issue mode: codebase check first. If a real blocking gap exists, chat shows relevant code facts, then each question as Qn with `➡️ Recommended:` on its own line, then ask to reply by number (or all recommended). Questions never go into the GitLab comment. After answers, close requirements in chat (decisions in what changes / acceptance / assumptions). Preview that closed brief with no Questions section. Do not call it a PRD. Do not add_issue_comment until the human validates that closed draft. No requirements.md, no Specify, no status change.",
+      "expected_output": "Issue mode: codebase check first, internally. If a real blocking gap exists, chat shows screen facts (no file paths or class names), then each question as Qn with `➡️ Recommended:` on its own line, then ask to reply by number (or all recommended). Questions never go into the GitLab comment. After answers, close requirements in chat (decisions in what changes / acceptance / assumptions). Preview that closed brief in the user's language (Portuguese prompt → Portuguese headings, no English/Portuguese mix), with no Questions section and no Files / areas. Do not call it a PRD. Do not add_issue_comment until the human validates that closed draft. No requirements.md, no Specify, no status change.",
       "files": []
     },
     {
@@ -16,7 +16,7 @@
     {
       "id": 3,
       "prompt": "This issue is already clear: Visitas realizadas must not wrap date/time cells; names on Colegas de cela, Visitas realizadas, and Visitas recebidas in uppercase like the rest of the person card. Code matches those screens. Enrich for the coding agent.",
-      "expected_output": "Ready implementation brief (✅). Current behavior + delta + verifiable acceptance + assumptions + files/areas. No Questions section. Zero filler questions. Issue URL present → preview only, no post until human yes; chat-only → no post offer. Do not run version Clarify or Specify. Not a PRD.",
+      "expected_output": "Ready implementation brief (✅). Current behavior + delta + verifiable acceptance + assumptions. No Files / areas, no paths, no class names. No Questions section. Zero filler questions. Issue URL present → preview only, no post until human yes; chat-only → no post offer. Do not run version Clarify or Specify. Not a PRD.",
       "files": []
     }
   ]

@@ -6,22 +6,26 @@ Replace `{placeholders}`.
 
 **Questions do not belong here.** The question batch (facts, `Recommended:`, reply by number) stays in chat and is already folded into the sections below. Do not add a Questions heading. Do not paste `Q1` / `Recommended` into this body.
 
+**No code references.** No Files / areas. No paths, classes, controllers, or SQL. Code shifts. This body is requirements: screen, column, behavior.
+
 **Verdict:** first line is always ready. Do not post this body while a chat question is still open.
 
-**`{author_username}`:** issue mode when posting — copy **only** `author.username` from `read_issue` (GitLab login). Never `author.name`, never slugify display name, never guess.
+**No `@mention`.** Do not tag the opener, an assignee, or a login taken from another comment. Missing author login is not a stop.
 
-**Chat mode:** omit the `@{author_username}` token. Use the same sections. Do not offer to post.
+**Language:** this skeleton is English. Before chat preview or `add_issue_comment`, translate every heading, the first line, and the footer into the **user's language**. One language in the whole body. Portuguese user → `Comportamento atual`, `O que muda`, `Aceite`, `Premissas`, first line `Brief de implementação. **Pronto.**`, footer `Brief de implementação gerado por ns-requirements-enricher.` Do not paste the English headings when the user writes Portuguese.
+
+**Chat mode:** same sections. Do not offer to post.
 
 ```markdown
-✅ @{author_username} — implementation brief. **Ready.**
+✅ Implementation brief. **Ready.**
 
-## Current behavior in code
+## Current behavior
 
-{What the app does today on the screens/flows this request touches. Name modules/files.}
+{What the user sees today on the named screens. No file paths, class names, or controllers.}
 
 ## What changes
 
-{Delta vs current behavior. Decisions from the chat answers. What stays unchanged if this is an extension.}
+{Requirement delta. Decisions from the chat answers. What stays unchanged.}
 
 ## Acceptance
 
@@ -31,10 +35,6 @@ Replace `{placeholders}`.
 
 - {Accepted default or safe assumption; impact if wrong}
 - {…}
-
-## Files / areas
-
-`{path1}`, `{path2}`, …
 
 ---
 
