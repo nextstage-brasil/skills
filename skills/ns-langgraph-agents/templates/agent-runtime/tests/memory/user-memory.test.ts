@@ -19,7 +19,7 @@ describe("user memory rules", () => {
   it("flags secrets and documents, keeps ordinary glossary terms", () => {
     expect(isSensitiveMemory("minha senha do ERP")).toBe(true);
     expect(isSensitiveMemory("CPF 123.456.789-09")).toBe(true);
-    expect(isSensitiveMemory("api_key=x9f8a7b6c5d4e3f2a1b0c9d8e7")).toBe(true);
+    expect(isSensitiveMemory("fake_api_key=x9f8a7b6c5d4e3f2a1b0c9d8e7")).toBe(true);
     expect(isSensitiveMemory("PF = ponto de função")).toBe(false);
     expect(isSensitiveMemory("token é a unidade de cobrança do modelo")).toBe(false);
   });
