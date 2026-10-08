@@ -1,6 +1,6 @@
 # Anti-hallucination (commercial budget)
 
-Every Feature, RNF, estimate premise, macro-row figure, margin % must trace to human description, clarification answers, **loaded product context** (`system-reverse-spec*` / `brownfield-map.md`), or explicit `[ASSUMPTION: …]` / `[LACUNA: …]` marker.
+Every Feature and RNF must trace to the **approved PRD** (`prd-gate.md`). Every estimate premise, macro-row figure, margin % must trace to budget-context answers, **loaded product context** (`system-reverse-spec*` / `brownfield-map.md`), or explicit `[ASSUMPTION: …]` / `[LACUNA: …]` marker.
 
 ## Forbidden
 
@@ -22,8 +22,8 @@ Every Feature, RNF, estimate premise, macro-row figure, margin % must trace to h
 14. **Improvised value speech** — Do not add extra headings under **Valor agregado desta versão**, pitch the operator instead of the decision-maker, or use procurement objections (“why another quote”, “sample first”, “wait for v2”). Follow `sales-value-speech.md`.
 15. **Invented commercial ROI** — No fabricated single-point R$ payback. Gains: range + short justification, cited benchmark, or stakeholder figure. `[⚠️ validar com cliente]` only on unsourced clauses — not on every line (`sales-value-speech.md`).
 
-16. **Frozen by wording** — Do not write "escopo congelado", "fechado", "sem pendências" or a firm estimate while the decision register has open or assumed items or open conflicts (`../../decision-coverage.md`).
-17. **Open question without proposal** — Every product-decision question carries a recommended answer or closed options.
+16. **Budget without approved PRD** — No Features, FP or hours before an approved PRD (`prd-gate.md`). No provisional budget as a workaround.
+17. **Scope decided in the budget** — Scope answers never go into Features, Premissas, `[ASSUMPTION]`, `[LACUNA]` or Notas técnicas. A scope doubt stops the budget and goes to the PRD (`prd-gate.md` → Step 5).
 
 ## Lacunas
 

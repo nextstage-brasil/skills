@@ -12,7 +12,7 @@ provides:
 consumes: []
 metadata:
   author: nextstage-brasil
-  version: "1.5"
+  version: "1.6"
 depends:
   - ns-harness
 ---
@@ -79,7 +79,7 @@ Close: one line — paste input or pick row.
 
 **Nested workflows:** router hit `references/ns-commercial-budget/` or `references/ns-delivery-schedule/` `workflow.md` — read full file, follow it (own `references/`, `assets/`, `scripts/`). No evals. Per-issue grill-me = `/ns-requirements-enricher` (catalog), not this skill.
 
-**Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Default = APF (IFPUG CPM latest; SISP latest if CPM does not cover). COSMIC CFP only when human asks. Other methods only when human names them. PF unit price unknown or asked: `references/ns-commercial-budget/references/pf-unit-price.md` (USD anchor, same-day local FX; fill Custo only after accept). Phases 1–5 = delivery forecast (RICE / sprint / PERT).
+**Commercial FP / client quote:** `references/ns-commercial-budget/workflow.md`. Requires an approved PRD first (`references/ns-commercial-budget/references/prd-gate.md`). Default = APF (IFPUG CPM latest; SISP latest if CPM does not cover). COSMIC CFP only when human asks. Other methods only when human names them. PF unit price unknown or asked: `references/ns-commercial-budget/references/pf-unit-price.md` (USD anchor, same-day local FX; fill Custo only after accept). Phases 1–5 = delivery forecast (RICE / sprint / PERT).
 
 **Triple productivity schedule (FP × h/FP, P100/P85/P50):** `references/ns-delivery-schedule/workflow.md`. Phase 5 = story-level PERT only.
 
@@ -91,13 +91,15 @@ Close: one line — paste input or pick row.
 
 ## Decision coverage (mandatory before any handoff artifact)
 
-A PM artifact is ready when development has **no business questions left**, not when it looks finished. Before every PRD, every non-provisional commercial budget and every version handoff, and at Phase 1 exit for a version scope, run `references/decision-coverage.md`:
+A PM artifact is ready when development has **no business questions left**, not when it looks finished. Before every PRD and every version handoff, and at Phase 1 exit for a version scope, run `references/decision-coverage.md`:
 
 1. **Coverage scan.** Walk dimensions D1–D14 for each in-scope capability (plan and consumption, roles, defaults for existing customers, configuration level, value rules, exceptions, customer inputs, time and calendar, output, lifecycle and undo, blast radius, data and privacy, AI behavior, priority), including what the input never mentions.
 2. **Rule probes.** For each business rule, ask the ten developer-lens probes (empty, tie, partial, duplicate, who may, default, undo, user ignores it, which date, where else).
 3. **Proposals.** Every question carries a recommended answer. No open "how should it work?".
 4. **Register.** Keep `Q-NN` decisions and `C-NN` conflicts across rounds; detect contradictions between rounds.
-5. **Readiness.** Draft → Business-validated → Dev-lens checked → Frozen. Never write "frozen", "congelado" or "sem pendências", and never mark an estimate firm, below the matching state.
+5. **Readiness.** Draft → Business-validated → Dev-lens checked → Frozen. Never write "frozen", "congelado" or "sem pendências" below the matching state.
+
+**Order: decisions (chat) → approved PRD → commercial budget.** The budget starts from an approved PRD (file or pasted). No approved PRD: build it in PRD mode first. A scope doubt during the budget stops the budget and goes back to the PRD (`references/ns-commercial-budget/references/prd-gate.md`).
 
 ## Phase 0 — Intake
 
@@ -191,7 +193,8 @@ Rules:
 
 - Never invent stakeholders, systems, integrations, SLAs, metrics not in input.
 - Never ask a product-decision question without a recommended answer. Never treat silence in the input as "not applicable".
-- Never declare scope frozen or an estimate firm while the decision register has open items, assumed items or conflicts.
+- Never declare scope frozen while the decision register has open items, assumed items or conflicts.
+- Never size or price scope that is not in an approved PRD. Never answer scope questions inside the budget.
 - Never infer team/capacity, backlog effort, three-point — send fill-in (`references/0N-*.md`), stop.
 - Never compute RICE, WSJF, DAG order, Monte Carlo, flow metrics, OKR rubric in LLM — run script (`rice_wsjf.py`, `dag_order.py`, etc.).
 - Layer execution order always from DAG (`dag_order.py`); RICE/WSJF requires activity list with effort + Phase 1 OKR — never on version narrative alone.

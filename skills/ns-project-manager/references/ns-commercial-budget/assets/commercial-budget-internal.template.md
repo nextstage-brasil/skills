@@ -3,7 +3,7 @@
 **Sequência:** `{seq}`  
 **Gerado em:** `{generated_at}`  
 **Versão / referência:** `{version_san}`  
-**Status da estimativa:** `{provisória — N decisões em aberto podem alterar PF/horas (Q-…) | firme}`  
+**PRD de referência:** `{prd path or "enviado no chat"} — {PRD version / last updated}`  
 **Idioma:** PT-BR
 
 ---

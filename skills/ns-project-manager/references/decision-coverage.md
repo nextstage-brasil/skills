@@ -1,6 +1,6 @@
 # Decision coverage — close business decisions before handoff
 
-Shared protocol for every PM artifact that feeds development: Phase 1 exit, **PRD** (`14-prd.md`), **commercial budget** (`ns-commercial-budget/workflow.md`), **version handoff** (`12-version-handoff.md`).
+Shared protocol for every PM artifact that defines scope: Phase 1 exit, **PRD** (`14-prd.md`), **version handoff** (`12-version-handoff.md`). The commercial budget does not run it: it starts from the approved PRD, and a scope doubt there stops the budget and sends it back to the PRD (`ns-commercial-budget/references/prd-gate.md`).
 
 ## Why this exists
 
@@ -19,7 +19,6 @@ A PM document is good when the developer who receives it has **no business quest
 | --- | --- |
 | Phase 1 exit, when the input is a version or multi-capability scope | Coverage scan + proposal batch |
 | Before every PRD draft and every PRD revision | Full protocol |
-| Before a commercial budget that is called anything other than **provisional** | Full protocol |
 | Before a version handoff card | Read the register. Block on open items (`12-version-handoff.md`) |
 | Human pastes questions returned by development or QA | **Feedback mode** (below) |
 
@@ -117,7 +116,7 @@ One register per version. It is the single source of truth that every PM artifac
 
 ## Step 6 — Developer-lens self-check (before every gate)
 
-Before you present a PRD, a budget or a handoff (for a PRD, also `prd-writing-standard.md` → Outside-reader check):
+Before you present a PRD or a handoff (for a PRD, also `prd-writing-standard.md` → Outside-reader check):
 
 1. Reread the artifact as the developer who must implement each RF / Feature tomorrow, without access to the chat.
 2. Write down every question that developer would ask.
@@ -137,14 +136,6 @@ Before you present a PRD, a budget or a handoff (for a PRD, also `prd-writing-st
 | **Frozen** | Dev-lens checked **and** the human explicitly says freeze / approve | "frozen", "congelado", "sem pendências" |
 
 **Forbidden:** writing "frozen", "congelado", "escopo fechado", "sem pendências", "no open items" or **Ready for build: yes** below the matching state. The only move forward is the human's explicit word; never rename a state yourself because it sounds like progress.
-
-## Provisional estimate seal
-
-While readiness is **Draft**, every FP count, hour count and cost is **provisional**:
-
-- Header line: `**Estimate status:** provisional — {n} open decisions can change FP or hours ({Q ids})` (PT-BR: `**Status da estimativa:** provisória — {n} decisões em aberto podem alterar PF/horas (…)`).
-- Count only open items that touch sizing: new capability, rule complexity, D1 consumption, D7 inputs, D11 blast radius.
-- Firm (`firme`) only at Business-validated or higher.
 
 ## Feedback mode — questions returned by development
 

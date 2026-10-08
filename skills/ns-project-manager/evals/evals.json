@@ -108,14 +108,13 @@
     {
       "id": 10,
       "prompt": "Preciso de um orçamento comercial para uma API de consulta de cadastros: autenticação, busca por documento, histórico de consultas e exportação CSV. Versão orcamento-api-consulta-v1. Pode gravar em docs.",
-      "expected_output": "Reads references/ns-commercial-budget/workflow.md, objective-structure.md, feature-description-structure.md, technical-notes.md, sales-value-speech.md, and pm-persist.md when persisting. Objetivo principal uses three subsections (O que buscamos, O que é, O que entregamos with Resultado esperado) per objective-structure.md — same text in internal and client export. Client Feature Descrição detalhada uses 1–3 contract blocks (Objeto e condições / Regras / Limites desta entrega) with bullets starting **lead term:** — never a run-on paragraph or tutorial; internal Descrição is compact with the same facts (feature-description-structure.md). Critérios de aceite are signed checks, not a copy of Descrição. Notas técnicas only in internal when technical source exists (after Features, before RNFs); omitted when no source; never in client export. Clarifies with ≤5 questions. Does not ask FP method. Does not ask who to pitch to as if the operator were the addressee. Writes docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md with APF statement (IFPUG CPM latest; SISP only if CPM does not cover), type of count, application boundary, and UFP origem including screen/consulta functions. If the same file already exists at the version root, STOP gate: searches the repo for references, proposes from-path → pm/, asks explicit confirm/decline, ends the turn — does not write, move, delete, or silent-move until the human answers that gate (`proceed`/assumptions/silence are not confirmation). Client {version_san}-commercial-budget-costumer.md (if emitted) is under the same pm/ folder and has Valor agregado after Objetivo addressed to the decision-maker, only four headings (Headline de valor, Parágrafo de valor agregado, Ganhos concretos esperados, Possíveis objeções + resposta sugerida); no extra subsections (no Resumo executivo / Por que esta cotação); paragraph 120–180 words, no bullets; headline is organizational gain not quote framing; gains are measurable ranges (not raw scope facts); objections are trust/overlap/permission not quote theater; no CPM/SISP types, complexity, or UFP; FP table with Esforço (h) and Custo (R$) (dashes when productivity/rates missing); same Total PF and hours as internal. No COSMIC/CFP (user did not ask). No invented R$. No tasks/SDD. First turn is the clarify gate: ≤5 budget-context questions (no FP-method question) plus product-decision proposals with recommended answers, decision-register.md written under pm/ with Readiness Draft, and no budget file yet. When the human then says 'proceed with assumptions', the budget is written with header 'Status da estimativa: provisória' listing the open decision ids while product decisions (D1–D14 per Feature, references/decision-coverage.md) remain open; product-decision questions carry a recommended answer and are not limited to the 5-question context cap.",
+      "expected_output": "Commercial-budget path; reads references/ns-commercial-budget/workflow.md and references/prd-gate.md first. No PRD exists in docs/versions/*/pm/prd.md and none was pasted, so it stops before any clarification or sizing: one short message saying the budget starts from the approved PRD, asking for it (file or paste) or offering to build it now in PRD mode. It does not write Features, FP, hours, a provisional budget, or any budget file, and does not ask scope questions under the budget. If the human agrees, it switches to PRD mode (decisions in chat with ➡️ Recomendado proposals, then the PRD). After an approved PRD: budget-context questions only (≤5: team experience/productivity, rates, persistence; never the FP method), Objetivo with three subsections, header 'PRD de referência', each Feature mapped to RF ids in the internal doc, persisted at docs/versions/.../pm/...-commercial-budget-internal.md, no invented R$, no COSMIC unless asked.",
       "files": [],
       "assertions": [
-        "Follows commercial-budget workflow references",
-        "Objetivo uses three subsections (O que buscamos / O que é / O que entregamos)",
-        "Clarifies with ≤5 context questions; does not ask FP method",
-        "Writes docs/versions/.../pm/...-commercial-budget-internal.md",
-        "Header Status da estimativa: provisória while decisions open",
+        "Checks for an approved PRD before any clarification or sizing",
+        "With no PRD: stops, asks for it (file or paste) or offers to build it in PRD mode",
+        "Writes no Features, FP, hours, provisional budget or budget file without an approved PRD",
+        "Asks no scope questions inside the budget",
         "No invented R$; no COSMIC unless asked"
       ]
     },
@@ -192,11 +191,11 @@
       "expected_output": "Reads references/14-prd.md and references/decision-coverage.md. On-demand PRD path, not Phase 1/2. The transcript leaves business decisions open (who receives the alert, speed source and tolerance, driver offline, default for existing fleets, baselines and targets), so the first turn is the chat proposal batch (title, context line, blank line, ➡️ Recomendado on its own line) with one line explaining the PRD is written once these are decided; it does not write prd.md yet and updates docs/versions/routewise-v1/pm/decision-register.md. After the human accepts the recommendations, writes docs/versions/routewise-v1/pm/prd.md: small-feature sections 1, 2, 3, 4, 6, 11, 13, 14; speed alert and monthly maintenance report in scope mapped to RF ids; predictive maintenance out of scope (no sensor); each RF follows prd-writing-standard.md (actors, trigger, behavior, RN business rules with the decided values, exceptions, Dado/Quando/Então acceptance with concrete data, Supports OBJ); persona is the dispatcher; §13 says 'Nenhuma.'. The document contains no Readiness, Ready for build, proposals, Recomendado, dimension codes, round references, budget/FP/hours, or review warning. Does not write 01-requirements.md, sdd/requirements.md, or a quote.",
       "files": [],
       "assertions": [
-        "On-demand PRD (not Phase 1/2); persists docs/versions/routewise-v1/pm/prd.md",
-        "Small-feature profile sections; RF blocks with Given/When/Then",
+        "First turn: proposal batch in chat (➡️ Recomendado on its own line); prd.md not written while decisions are open",
+        "After acceptance: prd.md at docs/versions/routewise-v1/pm/ with small-feature sections",
         "Predictive maintenance out of scope with sensor reason",
-        "Ready for build no / Draft while decisions open; proposal batch with ➡️ Recomendado",
-        "Never writes congelado or sem pendências"
+        "Each RF has actors, behavior, RN business rules, exceptions and Dado/Quando/Então acceptance with concrete data",
+        "PRD contains no Readiness, Ready for build, proposals, dimension codes, round references, budget/FP/hours or review warning"
       ]
     },
     {
@@ -216,22 +215,23 @@
       "expected_output": "Reads references/14-prd.md, references/decision-coverage.md and references/prd-writing-standard.md. Does NOT mark anything frozen and does NOT write the PRD in this turn, because business decisions are open; one chat line says the PRD is written once they are decided. Profiles include ai-data (D13 mandatory). The chat proposal batch walks D1–D14 even where the input is silent and includes recommended answers for at least: plan/consumption of AI suggestions, who accepts vs who configures and bulk accept, default for clinics already using the product, exact match vs tolerance and partial denials (glosas), tie after all criteria and guias already linked elsewhere, which date drives the matching window and business-day calendar, export of unreviewed suggestions and re-export replace vs keep, undo of an accepted composition, effect on existing single-payment matching, patient health data sent to an external AI provider and isolation unit, how suggestion accuracy is measured, and priority/phasing. Each question: title / context / blank line / ➡️ Recomendado on its own line. Writes docs/versions/clinica-v4/pm/decision-register.md with Readiness Draft. Never writes 'congelado', 'escopo fechado' or 'sem pendências'.",
       "files": [],
       "assertions": [
-        "Does NOT mark scope frozen; Readiness Draft; Ready for build no",
-        "Coverage walks D1–D14; proposal batch with ➡️ Recomendado",
-        "Persists prd.md and decision-register.md under clinica-v4/pm/",
+        "Does not mark anything frozen and does not write prd.md while decisions are open",
+        "Proposal batch walks D1–D14 (D13 mandatory) with ➡️ Recomendado",
+        "Writes decision-register.md under clinica-v4/pm/ with Readiness Draft",
         "Never writes congelado / escopo fechado / sem pendências"
       ]
     },
     {
       "id": 20,
-      "prompt": "Rodada 3 de respostas do orçamento da versão agenda-v2. Na rodada 1 vocês registraram: 'o paciente escolhe o modo de lembrete (SMS ou WhatsApp) no app'. Agora o cliente respondeu: 'só a recepção pode alterar o modo de lembrete'. Também: 'os lembretes consomem créditos de mensagem'. Atualiza o orçamento e já marca como firme e congelado.",
-      "expected_output": "Commercial-budget path with references/decision-coverage.md. Detects the contradiction between round 1 (patient chooses) and round 3 (only reception changes) and opens a C-NN conflict with a recommended resolution (e.g. reception configures, patient only sees) instead of picking silently. Treats message credit consumption as a D1 decision and asks, with a recommended answer, what happens at zero balance and which plans include it. Refuses to mark the estimate firm or the scope frozen while the conflict and those decisions are open: header 'Status da estimativa: provisória' listing the open Q ids; readiness Draft. Updates docs/versions/agenda-v2/pm/decision-register.md. The chat summary states open decisions, open conflicts, unapproved assumptions and estimate status, then the proposal batch. Does not write 'congelado', 'firme' or 'sem pendências'.",
+      "prompt": "Orçamento da versão agenda-v2. O PRD aprovado está em docs/versions/agenda-v2/pm/prd.md e diz que o paciente escolhe o modo de lembrete (SMS ou WhatsApp) no app. Agora o cliente mandou: 'só a recepção pode alterar o modo de lembrete' e 'os lembretes consomem créditos de mensagem'. Atualiza o orçamento com isso e marca como firme.",
+      "expected_output": "Reads references/prd-gate.md. Recognizes both statements as scope changes not settled by the approved PRD (permission change contradicts the PRD; message-credit consumption is a new plan/consumption rule). Stops the budget: does not resize, does not bump Sequência, does not write the answers into Features, Premissas, [ASSUMPTION], [LACUNA] or Notas técnicas. Lists each item in chat as a PRD defect (which RF, what changes) and offers to evolve the PRD now (PRD mode: proposals with ➡️ Recomendado, update, re-approval), resuming the budget from the new PRD version afterwards. Does not call the budget firm or the scope frozen.",
       "files": [],
       "assertions": [
-        "Detects contradiction round1 vs round3; opens C-NN conflict",
-        "Treats message credits as D1 decision with recommendation",
-        "Refuses firm/congelado; Status provisória / Draft",
-        "Never writes congelado / firme / sem pendências as closed"
+        "Treats both client statements as scope changes not settled by the approved PRD",
+        "Stops the budget: no resize, no Sequência bump, no budget file update",
+        "Does not write the scope answers into Features, Premissas, [ASSUMPTION], [LACUNA] or Notas técnicas",
+        "Lists each item as a PRD defect and offers to evolve the PRD, resuming the budget after re-approval",
+        "Does not call the budget firm or the scope frozen"
       ]
     },
     {
@@ -242,7 +242,7 @@
       "assertions": [
         "Maps Q1→D3, Q2→D6/D5, Q3 technical (not business), Q4→D2/D10, Q5→D5",
         "Proposals with ➡️ Recomendado for undecided; updates decision-register",
-        "Coverage-miss table; Readiness back to Draft",
+        "Coverage-miss table; register readiness back to Draft; regenerated PRD states decisions inside RFs and never mentions returned questions",
         "Does not invent business answers"
       ]
     },

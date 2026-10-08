@@ -1,7 +1,7 @@
 ---
 name: ns-commercial-budget
 description: >
-  (NS) Client-facing commercial budget from free-form scope — dual audience
+  (NS) Client-facing commercial budget from the approved PRD (required first; built in PRD mode when missing) — dual audience
   (client-first + delivery completeness). Features with acceptance criteria,
   Mermaid flow validation, per-Feature Function Points with calculation origins,
   hours as productivity formula, macro-activity table, risk-based safety margin
@@ -27,12 +27,12 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.30"
+  version: "1.31"
 ---
 
 # Commercial Budget
 
-Client-facing commercial budget from free-form scope: **Features**, **Mermaid flows**, **Function Points + hours**, **macro table**, **risk margins**. **Default sizing = APF (IFPUG CPM latest; SISP latest only for cases CPM does not cover).** Include COSMIC CFP only when the human explicitly asks. Other FP methods only when the human names them. Count screen consults, planograph, charts, maps — never 0 PF as “UI only”. Fixed path; header **Sequência** + **Gerado em** each regenerate.
+Client-facing commercial budget from the **approved PRD** (`references/prd-gate.md`): **Features**, **Mermaid flows**, **Function Points + hours**, **macro table**, **risk margins**. **Default sizing = APF (IFPUG CPM latest; SISP latest only for cases CPM does not cover).** Include COSMIC CFP only when the human explicitly asks. Other FP methods only when the human names them. Count screen consults, planograph, charts, maps — never 0 PF as “UI only”. Fixed path; header **Sequência** + **Gerado em** each regenerate.
 
 **Audience:** client first, delivery second. Client confirms scope; team gets traceable sizing. Narrative = product/commercial. Sizing detail in Estimativas. Read `references/product-voice.md`.
 
@@ -61,17 +61,18 @@ Optional — skip step if path missing. Do not invent project layout.
 
 ### 1. Intake
 
-1. Capture scope + productivity / team / rates hints.
-2. Resolve `{version_san}`.
-3. **Product context + reuse gate** — `references/product-context.md`; mandatory full-read reverse-spec + `brownfield-map.md`; reuse inventory before clarify/sizing.
-4. Persist under `docs/versions/{version_san}/pm/` or chat-only (default: persist).
+1. **PRD gate (first, blocking)** — `references/prd-gate.md`. Locate the PRD (`docs/versions/{version_san}/pm/prd.md` or pasted in chat) and check it is approved. Missing or not approved: stop, offer to build or finish it in PRD mode (`../14-prd.md`), resume only after approval. Price-only questions skip this gate.
+2. Take scope from the approved PRD. Capture productivity / team / rates hints.
+3. Resolve `{version_san}` (from the PRD when it names it).
+4. **Product context + reuse gate** — `references/product-context.md`; mandatory full-read reverse-spec + `brownfield-map.md`; reuse inventory before clarify/sizing.
+5. Persist under `docs/versions/{version_san}/pm/` or chat-only (default: persist).
 
 ### 2. Clarify
 
-Read `references/clarification.md` and `../decision-coverage.md`.
+Read `references/clarification.md`.
 
-- Budget context: ≤5 questions, one batch; ≤1 follow-up round.
-- Product decisions: coverage scan per Feature (D1–D14 + rule probes + cross-round detectors). Every question has a recommended answer. Keep the decision register (`docs/versions/{version_san}/pm/decision-register.md`) current.
+- Budget context only: ≤5 questions, one batch; ≤1 follow-up round.
+- No scope questions. Any scope doubt (vague RF, rule with two readings, conflict with reverse-spec, scope change) → **stop**, list it as a PRD defect, send it to PRD mode (`references/prd-gate.md` → Step 5).
 - Prefer team experience when hours estimated and missing.
 - Do not re-ask reverse-spec/brownfield facts — ask **delta** only.
 - `proceed with assumptions` / `quick mode`: mark `[ASSUMPTION]` / `[LACUNA]` in doc.
@@ -92,8 +93,8 @@ Read `references/clarification.md` and `../decision-coverage.md`.
 11. `references/macro-activities.md` + `references/risk-margin.md`
 12. `references/document-versioning.md`
 13. **Reuse inventory applied** — map `net-new`→ADD, `extend`→CHG, `reuse`→omit (IFPUG enhancement). Block if context existed and inventory skipped.
-14. **Estimate status** — header line in both docs: provisional while any sizing-relevant decision is `open` / `assumed` (list the Q ids), firm only at Business-validated or higher (`../decision-coverage.md` → Provisional estimate seal).
-15. **Developer-lens self-check** (`../decision-coverage.md` Step 6) before Stop. Business questions found go back to the proposal batch.
+14. **PRD reference** — header line in both docs: `PRD de referência` (path or "enviado no chat" + PRD version / last updated). Internal doc maps each Feature to its RF ids.
+15. **Scope check before Stop** — every Feature traces to approved RFs; nothing priced outside the PRD; no scope decided in Premissas or Notas técnicas. A doubt found here stops the budget (`references/prd-gate.md` → Step 5).
 
 | Section | Rules |
 |---------|--------|
@@ -133,9 +134,9 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 
 ### 5. Stop
 
-1. Summarize sequência, Gerado em, path(s), totals (FP, hours base, hours com margem, margin %), Custo filled or not, **estimate status** (provisional + open Q ids, or firm), **readiness** and developer-lens result. Include ΣCFP only when COSMIC was requested. When client file exists: note Valor agregado followed locked speech (decision-maker), subtotal negócio vs engenharia rollup, and whether Esforço/Custo columns are filled or `—`.
+1. Summarize sequência, Gerado em, path(s), totals (FP, hours base, hours com margem, margin %), Custo filled or not, **PRD de referência** and the RF → Feature coverage. Include ΣCFP only when COSMIC was requested. When client file exists: note Valor agregado followed locked speech (decision-maker), subtotal negócio vs engenharia rollup, and whether Esforço/Custo columns are filled or `—`.
 2. No tasks, issues, requirements.md, SDD handoff.
-3. Open decisions remain: send the proposal batch (`../decision-coverage.md` Step 4) and stop. None remain: offer approve, then SDD / PM forecast in text only.
+3. Offer approve, then SDD / PM forecast in text only.
 
 ## Out of scope
 
@@ -158,7 +159,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 | `references/technical-notes.md` | After Features — internal-only implementation notes from transcript/POC; omit if no source |
 | `assets/commercial-budget-costumer.template.md` | When writing `commercial-budget-costumer.md` |
 | `references/clarification.md` | Before generating |
-| `../decision-coverage.md` | Clarify + before Stop — product-decision coverage, proposals, register, readiness, provisional estimate |
+| `references/prd-gate.md` | Intake (first) — approved PRD required; scope doubt = stop and evolve the PRD |
 | `references/fp-sizing.md` | Before FP tables — APF default (CPM then SISP) |
 | `references/pf-unit-price.md` | When the human asks the PF price or does not know R$/PF — USD anchor, convert with the day's local FX |
 | `references/cosmic-sizing.md` | Only when human asked for COSMIC/CFP (agent sizing; doc = table only) |
