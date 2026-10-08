@@ -91,7 +91,7 @@ npx @nextstage-brasil/harness --preset gitlab --yes
 
 ### Project Manager (no code execution)
 
-Human PM workflow only — `ns-project-manager` (commercial budget, delivery schedule nested in `workflow.md`). Per-issue implementation brief is catalog skill `ns-requirements-enricher` (also in `gitlab` and `full`). Does **not** install SDD or coding skills.
+Human PM workflow — `ns-project-manager` (PRD, commercial budget, delivery schedule nested in `workflow.md`) **plus** `ns-requirements-enricher` (per-issue implementation brief). The two work as a pair: PM closes version-wide business decisions in `docs/versions/{version}/pm/decision-register.md`, and the enricher reads that register per issue instead of re-asking. The enricher is also in `gitlab` and `full`. Does **not** install SDD or coding skills.
 
 ```bash
 npx @nextstage-brasil/harness --preset project-manager --yes

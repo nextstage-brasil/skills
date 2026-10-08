@@ -21,6 +21,43 @@ Closer: reply by number (`1: …`) or "all yes" / "all recommended". Then close 
 
 Technique (not version Clarify): numbered batch; blocking vs assumed vs drop; unresolved-value and contradiction detectors. Never write version artifacts.
 
+## Business decisions — always ask, never assume
+
+Developers ask about these most often after handoff. They are business decisions, not code. When the issue adds or changes a rule and the source (issue, comments, upstream decisions) does not settle the point, promote it **with a Recommended answer**. Skip the ones the issue does not touch.
+
+| Dimension | Ask when the issue touches it |
+| --------- | ----------------------------- |
+| Plan and consumption | Which plan or tier gets it; does it use metered resources (credits, quota); behavior at zero balance |
+| Roles | Who configures, who uses, who approves, who reverts, who runs bulk actions; bulk on selected rows or on every filtered row |
+| Defaults for existing customers | What current customers or records get with no configuration; does today's behavior stay identical |
+| Configuration level | Global, per template, per client, per user, or per action on screen |
+| Values | Exact vs tolerance, rounding, where residual cents go, how extras are split |
+| Exceptions | Empty, no match, tie after every criterion, partial, duplicate, already linked elsewhere, coincidental match; volume limits and behavior above them |
+| Customer inputs | Which file or report, which screen uploads it, period covered, what if missing; mandatory fields on manual entry; what one row represents |
+| Time | Which date drives the rule; business days and which holidays |
+| Output | What goes to the export or report; what happens to unreviewed items at export; replace vs keep previous files |
+| Lifecycle | Undo, can a discard be reverted, how long items stay visible |
+| Blast radius | Does the new rule apply only to this flow or also to existing flows customers already validated |
+| Data and privacy | Personal data, external providers, isolation per client, retention at contract end |
+| AI behavior | What is labeled as AI; does it ever apply without review; which fields it fills; fallback when it has no basis |
+
+## Rule probes (developer lens)
+
+For each "the system does X when Y" in the issue, ask yourself the ten probes. Promote only what the coding agent would otherwise guess.
+
+1. Empty: nothing qualifies, or input missing
+2. Tie: still equal after every stated criterion
+3. Partial: half-done, partly paid, partly consumed
+4. Duplicate / already used elsewhere
+5. Who may trigger, see, override
+6. Default for existing customers or records
+7. Undo, and which state returns
+8. User ignores it (skips review, exports, closes)
+9. Which date or which source drives it
+10. Where else: does it leak into an existing flow
+
+**Recommended** picks the option that changes nothing for current customers, is reversible, and matches how the screen behaves today. No single safe default (price, legal basis)? Give closed options. Never ask a bare "how should it work?".
+
 ## Do NOT ask (never promote)
 
 - Missing / wrong labels (Team, Type, Priority, Severity, RF, …)
@@ -28,13 +65,14 @@ Technique (not version Clarify): numbered batch; blocking vs assumed vs drop; un
 - Schema, table, column, class, file path, env var, SQL, payload shape
 - "How should we implement…"
 - Version, PO, milestone-as-version, Gate 0 version scope, "full version"
-- Safe defaults (put in Assumptions)
+- Safe defaults (put in Assumptions) — only UI/layout/wording defaults. Business decisions above are never "safe defaults"
+- Algorithm, matching technique, performance tuning, library choice — engineering decides
 
 ## Scope (product)
 
 - [ ] What is **out of scope** for this delivery (other screens, reports, export)? Ask only if the issue could reasonably include them and the agent would guess.
 - [ ] Applies to **all** tenants/clients or only one context? Ask only if code/tenancy makes both plausible.
-- [ ] Must existing screen/filter behavior stay unchanged outside request? Default yes in Assumptions unless text conflicts.
+- [ ] Must existing screen/filter behavior stay unchanged outside request? Default yes in Assumptions for screens the issue does not touch. A new rule that could change a flow customers already use is a **Blast radius** question (above), not an assumption.
 
 ## Behavior / UX
 

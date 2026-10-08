@@ -8,7 +8,7 @@ consumes:
   - artifact:gitlab-issue
 metadata:
   author: nextstage-brasil
-  version: "1.8"
+  version: "1.9"
 depends:
   - ns-harness
 ---
@@ -91,10 +91,29 @@ Do **not** `@mention` anyone in the comment. Not the opener, not an assignee, no
 - **Acceptance** — list from description; each clear / partial / missing
 - **Constraints** — labels/milestone/due for _your_ context; do **not** turn missing labels into questions
 - **Already answered** — comment facts that remove ambiguity; do not re-ask
+- **Upstream decisions** — see **Upstream product decisions** below
 
 User claimed issue mode but no `ISSUE_URL`: stop one line — URL missing. Do not invent issue content. MCP unavailable is **not** this stop — **MCP fallback**.
 
 **Chat mode:** same Goal / AC / Constraints / Already answered from conversation text.
+
+### Upstream product decisions
+
+When the workspace has PM artifacts for the scope this issue belongs to, read them before asking anything:
+
+- `docs/versions/*/pm/decision-register.md`: decisions (`Q-NN`), conflicts (`C-NN`), readiness
+- `docs/versions/*/pm/prd.md`: business rules and acceptance per requirement, open questions
+
+Match by milestone, title or the requirement the issue implements. When it is unclear, use the closest match and say which one in one line of internal notes. Do not ask about it.
+
+| Upstream state | Enricher action |
+| -------------- | --------------- |
+| Decision `answered` | Already answered. Do not re-ask. Write it into the brief as a requirement |
+| Decision `open` / `assumed` that this issue touches | Must be in the question batch, using the upstream recommended answer |
+| Issue text contradicts an upstream decision | **Contradiction** detector. Ask which outcome wins |
+| No PM artifacts | Continue. Run the business decision scan yourself (Phase 3) |
+
+Pasted PRD or decision list in chat counts the same as files.
 
 ## Phase 2 — Codebase check first
 
@@ -127,9 +146,13 @@ Borrow **technique** from `ns-spec-driven` Clarify (`references/clarify-requirem
 
 Do **not** run version Clarify workflow (no brownfield Step 0.4 halt, no Gate 0, no version artifacts, no `skip clarify`).
 
-Cross **issue/chat text + comments + code**. Each gap: _would implementing agent guess product intent?_ If no guess needed → no question.
+Cross **issue/chat text + comments + upstream decisions + code**. Each gap: _would implementing agent guess product intent?_ If no guess needed → no question.
+
+**Business decision scan (mandatory).** Text-only ambiguity scans miss what nobody wrote. For each business rule this issue adds or changes, walk the business dimensions and the ten rule probes in `references/question-checklist.md` (empty, tie, partial, duplicate, who may, default for existing, undo, user ignores it, which date, where else). Scope the scan to what the issue touches. A one-line UI fix does not get the full list.
 
 **Zero blocking gaps:** say **ready**. Do **not** invent filler.
+
+**Developer-lens check before "ready".** Reread the draft brief as the coding agent, with no access to this chat. Every business question it would still ask goes into the batch. Every decision made in chat but missing from the brief goes into the brief. Technical questions (algorithm, schema, library) stay out.
 
 ### Audience
 
@@ -143,7 +166,8 @@ Questions for the human in this chat — product language, not developer/tech le
 | Case | Action |
 | ---- | ------ |
 | Agent cannot verify done without this product fact | Numbered question **plus Recommended** |
-| Safe default, and the agent can ship without asking | **Assumptions** — not a question |
+| **Business decision**: plan or consumption, who may do it, default for existing customers, money or rounding, export content, irreversible action, change to behavior customers already validated, personal data or third parties | Numbered question **plus Recommended**, **never** a silent assumption, even when the default looks obvious |
+| Safe default (layout, wording, UI pattern already on the screen), and the agent can ship without asking | **Assumptions** — not a question |
 | Already in description/comments/code | Drop |
 | Nice-to-have / engineering taste | Drop or assumption |
 
@@ -187,7 +211,9 @@ Translate the label with the rest of the reply (Portuguese user: `➡️ Recomen
 | Id | Hit | Close |
 | -- | --- | ----- |
 | Unresolved value | TBD, range, vague adjective on visible behavior | Pin in question **or** assumption + impact in brief |
-| Contradiction | Issue vs comments vs current code | Ask which product outcome wins. Do not pick silently |
+| Contradiction | Issue vs comments vs upstream decisions vs current code | Ask which product outcome wins. Do not pick silently |
+| Ambiguous term | A noun with two plausible meanings ("company", "account", "user", "title") | Ask which one, with the likely meaning recommended |
+| Scope leak | Behavior here depends on something declared out of scope, or a new rule could change an existing flow | Ask whether it applies only here or to the existing flow too, recommending "only here" |
 
 **Not a detector:** missing labels, branch names, GATE 1, milestone-as-version, PO, full-version language.
 
@@ -259,6 +285,8 @@ Do not post while any question is still open. There is no `❌` GitLab variant.
 
 After a real post: chat with link or `project_id` + `issue_iid`.
 
+**Decisions wider than this issue** (chat only, one line after the closed brief): list the decisions just made that also govern other screens or issues, so the requester records them where the rest of the team reads them. Never in the GitLab body.
+
 Do **not** use `set_issue_status`, `update_issue`, `create_issue`, `start_execution_planning`.
 
 ## Language
@@ -283,6 +311,8 @@ Template in `references/comment-template.md` is the English skeleton. Translate 
 - `➡️` on the same line as the question body (`sentence. ➡️`), or no blank line before it
 - Calling the closed brief a PRD
 - Filler questions; generic "How should this work?"
+- Business decisions (plan, permissions, defaults for existing customers, money, export, undo, personal data) hidden in Assumptions instead of asked with a Recommended answer
+- Re-asking decisions already answered upstream, or ignoring an upstream open decision this issue touches
 - Re-asking facts already in comments
 - `@mention` in the brief or the GitLab comment (opener, assignee, or a login copied from another comment)
 - Dev questions (table, branch, label, GATE, test path, JSON)
@@ -293,7 +323,7 @@ Template in `references/comment-template.md` is the English skeleton. Translate 
 
 | Layer | Skill | When | Grain | Not this |
 | ----- | ----- | ---- | ----- | -------- |
-| PM | `ns-project-manager` | Intake → RICE | OKR, scale, stakeholders | Not this |
+| PM | `ns-project-manager` | Intake → RICE, PRD, budget, decision register | OKR, scale, stakeholders, version-wide product decisions | Not this. Its answered decisions are inputs here; its open ones are asked here when this issue touches them |
 | SDD Clarify-Strict | `/ns-spec-driven` | Before Specify, Gate 0 | **Version** on disk | Technique borrowed; artifacts **not** |
 | Enricher (this) | `/ns-requirements-enricher` | Before coding one issue / pasted scope | Per-issue brief + scarce questions | Preview then internal comment **or** chat-only brief |
 | Specify | `/ns-spec-driven` Specify | After Clarify | Version `requirements.md` | Not per-issue brief |
@@ -306,7 +336,10 @@ Template in `references/comment-template.md` is the English skeleton. Translate 
 - [ ] Mode: issue vs chat
 - [ ] Issue: `read_issue` + `list_issue_comments`. No `@mention` in the brief
 - [ ] Chat: synthesize from user message; no MCP issue load
+- [ ] Upstream PM decisions read when present (answered = do not ask; open = ask with its recommendation)
 - [ ] Codebase check first: exists / extends / new
+- [ ] Business decision scan + rule probes on every rule the issue adds or changes
+- [ ] Developer-lens check before saying ready
 - [ ] Questions only if implementing agent would guess; else ready
 - [ ] Each open question: title line, body line, blank line, then `➡️` on the next line. Same-line `sentence. ➡️` is invalid. Closer: reply by number, then close requirements in chat. Not a PRD
 - [ ] After answers: closed brief (decisions in What changes / Acceptance / Assumptions). No Files / areas

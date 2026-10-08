@@ -18,6 +18,12 @@
       "prompt": "This issue is already clear: Visitas realizadas must not wrap date/time cells; names on Colegas de cela, Visitas realizadas, and Visitas recebidas in uppercase like the rest of the person card. Code matches those screens. Enrich for the coding agent.",
       "expected_output": "Ready implementation brief (✅). Current behavior + delta + verifiable acceptance + assumptions. No Files / areas, no paths, no class names. No Questions section. Zero filler questions. Issue URL present → preview only, no post until human yes; chat-only → no post offer. Do not run version Clarify or Specify. Not a PRD.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Sem GitLab. Escopo: na tela de Reservas, cancelar automaticamente reservas não pagas após 48 horas e liberar a vaga. O gerente pode cancelar manualmente também. Já existe o documento da versão em docs/versions/hotel-v3/pm/decision-register.md.",
+      "expected_output": "Chat mode, no GitLab offer. Reads docs/versions/hotel-v3/pm/decision-register.md first: answered decisions are not re-asked and appear in the brief as requirements; open decisions this scope touches are asked with the register's recommendation. Runs the business decision scan and rule probes: questions with ➡️ Recomendado on its own line cover at least which time counts for the 48 hours and whether weekends or holidays count (Time), what happens to reservations already pending when this ships (Defaults for existing customers), partially paid reservations (Exceptions), whether a cancellation can be undone (Lifecycle), and who besides the manager may cancel (Roles). These are questions, not silent Assumptions. Does not ask about the algorithm, job scheduler, table or branch. Uses Portuguese throughout (Comportamento atual, O que muda, Aceite, Premissas). After answers, the closed brief has no questions, and one chat line lists decisions that also govern other screens.",
+      "files": []
     }
   ]
 }
