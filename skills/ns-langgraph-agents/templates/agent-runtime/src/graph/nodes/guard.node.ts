@@ -40,6 +40,8 @@ export async function guardNode(
     discoveryBrief: null,
     paint: null,
     render_spec: null,
+    memoryOps: [],
+    memoryNotices: [],
     turnLocale: localeRes.locale,
     turnCurrency: localeRes.currency ?? null,
   };

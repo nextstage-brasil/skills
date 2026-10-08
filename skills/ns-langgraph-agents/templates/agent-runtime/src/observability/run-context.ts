@@ -4,6 +4,10 @@ import type { AgentStreamUsage } from "../shared/usage.js";
 export type RunCtx = {
   threadId: string;
   tenantId: string;
+  /** Authenticated end user — owner of user memory. Absent → memory off this turn. */
+  userId?: string;
+  /** Rendered user-memory block, loaded once per turn. Never copied into graph state. */
+  userMemoryBlock?: string;
   nodeName?: string;
   checkpointId?: string;
   /** Accumulated LLM usage for this HTTP turn (SSE completed.usage). */

@@ -19,6 +19,10 @@ Load for full review beyond Placement / Prompt inject / Topology / Bind parity /
 | Full tool JSON in messages | Same | `truncateToolOutput` |
 | Secrets in state/checkpointer | Leak via logs/resume | `configurable` only |
 | Full composed system/persona in `messages` | Sticky persona; checkpoint bloat | Invoke-only `base_invariant + injected` — `prompt-and-capability-injection.md` |
+| "Memory" keyed by `thread_id` (`agent_checkpoints` `memory:*`) | Forgotten on next thread; not user memory | `user_memories` per `(tenant_id, user_id)` — `user-memory.md` |
+| User memory block in state / `messages` | Stale after CRUD edits; checkpoint bloat | Load per turn, compose per invoke — `user-memory.md` §4 |
+| Confirmation question for every learned fact | Friction; users stop teaching | Deduce, apply, inform in one line — `user-memory.md` §3 |
+| `user_id` from request body/path on `/memories` | IDOR — read/erase other users | Owner from auth identity only |
 | Last-write-wins on shared artifact / thread state | Silent data loss under concurrent turns | Optimistic version check; reject + reconcile — `error-and-reliability.md` |
 
 ## Reliability (writes and distributed)

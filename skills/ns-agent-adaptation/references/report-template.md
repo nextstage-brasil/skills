@@ -78,6 +78,17 @@ Optional Reflection: separate critique call after draft (ideally different model
 
 **Retention:** persistent memory = compliance liability; deletion must be executable. Absence of long-term memory = valid — lock explicitly when chosen.
 
+**User memory** (omit when none):
+
+| Decision | Locked |
+| -------- | ------ |
+| Scope | per user / … |
+| Kinds | preference, glossary, feedback, profile / … |
+| Write mode | deduce and inform / … |
+| User control | CRUD in product UI + purge / … |
+| Never store | … |
+| Retention | … |
+
 ## Evaluation plan (agent metrics)
 
 [Planning vs tool failure tracking; valid plan %; steps; cost; latency vs baseline]

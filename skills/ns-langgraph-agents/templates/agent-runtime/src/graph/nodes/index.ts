@@ -7,5 +7,6 @@ export {
   routeAfterExecutor,
 } from "./analyst.node.js";
 export { executorNode } from "./executor.node.js";
+export { memoryWriteNode } from "./memory-write.node.js";
 export { composerNode } from "./composer.node.js";
 export { respondNode } from "./respond.node.js";

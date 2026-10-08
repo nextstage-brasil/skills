@@ -11,6 +11,7 @@ import {
   type HitlResumeBody,
 } from "./hitl-resume.js";
 import { extractPendingInterrupt } from "./pending-interrupt.js";
+import { handleMemoryRoute } from "./memory-routes.js";
 import { readJsonBody } from "./read-json-body.js";
 import { streamGraphTurn, type CompiledGraph } from "./stream-turn.js";
 import { wantsSse } from "./sse.js";
@@ -66,6 +67,17 @@ function resolveTenantId(): string {
   return "1";
 }
 
+/**
+ * Scaffold: trusted `X-User-Id` set by your gateway/BFF after auth.
+ * Product forks resolve from the verified token (e.g. JWT `sub`).
+ * Never read the user id from body or path. Absent → user memory off.
+ */
+function resolveUserId(req: IncomingMessage): string | undefined {
+  const raw = req.headers["x-user-id"];
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  return value?.trim() || undefined;
+}
+
 export function createAgentServer() {
   return createServer(async (_req: IncomingMessage, res: ServerResponse) => {
     const url = new URL(_req.url ?? "/", "http://localhost");
@@ -76,6 +88,14 @@ export function createAgentServer() {
 
       if (_req.method === "GET" && parts[0] === "health") {
         return json(res, 200, { status: "ok" });
+      }
+
+      if (parts[0] === "memories") {
+        const userId = resolveUserId(_req);
+        const owner = userId ? { tenantId: resolveTenantId(), userId } : null;
+        if (await handleMemoryRoute(_req, res, url, owner)) {
+          return;
+        }
       }
 
       if (_req.method === "GET" && parts[0] === "dev-chat" && parts.length === 1) {
@@ -99,11 +119,12 @@ export function createAgentServer() {
       if (_req.method === "POST" && parts[0] === "threads" && parts.length === 1) {
         const threadId = `thread_${Date.now()}`;
         const tenantId = resolveTenantId();
+        const userId = resolveUserId(_req);
 
         await syncTenant(tenantId, tenantId);
-        await logThread(threadId, tenantId);
+        await logThread(threadId, tenantId, userId);
 
-        const result = await runStorage.run({ threadId, tenantId }, async () =>
+        const result = await runStorage.run({ threadId, tenantId, userId }, async () =>
           invokeWithLatencyBudget(async (signal) =>
             graph.invoke(
               { messages: [] },
@@ -137,8 +158,9 @@ export function createAgentServer() {
           return json(res, 400, { error: "message_required" });
         }
         const tenantId = resolveTenantId();
+        const userId = resolveUserId(_req);
         await syncTenant(tenantId, tenantId);
-        await logThread(threadId, tenantId);
+        await logThread(threadId, tenantId, userId);
 
         const runConfig = buildRunConfig(threadId, {
           tenant_id: tenantId,
@@ -147,7 +169,7 @@ export function createAgentServer() {
         const input = { messages: [new HumanMessage(message)] };
 
         if (wantsSse(_req)) {
-          await runStorage.run({ threadId, tenantId }, async () =>
+          await runStorage.run({ threadId, tenantId, userId }, async () =>
             streamGraphTurn({
               req: _req,
               res,
@@ -159,7 +181,7 @@ export function createAgentServer() {
           return;
         }
 
-        const result = await runStorage.run({ threadId, tenantId }, async () =>
+        const result = await runStorage.run({ threadId, tenantId, userId }, async () =>
           invokeWithLatencyBudget(async (signal) =>
             graph.invoke(input, { ...runConfig, signal }),
           ),
@@ -175,6 +197,7 @@ export function createAgentServer() {
       ) {
         const threadId = parts[1];
         const tenantId = resolveTenantId();
+        const userId = resolveUserId(_req);
         let body: HitlResumeBody;
         try {
           body = (await readJsonBody(_req)) as HitlResumeBody;
@@ -238,7 +261,7 @@ export function createAgentServer() {
         const command = new Command({ resume: resumePayload });
 
         if (wantsSse(_req)) {
-          await runStorage.run({ threadId, tenantId }, async () =>
+          await runStorage.run({ threadId, tenantId, userId }, async () =>
             streamGraphTurn({
               req: _req,
               res,
@@ -250,7 +273,7 @@ export function createAgentServer() {
           return;
         }
 
-        const result = await runStorage.run({ threadId, tenantId }, async () =>
+        const result = await runStorage.run({ threadId, tenantId, userId }, async () =>
           invokeWithLatencyBudget(async (signal) =>
             // Command resume — LangGraph Command generics are wider than node-id union
             graph.invoke(command as never, {

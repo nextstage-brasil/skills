@@ -9,6 +9,8 @@ import { composeSystemPrompt } from "../../conversation/system-prompt.js";
 import { loadRolePromptMeta } from "../../conversation/load-role-prompt.js";
 import { resolveLlmConfigForRole } from "../../llm/config.js";
 import { streamJsonSchema } from "../../llm/json-output.js";
+import { loadUserMemoryBlock } from "../../memory/user-memory-context.js";
+import type { MemoryNotice } from "../../memory/user-memory.js";
 
 const ComposerLlmSchema = z.object({
   markdown: z.string(),
@@ -33,11 +35,12 @@ export async function composerNode(
 ): Promise<Partial<AgentStateType>> {
   const configurable = config?.configurable as Record<string, unknown> | undefined;
   const userPayload = buildComposerUserPayload(state);
-  const system = composeSystemPrompt({ role: "composer", configurable });
+  const userMemory = await loadUserMemoryBlock();
+  const system = composeSystemPrompt({ role: "composer", configurable, userMemory });
   const promptMeta = loadRolePromptMeta("composer");
 
   if (state.errorCode === AGENT_ERROR.LLM_FAILURE) {
-    const md = llmFailureCopy(state.turnLocale);
+    const md = withMemoryAck(llmFailureCopy(state.turnLocale), state);
     emitResponseStreaming(config, md);
     return {
       responseMarkdown: md,
@@ -82,7 +85,7 @@ export async function composerNode(
         ],
       };
     } catch (err) {
-      const md = composeFromState(state);
+      const md = withMemoryAck(composeFromState(state), state);
       emitResponseStreaming(config, md);
       return {
         responseMarkdown: md,
@@ -101,7 +104,7 @@ export async function composerNode(
     }
   }
 
-  const md = composeFromState(state);
+  const md = withMemoryAck(composeFromState(state), state);
   emitResponseStreaming(config, md);
   return {
     responseMarkdown: md,
@@ -117,6 +120,40 @@ export async function composerNode(
       },
     ],
   };
+}
+
+/**
+ * Deterministic memory acknowledgement for stub/fallback paths. The LLM path
+ * acknowledges via the composer prompt (memoryNotices in the user payload).
+ */
+export function memoryAckLine(notice: MemoryNotice, locale: string | null): string {
+  const pt = isPtLocale(locale);
+  if (notice.outcome === "declined") {
+    return pt
+      ? "Não guardo esse tipo de informação na memória."
+      : "I don't keep that kind of information in memory.";
+  }
+  if (notice.outcome === "forgotten") {
+    if (notice.reason === "not_found") {
+      return pt
+        ? `Não tinha nada registrado sobre "${notice.key}".`
+        : `I had nothing saved about "${notice.key}".`;
+    }
+    return pt ? `Ok, esqueci: ${notice.content}` : `Done, I forgot: ${notice.content}`;
+  }
+  if (notice.outcome === "updated") {
+    return pt ? `Atualizado: ${notice.content}` : `Updated: ${notice.content}`;
+  }
+  return pt ? `Registrado: ${notice.content}` : `Noted: ${notice.content}`;
+}
+
+function withMemoryAck(md: string, state: AgentStateType): string {
+  const notices = state.memoryNotices ?? [];
+  if (notices.length === 0) {
+    return md;
+  }
+  const acks = notices.map((n) => memoryAckLine(n, state.turnLocale));
+  return [...acks, "", md].join("\n");
 }
 
 function llmFailureCopy(locale: string | null): string {

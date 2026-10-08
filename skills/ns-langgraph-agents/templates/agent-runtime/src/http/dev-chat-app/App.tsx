@@ -154,6 +154,8 @@ export function App() {
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
           Accept: "text/event-stream",
+          // Dev bench identity — production gateways set X-User-Id from auth.
+          "X-User-Id": "dev-user",
         };
         if (token.trim()) {
           headers.Authorization = `Bearer ${token.trim()}`;

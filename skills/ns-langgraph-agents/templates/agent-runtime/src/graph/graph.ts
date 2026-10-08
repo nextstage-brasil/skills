@@ -8,6 +8,7 @@ import {
   executorNode,
   guardNode,
   mcpCatalogNode,
+  memoryWriteNode,
   respondNode,
   routeAfterAnalyst,
   routeAfterExecutor,
@@ -16,7 +17,8 @@ import {
 
 /**
  * Suggested greenfield scaffold (`plan_execute`). Change compile to match locked graph-spec.
- * guard → context_manager → mcp_catalog → analyst ⇄ (executor | composer) → composer → respond → END
+ * guard → context_manager → mcp_catalog → analyst → memory_write ⇄ (executor | composer) → composer → respond → END
+ * memory_write applies analyst memoryOps (user-scoped store); routing stays routeAfterAnalyst.
  *
  * HITL `interrupt()` is optional inside executor/analyst when graph-spec locks it —
  * default compile has no interrupt node.
@@ -27,6 +29,7 @@ async function compileGraph() {
     .addNode("context_manager", contextManagerNode)
     .addNode("mcp_catalog", mcpCatalogNode)
     .addNode("analyst", analystNode)
+    .addNode("memory_write", memoryWriteNode)
     .addNode("executor", executorNode)
     .addNode("composer", composerNode)
     .addNode("respond", respondNode)
@@ -37,7 +40,8 @@ async function compileGraph() {
     })
     .addEdge("context_manager", "mcp_catalog")
     .addEdge("mcp_catalog", "analyst")
-    .addConditionalEdges("analyst", routeAfterAnalyst, {
+    .addEdge("analyst", "memory_write")
+    .addConditionalEdges("memory_write", routeAfterAnalyst, {
       executor: "executor",
       composer: "composer",
     })

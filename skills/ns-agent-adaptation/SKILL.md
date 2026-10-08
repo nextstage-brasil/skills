@@ -4,7 +4,7 @@ description: "(NS) Prompt vs RAG vs Agent vs Fine-Tune before framework. Writes 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.5"
+  version: "1.6"
 depends:
   - ns-harness
 ---
@@ -101,7 +101,7 @@ Plan decoupled from execution. Validate plan before run. Optional parallel plans
 
 ### Step 7 — Memory
 
-Internal weights vs context window vs episodic vs semantic external. Retention liability; no long-term memory valid. What goes where. `references/planning-and-memory.md`.
+Internal weights vs context window vs episodic vs semantic external. Retention liability; no long-term memory valid. What goes where. Same user returns across sessions → lock **user memory** (scope, kinds, write mode, user control, never-store, retention). `references/planning-and-memory.md`.
 
 Before close Agent path: **reality-test gate** (five checks) in `references/planning-and-memory.md`.
 

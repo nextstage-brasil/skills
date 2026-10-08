@@ -1,5 +1,6 @@
 import { Annotation, messagesStateReducer } from "@langchain/langgraph";
 import type { BaseMessage } from "@langchain/core/messages";
+import type { MemoryNotice } from "./memory/user-memory.js";
 
 /** Durable MCP catalog — names + descriptions + inputSchema; never bound tools or secrets. */
 export type McpCatalogTool = {
@@ -119,6 +120,16 @@ export const AgentState = Annotation.Root({
   errorCode: Annotation<string | null>({
     reducer: (_prev, next) => next,
     default: () => null,
+  }),
+  /** Analyst-proposed user-memory ops this turn (applied by memory_write). */
+  memoryOps: Annotation<unknown[]>({
+    reducer: (_prev, next) => next,
+    default: () => [],
+  }),
+  /** Applied memory changes the composer must acknowledge this turn. */
+  memoryNotices: Annotation<MemoryNotice[]>({
+    reducer: (_prev, next) => next,
+    default: () => [],
   }),
   turnLocale: Annotation<string | null>({
     reducer: (_prev, next) => next,

@@ -27,7 +27,8 @@ Placeholders `{{PRODUCT_SLUG}}` and `{{PRODUCT_DISPLAY_NAME}}` are substituted a
 | Streaming SSE | `src/http/sse.ts`, `stream-turn.ts` — `POST /threads/:id/message` + resume SSE |
 | Dev chat | Shell `src/http/dev-chat.ts` + React `src/http/dev-chat-app/` → `dist/dev-chat-app.js` |
 | Docker | `Dockerfile` (node:24-slim multi-stage), `docker-compose.yml` (agent-api only), `.dockerignore` |
-| Memory | `src/memory/checkpointer.ts`, `store.ts` |
+| Memory | `src/memory/checkpointer.ts` (turn state); `user-memory.ts` + `user-memory-context.ts` (user-scoped long-term, `008_user_memories.sql`) |
+| User memory HTTP | `src/http/memory-routes.ts` — caller-scoped `/memories` CRUD for the frontend |
 | LLM + JSON logs | `src/llm/` — providers `lmstudio\|openai\|openrouter\|vllm`; `BASE_URL` / `REASONING` per stage |
 | HTTP | `src/http/server.ts` (`initDb()` + `initOtel()` + skills bootstrap on startup) |
 | Postman | `postman/agent-api.postman_collection.json` |
@@ -35,7 +36,7 @@ Placeholders `{{PRODUCT_SLUG}}` and `{{PRODUCT_DISPLAY_NAME}}` are substituted a
 
 Starting scaffold (`architecture: plan_execute` — change if `graph-spec.md` locks another topology):
 
-`guard` → `context_manager` → `mcp_catalog` → `analyst` ⇄ (`executor` | `composer`) → `composer` → `respond` → END
+`guard` → `context_manager` → `mcp_catalog` → `analyst` → `memory_write` ⇄ (`executor` | `composer`) → `composer` → `respond` → END
 
 No analyst self-loop. `routeAfterExecutor` is conditional. Cap: `AGENT_MAX_ANALYST_ITERATIONS` (default 3).
 
@@ -94,3 +95,21 @@ Nodes MUST call `composeSystemPrompt({ role, configurable })` from `src/conversa
 ## Conversation-observed locale
 
 Numbers, currency, and dates follow the **user's language/context this turn** — not a fixed product locale. See `references/evidence-and-fidelity.md`.
+
+## User memory (long-term, per user)
+
+The agent learns durable facts about **the user** (preferences, glossary/synonyms, feedback, profile) without asking, and the composer tells the user in one line ("Entendi, PF é ponto de função."). Company/tenant context stays in `product_system_prompt` — never in user memory. See `references/user-memory.md`.
+
+| Piece | Where |
+|-------|-------|
+| Identity | `X-User-Id` from your gateway/BFF (scaffold) → `RunCtx.userId`; absent → memory off |
+| Read | `loadUserMemoryBlock()` once per turn → appended by `composeSystemPrompt` (never in state/checkpointer) |
+| Write | analyst `memoryOps` (first hop) → `memory_write` node → `memoryNotices` → composer acknowledges |
+| Manage | `GET/POST /memories`, `GET/PATCH/DELETE /memories/:id`, `DELETE /memories` (purge) |
+
+| Variable | Purpose |
+|----------|---------|
+| `USER_MEMORY_ENABLED` | `false` disables read + write (default `true`) |
+| `USER_MEMORY_STORE` | `postgres` \| `memory`; default follows `CHECKPOINTER` |
+| `USER_MEMORY_PROMPT_MAX_CHARS` | Prompt block budget (default 4000) |
+

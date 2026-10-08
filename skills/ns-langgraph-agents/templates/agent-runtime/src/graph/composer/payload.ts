@@ -1,7 +1,7 @@
 import type { AgentStateType } from "../../state.js";
 import { lastHumanText } from "../../shared/messages.js";
 
-/** Composer user payload: current message + evidence channels. */
+/** Composer user payload: current message + evidence channels + memory notices. */
 export function buildComposerUserPayload(state: AgentStateType): string {
   const lines: string[] = [];
   lines.push("## Current user message");
@@ -32,6 +32,12 @@ export function buildComposerUserPayload(state: AgentStateType): string {
     results.length === 0
   ) {
     lines.push("(no evidence)");
+  }
+  const notices = state.memoryNotices ?? [];
+  if (notices.length > 0) {
+    lines.push("");
+    lines.push("## Memory notices (acknowledge each in one short line)");
+    lines.push(JSON.stringify(notices, null, 2));
   }
   return lines.join("\n");
 }

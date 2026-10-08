@@ -40,22 +40,22 @@ export function readProductSystemPrompt(
 }
 
 /**
- * Final system text = motor base_invariant(role) + optional product injection.
+ * Final system text = motor base_invariant(role) + optional product injection
+ * + optional user-memory block (data, rebuilt per invoke from the user store).
  * Allowlist / HITL / bind_tools are independent — this string MUST NOT grant capabilities.
  */
 export function composeSystemPrompt(params: {
   role: SystemPromptRole;
   productPrompt?: string | null;
   configurable?: Record<string, unknown>;
+  userMemory?: string | null;
 }): string {
   const invariant = motorInvariant(params.role);
   const injected =
     (typeof params.productPrompt === "string" && params.productPrompt.trim().length > 0
       ? params.productPrompt.trim()
       : undefined) ?? readProductSystemPrompt(params.configurable, params.role);
+  const userMemory = params.userMemory?.trim() || undefined;
 
-  if (!injected) {
-    return invariant;
-  }
-  return `${invariant}\n\n${injected}`;
+  return [invariant, injected, userMemory].filter(Boolean).join("\n\n");
 }

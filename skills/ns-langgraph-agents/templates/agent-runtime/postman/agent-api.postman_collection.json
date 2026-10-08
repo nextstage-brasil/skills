@@ -2,12 +2,30 @@
   "info": {
     "_postman_id": "factory-agent-api-{{PRODUCT_SLUG}}",
     "name": "{{PRODUCT_DISPLAY_NAME}} — agent-api",
-    "description": "LangGraph agent-api HTTP contract.\n\nKeep this collection aligned with `src/http/` routes. Base URL: `http://localhost:3100`.\n\n| Method | Path | Notes |\n|--------|------|-------|\n| POST | `/threads` | Create thread |\n| POST | `/threads/:id/message` | `{ message }`; `Accept: text/event-stream` → SSE |\n| POST | `/threads/:id/resume` | HITL; same SSE when Accept SSE; `{ decision }` |\n| GET | `/dev-chat` | Styled React bench (DEV only) |\n\nTerminal SSE: `completed` | `failed` | `cancelled` | `interrupted`.",
+    "description": "LangGraph agent-api HTTP contract.\n\nKeep this collection aligned with `src/http/` routes. Base URL: `http://localhost:3100`.\n\n| Method | Path | Notes |\n|--------|------|-------|\n| POST | `/threads` | Create thread |\n| POST | `/threads/:id/message` | `{ message }`; `Accept: text/event-stream` → SSE |\n| POST | `/threads/:id/resume` | HITL; same SSE when Accept SSE; `{ decision }` |\n| GET | `/memories` | Caller's memories; `?kind=&include_invalid=true` |\n| POST | `/memories` | `{ kind, key, content, why? }` |\n| GET | `/memories/:id` | One memory |\n| PATCH | `/memories/:id` | `{ kind?, key?, content?, why? }` |\n| DELETE | `/memories/:id` | Hard delete (+ superseded history) |\n| DELETE | `/memories` | Purge all caller memories (LGPD) |\n| GET | `/dev-chat` | Styled React bench (DEV only) |\n\nTerminal SSE: `completed` | `failed` | `cancelled` | `interrupted`.\n\nIdentity: `X-User-Id` header (scaffold; production resolves from auth). Required on `/memories`; on `/threads/*` it enables user memory.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:3100", "type": "string" },
-    { "key": "thread_id", "value": "", "type": "string" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3100",
+      "type": "string"
+    },
+    {
+      "key": "thread_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "dev-user",
+      "type": "string"
+    },
+    {
+      "key": "memory_id",
+      "value": "",
+      "type": "string"
+    }
   ],
   "item": [
     {
@@ -29,7 +47,16 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"message\": \"Hello\"\n}"
@@ -47,8 +74,18 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Accept", "value": "text/event-stream" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -67,8 +104,14 @@
               "originalRequest": {
                 "method": "POST",
                 "header": [
-                  { "key": "Content-Type", "value": "application/json" },
-                  { "key": "Accept", "value": "text/event-stream" }
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
                 ],
                 "body": {
                   "mode": "raw",
@@ -92,7 +135,16 @@
           "name": "Send message (JSON)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"message\": \"Follow-up message\"\n}"
@@ -110,8 +162,18 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Accept", "value": "text/event-stream" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -130,7 +192,16 @@
           "name": "Resume HITL — always-escalate approve",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"decision\": \"approve\",\n  \"approver_id\": \"user-123\",\n  \"approver_role\": \"regulatory-reviewer\",\n  \"always_escalate\": true,\n  \"intent_category\": \"regulated_publish\"\n}"
@@ -147,7 +218,16 @@
           "name": "Resume HITL — reject",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"decision\": \"reject\",\n  \"approver_id\": \"user-123\",\n  \"approver_role\": \"regulatory-reviewer\",\n  \"always_escalate\": true,\n  \"intent_category\": \"regulated_publish\"\n}"
@@ -157,6 +237,172 @@
               "host": ["{{baseUrl}}"],
               "path": ["threads", "{{thread_id}}", "resume"]
             }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User memory",
+      "description": "Caller-scoped CRUD for the frontend memory screen. Owner = authenticated user (X-User-Id in scaffold).",
+      "item": [
+        {
+          "name": "List memories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/memories?kind=glossary",
+              "host": ["{{baseUrl}}"],
+              "path": ["memories"],
+              "query": [
+                {
+                  "key": "kind",
+                  "value": "glossary"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create memory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/memories",
+              "host": ["{{baseUrl}}"],
+              "path": ["memories"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"kind\": \"glossary\",\n  \"key\": \"PF\",\n  \"content\": \"PF = ponto de função\",\n  \"why\": \"User term\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.id) pm.collectionVariables.set('memory_id', body.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get memory",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/memories/{{memory_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["memories", "{{memory_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update memory",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/memories/{{memory_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["memories", "{{memory_id}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"PF = pontos de função\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete memory",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/memories/{{memory_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["memories", "{{memory_id}}"]
+            },
+            "description": "204 on success. Removes superseded history of the same key."
+          },
+          "response": []
+        },
+        {
+          "name": "Purge my memories",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/memories",
+              "host": ["{{baseUrl}}"],
+              "path": ["memories"]
+            },
+            "description": "LGPD erasure — deletes every memory of the caller. Returns { deleted }."
           },
           "response": []
         }

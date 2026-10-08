@@ -122,6 +122,7 @@ POST /threads              → create thread_id
 POST /threads/:id/message  → body { message, ...extra }; Accept text/event-stream → SSE else JSON
 POST /threads/:id/resume   → HITL resume; same SSE when Accept SSE; option → { decision: option.id }
 GET  /health
+/memories[/:id]           → user memory CRUD (user-memory.md)
 GET  /dev-chat             → styled shell + React bench (greenfield streaming_sse MUST)
 GET  /dev-chat/app.js      → esbuild bundle (503 if missing — run build:dev-chat)
 ```

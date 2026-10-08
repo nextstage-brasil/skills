@@ -27,8 +27,8 @@ describe("role prompt contract", () => {
   });
 
   it("exposes prompt_version per role from frontmatter", () => {
-    expect(loadRolePromptMeta("analyst").promptVersion).toBe("1");
-    expect(loadRolePromptMeta("composer").promptVersion).toBe("1");
+    expect(loadRolePromptMeta("analyst").promptVersion).toBe("2");
+    expect(loadRolePromptMeta("composer").promptVersion).toBe("2");
   });
 
   it("throws when prompt_version frontmatter missing", () => {

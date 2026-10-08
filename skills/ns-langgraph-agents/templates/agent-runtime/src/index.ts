@@ -16,7 +16,19 @@ export {
 export { createChatModel, getChatModel } from "./llm/provider.js";
 export { invokeJsonSchema } from "./llm/json-output.js";
 export { getCheckpointer, resolveCheckpointerMode } from "./memory/checkpointer.js";
-export { saveAgentMemory, loadAgentMemory } from "./memory/store.js";
+export {
+  applyMemoryOps,
+  getUserMemoryRepo,
+  renderUserMemoryBlock,
+  InMemoryUserMemoryRepo,
+  PostgresUserMemoryRepo,
+  type UserMemory,
+  type UserMemoryKind,
+  type UserMemoryRepo,
+  type MemoryNotice,
+  type MemoryOwner,
+} from "./memory/user-memory.js";
+export { handleMemoryRoute } from "./http/memory-routes.js";
 export { getGraph, resetGraphForTests } from "./graph/graph.js";
 export { AgentState } from "./state.js";
 export {

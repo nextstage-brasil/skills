@@ -70,6 +70,9 @@ Optional when modes vary per turn — mode table (`mode | injected source | outp
   // analysis?: { intent?: string; userFacingIntent?: string; /* domain slots */ } | null;
   // executionPlan?: { status: string; actions: unknown[] } | null;
   // analystNarration?: string[]; // optional duplicate-guard for operator lines
+  // User memory (when Memory → Long = user_memories): reset by guard each turn
+  // memoryOps?: unknown[];          // analyst hop 1 → memory_write
+  // memoryNotices?: MemoryNotice[]; // memory_write → composer one-line ack
   {{custom_fields}}
 }
 ```
@@ -100,7 +103,8 @@ Example `plan_execute` mapping:
 | `guard` | `guardRoute`, `turnLocale` | Block → `respond`; else `context_manager` |
 | `context_manager` | `messages`, `summary` | Compact; summary not inside messages |
 | `mcp_catalog` | `mcpCatalog` | `{name, description, inputSchema?}[]` only; no-op on version match |
-| `analyst` | `executionPlan`, `analysis`, `analystStatus` | No `bindTools`; JSON plan |
+| `analyst` | `executionPlan`, `analysis`, `analystStatus`, `memoryOps` | No `bindTools`; JSON plan; `memoryOps` on hop 1 only |
+| `memory_write` | `memoryNotices` | Deterministic; applies `memoryOps` to `user_memories`; routes like analyst |
 | `executor` | `dataBundle`, `executionResults` | Tools/MCP; optional `interrupt()` if HITL locked |
 | `composer` | `responseMarkdown` / `messages` | Sole user-facing writer |
 
@@ -135,8 +139,19 @@ flowchart TD
 | Layer | Mechanism |
 | ----- | --------- |
 | Short | LangGraph checkpointer (`postgres` prod, `memory` tests) |
-| Long | {{**none** (default) \| store namespace \| RAG}} — enable store only if the same user/context repeats across sessions |
+| Long | {{**none** (default) \| `user_memories` per user \| RAG}} — enable only if the same user repeats across sessions (`references/user-memory.md`) |
 | Context window | trim; summarize above 80% of `CONTEXT_MAX_TOKENS`, compact to 50%, summary cap 10% — tool cap vs skill-body cap |
+
+User memory (fill when Long = `user_memories`; else delete):
+
+| Lock | Value |
+| ---- | ----- |
+| Owner | `(tenant_id, user_id)`; identity source: {{JWT sub \| gateway X-User-Id}} |
+| Kinds | {{preference, glossary, feedback, profile}} — company facts stay in `product_system_prompt` |
+| Write mode | `deduce_and_inform` — analyst `memoryOps` → `memory_write` → composer one-line ack; no confirmation |
+| Prompt budget | `USER_MEMORY_PROMPT_MAX_CHARS` = {{4000}} |
+| Retention | {{purge untouched after N months \| until user deletes}} |
+| CRUD | `GET/POST /memories`, `GET/PATCH/DELETE /memories/:id`, `DELETE /memories` |
 
 ## Capabilities — bind / inject
 
@@ -171,6 +186,9 @@ flowchart TD
 | POST | /threads | create |
 | POST | /threads/:id/message | {{sync_json\|streaming_sse}} |
 | POST | /threads/:id/resume | HITL |
+| GET / POST | /memories | user memory list / create (caller-scoped; omit when no user memory) |
+| GET / PATCH / DELETE | /memories/:id | read / edit / delete |
+| DELETE | /memories | purge all caller memories (LGPD) |
 
 ## Error contract
 

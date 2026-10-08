@@ -318,7 +318,7 @@ One entry per subtask row classified as agent. Rules and gates are not agents â€
 
 | Component | Sizing | Why |
 | --------- | ------ | --- |
-| Memory | short only \| long-term | [one line] |
+| Memory | short only \| long-term \| + user memory (per user) | [one line; user memory â†’ `ns-langgraph-agents` `references/user-memory.md`] |
 | Planning | direct \| chain-of-thought \| reflection | [why the extra call pays, or why not] |
 | Tools | [count] | [why each / why this count] |
 | Action | reversible \| behind gate | [one line] |

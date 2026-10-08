@@ -399,6 +399,21 @@
         "Requires flushSync or equivalent per-tick paint (forbids client typewriter / timer hide)",
         "Cites streaming-and-hitl.md"
       ]
+    },
+    {
+      "id": 32,
+      "prompt": "Users complain our LangGraph agent-api forgets them: every new chat they re-explain their acronyms and how they like answers. The scaffold has a memory/store.ts we never really used. Fix it.",
+      "expected_output": "Agent reads references/user-memory.md; diagnoses memory/store.ts (saveAgentMemory keyed by threadId) as thread state, not user memory; proposes user_memories keyed by tenant_id+user_id with company facts left in the product system prompt; analyst memoryOps -> memory_write -> composer one-line acknowledgement with no confirmation question; per-invoke injection outside state/checkpointer/messages; caller-scoped /memories CRUD + purge with user id from auth; sensitive-data filter / LGPD erasure; graph-spec + Postman updated; handoff to ns-coder.",
+      "files": [],
+      "assertions": [
+        "Identifies thread_id-keyed memory (saveAgentMemory / agent_checkpoints) as the root cause and scopes memory to tenant_id + user_id",
+        "Keeps company/tenant facts in the product system prompt, not in user memory",
+        "Writes memories without a confirmation question but informs the user in one short line (e.g. 'Entendi, PF é ponto de função.')",
+        "Injects memory per LLM invoke (system prompt compose), not persisted in graph state, checkpointer or messages",
+        "Specifies caller-scoped CRUD routes (list/create/read/update/delete + purge) with user id from auth, never from path/body",
+        "Mentions sensitive-data / secret filtering or LGPD erasure",
+        "Includes graph-spec.md (Memory section, memory_write node, /memories routes) and the Postman collection in the delivery scope (edited, or listed as required changes in the plan/handoff)"
+      ]
     }
   ]
 }

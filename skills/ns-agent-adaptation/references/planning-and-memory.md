@@ -34,11 +34,29 @@ External long-term = episodic **and/or** semantic — not one blob. RAG corpora 
 - Behavior/style locked via Fine-Tune only after Prompt (+ RAG) exhausted
 - Do not dump entire corpus into context — retrieval gate first
 
+## User memory (personalization)
+
+Semantic external memory **about one user**: how they want answers, their terms, their corrections. What ChatGPT "saved memories", Claude memory, and LangMem semantic memory do. Decide here; runtime shape lives in `ns-langgraph-agents` → `references/user-memory.md`.
+
+Ask when the same person returns across sessions and re-explains things ("PF é ponto de função", "fala comigo em português").
+
+| Decision | Options | Default |
+| -------- | ------- | ------- |
+| Need it? | yes / **none** | none unless the same user returns and repeats context |
+| Scope | **per user** (`tenant_id` + `user_id`) / per tenant | per user — company context goes in the product system prompt, not memory |
+| Kinds | preference, glossary, feedback, profile | all four; drop any the product must not keep |
+| Write mode | **deduce and inform** / ask to confirm / explicit only | deduce and inform — agent saves on its own and says so in one line ("Entendi, PF é ponto de função.") |
+| User control | **CRUD in product UI** + forget in chat / none | CRUD + purge — required for LGPD erasure |
+| Never store | secrets, documents, LGPD art. 11 sensitive data, company facts, one-off task data | — |
+| Retention | until user deletes / TTL | lock explicitly |
+
+Write mode trade-off: confirmation per fact adds friction and users stop teaching; silent saving breaks trust. Informing in one line keeps both — the user sees what was learned and can correct or delete it.
+
 ### Retention and liability
 
 Persistent memory = **compliance liability**. Deletion must be **executable** (tenant purge, user erasure). Absence of long-term memory = **valid design outcome** — prefer when retention risk outweighs benefit. Document the choice.
 
-Document per design: what lives in weights vs window vs episodic vs semantic vs none.
+Document per design: what lives in weights vs window vs episodic vs semantic vs none — and, if user memory is on, the decisions in the table above.
 
 ## Reflection
 
@@ -50,7 +68,7 @@ Before design locks (Agent path). All five:
 
 | Check | Ask |
 | ----- | --- |
-| Long-term memory off | What breaks? |
+| Long-term memory off | What breaks? (user memory: would users really re-explain?) |
 | Planning halved | What breaks? |
 | Every tool | Frequent real use case? |
 | Final action | Reversible? |

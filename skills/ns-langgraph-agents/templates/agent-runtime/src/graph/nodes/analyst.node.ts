@@ -12,6 +12,7 @@ import { composeSystemPrompt } from "../../conversation/system-prompt.js";
 import { loadRolePromptMeta } from "../../conversation/load-role-prompt.js";
 import { resolveLlmConfigForRole } from "../../llm/config.js";
 import { invokeJsonSchema } from "../../llm/json-output.js";
+import { loadUserMemoryBlock } from "../../memory/user-memory-context.js";
 
 const AnalystLlmSchema = z.object({
   intent: z.string().optional(),
@@ -20,6 +21,8 @@ const AnalystLlmSchema = z.object({
     status: z.string(),
     actions: z.array(z.unknown()),
   }),
+  /** Durable facts about the user learned this message — validated in memory_write. */
+  memoryOps: z.array(z.unknown()).optional(),
 });
 
 export function executionHasToolError(results: unknown[]): boolean {
@@ -37,6 +40,7 @@ function analystResult(params: {
   outcome: string;
   notes: Record<string, unknown>;
   errorCode?: string | null;
+  memoryOps?: unknown[];
 }): Partial<AgentStateType> {
   const status: Exclude<AnalystStatus, null> =
     params.planStatus === "need_more_data" && params.actions.length > 0
@@ -65,6 +69,10 @@ function analystResult(params: {
   if (params.errorCode !== undefined) {
     out.errorCode = params.errorCode;
   }
+  // First hop only: later hops re-plan evidence, they do not re-learn the user.
+  if (params.iteration === 1) {
+    out.memoryOps = params.memoryOps ?? [];
+  }
   return out;
 }
 
@@ -82,7 +90,8 @@ export async function analystNode(
   const locale = state.turnLocale;
   const configurable = config?.configurable as Record<string, unknown> | undefined;
   const userPayload = buildAnalystUserPayload(state);
-  const system = composeSystemPrompt({ role: "analyst", configurable });
+  const userMemory = await loadUserMemoryBlock();
+  const system = composeSystemPrompt({ role: "analyst", configurable, userMemory });
   const promptMeta = loadRolePromptMeta("analyst");
   const priorNarration = state.analystNarration ?? [];
 
@@ -111,7 +120,7 @@ export async function analystNode(
         system,
         user: userPayload,
         jsonShapeHint:
-          '{"intent":"english audit","userFacingIntent":"operator line","executionPlan":{"status":"complete|need_more_data","actions":[{"tool":"…","args":{}}]}}',
+          '{"intent":"english audit","userFacingIntent":"operator line","executionPlan":{"status":"complete|need_more_data","actions":[{"tool":"…","args":{}}]},"memoryOps":[{"op":"remember|forget","kind":"preference|glossary|profile|feedback","key":"…","content":"…","why":"…"}]}',
         promptVersion: promptMeta.promptVersion,
       });
       let actions: unknown[] = [];
@@ -132,6 +141,7 @@ export async function analystNode(
         intent: parsed.intent ?? "llm_plan",
         userFacingIntent,
         priorNarration,
+        memoryOps: parsed.memoryOps ?? [],
         outcome:
           planStatus === "need_more_data" && actions.length > 0
             ? "need_more_data"
@@ -141,6 +151,7 @@ export async function analystNode(
           questionLen: text.length,
           prompt_version: promptMeta.promptVersion,
           actionCount: actions.length,
+          memoryOpCount: parsed.memoryOps?.length ?? 0,
           ...(planParseError ? { planParseError } : {}),
         },
       });

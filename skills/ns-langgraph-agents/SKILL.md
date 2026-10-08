@@ -1,10 +1,10 @@
 ---
 name: ns-langgraph-agents
-description: "(NS) LangGraph.js agent-api — bootstrap-agent-runtime, StateGraph, MCP, skill bind/inject, checkpointers, HITL/SSE. Use for new agent-api, LangGraph graphs, MCP wiring, orphan layout, bind parity, graph-spec sync, or \"fix my LangGraph agent\" / \"wire MCP tools\" / \"translations in the graph\". Do NOT use for CrewAI, generic web apps, or SDD-only with no agent-api."
+description: "(NS) LangGraph.js agent-api — bootstrap-agent-runtime, StateGraph, MCP, skill bind/inject, checkpointers, user memory, HITL/SSE. Use for new agent-api, LangGraph graphs, MCP wiring, orphan layout, bind parity, graph-spec sync, or \"fix my LangGraph agent\" / \"wire MCP tools\" / \"translations in the graph\". Do NOT use for CrewAI, generic web apps, or SDD-only with no agent-api."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.18"
+  version: "1.19"
 depends:
   - ns-harness
 ---
@@ -56,6 +56,7 @@ See `../../ns-harness/references/session-boot.md` — **complete Session boot (b
 | Topology / state / capabilities / `guard_fail_mode` change | **Spec Sync Gate** — update `graph-spec.md` in the same delivery |
 | MCP with many servers/tools                               | Read `references/mcp-complex-access.md` + `references/capability-governance.md`                            |
 | Token blow-up / slow turns                                | Read `references/context-window-and-tokens.md`                                                             |
+| Agent must remember the user (preferences, terms, CRUD)   | Read `references/user-memory.md` — per-user store, deduce-and-inform, `/memories` routes                   |
 | Untrusted input / injection / claimed authority           | Read `references/guardrail-and-adversarial.md` — scope classifier; scaffold fail-open ≠ doctrine             |
 | Cost-sensitive high volume / model tier / cache           | Read `references/model-cascade-and-cache.md`                                                               |
 | Provider message/reasoning quirks                         | Read `references/message-content-blocks.md`                                                                |
@@ -155,6 +156,7 @@ Load on demand — do not memorize whole files.
 | `references/streaming-and-hitl.md`                   | SSE envelopes, operator `thinking`, `interrupted`, resume SSE, `interrupt()`, `Command` resume |
 | `references/turn-flow-gates.md`                      | Prompt/loop incidents: flow-first, terminal, repetition, tool-error, DoD                      |
 | `templates/contracts/planner-contract.md`            | JSON planner hops: `executionPlan` + `userFacingIntent`                                           |
+| `references/user-memory.md`                          | Per-user long-term memory: kinds, deduce-and-inform write path, per-invoke read, `/memories` CRUD, LGPD |
 | `references/evals-and-gates.md`                      | Architecture, tool-selection, memory evals; golden-set promotion |
 | `references/anti-patterns.md`                        | Review gate before marking done — hot path                                                        |
 | `references/anti-patterns-extended.md`               | Dead prompt copies, state/memory, reliability, graph, MCP, LLM, ops, process                      |
@@ -201,6 +203,7 @@ After bootstrap, **verify** these exist; do not re-scaffold. Fill only gaps vs `
 
 - `AgentState` with `messages` reducer (`Annotation.Root` or Zod + `MessagesZodMeta`).
 - `PostgresSaver` in dev/prod; `MemorySaver` only in `tests/setup.ts`.
+- Long-term memory (when `graph-spec.md` locks it): per **user** (`tenant_id` + `user_id`), never per `thread_id` — `references/user-memory.md`.
 - Every invoke/stream: `configurable.thread_id` via `buildRunConfig`.
 - JSON planner/analyst (no `bindTools` on that hop): declare `executionPlan` + `userFacingIntent` (or nested on `analysis`) in `graph-spec.md` state schema — `templates/snippets/state.ts.snippet`.
 
@@ -237,6 +240,8 @@ Apply `references/capability-governance.md` and `references/prompt-and-capabilit
 | `sync_json`     | `POST /threads`, `POST /threads/:id/message`                                                                                                                                                                              |
 | `streaming_sse` | SSE envelope per `references/streaming-and-hitl.md`; composer reply **MUST** `model.stream()` + cumulative `response_streaming` ticks (not invoke-dump); SSE flush leave-now; dev-chat `flushSync` per tick; **greenfield MUST** ship styled React `GET /dev-chat` (`DEV_CHAT_ENABLED`, local-only) + `GET /dev-chat/app.js`; JSON planner hops **MUST** emit operator `thinking`; Docker artifacts (Dockerfile, agent-only compose) shipped |
 | HITL            | `interrupt()` + `POST /threads/:id/resume` (SSE when Accept SSE) with `Command({ resume })`; always-escalate **MUST** send `approver_id` + `approver_role`; paused graph → terminal `interrupted` |
+
+User memory enabled → caller-scoped `/memories` CRUD (`references/user-memory.md` §5); `user_id` from auth only.
 
 Brownfield missing dev-chat: recommend add — not Critical. Postman synced with live routes.
 
@@ -330,6 +335,7 @@ Stay here for diagnosis, spec, placement, governance design, and **greenfield bo
 - Composer reply via `model.invoke` / single end-of-turn `response_streaming` dump; buffered SSE; client typewriter or delayed paint of ticks (`references/streaming-and-hitl.md`)
 - Writing `userFacingIntent` in a language other than the current user message (e.g. English progress when the operator wrote Portuguese)
 - Persisting composed system/persona prompt (`base_invariant + injected`) — or secrets/API keys — in graph state, checkpointer, or durable `messages` (rebuild system text per invoke)
+- Keying long-term user memory by `thread_id`, storing company/tenant facts or secrets in user memory, persisting the rendered memory block in state/checkpointer, or asking the user to confirm each memory instead of informing (`references/user-memory.md`)
 - Treating bootstrap / `.env` / `configurable.locale` as primary locale SoT, or persisting sticky thread locale (use conversation-observed `turnLocale` + Intl)
 - Passing unbounded tool/MCP output into `state.messages`
 - Applying tool/MCP truncate caps to skill bodies (use `CONTEXT_SKILL_BODY_MAX_CHARS`)

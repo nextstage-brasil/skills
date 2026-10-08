@@ -29,10 +29,10 @@ agent-api/
 │   │   ├── analyst/        # payload + plan-actions parsers
 │   │   ├── composer/       # payload builders
 │   │   └── nodes/*.node.ts # thin orchestrators; one file per node
-│   ├── http/               # server, sse, stream-turn, hitl-resume, dev-chat shell + dev-chat-app/
+│   ├── http/               # server, sse, stream-turn, hitl-resume, memory-routes, dev-chat shell + dev-chat-app/
 │   ├── db/                 # client, migrate, migrations/
 │   ├── llm/                # config, provider, json-output — infra only
-│   ├── memory/             # checkpointer, store, context-window, summarizer
+│   ├── memory/             # checkpointer, user-memory (+ context), context-window, summarizer
 │   ├── observability/      # postgres, run-context, langsmith, otel
 │   ├── capability/         # types, allowlist, rate limit, fingerprint, tool-budget, tool-names
 │   ├── mcp/                # client, registry, discovery, governance, adapter

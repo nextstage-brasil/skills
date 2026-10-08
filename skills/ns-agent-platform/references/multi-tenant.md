@@ -8,6 +8,7 @@
 | Tenant config | `config/tenants/{id}/` | Isolated store | Versioned config, not new `src/` modules |
 | Policy (tools / classes) | Central `AllowlistPolicy` | Copied YAML per tenant | Central; copy = drift — record why |
 | Data / checkpointer | Shared cluster, `tenant_id` filter | Isolated DB | Filter mandatory if shared |
+| User memory (`user_memories`) | Shared table, `tenant_id` + `user_id` filter | Isolated DB | Filter mandatory; tenant purge = delete by `tenant_id` — `ns-langgraph-agents` `references/user-memory.md` |
 | LLM gateway product | Shared control plane | Dedicated keys/quota | Product can share plane; keys tenant-scoped |
 
 ## Three rules

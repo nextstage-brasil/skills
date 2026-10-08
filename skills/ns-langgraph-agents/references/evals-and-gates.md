@@ -37,7 +37,7 @@ JSON planner hops: also assert `userFacingIntent` present, language matches last
 
 ## 3. Memory impact eval
 
-**Measures:** A/B memory on vs `MEMORY_DISABLED=1`.
+**Measures:** A/B memory on vs `USER_MEMORY_ENABLED=false`.
 
 | Metric | Meaning |
 | ------ | ------- |
@@ -45,7 +45,7 @@ JSON planner hops: also assert `userFacingIntent` present, language matches last
 | `decision_improvement` | Better action with memory |
 | `hallucination_from_memory` | False facts from stale memory |
 
-**When:** long-term or episodic memory enabled.
+**When:** long-term or episodic memory enabled. User memory: also run the deduce-and-inform cases in `references/user-memory.md` §7 (acknowledged in one line, no confirmation question, sensitive declined, company facts not stored, foreign id → 404).
 
 ## Suite format
 

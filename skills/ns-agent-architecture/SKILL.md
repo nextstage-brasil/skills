@@ -4,7 +4,7 @@ description: "(NS) Lock agent architecture ADR — LangGraph vs CrewAI, topology
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.24"
+  version: "1.25"
 depends:
   - ns-harness
   - ns-langgraph-agents
