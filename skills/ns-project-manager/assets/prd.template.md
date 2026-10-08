@@ -1,7 +1,7 @@
 <!--
 TEMPLATE METADATA (skill only — strip this whole comment from the final document)
 template: prd
-template_version: 1.2
+template_version: 2.0
 profiles: [small-feature, new-product, ai-data, client-project]
 
 FILL RULES
@@ -10,18 +10,18 @@ FILL RULES
 - [OPTIONAL]               omit the whole section when there is no sourced information.
 - <!-- prd-profile: X -->  include only when profile X is active.
 - <!-- hint: ... -->       fill instruction. Remove every HTML comment from the final document.
-- Missing required fact: write the gap token and add a row in Open questions.
-  English output: TO BE DEFINED. Portuguese output: A DEFINIR.
+- The PRD is a formal document for readers outside the conversation: references/prd-writing-standard.md.
+- Decisions are closed in chat first (references/decision-coverage.md). Every decided register row is rewritten into the RF it governs as complete requirement text (prd-writing-standard.md → From decisions to requirement text). Never paste question/answer pairs.
+- Gap token only in a Draft the human explicitly asked for: TO BE DEFINED (EN) / A DEFINIR (PT), plus one neutral §13 question.
 - Never invent metrics, dates, names, baselines, or priorities.
 - small-feature (default): sections 1, 2, 3, 4, 6, 11, 13, 14 only.
-  13 and 14 stay: they are required and they are where gaps and decisions go.
 - new-product: required sections plus any optional section that has sourced data, plus section 15.
 - ai-data: include section 9.
 - client-project: include section 10.
 - Section 16 (Glossary): any profile, only when the input uses domain terms an implementer could misread.
 - Profiles combine. Example: client project with AI = client-project + ai-data.
-- Stable ids: OBJ-NN (objectives), RF-NN (functional requirements), NFR-NN (non-functional), Q-NN (decisions — same ids as the decision register).
-- Decision coverage (references/decision-coverage.md) runs before filling. Readiness and Ready for build are computed from the register.
+- Stable ids: OBJ-NN (objectives), RF-NN (functional requirements), RN-NN.n (business rules), NFR-NN (non-functional), Q-NN (open questions, Draft only).
+- Never in the document: rounds, proposals, readiness, coverage, dimension codes, conflicts, blocking lists, budget/FP/hours, notes to the reader.
 -->
 
 # PRD: {product_or_feature_name}
@@ -30,8 +30,6 @@ FILL RULES
 |---|---|
 | **Owner (PM/PO)** | {owner} |
 | **Status** | {draft \| in review \| approved \| in development \| delivered} |
-| **Readiness** | {Draft \| Business-validated \| Dev-lens checked \| Frozen} — {n} open decisions |
-| **Ready for build** | {yes \| no — blocked by Q-NN} |
 | **Version** | {version_san} |
 | **Target release** | {date_or_milestone} |
 | **Last updated** | {YYYY-MM-DD} |
@@ -103,21 +101,36 @@ FILL RULES
      Every requirement has testable acceptance in Given / When / Then (Portuguese output: Dado / Quando / Então).
      Happy path plus at least one error or edge scenario (no permission, empty, invalid input, limit, duplicate) — only edges the input supports or the gap token.
      Then is observable (screen state, message, record, notification). Never "correctly" or "properly".
-     Supports = OBJ ids. Source = who or what in the input stated it. -->
+     Supports = OBJ ids only. No citations of chat rounds, earlier drafts, the budget or its features.
+     Structure and rules: references/prd-writing-standard.md → RF structure. Each RF must make sense to a reader outside the conversation. -->
 
-### RF-01: {title} — {P0 | P1 | P2 | gap token}
+### RF-01: {verb + object} — {P0 | P1 | P2}
 
 **Story:** As a {persona}, I want {action}, so that {benefit}.
 
-**Supports:** {OBJ-01} · **Source:** {stakeholder, transcript, ticket}
+**Actors:** {profiles that trigger, see, approve}
+**Trigger and preconditions:** {when it happens; what must already exist}
+
+**Behavior:**
+
+1. {what the system does, as the user observes it}
+
+**Business rules:**
+
+- **RN-01.1** {decided rule with exact values}
+
+**Exceptions:**
+
+- {condition} → {what the system does and shows}
+
+**Inputs and outputs:** {what the user provides; what the system records or exports}
 
 **Acceptance criteria:**
 
-- [ ] **Given** {context}, **when** {action}, **then** {expected_result}.
-- [ ] **Given** {error_or_edge_context}, **when** {action}, **then** {error_or_edge_behavior}.
+- [ ] **Given** {context with concrete data}, **when** {action}, **then** {observable result}.
+- [ ] **Given** {edge or error context}, **when** {action}, **then** {observable result}.
 
-**Business rules:** {rules_or_exceptions_or_gap_token}
-<!-- hint: write the answered decisions that govern this RF here (values and rounding, ties, partial, duplicates, defaults for existing customers, who may, undo, which date). A decision that lives only in §14 or in chat is missing. -->
+**Supports:** {OBJ-01}
 
 <!-- repeat the RF-NN block per in-scope capability -->
 
@@ -168,11 +181,10 @@ FILL RULES
 
 <!-- prd-profile: client-project -->
 
-<!-- hint: not a commercial quote. Money, hours, and FP stay in commercial-budget mode. Here, only what the input already states. -->
+<!-- hint: not a commercial quote. No money, hours, FP or budget references in the PRD. -->
 
 - **Client and approvers:** {names, roles}
 - **Contract assumptions:** {fixed scope, hours, SLA — sourced only}
-- **Budget / estimate:** {stated figure or range, else gap token}
 - **Client acceptance:** {milestones and approval conditions}
 
 ---
@@ -207,31 +219,13 @@ FILL RULES
 
 ## 13. Open questions [REQUIRED]
 
-<!-- hint: every gap token in the sections above, and every open or assumed coverage dimension, gets one row here.
-     Recommended = the proposed answer (never empty; closed options when no single default is defensible).
-     Blocks = RF/OBJ ids that cannot be built or measured until answered; "—" when none.
-     Any open or assumed row that blocks an in-scope RF sets "Ready for build" to "no". Answered rows move to §14. -->
+<!-- hint: Approved PRD: write "None." (PT: "Nenhuma.").
+     Draft the human explicitly asked for: one row per gap token, written as a neutral question.
+     No recommendations, no blocking tiers, no dimension codes, no conflicts, no analysis status. Those stay in chat. -->
 
-| ID | Dim | Question | Recommended | Blocks | Owner | Status |
-|---|---|---|---|---|---|---|
-| Q-01 | {D1–D14} | {question} | {proposal} | {RF-01 \| OBJ-01 \| —} | {who decides} | {open \| assumed} |
-
-**Conflicts**
-
-<!-- hint: omit when there are none. Two statements from the source or from different rounds that disagree. -->
-
-| ID | Statement A | Statement B | Recommended | Status |
-|---|---|---|---|---|
-| C-01 | {text (source)} | {text (source)} | {proposal} | open |
-
-**Decision coverage**
-
-<!-- hint: one row per in-scope RF. Cell = ✓ (answered) · n/a: {reason} · Q-NN (open or assumed). Never blank. Drop D13 column when no automation/AI is in scope.
-     small-feature: keep only the dimensions the change touches; one line "Other dimensions n/a: {reason}". -->
-
-| RF | D1 Plan | D2 Roles | D3 Defaults | D4 Config | D5 Values | D6 Exceptions | D7 Inputs | D8 Time | D9 Output | D10 Lifecycle | D11 Blast radius | D12 Data | D13 AI | D14 Priority |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| RF-01 | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} |
+| ID | Question | Affects | Owner |
+|---|---|---|---|
+| Q-01 | {neutral question} | {RF-01} | {who decides} |
 
 ---
 
@@ -239,9 +233,11 @@ FILL RULES
 
 **Decisions**
 
-| ID | Date | Decision | Reason | Decided by |
-|---|---|---|---|---|
-| Q-NN | {date} | {decision} | {reason} | {person} |
+<!-- hint: log only. Each decision is already written inside the RF it governs. No round numbers, no proposals. -->
+
+| Date | Decision | Affects | Decided by |
+|---|---|---|---|
+| {date} | {decision} | {RF-01} | {person or role} |
 
 **Approvals**
 

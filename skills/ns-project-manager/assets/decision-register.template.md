@@ -4,8 +4,8 @@ template: decision-register
 template_version: 1.0
 Protocol: references/decision-coverage.md
 - One register per version: docs/versions/{version_san}/pm/decision-register.md
-- Same Q-NN ids as the chat batch, PRD §13/§14, and commercial budget Premissas.
-- Update every round. PRD and budget render from this file; on conflict, this file wins.
+- Same Q-NN ids as the chat batch. Source of the PRD's decisions: every decided row is rewritten into the PRD as requirement text, never pasted as question/answer.
+- Update every round. PRD and budget are generated from the decisions here; on conflict, this file wins.
 - Translate headings and labels to the human's language. Ids and D1–D14 stay as-is.
 -->
 

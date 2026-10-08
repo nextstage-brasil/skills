@@ -37,6 +37,11 @@ Scan input before any User Story. Each hit: flag `[ANTI-PATTERN: type]` inline; 
 **Problem:** development returns dozens of business questions. Every one of them should have been asked before handoff.
 **Action:** run `references/decision-coverage.md`. Readiness comes from the register, not from how finished the document looks.
 
+## PRD as meeting minutes
+**Example:** "Blocks the start of Phase 1: C3, C4, C6. The others can be confirmed during the build." / "The budget must be recounted based on this PRD." / "Source: previous PRD §6.1; Feature 001 of the budget".
+**Problem:** the PRD is the formal reference for build and homologation. Its readers were not in the conversation. Process notes, analysis status and references to other working artifacts confuse them and leave the decisions unstated.
+**Action:** close decisions in chat, then write each one as a requirement. Run the forbidden-content and outside-reader checks in `references/prd-writing-standard.md`.
+
 ## Text-only ambiguity scan
 **Example:** the analyst checks each sentence for vague words but never asks who configures, what current customers get by default, or what happens on a tie.
 **Problem:** what nobody wrote is never asked.

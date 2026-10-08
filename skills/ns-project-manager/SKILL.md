@@ -12,7 +12,7 @@ provides:
 consumes: []
 metadata:
   author: nextstage-brasil
-  version: "1.4"
+  version: "1.5"
 depends:
   - ns-harness
 ---
@@ -83,7 +83,7 @@ Close: one line — paste input or pick row.
 
 **Triple productivity schedule (FP × h/FP, P100/P85/P50):** `references/ns-delivery-schedule/workflow.md`. Phase 5 = story-level PERT only.
 
-**PRD:** `references/14-prd.md` + `assets/prd.template.md`. Lean version PRD (required vs optional sections, profile `small-feature` by default). Acceptance criteria on each `RF-NN`. Persist `docs/versions/{version_san}/pm/prd.md`. Not Phase 2 `01-requirements.md`. Not SDD `requirements.md`.
+**PRD:** `references/14-prd.md` + `references/prd-writing-standard.md` + `assets/prd.template.md`. Formal reference document for build and homologation, written for readers outside the conversation. Decisions are closed in chat first, then written as requirements. No process, analysis status or budget content inside the document. Profile `small-feature` by default. Acceptance criteria on each `RF-NN`. Persist `docs/versions/{version_san}/pm/prd.md`. Not Phase 2 `01-requirements.md`. Not SDD `requirements.md`.
 
 **Version handoff card:** `references/12-version-handoff.md`. On-demand like commercial-budget — not pipeline phase 6+.
 
@@ -197,7 +197,7 @@ Rules:
 - Layer execution order always from DAG (`dag_order.py`); RICE/WSJF requires activity list with effort + Phase 1 OKR — never on version narrative alone.
 - Never dump multiple pipeline phases one response.
 - No gold plating: every output line traces input or prior phase.
-- Close analytical drafts with human-language equivalent of: "⚠️ Requires human review before entering a sprint."
+- Close analytical drafts **in chat** with human-language equivalent of: "⚠️ Requires human review before entering a sprint." Never inside a PRD.
 - Always **Language matching** for user-facing output.
 
 ## File index
@@ -209,6 +209,7 @@ Rules:
 | `references/anti-patterns.md` | 2 (helper) |
 | `references/02-prioritization.md` | 3 |
 | `references/14-prd.md` | PRD |
+| `references/prd-writing-standard.md` | PRD — formal voice, RF structure, forbidden content, outside-reader check |
 | `assets/prd.template.md` | PRD |
 | `references/12-version-handoff.md` | version handoff |
 | `assets/version-handoff.template.md` | version handoff |

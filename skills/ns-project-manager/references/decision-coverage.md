@@ -111,18 +111,19 @@ Rules:
 One register per version. It is the single source of truth that every PM artifact renders from.
 
 - Persist: `docs/versions/{version_san}/pm/decision-register.md` (template `assets/decision-register.template.md`) when persistence is on. Chat-only: keep the same tables in the reply.
-- Ids: `Q-NN` decisions (the same id in the chat batch, the register, PRD §13 / §14 and the budget's Premissas), `C-NN` conflicts.
+- Ids: `Q-NN` decisions (the same id in the chat batch and the register), `C-NN` conflicts.
 - Update it **every round**. The PRD and the budget never contradict the register. When they differ, the register wins and the artifact is regenerated.
+- The register is the **source** of the PRD's decisions. Every decided row must end up in the PRD, rewritten as requirement text (`prd-writing-standard.md` → From decisions to requirement text). Its mechanics (Q/C ids, dimension codes, statuses, readiness, rounds, proposals) never appear in the PRD.
 
 ## Step 6 — Developer-lens self-check (before every gate)
 
-Before you present a PRD, a budget or a handoff:
+Before you present a PRD, a budget or a handoff (for a PRD, also `prd-writing-standard.md` → Outside-reader check):
 
 1. Reread the artifact as the developer who must implement each RF / Feature tomorrow, without access to the chat.
 2. Write down every question that developer would ask.
 3. Classify each one:
    - **Business**: back to Step 4 as a proposal. The artifact stays Draft.
-   - **Answered only in chat**: write the decision into the artifact (RF business rules, acceptance, §14). A decision missing from the document counts as missing.
+   - **Answered only in chat**: write the decision into the artifact (in a PRD: the RF's business rules, exceptions and acceptance). A decision missing from the document counts as missing.
    - **Technical**: leave it to engineering. Do not ask the business.
 4. Report one line in chat: `Developer lens: {n} business questions surfaced (Q-…), {m} technical left to engineering.`
 
@@ -153,7 +154,7 @@ Trigger: the human pastes a list of questions from developers, QA or the client 
 2. Already decided? Answer with the artifact section and the `Q-NN`. If the artifact did not state it explicitly, fix the artifact.
 3. Not decided? Convert it into a proposal (Step 4) and add it to the register.
 4. Report the coverage miss in one table: dimension → number of returned questions. That is the skill's defect metric for this version.
-5. Readiness goes back to **Draft** until the new items close.
+5. The register's readiness goes back to **Draft** until the new items close. Once they close, regenerate the PRD with the decisions written into the affected RFs. The PRD never mentions that questions were returned.
 
 ## What not to do
 
