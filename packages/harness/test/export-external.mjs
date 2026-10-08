@@ -20,9 +20,10 @@ try {
     zip: false,
   });
 
-  assert(result.skills.length === 2, `expected 2 skills, got ${result.skills.join(',')}`);
+  assert(result.skills.length === 3, `expected 3 skills, got ${result.skills.join(',')}`);
   assert(result.skills.includes('ns-project-manager'), 'missing ns-project-manager');
   assert(result.skills.includes('ns-agent-architecture'), 'missing ns-agent-architecture');
+  assert(result.skills.includes('ns-requirements-enricher'), 'missing ns-requirements-enricher');
 
   const errors = validateExternalDir(outDir);
   assert(errors.length === 0, errors.join('\n'));
@@ -52,6 +53,13 @@ try {
   assert(architectMd.includes('Standalone import'), 'standalone delivery note missing');
   assert(existsSync(join(architectDir, 'references', 'reference-architecture.md')), 'reference-architecture.md missing');
   assert(!existsSync(join(architectDir, 'evals')), 'evals must not export');
+
+  const enricherDir = join(outDir, 'ns-requirements-enricher');
+  const enricherMd = readFileSync(join(enricherDir, 'SKILL.md'), 'utf8');
+  assert(enricherMd.includes('references/session-boot.md'), 'enricher session-boot path not rewritten');
+  assert(!enricherMd.includes('ns-harness'), 'enricher still references ns-harness');
+  assert(existsSync(join(enricherDir, 'references', 'session-boot.md')), 'vendored session-boot.md missing');
+  assert(!existsSync(join(enricherDir, 'evals')), 'enricher evals must not export');
 
   console.log('export-external smoke ok');
 } finally {

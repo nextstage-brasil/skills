@@ -103,6 +103,7 @@ Standalone Claude export (zip, no harness coupling):
 cd packages/harness && npm run export:external
 # → dist/external/ns-project-manager.zip
 # → dist/external/ns-agent-architecture.zip
+# → dist/external/ns-requirements-enricher.zip
 ```
 
 ### Frontend reverse prototyping
@@ -361,7 +362,7 @@ Do **not** put `init` after flags (`--source … init` is invalid). `init` is th
 cd packages/harness
 npm install
 npm test
-npm run export:external   # maintainer: dist/external/*.zip (PM + architect)
+npm run export:external   # maintainer: dist/external/*.zip (PM + architect + enricher)
 ```
 
 ## Release (CI)

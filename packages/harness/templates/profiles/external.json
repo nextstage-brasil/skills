@@ -2,6 +2,16 @@
   "excludeDirs": ["evals"],
   "stripFrontmatterKeys": ["requires_harness", "depends", "provides", "consumes"],
   "nestedSkillMdName": "workflow.md",
-  "vendor": [],
-  "rewrites": []
+  "vendor": [
+    {
+      "from": "skills/ns-harness/references/session-boot.md",
+      "into": "ns-requirements-enricher/references/session-boot.md"
+    }
+  ],
+  "rewrites": [
+    {
+      "from": "../../ns-harness/references/session-boot.md",
+      "to": "references/session-boot.md"
+    }
+  ]
 }
