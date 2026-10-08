@@ -18,6 +18,7 @@ Not beside SDD artifacts under `sdd/`. Create `pm/` if missing.
 | PERT configs | `docs/versions/{version_san}/pm/pert-config-p100.json` (and p85 / p50) |
 | PM execution handoff (version card) | `docs/versions/{version_san}/pm/execution-handoff.md` |
 | PRD (version requirements + acceptance) | `docs/versions/{version_san}/pm/prd.md` |
+| Decision register (coverage, Q-NN, conflicts, readiness) | `docs/versions/{version_san}/pm/decision-register.md` |
 
 ## SDD subtree — excluded from misplaced search
 

@@ -3,6 +3,7 @@
 **Sequência:** `{seq}`  
 **Gerado em:** `{generated_at}`  
 **Versão / referência:** `{version_san}-costumer`  
+**Status da estimativa:** `{provisória — N decisões em aberto podem alterar PF/horas (Q-…) | firme}`  
 **Idioma:** PT-BR
 
 ---

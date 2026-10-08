@@ -1,12 +1,17 @@
 # Clarification (commercial budget)
 
-Ask only what blocks a credible client budget (Features + Function Points + hours + macro table + risk margins). Do not ask which FP method (default APF: IFPUG CPM latest, SISP only when CPM does not cover) or whether to add COSMIC; include CFP only if the human already asked. Batch questions — no drip one-at-a-time across turns.
+Two kinds of questions, asked in the same batch:
+
+1. **Budget context** (question bank below): what a credible budget needs (Features + Function Points + hours + macro table + risk margins). Do not ask which FP method (default APF: IFPUG CPM latest, SISP only when CPM does not cover) or whether to add COSMIC; include CFP only if the human already asked.
+2. **Product decisions**: the coverage scan in `../../decision-coverage.md` (D1–D14 per Feature + rule probes + cross-round detectors). A budget is also a scope contract. Every decision left open here comes back later as a developer question and as rework on the estimate.
+
+Batch questions. No drip, one at a time, across turns.
 
 ## Limits
 
-- **Max 5 questions** in first clarification message.
-- **Max 1 follow-up round** (again ≤5 questions, only blockers that appeared after answers).
-- If human says `proceed with assumptions` / `quick mode`: skip further questions; mark gaps in document.
+- **Budget context:** max 5 questions in the first message; max 1 follow-up round (again ≤5, only new blockers).
+- **Product decisions:** no fixed cap. Every question carries a recommended answer, so the human reviews instead of writing (`decision-coverage.md` Step 4). One batch per round with every open item; when there are more than 30, send the most blocking first and give the remaining count.
+- `proceed with assumptions` / `quick mode`: stop asking. Context gaps → `[LACUNA]` / `[ASSUMPTION]`. Open decisions → `assumed` in the register, and the estimate stays **provisional** (`decision-coverage.md` → Provisional estimate seal).
 
 ## Prefer answers already in prompt **or product context**
 
@@ -38,3 +43,11 @@ Do **not** invent rates. The Floripa suggestion is an offer, not a silent fill. 
 ## After answers
 
 Map into Premissas / ressalvas, Feature boundaries, hours productivity premise (cite team experience **and** reverse-spec/map reuse signals). Unanswered blockers become `[LACUNA: …]` or `[ASSUMPTION: …]` — never silent invention (`anti-hallucination.md`).
+
+Update the decision register every round and run the contradiction detector against all earlier rounds. Answered decisions go into the Feature they govern (**Regras**, **Limites desta entrega**, Critérios), not only into Premissas.
+
+## Rounds and readiness
+
+- A new round re-reads every earlier answer. A new answer that contradicts an old one opens a `C-NN` conflict. Ask which one wins; do not pick silently.
+- Never call the scope "congelado", "fechado" or "sem pendências" unless the register says Frozen (`decision-coverage.md` → Readiness states).
+- The chat summary at each round states: open decisions, open conflicts, unapproved assumptions, and the estimate status (provisional / firm).

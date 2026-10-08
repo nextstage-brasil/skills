@@ -26,6 +26,7 @@ Safety margin % grounded in explicit risks — never silent round-up.
 | Driver | Higher margin |
 |--------|---------------|
 | Many `[LACUNA]` / vague scope | ↑ |
+| Open or assumed product decisions in the register (provisional estimate) | ↑ |
 | No reverse-spec / brownfield map | ↑ |
 | Greenfield or unknown modules | ↑ |
 | Junior / low product tenure | ↑ |

@@ -25,6 +25,14 @@ Data from prior phases only — never invent:
 
 Missing sprint map or forecast dates: field = `—`. Never fabricate.
 
+**Decision gate.** Read `docs/versions/{version_san}/pm/decision-register.md` when present (`references/decision-coverage.md`). Any `open` / `assumed` decision or open `C-NN` conflict that blocks an in-scope capability means the card is **not ready for execution**:
+
+- Say so in the first line of the output, with the blocking Q / C ids.
+- Send the proposal batch for those items.
+- Do not label the card "ready", "frozen" or "congelado".
+
+No register and no PRD: run the coverage scan on the scope you have before filling the card.
+
 ## Workflow
 
 1. Resolve `version_san` from user or `docs/versions/`.
@@ -43,3 +51,4 @@ Filled handoff markdown matching template sections. Gate: "Confirm handoff card,
 - Generate only from existing phase outputs — no invented sprints, dates, or scope.
 - Layer order always from Phase 3 DAG — never RICE-only order on dependent pipeline.
 - No mutation of spec-driven `sdd/execution-handoff.md`.
+- Execution never starts on open business decisions. Developers should receive decisions, not questions.

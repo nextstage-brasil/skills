@@ -39,11 +39,16 @@ Example:
 
 Same message: ask where save markdown artifacts — `references/11-artifact-persistence.md` (default `docs/<project-slug>/`, or "skip docs" = chat-only).
 
+## Product decisions (version or multi-capability scope)
+
+The checklist above covers **delivery context**. It does not cover the **product decisions** developers will need. When the input is a version, an epic or more than one capability, also run the coverage scan in `references/decision-coverage.md` (dimensions D1–D14 + rule probes) in the same batch. A single small change only uses the dimensions it touches.
+
 ## How to ask
 
-- Batch **5–7 numbered questions** one message — no drip.
+- Context checklist: batch **5–7 numbered questions** in one message. No drip.
+- Product decisions: every question carries a **recommended answer** (`decision-coverage.md` Step 4). No open "how should X work?".
 - Frame why: "Need OKR to anchor Phase 3 prioritization — without it, ranking = opinion."
-- Max **2 rounds** follow-up on still-ambiguous points.
+- Context checklist: max **2 rounds** of follow-up. Product decisions: keep asking only what is still open; never re-ask answered items. Answered items move to the register.
 
 ## Exit criteria
 
@@ -53,6 +58,8 @@ Advance Phase 2 only when:
 2. User say **"proceed with assumptions"** / **"skip questions"** / **"quick mode"**.
 
 Gaps: mark `[ASSUMPTION: …]` inline — never silent invent.
+
+Moving on to Phase 2 does **not** close product decisions. Items still `open` or `assumed` stay in the register (`decision-coverage.md` Step 5). They block **Ready for build**, not structuring.
 
 ## Quick mode shortcut
 
@@ -67,3 +74,4 @@ User ask "quick mode" or "just the stories":
 - No dump all 5 pipeline phases one response.
 - No block forever — 2 rounds max, then offer "proceed with assumptions."
 - No infer template answers from raw transcript alone — transcript may *suggest* OKR/constraint; confirm explicit before Phase 3 scoring.
+- No scanning only the text for ambiguity. What nobody wrote down (plan, roles, defaults for existing customers, rounding, ties, calendar, export of unreviewed items, undo, data privacy, priority) is still a decision to ask about.

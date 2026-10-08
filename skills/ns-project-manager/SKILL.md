@@ -1,6 +1,6 @@
 ---
 name: ns-project-manager
-description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; PRD (product discovery doc); product/project roadmap (multi-version); version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial, preço do ponto de função, quanto custa o PF; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, roadmap, roadmap do projeto, roadmap de produto, PRD, product requirements document, documento de requisitos de produto, versões entregues/planejadas, orçamento, cotação, cronograma, handoff, fecha a versão, valor do PF, não sei o preço do ponto de função — even if PM unnamed. Do NOT use for coding, SDD requirements.md, GitLab issue execution, or `/ns-requirements-enricher`."
+description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; PRD (product discovery doc); product/project roadmap (multi-version); version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial, preço do ponto de função, quanto custa o PF; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, roadmap, roadmap do projeto, roadmap de produto, PRD, product requirements document, documento de requisitos de produto, versões entregues/planejadas, orçamento, cotação, cronograma, handoff, fecha a versão, valor do PF, não sei o preço do ponto de função, dúvidas do dev, perguntas da equipe sobre o PRD — even if PM unnamed. Do NOT use for coding, SDD requirements.md, GitLab issue execution, or `/ns-requirements-enricher`."
 license: Apache-2.0
 requires_harness: ">=1.0.0"
 provides:
@@ -12,7 +12,7 @@ provides:
 consumes: []
 metadata:
   author: nextstage-brasil
-  version: "1.3"
+  version: "1.4"
 depends:
   - ns-harness
 ---
@@ -32,6 +32,7 @@ Gated PM pipeline (Phases 0–5) + on-demand modes (6+). One phase per turn unle
 | Version narrative, no activity list — "sequence the version", epic deps only | **3** DAG-only sequencing (no RICE) | `references/02-prioritization.md` narrative path |
 | "PRD", "product requirements document", "documento de requisitos de produto" | **prd** | `references/14-prd.md` |
 | "card de versão", "handoff", "fecha a versão", "o que entregar para execução", version card | **version-handoff** | `references/12-version-handoff.md` |
+| Pasted questions from developers / QA / client after a PRD, budget or handoff ("dúvidas do dev", "the team asked") | **decision feedback** | `references/decision-coverage.md` → Feedback mode |
 | "product roadmap", "roadmap de produto", "roadmap do projeto", "roadmap consolidado" / "consolidated roadmap", bare "roadmap" (product/project), multi-version / icebox | **product-roadmap** | `references/13-product-roadmap.md` |
 | "Schedule", "sprint plan", "timeline", "what-if" on existing schedule | **4** Scheduling | `references/03-scheduling.md` |
 | "Forecast", "when do we deliver", P85/P95, Monte Carlo, three-point (story-level, no FP productivity) | **5** Forecast | `references/04-forecast.md` |
@@ -87,6 +88,16 @@ Close: one line — paste input or pick row.
 **Version handoff card:** `references/12-version-handoff.md`. On-demand like commercial-budget — not pipeline phase 6+.
 
 **Product roadmap (multi-version):** `references/13-product-roadmap.md` + `assets/product-roadmap.template.md`. On-demand. Persist `docs/roadmap.md` (repo root under `docs/`, not project-slug). Not SDD `version-roadmap.md`.
+
+## Decision coverage (mandatory before any handoff artifact)
+
+A PM artifact is ready when development has **no business questions left**, not when it looks finished. Before every PRD, every non-provisional commercial budget and every version handoff, and at Phase 1 exit for a version scope, run `references/decision-coverage.md`:
+
+1. **Coverage scan.** Walk dimensions D1–D14 for each in-scope capability (plan and consumption, roles, defaults for existing customers, configuration level, value rules, exceptions, customer inputs, time and calendar, output, lifecycle and undo, blast radius, data and privacy, AI behavior, priority), including what the input never mentions.
+2. **Rule probes.** For each business rule, ask the ten developer-lens probes (empty, tie, partial, duplicate, who may, default, undo, user ignores it, which date, where else).
+3. **Proposals.** Every question carries a recommended answer. No open "how should it work?".
+4. **Register.** Keep `Q-NN` decisions and `C-NN` conflicts across rounds; detect contradictions between rounds.
+5. **Readiness.** Draft → Business-validated → Dev-lens checked → Frozen. Never write "frozen", "congelado" or "sem pendências", and never mark an estimate firm, below the matching state.
 
 ## Phase 0 — Intake
 
@@ -179,6 +190,8 @@ Rules:
 ## Global behavioral constraints
 
 - Never invent stakeholders, systems, integrations, SLAs, metrics not in input.
+- Never ask a product-decision question without a recommended answer. Never treat silence in the input as "not applicable".
+- Never declare scope frozen or an estimate firm while the decision register has open items, assumed items or conflicts.
 - Never infer team/capacity, backlog effort, three-point — send fill-in (`references/0N-*.md`), stop.
 - Never compute RICE, WSJF, DAG order, Monte Carlo, flow metrics, OKR rubric in LLM — run script (`rice_wsjf.py`, `dag_order.py`, etc.).
 - Layer execution order always from DAG (`dag_order.py`); RICE/WSJF requires activity list with effort + Phase 1 OKR — never on version narrative alone.
@@ -210,6 +223,8 @@ Rules:
 | `references/09-nl-to-workflow.md` | 10 |
 | `references/10-okr-aligner.md` | 11 |
 | `references/11-artifact-persistence.md` | all (docs/) |
+| `references/decision-coverage.md` | Phase 1 exit, PRD, commercial budget, handoff, dev-question feedback |
+| `assets/decision-register.template.md` | decision register (`pm/decision-register.md`) |
 | `references/pm-persist.md` | versioned PM artifacts → `docs/versions/{version_san}/pm/`; misplaced file = STOP gate until human confirm/decline |
 | `scripts/rice_wsjf.py` | 3 |
 | `scripts/dag_order.py` | 3 |

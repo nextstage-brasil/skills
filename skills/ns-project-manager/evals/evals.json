@@ -5,109 +5,246 @@
       "id": 1,
       "prompt": "Here's the transcript of our discovery call for the RouteWise fleet management project. Turn this into structured requirements: 'Carlos: we need the system to alert dispatchers in real time when a driver exceeds the speed limit. Marcus: sure, we can pull that from the GPS trackers. Carlos: also we want a monthly maintenance report and predictive maintenance eventually. Priya: predictive maintenance needs an accelerometer sensor we don't have yet, lead time is 60 days.'",
       "expected_output": "Does NOT dump all pipeline phases. Opens Phase 1 Clarification with batched questions about OKR/business objective, scale, deadline pressure, and stakeholders. Does not produce Domain Map or User Stories yet.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Opens Phase 1 Clarification (not full Domain Map / User Stories dump)",
+        "Asks batched questions covering OKR/objective, scale, deadline, stakeholders",
+        "Does not produce Domain Map or User Stories yet"
+      ]
     },
     {
       "id": 2,
       "prompt": "OKR: reduce fleet incident response time by 30% by Q3. 200 dispatchers, LGPD applies, MVP deadline September. Now prioritize this backlog by reason not gut feeling: US-01 speed alerts (reach 200, impact high, 8d), US-02 maintenance report (reach 50, impact medium, 3d), US-03 predictive maintenance (reach 200, impact high, blocked by hardware — depends on US-01 data pipeline, 6d).",
       "expected_output": "Runs Phase 3: builds JSON input, calls rice_wsjf.py then dag_order.py (or shows script chain), produces RICE/WSJF tables anchored to declared OKR plus DAG Mermaid, layer table, topological order. US-03 (predictive maintenance) appears after US-01 in final order because of hardware/data dependency — not RICE rank alone. Ends with gate question before scheduling — does not jump to sprint plan or forecast.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Runs or shows rice_wsjf.py then dag_order.py (script chain)",
+        "Produces RICE/WSJF tables anchored to OKR",
+        "Produces DAG Mermaid + layer/topological order",
+        "US-03 appears after US-01 due to dependency (not RICE alone)",
+        "Ends with gate before scheduling (no sprint/forecast jump)"
+      ]
     },
     {
       "id": 3,
       "prompt": "We've confirmed the backlog ranking. Team of 3 devs, 2-week sprints, 65% capacity. Run the full pipeline through forecast for US-01 (O=2,M=3,P=5 weeks), US-02 (O=1,M=2,P=4), US-03 blocked until week 9. When do we deliver?",
-      "expected_output": "Runs Phases 4 then 5 sequentially (with gate between them if not told to skip). Calls pert_montecarlo.py. States P85 explicitly as the committed delivery date. Does not also produce status report or risk monitor.",
-      "files": []
+      "expected_output": "Phase 4 hard-data rule (references/03-scheduling.md): the prompt gives only team size, sprint length and capacity %, with no per-person role/hours and no total duration, so the skill sends the Phase 4 fill-in template and stops. It acknowledges what was given and does not re-ask it, does not invent hours, and does not run Phase 5 or pert_montecarlo.py in this turn. Follow-up turn (human fills the template): schedules respecting US-03 blocked until week 9, gates, then Phase 5 runs pert_montecarlo.py and states P85 as the committed date. No status report or risk monitor.",
+      "files": [],
+      "assertions": [
+        "Runs Phase 4 then Phase 5 (or sequential with gate)",
+        "Calls or uses pert_montecarlo.py",
+        "States P85 as committed delivery date",
+        "Does not also produce status report or risk monitor"
+      ]
     },
     {
       "id": 4,
       "prompt": "Here's today's sprint review transcript — just give me the action items: 'Ana: the API timeout fix shipped. Bruno: we still need QA sign-off on the export feature before Friday. Carlos: client asked to move the demo to next Tuesday.'",
       "expected_output": "Triggers Phase 8 Meeting Digest directly — action table with owners/deadlines from transcript, no re-run of clarification or structuring phases.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Triggers Meeting Digest / action items path directly",
+        "Action table with owners and deadlines from transcript",
+        "Does not re-run clarification or structuring phases"
+      ]
     },
     {
       "id": 5,
       "prompt": "Write a status report for the board — sprint 4, 8 of 10 stories delivered, 3 bugs opened 1 resolved, velocity dropped 2 sprints in a row, hardware blocker on US-03 still unresolved.",
       "expected_output": "Triggers Phase 7 Status Report — three audience-specific reports from the same data. Managerial report shows Red status. Executive report has no story points or velocity jargon.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Produces three audience-specific status reports",
+        "Managerial report shows Red status",
+        "Executive report avoids story points / velocity jargon"
+      ]
     },
     {
       "id": 6,
       "prompt": "quick mode: 'the app should be more secure and give users a good experience when uploading files of any type'",
       "expected_output": "Skips full clarification — marks missing context as [ASSUMPTION]. Produces only User Stories + Open Questions + GitLab cards. Flags anti-patterns for unverifiable outcome and infinite scope. Does not proceed to prioritization without a gate.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Marks missing context as [ASSUMPTION] (quick mode)",
+        "Produces User Stories + Open Questions (+ GitLab cards)",
+        "Flags anti-patterns (unverifiable outcome / infinite scope)",
+        "Does not proceed to prioritization without a gate"
+      ]
     },
     {
       "id": 7,
       "prompt": "We've confirmed the backlog ranking (US-01, US-02, US-03). Build the sprint schedule.",
       "expected_output": "Does NOT infer team size, capacity, or sprint length from the backlog. Sends the Phase 4 fill-in template from references/03-scheduling.md (team composition, capacity %, sprint length, duration) and stops — no schedule is produced until the template is filled, even though 'quick mode' shortcuts exist elsewhere in the pipeline.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Does not invent team size, capacity, or sprint length",
+        "Sends Phase 4 fill-in template and stops",
+        "No schedule produced"
+      ]
     },
     {
       "id": 8,
       "prompt": "Discovery transcript for project RouteWise: [...]. Also, save everything as markdown as we go.",
       "expected_output": "Confirms the docs base folder (default docs/routewise/) once in Phase 1. After the Phase 1 gate, writes docs/routewise/00-clarification.md with the same content as the chat summary before asking the gate question. Does not write or rewrite docs/roadmap.md (or docs/routewise/roadmap.md). Does not re-ask about the docs path in later phases.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Confirms docs base folder (default docs/routewise/) in Phase 1",
+        "Writes docs/routewise/00-clarification.md after Phase 1 content",
+        "Does not write docs/roadmap.md"
+      ]
     },
     {
       "id": 9,
       "prompt": "Escreve um status report para a diretoria — sprint 4, 8 de 10 stories entregues, 3 bugs abertos 1 resolvido, velocity caiu 2 sprints seguidos, bloqueio de hardware no US-03 ainda aberto.",
       "expected_output": "Triggers Phase 7 Status Report. All three audience reports and the chat reply are in Portuguese (matching the human). Executive report has no story-points/velocity jargon. Managerial report shows Red. Does not reply in English.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "All three audience reports and chat reply in Portuguese",
+        "Executive report has no story-points/velocity jargon",
+        "Managerial report shows Red",
+        "Does not reply in English"
+      ]
     },
     {
       "id": 10,
       "prompt": "Preciso de um orçamento comercial para uma API de consulta de cadastros: autenticação, busca por documento, histórico de consultas e exportação CSV. Versão orcamento-api-consulta-v1. Pode gravar em docs.",
-      "expected_output": "Reads references/ns-commercial-budget/workflow.md, objective-structure.md, feature-description-structure.md, technical-notes.md, sales-value-speech.md, and pm-persist.md when persisting. Objetivo principal uses three subsections (O que buscamos, O que é, O que entregamos with Resultado esperado) per objective-structure.md — same text in internal and client export. Client Feature Descrição detalhada uses 1–3 contract blocks (Objeto e condições / Regras / Limites desta entrega) with bullets starting **lead term:** — never a run-on paragraph or tutorial; internal Descrição is compact with the same facts (feature-description-structure.md). Critérios de aceite are signed checks, not a copy of Descrição. Notas técnicas only in internal when technical source exists (after Features, before RNFs); omitted when no source; never in client export. Clarifies with ≤5 questions. Does not ask FP method. Does not ask who to pitch to as if the operator were the addressee. Writes docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md with APF statement (IFPUG CPM latest; SISP only if CPM does not cover), type of count, application boundary, and UFP origem including screen/consulta functions. If the same file already exists at the version root, STOP gate: searches the repo for references, proposes from-path → pm/, asks explicit confirm/decline, ends the turn — does not write, move, delete, or silent-move until the human answers that gate (`proceed`/assumptions/silence are not confirmation). Client {version_san}-commercial-budget-costumer.md (if emitted) is under the same pm/ folder and has Valor agregado after Objetivo addressed to the decision-maker, only four headings (Headline de valor, Parágrafo de valor agregado, Ganhos concretos esperados, Possíveis objeções + resposta sugerida); no extra subsections (no Resumo executivo / Por que esta cotação); paragraph 120–180 words, no bullets; headline is organizational gain not quote framing; gains are measurable ranges (not raw scope facts); objections are trust/overlap/permission not quote theater; no CPM/SISP types, complexity, or UFP; FP table with Esforço (h) and Custo (R$) (dashes when productivity/rates missing); same Total PF and hours as internal. No COSMIC/CFP (user did not ask). No invented R$. No tasks/SDD.",
-      "files": []
+      "expected_output": "Reads references/ns-commercial-budget/workflow.md, objective-structure.md, feature-description-structure.md, technical-notes.md, sales-value-speech.md, and pm-persist.md when persisting. Objetivo principal uses three subsections (O que buscamos, O que é, O que entregamos with Resultado esperado) per objective-structure.md — same text in internal and client export. Client Feature Descrição detalhada uses 1–3 contract blocks (Objeto e condições / Regras / Limites desta entrega) with bullets starting **lead term:** — never a run-on paragraph or tutorial; internal Descrição is compact with the same facts (feature-description-structure.md). Critérios de aceite are signed checks, not a copy of Descrição. Notas técnicas only in internal when technical source exists (after Features, before RNFs); omitted when no source; never in client export. Clarifies with ≤5 questions. Does not ask FP method. Does not ask who to pitch to as if the operator were the addressee. Writes docs/versions/{version_san}/pm/{version_san}-commercial-budget-internal.md with APF statement (IFPUG CPM latest; SISP only if CPM does not cover), type of count, application boundary, and UFP origem including screen/consulta functions. If the same file already exists at the version root, STOP gate: searches the repo for references, proposes from-path → pm/, asks explicit confirm/decline, ends the turn — does not write, move, delete, or silent-move until the human answers that gate (`proceed`/assumptions/silence are not confirmation). Client {version_san}-commercial-budget-costumer.md (if emitted) is under the same pm/ folder and has Valor agregado after Objetivo addressed to the decision-maker, only four headings (Headline de valor, Parágrafo de valor agregado, Ganhos concretos esperados, Possíveis objeções + resposta sugerida); no extra subsections (no Resumo executivo / Por que esta cotação); paragraph 120–180 words, no bullets; headline is organizational gain not quote framing; gains are measurable ranges (not raw scope facts); objections are trust/overlap/permission not quote theater; no CPM/SISP types, complexity, or UFP; FP table with Esforço (h) and Custo (R$) (dashes when productivity/rates missing); same Total PF and hours as internal. No COSMIC/CFP (user did not ask). No invented R$. No tasks/SDD. First turn is the clarify gate: ≤5 budget-context questions (no FP-method question) plus product-decision proposals with recommended answers, decision-register.md written under pm/ with Readiness Draft, and no budget file yet. When the human then says 'proceed with assumptions', the budget is written with header 'Status da estimativa: provisória' listing the open decision ids while product decisions (D1–D14 per Feature, references/decision-coverage.md) remain open; product-decision questions carry a recommended answer and are not limited to the 5-question context cap.",
+      "files": [],
+      "assertions": [
+        "Follows commercial-budget workflow references",
+        "Objetivo uses three subsections (O que buscamos / O que é / O que entregamos)",
+        "Clarifies with ≤5 context questions; does not ask FP method",
+        "Writes docs/versions/.../pm/...-commercial-budget-internal.md",
+        "Header Status da estimativa: provisória while decisions open",
+        "No invented R$; no COSMIC unless asked"
+      ]
     },
     {
       "id": 11,
       "prompt": "Preciso do prazo P50/P85/P95 e dos três cenários de produtividade. Só tenho FP e produtividade — não quero orçamento em R$ nem forecast por user story.",
-      "expected_output": "Reads references/ns-delivery-schedule/workflow.md. Asks only for missing hours/day, business days/week, and start date. Runs pert_montecarlo.py. No R$. Does not run story-only Phase 5. Does not patch docs/roadmap.md — dates live in 05-cronograma-tres-cenarios.md only.",
-      "files": []
+      "expected_output": "Reads references/ns-delivery-schedule/workflow.md. The prompt gives no numbers, so the first turn asks only for what is missing (FP, productivity h/FP, hours/day, business days/week, start date; version_san only if persistence needs it) and stops without computing. After the human supplies them: runs pert_montecarlo.py and returns P50/P85/P95 for the three productivity scenarios. No R$. Does not run story-only Phase 5. Does not patch docs/roadmap.md — dates live in 05-cronograma-tres-cenarios.md only.",
+      "files": [],
+      "assertions": [
+        "Uses ns-delivery-schedule path",
+        "Asks only missing hours/day, business days/week, start date (or equivalent)",
+        "Runs pert_montecarlo / P50-P85-P95; no R$",
+        "Does not run story-only Phase 5; does not patch docs/roadmap.md"
+      ]
     },
     {
       "id": 12,
       "prompt": "help",
       "expected_output": "Shows example prompts covering pipeline, commercial budget, delivery schedule, version handoff, product roadmap, and on-demand modes. Does not list grill-me / enricher. Does not start Phase 0/1, does not ask clarification questions, does not create files.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Shows example prompts (pipeline, commercial budget, delivery schedule, handoff, roadmap, on-demand)",
+        "Does not list grill-me / enricher",
+        "Does not start Phase 0/1 or create project docs"
+      ]
     },
     {
       "id": 13,
       "prompt": "OKR: reduce fleet incident response time by 30% by Q3. GitLab issues US-01 (speed alerts, 8d), US-02 (maintenance report, 3d), US-03 (export, 5d) — no declared dependencies between them. Prioritize and sequence.",
       "expected_output": "Activity-list path: runs rice_wsjf.py and dag_order.py. RICE ranking defines execution order — single-layer DAG (no invented edges). Produces RICE/WSJF tables plus DAG Mermaid with one layer. Does not force multi-layer graph without declared deps.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Runs rice_wsjf and dag_order",
+        "Single-layer DAG (no invented edges)",
+        "RICE ranking defines execution order"
+      ]
     },
     {
       "id": 14,
       "prompt": "Version narrative for RouteWise v2 — no backlog yet: 'Phase 1 ingest GPS feeds into index; Phase 2 GraphRAG over fleet history; Phase 3 analyst dashboard reads GraphRAG.' Sequence deliverables. Also run RICE on this.",
       "expected_output": "Narrative-only path: builds DAG from technical prerequisites (ingestion before GraphRAG before dashboard). Runs dag_order.py only — refuses RICE/WSJF with one line explaining missing effort per item + OKR + reach; offers Phase 2 structuring first. No fabricated Reach/Confidence scores.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Builds DAG from technical prerequisites (ingest→GraphRAG→dashboard)",
+        "Runs dag_order; refuses RICE/WSJF with explanation",
+        "No fabricated Reach/Confidence scores"
+      ]
     },
     {
       "id": 15,
       "prompt": "Fecha a versão routewise-v2 — preciso do card de handoff para execução. Phase 3 DAG já feito; ainda não temos sprint plan nem forecast.",
       "expected_output": "Reads references/12-version-handoff.md and assets/version-handoff.template.md. Fills version handoff from existing Phase 3 data only. Layer→sprint and P50/P85 fields show — (missing Phase 4/5). Persists to docs/versions/routewise-v2/pm/execution-handoff.md — not spec-driven docs/versions/routewise-v2/sdd/execution-handoff.md (or legacy root copy). If sdd/ or legacy root SDD handoff exists, states one line they are distinct and does not touch it.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Fills version handoff from Phase 3 data",
+        "Layer→sprint and P50/P85 show missing (—) for Phase 4/5",
+        "Persists to docs/versions/routewise-v2/pm/execution-handoff.md (not sdd/)"
+      ]
     },
     {
       "id": 16,
       "prompt": "Draft the consolidated product roadmap for this product — vision, modules, delivered vs planned versions, and icebox. Persist under docs.",
       "expected_output": "Reads references/13-product-roadmap.md and assets/product-roadmap.template.md. Routes to product-roadmap (not SDD version-roadmap.md). Same route for 'roadmap do projeto' or bare 'roadmap' in product/project sense. Prompt has no sourced versions/icebox: vision/modules only if present in input; omit or mark — on §3–§5; list gaps; does not invent tracker ids or version numbers. Persists to docs/roadmap.md when persistence on (not under docs/<project-slug>/). Does not write product-roadmap.md. If docs/roadmap.md already exists and is not the product template (missing ## 4. Versions), STOP gate — no silent overwrite.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Routes to product-roadmap (docs/roadmap.md)",
+        "Does not invent tracker ids or version numbers when unsourced",
+        "Does not write product-roadmap.md filename"
+      ]
     },
     {
       "id": 17,
       "prompt": "Gera o PRD da versão routewise-v1: 'Carlos: dispatchers need a real-time alert when a driver exceeds the speed limit, so we cut incident response. Priya: predictive maintenance is later — we do not have the sensor. Marcus: monthly maintenance report can ship in the MVP.' Persist under docs. Do not write the engineering spec.",
-      "expected_output": "Reads references/14-prd.md and assets/prd.template.md. On-demand PRD, not Phase 1 and not Phase 2. Profile small-feature (default): only sections 1, 2, 3, 4, 6, 11, 13, 14. No HTML comments, no {placeholders}, no [REQUIRED]/[OPTIONAL] tags. Section 6 is RF-01 style blocks with Given/When/Then (Portuguese: Dado/Quando/Então) for happy path and an error or edge — not a one-line acceptance column. Section 4 lists speed alert and monthly maintenance report as in scope, each mapped to an RF id; predictive maintenance is out of scope with Priya's reason (no sensor). Each RF has Supports (OBJ id) and Source (stakeholder). Missing baselines and targets are A DEFINIR and listed as Q-NN open questions with a Blocks column; header Ready for build is computed from blocking questions. No invented P0 and no invented numbers. Story persona is the dispatcher, not a generic user. Persists to docs/versions/routewise-v1/pm/prd.md. Does not write docs/routewise/01-requirements.md, docs/versions/**/sdd/requirements.md, or a commercial quote.",
-      "files": []
+      "expected_output": "Reads references/14-prd.md and assets/prd.template.md. On-demand PRD, not Phase 1 and not Phase 2. Profile small-feature (default): only sections 1, 2, 3, 4, 6, 11, 13, 14. No HTML comments, no {placeholders}, no [REQUIRED]/[OPTIONAL] tags. Section 6 is RF-01 style blocks with Given/When/Then (Portuguese: Dado/Quando/Então) for happy path and an error or edge — not a one-line acceptance column. Section 4 lists speed alert and monthly maintenance report as in scope, each mapped to an RF id; predictive maintenance is out of scope with Priya's reason (no sensor). Each RF has Supports (OBJ id) and Source (stakeholder). Missing baselines and targets are A DEFINIR and listed as Q-NN open questions with a Blocks column; header Ready for build is computed from blocking questions. No invented P0 and no invented numbers. Story persona is the dispatcher, not a generic user. Persists to docs/versions/routewise-v1/pm/prd.md. Does not write docs/routewise/01-requirements.md, docs/versions/**/sdd/requirements.md, or a commercial quote. Runs references/decision-coverage.md: header has a Readiness row (Draft) and Ready for build is no while decisions are open; section 13 rows carry a Recommended answer and a dimension (e.g. who receives the alert, which speed source and tolerance, what happens when the driver is offline, alert default for existing fleets), plus a decision coverage table per RF with no blank cell; the chat reply ends with the proposal batch (Q — title, context line, blank line, ➡️ Recomendado on its own line) and a developer-lens line. Never writes 'congelado' or 'sem pendências'.",
+      "files": [],
+      "assertions": [
+        "On-demand PRD (not Phase 1/2); persists docs/versions/routewise-v1/pm/prd.md",
+        "Small-feature profile sections; RF blocks with Given/When/Then",
+        "Predictive maintenance out of scope with sensor reason",
+        "Ready for build no / Draft while decisions open; proposal batch with ➡️ Recomendado",
+        "Never writes congelado or sem pendências"
+      ]
     },
     {
       "id": 18,
       "prompt": "Qual o valor médio do ponto de função? Não sei o preço.",
       "expected_output": "Reads references/ns-commercial-budget/references/pf-unit-price.md. Does not start a commercial budget and does not write files. Offers the Floripa midpoint stored as USD 140.850738 per PF, converted with a same-day local FX fetch (BRL: BCB PTAX cotacaoVenda of today, or the latest published PTAX if today's bulletin is missing). States source, rate, and timestamp. Shows local mean and the converted band (USD 110.668437–171.033040). Does not reuse the anchor-day BRL 700 as the live price. Does not fill Custo until the human accepts. Does not invent a different unit price.",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Reads pf-unit-price; does not start commercial budget or write budget files",
+        "Offers Floripa midpoint USD 140.850738 with live FX conversion",
+        "States source, rate, timestamp; does not reuse anchor-day BRL 700 as live price"
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Gera o PRD da versão clinica-v4 (persistir em docs): 'Os convênios pagam a clínica em lote: um único crédito no extrato quita várias guias de vários pacientes. Queremos que o sistema sugira quais guias compõem cada crédito e que a IA sugira o código TUSS de cada procedimento a partir do histórico da clínica. O faturista revisa e aceita. Glosas parciais existem. Exporta para o ERP financeiro.' Já fizemos três rodadas de conversa, pode marcar como escopo congelado.",
+      "expected_output": "Reads references/14-prd.md, references/decision-coverage.md and assets/prd.template.md. Profiles new-product or small-feature plus ai-data (section 9 present, D13 mandatory). Does NOT mark the scope frozen: Readiness = Draft, Ready for build = no, and the reply explains in one line that freezing needs the open decisions closed first. Coverage walks D1–D14 per RF even where the input is silent, and the proposal batch includes recommended answers for at least: plan/consumption of AI suggestions (D1), who accepts vs who configures and who may run bulk accept (D2), default for clinics already using the product (D3), exact match vs tolerance and treatment of partial denials (glosas) in the composition (D5/D6), tie after all criteria and items already linked elsewhere (D6), which date drives the matching window and business-day calendar (D8), what is exported when suggestions are left unreviewed and whether re-export replaces the previous file (D9), undo of an accepted composition (D10), whether the new matching affects existing single-payment matching (D11), patient health data sent to an external AI provider and isolation unit (D12), how suggestion accuracy is measured (D13), and priority/phasing (D14). Each question has the shape title / context / blank line / ➡️ Recomendado on its own line, with Decide and Bloqueia. Persists docs/versions/clinica-v4/pm/prd.md and docs/versions/clinica-v4/pm/decision-register.md with matching Q-NN ids. No invented metrics, owners or dates. Ends with a developer-lens line. Never writes 'congelado', 'escopo fechado' or 'sem pendências'.",
+      "files": [],
+      "assertions": [
+        "Does NOT mark scope frozen; Readiness Draft; Ready for build no",
+        "Coverage walks D1–D14; proposal batch with ➡️ Recomendado",
+        "Persists prd.md and decision-register.md under clinica-v4/pm/",
+        "Never writes congelado / escopo fechado / sem pendências"
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Rodada 3 de respostas do orçamento da versão agenda-v2. Na rodada 1 vocês registraram: 'o paciente escolhe o modo de lembrete (SMS ou WhatsApp) no app'. Agora o cliente respondeu: 'só a recepção pode alterar o modo de lembrete'. Também: 'os lembretes consomem créditos de mensagem'. Atualiza o orçamento e já marca como firme e congelado.",
+      "expected_output": "Commercial-budget path with references/decision-coverage.md. Detects the contradiction between round 1 (patient chooses) and round 3 (only reception changes) and opens a C-NN conflict with a recommended resolution (e.g. reception configures, patient only sees) instead of picking silently. Treats message credit consumption as a D1 decision and asks, with a recommended answer, what happens at zero balance and which plans include it. Refuses to mark the estimate firm or the scope frozen while the conflict and those decisions are open: header 'Status da estimativa: provisória' listing the open Q ids; readiness Draft. Updates docs/versions/agenda-v2/pm/decision-register.md. The chat summary states open decisions, open conflicts, unapproved assumptions and estimate status, then the proposal batch. Does not write 'congelado', 'firme' or 'sem pendências'.",
+      "files": [],
+      "assertions": [
+        "Detects contradiction round1 vs round3; opens C-NN conflict",
+        "Treats message credits as D1 decision with recommendation",
+        "Refuses firm/congelado; Status provisória / Draft",
+        "Never writes congelado / firme / sem pendências as closed"
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "O time de dev leu o PRD da versão loja-v7 e mandou estas dúvidas: '1. O cashback vale para quem já é cliente ou só para novos cadastros? 2. Se o pedido for cancelado parcialmente, o cashback é estornado proporcionalmente? 3. Qual biblioteca usar para a fila de créditos? 4. O gerente da loja pode ajustar o saldo manualmente? 5. Arredonda o cashback para baixo ou para o centavo mais próximo?' O PRD está em docs/versions/loja-v7/pm/prd.md.",
+      "expected_output": "Routes to decision feedback (references/decision-coverage.md → Feedback mode). Maps each question to a dimension: 1 → D3 defaults for existing customers, 2 → D6 partial / D5 values, 3 → technical (left to engineering, not asked to business), 4 → D2 roles / D10 lifecycle, 5 → D5 rounding. For questions already decided in the PRD, cites the section and Q id and makes the PRD state it explicitly; for undecided ones, writes a proposal (➡️ Recomendado on its own line) and adds a Q-NN to docs/versions/loja-v7/pm/decision-register.md. Shows a coverage-miss table (dimension → number of returned questions) and sets PRD Readiness back to Draft until the new items close. Does not invent the business answers.",
+      "files": [],
+      "assertions": [
+        "Maps Q1→D3, Q2→D6/D5, Q3 technical (not business), Q4→D2/D10, Q5→D5",
+        "Proposals with ➡️ Recomendado for undecided; updates decision-register",
+        "Coverage-miss table; Readiness back to Draft",
+        "Does not invent business answers"
+      ]
     }
   ]
 }

@@ -27,7 +27,7 @@ consumes:
   - artifact:docs/context/architecture-rules.md
 metadata:
   author: nextstage-brasil
-  version: "1.29"
+  version: "1.30"
 ---
 
 # Commercial Budget
@@ -68,9 +68,10 @@ Optional — skip step if path missing. Do not invent project layout.
 
 ### 2. Clarify
 
-Read `references/clarification.md`.
+Read `references/clarification.md` and `../decision-coverage.md`.
 
-- ≤5 questions, one batch; ≤1 follow-up round.
+- Budget context: ≤5 questions, one batch; ≤1 follow-up round.
+- Product decisions: coverage scan per Feature (D1–D14 + rule probes + cross-round detectors). Every question has a recommended answer. Keep the decision register (`docs/versions/{version_san}/pm/decision-register.md`) current.
 - Prefer team experience when hours estimated and missing.
 - Do not re-ask reverse-spec/brownfield facts — ask **delta** only.
 - `proceed with assumptions` / `quick mode`: mark `[ASSUMPTION]` / `[LACUNA]` in doc.
@@ -91,6 +92,8 @@ Read `references/clarification.md`.
 11. `references/macro-activities.md` + `references/risk-margin.md`
 12. `references/document-versioning.md`
 13. **Reuse inventory applied** — map `net-new`→ADD, `extend`→CHG, `reuse`→omit (IFPUG enhancement). Block if context existed and inventory skipped.
+14. **Estimate status** — header line in both docs: provisional while any sizing-relevant decision is `open` / `assumed` (list the Q ids), firm only at Business-validated or higher (`../decision-coverage.md` → Provisional estimate seal).
+15. **Developer-lens self-check** (`../decision-coverage.md` Step 6) before Stop. Business questions found go back to the proposal batch.
 
 | Section | Rules |
 |---------|--------|
@@ -130,9 +133,9 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 
 ### 5. Stop
 
-1. Summarize sequência, Gerado em, path(s), totals (FP, hours base, hours com margem, margin %), Custo filled or not. Include ΣCFP only when COSMIC was requested. When client file exists: note Valor agregado followed locked speech (decision-maker), subtotal negócio vs engenharia rollup, and whether Esforço/Custo columns are filled or `—`.
+1. Summarize sequência, Gerado em, path(s), totals (FP, hours base, hours com margem, margin %), Custo filled or not, **estimate status** (provisional + open Q ids, or firm), **readiness** and developer-lens result. Include ΣCFP only when COSMIC was requested. When client file exists: note Valor agregado followed locked speech (decision-maker), subtotal negócio vs engenharia rollup, and whether Esforço/Custo columns are filled or `—`.
 2. No tasks, issues, requirements.md, SDD handoff.
-3. Offer approve then SDD / PM forecast in text only.
+3. Open decisions remain: send the proposal batch (`../decision-coverage.md` Step 4) and stop. None remain: offer approve, then SDD / PM forecast in text only.
 
 ## Out of scope
 
@@ -155,6 +158,7 @@ Use `assets/commercial-budget-costumer.template.md`. Independent Sequência per 
 | `references/technical-notes.md` | After Features — internal-only implementation notes from transcript/POC; omit if no source |
 | `assets/commercial-budget-costumer.template.md` | When writing `commercial-budget-costumer.md` |
 | `references/clarification.md` | Before generating |
+| `../decision-coverage.md` | Clarify + before Stop — product-decision coverage, proposals, register, readiness, provisional estimate |
 | `references/fp-sizing.md` | Before FP tables — APF default (CPM then SISP) |
 | `references/pf-unit-price.md` | When the human asks the PF price or does not know R$/PF — USD anchor, convert with the day's local FX |
 | `references/cosmic-sizing.md` | Only when human asked for COSMIC/CFP (agent sizing; doc = table only) |

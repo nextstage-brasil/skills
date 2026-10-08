@@ -1,7 +1,7 @@
 <!--
 TEMPLATE METADATA (skill only — strip this whole comment from the final document)
 template: prd
-template_version: 1.1
+template_version: 1.2
 profiles: [small-feature, new-product, ai-data, client-project]
 
 FILL RULES
@@ -20,7 +20,8 @@ FILL RULES
 - client-project: include section 10.
 - Section 16 (Glossary): any profile, only when the input uses domain terms an implementer could misread.
 - Profiles combine. Example: client project with AI = client-project + ai-data.
-- Stable ids: OBJ-NN (objectives), RF-NN (functional requirements), NFR-NN (non-functional), Q-NN (open questions).
+- Stable ids: OBJ-NN (objectives), RF-NN (functional requirements), NFR-NN (non-functional), Q-NN (decisions — same ids as the decision register).
+- Decision coverage (references/decision-coverage.md) runs before filling. Readiness and Ready for build are computed from the register.
 -->
 
 # PRD: {product_or_feature_name}
@@ -29,6 +30,7 @@ FILL RULES
 |---|---|
 | **Owner (PM/PO)** | {owner} |
 | **Status** | {draft \| in review \| approved \| in development \| delivered} |
+| **Readiness** | {Draft \| Business-validated \| Dev-lens checked \| Frozen} — {n} open decisions |
 | **Ready for build** | {yes \| no — blocked by Q-NN} |
 | **Version** | {version_san} |
 | **Target release** | {date_or_milestone} |
@@ -115,6 +117,7 @@ FILL RULES
 - [ ] **Given** {error_or_edge_context}, **when** {action}, **then** {error_or_edge_behavior}.
 
 **Business rules:** {rules_or_exceptions_or_gap_token}
+<!-- hint: write the answered decisions that govern this RF here (values and rounding, ties, partial, duplicates, defaults for existing customers, who may, undo, which date). A decision that lives only in §14 or in chat is missing. -->
 
 <!-- repeat the RF-NN block per in-scope capability -->
 
@@ -154,7 +157,8 @@ FILL RULES
 
 - **Data sources:** {origin, quality, refresh}
 - **Expected model or agent behavior:** {what it must and must not do}
-- **Quality and evaluation:** {eval set, metrics, thresholds}
+- **Quality and evaluation:** {eval set, metrics, thresholds — metric unit, denominator, what counts as a hit, whether "no suggestion" items count, sample, who measures}
+- **Consumption and packaging:** {metered usage (credits, quota), behavior at zero balance, which plans — or gap token}
 - **Guardrails and error handling:** {refusals, fallback, human escalation}
 - **AI risks:** {hallucination, bias, data leak, prompt injection}
 
@@ -203,12 +207,31 @@ FILL RULES
 
 ## 13. Open questions [REQUIRED]
 
-<!-- hint: every gap token in the sections above gets one row here. Blocks = RF/OBJ ids that cannot be built or measured until answered; "—" when none.
-     Any open row that blocks an in-scope RF sets "Ready for build" to "no". -->
+<!-- hint: every gap token in the sections above, and every open or assumed coverage dimension, gets one row here.
+     Recommended = the proposed answer (never empty; closed options when no single default is defensible).
+     Blocks = RF/OBJ ids that cannot be built or measured until answered; "—" when none.
+     Any open or assumed row that blocks an in-scope RF sets "Ready for build" to "no". Answered rows move to §14. -->
 
-| ID | Question | Blocks | Owner | Due | Status |
-|---|---|---|---|---|---|
-| Q-01 | {question} | {RF-01 \| OBJ-01 \| —} | {who} | {date} | open |
+| ID | Dim | Question | Recommended | Blocks | Owner | Status |
+|---|---|---|---|---|---|---|
+| Q-01 | {D1–D14} | {question} | {proposal} | {RF-01 \| OBJ-01 \| —} | {who decides} | {open \| assumed} |
+
+**Conflicts**
+
+<!-- hint: omit when there are none. Two statements from the source or from different rounds that disagree. -->
+
+| ID | Statement A | Statement B | Recommended | Status |
+|---|---|---|---|---|
+| C-01 | {text (source)} | {text (source)} | {proposal} | open |
+
+**Decision coverage**
+
+<!-- hint: one row per in-scope RF. Cell = ✓ (answered) · n/a: {reason} · Q-NN (open or assumed). Never blank. Drop D13 column when no automation/AI is in scope.
+     small-feature: keep only the dimensions the change touches; one line "Other dimensions n/a: {reason}". -->
+
+| RF | D1 Plan | D2 Roles | D3 Defaults | D4 Config | D5 Values | D6 Exceptions | D7 Inputs | D8 Time | D9 Output | D10 Lifecycle | D11 Blast radius | D12 Data | D13 AI | D14 Priority |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| RF-01 | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} | {cell} |
 
 ---
 
@@ -216,9 +239,9 @@ FILL RULES
 
 **Decisions**
 
-| Date | Decision | Reason | Decided by |
-|---|---|---|---|
-| {date} | {decision} | {reason} | {person} |
+| ID | Date | Decision | Reason | Decided by |
+|---|---|---|---|---|
+| Q-NN | {date} | {decision} | {reason} | {person} |
 
 **Approvals**
 
