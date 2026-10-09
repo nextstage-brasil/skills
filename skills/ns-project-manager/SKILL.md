@@ -1,6 +1,6 @@
 ---
 name: ns-project-manager
-description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; PRD (product discovery doc); product/project roadmap (multi-version); version handoff; risk/status/OKR; orçamento, Function Points, proposta comercial, preço do ponto de função, quanto custa o PF; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, roadmap, roadmap do projeto, roadmap de produto, PRD, product requirements document, documento de requisitos de produto, versões entregues/planejadas, orçamento, cotação, cronograma, handoff, fecha a versão, valor do PF, não sei o preço do ponto de função, dúvidas do dev, perguntas da equipe sobre o PRD — even if PM unnamed. Do NOT use for coding, SDD requirements.md, GitLab issue execution, or `/ns-requirements-enricher`."
+description: "(NS) Gated PM: clarify, RICE/WSJF, sprint, PERT/Monte Carlo; PRD (product discovery doc); product/project roadmap (multi-version); version handoff; release delivery report for leadership (relatório de entrega da versão, deploy report para diretoria, o que vai para produção); risk/status/OKR; orçamento, Function Points, proposta comercial, preço do ponto de função, quanto custa o PF; cronograma P100/P85/P50. Use on transcripts, backlog, timeline, delivery date, status, roadmap, roadmap do projeto, roadmap de produto, PRD, product requirements document, documento de requisitos de produto, versões entregues/planejadas, orçamento, cotação, cronograma, handoff, fecha a versão, valor do PF, não sei o preço do ponto de função, dúvidas do dev, perguntas da equipe sobre o PRD — even if PM unnamed. Do NOT use for coding, SDD requirements.md, GitLab issue execution, or `/ns-requirements-enricher`."
 license: Apache-2.0
 requires_harness: ">=1.0.0"
 provides:
@@ -12,7 +12,7 @@ provides:
 consumes: []
 metadata:
   author: nextstage-brasil
-  version: "1.6"
+  version: "1.7"
 depends:
   - ns-harness
 ---
@@ -32,13 +32,14 @@ Gated PM pipeline (Phases 0–5) + on-demand modes (6+). One phase per turn unle
 | Version narrative, no activity list — "sequence the version", epic deps only | **3** DAG-only sequencing (no RICE) | `references/02-prioritization.md` narrative path |
 | "PRD", "product requirements document", "documento de requisitos de produto" | **prd** | `references/14-prd.md` |
 | "card de versão", "handoff", "fecha a versão", "o que entregar para execução", version card | **version-handoff** | `references/12-version-handoff.md` |
+| "relatório de entrega", "release report", "deploy report", "o que vai para produção", version going live + board/diretoria | **release-report** (not PM phase) | `references/15-release-report.md` |
 | Pasted questions from developers / QA / client after a PRD, budget or handoff ("dúvidas do dev", "the team asked") | **decision feedback** | `references/decision-coverage.md` → Feedback mode |
 | "product roadmap", "roadmap de produto", "roadmap do projeto", "roadmap consolidado" / "consolidated roadmap", bare "roadmap" (product/project), multi-version / icebox | **product-roadmap** | `references/13-product-roadmap.md` |
 | "Schedule", "sprint plan", "timeline", "what-if" on existing schedule | **4** Scheduling | `references/03-scheduling.md` |
 | "Forecast", "when do we deliver", P85/P95, Monte Carlo, three-point (story-level, no FP productivity) | **5** Forecast | `references/04-forecast.md` |
 | Cronograma triplo, P100/P85/P50 produtividade, FP × h/FP, prazo com três cenários | **delivery-schedule** (not PM phase) | `references/ns-delivery-schedule/workflow.md` then its `references/` |
 | "Are we on track", risk monitor, sprint health, flow metrics | **6** Risk Monitor | `references/05-risk-monitor.md` |
-| "Status report", "write up for manager/board/leadership" | **7** Status Report | `references/06-status-report.md` |
+| "Status report", "write up for manager/board/leadership" about a period or sprint (not a version going live) | **7** Status Report | `references/06-status-report.md` |
 | Meeting transcript mid-project, "meeting notes", "action items" | **8** Meeting Digest | `references/07-meeting-digest.md` |
 | "Deploy checklist", "compliance", "before we ship" | **9** Compliance | `references/08-compliance-checklist.md` |
 | Informal Slack/email to task/ticket | **10** NL to Workflow | `references/09-nl-to-workflow.md` |
@@ -69,6 +70,7 @@ On **help** / what-can-I-do / examples:
 | Commercial budget | `Need a commercial budget / orçamento for: [...].` |
 | Risk / sprint health | `Are we on track? Here's velocity and WIP: [...].` |
 | Status report | `Write a status report for the board — sprint N, …` |
+| Release delivery report | `Relatório de entrega da 1.21 para a diretoria — vai para produção 20/11 às 7h.` |
 | Meeting digest | `Meeting notes — just the action items: '[…transcript…]'` |
 | Compliance checklist | `Deploy checklist before we ship.` |
 | NL to ticket | `Turn this Slack message into a GitLab issue: […]` |
@@ -86,6 +88,8 @@ Close: one line — paste input or pick row.
 **PRD:** `references/14-prd.md` + `references/prd-writing-standard.md` + `assets/prd.template.md`. Formal reference document for build and homologation, written for readers outside the conversation. Decisions are closed in chat first, then written as requirements. No process, analysis status or budget content inside the document. Profile `small-feature` by default. Acceptance criteria on each `RF-NN`. Persist `docs/versions/{version_san}/pm/prd.md`. Not Phase 2 `01-requirements.md`. Not SDD `requirements.md`.
 
 **Version handoff card:** `references/12-version-handoff.md`. On-demand like commercial-budget — not pipeline phase 6+.
+
+**Release delivery report:** `references/15-release-report.md`. On-demand. Board audience, business language only. Metrics come from `scripts/release_metrics.sh` (human runs it locally per repo) and `scripts/release_kpis.py`; never computed in LLM. Persist `docs/versions/{version_san}/pm/release-report.md`. Not Status Report (period/sprint).
 
 **Product roadmap (multi-version):** `references/13-product-roadmap.md` + `assets/product-roadmap.template.md`. On-demand. Persist `docs/roadmap.md` (repo root under `docs/`, not project-slug). Not SDD `version-roadmap.md`.
 
@@ -145,7 +149,7 @@ Read `references/0N-*.md` at phase start.
 
 ## On-demand modes (Phases 6+)
 
-Distinct phrases (router table). Self-contained — read reference, run. Reuse pipeline data when present; never invent metrics. PRD, version handoff, and product roadmap are on-demand (like commercial-budget), not Phase 6+ rows — `references/14-prd.md`, `references/12-version-handoff.md`, `references/13-product-roadmap.md`.
+Distinct phrases (router table). Self-contained — read reference, run. Reuse pipeline data when present; never invent metrics. PRD, version handoff, release-report, and product roadmap are on-demand (like commercial-budget), not Phase 6+ rows — `references/14-prd.md`, `references/12-version-handoff.md`, `references/15-release-report.md`, `references/13-product-roadmap.md`.
 
 | Mode | Script |
 |---|---|
@@ -216,6 +220,10 @@ Rules:
 | `assets/prd.template.md` | PRD |
 | `references/12-version-handoff.md` | version handoff |
 | `assets/version-handoff.template.md` | version handoff |
+| `references/15-release-report.md` | release report |
+| `assets/area-map.template.tsv` | release report |
+| `scripts/release_metrics.sh` | release report |
+| `scripts/release_kpis.py` | release report |
 | `references/13-product-roadmap.md` | product roadmap |
 | `assets/product-roadmap.template.md` | product roadmap |
 | `references/03-scheduling.md` | 4 |

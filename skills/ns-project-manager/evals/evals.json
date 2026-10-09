@@ -251,6 +251,47 @@
       "prompt": "Decisões fechadas da versão estoque-v2 (todas as recomendações aceitas): reposição automática sugerida quando o saldo fica abaixo do mínimo; só o Comprador aprova a sugestão; o mínimo é configurado por produto e por filial; produtos sem histórico de 90 dias não recebem sugestão; a sugestão arredonda para a embalagem de compra; pedidos aprovados vão para o ERP; sugestão recusada pode ser reaberta em até 7 dias. Escreve o PRD final em docs.",
       "expected_output": "Writes docs/versions/estoque-v2/pm/prd.md as a formal document following references/prd-writing-standard.md. Each decision appears inside the RF it governs as a numbered business rule (RN-NN.n) in declarative present tense: minimum per product and branch, Comprador-only approval, no suggestion without 90 days of history, rounding up to the purchase pack, approved orders sent to the ERP, reopening a refused suggestion within 7 days. Each RF has actors, trigger/preconditions, behavior steps, exceptions (e.g. product without history, non-Comprador tries to approve, reopening after 7 days) and Dado/Quando/Então acceptance criteria with concrete example values (e.g. saldo 8, mínimo 10, embalagem de 12 → sugestão de 12). §13 Perguntas em aberto says 'Nenhuma.'. §16 defines domain terms when used. The document contains none of: rounds or 'conforme conversado', Readiness / Ready for build, proposals or 'Recomendado', D1–D14 or C-NN, blocking lists, 'confirmar durante o build', budget/orçamento/PF/horas, citations of earlier drafts or budget features, or the '⚠️ requer revisão humana' warning (that line, if any, stays in chat). Chat reports the outside-reader check in one line.",
       "files": []
+    },
+    {
+      "id": 23,
+      "prompt": "Preciso de um relatório de entrega da 1.21 para a diretoria, vai para produção dia 20/11 às 7h",
+      "expected_output": "Routes to release-report (references/15-release-report.md), not Status Report / version-handoff / product-roadmap / Compliance. Confirms required inputs (repos, base/target refs, area map) when missing; never invents production datetime (already given). Hands human release_metrics.sh per repo; runs release_kpis.py for numbers; never estimates code metrics in LLM. Persists docs/versions/{version_san}/pm/release-report.md and release-metrics.json. Chat closes with human-review warning before board send — not inside the document.",
+      "files": [],
+      "assertions": [
+        "Routes to release-report (not Status Report / handoff / roadmap / compliance)",
+        "Does not invent code metrics — uses release_metrics.sh + release_kpis.py",
+        "Persists release-report.md and release-metrics.json under pm/"
+      ]
+    },
+    {
+      "id": 24,
+      "prompt": "Monta o deploy report da versão 1.22 mostrando o tamanho da entrega",
+      "expected_output": "Routes to release-report. Asks for production datetime with timezone if missing (never invents). Board language, KPI panel, focus by lines changed.",
+      "files": [],
+      "assertions": [
+        "Routes to release-report",
+        "Asks production datetime when missing; does not invent it"
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "O que vai para produção nessa release? Quero algo para apresentar ao board",
+      "expected_output": "Routes to release-report (version going live + board), not Status Report mode 7.",
+      "files": [],
+      "assertions": [
+        "Routes to release-report",
+        "Does not produce three-audience Status Report"
+      ]
+    },
+    {
+      "id": 26,
+      "prompt": "Escreve o status report da sprint 14 para a diretoria",
+      "expected_output": "Routes to mode 7 Status Report (period/sprint), NOT release-report. Three audience reports; does not run release_metrics.sh.",
+      "files": [],
+      "assertions": [
+        "Routes to Status Report (mode 7), not release-report",
+        "Does not run release metrics scripts"
+      ]
     }
   ]
 }

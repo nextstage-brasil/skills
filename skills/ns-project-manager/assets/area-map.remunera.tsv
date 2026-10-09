@@ -1,0 +1,8 @@
+# area	regex	papel
+Motor de cálculo de comissões	^src/core/	nucleo
+Apuração de campanhas	^src/screenTabs/CampaignAppraisal/	produto
+Campanhas de remuneração	^src/components/Campaign/	produto
+Telas de unidades	^src/screenTabs/Unit/	produto
+Banco de dados	(^prisma/|^_triggers/|\.sql$)	apoio
+Automações e base técnica	(^src/cli/|^src/jobs/|^src/stores/)	apoio
+Especificações	^\.specs/	apoio

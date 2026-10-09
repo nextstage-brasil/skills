@@ -1,0 +1,4 @@
+# area	regex	papel
+# role: nucleo | produto | apoio — first match wins; tests are auto-detected (omit from map)
+# Example row (replace with product folders and business names):
+# Motor de cálculo	^src/core/	nucleo
