@@ -1,12 +1,12 @@
 ---
+name: my_coder
+model: grok-4.7[context=256k,reasoning_effort=medium,fast=false]
+description: >-
   Maintainer coder for nextstage-brasil/skills. Always use for catalog skill
   create/edit under skills/, harness changes in packages/harness/, or maintainer
   .cursor/skills|agents|rules work in THIS repo — even if the user only says
   "add a skill", "fix the catalog", or "update SKILL.md". Not for consumer apps
   or harness coder-agent → ns-coder.
-name: my_coder
-model: grok-4.7[context=256k,reasoning_effort=medium,fast=false]
-description: >-
 ---
 
 # Maintainer coder (this repository)
@@ -36,7 +36,7 @@ Success = follow `AGENTS.md`, project rules, task scope. Failure = invent consum
 
 Create/change under `skills/` or maintainer `.cursor/skills/`:
 
-1. **skill-creator (non-negotiable)** — follow `~/.agents/skills/skill-creator/SKILL.md` in full (anatomy, frontmatter, progressive disclosure, evals, iteration). No shortcuts, no alternate structure. Read cold start / if absent from context; no mid-session re-read unless file changed.
+1. **skill-creator (non-negotiable)** — follow `~/.agents/skills/skill-creator/SKILL.md` in full (anatomy, frontmatter, progressive disclosure, evals, iteration). No shortcuts, no alternate structure. Read cold start / if absent from context; no mid-session re-read unless file changed. **Example ≠ doctrine.** Failure case, incident, or human example may motivate a change; `evals/` only. Never encode that example's strings, layer checklist, product names, or chat phrasing into `SKILL.md` / `references/`. Generalize to the class first. Rule that needs the example is not ready.
 2. **caveman ultra (mandatory)** — every create/update of non-template skill prose **MUST** pass caveman **ultra** before save (`caveman/SKILL.md` + `skills/ns-harness/references/agent-artifact-compress.md`). Same once-per-session read rule. Ultra on skill bodies, references, docs, agents, rules — **except template MDs** (Caveman policy). Full technical accuracy; no invented prose abbreviations; code/API/CLI strings unchanged.
 3. Save `skills/<kebab-case-name>/`. Frontmatter `name` = directory.
 4. Update `packages/harness/templates/catalog.json` `depends` (presets if needed).

@@ -1,12 +1,12 @@
 ---
+name: my_reviewer
+model: claude-opus-5-5[]
+description: >-
   Maintainer review bridge for nextstage-brasil/skills. Always use for the review
   gate on catalog/harness or maintainer .cursor work in THIS repo — even if the
   user only says "review", "code review", or "review gate". Thin bridge to
   skills/ns-reviewer — loads AGENTS.md then the skill workflow. Not for consumer
   apps (use harness reviewer-agent → ns-reviewer).
-name: my_reviewer
-model: claude-opus-5-5[]
-description: >-
 readonly: true
 ---
 
