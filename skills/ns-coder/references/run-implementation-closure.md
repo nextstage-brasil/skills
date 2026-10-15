@@ -25,7 +25,7 @@ have written E2E specs earlier — execution of those suites is human-owned.
 Follow `../../ns-reviewer/references/review-gate-workflow.md` (each `Approved` = score **10** only).
 
 1. **MUST** `reviewer-agent` when available (else `ns-reviewer`) at version closure. See `../../../ns-harness/references/subagent-dispatch.md`. Reviewer does **not** dispatch judge.
-2. No `code-review-report.md`. On `Code Review: Rejected`/`Blocked` (score **9** = Lift), fix map + re-review until `Approved` or **blocked**. **Do not** run `ns-judge` until `Code Review: Approved`.
+2. No `code-review-report.md`. On `Code Review: Rejected`/`Blocked`, follow `review-gate-workflow.md` (exhaustive map → one coder → `delta` re-review) until `Approved` or **blocked**. **Do not** run `ns-judge` until `Code Review: Approved`.
 3. On `Code Review: Approved` only: read `../../ns-judge/SKILL.md` in-session (`--mode closure --version {version_san}` or `--requirements` path). Python optional. `Delivery Review: Approved` only at 10. Judge Rejected: fix map; if product files changed, code review again then judge again.
 4. Update handoff only on Pass (both Approved) or Stop:
    - **Version status:** `completed` | `completed_with_caveats` | `blocked_delivery`

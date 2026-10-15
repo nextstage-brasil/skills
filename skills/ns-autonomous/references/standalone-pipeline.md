@@ -56,15 +56,12 @@ Identical logic to Engine mode:
 
 ## 5. Internal review loop
 
-Follow `../../ns-reviewer/references/review-gate-workflow.md` (each `Approved` = **10**; judge copies reviewer table).
+Follow `../../ns-reviewer/references/review-gate-workflow.md` (exhaustive map → one coder → `delta`; each `Approved` = **10**).
 
 - **MUST** `reviewer-agent` when available (else `ns-reviewer`) **version-closure code mode** — bridge loads `AGENTS.md` then reviewer workflow — point at `docs/versions/{version_san}/sdd/` when exists, else worktree diff for single-unit run. Reviewer **MUST NOT** dispatch judge.
-- Pass code = `Code Review: Approved` (score **= 10**). Score **9** = Lift (`Rejected`). Score ≤8 = Fail. **No judge** until code Approved.
+- Pass code = `Code Review: Approved` (score **= 10**). **No judge** until code Approved.
 - Then in-session `../../ns-judge/SKILL.md` (`closure`). Pass delivery = `Delivery Review: Approved` (score **= 10**).
-- Max 3 rounds **per gate**:
-  - Code Pass → judge. Judge Pass → closure.
-  - Lift (**9**) or Fail with rounds left → fix-loop toward **10**, tests if in scope, **mandatory re-review** on that gate. Product files after judge Rejected: code review again then judge again.
-  - Stop (`Blocked` or rounds exhausted) → report blocked. No success claim.
+- Rejected/Blocked path: that workflow only (map verbatim, `delta` re-review). Product files after judge Rejected: code review again then judge again.
 
 ## 6. Report
 

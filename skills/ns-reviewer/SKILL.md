@@ -4,7 +4,7 @@ description: "(NS) Code quality gate: SOLID, clean code, performance, security, 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "2.2"
+  version: "2.3"
 depends:
   - ns-harness
 ---
@@ -45,7 +45,7 @@ Invoker passes working-tree diff only (no `ISSUE_URL`, no version-closure path):
 1. Apply **Score gate** (SOLID, security, orphan export, actor/rules). End chat with `Code Review: {Approved|Rejected|Blocked}`.
 2. **Do not** parse `requirements.md`. **Do not** walk `spec-coverage.md` / `ui-contract.md` / visual checklist — parent runs `ns-judge` after `Approved` (`../ns-judge/SKILL.md`).
 3. **Do not** write `code-review-report.md` (or any persistent review report).
-4. `Rejected` / `Blocked`: **minimal fix map** in response (`references/review-fix-map.template.md`) — data another agent needs. No human prose, no positive findings, no history.
+4. `Rejected` / `Blocked`: emit fix map per **Fix map rounds** (`references/review-fix-map.template.md`). No human prose, no positive findings, no history.
 5. `Approved`: Executive Summary + score + verdict line only (no fix map). Parent may then invoke `ns-judge`.
 
 ### Issue review mode
@@ -58,7 +58,13 @@ Invoker passes `ISSUE_URL` (or `project_id` + `issue_iid`):
 4. **Verdict (exactly one):** `Approved` | `Rejected` | `Blocked` — **Score gate** below.
 5. Post internal GitLab comment via `mcp-gitlab-usage` — first line: `Code Review | YYYY-MM-DD HH:MM (UTC) | Verdict: {Approved|Rejected|Blocked}`
 6. Last line to parent: `Code Review: {Approved|Rejected|Blocked}`
-7. `Rejected`/`Blocked`: GitLab comment = same minimal fix-map facts.
+7. `Rejected`/`Blocked`: GitLab comment = same fix-map facts (**Fix map rounds**).
+
+### Fix map rounds
+
+**Round 1 (exhaustive):** before write map, walk **every** touched file vs **Score caps** table. Emit **every** Critical **and** every Warning that would still cap score after other rows fixed — duplicate members already in a touched file each get a row (same smell class, multiple symbols). Template: `references/review-fix-map.template.md`. Omit P2 that does not block gate.
+
+**Round 2+ (delta):** only when parent prompt says `delta` **and** names prior map IDs. Check those rows + hunks fixer changed. New Warning outside that set = round-1 miss — **do not** emit, **do not** reject for it. New Critical **inside** those hunks = only new row allowed. Else residual open IDs only.
 
 ## Score gate (all modes)
 
@@ -171,7 +177,7 @@ Then: `Code Review: Approved`
 
 ### Fix map (agent)
 
-Follow `references/review-fix-map.template.md` — actionable correction rows only.
+Follow **Fix map rounds** + `references/review-fix-map.template.md` — actionable correction rows only.
 Omit positive findings, suggestions-only noise, history, long prose.
 
 Then: `Code Review: Rejected` or `Code Review: Blocked`

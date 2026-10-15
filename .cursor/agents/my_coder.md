@@ -1,12 +1,12 @@
 ---
-name: my_coder
-model: grok-4.7[context=256k,reasoning_effort=medium,fast=false]
-description: >-
   Maintainer coder for nextstage-brasil/skills. Always use for catalog skill
   create/edit under skills/, harness changes in packages/harness/, or maintainer
   .cursor/skills|agents|rules work in THIS repo — even if the user only says
   "add a skill", "fix the catalog", or "update SKILL.md". Not for consumer apps
   or harness coder-agent → ns-coder.
+name: my_coder
+model: inherit
+description: >-
 ---
 
 # Maintainer coder (this repository)

@@ -16,7 +16,7 @@
     {
       "id": 3,
       "prompt": "Version closure review for 2.0.0 — report what fails.",
-      "expected_output": "Agent does not write code-review-report.md. Does not walk spec-coverage/ui-contract (ns-judge after Approved). On Rejected/Blocked emits minimal fix map for the next agent; ends with Code Review: verdict line.",
+      "expected_output": "Agent does not write code-review-report.md. Does not walk spec-coverage/ui-contract (ns-judge after Approved). On Rejected/Blocked emits an exhaustive fix map for the touched set (every Critical and every score-capping Warning, not a minimal slice); ends with Code Review: verdict line.",
       "files": []
     },
     {
@@ -41,6 +41,12 @@
       "id": 7,
       "prompt": "Review agent-api diff: new write tool posts to ERP with no interrupt/HITL; prompt markdown edited with no prompt version bump; unit test asserts exact LLM reply string; new invoke has no token log.",
       "expected_output": "Critical for irreversible write without gate and prompt change without version bump; Warning + score cap 7–8 for equality assertion on model output; Warning (no extra cap alone) for missing token/cost accounting; ends Code Review: Rejected. Loads ns-langgraph-agents anti-patterns when agent-api touched.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "delta re-review after fix map IDs C1,W1,W2 — parent prompt names those IDs. Diff still has a new Warning outside that set in an untouched helper, and a new Critical the fixer introduced inside the W1 hunk.",
+      "expected_output": "Delta mode: ignore the new Warning outside prior map IDs (do not emit, do not reject for it). Emit a new Critical row for the defect the fixer introduced in the mapped hunk. Residual open prior IDs if still failing. Ends with Code Review: Rejected (or Blocked if rounds exhausted).",
       "files": []
     }
   ]

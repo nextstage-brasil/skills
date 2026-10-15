@@ -62,13 +62,14 @@ Judge Rejected → fix map → implement. Product files changed → code review 
 | After review | Condition | Next action |
 | ------------ | --------- | ----------- |
 | Pass (ship to judge) | `Code Review: Approved` (score **= 10**, zero Criticals) | Parent invokes `ns-judge` |
-| Lift | `Rejected` **and** score **= 9**, rounds left | In-scope quality fix toward **10** → tests if in scope → **mandatory re-review** via `reviewer-agent` / `ns-reviewer`. No judge. |
-| Fail | Criticals **or** score ≤ **8**, rounds left | Minimal fix in scope → tests if in scope → **mandatory re-review**. No judge. |
+| Lift / Fail | `Rejected` (Criticals **or** score ≤ **9**), rounds left | **One coder call** per map. Parent passes map **verbatim** — do not split across coders. Fix in scope → tests if in scope → **mandatory re-review** via `reviewer-agent` / `ns-reviewer`. Re-review prompt **must** say `delta` **and** include prior map IDs. Reviewer does **not** start a fresh hunt. No judge. |
 | Stop | `Blocked`, or 3 rounds exhausted | Report **blocked** — never fabricate success. No judge. |
+
+**Expected path:** two reviewer calls (round-1 exhaustive map, then delta). Third reviewer call **only** when delta finds a Critical the fix introduced; that coder runs once, then gate stops `Blocked` if still not 10. Max **3** reviewer rounds.
 
 **After Critical fix** (or Lift at 9): new `ns-reviewer` round **required**. Fix alone does not clear gate.
 
-P2 suggestions: **do not** block when `Approved` (score **10**). Score **9** still **Lift** even if P2 only.
+P2 suggestions: **do not** block when `Approved` (score **10**). Score **9** still **Lift** even if P2 only. Round-1 map = exhaustive (every Critical + every score-capping Warning); round 2+ = delta per `../SKILL.md` **Fix map rounds**.
 
 ### Delivery
 

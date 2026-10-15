@@ -7,7 +7,7 @@ Load at end of version, stop conditions, or forbidden checks.
 Every unit in `delivery-units.md` (if present) and every slice in `version-roadmap.md` is `completed` (or waived):
 
 1. Present any navigation / semantic grouping menu and **wait for human approval** before applying.
-2. Post-implementation review: **MUST** dispatch **`reviewer-agent`** when available (else `ns-reviewer`, read-only) over version diff. Do **not** expect `code-review-report.md` — verdict line and minimal fix map on Rejected. See `../../../ns-harness/references/subagent-dispatch.md`. **Do not** run `ns-judge` until `Code Review: Approved`. Skip second pair if `run-implementation` Step 5 already ran both.
+2. Post-implementation review: **MUST** dispatch **`reviewer-agent`** when available (else `ns-reviewer`, read-only) over version diff. Do **not** expect `code-review-report.md` — Rejected path = `../../ns-reviewer/references/review-gate-workflow.md` (exhaustive map → one coder → `delta`). See `../../../ns-harness/references/subagent-dispatch.md`. **Do not** run `ns-judge` until `Code Review: Approved`. Skip second pair if `run-implementation` Step 5 already ran both.
 3. On `Code Review: Approved`: read `../../ns-judge/SKILL.md` in-session (`closure`). Consolidate living specs only on `Delivery Review: Approved` — `ns-living-spec` (`../../ns-reviewer/references/review-gate-workflow.md`). Score **9** on either gate = `Rejected`, not close.
 4. Move version to `_done/` **only** after human confirms or documented waiver exists. Before the move: close the version handoff (`Final delivery — end`, recompute total process seconds), then **Archive prune** (`../../../ns-harness/references/artifact-layout.md`) — delete `sdd/tasks/` and the other non-history files listed there. Prune does not run without that confirm or waiver.
 5. If version `execution-handoff.md` exists, the close in step 4 already filled the final delivery block. Do not reopen it after the prune.
@@ -21,7 +21,7 @@ Every unit in `delivery-units.md` (if present) and every slice in `version-roadm
 | Real environment blocker (Docker/tests impossible) | Stop; note in handoff |
 | Inter-slice dependency not satisfied | Stop; fix roadmap or prior slice |
 | Missing `{version_san}` / roadmap | Ask **once**, then proceed |
-| `Code Review: Rejected`/`Blocked` or `Delivery Review: Rejected`/`Blocked` (score **9** included) without waiver | Stop before `_done/` move; Lift/fix map then re-review until both `Approved` |
+| `Code Review: Rejected`/`Blocked` or `Delivery Review: Rejected`/`Blocked` (score **9** included) without waiver | Stop before `_done/` move; follow `review-gate-workflow.md` until both `Approved` |
 | Human waiver needed (menu apply, `_done/` move) | Stop for that item only |
 
 ## Forbidden
