@@ -17,9 +17,9 @@ Delivery face + workers talk **to human**. Separate from agent-facing file compr
 | ----- | --- |
 | Phase jargon as commands: "Clarify first", "go for Specify", "after Consistency" | Human does not know pipeline |
 | Opaque document IDs as message: "Feature 005 touches E1 (D13)" | Forces human to re-read whole doc |
-| Section symbols / codes without expansion: "§5.3 item 4", "RL3", "D04", `FPA08` alone | Same — no standalone context |
-| Asking human to confirm/recall product error codes, ticket ids, `FPA*` / internal enums | Human cannot answer from memory; ask **observable** outcome (when, HTTP, what client sees). Codes stay in `source/` / `clarify-contract.md` |
-| Dumping detector ids `D1` `D2` `D3` in Gate 0 chat | Ask the gap in behavior words; ids stay in `unknowns-register.md` |
+| Section symbols / codes without expansion: section mark, decision code, or product error code alone | Same — no standalone context |
+| Asking human to confirm/recall product error codes, ticket ids, internal enums | Human cannot answer from memory — `clarify-strict.md` Chat questions |
+| Dumping detector ids `D1` `D2` `D3` `D4` in Gate 0 chat | Ask the gap in behavior words; ids stay in `unknowns-register.md` |
 | Menu chrome: `Reply:`, `Premise:`, `Premissa:` | Reads like bot form |
 | Skill / worker names in ask | Internal wiring; keep in agent reasoning |
 | Status telegrams: `Large X — Product. No requirements.md. Clarify first.` | Dense; no conversational frame |
@@ -49,13 +49,13 @@ Confirm `requirements.md`: do **not** dump shorthand. Per notable point or open 
 3. Ask **concrete** question when decision needed.
 4. Optionally append document ID in parentheses for traceability — never lead with it.
 
-**Bad:** "Feature 005 changes the E1 suite (D13). §5.3 and RL3 now say 403. Open: D04, HTTP contract notice to legacy integrator, where E1 suite lives."
+**Bad:** "Feature 00N changes the first suite (decision code). The section mark now says one HTTP status. Open: another code, partner notice, where that suite lives."
 
 **Good:** "Requirements are at `{path}`. Three things before you confirm:
 
-1. The feature that changes the Logos HTTP contract also updates status-code assertions in the first delivery's test suite — only those assertions; no scenarios removed. Prefer that suite to ship already on the new contract (instead of freezing the current 403/404/400 and patching later)?
-2. Open items: ordering vs issue 394 (does not block); tell the legacy integrator about the HTTP contract change before E2 deploy (blocks deploy, not development); decide whether that suite lives under Feature tests with real HTTP or under Unit/Integracao.
-3. I fixed two leftovers that still said 401 where the contract is now 403.
+1. The feature that changes the partner HTTP contract also updates status-code assertions in the first delivery's test suite — only those assertions; no scenarios removed. Prefer that suite to ship already on the new contract (instead of freezing the current statuses and patching later)?
+2. Open items: ordering vs another open issue (does not block); tell the partner about the HTTP contract change before the second delivery's deploy (blocks deploy, not development); decide whether that suite lives under feature tests with real HTTP or under unit/integration tests.
+3. I fixed two leftovers that still named an old status where the contract now names another.
 
 Confirm the document, or tell me what to change."
 
@@ -68,22 +68,22 @@ Before any `requirements.md`:
 1. List **open categories** in words (actors, error matrix, …).
 2. Say **counts**: critical open, major open.
 3. Restate **assumed premises** and **impact**.
-4. Ask **numbered** items `1.` `2.` `3.` … — one sequence: open questions first, then sensitive confirms. **Values** = behavior (page size, when blocked, HTTP, copy, pin vs range, conflict sides). **Not** source codes (`FPA08`, ticket ids). **Not** detector ids (`D1`/`D2`/`D3`) in chat — ask the gap in words.
+4. Ask **numbered** items `1.` `2.` `3.` … — one sequence: open questions first, then sensitive confirms. **Values** = behavior (page size, when blocked, HTTP, copy, pin vs range, conflict sides, reused path vs current behavior). **Not** detector ids (`D1`/`D2`/`D3`/`D4`) in chat — ask the gap in words.
 5. Close with how to answer: `Reply by number, e.g. 1: …  2: yes` **or** `Tudo sim` / `all yes` if every **remaining** item is a yes/no confirm (proposed value already stated).
 6. Map `1:` / `2:` replies onto those items. Partial set → re-ask **only missing numbers**.
 7. **`Tudo sim` / `all yes` / `sim em todos` / `yes to all`:** treat as **yes** on every numbered item that is a yes/no confirm of a stated value. **Does not** answer open questions (pick HTTP, who, timeout). If any open question still unanswered → accept bulk-yes on confirms, re-ask **only** those open numbers.
 8. Silence, `proceed`, `quick mode`, `assume`, `pode seguir` on a sensitive confirm: **reject**, re-ask **that number**. Bulk-yes is not those phrases.
 
-**Bad:** Unnumbered paragraphs. "Proceeding with defaults for 422 vs 400." / "Only FPA08 is defined for errors — confirm?"
+**Bad:** Unnumbered paragraphs. "Proceeding with defaults for one HTTP status vs another." / "Only the product error code is defined for errors — confirm?"
 
 **Good:**
 
 ```
-1. When the payload is missing company_id, should the API return 422 or 400?
-2. When the partner exceeds the successful request cap (40 per minute or 10 000 per day), same block as a failed login, a different HTTP status, or still open?
-3. Confirm: page starts at 1 and size is 300? (yes/no)
+1. When the payload is missing a required tenant field, should the API return one client error or another?
+2. When the partner exceeds the successful request cap ({per-minute} / {per-day}), same block as another rejection, a different HTTP status, or still open?
+3. Confirm: {constant} = {value}? (yes/no)
 
-Reply by number, e.g. 1: 400  2: same block  3: yes
+Reply by number, e.g. 1: {status}  2: same block  3: yes
 If 3–N are only yes/no confirms: Tudo sim is enough for those. Not for 1–2.
 ```
 

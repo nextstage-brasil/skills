@@ -9,7 +9,7 @@
 
 | ID | Category | Detector | Severity | Question | Blocking? |
 | -- | -------- | -------- | -------- | -------- | --------- |
-| U1 | {category from clarify-strict} | D1 \| D2 \| D3 | critical \| major \| minor | {question} | yes \| no |
+| U1 | {category from clarify-strict} | D1 \| D2 \| D3 \| D4 | critical \| major \| minor | {question} | yes \| no |
 
 ## Waived / accepted-with-risk
 
@@ -23,8 +23,17 @@
 | -- | ---------- | -------- |
 | U1 | answered \| assumed (see clarify-contract) \| waived | {pointer} |
 
+## Reused-path evidence (D4)
+
+One row for each D4 hit (`clarify-strict.md` D4). Severity and exemptions: `clarify-strict.md` D4 + Criticality.
+
+| Criterion | Path claim | Files opened | Current behavior | Survives? | Unknown ID |
+| --------- | ---------- | ------------ | ---------------- | --------- | ---------- |
+| {acceptance or criterion} | {same / existing / reuse claim} | {repo paths opened} | {what that code does now} | yes \| no \| unknown | {U-id, or — if none} |
+
 ## Counts
 
 - Critical open: {n}
 - Major open: {n}
 - Waived critical: {n}
+- D4 rows missing: {n}

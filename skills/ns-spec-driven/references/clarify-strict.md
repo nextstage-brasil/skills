@@ -15,7 +15,7 @@ Every category **answered** | **assumed** (accepted premise in `clarify-contract
 | Actors / permissions | Who acts; role vs permission matrix |
 | Entity states / transitions | States; legal transitions; illegal ones |
 | Payload fields | Type + nullability per field |
-| Error / rejection matrix | Trigger + client-visible outcome (HTTP). Artifact may store source codes; **chat** never asks human to name them |
+| Error / rejection matrix | Trigger + client-visible outcome (HTTP) |
 | Pagination / limits / constants | Page size, max, enums, magic numbers |
 | UI screens / elements / handlers / copy | Screens; controls; events; **verbatim** strings |
 | Integration / auth | Protocol, identity, tokens |
@@ -28,7 +28,7 @@ Every category **answered** | **assumed** (accepted premise in `clarify-contract
 
 `docs/versions/{version_san}/sdd/source/` from Intake: questions from unclassified / thin sections + checklist gaps. Never invent contract values to close gap.
 
-**Chat questions:** observable behavior only (when, who, HTTP, copy, numbers). Never ask human recall or confirm source codes (`FPA08`, ticket ids, `§`, `Sx`). Map code to situation in ask. Write codes only in `clarify-contract.md` / `unknowns-register.md` after human answers situation.
+**Chat questions:** observable behavior only (when, who, HTTP, copy, numbers). Never ask human recall or confirm product error codes, ticket ids, or section marks. Map code to situation in ask. Write codes only in `clarify-contract.md` / `unknowns-register.md` after human answers situation.
 
 ## Detectors (after checklist, before Gate 0)
 
@@ -39,16 +39,29 @@ Run **after** category checklist, **before** Gate 0. Topic mention in source ≠
 | **D1** Unresolved value | Range in limit/timeout cell; vague adjective on limit or error body; `TBD`; `impl.`; `to be defined`; empty copy slot | Single value, allowed set, or accepted premise. Limits / Errors / UI stay `open` until then |
 | **D2** External source unanchored | Cite of prototype, screenshot folder, other repo, or “see existing requirements” used to close UI/copy | `answered` only if Intake registered path in `docs/context/reference-sources.md` **and** agent opened it (or human waived). Missing path = `open`. Status table inside pasted spec claiming planning done ≠ Gate 1 |
 | **D3** Contradiction or capability | Two sections disagree; screen demands data declared persistence cannot supply | Record both sides. Do **not** pick winner |
+| **D4** Reused path | Brownfield acceptance or claim (`same` / `existing` / `reuse`, implied or stated) that depends on current screen, form, endpoint, state, error, or payload behavior | Reused-path evidence row in `unknowns-register.md` § Reused-path evidence (D4) |
 
-**Not a detector:** delivery phase / order tables. Map as `spec-coverage.md` rows + partition/task order (`spec-coverage.md`, `version-partitioner.md`).
+**Not a detector:** delivery phase / order tables. Map as `spec-coverage.md` rows + partition/task order (`spec-coverage.md`, `version-partitioner.md`). D4 is reused path, not phase order.
 
 ### D2 escape (mandatory)
 
 Path registered but **unreachable** (outside workspace, no access): do **not** re-ask twice; do **not** block. Premise + impact (copy from that source at execution; diverge = UI rework). Severity **major**. Row in `unknowns-register.md`. Quote at Gate 1. Block on unreachable path drives `skip clarify` and loses gate.
 
+### D4 reused path (mandatory)
+
+Brownfield + hit: **open** app code that implements the claim. Layers = whatever the claim touches. No fixed layer list.
+
+**Close:** evidence row — files opened, current behavior, acceptance survives?
+
+**Open + ask. Do not pick winner** on a **D4 critical** (Criticality).
+
+**Does not close D4:** source or process assertions (document status, deferral to engineering, prior session, claim that questions are closed, text-only consistency). Not path evidence.
+
+**May stay engineering-local** (no D4 row): implementation choice with no user-visible, save, or response-shape effect (string join, library pick).
+
 ### Criticality
 
-Default detector hit = **major** (premise + impact, or waiver). **Critical** (blocks Gate 0) only if gap changes **public contract**, **persistence/schema**, or **makes the feature impossible**.
+Default detector hit = **major** (premise + impact, or waiver). **Critical** (blocks Gate 0) only if gap changes **public contract**, **persistence/schema**, or **makes the feature impossible**. **D4 critical** (same block): acceptance cannot survive current path; security/visibility claim in source breaks; `Survives?` = `unknown` after path opened; reuse claim with no Reused-path evidence row.
 
 | Example | Severity |
 | ------- | -------- |
@@ -105,8 +118,10 @@ Without waiver: Gate 0 fail. Never Specify.
 - Treat `proceed` / `pode seguir` as sensitive-item confirm
 - Ignore `Tudo sim` on round that is only yes/no confirms
 - Document “reasonable assumptions” without premises + impact
-- Gate 0 / grill **chat** that quotes product error codes or asks human to confirm `FPA*` / ticket ids
+- Product error codes in Gate 0 / grill chat (Chat questions)
 - Dense UI inventory as `answered` when copy missing and no external SSoT
 - Range / `TBD` / `impl.` / `to be defined` as `answered` without pin or premise
 - Re-block loop on unreachable registered layout path (use D2 escape)
-- Fourth detector for delivery phases (coverage + partition only)
+- Delivery-phase / order table as a Clarify detector (coverage + partition only)
+- Close D4 without opening the path
+- Treat source-text confirmations as path evidence

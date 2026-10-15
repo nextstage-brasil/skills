@@ -43,9 +43,9 @@ Premises the human accepted. Each row needs impact. Empty if none.
 
 Constants, enums, transitions, rejection rules, UI flows/copy, inferences. Silence / `proceed` is not confirmation.
 
-Chat with the human uses observable behavior only (when, HTTP, copy). Do not put product error codes in the Gate 0 question; they belong in this table after the human answers the situation.
+Chat wording: `clarify-strict.md` Chat questions. Record product error codes in this table after the human answers the situation.
 
-`Tudo sim` / `all yes` confirms every remaining **yes/no** row. Silence / `proceed` is not confirmation.
+`Tudo sim` / `all yes` confirms every remaining **yes/no** row.
 
 | Item | Proposed value | Human confirmed |
 | ---- | -------------- | --------------- |

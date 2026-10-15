@@ -13,10 +13,12 @@ Present **plain language** (`human-communication.md` Gate 0 voice):
 - Open checklist categories **in words**
 - Critical / major counts from `unknowns-register.md`
 - Assumed premises + impact from `clarify-contract.md`
-- Sensitive-item table (confirmed vs not) — **behavior in chat**, not source error codes / `FPA*` / ticket ids
+- Sensitive-item table (confirmed vs not) — behavior in chat (`clarify-strict.md` Chat questions)
 - Every ask **numbered** (`1.` `2.` …); invite `1:` / `2:` replies **or** `Tudo sim` on remaining yes/no confirms (`human-communication.md`)
 
 **Pass:** `(critical unknowns = 0 AND explicit Gate 0 human confirm) OR recorded skip-clarify waiver` in unknowns-register.
+
+**D4:** Reused-path evidence per `clarify-strict.md` D4 + Criticality.
 
 **Hard stop:** never Specify / never write `requirements.md` without Gate 0.
 

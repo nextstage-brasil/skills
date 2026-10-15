@@ -4,7 +4,7 @@ description: '(NS) Spec-driven delivery — clarify, requirements, tasks (incl. 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.8.7"
+  version: "1.8.8"
 depends:
   - ns-harness
   - ns-coder
@@ -89,7 +89,7 @@ flowchart LR
 | Phase       | When                         | Reference                                                                                                                                                                            |
 | ----------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Intake      | Dense / pasted source        | `references/source-registry.md` — persist `source/{slug}.md`, anchors, classify                                                                                                       |
-| Clarify     | Medium+ mandatory            | `references/clarify-requirements.md` then `references/clarify-strict.md`: checklist, D1–D3, Gate 0 (in-session)                                                                      |
+| Clarify     | Medium+ mandatory            | `references/clarify-requirements.md` then `references/clarify-strict.md`: checklist, D1–D4, Gate 0 (in-session)                                                                      |
 | Specify     | Always for Medium+           | `references/requirements-generator.md` — also writes `ui-contract.md` when `ui-screen` in source (in-session — no v1 bridge)                                                                 |
 | Consistency | Before tasks (Large+)        | `references/analyze-consistency.md` (in-session — no v1 bridge)                                                                                                                      |
 | Partition   | Multi-slice versions         | `references/version-partitioner.md` (in-session — no v1 bridge)                                                                                                                      |
@@ -116,7 +116,7 @@ Details: `references/auto-sizing.md`, `references/router.md`.
 Chat short, natural language. **Read `references/human-communication.md` before any human gate or boot confirm.**
 
 - Name next **deliverable** ("requirements document", "task files") — not internal phases ("Specify", "Clarify").
-- Chat stand alone: highlights in plain language; document IDs only after meaning (**Gate 1 highlights** in that file). Gate 0: **numbered** asks (`1.` `2.` …); human may reply by number **or** `Tudo sim` / `all yes` on remaining yes/no confirms (not open questions). Behavior (when, HTTP, copy) — never product error codes (`FPA*`) for the human to recall.
+- Chat stand alone: highlights in plain language; document IDs only after meaning (**Gate 1 highlights** in that file). Gate 0: **numbered** asks (`1.` `2.` …); human may reply by number **or** `Tudo sim` / `all yes` on remaining yes/no confirms (not open questions). Behavior (when, HTTP, copy). Product error codes: `clarify-strict.md` Chat questions.
 - Never use `Reply:`, `Premise:`, or "go for Specify".
 - Caveman / artifact-compress = **files only** — never chat.
 

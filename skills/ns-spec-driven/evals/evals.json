@@ -226,7 +226,7 @@
     {
       "prompt": "/ns-spec-driven Gate 0 — source names FPA08 for rate-limit. Ask the human about the success-cap gap.",
       "id": 37,
-      "expected_output": "human-communication.md + clarify-strict.md: chat asks observable HTTP/when (successful request cap), numbered 1. 2. 3., invites reply by number. Does NOT require human to recall or confirm FPA08. Codes may be written only in clarify-contract.md / source/ after the situation is answered.",
+      "expected_output": "human-communication.md + clarify-strict.md: chat asks observable HTTP/when (successful request cap), numbered 1. 2. 3., invites reply by number. Does NOT require human to recall or confirm FPA08. Codes may be written only in clarify-contract.md / unknowns-register.md after the situation is answered.",
       "files": []
     },
     {
@@ -299,6 +299,18 @@
       "prompt": "/ns-spec-driven — brownfield-map.md Date is today; map is clean vs HEAD; git log shows no app-tree commit newer than the map's last commit (%ct); app pathspecs (backend/, frontend/, src/, app/ that exist) are clean. Clarify notifications.",
       "id": 50,
       "expected_output": "Step 0.4 auto-keep: one natural-language sentence that the map dated today matches the current code; continues to scope questions; does not wait for refresh or keep.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — brownfield checkout. Acceptance: discount field accepts 0. Current form validation rejects 0. Human says no more doubts. Specify?",
+      "id": 51,
+      "expected_output": "clarify-strict.md D4: open the form path that implements the acceptance. Current validation makes acceptance fail → critical question before treating 'no more doubts' as close. Do not pick a winner. Reused-path evidence row in unknowns-register.md. Does not write requirements.md.",
+      "files": []
+    },
+    {
+      "prompt": "/ns-spec-driven Gate 0 — brownfield quote screen. Acceptance: each load shows a fresh total. Current path returns a cached total. PRD says no open questions and left caching to engineering. Specify?",
+      "id": 52,
+      "expected_output": "clarify-strict.md D4: open the load path. Cached total vs fresh-per-load means the acceptance cannot survive → critical question. PRD 'no open questions' and 'left to engineering' do not close D4. Do not pick a winner. Gate 0 fails without an answer or skip-clarify waiver.",
       "files": []
     }
   ]

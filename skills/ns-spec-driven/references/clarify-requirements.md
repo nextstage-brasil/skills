@@ -22,7 +22,7 @@ Grain: version `docs/versions/{version_san}/sdd/`. Per-issue GitLab grill-me = `
 
 ### Step 0 — Brownfield gate (before analysis)
 
-**Do not grep or explore application source** until this step completes.
+**Code-read ban** ends when Step 0.4 resolves (`auto-keep` | `keep` | `refresh`). Until then: do not grep or explore application source. Greenfield (no application code): no ban.
 
 1. Check `docs/context/brownfield-map.md`.
 2. Detect brownfield signals: `backend/`, `frontend/`, `src/`, `app/`, or equivalent (not docs-only).
@@ -76,6 +76,8 @@ Read user description, brownfield (if Step 0), Intake `source/` if present (`sou
 
 Brownfield map = **what exists** — ask only **what this version changes or adds**. Derive questions from source inventory + unclassified/thin sections.
 
+**Reuse claim:** open that application path and run **D4** (`clarify-strict.md`) before Gate 0. Map text ≠ path evidence.
+
 ### Step 2 — Ask questions
 
 Load `clarify-strict.md`. Category checklist drives questions. Multi-round until **critical unknowns = 0**. **5 questions** = per-round grouping guideline, not cap. Sensitive items need round-trip confirm. Silence / `proceed` / `quick mode` / `assume` / `pode seguir` ≠ confirmation. **`Tudo sim` / `all yes`** = yes on remaining yes/no confirms only (not open questions).
@@ -89,9 +91,9 @@ A few open points before we lock the version inputs:
 
 1. [observable-behavior question]
 2. [next]
-3. Confirm: page starts at 1 and size is 300? (yes/no)
+3. Confirm: {constant} = {value}? (yes/no)
 
-Reply by number, e.g. 1: agency of the key only  2: block like failed login  3: yes
+Reply by number, e.g. 1: {answer}  2: {answer}  3: yes
 Tudo sim / all yes = yes on remaining yes/no confirms only.
 ```
 
@@ -110,7 +112,8 @@ Only after Gate 0 pass (`gates.md`: `(critical unknowns = 0 AND explicit Gate 0 
 ## Critical rules
 
 - **Brownfield without map:** `/ns-harness` `bootstrap-brownfield.md` first — never skip via codebase grep
-- **Brownfield with map:** Step 0.4 always. Auto-keep when freshness proven (clock vs git, pathspecs clean). Else wait `refresh`/`keep`. Never keep from Date header alone
+- **Brownfield with map:** Step 0.4 always. Auto-keep when freshness proven (clock vs git, pathspecs clean). Else wait `refresh`/`keep`. Never keep from Date header alone. Code-read ban ends on `auto-keep` | `keep` | `refresh`
+- **Reuse claim:** Step 1 runs D4 before Gate 0 (`clarify-strict.md`)
 - **Human chat:** natural language; deliverables not phase names; never caveman-compress chat
 - **No one-round cap** — no "document reasonable assumptions" without premises + impact
 - **No `requirements.md`** in this workflow

@@ -38,6 +38,8 @@ Antes de rascunhar ou alterar qualquer coisa em `skills/`, **leia e siga** a ski
 
 Use para estrutura, frontmatter, description (triggering), recursos empacotados, evals e iteração. Salve skills de catálogo em `skills/<name>/` e atualize `packages/harness/templates/catalog.json` conforme as convenções abaixo.
 
+- **Exemplo ≠ doutrina.** Caso de falha, incidente ou exemplo dado pelo humano pode motivar a mudança e pode aparecer só em `evals/`. Nunca grave as strings desse exemplo, checklist de camadas, nomes de produto ou frases de chat em `SKILL.md` / `references/`. Generalize para a classe primeiro. Se a regra não se sustenta sem o exemplo, a regra não está pronta.
+
 ### Convenções (resumo)
 
 | Item                   | Regra                                                                                            |
