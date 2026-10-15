@@ -106,6 +106,20 @@ Slice handoff:
 - `docs/versions/{version_san}/sdd/subversions/{subversion_san}/execution-handoff.md`
 - Master may hold top-level handoff for aggregate closure.
 
+## Archive prune (`_done/`)
+
+Run once, after the version handoff is closed (`Final delivery — end` filled) and **before** moving the folder to `_done/`. Production history only. Do not prune mid-implementation.
+
+Delete:
+
+- `sdd/tasks/` (legacy `tasks/` at version root if still unmigrated)
+- `sdd/unknowns-register.md` — fold any residual waiver or risk into `execution-handoff.md` first
+- `sdd/execution-plan.md`
+- `sdd/subversions/**/tasks/` and slice requirement excerpts. Delete a slice `execution-handoff.md` only when the version handoff already records that slice's time; otherwise keep that file
+- `sdd/graph-spec.md` only when `docs/specs/agent-architecture.md` already holds that version's graph
+
+Keep: `source/`, `spec-coverage.md`, `clarify-contract.md`, `requirements.md`, `ui-contract.md`, `version-roadmap.md`, `delivery-units.md`, `gitlab-issue-feature-map.md`, version `execution-handoff.md`, and `pm/`.
+
 ## GitLab MCP publishing
 
 SDD/GitLab steps pass explicit path `docs/versions/{version_san}/sdd/requirements.md` — not MCP default at version root. Server-side default alignment tracked in `skills/_meta/MIGRATION.md`.

@@ -94,7 +94,7 @@ Task starts, completes, blocks, or waived — **per task row** even when classic
 
 **GitLab sync:** `delivery-units.md` **GitLab status/spent (SSoT)** — no fourth branch.
 
-Version closure (review, living specs, `_done/` move): fill `Post-implementation review — end`, `Review — tokens` (or Session history note — **not** last task `Tokens` column), `Living specs — end` (when applicable), `Final delivery — end`; recalculate `Total process time (s)`.
+Version closure (review, living specs, `_done/` move): fill `Post-implementation review — end`, `Review — tokens` (or Session history note — **not** last task `Tokens` column), `Living specs — end` (when applicable), `Final delivery — end`; recalculate `Total process time (s)`. Fold any residual waiver or risk into this handoff, then **Archive prune** (`../../../ns-harness/references/artifact-layout.md`) before the `_done/` move — `tasks/` is deleted.
 
 ### Allowed task statuses
 

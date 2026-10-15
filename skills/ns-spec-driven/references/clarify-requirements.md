@@ -34,13 +34,21 @@ Grain: version `docs/versions/{version_san}/sdd/`. Per-issue GitLab grill-me = `
 4. **Greenfield** (no application code) — skip bootstrap; Step 1.
 5. **Map already exists** — **Step 0.4** before any scope analysis.
 
-#### Step 0.4 — Brownfield refresh gate (mandatory human confirmation)
+#### Step 0.4 — Brownfield refresh gate
 
-**Stop. No Step 1 until human replies.**
+Runs before Step 1 when map exists. Human halt **only** when freshness unproven.
 
-1. Read `docs/context/brownfield-map.md`.
-2. Extract map date from `**Date:**` header. Absent → `date unknown`.
-3. Present gate in **natural chat** (conversation language; English template below). No phase jargon, `Reply:`, telegraphic dumps. See `human-communication.md`.
+**Clock:** never `**Date:**`; never `git log --after=YYYY-MM-DD` (midnight; same-day commits look newer than header).
+- Map **clean** vs HEAD (`git status --porcelain --no-optional-locks -- docs/context/brownfield-map.md` empty): clock = `git log -1 --format=%ct -- docs/context/brownfield-map.md` (clone/checkout resets file mtime; git commit time is the real clock).
+- Map **dirty/untracked**: clock = filesystem mtime epoch seconds (`date -r docs/context/brownfield-map.md +%s`). Fresh rewrite after same-day commits still auto-keeps.
+
+1. Read `docs/context/brownfield-map.md`. Extract `**Date:**`. Absent → date unknown.
+2. App pathspecs = brownfield signal dirs that exist: `backend/`, `frontend/`, `src/`, `app/` (same as Step 0). None exist → repo root excluding `docs/` (`. ':!docs'`).
+3. Readonly git only. No content grep of application source.
+   - Stale if `git log -1 --format=%ct -- <pathspecs>` greater than clock.
+   - Stale if `git status --porcelain --no-optional-locks -- <pathspecs>` non-empty (dirty or untracked under those pathspecs).
+4. **Auto-keep** (do not wait) only when ALL true: Date header present, git succeeds, clock resolved (non-empty `%ct` or successful `date -r`), not stale, app pathspecs clean. Chat: one natural sentence (conversation language) that the map dated `{date}` matches the current code, then Step 1. Record gate `auto-keep`.
+5. **Ask** (template below) and wait when ANY: date unknown, not a git repo, git command fails, clock unresolved (empty `%ct` or `date -r` failure — gitignored / never-committed map), stale commits, dirty/untracked app pathspecs. Never assume `keep` from urgency, pasted spec, or recent Date header alone.
 
 ```
 There's already a codebase map at docs/context/brownfield-map.md
@@ -52,8 +60,6 @@ Want me to re-scan the repo and update it, or keep this one and move on to scope
 - keep — use the map as-is
 ```
 
-4. **Wait for explicit reply.** Valid: `refresh` / `keep` (or clear natural equivalent).
-5. **Never assume** `keep` (recent map, urgency, pasted spec).
 6. On **`refresh`:** `/ns-harness` `bootstrap-brownfield.md` (update in place), then Step 1 with new map.
 7. On **`keep`:** note human accepted map date `{date}`; Step 1 with existing file.
 8. Ambiguous reply: ask once more — no Step 1 until `refresh` or `keep` clear.
@@ -62,7 +68,7 @@ Also read `docs/context/system-reverse-spec.agent.md` when present (prefer over 
 
 Allowed reads before Step 1 (brownfield): user scope, `brownfield-map.md`, reverse-spec pair, `.nextstage-harness/rules/architecture-rules.md`, `docs/versions/{version_san}/sdd/` for active version (incl. `source/`).
 
-**Forbidden before Step 1:** ad-hoc grep in `backend/` / `frontend/` / `src/` to "reduce ambiguity"; skip Step 0.4 when map exists.
+**Forbidden before Step 1:** ad-hoc grep in application source to reduce ambiguity or decide freshness; skip Step 0.4 when map exists. Git `log`/`status` on app pathspecs allowed. No product-path special-case — map is repo context.
 
 ### Step 1 — Analyze raw scope
 
@@ -104,7 +110,7 @@ Only after Gate 0 pass (`gates.md`: `(critical unknowns = 0 AND explicit Gate 0 
 ## Critical rules
 
 - **Brownfield without map:** `/ns-harness` `bootstrap-brownfield.md` first — never skip via codebase grep
-- **Brownfield with map:** Step 0.4 mandatory — show date; wait `refresh` or `keep`
+- **Brownfield with map:** Step 0.4 always. Auto-keep when freshness proven (clock vs git, pathspecs clean). Else wait `refresh`/`keep`. Never keep from Date header alone
 - **Human chat:** natural language; deliverables not phase names; never caveman-compress chat
 - **No one-round cap** — no "document reasonable assumptions" without premises + impact
 - **No `requirements.md`** in this workflow

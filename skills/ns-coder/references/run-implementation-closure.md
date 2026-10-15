@@ -44,8 +44,9 @@ When status is `completed` or `completed_with_caveats` and `Delivery Review: App
 
 After human confirms (or documented waiver):
 
-1. Move `{version_san}/` → `_done/{version_san}/` when project workflow requires it
-2. Fill `Final delivery — end`; recalculate **Total process time (s)**
+1. Fill `Final delivery — end`; recalculate **Total process time (s)**
+2. **Archive prune** (`../../../ns-harness/references/artifact-layout.md`) — delete `sdd/tasks/` and the other non-history files listed there
+3. Move `{version_san}/` → `_done/{version_san}/` when project workflow requires it
 
 ## Critical rules
 

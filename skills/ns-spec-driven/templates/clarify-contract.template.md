@@ -13,7 +13,7 @@
 ## Brownfield context (if applicable)
 
 - Map: `docs/context/brownfield-map.md`
-- Gate: human chose `refresh` | `keep` on {date shown in gate}
+- Gate: `auto-keep` (map fresh vs app tree) | human `refresh` | human `keep`; map date {date shown in gate}
 
 ## Category checklist
 

@@ -6,7 +6,7 @@ Delivery face + workers talk **to human**. Separate from agent-facing file compr
 
 1. **Natural language** — short, direct sentences senior engineer would write in Slack. No telegraphic status dumps.
 2. **Name deliverable, not phase** — say what you will write or do next; never assume human knows internal pipeline names.
-3. **One ask per gate** — wait for clear answer before continuing.
+3. **One ask per gate** — wait for clear answer before continuing. Step 0.4 **auto-keep** = statement, not an ask — do not force a question.
 4. **Match conversation language** — if human writes Portuguese, chat Portuguese (artifacts stay English unless they asked otherwise).
 5. **Never apply caveman / artifact-compress style to chat.**
 6. **Self-contained chat** — human must understand highlights and questions without opening artifact. Document IDs (`Feature 00N`, slice labels, decision codes, `§` section refs) stay in files; in chat, lead with meaning, then optionally ID in parentheses.
@@ -31,7 +31,7 @@ Delivery face + workers talk **to human**. Separate from agent-facing file compr
 | --------- | ------------------ |
 | Boot / size | "This looks like a full version (Large). Version `{id}`. I'll draft markdown in English unless you want another language." |
 | No requirements yet | "There is no requirements document yet — I need a few scope answers before writing one." |
-| Brownfield map exists | See `clarify-requirements.md` Step 0.4 template |
+| Brownfield map exists | Fresh: one sentence map dated {date} matches current code — not a question. Stale/unknown: `clarify-requirements.md` Step 0.4 question |
 | After clarification | Stop at Gate 0 — see **Gate 0 voice**. Do not ask to write requirements until Gate 0 passes. |
 | Gate 0 (inputs) | Numbered `1.` `2.` …. Human may answer by number **or** `Tudo sim` / `all yes` for remaining **yes/no confirms only**. Open questions still need a value. Silence / `proceed` ≠ confirm. |
 | Gate 1 (requirements) | Path + plain-language highlights + coverage counts + out-of-scope list + clear ask. See **Gate 1 highlights** below. |

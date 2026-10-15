@@ -4,7 +4,7 @@ description: '(NS) Spec-driven delivery — clarify, requirements, tasks (incl. 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.8.6"
+  version: "1.8.7"
 depends:
   - ns-harness
   - ns-coder
@@ -18,7 +18,7 @@ depends:
 
 **Delivery face** for spec-driven journey: intake, clarify-strict, specify, (consistency / partition), tasks, execute, close.
 
-Completeness before fidelity, both by construction. Clarify-Strict **grill** = Gate 0 only. Confirm gates **1–4** and brownfield Step 0.4 stay. Version Clarify-Strict ≠ per-issue enricher (`ns-requirements-enricher`). `ns-project-manager` stays decoupled.
+Completeness before fidelity, both by construction. Clarify-Strict **grill** = Gate 0 only. Confirm gates **1–4** and brownfield Step 0.4 stay (auto-continue when map fresh vs app tree; wait when freshness unproven). Version Clarify-Strict ≠ per-issue enricher (`ns-requirements-enricher`). `ns-project-manager` stays decoupled.
 
 **Orchestrate** — **not** implement phase bodies inline. **Read** phase reference at delegation time. State on **disk** (`docs/versions/`, `docs/context/`, handoff files), not chat history.
 
