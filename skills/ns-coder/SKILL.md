@@ -163,10 +163,10 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 After step 6, run `../ns-reviewer/references/review-gate-workflow.md` before done — **except** SDD handoff **or** caller says defer review / engine C2 / G single-unit dispatch (return to parent; no reviewer, no judge). Rejected map/fix/re-review path: that workflow only (exhaustive → one coder → `delta` + prior IDs) — no restated rubric here.
 
 - **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) on working-tree diff (`git diff`) — reviewer bridge/skill begins Session boot at cold start then reviewer workflow; no `ISSUE_URL`, no version-closure path. Ad-hoc diff only. Reviewer **MUST NOT** dispatch judge.
-- **Max 3 code rounds.** `Code Review: Approved` = score **10** only. Rejected/Blocked: **do not** run `ns-judge`.
+- **Max 3 code rounds.** `Code Review: Approved` = score **10** only. `Rejected`/`Blocked`: **do not** run `ns-judge`.
   - **Pass:** `Code Review: Approved` (score **= 10**, zero Criticals). Then read `../ns-judge/SKILL.md` in-session (`adhoc`). Skip AC proof unless `--requirements` / `--ac-file`. Max 3 judge rounds. `Delivery Review: Approved` only at 10. Product files changed after judge Rejected: code review again (must Approved) then judge again.
-  - **Rejected / Blocked with rounds left:** apply map per `review-gate-workflow.md` (one coder, map verbatim, then `delta` re-review). `reviewer-agent` / `ns-reviewer` / `ns-judge` read-only — this skill applies fixes. **MUST** `reviewer-agent` when available; else `ns-reviewer`.
-  - **Stop:** `Blocked` or 3 rounds exhausted on that gate → **report blocked**. List unresolved Criticals and/or last score. No success. Skip step 8.
+  - **Rejected with rounds left:** apply map per `review-gate-workflow.md` **Code** rounds (one coder, map verbatim, re-review prompt = `delta` + prior map IDs). `reviewer-agent` / `ns-reviewer` / `ns-judge` read-only — this skill applies fixes. **MUST** `reviewer-agent` when available; else `ns-reviewer`.
+  - **Stop:** `Blocked` or call 3 not score **10** or 3 rounds exhausted → **report blocked**. No coder on `Blocked`. List unresolved Criticals and/or last score. No success. Skip step 8.
 - Fixes within original task scope. Critical (or score-blocking Warning) needs changes outside scope (public contract, cross-product, multi-day): stop, escalate per **Stop conditions**.
 - Suggestions (P2) alone do **not** block when code `Approved`. Score **9** still Lift even if only P2.
 

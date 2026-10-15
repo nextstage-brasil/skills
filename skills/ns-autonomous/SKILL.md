@@ -53,7 +53,7 @@ Inputs (already resolved by the caller — this skill never creates them): issue
 2. **Doubt protocol** — self-ask, docs-first lookup, self-answer non-destructive doubts, escalate destructive ones as a structured event to the caller instead of mutating GitLab state; pause dependent units until resumed. See `references/doubt-resolution.md`.
 3. **Multi-agent dispatch** — parse work units. **1 unit:** follow `ns-coder` in this session inside `WORKTREE_ROOT` (defer review to caller / standalone step 5). **≥2 units:** **MUST** dispatch `coder-agent` when available (else `ns-coder`) per unit; parallel only across units with no DAG edge and disjoint file scopes; sequential otherwise. Workers implement only — **no** per-unit `reviewer-agent`. See `references/multi-agent-dispatch.md` and `../../ns-harness/references/subagent-dispatch.md`.
 4. **Checkpoint commits** — one commit per completed sequential unit or per completed parallel batch, inside the worktree; the caller squashes at delivery.
-5. **Fix-loop entry point** — when re-invoked after a `Rejected` verdict, treat the reviewer findings as a new work unit (or units) and repeat step 3 for those only.
+5. **Fix-loop entry point** — when re-invoked after `Rejected`, run **one** coder call on the whole map **verbatim** (no unit-count split, no “or units”). Skip units already done.
 6. **Return to caller**: unit statuses, files changed, any open destructive doubt, and (first invocation only) a plan-based `estimate_seconds` hint — the caller applies `set_issue_estimate` only when the issue estimate is empty and the value is ≥ 60 (see `../ns-execution-gitlab-issue/references/time-tracking.md`).
 
 ## Standalone pipeline (non-GitLab origin)

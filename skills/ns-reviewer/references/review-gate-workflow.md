@@ -27,7 +27,7 @@ Same parent that already calls `ns-reviewer`. Only after last code verdict is `C
 
 Sequence: tests; `ns-reviewer`; `ns-judge` only if `Code Review: Approved`; `ns-living-spec` only if `Delivery Review: Approved`.
 
-Rejected/Blocked on code → **do not** run `ns-judge`. Fix → code re-review (max 3). Judge never sees dirty code.
+`Rejected` on code → **do not** run `ns-judge`; follow **Code** rounds below (max 3 reviewer calls). `Blocked` → stop — no coder, no judge. Judge never sees dirty code.
 
 Judge Rejected → fix map → implement. Product files changed → code review again (must `Approved`) → then judge again. Judge is never first look at new code.
 
@@ -59,17 +59,25 @@ Judge Rejected → fix map → implement. Product files changed → code review 
 
 ### Code
 
+Ordered contract (one sequence — table + callers must not invent a second stop):
+
+| Step | Condition | Next action |
+| ---- | --------- | ----------- |
+| 1 | Reviewer call 1 | Exhaustive map (`../SKILL.md` **Fix map rounds**). `Approved` → judge. `Blocked` → Stop (no coder). |
+| 2 | Call 1 `Rejected` | **One** coder call. Parent passes map **verbatim** — do not split across coders. Fix in scope → tests if in scope. |
+| 3 | Reviewer call 2 | Prompt **must** say `delta` **and** name prior map IDs. Reviewer does **not** fresh-hunt. `Approved` → judge. `Blocked` → Stop. |
+| 4 | Call 2 `Rejected`, rounds left | **One** coder on residual open IDs and/or new Critical row inside fixer hunks. Map verbatim — do not split. |
+| 5 | Reviewer call 3 | **Only** after step 4 (expected extra case: Critical the fix introduced). If not score **10** → Stop `Blocked`. No fourth coder. `Blocked` never re-enters coder. |
+
 | After review | Condition | Next action |
 | ------------ | --------- | ----------- |
 | Pass (ship to judge) | `Code Review: Approved` (score **= 10**, zero Criticals) | Parent invokes `ns-judge` |
-| Lift / Fail | `Rejected` (Criticals **or** score ≤ **9**), rounds left | **One coder call** per map. Parent passes map **verbatim** — do not split across coders. Fix in scope → tests if in scope → **mandatory re-review** via `reviewer-agent` / `ns-reviewer`. Re-review prompt **must** say `delta` **and** include prior map IDs. Reviewer does **not** start a fresh hunt. No judge. |
-| Stop | `Blocked`, or 3 rounds exhausted | Report **blocked** — never fabricate success. No judge. |
+| Lift / Fail | `Rejected`, rounds left | Steps 2 or 4 above — one coder, then next reviewer call per ordered contract. No judge. |
+| Stop | `Blocked`, or call 3 not score **10**, or 3 rounds exhausted | Report **blocked** — never fabricate success. No coder. No judge. |
 
-**Expected path:** two reviewer calls (round-1 exhaustive map, then delta). Third reviewer call **only** when delta finds a Critical the fix introduced; that coder runs once, then gate stops `Blocked` if still not 10. Max **3** reviewer rounds.
+**Expected path:** two reviewer calls (exhaustive, then delta). Call 3 exists only when step 4 ran. Max **3** reviewer rounds. Fix alone does not clear gate.
 
-**After Critical fix** (or Lift at 9): new `ns-reviewer` round **required**. Fix alone does not clear gate.
-
-P2 suggestions: **do not** block when `Approved` (score **10**). Score **9** still **Lift** even if P2 only. Round-1 map = exhaustive (every Critical + every score-capping Warning); round 2+ = delta per `../SKILL.md` **Fix map rounds**.
+P2 suggestions: **do not** block when `Approved` (score **10**). Score **9** still **Lift** even if P2 only. Round-1 map = exhaustive; round 2+ = delta.
 
 ### Delivery
 

@@ -54,4 +54,4 @@ Report: files changed, summary of the diff, blockers, tokens, any new destructiv
 
 ## Fix-loop re-dispatch
 
-When re-invoked with reviewer findings (`Rejected`), treat as one new unit (or split if unrelated) — dispatch only those units; skip units already done. Same unit-count gate: 1 = in-session; ≥2 = spawn.
+When re-invoked with reviewer findings (`Rejected`): **one** coder call on the whole map **verbatim**. Do **not** split map rows into units. Do **not** run the unit-count gate on map rows. Skip implementation units already done.

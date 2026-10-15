@@ -46,7 +46,7 @@
     {
       "id": 8,
       "prompt": "delta re-review after fix map IDs C1,W1,W2 — parent prompt names those IDs. Diff still has a new Warning outside that set in an untouched helper, and a new Critical the fixer introduced inside the W1 hunk.",
-      "expected_output": "Delta mode: ignore the new Warning outside prior map IDs (do not emit, do not reject for it). Emit a new Critical row for the defect the fixer introduced in the mapped hunk. Residual open prior IDs if still failing. Ends with Code Review: Rejected (or Blocked if rounds exhausted).",
+      "expected_output": "Delta mode: ignore the new Warning outside prior map IDs (do not emit, do not reject for it). Emit a new Critical row for the defect the fixer introduced in the mapped hunk. Residual open prior IDs if still failing. Ends with Code Review: Rejected — not Blocked (caller Blocked only after reviewer call 3 still not score 10).",
       "files": []
     }
   ]

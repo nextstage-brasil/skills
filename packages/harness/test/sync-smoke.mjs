@@ -35,7 +35,7 @@ const cliPath = join(harnessRoot, 'bin', 'cli.js');
 
 function assert(condition, message) {
   if (!condition) {
-    throw new Error(message);
+    throw new Error(`assert failed: ${message}`);
   }
 }
 
@@ -914,7 +914,7 @@ Should not land in canonical.
       const cursorCoder = readFileSync(join(subagentsDir, '.cursor', 'agents', 'coder-agent.md'), 'utf8');
       assert(cursorCoder.includes('name: coder-agent'), 'cursor adapter should have name');
       assert(cursorCoder.includes('readonly: false'), 'coder-agent should not be readonly');
-      assert(cursorCoder.includes('composer-2.5[fast=false]'), 'coder-agent default cursor model');
+      assert(cursorCoder.includes('model: inherit'), 'coder-agent default cursor model');
       assert(cursorCoder.includes('Obey `AGENTS.md`'), 'adapter body should require AGENTS.md');
       assert(cursorCoder.includes('.agents/skills/ns-coder/SKILL.md'), 'adapter should point at skill');
 
@@ -923,10 +923,7 @@ Should not land in canonical.
         'utf8',
       );
       assert(cursorReviewer.includes('readonly: true'), 'reviewer-agent must be readonly');
-      assert(
-        cursorReviewer.includes('grok-4.7[context=256k,reasoning_effort=medium,fast=false]'),
-        'reviewer-agent default cursor model',
-      );
+      assert(cursorReviewer.includes('model: inherit'), 'reviewer-agent default cursor model');
 
       const claudeTask = readFileSync(
         join(subagentsDir, '.claude', 'agents', 'task-writer-agent.md'),
@@ -1119,7 +1116,8 @@ Should not land in canonical.
     console.log('OK: harness sync smoke tests passed');
   })();
 } catch (error) {
-  console.error(error instanceof Error ? error.message : String(error));
+  console.error('FAIL: harness sync smoke');
+  console.error(error instanceof Error ? (error.stack || error.message) : String(error));
   process.exit(1);
 } finally {
   if (tempDir) {
