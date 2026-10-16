@@ -1,6 +1,6 @@
 ---
 name: ns-execution-gitlab-issue
-description: (NS) Execute a GitLab issue end-to-end — status gates, worktree isolation, atomic delivery, MR, mandatory code then judge loop. Use for external ISSUE_URL or SDD delivery unit (unit + issue_iid). External Phase 2: single-unit → coder-agent in worktree; multi-unit → ns-autonomous Engine. SDD unit mode uses ns-coder run-implementation. Needs mcp-gitlab-usage + ns-reviewer + ns-judge.
+description: "(NS) Execute a GitLab issue end-to-end — status gates, worktree isolation, atomic delivery, MR, mandatory code then judge loop. Use for external ISSUE_URL or SDD delivery unit (unit + issue_iid). External Phase 2: single-unit → coder-agent in worktree; multi-unit → ns-autonomous Engine. SDD unit mode uses ns-coder run-implementation. Needs mcp-gitlab-usage + ns-reviewer + ns-judge."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
