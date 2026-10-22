@@ -25,5 +25,6 @@
       }
     }
   ],
-  "subagents": []
+  "subagents": [],
+  "skills": { "preset": null, "ns": [], "external": [] }
 }

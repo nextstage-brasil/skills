@@ -2,6 +2,11 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import * as p from '@clack/prompts';
 import { listInstalledSkillNames } from './prepare.js';
+import { allSkillNames } from './catalog.js';
+import { isExternalSkill } from './externalSkills.js';
+import { readManifestSkills, writeManifestSkills } from './manifest.js';
+import { syncGitignore } from './syncGitignore.js';
+import { untrackManagedSkills } from './untrackManagedSkills.js';
 import { installSkills, updateInstalledSkills } from './installer.js';
 import { pruneRetiredSkills } from './pruneRetiredSkills.js';
 import { syncSkills } from './syncSkills.js';
@@ -14,8 +19,19 @@ import { logResolvedAgents } from './logResolvedAgents.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
 import { planSkillUpdates } from './skillUpdateDiff.js';
 
+function isManaged(name) {
+  return isExternalSkill(name) || allSkillNames().includes(name);
+}
+
+/** Installed skills plus those recorded in manifest.skills (restores a deleted .agents/). */
+function knownSkillNames(projectRoot) {
+  const recorded = readManifestSkills(projectRoot);
+  const wanted = recorded ? [...recorded.ns, ...recorded.external].filter(isManaged) : [];
+  return [...new Set([...listInstalledSkillNames(projectRoot), ...wanted])].sort();
+}
+
 export function listSkillsToUpdate(projectRoot, requested = []) {
-  const installed = listInstalledSkillNames(projectRoot);
+  const installed = knownSkillNames(projectRoot);
 
   if (requested.length === 0) {
     return { skills: installed, skipped: [], notInstalled: [] };
@@ -27,6 +43,29 @@ export function listSkillsToUpdate(projectRoot, requested = []) {
     skipped: requested.filter((name) => !installedSet.has(name)),
     notInstalled: requested.filter((name) => !installedSet.has(name)),
   };
+}
+
+/** Record skills in the manifest, ignore them in git and drop them from the index. */
+function reconcileSkillTracking(projectRoot, skills) {
+  const managed = skills.filter(isManaged);
+  const details = [];
+
+  writeManifestSkills(projectRoot, {
+    ns: managed.filter((name) => !isExternalSkill(name)),
+    external: managed.filter(isExternalSkill),
+  });
+
+  if (syncGitignore(projectRoot, { create: true }).written.length > 0) {
+    details.push('Updated .gitignore with harness ignore paths');
+  }
+
+  const { untracked } = untrackManagedSkills(projectRoot);
+  if (untracked.length > 0) {
+    details.push(
+      `Removed ${untracked.length} harness-managed path(s) from the git index (files kept): commit .gitignore + manifest.json`,
+    );
+  }
+  return details;
 }
 
 export async function runUpdate(argv = {}) {
@@ -72,8 +111,13 @@ export async function runUpdate(argv = {}) {
     p.log.info(`${diff.upToDate.length} skill(s) already up to date`);
   }
 
+  const trackingDetails = reconcileSkillTracking(projectRoot, skills);
+
   if (diff.toUpdate.length === 0) {
     p.log.success('All installed skills are up to date');
+    for (const line of trackingDetails) {
+      p.log.message(line);
+    }
     const pruneOnly = pruneRetiredSkills(projectRoot, { agents });
     if (pruneOnly.removed.length > 0) {
       p.log.message(`Retired skills removed: ${pruneOnly.removable.map((e) => e.oldName).join(', ')}`);
@@ -93,7 +137,7 @@ export async function runUpdate(argv = {}) {
     updateInstalledSkills(diff.toUpdate, installOptions);
   }
 
-  const details = [];
+  const details = [...trackingDetails];
 
   const pruneResult = pruneRetiredSkills(projectRoot, { agents });
   if (pruneResult.removed.length > 0) {

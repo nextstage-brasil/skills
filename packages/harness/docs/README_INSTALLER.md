@@ -129,7 +129,7 @@ Both read the same canonical rule bodies from `.nextstage-harness/rules/`. Skill
 Commit:
 
 - `.nextstage-harness/` (canonical rules + manifest)
-- `.agents/skills/` and `skills-lock.json` (Skills CLI)
+- Not committed: `.agents/skills/ns-*`, external skills, `skills-lock.json` (gitignored; restored from `manifest.json` → `skills` via `harness update`). Project-authored skills under `.agents/skills/` stay committed.
 - `AGENTS.md`, `CLAUDE.md` (if present)
 
 Do **not** commit generated adapters — `harness sync` manages a block in `.gitignore`:

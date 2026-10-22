@@ -4,7 +4,6 @@ import {
   readFileSync,
   rmSync,
   unlinkSync,
-  writeFileSync,
 } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -87,38 +86,6 @@ export function assessPruneRetiredSkills(projectRoot, options = {}) {
   return { removable, skipped };
 }
 
-function pruneSkillsLock(projectRoot, oldNames) {
-  const lockPath = join(projectRoot, 'skills-lock.json');
-  if (!existsSync(lockPath) || oldNames.length === 0) {
-    return [];
-  }
-
-  let lock;
-  try {
-    lock = JSON.parse(readFileSync(lockPath, 'utf8'));
-  } catch {
-    return [];
-  }
-
-  if (!lock.skills || typeof lock.skills !== 'object') {
-    return [];
-  }
-
-  const pruned = [];
-  for (const oldName of oldNames) {
-    if (lock.skills[oldName]) {
-      delete lock.skills[oldName];
-      pruned.push(oldName);
-    }
-  }
-
-  if (pruned.length > 0) {
-    writeFileSync(lockPath, `${JSON.stringify(lock, null, 2)}\n`, 'utf8');
-  }
-
-  return pruned;
-}
-
 export function pruneRetiredSkills(projectRoot, options = {}) {
   const { dryRun = false, agents = DEFAULT_AGENTS } = options;
   const assessment = assessPruneRetiredSkills(projectRoot, { agents });
@@ -127,7 +94,6 @@ export function pruneRetiredSkills(projectRoot, options = {}) {
     return {
       ...assessment,
       removed: [],
-      lockPruned: [],
       dryRun: true,
     };
   }
@@ -141,15 +107,9 @@ export function pruneRetiredSkills(projectRoot, options = {}) {
     }
   }
 
-  const lockPruned = pruneSkillsLock(
-    projectRoot,
-    assessment.removable.map((entry) => entry.oldName),
-  );
-
   return {
     ...assessment,
     removed,
-    lockPruned,
     dryRun: false,
   };
 }
@@ -178,11 +138,6 @@ export function formatPruneReport(result) {
     for (const entry of result.skipped) {
       lines.push(`  ${entry.oldName} — ${entry.reason}`);
     }
-  }
-
-  if (result.lockPruned?.length > 0) {
-    lines.push('');
-    lines.push(`skills-lock.json entries removed: ${result.lockPruned.join(', ')}`);
   }
 
   if (lines.length === 0) {

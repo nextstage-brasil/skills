@@ -148,7 +148,7 @@ Marker (first body line):
 
 ## Git policy
 
-Commit canonical only: `.nextstage-harness/` (`rules/`, `agents/`, `manifest.json` + `subagents`); `.agents/skills/` + `skills-lock.json`; `AGENTS.md`, `CLAUDE.md`.
+Commit canonical only: `.nextstage-harness/` (`rules/`, `agents/`, `manifest.json` + `subagents`); project-authored skills in `.agents/skills/` (harness-installed `ns-*` / external skills and `skills-lock.json` are gitignored — `harness update` restores them from `manifest.json` → `skills`); `AGENTS.md`, `CLAUDE.md`.
 
 Generated `.cursor/rules/`, `.cursor/agents/`, `.claude/` **gitignored** — `harness sync` adds to `.gitignore` on init/update. After clone:
 

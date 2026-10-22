@@ -15,10 +15,10 @@ import {
   DOCKERIGNORE_BLOCK_HEADER,
   DOCKERIGNORE_ENTRIES,
   GITIGNORE_BLOCK_HEADER,
-  GITIGNORE_ENTRIES,
   HARNESS_ROOT,
 } from './agentsLayout.js';
 import { stripIgnoreContent } from './patchIgnoreContent.js';
+import { gitignoreEntries } from './syncGitignore.js';
 import { GENERATION_MARKER } from './syncRules.js';
 
 function removePath(path) {
@@ -162,7 +162,7 @@ function assessIgnorePatches(projectRoot) {
   const gitignorePath = join(projectRoot, '.gitignore');
   if (existsSync(gitignorePath)) {
     const existing = readFileSync(gitignorePath, 'utf8');
-    const next = stripIgnoreContent(existing, GITIGNORE_BLOCK_HEADER, GITIGNORE_ENTRIES);
+    const next = stripIgnoreContent(existing, GITIGNORE_BLOCK_HEADER, gitignoreEntries(projectRoot));
     if (next !== existing) {
       patches.push({ path: gitignorePath, next });
     }

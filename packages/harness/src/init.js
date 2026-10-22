@@ -30,7 +30,8 @@ import { buildPostInstallNotes } from './postInstallNotes.js';
 import { pruneRetiredSkills } from './pruneRetiredSkills.js';
 import { normalizeAgentIds } from './agentIds.js';
 import { resolveAgentsConfig, HARNESS_ROOT } from './agentsLayout.js';
-import { writeManifestAgents, manifestPath } from './manifest.js';
+import { writeManifestAgents, writeManifestSkills, manifestPath } from './manifest.js';
+import { untrackManagedSkills } from './untrackManagedSkills.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
 import { logResolvedAgents } from './logResolvedAgents.js';
 import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
@@ -202,9 +203,23 @@ export async function runInit(argv = {}) {
     }
 
     try {
-      const gitignoreResult = syncGitignore(detection.projectRoot);
+      writeManifestSkills(detection.projectRoot, {
+        preset: argv.preset ?? null,
+        ns: plan.nsSkills,
+        external: [
+          ...plan.externalSkills,
+          ...(plan.installSkillCreator ? ['skill-creator'] : []),
+        ],
+      });
+      const gitignoreResult = syncGitignore(detection.projectRoot, { create: true });
       if (gitignoreResult.written.length > 0) {
         p.log.success('Updated .gitignore with harness ignore paths');
+      }
+      const { untracked } = untrackManagedSkills(detection.projectRoot);
+      if (untracked.length > 0) {
+        p.log.success(
+          `Removed ${untracked.length} harness-managed path(s) from the git index (files kept) — commit .gitignore + manifest.json`,
+        );
       }
     } catch (error) {
       p.log.warn(error instanceof Error ? error.message : String(error));

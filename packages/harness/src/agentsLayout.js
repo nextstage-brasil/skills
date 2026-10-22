@@ -85,6 +85,8 @@ export const GITIGNORE_BLOCK_HEADER = '# Nextstage-harness ignore files';
 
 /** Paths excluded from git (managed by harness sync). */
 export const GITIGNORE_ENTRIES = [
+  '/.agents/skills/ns-*',
+  '/skills-lock.json',
   '/AGENTS.local.md',
   '/.worktrees/',
   '/.cursor/rules/',

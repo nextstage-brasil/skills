@@ -153,7 +153,9 @@ npx @nextstage-brasil/harness agents          # show current
 
 ### Refresh skills after a catalog release
 
-Updates only skills that **changed** (compares local/source content hash, or GitHub tree SHA from `skills-lock.json`). Skips up-to-date installs. Does **not** install new catalog entries. Use `--force` to refresh everything.
+Updates only skills that **changed** (compares local/source content hash). Skips up-to-date installs. Does **not** install new catalog entries. Use `--force` to refresh everything.
+
+`.nextstage-harness/manifest.json` → `skills` (`preset`, `ns`, `external`) records what the harness installed. `update` restores any recorded skill missing from `.agents/skills/` (e.g. after deleting the folder). `ns-*` and external skills are gitignored; `init`/`update` also run `git rm --cached` on already-tracked ones (files kept, no commit) and on `skills-lock.json`. Older projects are migrated from the installed skills on the first `update`.
 
 ```bash
 npx @nextstage-brasil/harness update

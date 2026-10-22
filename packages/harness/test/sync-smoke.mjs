@@ -13,9 +13,10 @@ import { pruneRetiredSkills, assessPruneRetiredSkills } from '../src/pruneRetire
 import { groupExternalSkillsBySource, getExternalPreset } from '../src/externalSkills.js';
 import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js';
 import { listSkillsToUpdate } from '../src/update.js';
-import { computeSkillFolderHash, planSkillUpdates, getSkillFolderHashFromTree } from '../src/skillUpdateDiff.js';
+import { computeSkillFolderHash, planSkillUpdates } from '../src/skillUpdateDiff.js';
 import { resolveAgentsConfig } from '../src/agentsLayout.js';
-import { writeManifestAgents } from '../src/manifest.js';
+import { writeManifestAgents, writeManifestSkills, readManifestSkills } from '../src/manifest.js';
+import { untrackManagedSkills } from '../src/untrackManagedSkills.js';
 import { syncSubagents } from '../src/syncSubagents.js';
 import { buildSubagentBody } from '../src/subagentCanonical.js';
 import { ensureSubagents } from '../src/ensureSubagents.js';
@@ -653,7 +654,6 @@ Should not land in canonical.
     assert(!existsSync(oldSkillDir), 'old canonical skill dir should be removed');
     assert(!existsSync(cursorOldSkill), 'old cursor adapter should be removed');
     assert(existsSync(newSkillDir), 'replacement skill dir should remain');
-    assert(pruned.lockPruned.includes('task-generator'), 'prune should drop retired skills-lock entry');
 
     const dryRunCli = runCli(['prune-retired-skills', '--dry-run', '--dir', tempDir], harnessRoot);
     assert(dryRunCli.status === 0, `prune-retired-skills --dry-run should pass: ${dryRunCli.stderr}${dryRunCli.stdout}`);
@@ -723,6 +723,46 @@ Should not land in canonical.
     assert(plan.skills.length === 1 && plan.skills[0] === 'ns-harness', 'update plan should filter to installed only');
     assert(plan.notInstalled.includes('missing-skill'), 'update plan should track missing skills');
 
+    // manifest.skills restores skills missing on disk and drives gitignore/untrack
+    const restoreDir = mkdtempSync(join(tmpdir(), 'harness-restore-'));
+    try {
+      scaffoldProject(restoreDir, { agents: true, docs: false });
+      writeManifestSkills(restoreDir, { preset: 'p', ns: ['ns-harness'], external: ['skill-creator'] });
+      writeManifestSkills(restoreDir, { ns: ['ns-coder'] });
+      const recorded = readManifestSkills(restoreDir);
+      assert(recorded.preset === 'p' && recorded.ns.length === 2, 'manifest skills should merge, keep preset');
+      const restorePlan = listSkillsToUpdate(restoreDir);
+      assert(
+        restorePlan.skills.includes('ns-harness') && restorePlan.skills.includes('skill-creator'),
+        'update plan should include manifest skills missing on disk',
+      );
+      const ignored = buildGitignoreBlock(restoreDir);
+      assert(
+        ignored.includes('/.agents/skills/ns-*') && ignored.includes('/.agents/skills/skill-creator/'),
+        'gitignore block should cover ns-* and manifest externals',
+      );
+
+      const gitRun = (args) => spawnSync('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', ...args], { cwd: restoreDir, encoding: 'utf8' });
+      gitRun(['init', '-q']);
+      for (const file of ['.agents/skills/ns-x/SKILL.md', '.agents/skills/skill-creator/SKILL.md', '.agents/skills/mine/SKILL.md', 'skills-lock.json']) {
+        mkdirSync(dirname(join(restoreDir, file)), { recursive: true });
+        writeFileSync(join(restoreDir, file), 'x\n', 'utf8');
+      }
+      gitRun(['add', '-A']);
+      gitRun(['commit', '-q', '-m', 'seed']);
+      const { untracked } = untrackManagedSkills(restoreDir);
+      assert(
+        untracked.includes('.agents/skills/ns-x') && untracked.includes('.agents/skills/skill-creator') && untracked.includes('skills-lock.json'),
+        'untrack should drop ns-*, manifest externals and skills-lock.json',
+      );
+      const tracked = gitRun(['ls-files']).stdout;
+      assert(tracked.includes('.agents/skills/mine/SKILL.md'), 'project-authored skills stay tracked');
+      assert(!tracked.includes('ns-x'), 'ns-* should leave the index');
+      assert(existsSync(join(restoreDir, '.agents/skills/ns-x/SKILL.md')), 'untrack must keep files on disk');
+    } finally {
+      rmSync(restoreDir, { recursive: true, force: true });
+    }
+
     // Selective update: identical source vs installed → skip
     const sourceSkill = join(tempDir, 'fake-source', 'skills', 'ns-harness');
     mkdirSync(sourceSkill, { recursive: true });
@@ -751,52 +791,6 @@ Should not land in canonical.
       source: join(tempDir, 'fake-source'),
     });
     assert(forced.toUpdate.includes('ns-harness'), '--force should queue all skills');
-
-    const treeHash = getSkillFolderHashFromTree(
-      {
-        sha: 'root',
-        tree: [
-          { type: 'tree', path: 'skills/ns-harness', sha: 'abc123' },
-          { type: 'blob', path: 'skills/ns-harness/SKILL.md', sha: 'blob' },
-        ],
-      },
-      'skills/ns-harness/SKILL.md',
-    );
-    assert(treeHash === 'abc123', 'tree helper should resolve skill folder SHA');
-
-    const githubPlan = await planSkillUpdates(tempDir, ['ns-harness'], {
-      source: 'nextstage-brasil/skills',
-      fetchTree: async () => ({
-        sha: 'root',
-        tree: [{ type: 'tree', path: 'skills/ns-harness', sha: 'same-sha' }],
-      }),
-    });
-    // no skillFolderHash in lock → unchecked refresh
-    assert(githubPlan.toUpdate.includes('ns-harness'), 'missing lock hash should refresh');
-
-    writeFileSync(
-      join(tempDir, 'skills-lock.json'),
-      JSON.stringify({
-        version: 1,
-        skills: {
-          'ns-harness': {
-            source: 'nextstage-brasil/skills',
-            sourceType: 'github',
-            skillPath: 'skills/ns-harness/SKILL.md',
-            skillFolderHash: 'same-sha',
-          },
-        },
-      }, null, 2),
-      'utf8',
-    );
-    const githubUpToDate = await planSkillUpdates(tempDir, ['ns-harness'], {
-      source: 'nextstage-brasil/skills',
-      fetchTree: async () => ({
-        sha: 'root',
-        tree: [{ type: 'tree', path: 'skills/ns-harness', sha: 'same-sha' }],
-      }),
-    });
-    assert(githubUpToDate.upToDate.includes('ns-harness'), 'matching GitHub tree SHA should skip');
 
     mkdirSync(join(tempDir, '.agents', 'skills', 'langchain-fundamentals'), { recursive: true });
     writeFileSync(join(tempDir, '.agents', 'skills', 'langchain-fundamentals', 'SKILL.md'), '# external\n', 'utf8');
