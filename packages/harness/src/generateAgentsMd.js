@@ -1,7 +1,8 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { AGENTS_HOME, CLAUDE_MD_CONTENT, HARNESS_ROOT, HARNESS_RULES_DIR } from './agentsLayout.js';
+import { AGENTS_HOME, HARNESS_ROOT, HARNESS_RULES_DIR, resolveAgents } from './agentsLayout.js';
+import { writeClaudeMdIfMissing } from './syncClaudeMd.js';
 import { listCategories } from './catalog.js';
 import { loadManifest } from './manifest.js';
 import { DEFAULT_SUBAGENTS } from './subagentsCatalog.js';
@@ -223,10 +224,9 @@ function buildComplementsNote(installed) {
 }
 
 export function generateAgentsMd(projectRoot, options = {}) {
-  const { force = false } = options;
+  const { force = false, agents } = options;
   const root = resolve(projectRoot);
   const agentsPath = join(root, 'AGENTS.md');
-  const claudePath = join(root, 'CLAUDE.md');
 
   const installed = listSkillDirs(root);
   if (installed.length === 0) {
@@ -362,11 +362,14 @@ Project code comments and documentation: English unless the team defines otherwi
 `;
 
   writeFileSync(agentsPath, content, 'utf8');
-  writeFileSync(claudePath, CLAUDE_MD_CONTENT, 'utf8');
+  const written = ['AGENTS.md'];
+  if ((agents ?? resolveAgents(root)).includes('claude-code') && writeClaudeMdIfMissing(root).written) {
+    written.push('CLAUDE.md');
+  }
 
   return {
     skipped: false,
-    written: ['AGENTS.md', 'CLAUDE.md'],
+    written,
     skills: installed,
   };
 }

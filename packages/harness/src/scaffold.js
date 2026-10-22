@@ -5,6 +5,7 @@ import {
   DOCS_LAYOUT_DIRS,
   HARNESS_ROOT,
   HARNESS_RULES_DIR,
+  resolveAgents,
 } from './agentsLayout.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
 import { writeClaudeMdIfMissing } from './syncClaudeMd.js';
@@ -14,13 +15,16 @@ const templatesDir = join(__dirname, '..', 'templates');
 const harnessManifestTemplatePath = join(templatesDir, 'harness-manifest.json');
 
 export function scaffoldProject(projectRoot, options = {}) {
-  const { agents = true, docs = true, force = false } = options;
+  const { agents = true, docs = true, force = false, activeAgents } = options;
   const created = [];
   const skipped = [];
 
   if (agents) {
     scaffoldHarnessRoot(projectRoot, { force, created, skipped });
-    scaffoldClaudeStub(projectRoot, { created, skipped });
+    const targets = activeAgents ?? resolveAgents(projectRoot);
+    if (targets.includes('claude-code')) {
+      scaffoldClaudeStub(projectRoot, { created, skipped });
+    }
   }
 
   if (docs) {

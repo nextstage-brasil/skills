@@ -19,6 +19,7 @@ import {
 } from './agentsLayout.js';
 import { stripIgnoreContent } from './patchIgnoreContent.js';
 import { gitignoreEntries } from './syncGitignore.js';
+import { stripRootReadme } from './syncRootReadme.js';
 import { GENERATION_MARKER } from './syncRules.js';
 
 function removePath(path) {
@@ -165,6 +166,14 @@ function assessIgnorePatches(projectRoot) {
     const next = stripIgnoreContent(existing, GITIGNORE_BLOCK_HEADER, gitignoreEntries(projectRoot));
     if (next !== existing) {
       patches.push({ path: gitignorePath, next });
+    }
+  }
+
+  const readmePath = join(projectRoot, 'README.md');
+  if (existsSync(readmePath)) {
+    const next = stripRootReadme(readFileSync(readmePath, 'utf8'));
+    if (next !== null) {
+      patches.push({ path: readmePath, next });
     }
   }
 

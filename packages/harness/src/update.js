@@ -17,6 +17,7 @@ import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
 import { HARNESS_ROOT, resolveAgents } from './agentsLayout.js';
 import { logResolvedAgents } from './logResolvedAgents.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
+import { syncRootReadme } from './syncRootReadme.js';
 import { planSkillUpdates } from './skillUpdateDiff.js';
 
 function isManaged(name) {
@@ -57,6 +58,10 @@ function reconcileSkillTracking(projectRoot, skills) {
 
   if (syncGitignore(projectRoot, { create: true }).written.length > 0) {
     details.push('Updated .gitignore with harness ignore paths');
+  }
+
+  if (syncRootReadme(projectRoot).written) {
+    details.push('Updated README.md with harness usage');
   }
 
   const { untracked } = untrackManagedSkills(projectRoot);

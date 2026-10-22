@@ -33,6 +33,7 @@ import { resolveAgentsConfig, HARNESS_ROOT } from './agentsLayout.js';
 import { writeManifestAgents, writeManifestSkills, manifestPath } from './manifest.js';
 import { untrackManagedSkills } from './untrackManagedSkills.js';
 import { refreshHarnessReadme } from './refreshHarnessReadme.js';
+import { syncRootReadme } from './syncRootReadme.js';
 import { logResolvedAgents } from './logResolvedAgents.js';
 import { pruneExcludedAgentAdapters } from './pruneExcludedAgentAdapters.js';
 import { syncClaudeMd } from './syncClaudeMd.js';
@@ -159,7 +160,7 @@ export async function runInit(argv = {}) {
 
   let scaffoldRan = false;
   if (!scaffoldOptions.skip) {
-    const result = scaffoldProject(detection.projectRoot, scaffoldOptions);
+    const result = scaffoldProject(detection.projectRoot, { ...scaffoldOptions, activeAgents: agents });
     scaffoldRan = result.created.length > 0;
     if (result.created.length > 0) {
       p.log.success(`Created: ${result.created.join(', ')}`);
@@ -228,7 +229,7 @@ export async function runInit(argv = {}) {
 
   if (!scaffoldOptions.skip) {
     try {
-      const agentsMdResult = generateAgentsMd(detection.projectRoot, { force: false });
+      const agentsMdResult = generateAgentsMd(detection.projectRoot, { force: false, agents });
       if (agentsMdResult.skipped) {
         p.log.info(agentsMdResult.reason);
       } else {
@@ -269,6 +270,9 @@ export async function runInit(argv = {}) {
     const readmeResult = refreshHarnessReadme(detection.projectRoot);
     if (readmeResult.updated) {
       p.log.success(`Updated: ${HARNESS_ROOT}/README.md`);
+    }
+    if (syncRootReadme(detection.projectRoot).written) {
+      p.log.success('Updated README.md with harness usage');
     }
   } catch (error) {
     p.log.warn(error instanceof Error ? error.message : String(error));

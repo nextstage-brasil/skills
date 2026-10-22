@@ -396,7 +396,7 @@ async function runPrepareCmd(parsed) {
 
 async function runAgentsMd(parsed) {
   const projectRoot = resolveProjectDir(parsed.dir);
-  const result = generateAgentsMd(projectRoot, { force: parsed.force });
+  const result = generateAgentsMd(projectRoot, { force: parsed.force, agents: resolveAgents(projectRoot, parsed.agent) });
 
   if (result.skipped) {
     console.log(`Skipped: ${result.reason}`);

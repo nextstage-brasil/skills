@@ -17,6 +17,7 @@ import { computeSkillFolderHash, planSkillUpdates } from '../src/skillUpdateDiff
 import { resolveAgentsConfig } from '../src/agentsLayout.js';
 import { writeManifestAgents, writeManifestSkills, readManifestSkills } from '../src/manifest.js';
 import { untrackManagedSkills } from '../src/untrackManagedSkills.js';
+import { syncRootReadme, stripRootReadme } from '../src/syncRootReadme.js';
 import { syncSubagents } from '../src/syncSubagents.js';
 import { buildSubagentBody } from '../src/subagentCanonical.js';
 import { ensureSubagents } from '../src/ensureSubagents.js';
@@ -723,6 +724,15 @@ Should not land in canonical.
     assert(plan.skills.length === 1 && plan.skills[0] === 'ns-harness', 'update plan should filter to installed only');
     assert(plan.notInstalled.includes('missing-skill'), 'update plan should track missing skills');
 
+    // cursor-only scaffold must not create CLAUDE.md
+    const cursorOnlyDir = mkdtempSync(join(tmpdir(), 'harness-cursor-only-'));
+    try {
+      scaffoldProject(cursorOnlyDir, { agents: true, docs: false, activeAgents: ['cursor'] });
+      assert(!existsSync(join(cursorOnlyDir, 'CLAUDE.md')), 'cursor-only scaffold must not write CLAUDE.md');
+    } finally {
+      rmSync(cursorOnlyDir, { recursive: true, force: true });
+    }
+
     // manifest.skills restores skills missing on disk and drives gitignore/untrack
     const restoreDir = mkdtempSync(join(tmpdir(), 'harness-restore-'));
     try {
@@ -736,6 +746,12 @@ Should not land in canonical.
         restorePlan.skills.includes('ns-harness') && restorePlan.skills.includes('skill-creator'),
         'update plan should include manifest skills missing on disk',
       );
+      writeFileSync(join(restoreDir, 'README.md'), '# App\n', 'utf8');
+      assert(syncRootReadme(restoreDir).written, 'root README should get harness block');
+      assert(!syncRootReadme(restoreDir).written, 'root README sync should be idempotent');
+      const readmeBody = readFileSync(join(restoreDir, 'README.md'), 'utf8');
+      assert(readmeBody.startsWith('# App') && readmeBody.includes('harness update') && readmeBody.includes('--help'), 'README block should keep content and list commands');
+      assert(stripRootReadme(readmeBody) === '# App\n', 'strip should restore original README');
       const ignored = buildGitignoreBlock(restoreDir);
       assert(
         ignored.includes('/.agents/skills/ns-*') && ignored.includes('/.agents/skills/skill-creator/'),
@@ -868,7 +884,7 @@ Should not land in canonical.
       mkdirSync(join(agentsOnlyDir, '.agents', 'skills', 'ns-harness'), { recursive: true });
       writeFileSync(join(agentsOnlyDir, '.agents', 'skills', 'ns-harness', 'SKILL.md'), '# stub\n', 'utf8');
       generateAgentsMd(agentsOnlyDir, { force: true });
-      assert(existsSync(join(agentsOnlyDir, 'CLAUDE.md')), 'agents-md still writes CLAUDE.md');
+      assert(!existsSync(join(agentsOnlyDir, 'CLAUDE.md')), 'agents-md must not write CLAUDE.md for cursor-only projects');
       pruneExcludedAgentAdapters(agentsOnlyDir, ['cursor']);
       assert(
         !existsSync(join(agentsOnlyDir, 'CLAUDE.md')),
