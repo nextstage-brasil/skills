@@ -4,7 +4,7 @@ description: "(NS) LangGraph.js agent-api — bootstrap-agent-runtime, StateGrap
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.19"
+  version: "1.20"
 depends:
   - ns-harness
 ---
@@ -210,6 +210,9 @@ After bootstrap, **verify** these exist; do not re-scaffold. Fill only gaps vs `
 ### Phase 3 — LLM and messages
 
 - Provider config in `src/llm/` (infra only — no domain prompts).
+- **One env var per model role** (e.g. chat, summarize, embed) — **no hardcoded model id** in source.
+- Embedding model change invalidates vector index → **full re-seed** required.
+- Graph/node unit tests: **fake LLM** in default tier. Prompt/guardrail behavior needing a real model → **live tier** (Test tiers in `ns-harness` → `docker-and-testing.md`).
 - Prefer JSON mode + Zod parse for structured turns; avoid `withStructuredOutput` on OpenAI-compatible local servers.
 - Normalize provider output via `contentBlocks` / `content_blocks` — see `references/message-content-blocks.md`.
 

@@ -4,7 +4,7 @@ description: "(NS) PHPUnit unit/integration in backend package (bootstrap tests/
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
 ---
@@ -60,17 +60,20 @@ Do not proceed to Phase 1 until `{backend_root}` is confirmed and `phpunit.xml` 
 
 ## Phase 2 — Write tests
 
+- Unit/feature **default tier:** no HTTP/network to live third parties — fake/fixtures only (see Test tiers in `../../ns-harness/references/docker-and-testing.md`)
 - Unit: mock dependencies — no real DB/queue/cache I/O
 - Feature: HTTP tests with auth, 401/403, cross-tenant P0 when applicable
+- Real external service or real LLM required → PHPUnit **live** group (e.g. `#[Group('live')]`); exclude that group in `phpunit.xml` from default run; record marker + on-demand command in `architecture-rules.md`
 - Naming: `{Component}Test.php`, descriptive snake_case method names
 - Match module paths: `tests/Unit/Modules/{Domain}/`, `tests/Feature/Modules/{Domain}/`
+- **Never** edit assertions to match broken behavior
 
 ## Phase 3 — Run (mandatory contract)
 
 See also `../../ns-harness/references/docker-and-testing.md`.
 
 1. Run `docker ps` — confirm the documented **test** container (ask once if undocumented)
-2. Execute **inside the test container** at `{backend_root}` workdir:
+2. Execute **inside the test container** at `{backend_root}` workdir — **default suite only** (live group excluded). Never include the live group unless the human asks this run:
 
 ```bash
 timeout 120 docker exec -w {workdir} {test_container} \

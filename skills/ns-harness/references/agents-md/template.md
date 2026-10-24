@@ -79,6 +79,12 @@ Priority scan **1 → 5**; first match wins. Full handoffs: installed `ns-harnes
 - GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` — never ad-hoc coder on the main checkout.
 - Do not fabricate `{version_san}` or `docs/versions/` unless the active skill's workflow requires it.
 
+## Engineering guardrails
+
+- **Ask before:** new dependency; abstraction without 2 concrete uses; DB schema or shared contract change; CI/deploy/infra config; moving files across packages.
+- **Never:** secrets/keys/connection strings in versioned files; default-tier tests depending on network/live services/real LLM (fixtures/fakes; real calls → opt-in live tier); weakening/deleting/skipping a test to make it pass; type escape hatch without justifying comment.
+- **Rule:** when docs/rules diverge from real library API, follow the library and report the drift.
+
 ## Rules and sync
 
 - Canonical rules: `.nextstage-harness/rules/*.md` — edit here
@@ -90,6 +96,7 @@ See installed `ns-harness` (`session-boot.md`, `rules-sync.md`).
 ## Docker and testing
 
 - **MUST NOT** restart/stop/recreate or `docker compose up`/`down` without asking the user first.
+- **Test tiers** — include verbatim `### Test tiers` from `../docker-and-testing.md` (default deterministic; live opt-in; agents never run live unless human asks this run).
 - {test_evidence — only when recon finds it: e.g. Vitest on host; or test container name + command}
 - {phpunit_block — include verbatim PHPUnit subsection from `../docker-and-testing.md` ONLY if PHP/PHPUnit evidenced; otherwise omit}
 

@@ -48,6 +48,18 @@
       "prompt": "delta re-review after fix map IDs C1,W1,W2 — parent prompt names those IDs. Diff still has a new Warning outside that set in an untouched helper, and a new Critical the fixer introduced inside the W1 hunk.",
       "expected_output": "Delta mode: ignore the new Warning outside prior map IDs (do not emit, do not reject for it). Emit a new Critical row for the defect the fixer introduced in the mapped hunk. Residual open prior IDs if still failing. Ends with Code Review: Rejected — not Blocked (caller Blocked only after reviewer call 3 still not score 10).",
       "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Review diff that makes a failing unit test pass by deleting the assertion and adding .skip to the case. Author says green CI.",
+      "expected_output": "Critical for test weakened/deleted to pass; score forces Rejected; fix map requires restoring assertion and removing skip; ends Code Review: Rejected.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Review diff that adds an integration test calling a real LLM provider from the default test suite with no live group marker and no exclusion from npm test / CI.",
+      "expected_output": "Critical for real LLM/network reachable from default tier; ends Code Review: Rejected. Fix map: move behind live marker, exclude from default run/CI, document on-demand trigger.",
+      "files": []
     }
   ]
 }

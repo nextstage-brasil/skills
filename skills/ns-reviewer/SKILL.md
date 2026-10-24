@@ -4,7 +4,7 @@ description: "(NS) Code quality gate: SOLID, clean code, performance, security, 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "2.3"
+  version: "2.4"
 depends:
   - ns-harness
 ---
@@ -145,6 +145,15 @@ Keep anti-patterns delegation above. Extra criteria when diff touches agent/LLM 
 - N+1, unnecessary renders, missing validation
 - SQL injection, XSS, sensitive logs
 - Coupling that blocks testing
+
+| Finding | Severity |
+| ------- | -------- |
+| Secret/credential in versioned file | **Critical** |
+| Test weakened/deleted to pass | **Critical** |
+| Real LLM/network call reachable from default tier (no live marker, or not excluded from default run/CI) | **Critical** |
+| Live-tier test without documented on-demand trigger, or credentials not from env/secret manager | **Warning** |
+| Unjustified type escape hatch | **Warning** |
+| New dependency or abstraction not approved in task | **Warning** |
 
 ### Actor and gate semantics (rules-first)
 

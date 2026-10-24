@@ -49,7 +49,7 @@ Runs when prove **0** or scripts skipped.
 
 Judge:
 
-- Naked suppressions from `scan_bypasses.py` (noqa, eslint-disable, `@ts-ignore`, test skip)
+- Naked suppressions from `scan_bypasses.py` (noqa, eslint-disable, `@ts-ignore`, test-skip incl. `describe.skip`/`test.skip`/`markTestSkipped`, type-escape `: any`/`as any`/`@phpstan-ignore`/`@psalm-suppress`)
 - Claim without evidence (AC token still required when source present)
 - Leftover not already caught by tests
 

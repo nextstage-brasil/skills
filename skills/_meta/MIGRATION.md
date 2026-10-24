@@ -2,6 +2,24 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Engineering guardrails + Test tiers (2026-10-24)
+
+Portable engineering guardrails landed in generated/refined `AGENTS.md`, architecture-rules template, docker-and-testing snippets, and worker/review skills.
+
+| Surface | Change |
+| ------- | ------ |
+| Generated `AGENTS.md` | New **Engineering guardrails** (Ask before / Never / library-drift rule) after Hard stops |
+| Docker + testing snippets | **Test tiers** — default deterministic; live opt-in (marker + excluded from default CI/coder loop; credentials from env/secret manager) |
+| `architecture-rules` template | Domain invariants; Ask before / Never; Live (on demand) suite row |
+| `ns-coder` 2.3 → 2.4 | Ask-before gates; protected tests; default-tier-only pre-review |
+| `ns-reviewer` 2.3 → 2.4 | Critical/Warning rows for secrets, weakened tests, default-tier live/LLM |
+| `ns-judge` 1.0 → 1.1 | `scan_bypasses.py`: type-escape + expanded test-skip |
+| `ns-backend-tests` / `ns-e2e-tests` 1.0 → 1.1 | Live group / stubbed third-party by default |
+| `ns-langgraph-agents` 1.19 → 1.20 | Model role env vars; fake LLM default tier; LLM evals on-demand |
+| `ns-harness` 1.5.2 → 1.5.3 | Snippets + agents-md + architecture-rules + git atomic + skill precedence |
+
+Consumers: refresh `AGENTS.md` (`harness agents-md --force` or `/ns-harness` agents-md) and re-run architecture-rules prepare when updating constitution stubs.
+
 ## Add catalog skill — `ns-mcp-shield` (2026-09-28)
 
 Secure MCP server development/review (OWASP GenAI Practical Guide v1.0). Catalog `depends`: none (standalone — no `ns-harness`). **Not** in `alwaysInstall` or presets — opt-in:

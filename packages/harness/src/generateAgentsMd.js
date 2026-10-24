@@ -339,6 +339,12 @@ ${buildSkillCreatorSection(installed)}
 - GitLab \`ISSUE_URL\` → \`ns-execution-gitlab-issue\` — never ad-hoc coder on the main checkout.
 - Do not fabricate \`{version_san}\` or \`docs/versions/\` unless the active skill's workflow requires it.
 
+## Engineering guardrails
+
+- **Ask before:** new dependency; abstraction without 2 concrete uses; DB schema or shared contract change; CI/deploy/infra config; moving files across packages.
+- **Never:** secrets/keys/connection strings in versioned files; default-tier tests depending on network/live services/real LLM (fixtures/fakes; real calls → opt-in live tier); weakening/deleting/skipping a test to make it pass; type escape hatch without justifying comment.
+- **Rule:** when docs/rules diverge from real library API, follow the library and report the drift.
+
 ## Ownership
 
 This file **routes** agents to skills and project rules. Stack, modules, and technical constraints belong in \`architecture-rules.md\` — not here. Project codes, language, team context, and agent names belong in \`project-rules.md\`.

@@ -4,7 +4,7 @@ description: "(NS) Ad-hoc coding — bug fixes, refactors, scripts, migrations �
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "2.3"
+  version: "2.4"
 depends:
   - ns-harness
   - ns-investigator
@@ -121,6 +121,9 @@ Then:
 - **No SDD version artifacts** — no `task-NNN.md`, `requirements.md`, `execution-handoff.md`, or `docs/versions/` writes. Conditional living-spec updates under `docs/specs/` via `ns-living-spec` allowed (see **Living specs**).
 - **No gratuitous comments** unless requested
 - Tests per `AGENTS.md` Docker + testing; container/commands in `architecture-rules.md`
+- **Ask before** (gate — stop, ask): new dependency; abstraction without 2 concrete uses; DB schema or shared contract change; CI/deploy/infra config; moving files across packages
+- **Protected tests:** paths listed as Domain invariants / protected tests in `architecture-rules.md` — keep green; never weaken, delete, or skip to pass
+- **Library divergence:** docs/rules disagree with real library API → follow library, report drift
 - Under `execution-handoff.md` / `run-implementation`: **unit/integration only** — no E2E (human at version end); no review gate (parent Step 5)
 
 ## Complement delegation
@@ -152,7 +155,8 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 
 ### Pre-review (before step 7; also before SDD report complete)
 
-- Tests covering changed files per `AGENTS.md` and `../../ns-harness/references/docker-and-testing.md`.
+- Run **default tier** only (unit/integration / default `test` — see Test tiers in `../../ns-harness/references/docker-and-testing.md`). **Never** run live tier unless human asks this run.
+- New tests needing real LLM or live third-party → put in live group/marker; report how to trigger; do **not** run them.
 - Diff removes exports/constants/env flags/public symbols: search remaining call sites; resolve before review.
 - List **new or newly exported** public names (`return { }`, `module.exports`, `export`, `public`/`public static`, window/global attach).
 - Grep each: **no caller outside defining module** — keep private/unexported. Continue (ad-hoc: review; SDD: report parent). **Forbidden** reviewer in SDD handoff.
@@ -196,6 +200,9 @@ Then: what changed, follow-ups, blocked Criticals if applicable.
 | --------- | ------ |
 | Large change gate | Plan + wait |
 | Public contract change | Stop, explain, ask |
+| Ask-before gate (dep / abstraction / schema / CI / cross-package move) | Stop, ask |
+| Protected-test change would weaken coverage | Stop; fix behavior or ask |
+| Library API ≠ docs/rules | Follow library; report drift |
 | Task needs multi-day SDD planning | Redirect to `ns-spec-driven` |
 
 ## Related skills
@@ -215,6 +222,7 @@ Then: what changed, follow-ups, blocked Criticals if applicable.
 - SDD **version** artifact generation (`docs/versions/`, handoff, requirements/tasks)
 - Living-spec consolidator **before** `Delivery Review: Approved`, or when `docs/specs/` missing
 - Out-of-repo access without scope
+- Secrets/keys/connection strings in versioned files
 - Commits without explicit request
 - Refactors outside task scope
 - **Review substitutes** — Cursor Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or any review not via `reviewer-agent` / `ns-reviewer` `SKILL.md`. Harness `reviewer-agent` **allowed**. Judge = in-session `ns-judge` after Approved; no `judge-agent` in v1

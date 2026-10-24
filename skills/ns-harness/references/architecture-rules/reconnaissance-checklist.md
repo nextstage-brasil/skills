@@ -54,6 +54,11 @@ Read-only scan before drafting `architecture-rules.md`. Order below; skip empty 
 - [ ] i18n location
 - [ ] Protected branches / work branch policy
 - [ ] `.gitignore` or CI touch policies if in rules
+- [ ] Dependency policy (allow/deny new packages; who approves)
+- [ ] Regulatory / domain constraints (non-negotiable business or compliance rules)
+- [ ] Guard / protected tests (paths that must stay green; domain-invariant coverage)
+- [ ] Config-only identifiers (env keys, feature flags — no hardcoded secrets/ids in code)
+- [ ] Live test marker + on-demand command (group/tag/env; excluded from default `test` / CI)
 
 ## Output
 

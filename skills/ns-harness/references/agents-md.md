@@ -57,13 +57,14 @@ Session boot; note `.nextstage-harness/`. **Create** vs **refresh**; read existi
 - **How to start** — Planning / Implementation / Ad-hoc table with skill entry points.
 - **Implementation routing** — priority 1–5 from `code-skill-routing.md`; link `ns-harness` for handoffs.
 - **Hard stops / FORBIDDEN** — no invented personas; no skip architecture-rules; ISSUE_URL → gitlab-issue; no speculative version folders.
+- **Engineering guardrails** — Ask before (deps, abstractions, schema/contract, CI/infra, cross-package moves); Never (secrets in VCS; default-tier live/LLM; weaken/skip tests; unjustified type escapes); library API wins over drifted docs — report drift.
 - **Local overrides** — `agents.local.md` (case-insensitive) after `AGENTS.md`; mark present/absent in Layout; never inline.
 - **Installed skills** — exact `.agents/skills/` names, **grouped by role**. SDD chain from installed only.
 - **Project subagents** — from `manifest.json` `subagents` when present (name, skill, cursor model). Contract: spawn gate in `subagent-dispatch.md` — **MUST** spawn exact `{name}` when gate requires so YAML `model` applies; cheap execute = in-session; **FORBIDDEN** Task `inherit` / platform `coder`/`reviewer` stand-in / inline skill while bridge present **and** gate requires spawn. Do not omit when bridges exist.
 - **Layout** — compact present/absent: rules, skills, local, docs/context|specs|versions.
 - **No Workflows → Implementation** — routing table covers it.
 - **Ownership + Language + Project notes** — ≤5 bullets.
-- **Docker and testing** — MUST NOT compose/restart without ask. Host vs container evidence from recon. PHPUnit block from `./docker-and-testing.md` **only** when PHP evidenced.
+- **Docker and testing** — MUST NOT compose/restart without ask. Include verbatim **Test tiers** from `./docker-and-testing.md`. Host vs container evidence from recon. PHPUnit block **only** when PHP evidenced.
 - **Do not** inline architecture rules.
 - English only.
 
@@ -111,11 +112,11 @@ Preserve **Project-specific notes**, language, GitLab/MCP names if accurate. Rep
 ## Quality bar
 
 - [ ] `agent-artifact-compress.md` applied
-- [ ] First action, How to start, routing 1–5, FORBIDDEN present
+- [ ] First action, How to start, routing 1–5, FORBIDDEN + Engineering guardrails present
 - [ ] Ownership/language/notes collapsed; no Workflows echo
 - [ ] Local overrides rule (`agents.local.md`, case-insensitive); not harness template copy
 - [ ] Every skill exists under `.agents/skills/`; grouped by role; no personas
-- [ ] Layout repo-relative; Docker MUST NOT; PHPUnit only if PHP evidenced
+- [ ] Layout repo-relative; Docker MUST NOT; Test tiers verbatim; PHPUnit only if PHP evidenced
 - [ ] SDD chain from installed skills only
 - [ ] `CLAUDE.md` exact Step 5 — no compress
 - [ ] No stack deep-dive; ≤130 lines (ideally 95–110)

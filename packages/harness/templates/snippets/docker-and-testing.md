@@ -8,6 +8,14 @@ Strict rules — no exceptions:
 - **MUST** run `docker ps` immediately before executing tests and confirm the target container is the documented test service.
 - Resolve the test container from `architecture-rules.md`, `docs/context/stack-confirmed.md`, or Compose/service docs. If unclear or undocumented, **ask once** — do not guess and do not run tests until confirmed.
 
+### Test tiers
+
+- **Default tier** (unit, integration, default `test` script, CI default, coder gate): deterministic. No network, no live third-party API, no real LLM. Use fixtures/fakes.
+- **Live tier** (exception): only when behavior cannot be proven without real LLM or external service. All three must hold: (1) isolated behind a project-defined marker recorded in architecture-rules.md; (2) excluded from default test command, default CI, and ns-coder / ns-backend-tests run loop; (3) runs only on demand via explicit script/flag/env (project chooses name, e.g. test:live or RUN_LIVE_TESTS=1).
+- **Live failures:** fix behavior or documented expectation — never skip, loosen assertion, or move out of live group to get green.
+- **Secrets:** live tests read credentials from env or secret manager only.
+- Agents never run the live tier unless the human asks in this run.
+
 ### PHPUnit (PHP backend)
 
 When the project uses PHPUnit (Laravel or plain PHP):

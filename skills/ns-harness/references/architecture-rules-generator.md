@@ -52,8 +52,9 @@ Minimum: root manifests; directory tree (~2 levels); entry points; module/domain
 | **Layout** | Abbreviated tree, module boundaries |
 | **Patterns** | API style, multitenancy, auth, module conventions, integrations |
 | **Forbidden** | Generated dirs, migration constraints, secrets |
-| **Dev & test** | Docker, **test container name**, copy-paste test commands (behavioral rules in `AGENTS.md`) |
-| **Discipline** | Code/doc language vs chat, minimal diff — only if in repo rules or `AGENTS.md` |
+| **Dev & test** | Docker, **test container name**, default suite commands, **Live (on demand)** marker + command (Test tiers) |
+| **Domain invariants** | Non-negotiable rules + protected test path each |
+| **Discipline** | Code/doc language vs chat, minimal diff; **Ask before** / **Never** from template when evidenced |
 
 Large subsystems: one line to layer rule; offer sibling in follow-up. Sibling: `npx @nextstage-brasil/harness add-rule <name> --description "…"` (default `alwaysApply: false`). Never hand-write `.cursor/rules/*.mdc` or omit manifest metadata — `./rules-sync.md`.
 
@@ -87,8 +88,11 @@ Preserve hand-edited locale, GitLab MCP, protected branches unless recon proves 
 - [ ] `agent-artifact-compress.md` applied; no YAML frontmatter
 - [ ] `manifest.json` `architecture-rules` `alwaysApply: true`
 - [ ] ≤250 lines (ideally ≤200); stack rows verified
-- [ ] Generated/forbidden paths listed; test command copy-pasteable
+- [ ] Generated/forbidden paths listed; default test command copy-pasteable
 - [ ] Test container documented when separate from dev/host
+- [ ] Live (on demand) suite row when live tests exist (marker + command)
+- [ ] Domain invariants table (invariant + protected test) when evidenced
+- [ ] Implementation discipline includes Ask before / Never when evidenced
 - [ ] Sibling rules linked, not inlined; no business-domain rules (`docs/specs/`)
 - [ ] `harness sync` run or instructed
 

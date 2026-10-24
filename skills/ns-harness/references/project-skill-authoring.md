@@ -51,6 +51,10 @@ Regenerates Claude skill symlinks. Cursor reads `.agents/skills/` directly.
 
 Report sync results. Do not claim discoverable until sync succeeds.
 
+## Skill precedence
+
+Official / vendor **framework** skills win on framework idiom (Laravel, Cypress, LangGraph, …). Project-local skills describe **project decisions** only — stack choices, paths, invariants — not restate framework docs.
+
 ## Description optimization
 
 Stable skill → offer upstream description optimization (`run_loop.py`). Update frontmatter, then `harness sync` if adapters need refresh.

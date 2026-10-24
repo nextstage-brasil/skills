@@ -13,7 +13,17 @@ PATTERNS = [
     ("ts-ignore", re.compile(r"@ts-ignore|@ts-expect-error")),
     ("pylint-disable", re.compile(r"pylint:\s*disable")),
     ("nosec", re.compile(r"\bnosec\b")),
-    ("test-skip", re.compile(r"@pytest\.mark\.skip|\bit\.skip\b|\bxit\b|\.skip\(")),
+    (
+        "test-skip",
+        re.compile(
+            r"@pytest\.mark\.skip|\bit\.skip\b|\bdescribe\.skip\b|\btest\.skip\b|"
+            r"\bxit\b|\.skip\(|markTestSkipped"
+        ),
+    ),
+    (
+        "type-escape",
+        re.compile(r":\s*any\b|\bas\s+any\b|@phpstan-ignore|@psalm-suppress"),
+    ),
     ("suppress-warnings", re.compile(r"@SuppressWarnings")),
 ]
 

@@ -68,11 +68,11 @@ cases:
 
 | Gate | Command |
 | ---- | ------- |
-| Unit | `npm test` |
+| Unit | `npm test` (default tier — fake LLM; no live model) |
 | Build | `npm run build` |
-| Eval | `npm run eval` (project script) |
+| Eval | `npm run eval` (project script; **on-demand** when suite needs real LLM — not default `test`) |
 
-Block merge on threshold fail.
+Block merge on threshold fail for suites in the merge gate. Live-model evals stay opt-in.
 
 ## MCP contract gates (MCP in scope)
 
@@ -123,3 +123,4 @@ Dropped context with still-green suite = **config regression**, not a model win.
 - [ ] Playwright/dev-chat if `streaming_sse` (greenfield MUST)
 - [ ] Golden-set promotion: pinned context ids; dropped-doc case fails
 - [ ] No eval uses live secrets — mocks or staging MCP
+- [ ] LLM evals / live-model suites are **on-demand** — not part of default `test` (or default CI)

@@ -22,3 +22,4 @@ fi
 - `--author` only when **both** vars set; else default git identity.
 - Never modify global/local `git config` for author.
 - Messages: English, imperative, **why**.
+- **Atomic commit:** one commit = one change. Message needs "and" → split.

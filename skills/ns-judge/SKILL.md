@@ -4,7 +4,7 @@ description: "(NS) Delivery proof after Code Review: Approved. AC tokens, spec-c
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 depends:
   - ns-harness
   - ns-reviewer

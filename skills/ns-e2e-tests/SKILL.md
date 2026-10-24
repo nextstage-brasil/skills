@@ -4,7 +4,7 @@ description: "(NS) Cypress E2E in independent tests-e2e/ at repo root (bootstrap
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Create E2E Tests
@@ -97,6 +97,7 @@ Forbidden: specs directly under `cypress/e2e/` without `device/` prefix.
 
 - Use `data-testid` from frontend task contract — do not invent
 - No fixed `cy.wait(N)` — intercepts or assertion timeouts
+- Third-party HTTP/API calls **stubbed by default** (intercepts/fixtures). Real third-party flows → opt-in project/tag (live tier); exclude from default `cypress:run` / CI unless human asks
 - RBAC: menu hidden + direct URL denial
 - Auth: login via UI or support session; tenant-aware fixtures
 

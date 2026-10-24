@@ -194,6 +194,32 @@ class ScanBypassesTests(unittest.TestCase):
         self.assertTrue(payload["bypasses"])
         self.assertEqual(payload["bypasses"][0]["kind"], "noqa")
 
+    def test_type_escape(self):
+        diff = """\
++++ b/src/a.ts
+@@ -1,0 +1,2 @@
++const x = value as any;
++const y: any = 1;
+"""
+        code, out, _ = run_py(SCAN, [], stdin=diff)
+        self.assertEqual(code, 0)
+        kinds = {b["kind"] for b in json.loads(out)["bypasses"]}
+        self.assertIn("type-escape", kinds)
+
+    def test_test_skip_variants(self):
+        diff = """\
++++ b/src/a.test.ts
+@@ -1,0 +1,3 @@
++describe.skip('x', () => {});
++test.skip('y', () => {});
++self.markTestSkipped('z');
+"""
+        code, out, _ = run_py(SCAN, [], stdin=diff)
+        self.assertEqual(code, 0)
+        kinds = {b["kind"] for b in json.loads(out)["bypasses"]}
+        self.assertIn("test-skip", kinds)
+        self.assertGreaterEqual(len(json.loads(out)["bypasses"]), 3)
+
 
 class ReviewGateTests(unittest.TestCase):
     def _write(self, tmp: str, payload: dict) -> Path:

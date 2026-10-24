@@ -42,10 +42,23 @@ Project-specific only — universal agent rules live in `AGENTS.md` (Docker and 
 | Suite | Location | Run |
 | ----- | -------- | --- |
 | {suite} | {path} | `{command}` |
+| Live (on demand) | {live_path_or_marker} | `{live_command}` |
+
+## Domain invariants
+
+Non-negotiable rules. Each row: invariant + protected test path that guards it.
+
+| Invariant | Protected test |
+| --------- | -------------- |
+| {invariant} | `{test_path}` |
 
 ## Implementation discipline
 
 {only_rules_found_in_repo — minimal diff, languages, completion style, git constraints}
+
+**Ask before:** new dependency; abstraction without 2 concrete uses; DB schema or shared contract change; CI/deploy/infra config; moving files across packages.
+
+**Never:** secrets/keys/connection strings in versioned files; default-tier tests depending on network/live services/real LLM; weakening/deleting/skipping a test to make it pass; type escape hatch without justifying comment.
 
 ## Key references
 
