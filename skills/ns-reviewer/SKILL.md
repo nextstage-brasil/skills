@@ -154,6 +154,10 @@ Keep anti-patterns delegation above. Extra criteria when diff touches agent/LLM 
 | Live-tier test without documented on-demand trigger, or credentials not from env/secret manager | **Warning** |
 | Unjustified type escape hatch | **Warning** |
 | New dependency or abstraction not approved in task | **Warning** |
+| New code duplicates existing repo helper, stdlib/platform feature, or installed dependency | **Warning** + score cap **8** |
+| Speculative option/config/wrapper not asked by task | **Warning** + score cap **8** |
+| Moved/merged code lost validation or error handling | **Warning** + score cap **8** |
+| New non-trivial logic (branch, loop, parser, money, security) without test | **Warning** + score cap **8** |
 
 ### Actor and gate semantics (rules-first)
 

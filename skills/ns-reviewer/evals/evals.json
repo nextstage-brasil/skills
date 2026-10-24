@@ -60,6 +60,24 @@
       "prompt": "Review diff that adds an integration test calling a real LLM provider from the default test suite with no live group marker and no exclusion from npm test / CI.",
       "expected_output": "Critical for real LLM/network reachable from default tier; ends Code Review: Rejected. Fix map: move behind live marker, exclude from default run/CI, document on-demand trigger.",
       "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Review diff that merges two input parsers into one shared function (dropping the null/format checks of one) and adds an unused optional 'strict' config flag plus a thin wrapper the task never requested.",
+      "expected_output": "Warning for moved/merged code that lost validation; Warning for speculative option/config/wrapper not asked by task; fix map restores checks and removes flag/wrapper; score cap 8 so Code Review: Rejected.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Review diff that adds a new local date-formatting function in a controller, while the repo already exports an equivalent formatter from its shared utils module.",
+      "expected_output": "Greps repo for existing equivalent; Warning for new code duplicating existing repo helper; fix map replaces local function with the shared helper; score cap 8 so Code Review: Rejected.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "Review diff that adds a discount-calculation branch with rounding rules to the order service and no test covering it.",
+      "expected_output": "Warning for new non-trivial money logic without test; score cap 8 so Code Review: Rejected; fix map asks for one small test covering the branch and rounding edge.",
+      "files": []
     }
   ]
 }

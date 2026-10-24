@@ -4,7 +4,7 @@ description: "(NS) Ad-hoc coding — bug fixes, refactors, scripts, migrations �
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "2.4"
+  version: "2.5"
 depends:
   - ns-harness
   - ns-investigator
@@ -66,7 +66,7 @@ Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-
 3. Implement + unit/integration only. No E2E.
 4. **Forbidden:** `reviewer-agent` / `ns-reviewer` / `ns-judge`, living-spec consolidator, `Code Review:` / `Delivery Review:` verdict lines.
 5. **Before report complete:** public-export grep (**Pre-review**). Still **no** reviewer.
-6. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`), `Layout SSoT: {path} read | none registered`. Parent marks rows. Version closure (steps 4–6): `references/run-implementation-closure.md` — not the per-batch file. Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
+6. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`), `Layout SSoT: {path} read | none registered`, `Skipped / not checked / risk:` (format: `../ns-reviewer/references/review-gate-workflow.md` **Final report**). Parent marks rows. Version closure (steps 4–6): `references/run-implementation-closure.md` — not the per-batch file. Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
 
 ## Session boot
 
@@ -116,6 +116,7 @@ Then:
 - **Rules + code same turn:** rule request + code delivers diff same turn, not harness text only.
 - **Diff-first** — only required lines; no unrelated formatting
 - **Prefer editing** existing files over new files
+- **Minimal change** — reuse ladder, no speculative code, root-cause fix at shared callers: `references/minimal-change.md`
 - **Large change gate:** >1 file simultaneously, >20 lines in one file, or public contract change: one-line plan, wait for approval
 - **No commits** unless human explicitly asks — when committing, see `../../ns-harness/references/agent-git-identity.md`
 - **No SDD version artifacts** — no `task-NNN.md`, `requirements.md`, `execution-handoff.md`, or `docs/versions/` writes. Conditional living-spec updates under `docs/specs/` via `ns-living-spec` allowed (see **Living specs**).
@@ -146,7 +147,7 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 1. Understand task
 2. Load rules — obey `AGENTS.md` already booted; Session boot again only if cold start this agent or files changed
 3. Explore (grep/head large fixtures — no full test dumps)
-4. Identify minimal diff
+4. Identify minimal diff — apply `references/minimal-change.md`
 5. Apply (or plan if large-change gate)
 6. Run tests if in scope + public-export grep (**Pre-review**)
 7. **Review loop** — ad-hoc only: **MUST** `reviewer-agent` when available (else `ns-reviewer`); then `ns-judge` in-session only if `Code Review: Approved`; `../ns-reviewer/references/review-gate-workflow.md`. Skip when SDD handoff / engine defer.

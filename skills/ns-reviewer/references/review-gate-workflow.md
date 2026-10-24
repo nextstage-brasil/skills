@@ -123,5 +123,6 @@ Every closure response **must** include:
 | Delivery verdict | Exact line: `Delivery Review: {Approved\|Rejected\|Blocked}` \| `n/a` (code not Approved). Adhoc AC proof may be `n/a` inside judge report when no `--requirements` / `--ac-file` |
 | Living specs | When caller is `ns-coder`: `updated` \| `skipped: {reason}` \| `n/a` |
 | Layout SSoT | When caller is `ns-coder`: `{path} read` \| `none registered` |
+| Skipped / not checked / risk | One or two lines; `none` when nothing skipped |
 
 Then: summary of changes, follow-ups, and blocked items if applicable.

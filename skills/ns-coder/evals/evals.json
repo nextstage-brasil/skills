@@ -60,6 +60,18 @@
       "prompt": "Ad-hoc: add a new npm dependency to implement the requested feature. Task does not mention approving new packages.",
       "expected_output": "Stops at Ask-before gate for new dependency; does not install or commit the package until the human approves; reports the ask.",
       "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Ad-hoc: format currency values in the invoice summary. The repo already has a formatMoney helper in the shared utils module.",
+      "expected_output": "Follows reuse ladder from references/minimal-change.md: greps and reuses existing formatMoney; does not add a new util, wrapper, or option. Final report includes 'Skipped / not checked / risk:' line.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Ad-hoc: bug fix — parseAmount returns NaN on empty string. It is used by 5 callers across checkout, refunds and reports.",
+      "expected_output": "Greps all callers of parseAmount; fixes root cause once inside the shared function, not per caller; keeps existing validation; adds one small test for the empty-string edge case (no runtime assert); no speculative options. Final report includes 'Skipped / not checked / risk:' line.",
+      "files": []
     }
   ]
 }
