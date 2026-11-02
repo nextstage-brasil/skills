@@ -1,10 +1,10 @@
 ---
 name: ns-living-spec
-description: "(NS) Living domain specs under docs/specs/. Use after version closure when requirements, `Code Review: Approved`, `Delivery Review: Approved`, and execution-handoff exist; ad-hoc when both Approved + behavioral diff + docs/specs/; appearance mode from ns-proto-creator / ns-proto-visual-guide (no review gates). Incremental only. Do NOT run Version/Ad-hoc before both Approved (appearance mode excepted)."
+description: "(NS) Living domain specs under docs/specs/. Use after version closure when requirements, `Code Review: Approved`, `Delivery Review: Approved`, and execution-handoff exist; ad-hoc when both Approved + behavioral diff + docs/specs/; appearance mode from ns-proto-creator / ns-proto-visual-guide (no review gates). Incremental only. On feature branches stage a per-MR fragment under docs/specs/_pending/ instead of editing domain specs; consolidate on the integration branch. Do NOT run Version/Ad-hoc before both Approved (appearance mode excepted)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.8"
+  version: "1.9"
 depends:
   - ns-harness
 ---
@@ -26,6 +26,33 @@ See `../../ns-harness/references/session-boot.md` and `../../ns-harness/referenc
 | **Appearance** | Invoked by `ns-proto-creator` or `ns-proto-visual-guide` | Guide/prototype path + short behavioral delta | **None** |
 
 **Appearance** if invoker pass mode `appearance` (or equivalent: guide/prototype path + behavioral delta, no review verdict). **Ad-hoc** if mode `ad-hoc` (or equivalent: no `{version_san}`, task description + approved diff). Else **Version**.
+
+## Write target
+
+Orthogonal to **Modes** (which decide *what* to document and which gates apply). Decide *where* to write:
+
+| Target | When | Writes |
+| ------ | ---- | ------ |
+| **Direct** | Integration branch, or branch role unknown, or `docs/specs/_pending/` absent (legacy repo) | `docs/specs/{domain}.md` + `INDEX.md` per **Workflow**. If `_pending/` holds fragments, run **Consolidate** first |
+| **Fragment** | Feature branch (`../../ns-harness/references/artifact-layout.md` → **Branch role**) and `docs/specs/_pending/` exists | Exactly one new file per domain: `docs/specs/_pending/{label}-{slug}.md` from `references/pending-fragment.template.md`. **Nothing else** under `docs/specs/` |
+| **Consolidate** | Integration branch: asked explicitly, or before a Direct write | Applies every fragment, then deletes it (see **Consolidate**) |
+
+Why: parallel MRs editing the same domain file conflict; distinct new files never do. Layout: `../../ns-harness/references/artifact-layout.md` → **Living spec fragments**.
+
+**Fragment** keeps every gate, skip rule, and domain-mapping step of the active mode. Only step 2 changes (write the delta to the fragment instead of editing the domain file) and step 3 is skipped (`INDEX.md` is touched only on consolidate). `{slug}` = short kebab-case of task or issue; `{label}` = changelog label of the mode. Report with **Living specs staged** (domains + fragment paths).
+
+### Consolidate
+
+Gates were already enforced when each fragment was written — do not re-ask for review verdicts.
+
+1. List `docs/specs/_pending/*.md`; process in filename order (deterministic).
+2. Per fragment: read the target `{domain}.md` entirely; apply requirement/data-model/endpoint deltas; append the fragment's changelog entry with its `label`; create the domain file from `references/domain-spec.template.md` if missing.
+3. Update `INDEX.md` once at the end (date + versions per domain touched).
+4. Delete each fragment **only after** it applied cleanly.
+5. **Conflict** (fragment updates or removes a requirement that no longer exists or was renamed by an earlier fragment): do not guess. Leave that fragment in place and list it in the report with the reason.
+6. Report: `## Living specs consolidated` — fragments consumed, fragments left (with reason), domains updated.
+
+Run only on the integration branch (or role unknown). Never on a feature branch.
 
 ## When invoked
 
@@ -126,6 +153,8 @@ Requirements updated: N
 New specs: N
 ```
 
+Fragment target: replace the heading with `## Living specs staged` and list `docs/specs/_pending/` paths instead of domain files.
+
 If skipped (non-behavioral, polish-only, or Ad-hoc missing `docs/specs/`):
 
 ```
@@ -143,6 +172,7 @@ Reason: {missing docs/specs/|non-behavioral diff|chrome polish only}
 - Ad-hoc must not invent `{version_san}`
 - Appearance must not paste normative Element|How tables into specs
 - Appearance must not require Code Review Approved
+- Fragment target must not edit `docs/specs/{domain}.md` or `INDEX.md`; Consolidate must not delete a fragment it did not fully apply
 - Do not overwrite `docs/specs/agent-architecture.md` (`ns-agent-architecture` living ADR). `agent.md` is behavior only
 
 ## Related skills

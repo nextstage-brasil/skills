@@ -42,6 +42,18 @@
       "prompt": "/ns-harness generate architecture rules for this project",
       "expected_output": "Routes to references/architecture-rules-generator.md; writes .nextstage-harness/rules/architecture-rules.md; runs harness sync. Does not run full prepare unless asked.",
       "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "/ns-harness prepare this repo — I'm on a feature branch and project-rules.md declares 'Context regeneration branch: develop'.",
+      "expected_output": "Boot branch check fails: stops, names declared branch(es), writes no docs/context/** files, no rules/AGENTS.md changes.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "/ns-harness prepare on the declared regeneration branch, nothing in the code changed since the last run.",
+      "expected_output": "Runs full prepare; deterministic output — files whose content did not change are not rewritten (no date/counter bump), git diff stays empty.",
+      "files": []
     }
   ]
 }

@@ -212,6 +212,8 @@ npx @nextstage-brasil/harness init \
 
 In the agent, invoke skills via menu or slash: `/ns-spec-driven`, `/ns-coder`, `/ns-reviewer`, …
 
+**Teams:** feature branches never regenerate `docs/context/**` and write spec changes as per-MR fragments in `docs/specs/_pending/`; the integration branch consolidates them and runs prepare. Operator steps: `.nextstage-harness/README.md` → "Working in a team".
+
 Consumer guide (scaffolded into projects): `.nextstage-harness/README.md`  
 Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 

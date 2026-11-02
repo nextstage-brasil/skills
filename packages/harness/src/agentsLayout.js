@@ -12,6 +12,7 @@ export const HARNESS_AGENTS_DIR = join(HARNESS_ROOT, 'agents');
 export const DOCS_LAYOUT_DIRS = [
   'docs/context',
   'docs/specs',
+  'docs/specs/_pending',
   'docs/versions',
 ];
 

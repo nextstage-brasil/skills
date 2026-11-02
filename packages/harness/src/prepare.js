@@ -98,6 +98,9 @@ export function buildPrepareMessage(assessment) {
     lines.push('  • After major refactors, new modules, or stack changes');
     lines.push('  • Before SDD planning when brownfield docs may be stale');
     lines.push('  • Updates: architecture-rules, brownfield-map, system-reverse-spec, AGENTS.md');
+    lines.push('');
+    lines.push('Teams: run prepare on the integration branch only (not on feature branches).');
+    lines.push('  See .nextstage-harness/README.md → "Working in a team".');
   }
 
   return lines.join('\n');

@@ -86,7 +86,7 @@ try {
       readFileSync(join(tempDir, '.nextstage-harness', 'README.md'), 'utf8').includes('add-rule'),
       'harness README should mention add-rule',
     );
-    for (const dir of ['docs/context', 'docs/specs', 'docs/versions']) {
+    for (const dir of ['docs/context', 'docs/specs', 'docs/specs/_pending', 'docs/versions']) {
       assert(existsSync(join(tempDir, ...dir.split('/'))), `scaffold should create ${dir}`);
       assert(
         existsSync(join(tempDir, ...dir.split('/'), '.gitkeep')),

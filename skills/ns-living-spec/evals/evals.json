@@ -42,6 +42,18 @@
       "prompt": "Appearance mode: only tightened card padding and swapped accent color — no behavior change.",
       "expected_output": "Skips writes — chrome polish only; reports Living specs skipped with reason.",
       "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Repo has docs/specs/_pending/. Feature MR delivered auth change, both reviews Approved — update living specs.",
+      "expected_output": "Fragment target: writes one new file docs/specs/_pending/{label}-{slug}.md from pending-fragment.template.md; does NOT edit docs/specs/auth.md or INDEX.md; gates still enforced; report says Living specs staged.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "On the integration branch: consolidate pending specs. Two fragments exist; the second removes a requirement the first already renamed.",
+      "expected_output": "Consolidate: processes fragments in filename order, applies first, deletes it after clean apply; leaves the conflicting fragment in place and reports reason instead of guessing; updates INDEX.md once; report Living specs consolidated.",
+      "files": []
     }
   ]
 }

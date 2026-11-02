@@ -27,6 +27,21 @@ See `./session-boot.md` + `./rules-sync.md`.
 | One worker only | Route via `ns-harness` SKILL.md table |
 | Greenfield, no application code | **Stop** — nothing to scan |
 
+## Concurrent teams (merge-safe)
+
+Several people working on one repo: generated context is **output, not hand-edited source**. If every feature branch regenerates it, every MR touches the same files and conflicts.
+
+| Artifact | Single writer | Runs where |
+| -------- | ------------- | ---------- |
+| `docs/context/brownfield-map.md`, `system-reverse-spec.md`, `system-reverse-spec.agent.md` | Prepare steps 2–3 | Integration branch after merge (CI job or one named owner), or at version closure |
+| `.nextstage-harness/rules/*.md`, `AGENTS.md` | Prepare steps 1 and 4 | Dedicated MR — never bundled with a feature |
+
+- **Feature branches read these files; they do not regenerate or commit them.** Divergence between merges is expected and acceptable.
+- **Who may regenerate** = integration branch per `artifact-layout.md` → **Branch role** (inferred from the current branch name; optional override line in `project-rules.md` / `agents.local.md`). Role unknown = no restriction.
+- **Deterministic output.** Stable ordering (path / alphabetical); no run ids, no volatile counters, no timestamp in the body. Rewrite a file only when its content changed — a no-op refresh leaves `git diff` empty, date line included.
+- **Optional repo hygiene** (not installed by the harness): `.gitattributes` entry `docs/context/** linguist-generated=true`, and a CI guard that fails feature-branch MRs touching `docs/context/**`.
+- Living specs follow the same idea at finer grain — see `ns-living-spec` (**Write target**, fragment mode).
+
 ## Prerequisites
 
 1. `harness init` done (or `.agents/skills/` + `.nextstage-harness/` present).
@@ -37,7 +52,7 @@ See `./session-boot.md` + `./rules-sync.md`.
 
 1. Complete Session boot (`./session-boot.md`).
 2. Defaults (do **not** ask when checks pass): markdown artifact language = conversation language; reverse-spec pair = **English only**; scope = whole product; depth = executive; mode = **create** or **refresh** from disk.
-3. Checks: `ns-harness` present; application code under repo (manifests, `src/`, `app/`, etc.).
+3. Checks: `ns-harness` present; application code under repo (manifests, `src/`, `app/`, etc.); **branch check** — current branch must not be a feature branch (see **Concurrent teams** / `artifact-layout.md` → **Branch role**).
 4. **Any check fails:** failure table + **stop**. No broken-scope confirmation.
 5. **All pass:** compact scope summary + **proceed immediately** into Step 1 — no "Confirma?" / approval wait.
 6. After boot summary, start Step 1 **same turn**. Run **all four steps** in order. No "continue?" between steps. Read named reference at step start; follow it. **Do not** skip `codebase-reverse-spec.md`. After step 1: `npx @nextstage-brasil/harness sync` before step 2.
@@ -128,6 +143,7 @@ Stub or errors: **stop** — report step + gap. No empty upstream artifacts.
 | `ns-harness` missing | Stop — run `harness init` |
 | Step output missing or harness stub | Stop — fix step |
 | `harness sync` fails | Stop — report error |
+| Current branch is a feature branch | Stop — say prepare runs on the integration branch; do not write context files |
 | User stops mid-chain | Stop at step boundary |
 
 ## Completion summary
@@ -145,6 +161,8 @@ Stub or errors: **stop** — report step + gap. No empty upstream artifacts.
 - Caveman-rewrite human reverse-spec body or `CLAUDE.md`.
 - Edit `.cursor/` or `.claude/` directly.
 - Modify application source during prepare.
+- Regenerate or commit `docs/context/**` from a feature branch.
+- Bump dates, counters, or ordering on a refresh whose content did not change.
 
 ## Invocation
 

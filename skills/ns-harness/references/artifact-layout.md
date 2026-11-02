@@ -17,6 +17,7 @@ docs/versions/{version_san}/sdd/
 docs/versions/{version_san}/pm/   # ns-project-manager deliverables
 docs/context/
 docs/specs/          # first living-spec delivery
+docs/specs/_pending/ # per-MR spec fragments (scaffold creates it; see below)
 ```
 
 New versions: create SDD artifacts only under `sdd/`.
@@ -40,9 +41,29 @@ New versions: create SDD artifacts only under `sdd/`.
 | Commercial budget (client) | `docs/versions/{version_san}/pm/{version_san}-commercial-budget-costumer.md` (optional; header: `{version_san}-costumer`) |
 | Living spec index | `docs/specs/INDEX.md` |
 | Domain spec | `docs/specs/{domain}.md` |
+| Pending spec fragment | `docs/specs/_pending/{label}-{slug}.md` (`ns-living-spec` fragment target on feature branches; consumed + deleted on consolidate) |
 | Agent architecture ADR | `docs/specs/agent-architecture.md` (`ns-agent-architecture`; living + Changelog — not under `docs/versions/`) |
 | Agent architecture defense pack | `docs/specs/agent-architecture-defense.md` (`ns-agent-architecture` Step 9 opt-in — stakeholder canvases; not under `docs/versions/`) |
 | Agent platform | `docs/specs/agent-platform.md` (`ns-agent-platform`; compute + tenant/platform; after ADR) |
+
+## Branch role (feature vs integration)
+
+Read the current branch (`git branch --show-current`); no per-project declaration needed.
+
+- **Feature branch:** name matches `work/*`, `feature/*`, `feat/*`, `fix/*`, `bugfix/*`, `hotfix/*`, or starts with an issue number (`2110-…`).
+- **Integration branch:** any other name (`main`, `develop*`, `release/*`, …).
+- **Optional override** for repos with another convention: line `Context regeneration branch: <glob>[, <glob>]` in `project-rules.md` / `agents.local.md`. Branches matching a glob are integration; all others are feature.
+- Detached HEAD / no git: role unknown — apply no restriction (legacy behavior).
+
+Used by `ns-harness` → `prepare.md` (who may regenerate context) and `ns-living-spec` (write target).
+
+## Living spec fragments (`docs/specs/_pending/`)
+
+Multi-developer repos: two MRs editing the same `docs/specs/{domain}.md` conflict. The harness scaffold creates `docs/specs/_pending/` (with `.gitkeep`).
+
+- **Feature-branch** deliveries write **one new file** per domain under `_pending/` and never edit `{domain}.md` or `INDEX.md`. Distinct filenames ⇒ no merge conflict.
+- On the **integration branch** `ns-living-spec` writes direct and first consolidates any pending fragments; the same consolidate pass applies fragments to domain specs + `INDEX.md`, then deletes them.
+- `_pending/` is transient: not a source of truth. Planning reads `docs/specs/{domain}.md` + `INDEX.md`; scan `_pending/` too when it holds fragments for the domain being planned.
 
 ## Legacy path resolution (read)
 

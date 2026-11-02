@@ -242,7 +242,7 @@ Locally, `harness sync --check` verifies adapters on disk match canonical (use a
 
 ## Brownfield onboarding (manual)
 
-For existing codebases, run once (and again after major refactors). **Not** part of `/ns-spec-driven`.
+For existing codebases, run once (and again after major refactors). **Not** part of `/ns-spec-driven`. In a team, run it **on the integration branch only** — see [Working in a team](#working-in-a-team).
 
 **In agent:** `/ns-harness prepare this repo`  
 **Chain:** architecture-rules → sync → brownfield map → reverse spec → AGENTS.md
@@ -250,6 +250,46 @@ For existing codebases, run once (and again after major refactors). **Not** part
 **Terminal:** `npx @nextstage-brasil/harness prepare` prints full instructions.
 
 Artifacts land under `docs/context/`, `docs/specs/`, `docs/versions/{version_san}/sdd/` (PM under `pm/`).
+
+---
+
+## Working in a team
+
+Several developers, one repo. Generated context (`docs/context/**`) and shared domain specs (`docs/specs/{domain}.md`) would otherwise be rewritten by every feature branch and conflict on every merge. The harness splits the work by **branch role**.
+
+### Branch role (nothing to configure)
+
+The agent reads the current branch name:
+
+| Branch | Role | Examples |
+|--------|------|----------|
+| Feature | `work/*`, `feature/*`, `feat/*`, `fix/*`, `bugfix/*`, `hotfix/*`, or starts with an issue number | `work/2110-login-fix`, `2110-login-fix` |
+| Integration | anything else | `main`, `develop_1.32`, `release/1.32` |
+
+Different convention? Add one line to `rules/project-rules.md` (or `AGENTS.local.md`): `Context regeneration branch: develop_*, main`. Branches matching a glob are integration; all others are feature.
+
+### If you are on a feature branch
+
+- **Read** `docs/context/` and `docs/specs/` as usual.
+- **Do not** run `/ns-harness prepare` — it stops and writes nothing. Do not hand-edit or commit `docs/context/**`, `rules/`, or `AGENTS.md` inside a feature MR (change rules in their own MR).
+- At delivery, `ns-living-spec` does **not** edit `docs/specs/{domain}.md` or `INDEX.md`. It creates one new file per domain in `docs/specs/_pending/` (e.g. `1.32-login-messages.md`). **Commit that file with your MR.** Different MRs create different files, so they do not conflict.
+- Review gates are unchanged: the fragment is written only after the usual approvals.
+
+### If you operate the integration branch
+
+After MRs are merged:
+
+1. **Consolidate specs** — in your agent, on the integration branch, ask: *consolidate pending specs* (`/ns-living-spec`). It applies each fragment in `docs/specs/_pending/` to `docs/specs/{domain}.md`, updates `INDEX.md` once, and deletes the applied fragments. A fragment that conflicts with another (e.g. changes a requirement an earlier fragment removed) is **left in place** and listed in the report — resolve it by hand, then run consolidate again.
+2. **Refresh context** — run `/ns-harness prepare this repo`. When nothing really changed, files are not rewritten and `git diff` stays empty.
+3. **Sync + commit** — `npx @nextstage-brasil/harness sync`, then commit `docs/context/**`, `docs/specs/**` (including the deleted fragments), `.nextstage-harness/`, `AGENTS.md` in one commit.
+
+Cadence: after each merge batch, at least once per sprint or version closure. If a dev works directly on the integration branch, `ns-living-spec` consolidates pending fragments before writing — no extra step.
+
+### Optional repo hygiene (not installed by the harness)
+
+- `.gitattributes`: `docs/context/** linguist-generated=true` — collapses generated files in MR diffs.
+- CI guard: fail feature-branch MRs that change `docs/context/**`.
+- CI job on the integration branch that runs consolidate + prepare, so nobody has to remember.
 
 ---
 
@@ -298,6 +338,9 @@ Brownfield refinement: **`/ns-harness` agents-md** in your agent.
 | `sync --check` fails locally | Edit `rules/*.md` here → `harness sync` → commit `.nextstage-harness/` only |
 | `.claude/` appeared but I only use Cursor | `harness agents set --agent cursor` |
 | New skill version available | `harness update` |
+| `/ns-harness prepare` refuses to run | You are on a feature branch — run it on the integration branch ([Working in a team](#working-in-a-team)) |
+| `docs/specs/_pending/` missing | `npx @nextstage-brasil/harness update` (scaffold creates it) |
+| `_pending/` keeps growing | Nobody ran *consolidate pending specs* on the integration branch |
 | Orphan / legacy `.cursor/rules/*.mdc` | `npx @nextstage-brasil/harness sync` (absorbs into canonical) |
 
 ---
