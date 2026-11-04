@@ -1,11 +1,14 @@
-export const DEFAULT_AGENTS = ['cursor', 'claude-code'];
+export const DEFAULT_AGENTS = ['cursor', 'claude-code', 'antigravity'];
 
-export const KNOWN_AGENT_IDS = ['cursor', 'claude-code'];
+export const KNOWN_AGENT_IDS = ['cursor', 'claude-code', 'antigravity'];
 
 const AGENT_ALIASES = {
   claude: 'claude-code',
   'claude-code': 'claude-code',
   cursor: 'cursor',
+  antigravity: 'antigravity',
+  agy: 'antigravity',
+  gemini: 'antigravity',
 };
 
 export function normalizeAgentId(agentId) {

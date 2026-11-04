@@ -11,7 +11,7 @@ import {
   unlinkSync,
 } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
-import { AGENTS_SKILLS_DIR } from './agentsLayout.js';
+import { AGENTS_SKILLS_DIR, DEFAULT_AGENTS } from './agentsLayout.js';
 
 function resolveSymlinkTarget(linkPath) {
   const target = readlinkSync(linkPath);
@@ -72,7 +72,7 @@ function listSkillNames(canonicalDir) {
 }
 
 /**
- * Cursor discovers skills from `.agents/skills/` directly (no `.cursor/skills/` adapter).
+ * Cursor and Antigravity discover skills from `.agents/skills/` directly (no adapter needed).
  * Claude Code still reads `.claude/skills/` — symlink canonical skills there when requested.
  */
 function skillAdapterDirs(projectRoot, agents) {
@@ -102,7 +102,7 @@ function pruneLegacyCursorSkillAdapters(projectRoot, canonicalDir, skillNames) {
 }
 
 export function syncSkills(projectRoot, options = {}) {
-  const { agents = ['cursor', 'claude-code'], check = false, copy = false } = options;
+  const { agents = DEFAULT_AGENTS, check = false, copy = false } = options;
   const canonicalDir = join(projectRoot, AGENTS_SKILLS_DIR);
 
   if (!existsSync(canonicalDir)) {

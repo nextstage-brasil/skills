@@ -5,6 +5,7 @@ import { KNOWN_AGENT_IDS } from './agentIds.js';
 const AGENT_ADAPTER_PATHS = {
   cursor: ['.cursor/rules', '.cursor/skills', '.cursor/agents'],
   'claude-code': ['.claude/rules', '.claude/skills', '.claude/agents'],
+  antigravity: ['.agents/rules'],
 };
 
 function removePath(path) {

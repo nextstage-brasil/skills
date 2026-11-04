@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "agents": ["cursor", "claude-code"],
+  "agents": ["cursor", "claude-code", "antigravity"],
   "rules": [
     {
       "name": "architecture-rules",
@@ -11,7 +11,8 @@
       },
       "claude": {
         "paths": null
-      }
+      },
+      "antigravity": {}
     },
     {
       "name": "project-rules",
@@ -22,7 +23,8 @@
       },
       "claude": {
         "paths": null
-      }
+      },
+      "antigravity": {}
     }
   ],
   "subagents": [],

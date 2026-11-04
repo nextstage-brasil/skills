@@ -9,3 +9,4 @@ skills/*-workspace/
 .skill-workspaces/
 local/
 dist/
+/.agents/rules/

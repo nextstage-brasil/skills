@@ -63,6 +63,7 @@ function collectManagedRuleAdapters(projectRoot) {
   const ruleDirs = [
     join(projectRoot, '.cursor', 'rules'),
     join(projectRoot, '.claude', 'rules'),
+    join(projectRoot, '.agents', 'rules'),
   ];
 
   for (const dir of ruleDirs) {
@@ -126,6 +127,7 @@ function collectEmptyDirCandidates(projectRoot) {
     join(projectRoot, '.claude', 'agents'),
     join(projectRoot, '.claude'),
     join(projectRoot, AGENTS_SKILLS_DIR),
+    join(projectRoot, '.agents', 'rules'),
     join(projectRoot, AGENTS_HOME, 'docs'),
     join(projectRoot, AGENTS_HOME),
   ];

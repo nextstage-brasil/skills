@@ -14,7 +14,7 @@ import {
   stripFrontmatter,
 } from './syncRules.js';
 import { ensureSubagents, resolvableSubagents } from './ensureSubagents.js';
-import { HARNESS_ROOT } from './agentsLayout.js';
+import { DEFAULT_AGENTS, HARNESS_ROOT } from './agentsLayout.js';
 import { readSubagentCanonicalBody, subagentCanonicalRel } from './subagentCanonical.js';
 
 function yamlQuote(value) {
@@ -104,7 +104,7 @@ function pruneStaleAdapters(dir, expectedNames, check) {
  */
 export function syncSubagents(projectRoot, options = {}) {
   const {
-    agents = ['cursor', 'claude-code'],
+    agents = DEFAULT_AGENTS,
     check = false,
   } = options;
 

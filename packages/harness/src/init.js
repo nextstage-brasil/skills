@@ -583,6 +583,10 @@ export function printList(options = {}) {
         'Project agents (stored in .nextstage-harness/manifest.json):',
         '  npx @nextstage-brasil/harness agents',
         '  npx @nextstage-brasil/harness agents set --agent cursor',
+        '  npx @nextstage-brasil/harness agents set --agent claude',
+        '  npx @nextstage-brasil/harness agents set --agent antigravity',
+        '  npx @nextstage-brasil/harness agents set --agent cursor --agent claude',
+        '  npx @nextstage-brasil/harness agents set --agent antigravity --agent claude',
       ].join('\n'),
       'Install',
     );

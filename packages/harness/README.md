@@ -1,6 +1,6 @@
 # @nextstage-brasil/harness
 
-**One CLI to install NextStage agent skills, scaffold Spec-Driven Development (SDD) layout, and keep Cursor / Claude Code rules in sync.**
+**One CLI to install NextStage agent skills, scaffold Spec-Driven Development (SDD) layout, and keep Cursor / Claude Code / Antigravity rules in sync.**
 
 Stop wiring skills by hand. Point harness at your project, pick a preset (or a single skill), and get a ready workspace: skills under `.agents/skills/`, canonical rules under `.nextstage-harness/`, generated adapters for your agents, plus a baseline `AGENTS.md`.
 
@@ -10,7 +10,7 @@ npx @nextstage-brasil/harness
 
 Interactive wizard. Prefer CI / scripts? Use flags below — every common path is copy-paste ready.
 
-**Requires:** Node.js 18+ · works with [Cursor](https://cursor.com/) and [Claude Code](https://claude.ai/code) · skills from [nextstage-brasil/skills](https://github.com/nextstage-brasil/skills)
+**Requires:** Node.js 18+ · works with [Cursor](https://cursor.com/), [Claude Code](https://claude.ai/code), and [Antigravity](https://antigravity.google/) · skills from [nextstage-brasil/skills](https://github.com/nextstage-brasil/skills)
 
 ---
 
@@ -18,9 +18,9 @@ Interactive wizard. Prefer CI / scripts? Use flags below — every common path i
 
 | After `init`                                  | Why it matters                                         |
 | --------------------------------------------- | ------------------------------------------------------ |
-| `.agents/skills/`                             | Installed skills (Skills CLI). Cursor reads them here. |
+| `.agents/skills/`                             | Installed skills (Skills CLI). Cursor and Antigravity read them here. |
 | `.nextstage-harness/rules/`                   | **Edit rules here** — single source of truth           |
-| `.cursor/rules/`, `.claude/rules/`            | Generated adapters — do not edit by hand               |
+| `.cursor/rules/`, `.claude/rules/`, `.agents/rules/` | Generated adapters — do not edit by hand        |
 | `AGENTS.md` + `CLAUDE.md`                     | Project entry for agents                               |
 | `docs/context`, `docs/specs`, `docs/versions` | SDD folders (`sdd/` + `pm/` per version; unless `--no-scaffold`) |
 
@@ -142,13 +142,21 @@ npx @nextstage-brasil/harness --preset gitlab --dry-run
 npx @nextstage-brasil/harness --skill ns-frontend-design --dry-run
 ```
 
-### Cursor only (or Cursor + Claude)
+### Agent selection (Cursor, Claude Code, Antigravity)
 
-Default agents: `cursor` + `claude-code`. Persist Cursor-only and prune Claude adapters:
+Default agents: `cursor`, `claude-code`, `antigravity`. Show or configure active agents:
 
 ```bash
-npx @nextstage-brasil/harness agents set --agent cursor
 npx @nextstage-brasil/harness agents          # show current
+
+# Single agent examples
+npx @nextstage-brasil/harness agents set --agent cursor
+npx @nextstage-brasil/harness agents set --agent claude
+npx @nextstage-brasil/harness agents set --agent antigravity
+
+# Paired agents
+npx @nextstage-brasil/harness agents set --agent cursor --agent claude
+npx @nextstage-brasil/harness agents set --agent antigravity --agent claude
 ```
 
 ### Refresh skills after a catalog release
@@ -284,7 +292,7 @@ Interactive wizard groups catalog skills by `catalog.json` **categories**. `impl
 | `--preset <name>`       | Preset selection                                          |
 | `--skill <id>`          | Skill selection (repeatable)                              |
 | `--all`                 | Full catalog                                              |
-| `--agent <name>`        | `cursor`, `claude-code` (repeatable; default both)        |
+| `--agent <name>`        | `cursor`, `claude-code`, `antigravity` (aliases: `agy`, `gemini`) (repeatable; default all) |
 | `--source <path\|repo>` | Skills source override                                    |
 | `--copy`                | Copy skills instead of symlinks                           |
 | `--global` / `-g`       | Global skills install (Skills CLI)                        |

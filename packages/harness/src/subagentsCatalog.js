@@ -11,6 +11,7 @@ export const DEFAULT_SUBAGENTS = [
     model: {
       cursor: 'inherit',
       claude: 'sonnet',
+      antigravity: 'inherit',
     },
     readonly: false,
   },
@@ -22,6 +23,7 @@ export const DEFAULT_SUBAGENTS = [
     model: {
       cursor: 'inherit',
       claude: 'opus',
+      antigravity: 'inherit',
     },
     readonly: true,
   },
@@ -34,6 +36,7 @@ export const DEFAULT_SUBAGENTS = [
     model: {
       cursor: 'inherit',
       claude: 'haiku',
+      antigravity: 'inherit',
     },
     readonly: false,
   },

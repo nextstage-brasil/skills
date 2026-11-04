@@ -52,7 +52,7 @@ function formatHelp() {
 Usage:
   harness init [options]   Install NextStage skills and scaffold project layout (default)
   harness prepare          Print full brownfield prepare instructions (/ns-harness prepare)
-  harness sync [options]   Absorb orphan .cursor/rules/*.mdc, regenerate adapters, ensure CLAUDE.md when claude-code is set
+  harness sync [options]   Absorb orphan .cursor/rules/*.mdc, regenerate adapters (.cursor, .claude, .agents), ensure CLAUDE.md when claude-code is set
   harness add-rule <name>  Create a canonical rule, update manifest, and sync adapters
   harness add-subagent <name>  Create a canonical subagent bridge, update manifest, and sync
   harness agents-md        Generate AGENTS.md + CLAUDE.md from installed skills (no AI)
@@ -69,7 +69,7 @@ Options:
   --skill <name>         Install skill + catalog depends (repeatable). Empty depends = that skill only
   --all                  Install every skill in the catalog
   --global, -g           Install skills globally (passed to skills CLI)
-  --agent <name>         Target agent (repeatable; default from manifest or cursor + claude-code)
+  --agent <name>         Target agent: cursor, claude-code, antigravity (aliases: agy, gemini) (repeatable; default from manifest or all)
   --copy                 Copy skill files instead of symlinking
   --source <path>        Skills source (default: nextstage-brasil/skills or local repo)
   --yes, -y              Non-interactive; install all skills and default scaffold
@@ -87,6 +87,8 @@ Notes:
   --skill resolves catalog.json depends (e.g. ns-coder pulls complements). Skills with depends: []
   install alone (e.g. ns-mcp-shield — no ns-harness). npx skills add owner/repo@skill does NOT
   resolve depends; use this CLI when you need the dependency graph.
+  --agent supports cursor, claude-code, and antigravity. Cursor and Antigravity discover skills from
+  .agents/skills/ directly; Antigravity rule adapters sync to .agents/rules/*.md.
 
 Examples:
   npx @nextstage-brasil/harness
@@ -109,6 +111,10 @@ ${presetExamples}
   npx @nextstage-brasil/harness uninstall --yes
   npx @nextstage-brasil/harness agents
   npx @nextstage-brasil/harness agents set --agent cursor
+  npx @nextstage-brasil/harness agents set --agent claude
+  npx @nextstage-brasil/harness agents set --agent antigravity
+  npx @nextstage-brasil/harness agents set --agent cursor --agent claude
+  npx @nextstage-brasil/harness agents set --agent antigravity --agent claude
   npx @nextstage-brasil/harness list
 `.trim();
 }

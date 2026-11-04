@@ -53,6 +53,7 @@ function buildManifestEntry({ name, description, globs, alwaysApply = false }) {
     canonical: `rules/${name}.md`,
     cursor: {},
     claude: { paths: null },
+    antigravity: {},
   };
 
   if (description) {

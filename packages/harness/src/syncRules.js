@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { absorbOrphanCursorRules } from './absorbCursorRules.js';
-import { HARNESS_ROOT } from './agentsLayout.js';
+import { DEFAULT_AGENTS, HARNESS_ROOT } from './agentsLayout.js';
 import {
   GENERATION_MARKER,
   HASH_PATTERN,
@@ -105,6 +105,10 @@ export function buildClaudeAdapter(rule, body, hash) {
   return `${buildClaudeFrontmatter(rule)}${buildAdapterBody(body, hash)}`;
 }
 
+export function buildAntigravityAdapter(rule, body, hash) {
+  return buildAdapterBody(body, hash);
+}
+
 export function readAdapterHash(adapterContent) {
   const match = adapterContent.match(HASH_PATTERN);
   return match?.[1] ?? null;
@@ -127,7 +131,7 @@ export function updateAgentsSyncMarker(projectRoot) {
 
 export function syncRules(projectRoot, options = {}) {
   const {
-    agents = ['cursor', 'claude-code'],
+    agents = DEFAULT_AGENTS,
     check = false,
     updateAgentsMarker = !check,
     absorbWarn = (msg) => console.warn(msg),
@@ -219,6 +223,26 @@ export function syncRules(projectRoot, options = {}) {
         }
       } else {
         mkdirSync(join(projectRoot, '.claude', 'rules'), { recursive: true });
+        writeFileSync(adapterPath, expected, 'utf8');
+        written.push(adapterPath);
+      }
+    }
+
+    if (agents.includes('antigravity')) {
+      const adapterPath = join(projectRoot, '.agents', 'rules', `${rule.name}.md`);
+      const expected = buildAntigravityAdapter(rule, body, hash);
+      if (check) {
+        if (!existsSync(adapterPath)) {
+          drifts.push(adapterPath);
+        } else {
+          const current = readFileSync(adapterPath, 'utf8');
+          const currentHash = readAdapterHash(current);
+          if (currentHash !== hash) {
+            drifts.push(adapterPath);
+          }
+        }
+      } else {
+        mkdirSync(join(projectRoot, '.agents', 'rules'), { recursive: true });
         writeFileSync(adapterPath, expected, 'utf8');
         written.push(adapterPath);
       }

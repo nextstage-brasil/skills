@@ -146,8 +146,8 @@ Browse: `npx skills add nextstage-brasil/skills --list --full-depth`
 | ---------------------- | --------------------------------------------------------------------------- |
 | **Skills (this repo)** | Portable instructions — `npx @nextstage-brasil/harness` or `npx skills add` |
 | **Project rules**      | `AGENTS.md` at repo root; canonical rules in `.nextstage-harness/rules/`    |
-| **Generated adapters** | `.cursor/rules/*.mdc`, `.claude/rules/*.md` (via `harness sync`)            |
-| **Installed skills**   | `.agents/skills/` (Cursor); `.claude/skills/` symlink for Claude Code       |
+| **Generated adapters** | `.cursor/rules/*.mdc`, `.claude/rules/*.md`, `.agents/rules/*.md` (via `harness sync`) |
+| **Installed skills**   | `.agents/skills/` (Cursor, Antigravity); `.claude/skills/` symlink for Claude Code       |
 | **SDD artifacts**      | `docs/context/`, `docs/specs/`, `docs/versions/{version_san}/sdd/` (project root) |
 
 Install and migration guide: `packages/harness/docs/README_INSTALLER.md`.

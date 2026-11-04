@@ -59,9 +59,12 @@ export function runAgentsShow(projectRoot, options = {}) {
   console.log('');
   console.log('Set project agents:');
   console.log('  npx @nextstage-brasil/harness agents set --agent cursor');
-  console.log('  npx @nextstage-brasil/harness agents set cursor claude-code');
+  console.log('  npx @nextstage-brasil/harness agents set --agent claude');
+  console.log('  npx @nextstage-brasil/harness agents set --agent antigravity');
+  console.log('  npx @nextstage-brasil/harness agents set --agent cursor --agent claude');
+  console.log('  npx @nextstage-brasil/harness agents set --agent antigravity --agent claude');
   console.log('');
-  console.log(`Known agents: ${info.known.join(', ')} (alias: claude → claude-code)`);
+  console.log(`Known agents: ${info.known.join(', ')} (aliases: claude → claude-code, agy/gemini → antigravity)`);
 
   return info;
 }

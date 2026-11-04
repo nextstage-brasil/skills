@@ -39,17 +39,18 @@ npx @nextstage-brasil/harness <command>
 | `AGENTS.md` | Project entry for agents | CLI baseline; refine with `/ns-harness` agents-md |
 | `.cursor/rules/*.mdc` | Cursor rule adapters | **No** — generated; gitignored |
 | `.claude/rules/*.md` | Claude rule adapters | **No** — generated; gitignored |
+| `.agents/rules/*.md` | Antigravity rule adapters | **No** — generated; gitignored |
 | `.cursor/agents/*.md` | Cursor subagent bridges | **No** — generated; set `model` in manifest; gitignored |
 | `.claude/agents/*.md` | Claude subagent bridges | **No** — generated; set `model` in manifest; gitignored |
 | `.claude/skills/` | Claude skill symlinks | **No** — generated when `claude-code` is active; gitignored |
 
-**Mental model:** truth = `.nextstage-harness/` + `.agents/skills/` · mirrors = `.cursor/` + `.claude/` (regenerated via `harness sync`; gitignored).
+**Mental model:** truth = `.nextstage-harness/` + `.agents/skills/` · mirrors = `.cursor/` + `.claude/` + `.agents/rules/` (regenerated via `harness sync`; gitignored).
 
 **After clone:** `npx @nextstage-brasil/harness sync`
 
 ---
 
-## Project agents (Cursor vs Claude Code)
+## Project agents (Cursor, Claude Code, Antigravity)
 
 Active agents are stored in `manifest.json` under `"agents"`.
 
@@ -57,19 +58,25 @@ Active agents are stored in `manifest.json` under `"agents"`.
 # Show current agents and where the setting comes from
 npx @nextstage-brasil/harness agents
 
-# Cursor only — persists, syncs, removes .claude/ and CLAUDE.md
+# Single agent examples (persists, syncs, and prunes unused adapters)
 npx @nextstage-brasil/harness agents set --agent cursor
+npx @nextstage-brasil/harness agents set --agent claude
+npx @nextstage-brasil/harness agents set --agent antigravity
 
-# Both agents
-npx @nextstage-brasil/harness agents set --agent cursor --agent claude-code
-# alias: claude → claude-code
-npx @nextstage-brasil/harness agents set claude cursor
+# Paired agents
+npx @nextstage-brasil/harness agents set --agent cursor --agent claude
+npx @nextstage-brasil/harness agents set --agent antigravity --agent claude
+
+# All agents (repeatable flags or positional with aliases)
+npx @nextstage-brasil/harness agents set --agent cursor --agent claude-code --agent antigravity
+# aliases: claude → claude-code, agy/gemini → antigravity
+npx @nextstage-brasil/harness agents set claude cursor agy
 ```
 
 **Precedence:** `--agent` on a single command overrides `manifest.json`.  
 `sync` and `update` use `manifest.agents` when you omit `--agent`.
 
-Cursor reads skills from `.agents/skills/` directly. Claude Code uses symlinks in `.claude/skills/` when enabled.
+Cursor and Antigravity read skills from `.agents/skills/` directly. Claude Code uses symlinks in `.claude/skills/` when enabled.
 
 ---
 

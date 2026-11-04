@@ -65,6 +65,7 @@ export function buildManifestEntryFromFrontmatter(name, frontmatter, options = {
     canonical: `rules/${name}.md`,
     cursor: { description },
     claude: { paths: null },
+    antigravity: {},
   };
 
   if (alwaysTrue && globsRaw) {
