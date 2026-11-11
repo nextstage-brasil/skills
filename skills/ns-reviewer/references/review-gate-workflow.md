@@ -2,7 +2,7 @@
 
 Fixed close for implementation skills. **Two sequential gates.** Code first (`ns-reviewer`), then delivery (`ns-judge`). Each `Approved` only at score **10**/10.
 
-**Not** "run any review". Code path = `ns-reviewer` (**MUST** via `reviewer-agent` when available — `../../ns-harness/references/subagent-dispatch.md`). Judge path = **same parent** reads `../ns-judge/SKILL.md` **in-session** after reviewer child returns `Code Review: Approved`. No `judge-agent` in v1. Human `/ns-judge` = session face only.
+**Not** "run any review". Code path = `ns-reviewer` **in-session** (`reviewer-agent` only if the user explicitly asks — `../../ns-harness/references/subagent-dispatch.md`). Judge path = **same parent** reads `../ns-judge/SKILL.md` **in-session** after the code review returns `Code Review: Approved`. No `judge-agent` in v1. Human `/ns-judge` = session face only.
 
 `ns-reviewer` is **read-only** and **MUST NOT** dispatch `ns-judge`.
 
@@ -33,7 +33,7 @@ Judge Rejected → fix map → implement. Product files changed → code review 
 
 ## Invocation (code — only allowed path)
 
-1. **MUST** dispatch `reviewer-agent` when available — `../../ns-harness/references/subagent-dispatch.md`. Bridge Session boot at cold start (`../../ns-harness/references/session-boot.md`, then `ns-reviewer`). Inline `Skill(ns-reviewer)` while bridge present = forbidden.
+1. Follow `ns-reviewer` **in-session**, read-only, grounded on the diff (`../../ns-harness/references/subagent-dispatch.md` **In-session rules**). Spawn `reviewer-agent` only on explicit user request.
 2. **Else** (bridge missing) read `../SKILL.md`; follow active mode (ad-hoc diff, version closure, Issue review).
 3. Reviewer run = this skill (bridge or direct) — not paraphrase, not platform persona.
 4. Last line from reviewer: `Code Review: {Approved|Rejected|Blocked}`.
@@ -43,7 +43,7 @@ Judge Rejected → fix map → implement. Product files changed → code review 
 - Cursor Task subagents: `senior-tech-lead-reviewer`, `bugbot`, `security-review`
 - Any other persona, generic "code review", or improvised checklist in place of `ns-reviewer`
 
-**Allowed:** `reviewer-agent` (harness thin bridge). It is **not** a substitute.
+**Allowed:** in-session `ns-reviewer`; `reviewer-agent` (harness thin bridge) on explicit user request.
 
 ## Invocation (judge)
 
@@ -113,7 +113,7 @@ Every closure response **must** include:
 | Field | Required value |
 | ----- | -------------- |
 | Active skill | e.g. `ns-coder` |
-| Reviewer skill | `ns-reviewer` only (via `reviewer-agent` when dispatched) |
+| Reviewer skill | `ns-reviewer` only (in-session; `reviewer-agent` on explicit request) |
 | Review round | Last code round: `1`, `2`, or `3` |
 | Code score | Last overall score from reviewer |
 | Code verdict | Exact parseable line: `Code Review: {Approved\|Rejected\|Blocked}` |

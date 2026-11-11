@@ -13,11 +13,11 @@ From single implicit unit or `execution-plan.md` DAG (`planning-decision.md`):
 | Units | Action |
 | ----- | ------ |
 | **1** | Follow `ns-coder` **in A session** inside `WORKTREE_ROOT`. **MUST NOT** spawn `coder-agent`. Defer review to caller (G Phase 4) or standalone step 5. |
-| **≥2** | **MUST** `coder-agent` when available per unit (else `ns-coder`). Parallel only disjoint + no DAG edge. |
+| **≥2** | Follow `ns-coder` in A session per unit, sequential in DAG order. `coder-agent` / parallel only on explicit user request (disjoint + no DAG edge). |
 
 See `../../../ns-harness/references/subagent-dispatch.md` spawn gate.
 
-## Dispatching a unit (≥2 or spawned worker)
+## Executing a unit (≥2)
 
 **Gate before edit:** shell/subagent inside `WORKTREE_ROOT` on `WORK_BRANCH`. Else refuse unit — no silent main-checkout writes.
 
@@ -31,20 +31,9 @@ Each unit:
 - Failed worktree isolation → unit `blocked`, not soft continue on main checkout.
 - **Engine mode** (`ns-execution-gitlab-issue`): no route to `ns-execution-gitlab-issue` on `ISSUE_URL` in scope — doubt protocol to caller.
 
-### Subagent prompt template (≥2 units)
+### Parallel workers (explicit user request only)
 
-```
-Implement work unit {unit_id} inside {WORKTREE_ROOT} on branch {WORK_BRANCH}.
-MUST use coder-agent when available; else follow ns-coder skill.
-Preflight: confirm pwd and git branch match WORKTREE_ROOT / WORK_BRANCH before any edit.
-If you are on main/master/base branch or outside WORKTREE_ROOT: stop and report blocked — do not implement.
-Scope: {unit description / acceptance criteria}
-File boundary: {files or directories this unit owns — do not touch files outside this boundary}
-Resolved context: {relevant Q&A from the doubt protocol, or "none"}
-Harness rules: {paths to applicable rule files}
-Review: DEFER — implement only; do NOT invoke reviewer-agent / ns-reviewer / ns-judge. Parent owns closure review.
-Report: files changed, summary of the diff, blockers, tokens, any new destructive doubt (do not guess on it).
-```
+Default is in-session. If the user asked for parallel workers, each gets: `{unit_id}`, `WORKTREE_ROOT` + `WORK_BRANCH` (preflight: `pwd` and branch match before any edit; else report blocked), scope/AC, file boundary (no edits outside it), resolved doubt Q&A, harness rule paths. Implement only — no review. Report: files changed, diff summary, blockers, tokens, new destructive doubts (never guess).
 
 ## Checkpoint commits
 

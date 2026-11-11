@@ -2,7 +2,7 @@
 
 Convert Features into `task-NNN-slug.md`. Unit = **1 Feature × 1 impl layer = 1 implementation task** (+ capped test tasks — **Decomposition**).
 
-Face (**MUST** spawn project agent `task-writer-agent` by exact name when bridge exists — adapter `model`, not parent inherit — `../../../ns-harness/references/subagent-dispatch.md`). This file = worker body, not invite inline from `ns-spec-driven`.
+Face follows this file **in-session** (`task-writer-agent` only on explicit user request — `../../../ns-harness/references/subagent-dispatch.md`).
 
 ## Session boot
 
@@ -19,7 +19,7 @@ Face (**MUST** spawn project agent `task-writer-agent` by exact name when bridge
 
 - **Impl layers (this file):** Backend, Frontend, Infrastructure
 - **Test layers (after impl):** unit-tests via `unit-test-task-generator.md`; e2e via `e2e-test-task-generator.md` — same Feature, separate tasks
-- **Then (MUST read, same `task-writer-agent` session):** after backend implementation tasks then `unit-test-task-generator.md`; after frontend UI tasks then `e2e-test-task-generator.md`
+- **Then (MUST read, same session):** after backend implementation tasks then `unit-test-task-generator.md`; after frontend UI tasks then `e2e-test-task-generator.md`
 
 ## Golden rule
 

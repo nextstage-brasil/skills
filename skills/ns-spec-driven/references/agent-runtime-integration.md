@@ -67,7 +67,7 @@ Coordinate **features** here. **Skeleton** = `ns-langgraph-agents` bootstrap. Do
 | Clarify | Graph/MCP/HITL ambiguities; topology via `ns-langgraph-agents`, `ns-agent-architecture` only if framework unlocked. `intelligent_saas`: confirm App chat relay, no browser to agent-api |
 | Specify | `intelligent-saas.md` or `agent-runtime.md`; version `graph-spec.md` when graph in scope; greenfield Feature 001 = bootstrap; requirements cite placement, bind, spec sync. `intelligent_saas`: requirements **MUST** document conversation hop (App routes, SSE relay, resume via App, persistence in App PG) |
 | Tasks | First greenfield task = bootstrap command + `npm test`. Later: `graph-spec.md` sync, capability plan, or placement block per langgraph pre-change gates. `intelligent_saas`: task plan **MUST** include hops table; frontend chat cards cite App endpoints only |
-| Execute | Bootstrap task: `ns-langgraph-agents` script. Feature tasks: `coder-agent` / `ns-coder`; refs in parent context. `intelligent_saas`: reject direct browser to agent-api or client-side `thread_id` |
+| Execute | Bootstrap task: `ns-langgraph-agents` script. Feature tasks: in-session `ns-coder`; refs in parent context. `intelligent_saas`: reject direct browser to agent-api or client-side `thread_id` |
 | Close | `ns-reviewer` anti-patterns for agent-api; `ns-judge` after `Code Review: Approved`. Parent must not contradict doctrine. `intelligent_saas`: verify hop invariant in delivered paths |
 
 **MUST NOT** inline langgraph workflows in this face skill. **MUST** keep doctrine in context.

@@ -58,7 +58,7 @@ Identical logic to Engine mode:
 
 Follow `../../ns-reviewer/references/review-gate-workflow.md` (exhaustive map → one coder → `delta`; each `Approved` = **10**).
 
-- **MUST** `reviewer-agent` when available (else `ns-reviewer`) **version-closure code mode** — bridge loads `AGENTS.md` then reviewer workflow — point at `docs/versions/{version_san}/sdd/` when exists, else worktree diff for single-unit run. Reviewer **MUST NOT** dispatch judge.
+- **MUST** run `ns-reviewer` in-session, **version-closure code mode** — point at `docs/versions/{version_san}/sdd/` when exists, else worktree diff for single-unit run. Reviewer **MUST NOT** dispatch judge.
 - Pass code = `Code Review: Approved` (score **= 10**). **No judge** until code Approved.
 - Then in-session `../../ns-judge/SKILL.md` (`closure`). Pass delivery = `Delivery Review: Approved` (score **= 10**).
 - Rejected/Blocked path: that workflow only (map verbatim, `delta` re-review). Product files after judge Rejected: code review again then judge again.

@@ -14,17 +14,15 @@ When Layout SSoT registered for a screen (`reference-sources.md` `role: ui-layou
 
 If frontend navigation changes: present grouping proposals and **wait for human approval** before applying.
 
-### Step 4.5 — E2E (human only)
+### Step 4.5 — E2E (only on explicit user request)
 
-Do **not** run E2E as the agent. Tell the human that E2E is their gate at version
-end (after tasks complete; before or alongside review as they prefer). Agents may
-have written E2E specs earlier — execution of those suites is human-owned.
+Do **not** run E2E unless the user explicitly asks. Otherwise tell the user E2E was not run and is theirs to trigger (before or alongside review as they prefer). E2E specs written earlier are not executed by default.
 
 ### Step 5 — Code review then judge (required)
 
 Follow `../../ns-reviewer/references/review-gate-workflow.md` (each `Approved` = score **10** only).
 
-1. **MUST** `reviewer-agent` when available (else `ns-reviewer`) at version closure. See `../../../ns-harness/references/subagent-dispatch.md`. Reviewer does **not** dispatch judge.
+1. **MUST** run `ns-reviewer` in-session at version closure. See `../../../ns-harness/references/subagent-dispatch.md`. Reviewer does **not** dispatch judge.
 2. No `code-review-report.md`. On `Code Review: Rejected`/`Blocked`, follow `review-gate-workflow.md` (exhaustive map → one coder → `delta` re-review) until `Approved` or **blocked**. **Do not** run `ns-judge` until `Code Review: Approved`.
 3. On `Code Review: Approved` only: read `../../ns-judge/SKILL.md` in-session (`--mode closure --version {version_san}` or `--requirements` path). Python optional. `Delivery Review: Approved` only at 10. Judge Rejected: fix map; if product files changed, code review again then judge again.
 4. Update handoff only on Pass (both Approved) or Stop:
@@ -51,14 +49,14 @@ After human confirms (or documented waiver):
 ## Critical rules
 
 - **Always** update `execution-handoff.md` when task status changes — rows stay **per task**; parent owns file
-- **Batching:** **unit mode** on **unit-scoped run** (step 0 definition — all tasks in that `unit`). **Classic** only when not unit-scoped — same-layer consecutive `pending`, prefer 4–7, hard max 7.
-- **AGENTS first** — Session boot once in Bootstrap (step 1); no rule re-read per batch unless `agents.local.md` or harness rules changed; never tool-Read `AGENTS.md`
+- **Scope:** **unit mode** on **unit-scoped run** (step 0 definition — all tasks in that `unit`). **Classic** otherwise — next `pending` task, numeric order. One task at a time either way.
+- **AGENTS first** — Session boot once in Bootstrap (step 1); no rule re-read per task unless `agents.local.md` or harness rules changed; never tool-Read `AGENTS.md`
 - **Numeric task order** unless explicit dependency in the task file says otherwise
-- **Minimal diff** — current batch scope only
+- **Minimal diff** — current task scope only
 - **No commits** unless human explicitly asks
 - On real blocker: `blocked` + task **Execution notes**, stop
-- **No E2E runs** during tasks — unit/integration only; human runs E2E at end
-- **No per-task / mid-batch review** — `coder-agent` / `ns-coder` must not call reviewer or judge; **only** Step 5 invokes `reviewer-agent` / `ns-reviewer` then `ns-judge` after `Code Review: Approved`
+- **No E2E runs** unless the user explicitly asks — unit/integration only
+- **No per-task review** — implementation (`ns-coder`) must not call reviewer or judge; **only** Step 5 invokes `reviewer-agent` / `ns-reviewer` then `ns-judge` after `Code Review: Approved`
 
 ## References
 

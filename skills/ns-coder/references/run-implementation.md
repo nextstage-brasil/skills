@@ -2,11 +2,11 @@
 
 Planned version via `execution-handoff.md` as entry + progress tracker.
 
-No `delivery-units.md` = **classic default** (batched same-layer dispatch) — not legacy-only.
+No `delivery-units.md` = **classic default** (task-by-task queue, in-session) — not legacy-only.
 
 **Unit-scoped run** (stay in this file, step 0b): caller is G SDD unit mode **or** current `unit` is set **or** (`delivery-units.md` exists and this is **not** a top-level partitioned parent with pending slices). Top-level parent + `version-roadmap.md` pending slices + **no** `unit` → `../../ns-spec-driven/references/orchestrator.md`. Do not bounce a unit-scoped run back to orchestrator.
 
-**Batching:** this file only. Classic batch = same-layer consecutive `pending`, prefer **4–7**, hard **max 7**, fewer OK (size 1 = single-task). Slice **target 4–7** = `version-partitioner.md` only. **Unit-scoped:** batch = all tasks in current `unit` only.
+**Scope:** this file only. Classic = queue of `pending` tasks, one task at a time in order. **Unit-scoped:** scope = all tasks in current `unit` only, one at a time. Slice **target 4–7** = `version-partitioner.md` only.
 
 **GitLab:** `../../ns-spec-driven/references/delivery-units.md` **status/spent (SSoT)** — no fourth branch.
 
@@ -42,10 +42,10 @@ If classic artifacts only at version root → nest migration STOP (`session-cont
 3. Validate **Time tracking (seconds)** section exists; add from template if missing
 4. Read resolved `requirements.md` — `sdd/` first, else legacy version root (overview — do not replan); confirm Consistency status is `Approved` when present
 5. Load product context: follow **Implementation boot rule** in `../../../ns-harness/references/artifact-layout.md`
-6. **Next batch:**
-   - **Unit mode:** all `pending`/`in_progress` tasks in current unit (step 0b) — ignore layer 4–7 classic cap
-   - **Classic:** consecutive `pending` same layer (max 7); Progress **Next task** = first short id of that batch (or resume `in_progress`)
-7. Load harness rules for the batch layer(s)
+6. **Next task:**
+   - **Unit mode:** `pending`/`in_progress` tasks of current unit (step 0b), in order
+   - **Classic:** first `pending` task in numeric order (or resume `in_progress`); Progress **Next task** = its short id
+7. Load harness rules for the layer(s) in scope — once; reload only when the layer changes
 8. If `Implementation — start` is empty, fill with current ISO local timestamp
 
 ### Work branch (step 1.5 — GitLab)
@@ -59,33 +59,33 @@ If classic artifacts only at version root → nest migration STOP (`session-cont
 3. Create or checkout `work_branch` once per version before first code task
 4. Record branches in the task **Execution notes** when applicable
 
-## Per-batch loop (step 2)
+## Per-task loop (step 2)
 
-Until scope done or all tasks complete:
+Until scope done or all tasks complete. No pause or confirmation between tasks.
 
-### Select batch
+### Select task
 
-- **Unit mode:** batch = all tasks in current unit row — never tasks from another unit
-- **Classic:** consecutive `pending`, **same layer**, prefer **4–7**, hard **max 7**. Stop before unfinished dependency. Size 1 → single-task. Numeric order unless the task file names a dependency.
+- **Unit mode:** next task of current unit row — never tasks from another unit
+- **Classic:** next `pending` task, numeric order unless the task file names a dependency (stop before unfinished dependency). Consecutive same-layer tasks run back-to-back — rules and context already loaded, no reload.
 
-### Dispatch
+### Execute
 
-1. **Update handoff — batch start:** each selected row `Status` → `in_progress`; `Started at` → now; `Updated at` → now
-   - **GitLab batch start:** if caller is `ns-execution-gitlab-issue` → **zero** board writes here. Else apply SSoT at **unit** start only (Flow B per task only when SSoT Flow B row).
-2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). If `### Contract` present (API/schema/screen), always read it. Open cited `source/` section anchors for the batch. Open `Detailed description` on demand — ambiguity or `blocked`. See `../../ns-spec-driven/references/task-schema.md`.
-3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-batch re-read; never tool-Read `AGENTS.md`)
-4. **Implement** — **one** `coder-agent` dispatch per batch (**MUST** when available — heavy; loads `ns-coder`); else `ns-coder` direct. See `../../../ns-harness/references/subagent-dispatch.md`. **MUST NOT** split batch to size-1 to skip spawn.
-   - **Dispatch must state SDD handoff mode:** this batch only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer` / `ns-judge`; **do not** run living specs; review = **Step 5** only. Workers grep new/changed public exports before marking complete (keep unused names unexported).
-   - Worker reports per-task outcomes (files, tests, blockers, tokens). Parent owns `execution-handoff.md`.
+1. **Update handoff — task start:** row `Status` → `in_progress`; `Started at` → now; `Updated at` → now
+   - **GitLab task start:** if caller is `ns-execution-gitlab-issue` → **zero** board writes here. Else apply SSoT at **unit** start only (Flow B per task only when SSoT Flow B row).
+2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). If `### Contract` present (API/schema/screen), always read it. Open cited `source/` section anchors for the task. Open `Detailed description` on demand — ambiguity or `blocked`. See `../../ns-spec-driven/references/task-schema.md`.
+3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-task re-read; never tool-Read `AGENTS.md`)
+4. **Implement** — follow `ns-coder` **in this session** per task (**MUST NOT** spawn `coder-agent` — `../../../ns-harness/references/subagent-dispatch.md` Default: one session; host harness handles context compaction). Only explicit Gate 4 parallel units use separate workers.
+   - **SDD handoff mode applies:** current task only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer` / `ns-judge`; **do not** run living specs; review = **Step 5** only. Workers grep new/changed public exports before marking complete (keep unused names unexported).
+   - Record per-task outcomes (files, tests, blockers, tokens) in `execution-handoff.md` as each task finishes, so a host compaction/restart resumes from disk.
 5. **Validate** per project rules (Docker **unit/integration** tests, i18n, multitenancy, etc.)
    - **Allowed:** unit/integration only (e.g. PHPUnit in test container)
-   - **Forbidden:** run E2E (Cypress or equivalent) during any task — including `e2e`-layer tasks. Writing E2E specs OK; **running** them not. Human runs E2E after all tasks complete.
-   - **Forbidden:** per-task / mid-version / mid-batch code review or judge — wait for Step 5
-6. **Collect Tokens** before each `completed`. Prefer worker/UI usage split per task; else parent tokens; else ask once then `~N` + `tokens: ~N (estimated)` in task Execution notes. **Forbidden:** `0` on `completed` LLM work.
-7. **Update handoff — per task from worker report:** each task `Status` → `completed` (or `blocked`); write `Tokens` (step 6)
+   - **E2E:** agents do **not** run E2E suites (Cypress/`cypress:run`/`cypress:open`/equivalent) unless the user explicitly asks for it in this session. Writing E2E specs is fine. Otherwise remind the user at version end that E2E was not run. Applies to `e2e`-layer tasks too.
+   - **Forbidden:** per-task / mid-version code review or judge — wait for Step 5
+6. **Collect Tokens** before each `completed`. Prefer session usage delta split per task; else parent tokens; else ask once then `~N` + `tokens: ~N (estimated)` in task Execution notes. **Forbidden:** `0` on `completed` LLM work.
+7. **Update handoff — per task:** each task `Status` → `completed` (or `blocked`) as it finishes; write `Tokens` (step 6)
    - On `blocked` / waiver / important events: append to task file `## Execution notes` (relevant only)
    - **GitLab complete:** if caller is G → **zero** board writes here. Else SSoT at **unit** end only (never per-task spent when units published).
-8. **Recalculate (required)** after batch (or after each task if reporting incremental):
+8. **Recalculate (required)** after each task:
    - Row `Time (s)` = `Finished at − Started at`
    - **Tokens (total)** = sum of `Tokens` (integers; `~N` counts as `N`)
    - `Total task time (s)` = sum of column
@@ -93,11 +93,11 @@ Until scope done or all tasks complete:
    - `Total process time (s)` per handoff formula
    - `Last recalculated` = now
    - **Progress** and **Next task**
-9. Advance to next batch. Status rules: `../../ns-spec-driven/references/execution-handoff.md`.
+9. Advance to next task. Status rules: `../../ns-spec-driven/references/execution-handoff.md`.
 
 ## Session end (step 3)
 
-Pause: handoff matches progress; ultra-short Notes. Impl finished this session: fill `Implementation — end`, totals. Report: tasks done, next batch, blockers, seconds, tokens.
+Pause: handoff matches progress; ultra-short Notes. Impl finished this session: fill `Implementation — end`, totals. Report: tasks done, next task, blockers, seconds, tokens.
 
 ## Closure (steps 4–6)
 

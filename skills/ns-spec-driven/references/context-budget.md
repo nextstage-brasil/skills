@@ -9,7 +9,7 @@ Keep active window focused. Prefer **disk artifacts** over paste large docs into
 3. `.nextstage-harness/rules/architecture-rules.md` when implementing.
 4. **One** version SDD tree: `docs/versions/{version_san}/sdd/` for active version only.
 
-Do **not** re-load full rule corpus per task unless files changed. Fresh worker/subagent = own cold-start boot.
+Do **not** re-load full rule corpus per task unless files changed. Everything runs in one session — cold-start cost is paid **once**; protect it.
 
 ## On-demand load
 
@@ -30,12 +30,18 @@ Do **not** re-load full rule corpus per task unless files changed. Fresh worker/
 - Load two version trees (`docs/versions/{a}/` and `docs/versions/{b}/`) as working sets.
 - Paste entire living spec corpus into context.
 - Re-read completed task files unless debugging.
-- Mid-version / per-task / mid-batch code review during `run-implementation` (version closure only).
+- Mid-version / per-task code review during `run-implementation` (version closure only).
 
-## Worker delegation
+## Single-session hygiene
 
-Delegate: pass **paths + phase goal** — worker skill loads own references.
-Coding under handoff: state **SDD handoff mode** (implement only; parent owns review).
+One session carries tasks, implementation and review. Costless habits that keep it lean (never add extra reads or steps to follow them):
+
+- **Disk is the memory.** Handoff/units/roadmap rows are written as each task finishes; after that, nothing about the task needs to stay in chat.
+- Read a task card once, when starting it. No re-reading finished cards, no re-reading files you just wrote.
+- Grep/`head` over whole-file dumps; targeted `source/` anchors only.
+- Report outcomes in a few lines (files, tests, blockers) — no diffs or logs pasted back into chat.
+- **Boundaries:** at a unit end, wave end or slice end the context is cheapest to drop. Say once, in one line, that `/compact` or `/clear` is safe there and resume is automatic from the handoff file. Never stop or wait for the user to do it; the host may also auto-compact.
+- Resume after compaction/restart: read only the handoff file + the current task card.
 
 ## Missing context docs
 

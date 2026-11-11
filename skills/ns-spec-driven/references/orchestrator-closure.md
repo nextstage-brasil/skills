@@ -7,7 +7,7 @@ Load at end of version, stop conditions, or forbidden checks.
 Every unit in `delivery-units.md` (if present) and every slice in `version-roadmap.md` is `completed` (or waived):
 
 1. Present any navigation / semantic grouping menu and **wait for human approval** before applying.
-2. Post-implementation review: **MUST** dispatch **`reviewer-agent`** when available (else `ns-reviewer`, read-only) over version diff. Do **not** expect `code-review-report.md` — Rejected path = `../../ns-reviewer/references/review-gate-workflow.md` (exhaustive map → one coder → `delta`). See `../../../ns-harness/references/subagent-dispatch.md`. **Do not** run `ns-judge` until `Code Review: Approved`. Skip second pair if `run-implementation` Step 5 already ran both.
+2. Post-implementation review: **MUST** run **`ns-reviewer`** in-session (read-only) over version diff. Do **not** expect `code-review-report.md` — Rejected path = `../../ns-reviewer/references/review-gate-workflow.md` (exhaustive map → one coder → `delta`). See `../../../ns-harness/references/subagent-dispatch.md`. **Do not** run `ns-judge` until `Code Review: Approved`. Skip second pair if `run-implementation` Step 5 already ran both.
 3. On `Code Review: Approved`: read `../../ns-judge/SKILL.md` in-session (`closure`). Consolidate living specs only on `Delivery Review: Approved` — `ns-living-spec` (`../../ns-reviewer/references/review-gate-workflow.md`). Score **9** on either gate = `Rejected`, not close.
 4. Move version to `_done/` **only** after human confirms or documented waiver exists. Before the move: close the version handoff (`Final delivery — end`, recompute total process seconds), then **Archive prune** (`../../../ns-harness/references/artifact-layout.md`) — delete `sdd/tasks/` and the other non-history files listed there. Prune does not run without that confirm or waiver.
 5. If version `execution-handoff.md` exists, the close in step 4 already filled the final delivery block. Do not reopen it after the prune.
@@ -26,9 +26,9 @@ Every unit in `delivery-units.md` (if present) and every slice in `version-roadm
 
 ## Forbidden
 
-- Do not implement application code in parent session — delegate to unit or slice worker.
+- Do not spawn `coder-agent` per unit/slice — implement in this session (only explicit Gate 4 parallel uses workers).
 - Do not skip parent commit after successful **local** unit (no G) or classic **slice**. When G SDD unit mode ran, **do not** parent-commit — G Phase 3 already delivered.
-- Do not dispatch a whole slice as one worker when `delivery-units.md` exists — **by unit** only.
+- Do not execute a whole slice as one pass when `delivery-units.md` exists — **by unit** only.
 - Do not generate new task files (planning closed by the time you run).
 - Do not access paths outside repo.
 - Do not apply navigation semantic grouping without human approval.
@@ -38,7 +38,7 @@ Every unit in `delivery-units.md` (if present) and every slice in `version-roadm
 
 ```
 Version: 3.8.0-feat-payable-payment-workflow
-Resume partitioned implementation — `delivery-units.md` present: sync worker per unit, parent commit only if local (G owns commit/MR when published). Else: sync subagent per slice, commit per slice.
+Resume partitioned implementation — `delivery-units.md` present: in-session per unit, parent commit only if local (G owns commit/MR when published). Else: in-session per slice, commit per slice.
 ```
 
 ```
@@ -51,10 +51,10 @@ Continue orchestrating the partitioned implementation of apps/my-product 3.8.0.
 | ----- | --------- |
 | Partition version → roadmap + subversions | `version-partitioner.md` |
 | Handoff generation and updates | `execution-handoff.md` |
-| Slice worker (no units file) | `coder-agent` → `ns-coder` |
-| Unit worker (`delivery-units.md`) | G SDD unit mode when `issue_iid`; else `coder-agent` → `ns-coder` |
+| Slice (no units file) | `ns-coder` in-session |
+| Unit (`delivery-units.md`) | G SDD unit mode when `issue_iid`; else `ns-coder` in-session |
 | GitLab status/spent | `delivery-units.md` **GitLab status/spent (SSoT)** |
-| End-of-version review gate | `reviewer-agent` → `ns-reviewer` then `ns-judge` after `Code Review: Approved` — each `Approved` = **10** (`../../ns-reviewer/references/review-gate-workflow.md`) |
+| End-of-version review gate | `ns-reviewer` in-session then `ns-judge` after `Code Review: Approved` — each `Approved` = **10** (`../../ns-reviewer/references/review-gate-workflow.md`) |
 | Living specs consolidation | `ns-living-spec` after `Delivery Review: Approved` |
 | Delivery units + waves | `delivery-units.md` |
 | Work branch / GitLab sync | `mcp-gitlab-usage` |

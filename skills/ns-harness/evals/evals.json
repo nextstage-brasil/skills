@@ -9,20 +9,20 @@
     },
     {
       "id": 2,
-      "prompt": "Under /ns-spec-driven I need to generate tasks. task-writer-agent exists in .cursor/agents/. Can I just inline task generation in this session?",
-      "expected_output": "Agent cites subagent-dispatch.md: MUST spawn the project agent named task-writer-agent (.cursor/agents/task-writer-agent.md or /task-writer-agent) so adapter model applies; loads ns-spec-driven/references/task-generator.md. Inline task generation while bridge present is forbidden. FORBIDDEN: Task inherit / coder / generalPurpose as stand-in (parent model). Rule 4 in-session exception does not apply — Tasks is a child phase under ns-spec-driven. Fallback to reading task-generator.md only if bridge unavailable.",
+      "prompt": "Under /ns-spec-driven I need to generate tasks. task-writer-agent exists in .cursor/agents/. Can I just inline task generation in this session, or must I spawn it?",
+      "expected_output": "Agent cites subagent-dispatch.md Default: one session — task generation runs in-session by reading ns-spec-driven/references/task-generator.md; task-writer-agent is spawned only if the user explicitly asks. Does not spawn just because the bridge exists.",
       "files": []
     },
     {
       "id": 5,
-      "prompt": "/ns-spec-driven Tasks: I will Task(inherit) a worker titled task-writer-agent so it stays Grok like this session.",
-      "expected_output": "subagent-dispatch.md: FORBIDDEN. Child must be the named bridge with YAML model from manifest, not inherit. Stop; tell human /task-writer-agent if platform cannot spawn that name.",
+      "prompt": "/ns-spec-driven Tasks: the user explicitly asked for a subagent for task files; I will Task(inherit) a worker titled task-writer-agent so it stays Grok like this session.",
+      "expected_output": "subagent-dispatch.md: user request makes a spawn allowed, but Task inherit / persona stand-ins are FORBIDDEN. Child must be the named bridge with YAML model from manifest. Stop; tell human /task-writer-agent if platform cannot spawn that name.",
       "files": []
     },
     {
       "id": 6,
       "prompt": "Review gate: I will Task(subagent_type=reviewer, model=inherit) because Cursor lists reviewer. Coder work: Task(coder).",
-      "expected_output": "subagent-dispatch.md Cursor Task trap: platform reviewer/coder are not harness bridges. Review gate MUST spawn reviewer-agent by exact name (adapter model, not inherit). Coder spawn follows spawn gate — heavy execute MUST coder-agent; cheap execute MUST NOT spawn coder-agent (in-session ns-coder). If required bridge types missing from Task enum, stop and ask human /reviewer-agent or /coder-agent.",
+      "expected_output": "subagent-dispatch.md Cursor Task trap: platform reviewer/coder are not harness bridges. Default is in-session for review and coding (ns-reviewer / ns-coder); no spawn unless the user explicitly asks. If the user did ask and the exact bridge type is missing from the Task enum, stop and ask human to invoke /reviewer-agent or /coder-agent rather than using inherit/platform personas.",
       "files": []
     },
     {
@@ -34,7 +34,7 @@
     {
       "id": 7,
       "prompt": "/ns-spec-driven Quick: fix one typo in README — one file. coder-agent bridge exists.",
-      "expected_output": "Spawn gate cheap execute: follow ns-coder in-session; MUST NOT spawn coder-agent even when bridge present. Reviewer still MUST spawn reviewer-agent only if user asks review.",
+      "expected_output": "Follow ns-coder in-session; MUST NOT spawn coder-agent even when bridge present. Review only if user asks, also in-session (ns-reviewer).",
       "files": []
     },
     {

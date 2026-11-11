@@ -20,7 +20,7 @@ After section 8 is in the chat:
 | Condition | Dispatch |
 | --------- | -------- |
 | GitLab `ISSUE_URL` in the report, issue, or this turn | `ns-execution-gitlab-issue` (in-session; lifecycle owner) |
-| No URL | `ns-coder` (spawn gate: `coder-agent` when heavy; else in-session) |
+| No URL | `ns-coder` (in-session) |
 
 Confidence **Low** still dispatches. Section 8 marks hypothesis. Do not wait for a human.
 

@@ -1,6 +1,6 @@
 # Harness project subagent dispatch
 
-Skill spawns harness **thin bridge** when **spawn gate** says so. Bare skill / invented persona = forbidden while bridge present **and** gate requires spawn.
+Harness **thin bridges** exist for optional isolation. Skills do **not** spawn them by default — only on explicit user request (see **Default: one session**).
 
 **Spawn vehicle (Cursor):** project agent whose **`name` equals** `manifest.json` `subagents[].name` — file `.cursor/agents/{name}.md` (slash `/{name}`). That YAML `model:` is bound model.
 
@@ -16,75 +16,45 @@ Skills = **workflow SoT**. Bridges bind `model` / `readonly`, Session boot at co
 
 Defaults: `rules-sync.md` Default subagents. Project owns `model` in `.nextstage-harness/manifest.json` `subagents`.
 
-## Presence check
+## Default: one session
 
-Bridge **available** if **any**:
+**Default = everything runs in the current session.** No subagent, no bridge spawn — for Tasks, Execute, Review, Close alike. Reason: each spawned worker re-pays cold start (boot, rules, `source/`, cards) in a fresh context, so N workers cost more tokens than one session that keeps context. Context management (auto-compaction, `/clear`, new chat) is the **host harness's job** (Claude Code, Cursor, …); skills never simulate it with subagents.
 
-1. `.cursor/agents/{name}.md`, or
-2. `.claude/agents/{name}.md`, or
-3. `manifest.json` `subagents[]` has `{ "name": "{name}" }` + `.agents/skills/{skill}/` installed
-
-Unavailable: follow `.agents/skills/{skill}/SKILL.md` in-session (or generic subagent whose **only** instruction = that skill).
+**Spawn only when the user explicitly asks** (e.g. "use a subagent", "run `/reviewer-agent`", "parallel workers", Gate 4 `parallel`). Approval for one spawn does not extend to later phases. When spawning on request, say once that it trades tokens for isolation/speed.
 
 ## Spawn gate
 
-Parent face (`ns-spec-driven`, handoff, orchestrator, autonomous, gitlab) picks phase. Gate decides spawn vs in-session. Callers cite this table — no second table.
+Callers cite this table — no second table.
 
-| Phase | Spawn | Else |
-| ----- | ----- | ---- |
-| Review / Close | **MUST** `reviewer-agent` when available | `ns-reviewer` in-session if bridge missing |
-| Tasks (Medium+ task files) | **MUST** `task-writer-agent` when available | `task-generator.md` in-session if bridge missing |
-| Execute **cheap** | **MUST NOT** spawn `coder-agent` | Parent follows `ns-coder` in-session |
-| Execute **heavy** | **MUST** `coder-agent` when available | `ns-coder` if bridge missing |
+| Phase | Default | Only on explicit user request |
+| ----- | ------- | ----------------------------- |
+| Tasks (task files) | Parent follows `task-generator.md` in-session | `task-writer-agent` |
+| Execute (any size, SDD or not) | Parent follows `ns-coder` in-session | `coder-agent` (e.g. Gate 4 `parallel`) |
+| Review / Close | Parent follows `ns-reviewer` in-session | `reviewer-agent` |
 
-Clarify / Specify / Consistency / Partition: no v1 bridge — in-session OK.
+Clarify / Specify / Consistency / Partition: always in-session.
 
-**Delivery judge (v1):** no `judge-agent`. After `reviewer-agent` returns `Code Review: Approved`, **parent** reads `ns-judge/SKILL.md` in-session. Human `/ns-judge` only as session face. Reviewer **MUST NOT** dispatch judge.
+**Judge:** no `judge-agent`. After `Code Review: Approved`, parent reads `ns-judge/SKILL.md` in-session.
 
-### Cheap vs heavy execute
+### In-session rules
 
-**Cheap** (all must hold): one-sentence scope, ≤3 files expected, no `execution-handoff.md`, not GitLab lifecycle / not unit worktree. Host priority **5** ad-hoc and `ns-spec-driven` Quick.
+- **State lives on disk** (`execution-handoff.md`, `delivery-units.md`, roadmap, git). Update as each task completes so a host compaction/restart resumes from files.
+- Do not re-read rules, `AGENTS.md`, or full `source/` per batch; read only the task card and cited anchors.
+- **Review independence:** in-session review must be **read-only and diff-grounded** — judge the diff against `AGENTS.md` + rules + cited contracts, not against your own implementation notes. Do not fix inside the review step; apply the `Rejected` map afterward per `review-gate-workflow.md`.
+- Engine `C2` / SDD handoff batches = implement only — **no** per-unit / per-batch review. One review at closure (G Phase 4, A standalone step 5, `run-implementation` Step 5). Ad-hoc `/ns-coder` = one review after diff.
+- `ns-execution-gitlab-issue` external Phase 2: single-unit (≤5 files / one-paragraph AC) → follow `ns-coder` in the worktree, skip `ns-autonomous`; multi-unit → `ns-autonomous` Engine (`../ns-autonomous/references/planning-decision.md`), units executed sequentially in-session.
 
-**Heavy:** `run-implementation` batch, orchestrator unit/slice, G Phase 2 coding in worktree, A with **≥2** work units.
+## Dispatch rules (when the user did ask for a spawn)
 
-**Handoff size:** classic batch prefer **4–7**, hard **max 7**, same layer. **MUST NOT** split to size-1 to skip spawn. Unit-scoped batch = whole unit.
-
-### Review once per closure
-
-Engine `C2` / SDD handoff batches = implement only — **no** per-unit / per-batch `reviewer-agent`. Parent owns one review at closure (G Phase 4, A standalone step 5, `run-implementation` Step 5). Ad-hoc `/ns-coder` = one review after diff.
-
-### Engine skip (G → A)
-
-`ns-execution-gitlab-issue` external Phase 2: invoke `ns-autonomous` Engine **only if** planning-depth would be multi-unit (`../ns-autonomous/references/planning-decision.md` Requirements+tasks path). Single-unit heuristic (≤5 files / one-paragraph AC) → **skip A**; **MUST** `coder-agent` in existing worktree (or `ns-coder` if bridge missing). Cite `planning-decision.md` — no third heuristic.
-
-A already running with **1** unit: follow `ns-coder` in A session (worktree); **MUST NOT** extra `coder-agent` spawn. A with **≥2** units: **MUST** `coder-agent` per unit.
-
-## Dispatch rules
-
-1. Bridge **available** **and** spawn gate **requires** spawn: **MUST** dispatch that `{name}`. Inline `Skill(ns-*)` / bare follow while bridge present **and** gate requires spawn = **forbidden**.
-2. Spawn gate says **MUST NOT** spawn: follow mapped skill in-session even if bridge present. Still **FORBIDDEN** invent persona / platform `coder`/`reviewer` stand-in.
-3. **Do not** paraphrase skill into custom persona.
-4. Pass task context (paths, `ISSUE_URL`, unit scope, mode) in dispatch message; bridge boots then skill.
-5. **In-session exception:** user already invoked **that same** skill/bridge as session face (e.g. `/ns-coder`, `/task-writer-agent`). Continue face. **Cheap execute** also applies under `ns-spec-driven` Quick (parent S + cheap child = in-session `ns-coder`). Heavy child under S/handoff/orchestrator/autonomous/gitlab still **MUST** spawn when bridge available.
-6. **Model:** child **MUST** run adapter frontmatter `model` (from manifest). Parent session model is **not** worker model.
-7. Platform cannot spawn `{name}` (only `inherit` / `coder` / `reviewer` / `generalPurpose` / other persona): **stop**. Tell human invoke `/{name}`. Do **not** spawn inherit-as-bridge.
-
-## Allowed vs forbidden
-
-| Allowed | Forbidden (unless human explicit) |
-| ------- | --------------------------------- |
-| Exact `{name}` when gate requires spawn | Cursor Task personas: `senior-tech-lead-reviewer`, `bugbot`, `security-review` |
-| In-session mapped skill when gate says cheap / bridge missing | Inline `Skill` / bare follow while bridge present **and** gate requires spawn |
-| Human `/{name}` when parent cannot bind model | Child Task with `model: inherit` (or omit model so child = parent) |
-| | `coder` / `reviewer` / `generalPurpose` / `explore` as stand-in for named bridge |
-| | Improvised "act as reviewer" without `ns-reviewer` |
-| | Spawn `coder-agent` for cheap execute |
-
-`reviewer-agent` = required review-gate vehicle when present — loads `ns-reviewer`.
+1. Spawn the project agent whose `name` equals the bridge (exact). Presence: `.cursor/agents/{name}.md`, `.claude/agents/{name}.md`, or `manifest.json` `subagents[]` + `.agents/skills/{skill}/` installed.
+2. **Do not** paraphrase skill into a custom persona; **do not** use Task `inherit` / `coder` / `reviewer` / `generalPurpose` as stand-in; no Cursor Task personas (`senior-tech-lead-reviewer`, `bugbot`, `security-review`).
+3. Pass task context (paths, `ISSUE_URL`, unit scope, mode) in the dispatch message; bridge boots then skill. Child runs adapter `model` from manifest.
+4. Platform cannot spawn `{name}`: tell the human to invoke `/{name}`; do not spawn inherit-as-bridge.
+5. Parallel units: only Gate 4 `parallel` + `A ∥ B` + `max_parallel_units`.
 
 ## Callers
 
-Cite when dispatching:
+Cite this gate (default in-session):
 
 - `ns-spec-driven` (Tasks / Execute / Quick / Close / partitioned)
 - `../ns-coder/references/run-implementation.md`

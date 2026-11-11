@@ -15,9 +15,9 @@ Deep constructive review vs project rules. **Code only.** Delivery proof (`requi
 
 ## Caller contract (workflow callers)
 
-Invoker: `ns-coder`, `ns-autonomous`, `ns-execution-gitlab-issue` (direct or harness **`reviewer-agent`**):
+Invoker: `ns-coder`, `ns-autonomous`, `ns-execution-gitlab-issue` (in-session by default; harness **`reviewer-agent`** only on explicit user request):
 
-- Caller **must** run this skill — **MUST** dispatch `reviewer-agent` when available (`../../ns-harness/references/subagent-dispatch.md`); else read this `SKILL.md` in-session. No Cursor Task personas (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or improvised review.
+- Caller **must** run this skill — read this `SKILL.md` in-session (`reviewer-agent` only on explicit user request; `../../ns-harness/references/subagent-dispatch.md`). No Cursor Task personas (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or improvised review.
 - Gate rules: `references/review-gate-workflow.md`.
 - Every response to workflow caller **must** end exact line: `Code Review: {Approved|Rejected|Blocked}`. Overall score in **Executive Summary**.
 
@@ -27,7 +27,7 @@ See `../../ns-harness/references/session-boot.md`. **Complete Session boot (bloc
 
 ## Workflow
 
-1. **Session boot** — Cold start `reviewer-agent` / this skill: Session boot steps 1–6 in `session-boot.md`. Already booted same agent run (1–6 done), files unchanged: no re-read. Still judge diff vs `AGENTS.md` (in context) + project rules.
+1. **Session boot** — Cold start of this skill (or `reviewer-agent` if explicitly requested): Session boot steps 1–6 in `session-boot.md`. Already booted same agent run (1–6 done), files unchanged: no re-read. Still judge diff vs `AGENTS.md` (in context) + project rules.
 2. `git diff` (`git status` if needed).
 3. Focus modified files + surrounding context.
 4. Start immediately — no permission ask.

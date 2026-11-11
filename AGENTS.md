@@ -23,7 +23,9 @@ skills/
 ├── ns-harness/         # Skill base do harness (alwaysInstall)
 └── _meta/              # Notas de migração
 packages/harness/       # CLI @nextstage-brasil/harness (wizard de install, catálogo, templates)
-.cursor/skills/         # Skills só de maintainer (não entram no catálogo do harness)
+.agents/skills/         # Skills só de maintainer (não entram no catálogo do harness)
+.agents/agents/         # Agents só de maintainer (my_coder, my_reviewer); .claude/agents e .claude/skills são symlinks para .agents/
+.claude/rules/          # Regras de projeto para Claude Code
 ```
 
 Skill ID = nome do diretório (`ns-coder`). Caminho de install: `skills/<name>/` — ver `skills/_meta/MIGRATION.md`.
@@ -79,7 +81,7 @@ Rode o validador de catálogo localmente antes de push ao adicionar ou renomear 
 
 ## Skills de projeto só de maintainer
 
-Skills sob `.cursor/skills/` guiam trabalho **neste repositório** apenas. **Não** entram em `catalog.json` e **não** são instaladas pelo harness. Exemplo: `code-routing-diagram` — atualize o Mermaid de code routing depois de mudar routing nas skills `ns-code-`\*.
+Skills sob `.agents/skills/` guiam trabalho **neste repositório** apenas. **Não** entram em `catalog.json` e **não** são instaladas pelo harness. Exemplo: `code-routing-diagram` — atualize o Mermaid de code routing depois de mudar routing nas skills `ns-code-`\*.
 
 ## Sinal de conclusão
 

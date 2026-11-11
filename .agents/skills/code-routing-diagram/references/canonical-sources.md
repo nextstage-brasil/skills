@@ -20,4 +20,4 @@ skills/ns-coder/references/entry-triggers.md
 
 ## This skill
 
-Lives at `.cursor/skills/code-routing-diagram/` — not under `skills/` and not in harness catalog.
+Lives at `.agents/skills/code-routing-diagram/` — not under `skills/` and not in harness catalog.

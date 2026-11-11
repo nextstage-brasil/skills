@@ -26,9 +26,9 @@ Central **execution worker** for ad-hoc diffs (and `C2` under `ns-autonomous`). 
 
 ## Workflow mode (mandatory)
 
-**Fixed workflow**, not loose checklist. Steps in order; handoffs = **named skills** or harness bridges (`coder-agent` / `reviewer-agent` per `../../ns-harness/references/subagent-dispatch.md`). No platform Task personas or improvised review.
+**Fixed workflow**, not loose checklist. Steps in order; handoffs = **named skills**, run in-session (bridges `coder-agent` / `reviewer-agent` only on explicit user request — `../../ns-harness/references/subagent-dispatch.md`). No platform Task personas or improvised review.
 
-Canonical review gate: `../ns-reviewer/references/review-gate-workflow.md` — steps 7–9 **ad-hoc / C2 only**. Code review **only** via `reviewer-agent` then `ns-reviewer` (**MUST** bridge when available; else direct); then `ns-judge` in-session **only if** `Code Review: Approved`. Max **3** rounds per gate; **`Approved` = score 10 only**. Score **9** = `Rejected` (Lift + mandatory re-review). No success without **both** `Approved` or **blocked**. After `Delivery Review: Approved`: Living specs (8) if match, then Final report (9).
+Canonical review gate: `../ns-reviewer/references/review-gate-workflow.md` — steps 7–9 **ad-hoc / C2 only**. Code review **only** via `ns-reviewer` in-session; then `ns-judge` in-session **only if** `Code Review: Approved`. Max **3** rounds per gate; **`Approved` = score 10 only**. Score **9** = `Rejected` (Lift + mandatory re-review). No success without **both** `Approved` or **blocked**. After `Delivery Review: Approved`: Living specs (8) if match, then Final report (9).
 
 **Exception — SDD handoff mode:** caller `run-implementation` / `execution-handoff.md` (or dispatch says SDD task mode): **skip** review gate + living specs. Parent owns review at version closure. See **When invoked under execution-handoff**.
 
@@ -41,7 +41,7 @@ Canonical review gate: `../ns-reviewer/references/review-gate-workflow.md` — s
 | Product bug report / screen expected vs actual **without** `diagnosis_complete` | `ns-bug-report-diagnosis` |
 | BRD handoff with `diagnosis_complete: true` | Implement — **do not** return to `ns-bug-report-diagnosis` |
 | Obscure bug, root cause unclear (stack/CI) | `ns-investigator` |
-| Ad-hoc diff ready | `reviewer-agent` then `ns-reviewer`; `ns-judge` only if `Code Review: Approved` |
+| Ad-hoc diff ready | `ns-reviewer` in-session; `ns-judge` only if `Code Review: Approved` |
 
 Entry priority **5** (default). Harness table: `../../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
 
@@ -61,9 +61,9 @@ Entry priority **5** (default). Harness table: `../../ns-harness/references/code
 
 Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-handoff**:
 
-1. **Scope:** classic = one **batch** (same-layer consecutive `pending`, prefer 4–7, hard max 7; size 1 = single task) per `references/run-implementation.md`. Partitioned slice = that slice's tasks. Parent owns handoff file updates.
+1. **Scope:** classic = next `pending` task, one at a time, per `references/run-implementation.md`. Partitioned slice = that slice's tasks. Parent owns handoff file updates.
 2. Read each task **card** (header through Validation criteria); open `Detailed description` on demand (ambiguity or `blocked`) — `../ns-spec-driven/references/task-schema.md`.
-3. Implement + unit/integration only. No E2E.
+3. Implement + unit/integration only. No E2E unless the user explicitly asks.
 4. **Forbidden:** `reviewer-agent` / `ns-reviewer` / `ns-judge`, living-spec consolidator, `Code Review:` / `Delivery Review:` verdict lines.
 5. **Before report complete:** public-export grep (**Pre-review**). Still **no** reviewer.
 6. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`), `Layout SSoT: {path} read | none registered`, `Skipped / not checked / risk:` (format: `../ns-reviewer/references/review-gate-workflow.md` **Final report**). Parent marks rows. Version closure (steps 4–6): `references/run-implementation-closure.md` — not the per-batch file. Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.
@@ -125,7 +125,7 @@ Then:
 - **Ask before** (gate — stop, ask): new dependency; abstraction without 2 concrete uses; DB schema or shared contract change; CI/deploy/infra config; moving files across packages
 - **Protected tests:** paths listed as Domain invariants / protected tests in `architecture-rules.md` — keep green; never weaken, delete, or skip to pass
 - **Library divergence:** docs/rules disagree with real library API → follow library, report drift
-- Under `execution-handoff.md` / `run-implementation`: **unit/integration only** — no E2E (human at version end); no review gate (parent Step 5)
+- Under `execution-handoff.md` / `run-implementation`: **unit/integration only** — no E2E unless the user explicitly asks; no review gate (parent Step 5)
 
 ## Complement delegation
 
@@ -142,7 +142,7 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 
 ## Per-task cycle
 
-**SDD handoff mode:** one dispatch may cover a **batch**; still stop after step 6; report **per task** to parent; skip 7–9.
+**SDD handoff mode:** one task at a time; still stop after step 6; report **per task**; skip 7–9.
 
 1. Understand task
 2. Load rules — obey `AGENTS.md` already booted; Session boot again only if cold start this agent or files changed
@@ -150,7 +150,7 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 4. Identify minimal diff — apply `references/minimal-change.md`
 5. Apply (or plan if large-change gate)
 6. Run tests if in scope + public-export grep (**Pre-review**)
-7. **Review loop** — ad-hoc only: **MUST** `reviewer-agent` when available (else `ns-reviewer`); then `ns-judge` in-session only if `Code Review: Approved`; `../ns-reviewer/references/review-gate-workflow.md`. Skip when SDD handoff / engine defer.
+7. **Review loop** — ad-hoc only: `ns-reviewer` in-session; then `ns-judge` in-session only if `Code Review: Approved`; `../ns-reviewer/references/review-gate-workflow.md`. Skip when SDD handoff / engine defer.
 8. **Living specs (conditional)** — see below
 9. **Final report** — mandatory fields; never skip verdict or round count
 
@@ -167,10 +167,10 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 
 After step 6, run `../ns-reviewer/references/review-gate-workflow.md` before done — **except** SDD handoff **or** caller says defer review / engine C2 / G single-unit dispatch (return to parent; no reviewer, no judge). Rejected map/fix/re-review path: that workflow only (exhaustive → one coder → `delta` + prior IDs) — no restated rubric here.
 
-- **MUST** invoke **`reviewer-agent`** when available (else **`ns-reviewer`**) on working-tree diff (`git diff`) — reviewer bridge/skill begins Session boot at cold start then reviewer workflow; no `ISSUE_URL`, no version-closure path. Ad-hoc diff only. Reviewer **MUST NOT** dispatch judge.
+- **MUST** run **`ns-reviewer`** in-session on working-tree diff (`git diff`); no `ISSUE_URL`, no version-closure path. Ad-hoc diff only. Reviewer **MUST NOT** dispatch judge.
 - **Max 3 code rounds.** `Code Review: Approved` = score **10** only. `Rejected`/`Blocked`: **do not** run `ns-judge`.
   - **Pass:** `Code Review: Approved` (score **= 10**, zero Criticals). Then read `../ns-judge/SKILL.md` in-session (`adhoc`). Skip AC proof unless `--requirements` / `--ac-file`. Max 3 judge rounds. `Delivery Review: Approved` only at 10. Product files changed after judge Rejected: code review again (must Approved) then judge again.
-  - **Rejected with rounds left:** apply map per `review-gate-workflow.md` **Code** rounds (one coder, map verbatim, re-review prompt = `delta` + prior map IDs). `reviewer-agent` / `ns-reviewer` / `ns-judge` read-only — this skill applies fixes. **MUST** `reviewer-agent` when available; else `ns-reviewer`.
+  - **Rejected with rounds left:** apply map per `review-gate-workflow.md` **Code** rounds (one coder, map verbatim, re-review prompt = `delta` + prior map IDs). `reviewer-agent` / `ns-reviewer` / `ns-judge` read-only — this skill applies fixes. Re-review via `ns-reviewer` in-session.
   - **Stop:** `Blocked` or call 3 not score **10** or 3 rounds exhausted → **report blocked**. No coder on `Blocked`. List unresolved Criticals and/or last score. No success. Skip step 8.
 - Fixes within original task scope. Critical (or score-blocking Warning) needs changes outside scope (public contract, cross-product, multi-day): stop, escalate per **Stop conditions**.
 - Suggestions (P2) alone do **not** block when code `Approved`. Score **9** still Lift even if only P2.
@@ -226,8 +226,8 @@ Then: what changed, follow-ups, blocked Criticals if applicable.
 - Secrets/keys/connection strings in versioned files
 - Commits without explicit request
 - Refactors outside task scope
-- **Review substitutes** — Cursor Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or any review not via `reviewer-agent` / `ns-reviewer` `SKILL.md`. Harness `reviewer-agent` **allowed**. Judge = in-session `ns-judge` after Approved; no `judge-agent` in v1
+- **Review substitutes** — Cursor Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or any review not via `ns-reviewer` `SKILL.md`. Harness `reviewer-agent` allowed only on explicit user request. Judge = in-session `ns-judge` after Approved; no `judge-agent` in v1
 - **Judge before code Approved** — `ns-judge` while last `Code Review:` is not `Approved`
 - **Skipping re-review** — success after `Rejected` (including score **9**) without a new `Approved` round on that gate (ad-hoc / C2)
 - **Success without verdict** — ad-hoc / C2 closure without mandatory **Final report** fields and parseable `Code Review:` + `Delivery Review:` lines
-- **Per-task / mid-batch review under handoff** — `reviewer-agent` / `ns-reviewer` / `ns-judge` during `run-implementation` task or batch (parent owns Step 5)
+- **Per-task review under handoff** — `reviewer-agent` / `ns-reviewer` / `ns-judge` during `run-implementation` task (parent owns Step 5)

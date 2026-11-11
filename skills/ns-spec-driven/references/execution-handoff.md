@@ -20,7 +20,7 @@ Bridge planning to implementation. Maintain `docs/versions/{version_san}/sdd/exe
 
 Implementer loop: `../../ns-coder/references/run-implementation.md`.
 
-Classic: batch consecutive same-layer `pending` (prefer **4–7**, hard **max 7**, fewer OK) into one `coder-agent` dispatch. **Handoff rows stay per task.** Progress **Next task** = first short id of next batch. Partitioned: batching per slice via `orchestrator.md` — not this generator. Slice size **target 4–7** = `version-partitioner.md` only.
+Classic: in-session, one task at a time in numeric order (`ns-coder`). **Handoff rows per task.** Progress **Next task** = first short id of first `pending`. Partitioned: per slice via `orchestrator.md` — not this generator. Slice size **target 4–7** = `version-partitioner.md` only.
 
 ## Prerequisites (generation)
 
@@ -70,17 +70,17 @@ Handoff path, total tasks indexed, first task ID, start via `../../ns-coder/refe
 
 ## Status updates (during implementation)
 
-Task starts, completes, blocks, or waived — **per task row** even when classic mode dispatches multi-task batch:
+Task starts, completes, blocks, or waived — **per task row**:
 
 1. Locate row in **Task status**
-2. Update `Status`, `Started at` (on `in_progress` — all batch members at batch start), `Finished at` (on `completed` — per task from worker report), `Time (s)` (`Finished at − Started at`), `Tokens`, `Updated at`
+2. Update `Status`, `Started at` (on `in_progress`), `Finished at` (on `completed` — per task), `Time (s)` (`Finished at − Started at`), `Tokens`, `Updated at`
 3. **`Tokens` required before `completed`.** Sources (priority):
-   1. Usage/tokens from Task result / UI of `coder-agent` + other subagents — **split per task** from worker report, or `~N` estimate per task
+   1. Session usage delta over the task (host UI / usage counter) — **split per task**, or `~N` estimate per task; separate-worker usage only if Gate 4 parallel workers ran
    2. Parent tokens for that task if platform surfaces them
    3. Nothing exposed: ask human once; if declined, `~N` estimate + task `## Execution notes` line `tokens: ~N (estimated)`
    **Forbidden:** `0` on `completed` task that did LLM work
 4. Recalculate **Tokens (total)** = sum of `Tokens` column (integers; `~N` counts as `N`)
-5. Recalculate **Progress** (`Next task` = first short id of next batch — first `pending`/`in_progress` in numeric order = batch head)
+5. Recalculate **Progress** (`Next task` = first `pending`/`in_progress` short id in numeric order)
 6. Recalculate **Time tracking (seconds)**:
    - `Implementation — start` = earliest filled `Started at`
    - `Implementation — end` = latest filled `Finished at` when present
@@ -112,9 +112,9 @@ Tasks added or removed after generation: **regenerate** preserving statuses by t
 | Stage | Skill / reference |
 | ----- | ----------------- |
 | After task generation | This phase (generate handoff) |
-| Classic implementation | `../../ns-coder/references/run-implementation.md` + `coder-agent` (**MUST** when available — heavy) / `ns-coder` |
+| Classic implementation | `../../ns-coder/references/run-implementation.md` — in-session `ns-coder` (no `coder-agent`) |
 | Partitioned implementation | `orchestrator.md` (slice handoffs + master closure) |
-| End-of-version review | `reviewer-agent` (**MUST** when available) / `ns-reviewer` then `ns-judge` after `Code Review: Approved` — each `Approved` = **10** (`../../ns-reviewer/references/review-gate-workflow.md`) |
+| End-of-version review | `ns-reviewer` in-session, then `ns-judge` after `Code Review: Approved` — each `Approved` = **10** (`../../ns-reviewer/references/review-gate-workflow.md`) |
 | Living specs | `ns-living-spec` after `Delivery Review: Approved` |
 | GitLab board sync | `ns-gitlab-board-sync` (when config exists) |
 

@@ -35,16 +35,16 @@ Planning complete — **execute, do not replan**.
 
 ### Execution rules
 
-1. Start with **next batch**: consecutive `pending` tasks, **same layer**, prefer **4–7**, hard **max 7**, fewer OK when fewer remain; stop at dependency on unfinished task (classic mode — `run-implementation.md`). Size 1 = single-task dispatch. Numeric order unless task `Depends on` says otherwise. Progress **Next task** = first short id of that batch.
-2. Session boot once at version start (`session-boot.md`). No per-batch re-read — only if `agents.local.md` or harness rules change. Never tool-Read `AGENTS.md`. Fresh `coder-agent` = own cold-start boot.
+1. Start with the **next `pending` task**, one at a time (classic mode — `run-implementation.md`); stop at dependency on unfinished task. Numeric order unless task `Depends on` says otherwise. Same-layer tasks run back-to-back. Progress **Next task** = first short id of first `pending`.
+2. Session boot once at version start (`session-boot.md`). No per-task re-read — only if `agents.local.md` or harness rules change. Never tool-Read `AGENTS.md`. Implementation is in-session — no per-worker cold start; host harness manages context (compaction/reset), this file is the resume point.
 3. Read task **card** (header through Validation criteria) before coding; open `Detailed description` on demand (ambiguity or `blocked`).
-4. Implement **only** inside repo (code) and harness rules (read-only). **One** `coder-agent` / `ns-coder` dispatch **per batch** in **SDD handoff mode** (implement + unit/integration; **no** per-task / mid-batch review). Parent owns handoff; rows stay **per task**.
+4. Implement **only** inside repo (code) and harness rules (read-only). Implement each task **in this session** via `ns-coder` (**no** `coder-agent` spawn) in **SDD handoff mode** (implement + unit/integration; **no** per-task review). Parent owns handoff; rows stay **per task**.
 5. Validate all **validation criteria** before marking `completed`.
-6. **Tests during task execution:** unit/integration only (e.g. PHPUnit). **Forbidden:** run any E2E suite (Cypress/`cypress:run`/`cypress:open`/equivalent). E2E is **human-only at version end** after all tasks complete.
+6. **Tests during task execution:** unit/integration only (e.g. PHPUnit). **E2E:** agents do **not** run E2E suites (Cypress/`cypress:run`/`cypress:open`/equivalent) unless the user explicitly asks for it in this session. Writing E2E specs is fine. Otherwise remind the user at version end that E2E was not run.
 7. **Forbidden during tasks:** `reviewer-agent` / `ns-reviewer` / `ns-judge` — review **once** after all tasks (rule 10).
-8. **Update this file** when starting (`in_progress` on all batch members at batch start), completing (`completed` per task from worker report), or blocking (`blocked`) each task. Tokens: split per task or `~N` estimate.
-9. Update **Version status**, **Progress**, and **Tokens (total)** after each task / batch.
-10. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-reviewer`, then `ns-judge` only if `Code Review: Approved`) before declaring version ready; remind human to run E2E.
+8. **Update this file** when starting (`in_progress` at task start), completing (`completed` per task), or blocking (`blocked`) each task. Tokens: split per task or `~N` estimate.
+9. Update **Version status**, **Progress**, and **Tokens (total)** after each task.
+10. When **all** tasks are `completed` or `waived`: run post-implementation review (`reviewer-agent` / `ns-reviewer`, then `ns-judge` only if `Code Review: Approved`) before declaring version ready; remind user that E2E was not run (unless they asked for it).
 11. **GitLab:** implement only on registered `work_branch` or per-unit `work/{unit}-{slug}`; MR target per config / `delivery-units.md` `SOURCE_BRANCH`.
 12. **GitLab status/spent:** follow `delivery-units.md` section **GitLab status/spent (SSoT)** — no fourth branch.
 13. Do not stop to replan unless real blocker documented in task **Execution notes**.
@@ -124,8 +124,8 @@ Allowed values: `pending` | `in_progress` | `completed` | `blocked` | `waived`
 
 ## How to update this file
 
-1. **Task start (batch or single):** set each selected row `Status` to `in_progress`; fill `Started at` (ISO local); update `Updated at`; increment **In progress**; optionally append session history. Classic mode: mark all batch members at batch start.
-2. **Task complete:** Collect **Tokens** first (required before `completed`). Sources (priority): (1) usage/tokens from Task result / UI of `coder-agent` and any other subagents — **split per task** from worker report, or `~N` estimate per task; (2) parent tokens attributable to that task if platform surfaces them; (3) if nothing exposed — ask human once; if human declines, write best estimate with `~` prefix and one line in task `## Execution notes`: `tokens: ~N (estimated)`. **Forbidden:** leave `0` on `completed` task that did LLM work. Then: `Status` to `completed`; fill `Finished at`; `Time (s)` = `Finished at − Started at`; write `Tokens`; update **Tokens (total)** = sum of `Tokens` column (integers; treat `~N` as `N`); update **Progress** and **Next task**; sum **Total task time (s)**.
+1. **Task start:** set the row `Status` to `in_progress`; fill `Started at` (ISO local); update `Updated at`; increment **In progress**; optionally append session history.
+2. **Task complete:** Collect **Tokens** first (required before `completed`). Sources (priority): (1) session usage delta over the task (host UI / usage counter) — **split per task**, or `~N` estimate per task; (2) parent tokens attributable to that task if platform surfaces them; (3) if nothing exposed — ask human once; if human declines, write best estimate with `~` prefix and one line in task `## Execution notes`: `tokens: ~N (estimated)`. **Forbidden:** leave `0` on `completed` task that did LLM work. Then: `Status` to `completed`; fill `Finished at`; `Time (s)` = `Finished at − Started at`; write `Tokens`; update **Tokens (total)** = sum of `Tokens` column (integers; treat `~N` as `N`); update **Progress** and **Next task**; sum **Total task time (s)**.
 3. **Recalculate aggregates (required):** `Implementation — total (s)`; **Total process time (s)** per formula; `Last recalculated`.
 4. **Blocked:** `Status` to `blocked`; reason in task file **Execution notes**; set version `blocked` if blocking.
 5. **Resume:** `blocked` to `in_progress` when resolved.

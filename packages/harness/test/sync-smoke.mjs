@@ -1041,9 +1041,8 @@ Should not land in canonical.
         agentsContent.includes('spawn gate') &&
         agentsContent.includes('subagent-dispatch.md') &&
         agentsContent.includes('FORBIDDEN') &&
-        agentsContent.includes('Cheap execute') &&
-        (agentsContent.includes('Inline mapped skill while bridge present') ||
-          agentsContent.includes('gate requires spawn')),
+        agentsContent.includes('only when the user explicitly asks') &&
+        agentsContent.includes('current session'),
         'AGENTS.md subagents section should cite spawn gate, forbid inherit stand-in',
       );
 

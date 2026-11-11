@@ -33,8 +33,8 @@ Three execution modes — GitLab optional; no hard `depends` change on this skil
 
 | Mode | When | Path |
 | ---- | ---- | ---- |
-| **Local** | Default sequential, no units file | `run-implementation.md` classic; unit batches only when `delivery-units.md` present |
-| **Parallel units (no publish)** | Gate 4 publish `no`, `gate4_mode=parallel` — file without `issue_iid` | `run-implementation.md` unit batches per `gates.md` After answers |
+| **Local** | Default sequential, no units file | `run-implementation.md` classic; unit scope only when `delivery-units.md` present |
+| **Parallel units (no publish)** | Gate 4 publish `no`, `gate4_mode=parallel` — file without `issue_iid` | `run-implementation.md` unit scope per `gates.md` After answers |
 | **Publish units** | Gate 4 publish `yes` — `delivery-units.md` + `issue_iid` per row | `mcp-gitlab-usage` SDD delivery-unit publish. Execute: **G** SDD unit mode when `ns-execution-gitlab-issue` present; else local `run-implementation` + Flow D. Status/spent: `delivery-units.md` **GitLab status/spent (SSoT)** |
 | **External issue** | Human passes `ISSUE_URL` | `ns-execution-gitlab-issue` priority 1 — **not** same as SDD unit mode |
 

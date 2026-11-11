@@ -48,10 +48,10 @@ Present **plain language** (`human-communication.md` Gate 0 voice):
 ## Gate 3 — Task plan (`execution_confirmed`) {#gate-3-execution}
 
 - **Always required** before writing any `task-*.md` — even when consistency is 100% Approved.
-- Summarized task plan: count by layer/type **and** estimated worker spawns (classic batches: same-layer consecutive `pending`, prefer 4–7, hard max 7). Volume visible before generation.
+- Summarized task plan: count by layer/type (total tasks; executed in-session, one at a time). Volume visible before generation.
 - Group tasks **by source section** (`Sx`) when `source/` exists.
 - **Stop** until human confirms (`execution_confirmed`).
-- Example ask: "Task plan: N backend, M frontend, … (~K worker batches, prefer 4–7 tasks each). Shall I generate the task files?"
+- Example ask: "Task plan: N backend, M frontend, … (~T tasks total). Shall I generate the task files?"
 - **`intelligent_saas`:** task plan without conversation hops table (App endpoints, relay, resume, persistence) = **fail** — do not generate `task-*.md`; return to Specify or fix plan.
 
 ## Gate 4 — Delivery units + GitLab (`delivery_units_confirmed`) {#gate-4-delivery-units}

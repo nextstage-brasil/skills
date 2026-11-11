@@ -1,63 +1,37 @@
-# Slice / unit dispatch — subagent prompt and validation
+# Slice / unit execution — scope and validation
 
-Orchestrator dispatch exactly one **synchronous (blocking)** worker:
-- **`delivery-units.md` present:** one worker **per unit** (`orchestrator.md` per-unit loop).
-- **Else:** one subagent **per slice**.
+Orchestrator executes **in-session** (follow `ns-coder` inline; **MUST NOT** spawn `coder-agent` — `../../../ns-harness/references/subagent-dispatch.md` Default: one session):
+- **`delivery-units.md` present:** one **unit** at a time (`orchestrator.md` per-unit loop).
+- **Else:** one **slice** at a time.
 
-**MUST** use harness **`coder-agent`** when available (`../../../ns-harness/references/subagent-dispatch.md`); else generic subagent whose prompt follows `ns-coder`. Keep context small: pass only what worker needs, never whole roadmap or master requirements.
+Keep context small: load only the unit/slice tasks and cited `source/` anchors, never whole roadmap or master requirements. Host harness handles compaction; progress lives in handoff/roadmap files.
 
-## Prompt template
+## Scope rules (apply to yourself)
 
-Use when dispatching `coder-agent` or fallback that must load `ns-coder`:
+- Product context: `docs/context/` per the **Implementation boot rule** (`ns-harness` `artifact-layout.md`); session boot already done — no re-read.
+- Slice path: `docs/versions/{version_san}/sdd/subversions/{subversion_san}/` first, else legacy `subversions/{subversion_san}/` (`artifact-layout.md` Legacy path resolution). `source/` likewise (`sdd/source/` first); open cited anchors — never implement from memory of paraphrased contracts.
+- Implement ALL tasks in the {slice | unit}, in order, no confirmation between tasks.
+- Commit: owner = `delivery-units.md` **Commit / MR (SSoT)** when units exist (parent local or G Phase 3); no units file → once per slice.
+- Tests: unit/integration per task as project rules require; no E2E unless the user explicitly asked.
+- Obey `AGENTS.md`, `agents.local.md` (if present) and harness rules. Instruction conflicts with rules or confirmed scope → STOP, report blocker, do not proceed by assumption.
+- Report per task: done / waived (reason) / blocked (reason); files changed.
 
-```
-Follow the `ns-coder` skill as a slice worker, invoked by the execution
-orchestrator. (If you are coder-agent: Session boot once at cold start, then that skill.)
-
-Product:     (this repo)
-Version:     {version_san}
-Subversion:  {subversion_san}
-Active path: resolved slice — `docs/versions/{version_san}/sdd/subversions/{subversion_san}/` first, else legacy `subversions/{subversion_san}/` (`artifact-layout.md` Legacy path resolution)
-Source:      resolved `source/` — `sdd/source/` first, else legacy `source/`  sections: {S…}
-
-Before coding:
-- Session boot once at slice-worker start per `session-boot.md`
-  (obey `AGENTS.md` in context — no tool-Read; then local + harness rules).
-  No per-task AGENTS re-read inside the slice unless local/rules changed.
-  Obey orders, including any mandatory product skills named.
-- Load product context from docs/context/ per the Implementation
-  boot rule in ns-harness artifact-layout.md (list folder, read layer-relevant files).
-- Read resolved `source/` (or listed sections {S…}) before coding — `sdd/source/` first, else legacy `source/`.
-  Mandate: open cited anchors; do not implement from memory of paraphrased contracts.
-
-Mandate:
-- Implement ALL tasks in this {slice | unit}, in order, with no confirmation between tasks.
-- Do NOT commit — owner = `delivery-units.md` **Commit / MR (SSoT)** when units exist (parent local or G Phase 3). No units file: orchestrator commits once per slice.
-- Do NOT run backend or frontend tests — implement only.
-- Obey AGENTS.md, agents.local.md (if present), and harness rules strictly. If
-  any instruction conflicts with the rules or the confirmed scope, STOP and
-  report a blocker instead of proceeding by assumption.
-
-Report back:
-- Per-task status: done / waived (with reason) / blocked (with reason).
-- Files changed.
-- Any blocker that prevented completion.
-```
+**Parallel workers (explicit user request / Gate 4 `parallel` only):** give each worker the same rules above, its unit's task paths, and the worktree `.worktrees/{unit_id}`; it must not commit.
 
 ## Delivery units (when `delivery-units.md` exists)
 
-Parent dispatches **by unit** — not whole slice:
+Execute **by unit** — not whole slice:
 
 - Worktree: `.worktrees/{unit_id}`
 - Work branch: `work/{unit_id}-{slug}`
 - Implement **all tasks in unit** only
 - Wave barrier: do not start wave N+1 until all units in wave N complete or blocked
-- Parallel units: only when Gate 4 parallel + `A ∥ B` + `max_parallel_units`
+- Parallel units (the only case with separate workers): only when Gate 4 parallel + `A ∥ B` + `max_parallel_units`
 - GitLab: `delivery-units.md` **GitLab status/spent (SSoT)**
-- Prompt: same template; Mandate = ALL tasks **in this unit**; Do NOT commit
-- **Commit/MR:** local `coder-agent` → parent once per unit. **G dispatched** → G Phase 3 owns commit/MR; parent does not commit
+- Scope = ALL tasks **in this unit**; Do NOT commit (owner per Commit / MR below)
+- **Commit/MR:** local in-session → parent once per unit. **G unit mode** → G Phase 3 owns commit/MR; parent does not commit
 
-## Validation checklist (before parent commit)
+## Validation checklist (before commit)
 
 - [ ] Unit/slice **contract-conformance:** every cited Contract block / `ui-contract.md` element matches implementation (or reported divergence)
 - [ ] **Layout SSoT conformance (when cited):** walk cited SSoT **Quick visual checklist** (`reference-sources.md` `role: ui-layout`, or task cites `*-visual.md`); report layout divergence before parent commit — same bar as orchestrator 4b; do not treat bare `prototype/` citation as Layout SSoT
@@ -79,6 +53,6 @@ feat({subversion_slug}): implement slice {NN} — {short summary}
 
 Then mark unit (or roadmap row) `completed` and advance.
 
-## When subagent reports blocker
+## When a task is blocked
 
 Do not retry blindly. Record blocker in slice handoff and roadmap row, then halt loop per `orchestrator.md` stop conditions — human resolves blocker before orchestration resumes.

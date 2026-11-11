@@ -22,7 +22,7 @@
     {
       "id": 4,
       "prompt": "Engine mode for issue #500 — execution-plan.md has three work units (backend, frontend, migration) in the given worktree. Dispatch them.",
-      "expected_output": "≥2 units → MUST coder-agent per unit when available; implement only (no per-unit reviewer-agent); checkpoint commits; return to caller for Phase 4 review.",
+      "expected_output": "≥2 units → follow ns-coder in the A session per unit, sequentially, no coder-agent spawn; implement only (no per-unit review); checkpoint commits; return to caller for Phase 4 review.",
       "files": []
     }
   ]

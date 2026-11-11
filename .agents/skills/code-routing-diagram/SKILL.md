@@ -1,6 +1,6 @@
 ---
 name: code-routing-diagram
-description: Maintainer-only skill for the nextstage-brasil/skills repo. Create or update the Mermaid flowchart that shows GitLab issue execution, coder entry, investigator, spec-driven, and autonomous handoffs. Use when working IN this repository and the user asks for routing diagram, coder flow mermaid, issue resolution chart, or after changing routing in ns-code-* skills. NOT installed via harness — lives in .cursor/skills/. Skills are source of truth; the diagram is derived from them. Do NOT invent routing in the diagram alone.
+description: Maintainer-only skill for the nextstage-brasil/skills repo. Create or update the Mermaid flowchart that shows GitLab issue execution, coder entry, investigator, spec-driven, and autonomous handoffs. Use when working IN this repository and the user asks for routing diagram, coder flow mermaid, issue resolution chart, or after changing routing in ns-code-* skills. NOT installed via harness — lives in .agents/skills/. Skills are source of truth; the diagram is derived from them. Do NOT invent routing in the diagram alone.
 ---
 
 # Code routing diagram (this repo only)

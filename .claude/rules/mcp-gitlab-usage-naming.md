@@ -1,8 +1,3 @@
----
-description: mcp-gitlab-usage is MCP-provisioned; never use the ns- skill prefix
-alwaysApply: true
----
-
 # Skill naming — `mcp-gitlab-usage`
 
 `mcp-gitlab-usage` is **not** a harness catalog skill. The GitLab MCP server creates and updates it on first use via `get_mcp_gitlab_skill`. It remains an intentional exception to the catalog `ns-` prefix convention.

@@ -114,12 +114,12 @@ Forbidden: Flow B when any `issue_iid` filled. G + Flow D on same issue. Per-tas
 | Condition | Owner |
 | --------- | ----- |
 | This run is G SDD unit mode | **G Phase 3** — squash, push, draft MR, write `mr_url`. Parent must **not** commit |
-| Unit worker is local (`coder-agent` / `run-implementation`, no G) | **Parent** — one Conventional Commit + draft MR per unit (`mr_per_unit`) |
+| Unit is local (in-session `run-implementation`, no G) | **Parent** — one Conventional Commit + draft MR per unit (`mr_per_unit`) |
 | No `delivery-units.md` (classic partitioned) | **Parent** — one Conventional Commit per slice |
 
 ## Execute
 
-Apply **GitLab status/spent (SSoT)** above. Coding: G SDD unit mode when published + G; else `run-implementation.md` unit batches.
+Apply **GitLab status/spent (SSoT)** above. Coding: G SDD unit mode when published + G; else `run-implementation.md` unit scope.
 
 ## Compatibility
 
