@@ -80,6 +80,17 @@ export const DOCKERIGNORE_ENTRIES = [
   '/CLAUDE.md',
   '/skills-lock.json',
   '/.worktrees/',
+  '/.git',
+  '/.vscode',
+  '/docker',
+  '/tests',
+  '/.env.example',
+  '/.env.testing',
+  '/phpstan.neon',
+  '/phpunit.xml',
+  '/README.md',
+  '/.gitlab-ci.yml',
+  '/.dockerignore',
 ];
 
 export const GITIGNORE_BLOCK_HEADER = '# Nextstage-harness ignore files';
