@@ -82,7 +82,7 @@ Priority scan **1 → 5**; first match wins. Full handoffs: installed `ns-harnes
 ## Engineering guardrails
 
 - **Ask before:** new dependency; abstraction without 2 concrete uses; DB schema or shared contract change; CI/deploy/infra config; moving files across packages.
-- **Never:** secrets/keys/connection strings in versioned files; default-tier tests depending on network/live services/real LLM (fixtures/fakes; real calls → opt-in live tier); weakening/deleting/skipping a test to make it pass; type escape hatch without justifying comment.
+- **Never:** secrets/keys/connection strings in versioned files; default-tier tests depending on network/live services/real LLM (fixtures/fakes; real calls → opt-in live tier); weakening/deleting/skipping a test to make it pass; type escape hatch without justifying comment; parentheses in `.env*` comments (INI parsers reject the file and the app fails to boot).
 - **Rule:** when docs/rules diverge from real library API, follow the library and report the drift.
 
 ## Rules and sync

@@ -58,7 +58,7 @@ Non-negotiable rules. Each row: invariant + protected test path that guards it.
 
 **Ask before:** new dependency; abstraction without 2 concrete uses; DB schema or shared contract change; CI/deploy/infra config; moving files across packages.
 
-**Never:** secrets/keys/connection strings in versioned files; default-tier tests depending on network/live services/real LLM; weakening/deleting/skipping a test to make it pass; type escape hatch without justifying comment.
+**Never:** secrets/keys/connection strings in versioned files; default-tier tests depending on network/live services/real LLM; weakening/deleting/skipping a test to make it pass; type escape hatch without justifying comment; parentheses in `.env*` comments (INI parsers reject the file and the app fails to boot).
 
 ## Key references
 
