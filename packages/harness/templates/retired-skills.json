@@ -90,5 +90,7 @@
   "ns-agent-generator": "ns-harness",
   "ns-codebase-reverse-spec": "ns-harness",
   "ns-bootstrap-brownfield": "ns-harness",
-  "ns-skill-creator": "skill-creator"
+  "ns-skill-creator": "skill-creator",
+  "langchain-fundamentals": "langchain-build-agent",
+  "langgraph-persistence": "langchain-agent-tracing"
 }

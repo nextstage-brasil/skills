@@ -320,7 +320,7 @@ npx @nextstage-brasil/harness add-subagent investigator-agent \
 npx @nextstage-brasil/harness init \
   --dir ./my-agent-service \
   --skill ns-agent-architecture \
-  --skill langchain-fundamentals \
+  --skill langchain-build-agent \
   --agent cursor \
   --agent claude-code \
   --source nextstage-brasil/skills \

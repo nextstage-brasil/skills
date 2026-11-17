@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { normalizeAgentIds } from './agentIds.js';
+import { isRetiredSkillName } from './pruneRetiredSkills.js';
 
 const HARNESS_ROOT = '.nextstage-harness';
 
@@ -37,7 +38,9 @@ export function writeManifestAgents(projectRoot, agentIds) {
 }
 
 function uniqueSorted(values) {
-  return [...new Set(Array.isArray(values) ? values : [])].sort();
+  return [...new Set(Array.isArray(values) ? values : [])]
+    .filter((name) => !isRetiredSkillName(name))
+    .sort();
 }
 
 /**

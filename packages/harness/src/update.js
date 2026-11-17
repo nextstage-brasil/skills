@@ -7,8 +7,12 @@ import { isExternalSkill } from './externalSkills.js';
 import { readManifestSkills, writeManifestSkills } from './manifest.js';
 import { syncGitignore } from './syncGitignore.js';
 import { untrackManagedSkills } from './untrackManagedSkills.js';
-import { installSkills, updateInstalledSkills } from './installer.js';
-import { pruneRetiredSkills } from './pruneRetiredSkills.js';
+import { updateInstalledSkills } from './installer.js';
+import { isRetiredSkillName, pruneRetiredSkills } from './pruneRetiredSkills.js';
+import {
+  migrateRetiredSkillRefs,
+  skillInstalledOnDisk,
+} from './migrateRetiredSkillRefs.js';
 import { syncSkills } from './syncSkills.js';
 import { syncRules } from './syncRules.js';
 import { syncSubagents } from './syncSubagents.js';
@@ -28,7 +32,9 @@ function isManaged(name) {
 function knownSkillNames(projectRoot) {
   const recorded = readManifestSkills(projectRoot);
   const wanted = recorded ? [...recorded.ns, ...recorded.external].filter(isManaged) : [];
-  return [...new Set([...listInstalledSkillNames(projectRoot), ...wanted])].sort();
+  return [...new Set([...listInstalledSkillNames(projectRoot), ...wanted])]
+    .filter((name) => !isRetiredSkillName(name))
+    .sort();
 }
 
 export function listSkillsToUpdate(projectRoot, requested = []) {
@@ -78,7 +84,18 @@ export async function runUpdate(argv = {}) {
   const agentFlags = argv.agent ?? [];
   logResolvedAgents(projectRoot, agentFlags);
   const agents = resolveAgents(projectRoot, agentFlags);
-  const { skills, notInstalled } = listSkillsToUpdate(projectRoot, argv.skill ?? []);
+  const dryRun = Boolean(argv['dry-run']);
+
+  const migration = migrateRetiredSkillRefs(projectRoot, { dryRun });
+  if (migration.migrations.length > 0) {
+    const label = dryRun ? 'Would migrate retired skills' : 'Migrated retired skills';
+    p.log.info(
+      `${label}: ${migration.migrations.map((entry) => `${entry.oldName} → ${entry.newName}`).join(', ')}`,
+    );
+  }
+
+  const { skills: listed, notInstalled } = listSkillsToUpdate(projectRoot, argv.skill ?? []);
+  const skills = [...new Set([...listed, ...migration.replacements])].sort();
 
   if (notInstalled.length > 0) {
     throw new Error(`Not installed (skipped): ${notInstalled.join(', ')}`);
@@ -94,7 +111,13 @@ export async function runUpdate(argv = {}) {
     source: argv.source,
   });
 
-  if (argv['dry-run']) {
+  for (const name of migration.replacements) {
+    if (!skillInstalledOnDisk(projectRoot, name) && !diff.toUpdate.includes(name)) {
+      diff.toUpdate.push(name);
+    }
+  }
+
+  if (dryRun) {
     p.log.info(
       `Would update ${diff.toUpdate.length} skill(s)`
       + (diff.upToDate.length > 0 ? `; ${diff.upToDate.length} already up to date` : ''),
@@ -109,7 +132,7 @@ export async function runUpdate(argv = {}) {
       const uncheckedNames = diff.unchecked.map((entry) => entry.name);
       p.log.message(`No baseline hash (will refresh): ${uncheckedNames.join(', ')}`);
     }
-    return { skills: diff.toUpdate, upToDate: diff.upToDate, dryRun: true };
+    return { skills: diff.toUpdate, upToDate: diff.upToDate, dryRun: true, migration };
   }
 
   if (diff.upToDate.length > 0) {
@@ -127,7 +150,7 @@ export async function runUpdate(argv = {}) {
     if (pruneOnly.removed.length > 0) {
       p.log.message(`Retired skills removed: ${pruneOnly.removable.map((e) => e.oldName).join(', ')}`);
     }
-    return { skills: [], upToDate: diff.upToDate, skipped: false };
+    return { skills: [], upToDate: diff.upToDate, skipped: false, migration };
   }
 
   const installOptions = {
@@ -205,5 +228,5 @@ export async function runUpdate(argv = {}) {
     );
   }
 
-  return { skills: diff.toUpdate, upToDate: diff.upToDate, skipped: false };
+  return { skills: diff.toUpdate, upToDate: diff.upToDate, skipped: false, migration };
 }

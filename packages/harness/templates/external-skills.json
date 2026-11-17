@@ -2,7 +2,7 @@
   "stacks": {
     "agents": {
       "label": "Agents projects",
-      "description": "LangChain/LangGraph agent APIs — MCP, evaluation, testing, and persistence"
+      "description": "LangChain/LangGraph agent APIs — MCP, evaluation, testing, and observability"
     },
     "authoring": {
       "label": "Skill authoring",
@@ -15,15 +15,25 @@
       "stack": "authoring",
       "label": "Skill creator (Anthropics)"
     },
-    "langchain-fundamentals": {
+    "langchain-build-agent": {
       "source": "langchain-ai/langchain-skills",
       "stack": "agents",
-      "label": "LangChain fundamentals"
+      "label": "LangChain build agent"
     },
-    "langgraph-persistence": {
+    "langchain-agent-monitoring": {
       "source": "langchain-ai/langchain-skills",
       "stack": "agents",
-      "label": "LangGraph persistence"
+      "label": "LangChain agent monitoring"
+    },
+    "langchain-agent-tracing": {
+      "source": "langchain-ai/langchain-skills",
+      "stack": "agents",
+      "label": "LangChain agent tracing"
+    },
+    "langchain-eval-engineering": {
+      "source": "langchain-ai/langchain-skills",
+      "stack": "agents",
+      "label": "LangChain eval engineering"
     },
     "mcp-builder": {
       "source": "anthropics/skills",
@@ -62,8 +72,10 @@
         "ns-graphrag"
       ],
       "skills": [
-        "langchain-fundamentals",
-        "langgraph-persistence",
+        "langchain-build-agent",
+        "langchain-agent-monitoring",
+        "langchain-agent-tracing",
+        "langchain-eval-engineering",
         "mcp-builder",
         "vitest",
         "llm-evaluation",

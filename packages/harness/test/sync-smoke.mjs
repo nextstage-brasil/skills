@@ -10,6 +10,7 @@ import { syncDockerignore, buildDockerignoreBlock } from '../src/syncDockerignor
 import { syncGitignore, buildGitignoreBlock } from '../src/syncGitignore.js';
 import { generateAgentsMd } from '../src/generateAgentsMd.js';
 import { pruneRetiredSkills, assessPruneRetiredSkills } from '../src/pruneRetiredSkills.js';
+import { migrateRetiredSkillRefs } from '../src/migrateRetiredSkillRefs.js';
 import { groupExternalSkillsBySource, getExternalPreset } from '../src/externalSkills.js';
 import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js';
 import { listSkillsToUpdate } from '../src/update.js';
@@ -671,15 +672,69 @@ Should not land in canonical.
     const dryRunCli = runCli(['prune-retired-skills', '--dry-run', '--dir', tempDir], harnessRoot);
     assert(dryRunCli.status === 0, `prune-retired-skills --dry-run should pass: ${dryRunCli.stderr}${dryRunCli.stdout}`);
 
+    // 11b. migrate retired external skill ids in manifest before update/install
+    const migrateDir = mkdtempSync(join(tmpdir(), 'harness-migrate-retired-'));
+    try {
+      scaffoldProject(migrateDir, { agents: true, docs: false });
+      const migrateManifestPath = join(migrateDir, '.nextstage-harness', 'manifest.json');
+      const migrateManifest = JSON.parse(readFileSync(migrateManifestPath, 'utf8'));
+      migrateManifest.skills = {
+        preset: null,
+        ns: ['ns-harness'],
+        external: ['langchain-fundamentals', 'langgraph-persistence', 'vitest'],
+      };
+      writeFileSync(migrateManifestPath, `${JSON.stringify(migrateManifest, null, 2)}\n`, 'utf8');
+      mkdirSync(join(migrateDir, '.agents', 'skills', 'langchain-fundamentals'), { recursive: true });
+      writeFileSync(
+        join(migrateDir, '.agents', 'skills', 'langchain-fundamentals', 'SKILL.md'),
+        '# old\n',
+        'utf8',
+      );
+
+      const dryMigrate = migrateRetiredSkillRefs(migrateDir, { dryRun: true });
+      assert(dryMigrate.migrations.length === 2, 'dry-run should detect both langchain remaps');
+      assert(!dryMigrate.written, 'dry-run must not write manifest');
+      assert(
+        JSON.parse(readFileSync(migrateManifestPath, 'utf8')).skills.external.includes(
+          'langchain-fundamentals',
+        ),
+        'dry-run leaves old external ids in place',
+      );
+
+      const migrated = migrateRetiredSkillRefs(migrateDir);
+      assert(migrated.written, 'migrate should rewrite manifest');
+      assert(
+        migrated.replacements.includes('langchain-build-agent')
+          && migrated.replacements.includes('langchain-agent-tracing'),
+        'migrate should queue replacements',
+      );
+      const after = readManifestSkills(migrateDir);
+      assert(!after.external.includes('langchain-fundamentals'), 'old fundamentals id removed');
+      assert(!after.external.includes('langgraph-persistence'), 'old persistence id removed');
+      assert(after.external.includes('langchain-build-agent'), 'build-agent recorded');
+      assert(after.external.includes('langchain-agent-tracing'), 'tracing recorded');
+      assert(after.external.includes('vitest'), 'unrelated external kept');
+
+      const listed = listSkillsToUpdate(migrateDir).skills;
+      assert(!listed.includes('langchain-fundamentals'), 'retired id must leave update list');
+      assert(listed.includes('langchain-build-agent'), 'replacement must enter update list via manifest');
+    } finally {
+      rmSync(migrateDir, { recursive: true, force: true });
+    }
+
     // 12. external skills registry groups installs by source
-    const grouped = groupExternalSkillsBySource(['langchain-fundamentals', 'langgraph-persistence', 'vitest']);
+    const grouped = groupExternalSkillsBySource([
+      'langchain-build-agent',
+      'langchain-agent-tracing',
+      'vitest',
+    ]);
     assert(grouped.length === 2, 'external skills should group by source repo');
     const langchainGroup = grouped.find((group) => group.source === 'langchain-ai/langchain-skills');
     assert(langchainGroup?.skills.length === 2, 'langchain repo should include two skills');
 
     const agentsPreset = getExternalPreset('agents');
-    assert(agentsPreset?.skills.length === 6, 'agents preset should include all six external skills');
-    assert(agentsPreset?.skills.includes('langgraph-persistence'), 'agents preset should include langgraph skill');
+    assert(agentsPreset?.skills.length === 8, 'agents preset should include all eight external skills');
+    assert(agentsPreset?.skills.includes('langchain-build-agent'), 'agents preset should include langchain-build-agent');
     assert(agentsPreset?.skills.includes('postgresql-table-design'), 'agents preset should include postgresql skill');
     assert(agentsPreset?.nsSkills.includes('ns-agent-architecture'), 'agents preset should include NS architect skill');
     assert(agentsPreset?.nsSkills.includes('ns-langgraph-agents'), 'agents preset should include ns-langgraph-agents');
@@ -693,7 +748,7 @@ Should not land in canonical.
     const agentsDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents', '--dir', tempDir], harnessRoot);
     assert(agentsDryRun.status === 0, `agents preset dry-run should pass: ${agentsDryRun.stderr}${agentsDryRun.stdout}`);
     assert(
-      agentsDryRun.stdout.includes('langchain-fundamentals') &&
+      agentsDryRun.stdout.includes('langchain-build-agent') &&
       agentsDryRun.stdout.includes('vitest') &&
       agentsDryRun.stdout.includes('ns-spec-driven') &&
       agentsDryRun.stdout.includes('ns-bug-report-diagnosis') &&
@@ -706,7 +761,7 @@ Should not land in canonical.
     const agentsAliasDryRun = runCli(['--dry-run', '--yes', '--preset', 'agents-api', '--dir', tempDir], harnessRoot);
     assert(agentsAliasDryRun.status === 0, `agents-api alias dry-run should pass: ${agentsAliasDryRun.stderr}${agentsAliasDryRun.stdout}`);
     assert(
-      agentsAliasDryRun.stdout.includes('langchain-fundamentals') && agentsAliasDryRun.stdout.includes('ns-spec-driven'),
+      agentsAliasDryRun.stdout.includes('langchain-build-agent') && agentsAliasDryRun.stdout.includes('ns-spec-driven'),
       'agents-api alias should install the unified agents preset',
     );
 
@@ -820,13 +875,13 @@ Should not land in canonical.
     });
     assert(forced.toUpdate.includes('ns-harness'), '--force should queue all skills');
 
-    mkdirSync(join(tempDir, '.agents', 'skills', 'langchain-fundamentals'), { recursive: true });
-    writeFileSync(join(tempDir, '.agents', 'skills', 'langchain-fundamentals', 'SKILL.md'), '# external\n', 'utf8');
-    const foreignPlan = await planSkillUpdates(tempDir, ['ns-harness', 'langchain-fundamentals'], {
+    mkdirSync(join(tempDir, '.agents', 'skills', 'langchain-build-agent'), { recursive: true });
+    writeFileSync(join(tempDir, '.agents', 'skills', 'langchain-build-agent', 'SKILL.md'), '# external\n', 'utf8');
+    const foreignPlan = await planSkillUpdates(tempDir, ['ns-harness', 'langchain-build-agent'], {
       source: join(tempDir, 'fake-source'),
     });
-    assert(foreignPlan.upToDate.includes('langchain-fundamentals'), 'skill missing from local --source must not queue marketplace update');
-    assert(!foreignPlan.toUpdate.includes('langchain-fundamentals'), 'foreign skill should stay out of toUpdate');
+    assert(foreignPlan.upToDate.includes('langchain-build-agent'), 'skill missing from local --source must not queue marketplace update');
+    assert(!foreignPlan.toUpdate.includes('langchain-build-agent'), 'foreign skill should stay out of toUpdate');
 
     const updateDryRun = runCli(['update', '--dry-run', '--dir', tempDir, '--source', join(tempDir, 'fake-source')], harnessRoot);
     assert(updateDryRun.status === 0, `update --dry-run should pass: ${updateDryRun.stderr}${updateDryRun.stdout}`);

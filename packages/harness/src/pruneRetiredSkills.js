@@ -15,11 +15,19 @@ const retiredPath = join(__dirname, '..', 'templates', 'retired-skills.json');
 
 let cachedRetired;
 
-function loadRetiredSkills() {
+export function loadRetiredSkills() {
   if (!cachedRetired) {
     cachedRetired = JSON.parse(readFileSync(retiredPath, 'utf8'));
   }
   return cachedRetired;
+}
+
+export function isRetiredSkillName(name) {
+  return Object.prototype.hasOwnProperty.call(loadRetiredSkills(), name);
+}
+
+export function retiredReplacement(name) {
+  return loadRetiredSkills()[name] ?? null;
 }
 
 function removePath(path) {
