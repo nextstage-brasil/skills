@@ -1,0 +1,13 @@
+{
+  "name": "qa",
+  "requires_harness": ">=1.0.0",
+  "description": "GitLab SDD cycle + acceptance homologation (ns-qa-homologation) + E2E tests",
+  "extends": "gitlab",
+  "includes": [
+    "skills/ns-qa-homologation",
+    "skills/ns-e2e-tests"
+  ],
+  "warnings": [
+    "ns-qa-homologation requires Python 3.9+ (python3 on PATH): its deterministic gate stops the run at Q0 when Python is missing."
+  ]
+}

@@ -48,6 +48,7 @@
     "ns-investigator": ["ns-harness"],
     "ns-bug-report-diagnosis": ["ns-harness"],
     "ns-e2e-tests": [],
+    "ns-qa-homologation": ["ns-harness", "ns-e2e-tests", "ns-judge", "ns-reviewer"],
     "ns-backend-tests": ["ns-harness"],
     "ns-agent-adaptation": ["ns-harness"],
     "ns-agent-architecture": ["ns-harness", "ns-langgraph-agents"],
@@ -99,6 +100,10 @@
     "implementation": {
       "label": "Implementation",
       "skills": ["ns-coder", "ns-autonomous", "ns-frontend-design", "ns-docs-writer", "ns-best-practices", "ns-execution-gitlab-issue", "ns-investigator", "ns-bug-report-diagnosis", "ns-reviewer", "ns-judge", "ns-e2e-tests", "ns-backend-tests"]
+    },
+    "qa": {
+      "label": "QA homologation",
+      "skills": ["ns-qa-homologation", "ns-e2e-tests"]
     },
     "retrieval": {
       "label": "Retrieval (RAG)",

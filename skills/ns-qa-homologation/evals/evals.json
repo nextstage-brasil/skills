@@ -1,0 +1,23 @@
+{
+  "skill_name": "ns-qa-homologation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "homologate https://gitlab.example.com/acme/shop/-/issues/482 — the dev MR is merged. The issue has an 'Acceptance criteria' checklist with 3 items (coupon applies 10% discount, expired coupon shows an error, discount appears on the invoice). docs/context/qa-profile.md exists with autonomy_level: L2.",
+      "expected_output": "Q0 runs qa_gate.py --check-profile; autonomy_effective is L0 with the implemented-phase cap reason. Q1 reads issue, MR, comments read-only and records the status guard as 'would set' (no set_issue_status). acceptance.yml has AC-1..AC-3 with source: issue and criticality. impact.md maps the MR diff to direct/indirect areas. plan.yml is risk-ordered, critical/high ACs have positive+negative+business_rule (or waivers), and --check-plan exits 0. report.md follows the 8 sections, states 'Requested level L2 ran as L0' with reasons, verdict not computed. No comment, no status change.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "homologar #57 (acme/billing). The issue only says 'export the monthly statement as PDF' — no acceptance criteria written anywhere, no PRD. There is no docs/context/qa-profile.md yet; the repo has playwright.config.ts and a .env.example.",
+      "expected_output": "Q0 runs profile discovery: copies the template, infers runner playwright and e2e_root from playwright.config.ts, takes only variable names from .env.example, marks uncertain fields '# inferred', writes autonomy_level L1, keeps placeholders where no evidence exists and asks the human for them in one message instead of inventing tracker ids or credentials. Once valid, Q2 derives ACs with source: derived plus assumption text instead of stopping; the report flags derived criteria and that a derived critical AC would cap the verdict.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "QA reported a bug that was fixed in acme/portal#903: 'saving a draft with an attachment shows success but the attachment disappears after reload'. Fix MR !211 is merged. Please do the acceptance QA for 903, plan only — do not touch the issue.",
+      "expected_output": "Uses ns-qa-homologation at L0 (not ns-bug-report-diagnosis, not ns-execution-gitlab-issue). ACs cover expected behavior plus 'defect no longer reproduces' with the original steps. impact.md adds indirect areas for consumers of the changed upload/save code, each with a regression scenario. --check-plan exits 0; report.md stays local; no tracker writes.",
+      "files": []
+    }
+  ]
+}

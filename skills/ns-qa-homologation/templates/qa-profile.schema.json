@@ -1,0 +1,326 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-profile.schema.json",
+  "title": "QA profile (YAML block of docs/context/qa-profile.md)",
+  "description": "Machine form of references/profile-schema.md. Validated by scripts/qa_gate.py --check-profile. Cross-field rules the schema cannot express (placeholders, judge weight sum, status keys, inferred markers) live in qa_profile_rules.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["qa_profile_version", "language", "autonomy_level", "tracker", "environment", "auth", "execution", "data", "evidence", "cleanup", "policy"],
+  "properties": {
+    "qa_profile_version": { "const": 1 },
+    "language": { "type": "string", "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$" },
+    "autonomy_level": { "enum": ["L0", "L1", "L2", "L3"] },
+    "tracker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "mcp_server", "product_project", "qa_issues", "status_source", "status_sync"],
+      "properties": {
+        "kind": { "const": "gitlab-mcp" },
+        "mcp_server": { "$ref": "#/$defs/text" },
+        "product_project": { "$ref": "#/$defs/projectRef" },
+        "qa_issues": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": { "enum": ["separate_project", "same_project", "none"] },
+            "project": { "$ref": "#/$defs/projectRef" },
+            "signal": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "title_prefix": { "$ref": "#/$defs/textList" },
+                "labels": { "$ref": "#/$defs/textList" }
+              }
+            },
+            "link_relation": { "$ref": "#/$defs/text" }
+          },
+          "if": { "properties": { "mode": { "const": "separate_project" } } },
+          "then": { "required": ["project"] }
+        },
+        "ignore_authors": { "$ref": "#/$defs/textList" },
+        "status_source": { "$ref": "#/$defs/text" },
+        "status_sync": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["dev_from", "dev_running"],
+          "properties": {
+            "dev_from": { "$ref": "#/$defs/statusKey" },
+            "dev_running": { "$ref": "#/$defs/statusKey" },
+            "qa_from": { "$ref": "#/$defs/statusKey" },
+            "qa_running": { "$ref": "#/$defs/statusKey" }
+          }
+        },
+        "status_result": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["homologated", "homologation_rejected"],
+          "properties": {
+            "homologated": { "$ref": "#/$defs/statusKey" },
+            "homologation_rejected": { "$ref": "#/$defs/statusKey" }
+          }
+        },
+        "mr_edit": { "enum": ["glab", "none"] },
+        "attachments": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "max_per_comment": { "type": "integer", "minimum": 1 } }
+        }
+      },
+      "if": { "properties": { "qa_issues": { "properties": { "mode": { "enum": ["separate_project", "same_project"] } } } } },
+      "then": {
+        "required": ["status_result"],
+        "properties": { "status_sync": { "required": ["qa_from", "qa_running"] } }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "isolation"],
+      "properties": {
+        "provider": { "enum": ["script", "url", "none"] },
+        "script": { "$ref": "#/$defs/text" },
+        "url": { "$ref": "#/$defs/text" },
+        "isolation": { "const": "slot" },
+        "health_checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["kind", "url", "expect"],
+                "properties": {
+                  "kind": { "const": "http" },
+                  "url": { "$ref": "#/$defs/text" },
+                  "expect": { "type": "integer", "minimum": 100, "maximum": 599 }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["kind"],
+                "properties": { "kind": { "const": "login" } }
+              }
+            ]
+          }
+        }
+      },
+      "allOf": [
+        { "if": { "properties": { "provider": { "const": "script" } } }, "then": { "required": ["script", "health_checks"] } },
+        { "if": { "properties": { "provider": { "const": "url" } } }, "then": { "required": ["url", "health_checks"] } }
+      ]
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "credentials_env"],
+      "properties": {
+        "strategy": { "enum": ["ui-form", "api-token", "storage-state"] },
+        "credentials_env": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^[A-Z_][A-Z0-9_]*$", "description": "Env var NAME only; never a value." }
+        },
+        "credentials_file": { "$ref": "#/$defs/text" },
+        "session_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "keys"],
+          "properties": {
+            "kind": { "$ref": "#/$defs/text" },
+            "keys": { "$ref": "#/$defs/textList" }
+          }
+        },
+        "profile_under_test": { "$ref": "#/$defs/text" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runner", "runner_retries_during_verification"],
+      "properties": {
+        "runner": { "enum": ["cypress", "playwright", "none"] },
+        "e2e_root": { "$ref": "#/$defs/text" },
+        "e2e_authoring": { "enum": ["auto", "repo-local", "ns-e2e-tests"] },
+        "e2e_git": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "base_branch": { "$ref": "#/$defs/text" },
+            "branch_pattern": { "$ref": "#/$defs/text" },
+            "commit_prefix": { "$ref": "#/$defs/text" },
+            "commit_language": { "type": "string", "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$" }
+          }
+        },
+        "browser_tool_preference": { "$ref": "#/$defs/textList" },
+        "stability_runs": { "type": "integer", "minimum": 1 },
+        "runner_retries_during_verification": { "const": 0 },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "max_scenarios": { "anyOf": [{ "const": "unlimited" }, { "type": "integer", "minimum": 1 }] },
+            "checkpoint_min": { "type": "integer", "minimum": 1 },
+            "on_checkpoint": { "const": "ask" },
+            "on_stall": { "const": "ask" }
+          }
+        }
+      },
+      "if": { "properties": { "runner": { "enum": ["cypress", "playwright"] } } },
+      "then": { "required": ["e2e_root"] }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["location", "run_prefix", "seed", "teardown"],
+      "properties": {
+        "location": { "const": "disposable_env" },
+        "run_prefix": { "$ref": "#/$defs/text" },
+        "seed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": { "enum": ["api", "script", "none"] },
+            "ref": { "$ref": "#/$defs/text" }
+          },
+          "if": { "properties": { "kind": { "enum": ["api", "script"] } } },
+          "then": { "required": ["ref"] }
+        },
+        "mock": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "allowed": { "type": "boolean" },
+            "order": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "enum": ["product_api", "db_fixture", "response_intercept"] }
+            }
+          }
+        },
+        "teardown": { "enum": ["discard_env", "none"] }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dir", "pii_masking"],
+      "properties": {
+        "dir": { "$ref": "#/$defs/text" },
+        "capture": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["screenshot", "console", "network", "runner_video"] }
+        },
+        "pii_masking": { "const": "dom" },
+        "pii_fields": { "$ref": "#/$defs/textList" },
+        "keep_on_upload_failure": { "type": "boolean" }
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "on_failure", "log"],
+      "properties": {
+        "on_full_success": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["containers", "volumes", "images", "worktrees", "evidence"] }
+        },
+        "keep_local_report_at_L1": { "type": "boolean" },
+        "scope": { "const": "run_owned_only" },
+        "on_failure": { "const": "keep" },
+        "log": { "$ref": "#/$defs/text" }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "criticality_weights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["critical", "high", "medium", "low"],
+          "properties": {
+            "critical": { "$ref": "#/$defs/positive" },
+            "high": { "$ref": "#/$defs/positive" },
+            "medium": { "$ref": "#/$defs/positive" },
+            "low": { "$ref": "#/$defs/positive" }
+          }
+        },
+        "blocked_scenario_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "flaky_on_critical_cap": { "const": "with_reservations" },
+        "derived_critical_cap": { "const": "with_reservations" }
+      }
+    },
+    "judge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "weights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["coverage", "depth", "impact", "evidence", "data_realism", "stability"],
+          "properties": {
+            "coverage": { "$ref": "#/$defs/nonNegative" },
+            "depth": { "$ref": "#/$defs/nonNegative" },
+            "impact": { "$ref": "#/$defs/nonNegative" },
+            "evidence": { "$ref": "#/$defs/nonNegative" },
+            "data_realism": { "$ref": "#/$defs/nonNegative" },
+            "stability": { "$ref": "#/$defs/nonNegative" }
+          }
+        },
+        "min_score": { "type": "number", "minimum": 0, "maximum": 10 },
+        "on_below_min": { "const": "complete" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["close_issues", "log_spent_time"],
+      "properties": {
+        "verdict_publish": { "const": "final" },
+        "publish_comment": { "const": "on_approval" },
+        "set_status_labels": { "const": "auto" },
+        "open_e2e_mr": { "const": "auto" },
+        "e2e_reviewer": { "$ref": "#/$defs/text" },
+        "runner_none_critical_cap": { "const": "with_reservations" },
+        "close_issues": { "const": "never" },
+        "log_spent_time": { "const": "never" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "autonomy_level": { "const": "L3" } } },
+      "then": {
+        "properties": {
+          "execution": {
+            "required": ["e2e_git"],
+            "properties": { "e2e_git": { "required": ["base_branch", "branch_pattern", "commit_prefix", "commit_language"] } }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "environment": { "properties": { "provider": { "const": "script" } } } } },
+      "then": { "properties": { "data": { "properties": { "teardown": { "const": "discard_env" } } } } }
+    },
+    {
+      "if": { "properties": { "environment": { "properties": { "provider": { "const": "url" } } } } },
+      "then": { "properties": { "data": { "properties": { "teardown": { "const": "none" } } } } }
+    }
+  ],
+  "$defs": {
+    "text": { "type": "string", "minLength": 1 },
+    "textList": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "projectRef": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "integer", "minimum": 1 }] },
+    "statusKey": { "type": "string", "pattern": "^status_[a-z0-9_]+$", "description": "gitlab-sync-config KEY, never a label name." },
+    "positive": { "type": "number", "minimum": 0.000001 },
+    "nonNegative": { "type": "number", "minimum": 0 }
+  }
+}

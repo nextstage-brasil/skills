@@ -52,6 +52,7 @@ Declarative preset format for `@nextstage-brasil/harness` **1.x**. Presets refer
 | `frontend-prototype` | `presets/frontend.json` |
 | `spec-driven-gitlab` | `presets/gitlab.json` |
 | `gitlab` | `presets/gitlab.json` |
+| `qa` | `presets/qa.json` |
 | `agent-creator` | `presets/agents.json` |
 | `agents-api` | `presets/agents.json` |
 | `agents` | `presets/agents.json` |
@@ -61,3 +62,4 @@ Declarative preset format for `@nextstage-brasil/harness` **1.x**. Presets refer
 - Presets do **not** list internal SDD phase references (clarify, specify, etc.) — only the face skill `ns-spec-driven`.
 - `spec-driven` lists `code/*`, `ns-spec-driven`, and `ns-living-spec`.
 - `gitlab` extends `spec-driven` and adds GitLab skills. Alias: `spec-driven-gitlab`.
+- `qa` extends `gitlab` and adds `ns-qa-homologation` + `ns-e2e-tests`; `warnings` states Python 3.9+ is required. `full` extends `qa`.

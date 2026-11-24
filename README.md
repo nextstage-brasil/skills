@@ -34,6 +34,7 @@ Skills are invoked via the Skills menu / slash (e.g. `/ns-coder`, `/ns-reviewer`
 | `ns-investigator`               | Root-cause analysis and minimal fixes                                                                                                         |
 | `ns-bug-report-diagnosis`       | Product bug-report diagnosis (screen story) — chat only, no patch here; then continues to `ns-execution-gitlab-issue` or `ns-coder` unless diagnose-only |
 | `ns-e2e-tests`                  | Implement/refactor Cypress specs (execution phase)                                                                                            |
+| `ns-qa-homologation`            | Acceptance homologation (QA) of a delivered GitLab issue — QA profile, intake, AC-n, impact, risk-ordered plan, `qa_gate.py`, local report. Explicit invocation only; v0.1.0 runs L0 (plan + report). Python 3.9+ required (`--preset qa`) |
 | `ns-backend-tests`              | Implement/refactor PHPUnit tests in Docker (execution phase)                                                                                  |
 | `ns-frontend-design`            | Distinctive production UI; anti–generic AI aesthetics (code complement — installed with `spec-driven` via `ns-coder`)                         |
 | `ns-docs-writer`                | README and `docs/` guides for humans (code complement)                                                                                          |
@@ -88,10 +89,11 @@ See `packages/harness/README.md` for all flags. Install and migration details: `
 | ------ | ------------ |
 | `spec-driven` | SDD face + coder, reviewer, investigator, bug-report diagnosis, autonomous, living-spec — and code complements (frontend-design, docs-writer, best-practices, backend/e2e tests) via `ns-coder` `depends`. |
 | `gitlab` | Extends `spec-driven`. Adds GitLab issue execution, board sync, CI generator, requirements enricher. (`mcp-gitlab-usage` comes from GitLab MCP on first use.) Alias: `spec-driven-gitlab`. |
+| `qa` | Extends `gitlab`. Adds `ns-qa-homologation` (acceptance homologation) + `ns-e2e-tests`. Python 3.9+ required. |
 | `project-manager` | PM face (`ns-project-manager` + `ns-requirements-enricher`). No SDD or code workers. |
 | `frontend` | UI design, reverse prototyping, visual appearance guides. Alias: `frontend-prototype`. |
 | `agents` | Extends `spec-driven`. Adds the agent pipeline (Stage 1 `ns-agent-adaptation`, Stage 2 `ns-agent-architecture`, Stage 3 `ns-langgraph-agents`, Stage 4 `ns-agent-platform`) + `ns-postgres-rag` + `ns-graphrag`, plus LangChain/MCP/Vitest/eval externals. Aliases: `agent-creator`, `agents-api`. |
-| `full` | Bundled NS presets: `gitlab` + `frontend` + `project-manager` + `agents` (plus leftover skills those presets already list). Includes `ns-postgres-rag` and `ns-graphrag` via `agents`. |
+| `full` | Bundled NS presets: `qa` (extends `gitlab`) + `frontend` + `project-manager` + `agents` (plus leftover skills those presets already list). Includes `ns-postgres-rag` and `ns-graphrag` via `agents`. |
 
 Aliases: `frontend-prototype` → `frontend`, `spec-driven-gitlab` → `gitlab`, `agent-creator` / `agents-api` → `agents`.
 

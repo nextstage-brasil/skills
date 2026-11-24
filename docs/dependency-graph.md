@@ -53,6 +53,18 @@ ns-execution-gitlab-issue ──┬── ns-harness
 ns-requirements-enricher ── ns-harness
 ```
 
+## QA homologation
+
+```
+ns-qa-homologation ──┬── ns-harness
+                     ├── ns-e2e-tests
+                     ├── ns-judge
+                     ├── ns-reviewer
+                     └── (runtime) mcp-gitlab-usage [MCP-provisioned]
+```
+
+Preset `qa` (extends `gitlab`). Python 3.9+ required.
+
 `mcp-gitlab-usage` is not a catalog skill; GitLab MCP writes it on first use.
 
 ## Frontend prototype

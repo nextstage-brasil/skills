@@ -2,6 +2,22 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Add catalog skill — `ns-qa-homologation` 0.1.0, Phase 1 (2026-11-24)
+
+Acceptance homologation face (Q0–Q10). Phase 1 = Q0–Q4 + local report (L0). Profile level ≥ L1 runs as L0 until Q5–Q9 land; report states declared vs effective level. Explicit invocation only — no routing row yet (Phase 6). Python 3.9+ mandatory (Q0 stops without it; deliberate divergence from `ns-judge`).
+
+| Surface | Version | Change |
+| ------- | ------- | ------ |
+| `ns-qa-homologation` | 0.1.0 | New. `SKILL.md` + references (`profile-schema[-policy]`, `profile-discovery`, `intake`, `acceptance-criteria`, `impact-mapping`, `test-design`, `entry-triggers`, `report.template`). `templates/`: profile template + JSON schemas (profile, acceptance, plan, ledger). `scripts/qa_gate.py` (`--check-profile` / `--check-plan` / `--check-ledger`; exit 0/2/3, 1 unused) + stdlib YAML-subset parser + tests/mutation tests. Catalog `depends`: `ns-harness`, `ns-e2e-tests`, `ns-judge`, `ns-reviewer` (`mcp-gitlab-usage` runtime only, never declared) |
+| `docs/qa-homologation/` | — | Removed. `profile-schema.md` → `skills/ns-qa-homologation/references/` (split into `profile-schema.md` + `profile-schema-policy.md` for the 8 KB reference budget; example moved to `templates/qa-profile.template.md`); `qa-ledger.schema.json` → `skills/ns-qa-homologation/templates/` |
+| Preset `qa` | — | New (`presets/` + bundled copy, alias `qa`): extends `gitlab`, adds `ns-qa-homologation` + `ns-e2e-tests`; `warnings`: Python 3.9+ required. `full` extends `qa` instead of `gitlab` (same skills + QA). `full` consumers therefore also get the `## Acceptance tier` section inlined in generated `AGENTS.md` (installed `ns-qa-homologation`) and the Python 3.9+ install warning |
+| `catalog.json` | — | `ns-qa-homologation` depends + category `qa`; `skill-paths.json` entry |
+| Harness `GITIGNORE_ENTRIES` | — | `/docs/qa/` (QA evidence never versioned). Managed block → applies to **every** consumer on next `harness sync`, with or without the `qa` preset |
+| `ns-harness` | 1.6.1 → 1.6.2 | `artifact-layout.md`: `docs/context/qa-profile.md`, `docs/qa/<run_id>/` |
+| CI | — | `validate-skills.yml` runs `ns-qa-homologation` Python tests; `npm test` dry-runs `--preset qa`; `validate-catalog.js` checks `qa.json` mirror |
+
+Consumers: `npx @nextstage-brasil/harness --preset qa --yes`; re-run `harness sync` to add `/docs/qa/` to `.gitignore`. Profile: `docs/context/qa-profile.md` from template (or Q0 discovery), starts at L1.
+
 ## QA homologation — Phase 0 foundations (2026-11-24)
 
 Groundwork for planned `ns-qa-homologation`. No new catalog skill; no `catalog.json` key. Existing behavior unchanged except `ns-gitlab-board-sync` MCP correction.

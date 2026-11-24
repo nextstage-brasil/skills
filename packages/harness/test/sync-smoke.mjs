@@ -637,6 +637,7 @@ Should not land in canonical.
     assert(gitignoreContent.includes('/.cursor/rules/'), 'gitignore should include /.cursor/rules/');
     assert(gitignoreContent.includes('/.cursor/agents/'), 'gitignore should include /.cursor/agents/');
     assert(gitignoreContent.includes('/.claude/'), 'gitignore should include /.claude/');
+    assert(gitignoreContent.includes('/docs/qa/'), 'gitignore should include /docs/qa/ (QA evidence never versioned)');
     assert(
       gitignoreContent.includes(buildGitignoreBlock().trim()),
       'gitignore should contain full managed block',

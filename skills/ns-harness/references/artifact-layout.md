@@ -45,6 +45,7 @@ New versions: create SDD artifacts only under `sdd/`.
 | Agent architecture ADR | `docs/specs/agent-architecture.md` (`ns-agent-architecture`; living + Changelog — not under `docs/versions/`) |
 | Agent architecture defense pack | `docs/specs/agent-architecture-defense.md` (`ns-agent-architecture` Step 9 opt-in — stakeholder canvases; not under `docs/versions/`) |
 | Agent platform | `docs/specs/agent-platform.md` (`ns-agent-platform`; compute + tenant/platform; after ADR) |
+| QA homologation run | `docs/qa/<run_id>/` (`ns-qa-homologation`; gitignored, never versioned — run state, plan, evidence, local report) |
 
 ## Branch role (feature vs integration)
 
@@ -93,6 +94,7 @@ Stable product-wide context outside version folders.
 | `system-reverse-spec.md` | Human reverse description |
 | `system-reverse-spec.agent.md` | Agent index (prefer when both exist) |
 | `gitlab-sync-config.md` | Project ids, status labels, branches |
+| `qa-profile.md` | QA homologation profile — tracker keys, environment, runner, policy, autonomy level (`ns-qa-homologation`) |
 | `ci-cd-notes.md` | Pipeline / deploy notes |
 | `reference-sources.md` | Pointers to version `sdd/source/` trees (not a dump of source) |
 

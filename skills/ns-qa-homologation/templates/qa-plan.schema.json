@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-plan.schema.json",
+  "title": "QA test plan (plan.yml, Q3 areas + Q4 scenarios)",
+  "description": "Structure of the Q4 artifact. Coverage, minimum types, area links and risk order are cross-checked in qa_plan_rules.py. See references/test-design.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["plan_version", "areas", "scenarios", "waivers"],
+  "properties": {
+    "plan_version": { "const": 1 },
+    "areas": {
+      "type": "array",
+      "description": "Impact areas from impact.md (Q3). Empty only when no MR diff exists.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "summary"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^IA-[0-9]+$" },
+          "kind": { "enum": ["direct", "indirect"] },
+          "summary": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "covers", "areas", "type", "lane", "data", "existing", "automate"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^S-[0-9]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "covers": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^AC-[0-9]+$" }
+          },
+          "areas": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^IA-[0-9]+$" }
+          },
+          "type": { "enum": ["positive", "negative", "business_rule", "regression"] },
+          "lane": { "enum": ["runner", "browser"] },
+          "data": { "type": "string", "minLength": 1, "description": "Data precondition; 'none' when no data is needed." },
+          "existing": {
+            "type": "array",
+            "description": "Existing runner coverage found by @AC-n tag or route-to-spec map: '<spec path> (<tag|route>)'.",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "automate": { "type": "boolean" }
+        }
+      }
+    },
+    "waivers": {
+      "type": "array",
+      "description": "Minimum-type exceptions; listed in the report.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ac", "type", "reason"],
+        "properties": {
+          "ac": { "type": "string", "pattern": "^AC-[0-9]+$" },
+          "type": { "enum": ["negative", "business_rule"] },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

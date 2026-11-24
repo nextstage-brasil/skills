@@ -235,10 +235,11 @@ Deep installer reference: [docs/README_INSTALLER.md](docs/README_INSTALLER.md)
 | -------------------- | ----------------------------------------------------------------------------------------------------- |
 | `spec-driven`        | SDD face + coder, review, investigator, autonomous, living-spec + code complements via `ns-coder` |
 | `gitlab`             | Everything in `spec-driven`, plus GitLab issues, board sync, CI generator, requirements enricher (alias: `spec-driven-gitlab`) |
+| `qa`                 | Everything in `gitlab`, plus `ns-qa-homologation` (acceptance homologation) + `ns-e2e-tests`; Python 3.9+ required |
 | `project-manager`    | Human PM toolkit — `ns-project-manager` + `ns-requirements-enricher` (**no** SDD/code workers) |
 | `frontend`           | UI design, reverse prototype (`ns-proto-creator`), visual guides (alias: `frontend-prototype`)        |
 | `agents`             | `spec-driven` + LangGraph labs + `ns-postgres-rag` + `ns-graphrag` + LangChain/MCP/eval externals (aliases: `agent-creator`, `agents-api`) |
-| `full`               | Bundled presets (`gitlab` + `frontend` + `project-manager` + `agents`); includes `ns-postgres-rag` + `ns-graphrag` via `agents` |
+| `full`               | Bundled presets (`qa` + `frontend` + `project-manager` + `agents`; `qa` extends `gitlab`); includes `ns-postgres-rag` + `ns-graphrag` via `agents` |
 
 ```bash
 npx @nextstage-brasil/harness --preset <name> --yes

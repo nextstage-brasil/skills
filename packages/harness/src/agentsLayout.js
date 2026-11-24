@@ -105,4 +105,5 @@ export const GITIGNORE_ENTRIES = [
   '/.cursor/rules/',
   '/.cursor/agents/',
   '/.claude/',
+  '/docs/qa/',
 ];

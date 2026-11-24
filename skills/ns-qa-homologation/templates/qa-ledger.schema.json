@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/nextstage-brasil/skills/docs/qa-homologation/qa-ledger.schema.json",
+  "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-ledger.schema.json",
   "title": "QA homologation run ledger",
-  "description": "Phase 0 contract for qa-ledger.json written by the planned ns-qa-homologation skill. One ledger per run; the verdict and the homologation score are computed from it.",
+  "description": "Contract for qa-ledger.json written by ns-qa-homologation. One ledger per run; the verdict and the homologation score are computed from it. Validated by scripts/qa_gate.py --check-ledger.",
   "type": "object",
   "additionalProperties": false,
   "required": ["ledger_version", "run_id", "issue", "mr", "environment", "criteria", "scenarios", "findings", "residual_state", "judge_rounds"],

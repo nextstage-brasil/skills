@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-acceptance.schema.json",
+  "title": "QA acceptance criteria (acceptance.yml, Q2)",
+  "description": "Structure of the Q2 artifact. Cross-checks (unique ids, assumption rules) live in qa_plan_rules.py. See references/acceptance-criteria.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["acceptance_version", "issue", "criteria"],
+  "properties": {
+    "acceptance_version": { "const": 1 },
+    "issue": { "type": "string", "pattern": "^[^\\s#]+#[0-9]+$", "description": "<project path>#<iid> of the development issue." },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text", "source", "criticality", "ambiguity"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^AC-[0-9]+$" },
+          "text": { "type": "string", "minLength": 1 },
+          "source": { "enum": ["issue", "derived"] },
+          "criticality": { "enum": ["critical", "high", "medium", "low"] },
+          "ambiguity": { "enum": ["clear", "ambiguous"] },
+          "assumption": { "type": "string", "minLength": 1, "description": "Required when source is derived or ambiguity is ambiguous." },
+          "origin": { "type": "string", "minLength": 1, "description": "Where the criterion came from (issue section, comment, PRD, handoff)." }
+        }
+      }
+    }
+  }
+}
