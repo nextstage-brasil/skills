@@ -4,6 +4,8 @@ The CLI does **not** copy this file. `harness agents-md` generates `AGENTS.md` f
 
 Shared **Docker and testing** rules: `snippets/docker-and-testing.md` (inlined into generated output).
 
+**Acceptance tier** exception: `snippets/acceptance-tier.md` (inlined after Docker and testing **only** when `ns-qa-homologation` is installed).
+
 For brownfield refinement, use `/ns-harness` (`references/agents-md.md`).
 
 Generated output includes a **local overrides** rule: when `agents.local.md` exists at the same directory as `AGENTS.md` (case-insensitive), agents read it after `AGENTS.md`.

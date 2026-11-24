@@ -1,6 +1,6 @@
 # Backend testing architecture summary
 
-Consolidated from harness `backend-tests-rules.mdc` when present. Catalog fallback for PHPUnit execution.
+Catalog fallback for PHPUnit execution when optional `.nextstage-harness/rules/backend-tests-rules.md` absent; that rule wins when present.
 
 ## Backend test root
 
@@ -50,7 +50,7 @@ tests/
     Modules/{DomainName}/{DomainName}ControllerTest.php
 ```
 
-Follow module layout from `backend-rules.mdc` when present.
+Follow module layout from `.nextstage-harness/rules/backend-rules.md` when present.
 
 ## PHPUnit run contract (mandatory)
 

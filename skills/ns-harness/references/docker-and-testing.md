@@ -15,6 +15,7 @@ Strict rules — no exceptions:
 - **Live failures:** fix behavior or documented expectation — never skip, loosen assertion, or move out of live group to get green.
 - **Secrets:** live tests read credentials from env or secret manager only.
 - Agents never run the live tier unless the human asks in this run.
+- **Acceptance tier** (agent-run E2E/acceptance inside a human-invoked homologation run, `ns-qa-homologation`): `ns-harness` → `references/acceptance-tier.md`. E2E runs the user explicitly requests under other skills keep their existing rules.
 
 ### PHPUnit (PHP backend)
 

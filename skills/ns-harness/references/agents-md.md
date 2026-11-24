@@ -64,7 +64,7 @@ Session boot; note `.nextstage-harness/`. **Create** vs **refresh**; read existi
 - **Layout** — compact present/absent: rules, skills, local, docs/context|specs|versions.
 - **No Workflows → Implementation** — routing table covers it.
 - **Ownership + Language + Project notes** — ≤5 bullets.
-- **Docker and testing** — MUST NOT compose/restart without ask. Include verbatim **Test tiers** from `./docker-and-testing.md`. Host vs container evidence from recon. PHPUnit block **only** when PHP evidenced.
+- **Docker and testing** — MUST NOT compose/restart without ask. Include verbatim **Test tiers** from `./docker-and-testing.md`. Include `./acceptance-tier.md` verbatim **only** when `ns-qa-homologation` installed. Host vs container evidence from recon. PHPUnit block **only** when PHP evidenced.
 - **Do not** inline architecture rules.
 - English only.
 

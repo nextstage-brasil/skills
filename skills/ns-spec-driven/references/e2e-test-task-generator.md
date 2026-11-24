@@ -13,7 +13,7 @@ Face **MUST** read after frontend UI tasks exist (`task-generator.md`). Not cata
 
 ## Session boot
 
-Load `.nextstage-harness/rules/e2e-tests-rules.mdc` and `frontend-rules.mdc` when present.
+Load `.nextstage-harness/rules/e2e-tests-rules.md` and `frontend-rules.md` when present (optional siblings via `harness add-rule`).
 
 ## Inputs
 

@@ -235,6 +235,28 @@ try {
     const agentsMdPath = join(tempDir, 'AGENTS.md');
     let agentsMdText = readFileSync(agentsMdPath, 'utf8');
     assert(agentsMdText.includes('ns-harness'), 'AGENTS.md should list installed skill');
+    assert(
+      agentsMdText.includes('references/acceptance-tier.md'),
+      'AGENTS.md Docker and testing should point to the acceptance tier',
+    );
+    assert(
+      !agentsMdText.includes('## Acceptance tier'),
+      'AGENTS.md must not inline the acceptance tier without ns-qa-homologation',
+    );
+    const acceptanceDir = join(tempDir, 'acceptance-tier');
+    const acceptanceSkillDir = join(acceptanceDir, '.agents', 'skills', 'ns-qa-homologation');
+    mkdirSync(acceptanceSkillDir, { recursive: true });
+    writeFileSync(join(acceptanceSkillDir, 'SKILL.md'), '# stub\n', 'utf8');
+    generateAgentsMd(acceptanceDir, { force: true, agents: ['cursor'] });
+    const acceptanceAgentsMd = readFileSync(join(acceptanceDir, 'AGENTS.md'), 'utf8');
+    assert(
+      acceptanceAgentsMd.includes('## Acceptance tier'),
+      'AGENTS.md must inline the acceptance tier when ns-qa-homologation is installed',
+    );
+    assert(
+      acceptanceAgentsMd.indexOf('## Acceptance tier') > acceptanceAgentsMd.indexOf('## Docker and testing'),
+      'acceptance tier must follow Docker and testing',
+    );
     assert(!agentsMdText.includes('harness-sync-managed'), 'AGENTS.md must not include sync marker');
     assert(
       !agentsMdText.includes('harness-agents-md: generated'),

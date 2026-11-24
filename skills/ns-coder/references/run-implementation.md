@@ -41,7 +41,7 @@ If classic artifacts only at version root → nest migration STOP (`session-cont
 2. Session boot once at implementer start per `session-boot.md` (obey `AGENTS.md` in context; no tool-Read); obey any mandatory product skills named there
 3. Validate **Time tracking (seconds)** section exists; add from template if missing
 4. Read resolved `requirements.md` — `sdd/` first, else legacy version root (overview — do not replan); confirm Consistency status is `Approved` when present
-5. Load product context: follow **Implementation boot rule** in `../../../ns-harness/references/artifact-layout.md`
+5. Load product context: follow **Implementation boot rule** in `../../ns-harness/references/artifact-layout.md`
 6. **Next task:**
    - **Unit mode:** `pending`/`in_progress` tasks of current unit (step 0b), in order
    - **Classic:** first `pending` task in numeric order (or resume `in_progress`); Progress **Next task** = its short id
@@ -74,12 +74,12 @@ Until scope done or all tasks complete. No pause or confirmation between tasks.
    - **GitLab task start:** if caller is `ns-execution-gitlab-issue` → **zero** board writes here. Else apply SSoT at **unit** start only (Flow B per task only when SSoT Flow B row).
 2. **Read** each `tasks/task-NNN-*.md` **card** (header through Validation criteria). If `### Contract` present (API/schema/screen), always read it. Open cited `source/` section anchors for the task. Open `Detailed description` on demand — ambiguity or `blocked`. See `../../ns-spec-driven/references/task-schema.md`.
 3. **Before coding:** Session boot already done in Bootstrap — re-read rules **only** if `agents.local.md` or harness rules changed (no per-task re-read; never tool-Read `AGENTS.md`)
-4. **Implement** — follow `ns-coder` **in this session** per task (**MUST NOT** spawn `coder-agent` — `../../../ns-harness/references/subagent-dispatch.md` Default: one session; host harness handles context compaction). Only explicit Gate 4 parallel units use separate workers.
+4. **Implement** — follow `ns-coder` **in this session** per task (**MUST NOT** spawn `coder-agent` — `../../ns-harness/references/subagent-dispatch.md` Default: one session; host harness handles context compaction). Only explicit Gate 4 parallel units use separate workers.
    - **SDD handoff mode applies:** current task only; unit/integration OK; **do not** invoke `reviewer-agent` / `ns-reviewer` / `ns-judge`; **do not** run living specs; review = **Step 5** only. Workers grep new/changed public exports before marking complete (keep unused names unexported).
    - Record per-task outcomes (files, tests, blockers, tokens) in `execution-handoff.md` as each task finishes, so a host compaction/restart resumes from disk.
 5. **Validate** per project rules (Docker **unit/integration** tests, i18n, multitenancy, etc.)
    - **Allowed:** unit/integration only (e.g. PHPUnit in test container)
-   - **E2E:** agents do **not** run E2E suites (Cypress/`cypress:run`/`cypress:open`/equivalent) unless the user explicitly asks for it in this session. Writing E2E specs is fine. Otherwise remind the user at version end that E2E was not run. Applies to `e2e`-layer tasks too.
+   - **E2E:** agents do **not** run E2E suites (Cypress/`cypress:run`/`cypress:open`/equivalent) unless the user explicitly asks for it in this session. Writing E2E specs is fine. Otherwise remind the user at version end that E2E was not run. Applies to `e2e`-layer tasks too. Acceptance tier (`../../ns-harness/references/acceptance-tier.md`) = human-invoked homologation runs only; not this flow.
    - **Forbidden:** per-task / mid-version code review or judge — wait for Step 5
 6. **Collect Tokens** before each `completed`. Prefer session usage delta split per task; else parent tokens; else ask once then `~N` + `tokens: ~N (estimated)` in task Execution notes. **Forbidden:** `0` on `completed` LLM work.
 7. **Update handoff — per task:** each task `Status` → `completed` (or `blocked`) as it finishes; write `Tokens` (step 6)

@@ -1,6 +1,6 @@
 # E2E architecture summary
 
-Consolidated from harness `e2e-tests-rules.mdc` when present. This file is the catalog fallback.
+Catalog fallback when optional `.nextstage-harness/rules/e2e-tests-rules.md` absent; that rule wins when present.
 
 ## Cypress project root
 

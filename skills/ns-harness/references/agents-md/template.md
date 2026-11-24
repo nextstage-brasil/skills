@@ -99,6 +99,7 @@ See installed `ns-harness` (`session-boot.md`, `rules-sync.md`).
 - **Test tiers** — include verbatim `### Test tiers` from `../docker-and-testing.md` (default deterministic; live opt-in; agents never run live unless human asks this run).
 - {test_evidence — only when recon finds it: e.g. Vitest on host; or test container name + command}
 - {phpunit_block — include verbatim PHPUnit subsection from `../docker-and-testing.md` ONLY if PHP/PHPUnit evidenced; otherwise omit}
+- {acceptance_tier_block — include verbatim `../acceptance-tier.md` as its own `## Acceptance tier` section after this one ONLY if `ns-qa-homologation` installed; otherwise omit}
 
 ## Project notes
 

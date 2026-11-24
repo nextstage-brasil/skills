@@ -4,7 +4,7 @@ description: "(NS) Cypress E2E in independent tests-e2e/ at repo root (bootstrap
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Create E2E Tests
@@ -13,7 +13,7 @@ Execution-phase Cypress implementation. Planning-phase: `ns-spec-driven/referenc
 
 ## Session boot
 
-Load `.nextstage-harness/rules/e2e-tests-rules.mdc` when present. See `references/e2e-architecture.md` for layout and bootstrap summary.
+Load `.nextstage-harness/rules/e2e-tests-rules.md` when present (optional sibling via `harness add-rule`; not distributed). See `references/e2e-architecture.md` for layout and bootstrap summary.
 
 ## Phase 0 — Resolve or bootstrap Cypress root
 
@@ -108,6 +108,8 @@ From `{e2e_root}`: `npm run cypress:run` (or docker equivalent documented for th
 **SDD version execution:** when called under `execution-handoff.md` /
 `run-implementation`, **write or refactor specs only** — do **not** run the E2E
 suite. The human runs E2E at version end.
+
+**Acceptance tier:** agent-run E2E inside a human-invoked homologation run = `ns-qa-homologation` (`ns-harness` → `references/acceptance-tier.md`). Phase 5 runs and user-requested runs here keep rules above.
 
 ## References
 

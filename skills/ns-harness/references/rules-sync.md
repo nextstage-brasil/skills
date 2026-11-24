@@ -73,7 +73,7 @@ Cursor subagents use same skill catalog as parent — no `.cursor/skills/` copy.
       "name": "coder-agent",
       "skill": "ns-coder",
       "description": "(NS) Thin bridge to ns-coder…",
-      "model": { "cursor": "composer-2.5[fast=false]", "claude": "sonnet" },
+      "model": { "cursor": "inherit", "claude": "sonnet", "antigravity": "inherit" },
       "readonly": false
     }
   ]
@@ -96,11 +96,11 @@ Cursor subagents use same skill catalog as parent — no `.cursor/skills/` copy.
 
 ### Default subagents (seeded when skill installed)
 
-| Name | Skill | Default model (cursor / claude) | `readonly` |
+| Name | Skill | Default model (cursor / claude / antigravity) | `readonly` |
 | ---- | ----- | ------------------------------- | ---------- |
-| `coder-agent` | `ns-coder` | `composer-2.5[fast=false]` / `sonnet` | `false` |
-| `reviewer-agent` | `ns-reviewer` | `grok-4.7[context=256k,reasoning_effort=medium,fast=false]` / `opus` | `true` |
-| `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | `composer-2.5[fast=false]` / `haiku` | `false` |
+| `coder-agent` | `ns-coder` | `inherit` / `sonnet` / `inherit` | `false` |
+| `reviewer-agent` | `ns-reviewer` | `inherit` / `opus` / `inherit` | `true` |
+| `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | `inherit` / `haiku` / `inherit` | `false` |
 
 Presets get bridges on `init` / `sync` / `update`. Bridge body: obey `AGENTS.md` (no tool-Read) → Session boot (`session-boot.md`) → skill. Seeded bridges: spawn by **exact `{name}`** when spawn gate requires — `subagent-dispatch.md` (no child `inherit`). Cheap execute = in-session.
 

@@ -2,7 +2,7 @@
 
 Stack confirmed Laravel backend + React/TypeScript frontend (optional monorepo `backend/` + `frontend/`).
 
-Load harness rules when present: `backend-rules.mdc`, `frontend-rules.mdc`, `architecture-rules.mdc`, `i18n-rules.mdc`, `e2e-tests-rules.mdc`.
+Load `.nextstage-harness/rules/` when present: `architecture-rules.md`, `backend-rules.md`, `frontend-rules.md`, `i18n-rules.md`, `e2e-tests-rules.md`.
 
 ## Greenfield setup order
 
@@ -31,4 +31,4 @@ Reference Grogoo pipeline only when `uses_grogoo: true` in stack context. Defaul
 
 ## Docker / frontend proxy
 
-Frontend in container: relative API base path, proxy target to host gateway, CORS/Sanctum domains — per `infra-rules.mdc` when harness provides it.
+Frontend in container: relative API base path, proxy target to host gateway, CORS/Sanctum domains — per `.nextstage-harness/rules/infra-rules.md` when present.

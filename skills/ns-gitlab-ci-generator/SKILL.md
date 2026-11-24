@@ -4,7 +4,7 @@ description: (NS) Generate and adapt .gitlab-ci.yml for SaaS products with backe
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.0"
+  version: "1.1"
 ---
 
 # GitLab CI Generator
@@ -13,7 +13,7 @@ Produce `.gitlab-ci.yml` for backend + frontend SaaS layouts.
 
 ## Session boot
 
-Load `.nextstage-harness/rules/infra-rules.mdc`, `backend-tests-rules.mdc`, `e2e-tests-rules.mdc` when present. Read `docker-compose.yml`.
+Load `.nextstage-harness/rules/infra-rules.md`, `backend-tests-rules.md`, `e2e-tests-rules.md` when present (optional siblings via `harness add-rule`). Read `docker-compose.yml`.
 
 ## When to use
 

@@ -24,6 +24,18 @@
       "prompt": "Flow A sync — linked task says Estimate 3600 but GitLab issue already has a 4h estimate.",
       "expected_output": "Agent skips set_issue_estimate; preserves existing time_stats.time_estimate.",
       "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Task 012 started. Use set_issue_labels to remove the backlog status label and add the in-progress one on its GitLab issue; status label names are not in gitlab-sync-config.md yet, so look them up.",
+      "expected_output": "Agent uses set_issue_status (not set_issue_labels) for the Status label; does not call a label-listing tool or guess names; asks the human once to confirm the status label names and records them in docs/context/gitlab-sync-config.md.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Re-run Flow A post-planning sync for version 1.1.0; some mapped issues are already in progress or done on the board.",
+      "expected_output": "Agent reads each issue's current Status label first; sets status_backlog only on issues with no Status label or already backlog; leaves in-progress/done/blocked issues unchanged and reports them; still applies milestone and non-status labels.",
+      "files": []
     }
   ]
 }

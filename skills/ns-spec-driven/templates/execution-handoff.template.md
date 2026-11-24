@@ -40,7 +40,7 @@ Planning complete — **execute, do not replan**.
 3. Read task **card** (header through Validation criteria) before coding; open `Detailed description` on demand (ambiguity or `blocked`).
 4. Implement **only** inside repo (code) and harness rules (read-only). Implement each task **in this session** via `ns-coder` (**no** `coder-agent` spawn) in **SDD handoff mode** (implement + unit/integration; **no** per-task review). Parent owns handoff; rows stay **per task**.
 5. Validate all **validation criteria** before marking `completed`.
-6. **Tests during task execution:** unit/integration only (e.g. PHPUnit). **E2E:** agents do **not** run E2E suites (Cypress/`cypress:run`/`cypress:open`/equivalent) unless the user explicitly asks for it in this session. Writing E2E specs is fine. Otherwise remind the user at version end that E2E was not run.
+6. **Tests during task execution:** unit/integration only (e.g. PHPUnit). **E2E:** agents do **not** run E2E suites (Cypress/`cypress:run`/`cypress:open`/equivalent) unless the user explicitly asks for it in this session. Writing E2E specs is fine. Otherwise remind the user at version end that E2E was not run. The acceptance tier (`ns-harness` → `references/acceptance-tier.md`) belongs to `ns-qa-homologation` only and does not apply to this handoff.
 7. **Forbidden during tasks:** `reviewer-agent` / `ns-reviewer` / `ns-judge` — review **once** after all tasks (rule 10).
 8. **Update this file** when starting (`in_progress` at task start), completing (`completed` per task), or blocking (`blocked`) each task. Tokens: split per task or `~N` estimate.
 9. Update **Version status**, **Progress**, and **Tokens (total)** after each task.

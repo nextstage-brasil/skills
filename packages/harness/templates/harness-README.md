@@ -101,7 +101,7 @@ Orchestrators follow spawn gate in `ns-harness` → `references/subagent-dispatc
     "canonical": "agents/reviewer-agent.md",
     "skill": "ns-reviewer",
     "description": "(NS) Thin bridge…",
-    "model": { "cursor": "grok-4.7[context=256k,reasoning_effort=medium,fast=false]", "claude": "opus" },
+    "model": { "cursor": "inherit", "claude": "opus", "antigravity": "inherit" },
     "readonly": true
   }
 ]

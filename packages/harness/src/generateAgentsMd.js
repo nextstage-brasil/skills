@@ -12,6 +12,11 @@ const DOCKER_TESTING_SECTION = readFileSync(
   join(__dirname, '..', 'templates', 'snippets', 'docker-and-testing.md'),
   'utf8',
 ).trimEnd();
+const ACCEPTANCE_TIER_SECTION = readFileSync(
+  join(__dirname, '..', 'templates', 'snippets', 'acceptance-tier.md'),
+  'utf8',
+).trimEnd();
+const ACCEPTANCE_TIER_SKILL = 'ns-qa-homologation';
 
 const SDD_PLANNING = [
   'ns-spec-driven',
@@ -196,6 +201,11 @@ function buildSkillCreatorSection(installed) {
   return 'Install Anthropics **skill-creator** to author project-local skills in `.agents/skills/`:\n\n```bash\nnpx skills add https://github.com/anthropics/skills --skill skill-creator -y\n```\n\nOr: `npx @nextstage-brasil/harness --preset full --yes` (installs skill-creator). Then read `.agents/skills/skill-creator/SKILL.md` and `ns-harness` → `references/project-skill-authoring.md`.';
 }
 
+/** Acceptance-tier exception is embedded only when the skill it authorizes is installed. */
+function buildAcceptanceTierSection(installed) {
+  return installed.includes(ACCEPTANCE_TIER_SKILL) ? `\n\n${ACCEPTANCE_TIER_SECTION}` : '';
+}
+
 function buildComplementsNote(installed) {
   const set = new Set(installed);
   const present = COMPLEMENT_SKILLS.filter((skill) => set.has(skill));
@@ -360,7 +370,7 @@ This file **routes** agents to skills and project rules. Stack, modules, and tec
 
 See \`ns-harness\` skill (\`session-boot.md\`, \`rules-sync.md\`).
 
-${DOCKER_TESTING_SECTION}
+${DOCKER_TESTING_SECTION}${buildAcceptanceTierSection(installed)}
 
 ## Language
 

@@ -16,13 +16,13 @@ If frontend navigation changes: present grouping proposals and **wait for human 
 
 ### Step 4.5 — E2E (only on explicit user request)
 
-Do **not** run E2E unless the user explicitly asks. Otherwise tell the user E2E was not run and is theirs to trigger (before or alongside review as they prefer). E2E specs written earlier are not executed by default.
+Do **not** run E2E unless the user explicitly asks. Otherwise tell the user E2E was not run and is theirs to trigger (before or alongside review as they prefer). E2E specs written earlier are not executed by default. Acceptance tier (`../../ns-harness/references/acceptance-tier.md`) = human-invoked homologation runs (`ns-qa-homologation`) only; not this closure.
 
 ### Step 5 — Code review then judge (required)
 
 Follow `../../ns-reviewer/references/review-gate-workflow.md` (each `Approved` = score **10** only).
 
-1. **MUST** run `ns-reviewer` in-session at version closure. See `../../../ns-harness/references/subagent-dispatch.md`. Reviewer does **not** dispatch judge.
+1. **MUST** run `ns-reviewer` in-session at version closure. See `../../ns-harness/references/subagent-dispatch.md`. Reviewer does **not** dispatch judge.
 2. No `code-review-report.md`. On `Code Review: Rejected`/`Blocked`, follow `review-gate-workflow.md` (exhaustive map → one coder → `delta` re-review) until `Approved` or **blocked**. **Do not** run `ns-judge` until `Code Review: Approved`.
 3. On `Code Review: Approved` only: read `../../ns-judge/SKILL.md` in-session (`--mode closure --version {version_san}` or `--requirements` path). Python optional. `Delivery Review: Approved` only at 10. Judge Rejected: fix map; if product files changed, code review again then judge again.
 4. Update handoff only on Pass (both Approved) or Stop:
@@ -43,7 +43,7 @@ When status is `completed` or `completed_with_caveats` and `Delivery Review: App
 After human confirms (or documented waiver):
 
 1. Fill `Final delivery — end`; recalculate **Total process time (s)**
-2. **Archive prune** (`../../../ns-harness/references/artifact-layout.md`) — delete `sdd/tasks/` and the other non-history files listed there
+2. **Archive prune** (`../../ns-harness/references/artifact-layout.md`) — delete `sdd/tasks/` and the other non-history files listed there
 3. Move `{version_san}/` → `_done/{version_san}/` when project workflow requires it
 
 ## Critical rules

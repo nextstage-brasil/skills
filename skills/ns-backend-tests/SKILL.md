@@ -4,7 +4,7 @@ description: "(NS) PHPUnit unit/integration in backend package (bootstrap tests/
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.1"
+  version: "1.2"
 depends:
   - ns-harness
 ---
@@ -15,7 +15,7 @@ Execution-phase PHPUnit implementation. Planning-phase: `ns-spec-driven/referenc
 
 ## Session boot
 
-Load `.nextstage-harness/rules/backend-tests-rules.mdc` and `backend-rules.mdc` when present. See `references/backend-testing-architecture.md` for layout, run contract, and bootstrap summary.
+Load `.nextstage-harness/rules/backend-tests-rules.md` and `backend-rules.md` when present (optional siblings via `harness add-rule`). See `references/backend-testing-architecture.md` for layout, run contract, and bootstrap summary.
 
 ## Phase 0 — Resolve or bootstrap backend test root
 

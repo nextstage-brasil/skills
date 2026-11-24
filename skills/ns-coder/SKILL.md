@@ -4,7 +4,7 @@ description: "(NS) Ad-hoc coding — bug fixes, refactors, scripts, migrations �
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "2.5"
+  version: "2.6"
 depends:
   - ns-harness
   - ns-investigator
@@ -63,7 +63,7 @@ Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-
 
 1. **Scope:** classic = next `pending` task, one at a time, per `references/run-implementation.md`. Partitioned slice = that slice's tasks. Parent owns handoff file updates.
 2. Read each task **card** (header through Validation criteria); open `Detailed description` on demand (ambiguity or `blocked`) — `../ns-spec-driven/references/task-schema.md`.
-3. Implement + unit/integration only. No E2E unless the user explicitly asks.
+3. Implement + unit/integration only. No E2E unless the user explicitly asks. Acceptance tier (`../../ns-harness/references/acceptance-tier.md`) = human-invoked homologation runs (`ns-qa-homologation`) only — not this skill.
 4. **Forbidden:** `reviewer-agent` / `ns-reviewer` / `ns-judge`, living-spec consolidator, `Code Review:` / `Delivery Review:` verdict lines.
 5. **Before report complete:** public-export grep (**Pre-review**). Still **no** reviewer.
 6. Report to parent **per task**: files changed, tests run, blockers, tokens (split or `~N`), `Layout SSoT: {path} read | none registered`, `Skipped / not checked / risk:` (format: `../ns-reviewer/references/review-gate-workflow.md` **Final report**). Parent marks rows. Version closure (steps 4–6): `references/run-implementation-closure.md` — not the per-batch file. Session boot: cold start this agent = full boot per `session-boot.md`; same agent continuing = no full re-read unless `agents.local.md` / harness rules changed.

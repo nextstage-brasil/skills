@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nextstage-brasil/skills/docs/qa-homologation/qa-ledger.schema.json",
+  "title": "QA homologation run ledger",
+  "description": "Phase 0 contract for qa-ledger.json written by the planned ns-qa-homologation skill. One ledger per run; the verdict and the homologation score are computed from it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ledger_version", "run_id", "issue", "mr", "environment", "criteria", "scenarios", "findings", "residual_state", "judge_rounds"],
+  "properties": {
+    "ledger_version": { "const": 1 },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique run id, e.g. <issue-iid>-<UTC timestamp>."
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dev"],
+      "properties": {
+        "dev": { "$ref": "#/$defs/issueRef", "description": "Development issue under homologation." },
+        "qa": {
+          "anyOf": [{ "$ref": "#/$defs/issueRef" }, { "type": "null" }],
+          "description": "Homologation issue; null when tracker.qa_issues.mode is none."
+        }
+      }
+    },
+    "mr": {
+      "description": "Merge request under homologation, or null when none exists (legal). environment.commit must equal mr.commit; mr null or an unverifiable commit forces verdict Blocked (gate rule, not a schema failure).",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ref", "commit"],
+          "properties": {
+            "ref": { "type": "string", "pattern": "^[^\\s!]+![0-9]+$", "description": "<project path>!<mr iid>." },
+            "commit": { "$ref": "#/$defs/commit" }
+          }
+        },
+        { "type": "null" }
+      ]
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "url", "health"],
+      "properties": {
+        "commit": { "$ref": "#/$defs/commit", "description": "Deployed commit; must equal mr.commit." },
+        "url": { "type": "string", "minLength": 1 },
+        "health": { "enum": ["ok", "failed"] }
+      }
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text", "source", "criticality"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^AC-[0-9]+$" },
+          "text": { "type": "string", "minLength": 1 },
+          "source": { "enum": ["issue", "derived"], "description": "derived = assumed by the agent; a derived critical AC caps the verdict at with reservations." },
+          "criticality": { "enum": ["critical", "high", "medium", "low"] }
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "covers", "type", "lane", "status", "attempts", "triage", "data_source", "evidence"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^S-[0-9]+$" },
+          "covers": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^AC-[0-9]+$" }
+          },
+          "type": { "enum": ["positive", "negative", "business_rule", "regression"] },
+          "lane": { "enum": ["runner", "browser"], "description": "runner = deterministic E2E runner; browser = exploratory browser tool." },
+          "status": { "enum": ["pass", "fail", "blocked", "not_run", "flaky"] },
+          "attempts": { "type": "integer", "minimum": 0 },
+          "triage": {
+            "enum": ["ENV", "DATA", "TEST", "FLAKY", "PRODUCT", null],
+            "description": "Failure class assigned before any retry; null when no failure occurred."
+          },
+          "not_run_reason": { "type": "string", "minLength": 1 },
+          "data_source": { "enum": ["real", "db_fixture", "response_intercept"] },
+          "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "status": { "const": "pass" } } },
+            "then": { "properties": { "evidence": { "type": "array", "minItems": 1 } } }
+          },
+          {
+            "if": { "properties": { "status": { "const": "not_run" } } },
+            "then": { "required": ["not_run_reason"] }
+          }
+        ]
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "scenario", "severity", "class", "reproduced"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^F-[0-9]+$" },
+          "scenario": { "type": "string", "pattern": "^S-[0-9]+$" },
+          "severity": { "enum": ["blocker", "high", "medium", "low"] },
+          "class": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Finding class; delivery_defect = defect in the delivered change (drives the verdict)."
+          },
+          "reproduced": { "type": "integer", "minimum": 1, "description": "Times reproduced in a healthy environment." }
+        }
+      }
+    },
+    "residual_state": {
+      "type": "array",
+      "description": "Data or resources left behind by the run; empty array = nothing left. Must always be declared.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entity", "ref", "reason"],
+        "properties": {
+          "entity": { "type": "string", "minLength": 1 },
+          "ref": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "judge_rounds": {
+      "type": "array",
+      "description": "Homologation-score complement rounds (Q7b); empty when the first score met judge.min_score.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["round", "score_before", "score_after", "added"],
+        "properties": {
+          "round": { "type": "integer", "minimum": 1 },
+          "score_before": { "$ref": "#/$defs/score" },
+          "score_after": { "$ref": "#/$defs/score" },
+          "added": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "description": "Scenario ids or gap items added in this round."
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "issueRef": {
+      "type": "string",
+      "pattern": "^[^\\s#]+#[0-9]+$",
+      "description": "<project path>#<iid>."
+    },
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$" },
+    "score": { "type": "number", "minimum": 0, "maximum": 10 },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "path", "sha256"],
+      "properties": {
+        "kind": { "enum": ["junit", "screenshot", "console", "network", "runner_video"] },
+        "path": { "type": "string", "minLength": 1, "description": "Relative to the run evidence dir." },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "pii_scrubbed": { "type": "boolean" }
+      },
+      "if": { "properties": { "kind": { "const": "screenshot" } } },
+      "then": { "required": ["pii_scrubbed"] }
+    }
+  }
+}

@@ -2,6 +2,25 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## QA homologation — Phase 0 foundations (2026-11-24)
+
+Groundwork for planned `ns-qa-homologation`. No new catalog skill; no `catalog.json` key. Existing behavior unchanged except `ns-gitlab-board-sync` MCP correction.
+
+| Surface | Version | Change |
+| ------- | ------- | ------ |
+| `ns-harness` | 1.6.0 → 1.6.1 | New `references/acceptance-tier.md` (+ `packages/harness/templates/snippets/acceptance-tier.md`): tier = agent-run E2E inside human-invoked homologation run; user-requested E2E under other skills keeps existing rules. Pointer in `docker-and-testing.md` (both copies); `agents-md.md` + template include it only when `ns-qa-homologation` installed; `rules-sync.md` default subagent models = code (`inherit` cursor/antigravity) |
+| `packages/harness/templates/harness-README.md` | — | Subagent manifest example model = code default (`inherit`) |
+| Generated `AGENTS.md` | — | Docker and testing gains one acceptance-tier pointer line; `## Acceptance tier` inlined only when `ns-qa-homologation` installed |
+| `ns-coder` | 2.5 → 2.6 | Acceptance-tier pointer at E2E bans (`SKILL.md`, `run-implementation.md`, `run-implementation-closure.md`); ban unchanged. `references/` links to `ns-harness` fixed `../../../` → `../../` |
+| `ns-spec-driven` | 1.8.8 → 1.8.9 | Pointer in `execution-handoff.template.md`; `e2e-test-task-generator.md`, `unit-test-task-generator.md`, `stacks/laravel-react.md` rule paths `.mdc` → `.nextstage-harness/rules/<name>.md` |
+| `ns-backend-tests` | 1.1 → 1.2 | Rule paths `.mdc` → `.md` (`SKILL.md`, `backend-testing-architecture.md`) |
+| `ns-e2e-tests` | 1.1 → 1.2 | Acceptance-tier pointer; `e2e-tests-rules` path → `.md` (optional via `harness add-rule`; not distributed) |
+| `ns-gitlab-ci-generator` | 1.0 → 1.1 | Rule paths `.mdc` → `.md` |
+| `ns-gitlab-board-sync` | 1.2 → 1.3 | **Behavior fix:** `Status: *` via `set_issue_status` only (never `set_issue_labels`) + Status guard (read current status; never overwrite in-progress/done/blocked; unexpected status → no change, report); dropped non-existent `list_project_labels` — unknown label names: ask human once, record in config. Config template: optional homologation status keys; config = single source of status label names |
+| `docs/qa-homologation/` | — | Phase 0 contracts: `profile-schema.md`, `qa-ledger.schema.json` (moved into skill in Phase 1) |
+
+Consumers: `harness agents-md --force` to pick up the pointer line. Board-sync configs: no key renames.
+
 ## Engineering guardrails + Test tiers (2026-10-24)
 
 Portable engineering guardrails landed in generated/refined `AGENTS.md`, architecture-rules template, docker-and-testing snippets, and worker/review skills.
