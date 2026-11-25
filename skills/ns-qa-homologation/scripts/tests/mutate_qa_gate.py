@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mutation tests: each mutation of a consistent fixture must flip qa_gate to exit 2."""
+"""Mutation tests: each mutation of a consistent fixture (ledger, run manifest, plan) must flip qa_gate to exit 2."""
 
 from __future__ import annotations
 
@@ -11,8 +11,10 @@ from qa_fixtures import (
     ACCEPTANCE_YML,
     PLAN_YML,
     base_ledger,
+    base_run,
     clone,
     run_gate,
+    write_json,
     write_ledger,
     write_plan_run,
 )
@@ -56,6 +58,39 @@ LEDGER_MUTATIONS = {
     drop_residual_state: "missing required 'residual_state'",
     orphan_finding: "/findings/F-1: references unknown scenario S-99",
     duplicate_scenario_id: "/scenarios: duplicate id S-1",
+}
+
+def rename_resource_outside_run(run: dict) -> None:
+    run["created_resources"][-1]["id"] = "shared-stack-app-1"
+
+
+def register_resource_twice(run: dict) -> None:
+    run["created_resources"].append(dict(run["created_resources"][0]))
+
+
+def switch_provider_to_url(run: dict) -> None:
+    run["environment"]["provider"] = "url"
+
+
+def escape_evidence_dir(run: dict) -> None:
+    run["created_resources"][0]["id"] = "../" + run["created_resources"][0]["id"]
+
+
+def inject_shell_into_id(run: dict) -> None:
+    run["created_resources"][-1]["id"] += "; rm -rf ~"
+
+
+def claim_other_run(run: dict) -> None:
+    run["created_resources"][-1]["id"] = run["created_resources"][-1]["id"].replace("qa-42-", "qa-142-")
+
+
+RUN_MUTATIONS = {
+    rename_resource_outside_run: "id does not embed run_id",
+    register_resource_twice: "/created_resources: duplicate resource evidence_dir:",
+    switch_provider_to_url: "provider url has no qa-env script",
+    escape_evidence_dir: "/created_resources/0/id: does not match",
+    inject_shell_into_id: "/created_resources/5/id: does not match",
+    claim_other_run: "id does not embed run_id",
 }
 
 PLAN_MUTATIONS = {
@@ -119,6 +154,21 @@ class MutateLedger(_ReasonCase):
                 ledger = clone(base_ledger(run_dir))
                 mutate(ledger, run_dir)
                 code, payload = run_gate(["--check-ledger", str(write_ledger(run_dir, ledger))])
+                self.assertRejected(code, payload, reason)
+
+
+class MutateRun(_ReasonCase):
+    def test_baseline_consistent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            code, payload = run_gate(["--check-run", str(write_json(Path(tmp) / "run.json", base_run()))])
+            self.assertEqual(code, 0, payload)
+
+    def test_each_mutation_rejected(self):
+        for mutate, reason in RUN_MUTATIONS.items():
+            with self.subTest(mutation=mutate.__name__), tempfile.TemporaryDirectory() as tmp:
+                run = clone(base_run())
+                mutate(run)
+                code, payload = run_gate(["--check-run", str(write_json(Path(tmp) / "run.json", run))])
                 self.assertRejected(code, payload, reason)
 
 

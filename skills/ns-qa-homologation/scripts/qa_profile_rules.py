@@ -15,7 +15,10 @@ _LEVELS = ("L0", "L1", "L2", "L3")
 _INFERRED_CAP = "L1"
 # Highest level whose phases exist in this skill version. Raise when Q5-Q9 land.
 IMPLEMENTED_MAX_LEVEL = "L0"
-_IMPLEMENTED_REASON = "phases Q5-Q9 not implemented in this skill version: run is plan + local report"
+_IMPLEMENTED_REASON = (
+    "execution phases Q5-Q9 not implemented in this skill version (Q5/Q10 specified only): "
+    "run is plan + local report"
+)
 _PLACEHOLDER = re.compile(r"^<[^<>]+>$")
 _STATUS_KEY_LINE = re.compile(r"^\s*(status_[a-z0-9_]+)\s*:", re.MULTILINE)
 _JUDGE_WEIGHT_TOTAL = 10.0

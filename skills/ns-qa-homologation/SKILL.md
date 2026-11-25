@@ -4,7 +4,7 @@ description: "(NS) Acceptance homologation (QA) of a delivered GitLab issue: QA 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "0.1.0"
+  version: "0.2.0"
 depends:
   - ns-harness
   - ns-e2e-tests
@@ -16,18 +16,18 @@ depends:
 
 Acceptance homologation of a **delivered** issue against the running system. Phases Q0–Q10, state on disk, project values only in QA profile. Evaluates product, not code: `ns-judge` proves diff vs ACs; this skill homologates behavior. Verdict scale (4 levels + confidence) belongs here only — `ns-judge` "no second rubric" rule stays inside `ns-judge`. Ledger consistency stays binary (`qa_gate.py` exit 0 or reject).
 
-## Implementation status (v0.1.0)
+## Implementation status (v0.2.0)
 
 | Delivered | Phases | Level |
 | --------- | ------ | ----- |
 | **Yes** (Phase 1) | Q0 boot, Q1 intake, Q2 criteria, Q3 impact, Q4 plan, Q7 report (local, no verdict) | L0 |
-| No — Phase 2 | Q5 environment + data | — |
+| **Specified** (Phase 2) | Q5 environment + data, Q10 cleanup: `qa-env` contract, `run.json` manifest, `--check-run` / `--check-env`, cleanup planner | Run from Phase 3 (L1) |
 | No — Phase 3 | Q6 execution + evidence, Q1 status writes | L1 |
 | No — Phase 4 | Q7 verdict, Q7b homologation score, Q9 approval + publication | L2 |
 | No — Phase 5 | Q8 automation | L3 |
 | No — Phase 6 | Routing row, `qa-agent` bridge, dev → QA handoff | — |
 
-**Until phases land:** any profile level ≥ L1 runs as **L0** (plan + local report, zero tracker writes). `qa_gate.py --check-profile` returns `autonomy_effective`; report §1 states declared vs effective + reasons. Never run a phase marked No.
+**Until phases land:** any profile level ≥ L1 runs as **L0** (plan + local report, zero tracker writes, no env, no Q10). `qa_gate.py --check-profile` returns `autonomy_effective`; report §1 states declared vs effective + reasons. Never run a phase marked No.
 
 ## Routing
 
@@ -66,13 +66,15 @@ Never: close issue · log time · merge · push protected branch · change produ
 
 | File | Phase | Content |
 | ---- | ----- | ------- |
-| `run.json` | Q0 | `run_id`, issues, declared/effective level + caps, `profile_sha256`, `phase` (last gate passed), `resources: []` (each created resource, registered at creation) |
+| `run.json` | Q0 | Manifest `templates/qa-run.schema.json`: `run_id`, issues, level (declared/effective/caps), `profile_sha256`, provider, `phase` (last gate passed), `phases[]`, `created_resources[]` (registered at creation), `checkpoints[]`, `pauses[]` |
 | `intake.md` | Q1 | `references/intake.md` |
 | `acceptance.yml` | Q2 | `references/acceptance-criteria.md` |
 | `impact.md` | Q3 | `references/impact-mapping.md` |
 | `plan.yml` | Q4 | `references/test-design.md` |
 | `report.md` | Q7 | `references/report.template.md` |
-| `env.json`, `evidence/`, `results/`, `qa-ledger.json`, `verdict.json`, `qa-judgment.json`, `preview.md`, `publish.json` | Q5–Q9 | Planned |
+| `env.json`, `env/<command>-<n>.json` | Q5 | `references/environment.md`, `references/qa-env-contract.md` |
+| `evidence/`, `results/`, `qa-ledger.json`, `verdict.json`, `qa-judgment.json`, `preview.md`, `publish.json` | Q6–Q9 | Planned |
+| Profile `cleanup.log` (shared, append-only) | Q10 | One line per run: `references/cleanup.md` |
 
 **Resume:** same dev issue + `run.json` with `phase` before done → continue at next phase; never redo a passed gate. Context compaction → re-read `run.json` first.
 
@@ -85,13 +87,13 @@ Never: close issue · log time · merge · push protected branch · change produ
 | Q2 Criteria | `acceptance.yml` | every AC `source: issue\|derived`; derived/ambiguous carry `assumption` | Ready |
 | Q3 Impact | `impact.md` | every area linked to ≥1 scenario (checked at Q4) | Ready |
 | Q4 Plan | `plan.yml` | `--check-plan` exit 0 (coverage, minimum types, risk order) | Ready |
-| Q5 Environment | `env.json` | `qa-env health` ok; deployed commit = MR commit | Phase 2 |
+| Q5 Environment | `env.json` | `qa-env health` + profile `health_checks` ok; deployed commit = MR commit | Specified; runs Phase 3 |
 | Q6 Execution | ledger + evidence | every scenario terminal (pass/fail/blocked/not_run+reason) | Phase 3 |
 | Q7 Verdict + report | `verdict.json`, `report.md` | `--check-ledger` exit 0; L0: report only | Report ready; verdict Phase 4 |
 | Q7b Score | `qa-judgment.json` | score ≥ `judge.min_score`; else complement cycle | Phase 4 |
 | Q8 Automation | E2E MR | ≥`stability_runs` green, review approved | Phase 5 |
 | Q9 Approval + publish | `preview.md`, `publish.json` | human approved preview; idempotent publish | Phase 4 |
-| Q10 Cleanup | `cleanup.log` line | full success only; registered resources only | Phase 2+ |
+| Q10 Cleanup | `cleanup.log` line | plan from `qa_cleanup_plan.py`; registered resources only; stop on first failure | Specified; runs Phase 3 |
 
 ### Q0 Boot
 
@@ -99,11 +101,15 @@ Never: close issue · log time · merge · push protected branch · change produ
 2. Profile `docs/context/qa-profile.md` absent → `references/profile-discovery.md`, then continue.
 3. `python3 scripts/qa_gate.py --check-profile docs/context/qa-profile.md --repo .` — exit 3 → stop, list `errors`; never rediscover an existing profile. Keep `warnings` for report.
 4. Read `tracker.status_source` (single source of status names). GitLab MCP unavailable → stop (stall rule).
-5. Create run dir + `run.json` with `autonomy_effective` + `autonomy_caps` from step 3.
+5. Create run dir + `run.json` (level from step 3); register run dir as `evidence_dir` (`via: agent`); `--check-run` exit 0.
 
 ### Q1–Q4
 
 Follow each reference in order. One artifact per phase; update `run.json.phase` after each gate. L0: MCP **read** tools only.
+
+### Q5 + Q10 (specified; execution from Phase 3)
+
+Q5: `references/environment.md` (provider, health, commit check, data cycle, ENV/DATA caps, contract-break stall) + `references/qa-env-contract.md`. Q10: `references/cleanup.md`. Every created resource → `run.json` at creation, then `--check-run`. Never run at effective L0.
 
 ### Q7 report (L0)
 
@@ -118,8 +124,11 @@ Fill `references/report.template.md` in profile `language`. §1 verdict = not co
 | Profile | `--check-profile <profile.md> [--repo .]` | 0 valid; 3 invalid |
 | Plan (L0) | `--check-plan <run_dir>` | 0 consistent; 2 rejected; 3 missing/unparseable |
 | Ledger | `--check-ledger <qa-ledger.json> [--evidence-dir <dir>]` | 0 consistent (may report `blocked: true`); 2 rejected; 3 unreadable |
+| Run manifest | `--check-run <run.json>` | 0 consistent (may report `paused: true`); 2 rejected; 3 unreadable |
+| qa-env output | `--check-env <output.json> [--run-id <id>]` | 0 contract kept; 2/3 → stall |
+| Cleanup plan | `scripts/qa_cleanup_plan.py --run <run.json> --outcome <o> [--profile <md>]` | 0 plan printed (`argv` per step; executes nothing); 2 run rejected / outcome unproven; 3 unreadable / invalid profile |
 
-Exit **1 never used** (unlike `ns-judge`, where 1 = skip). Exit 2 → fix artifact per `errors`, re-run. `--verdict` + `qa_judge.py` = Phase 4 (not present). Ledger contract: `templates/qa-ledger.schema.json`; `mr: null`, commit mismatch, unhealthy env → `blocked_reasons`, not schema failure.
+Exit **1 never used** (unlike `ns-judge`, where 1 = skip). Exit 2 → fix artifact per `errors`, re-run (`--check-env`: stall instead). `--verdict` + `qa_judge.py` = Phase 4 (not present). Ledger contract: `templates/qa-ledger.schema.json`; `mr: null`, commit mismatch, unhealthy env → `blocked_reasons`, not schema failure.
 
 ## Checkpoint + stall
 
@@ -140,7 +149,9 @@ L2/L3 only. After all phases (incl. Q8 at L3): send human the exact comment, att
 | `references/acceptance-criteria.md` | Q2 |
 | `references/impact-mapping.md` | Q3 |
 | `references/test-design.md` | Q4 |
+| `references/environment.md`, `references/qa-env-contract.md` | Q5; writing a project `qa-env` script |
+| `references/cleanup.md` | Q10; leftover removal |
 | `references/report.template.md` | Q7 report |
 | `references/entry-triggers.md` | Trigger phrases |
-| `templates/qa-profile.template.md` | Profile scaffold |
-| `templates/*.schema.json` | Profile / acceptance / plan / ledger contracts |
+| `templates/qa-profile.template.md`, `templates/qa-env.template.sh` | Profile / `qa-env` scaffolds |
+| `templates/*.schema.json` | Profile / acceptance / plan / ledger / run / qa-env output contracts |

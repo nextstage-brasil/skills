@@ -114,15 +114,15 @@ jobs:
           fi
           echo 'OK: no YAML parse skips from skills CLI'
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Harness CLI smoke test
         working-directory: packages/harness
         run: |
           npm install
           npm test
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
 
       - name: ns-judge script tests
         run: |
@@ -132,4 +132,5 @@ jobs:
       - name: ns-qa-homologation script tests
         run: |
           python3 skills/ns-qa-homologation/scripts/tests/test_qa_gate.py
+          python3 skills/ns-qa-homologation/scripts/tests/test_qa_run.py
           python3 skills/ns-qa-homologation/scripts/tests/mutate_qa_gate.py

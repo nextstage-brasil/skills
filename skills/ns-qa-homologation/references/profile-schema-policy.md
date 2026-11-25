@@ -8,7 +8,7 @@ Continuation of `profile-schema.md` (legend, YAML subset, gate extras there). `R
 | --- | - | ------------- | ------- | ---- |
 | `location` | R | `disposable_env` | — | Env dedicated to this run (`provider: script` slot or `provider: url`). Never seed shared env |
 | `run_prefix` | R | string | — | Run data id = prefix + `run_id` |
-| `seed.kind` / `seed.ref` | R | `api`\|`script`\|`none` / string | — | Create preconditions before tests |
+| `seed.kind` / `seed.ref` | R | `api`\|`script`\|`none` / string | — | Preconditions before tests. `script` → `qa-env seed` (provider `script` only). `api` → agent calls product API `ref`. Cycle: `environment.md` |
 | `mock.allowed` | — | bool | `true` | Hard-to-create data only |
 | `mock.order` | — | list | `[product_api, db_fixture, response_intercept]` | Most real → most artificial; scenario records `data_source` |
 | `teardown` | R | `discard_env`\|`none` | — | `provider: script` (run-owned slot) → `discard_env` required; Q10 discard removes data. `provider: url` → `none`: nothing discarded; leftovers → ledger `residual_state` |
@@ -17,7 +17,7 @@ Continuation of `profile-schema.md` (legend, YAML subset, gate extras there). `R
 
 | Key | R | Type / values | Default | Rule |
 | --- | - | ------------- | ------- | ---- |
-| `dir` | R | path template (`{run_id}`) | `docs/qa/{run_id}` | Gitignored; never versioned. `run_id` starts with dev iid |
+| `dir` | R | path template, MUST contain `{run_id}` | `docs/qa/{run_id}` | Gitignored; never versioned. `run_id` starts with dev iid. Run dir = `run.json` `evidence_dir` |
 | `capture` | — | subset of `screenshot`, `console`, `network`, `runner_video` | all | |
 | `pii_masking` | R | `dom` | `dom` | Hide fields in DOM before capture; no OCR. Mask fail → image not published |
 | `pii_fields` | — | CSS selector[] | `[]` | |
@@ -27,7 +27,7 @@ Continuation of `profile-schema.md` (legend, YAML subset, gate extras there). `R
 
 | Key | R | Type / values | Default | Rule |
 | --- | - | ------------- | ------- | ---- |
-| `on_full_success` | — | subset of `containers`, `volumes`, `images`, `worktrees`, `evidence` | all | Only after every phase gate passed (any verdict) |
+| `on_full_success` | — | subset of `containers`, `volumes`, `images`, `worktrees`, `evidence` | all | Only after every phase gate passed (any verdict). Matrix: `cleanup.md` |
 | `keep_local_report_at_L1` | — | bool | `true` | L1 keeps `report.md` + `qa-ledger.json` |
 | `scope` | R | `run_owned_only` | — | Only resources in `run.json` |
 | `on_failure` | R | `keep` | — | Incomplete run keeps everything |

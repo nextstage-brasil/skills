@@ -41,11 +41,14 @@ tracker:
 
 environment:
   provider: script                # script | url | none
-  script: scripts/qa-env.sh       # qa-env contract: up | health | seed | reset | down | info
+  script: scripts/qa-env.sh       # qa-env contract: up | health | seed | reset | down | info (scaffold: templates/qa-env.template.sh)
+  # url: <dedicated run environment URL>            # only when provider: url
+  # version_url: <URL returning the deployed commit> # required when provider: url
   isolation: slot
-  health_checks:
+  health_checks:                  # "{api}" = the qa-env "urls" entry named api
     - { kind: http, url: "{api}/health", expect: 200 }
     - { kind: login }
+  timeouts: { up: 1800, seed: 600, reset: 600, default: 120 }   # seconds per qa-env call
 
 auth:
   strategy: ui-form               # ui-form | api-token | storage-state

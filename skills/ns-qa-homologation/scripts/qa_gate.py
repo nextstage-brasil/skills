@@ -5,10 +5,12 @@ Modes (exactly one):
   --check-profile PATH   QA profile Markdown (one fenced yaml block)
   --check-plan RUN_DIR   L0 artifacts RUN_DIR/acceptance.yml + RUN_DIR/plan.yml
   --check-ledger PATH    qa-ledger.json (evidence paths relative to --evidence-dir)
+  --check-run PATH       run.json manifest (schema + run-owned resource rules)
+  --check-env PATH       stdout JSON of one qa-env subcommand (optional --run-id)
 
 Exit codes:
-  0  consistent (ledger may still report blocked=true)
-  2  rejected: plan or ledger inconsistent; reasons in JSON "errors"
+  0  consistent (ledger may report blocked=true; run may report paused=true)
+  2  rejected: plan, ledger, run manifest or qa-env output inconsistent; reasons in JSON "errors"
   3  invalid input: invalid profile, unreadable/unparseable file, bad usage
 Exit 1 is never returned by design (unlike ns-judge, where 1 = skip scripts);
 a Python traceback (exit 1) means a script bug.
@@ -29,9 +31,12 @@ if sys.version_info < MIN_PYTHON:
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from qa_common import load_json  # noqa: E402
+from qa_env_rules import check_env_output  # noqa: E402
 from qa_ledger_rules import check_ledger  # noqa: E402
 from qa_plan_rules import check_plan  # noqa: E402
 from qa_profile_rules import check_profile  # noqa: E402
+from qa_run_rules import check_run  # noqa: E402
 from qa_schema_lite import SchemaLiteError, load_schema  # noqa: E402
 from qa_yaml_lite import YamlLiteError, parse  # noqa: E402
 
@@ -89,16 +94,32 @@ def _run_plan(args: argparse.Namespace) -> tuple[int, dict]:
     return (EXIT_OK if not report.errors else EXIT_REJECTED), report.as_dict()
 
 
+def _read_json(path: Path, label: str) -> object:
+    try:
+        return load_json(path)
+    except ValueError as exc:
+        raise _InvalidInput(f"{label}: {exc}") from exc
+
+
 def _run_ledger(args: argparse.Namespace) -> tuple[int, dict]:
     path = Path(args.check_ledger)
-    try:
-        ledger = json.loads(path.read_text(encoding="utf-8"))
-    except OSError as exc:
-        raise _InvalidInput(f"ledger: {exc.strerror or exc}") from exc
-    except ValueError as exc:
-        raise _InvalidInput(f"ledger: invalid JSON: {exc}") from exc
+    ledger = _read_json(path, "ledger")
     evidence_root = Path(args.evidence_dir) if args.evidence_dir else path.resolve().parent
     report = check_ledger(ledger, evidence_root, load_schema(TEMPLATES / "qa-ledger.schema.json"))
+    return (EXIT_OK if not report.errors else EXIT_REJECTED), report.as_dict()
+
+
+def _run_manifest(args: argparse.Namespace) -> tuple[int, dict]:
+    report = check_run(_read_json(Path(args.check_run), "run"), load_schema(TEMPLATES / "qa-run.schema.json"))
+    return (EXIT_OK if not report.errors else EXIT_REJECTED), report.as_dict()
+
+
+def _run_env(args: argparse.Namespace) -> tuple[int, dict]:
+    report = check_env_output(
+        _read_json(Path(args.check_env), "qa-env output"),
+        load_schema(TEMPLATES / "qa-env-output.schema.json"),
+        args.run_id,
+    )
     return (EXIT_OK if not report.errors else EXIT_REJECTED), report.as_dict()
 
 
@@ -106,6 +127,8 @@ _MODES = {
     "check_profile": ("profile", _run_profile),
     "check_plan": ("plan", _run_plan),
     "check_ledger": ("ledger", _run_ledger),
+    "check_run": ("run", _run_manifest),
+    "check_env": ("env", _run_env),
 }
 
 
@@ -115,8 +138,11 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     group.add_argument("--check-profile", metavar="PROFILE_MD")
     group.add_argument("--check-plan", metavar="RUN_DIR")
     group.add_argument("--check-ledger", metavar="LEDGER_JSON")
+    group.add_argument("--check-run", metavar="RUN_JSON")
+    group.add_argument("--check-env", metavar="QA_ENV_OUTPUT_JSON")
     parser.add_argument("--repo", default=".", help="repo root for profile tracker.status_source")
     parser.add_argument("--evidence-dir", help="evidence root for ledger paths (default: ledger dir)")
+    parser.add_argument("--run-id", help="--check-env: expected run_id")
     return parser.parse_args(argv)
 
 

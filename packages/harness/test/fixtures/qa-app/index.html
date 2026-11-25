@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QA fixture app</title>
+  </head>
+  <body>
+    <main>
+      <h1 data-testid="title">Records</h1>
+      <form data-testid="record-form">
+        <label for="name">Name</label>
+        <input id="name" name="name" required />
+        <button type="submit" data-testid="save">Save</button>
+      </form>
+      <p data-testid="status" role="status"></p>
+    </main>
+    <script>
+      document.querySelector('[data-testid="record-form"]').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        document.querySelector('[data-testid="status"]').textContent = name ? `Saved ${name}` : 'Name is required';
+      });
+    </script>
+  </body>
+</html>

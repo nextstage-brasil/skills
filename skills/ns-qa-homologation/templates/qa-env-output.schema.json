@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-env-output.schema.json",
+  "title": "qa-env script output (stdout JSON of one subcommand)",
+  "description": "Contract between the agent and the consumer qa-env script (references/qa-env-contract.md). Validated by scripts/qa_gate.py --check-env; per-command allowed keys, ok/error pairing and run-owned ids live in qa_env_rules.py. Output that fails this contract triggers the stall rule, never a retry.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "command",
+    "run_id",
+    "ok",
+    "error"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": 1
+    },
+    "command": {
+      "enum": [
+        "up",
+        "health",
+        "seed",
+        "reset",
+        "down",
+        "info"
+      ]
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[0-9]+-[0-9]{8}T[0-9]{4}Z$"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "One-line reason when ok is false; null when ok is true. Never contains credentials."
+    },
+    "urls": {
+      "type": "array",
+      "description": "Named entry points; health check '{name}' placeholders resolve against these names.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "url"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "commit": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/commit"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Deployed commit; null only when not yet known (up). info must return it."
+    },
+    "created_resources": {
+      "type": "array",
+      "description": "Every run-owned resource existing after this call, also when ok is false (partial creation). Re-runs repeat earlier entries; the agent registers only kind:id pairs not yet in run.json.",
+      "items": {
+        "$ref": "#/$defs/resource"
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "ok",
+          "detail"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ok": {
+            "type": "boolean"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "data": {
+      "type": "array",
+      "description": "Seeded entities; ref embeds data.run_prefix + run_id.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entity",
+          "ref",
+          "data_source"
+        ],
+        "properties": {
+          "entity": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "data_source": {
+            "enum": [
+              "real",
+              "db_fixture"
+            ],
+            "description": "real = created through the product (API or product command); db_fixture = written straight into the disposable database."
+          }
+        }
+      }
+    },
+    "removed": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/resource"
+      }
+    },
+    "failed": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "id",
+            "reason"
+          ],
+          "properties": {
+            "kind": {
+              "$ref": "#/$defs/envKind"
+            },
+            "id": {
+              "$ref": "#/$defs/resourceId"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "skipped": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/resource"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "command": {
+            "const": "up"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "urls",
+          "commit",
+          "created_resources"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "command": {
+            "const": "health"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "checks"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "command": {
+            "const": "seed"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "data"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "command": {
+            "const": "reset"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "data",
+          "created_resources"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "command": {
+            "const": "down"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "removed",
+          "failed",
+          "skipped"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "command": {
+            "const": "info"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "urls",
+          "commit"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$"
+    },
+    "envKind": {
+      "enum": [
+        "container",
+        "volume",
+        "database",
+        "image",
+        "worktree"
+      ]
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id"
+      ],
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/envKind"
+        },
+        "id": {
+          "$ref": "#/$defs/resourceId"
+        }
+      }
+    },
+    "resourceId": {
+      "type": "string",
+      "pattern": "^(?!.*\\.\\.)[A-Za-z0-9.][A-Za-z0-9._/:@+-]*$",
+      "description": "Safe for command arguments: starts alphanumeric or '.' (never '-'), only [A-Za-z0-9._/:@+-], no '..'. Must embed the run_id (boundary-aware)."
+    }
+  }
+}

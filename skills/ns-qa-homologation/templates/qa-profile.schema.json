@@ -81,7 +81,18 @@
         "provider": { "enum": ["script", "url", "none"] },
         "script": { "$ref": "#/$defs/text" },
         "url": { "$ref": "#/$defs/text" },
+        "version_url": { "$ref": "#/$defs/text" },
         "isolation": { "const": "slot" },
+        "timeouts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "up": { "$ref": "#/$defs/seconds" },
+            "seed": { "$ref": "#/$defs/seconds" },
+            "reset": { "$ref": "#/$defs/seconds" },
+            "default": { "$ref": "#/$defs/seconds" }
+          }
+        },
         "health_checks": {
           "type": "array",
           "minItems": 1,
@@ -109,7 +120,7 @@
       },
       "allOf": [
         { "if": { "properties": { "provider": { "const": "script" } } }, "then": { "required": ["script", "health_checks"] } },
-        { "if": { "properties": { "provider": { "const": "url" } } }, "then": { "required": ["url", "health_checks"] } }
+        { "if": { "properties": { "provider": { "const": "url" } } }, "then": { "required": ["url", "version_url", "health_checks"] } }
       ]
     },
     "auth": {
@@ -210,7 +221,7 @@
       "additionalProperties": false,
       "required": ["dir", "pii_masking"],
       "properties": {
-        "dir": { "$ref": "#/$defs/text" },
+        "dir": { "type": "string", "pattern": "\\{run_id\\}", "description": "Run dir template; must contain {run_id} (one dir per run, registered as evidence_dir in run.json)." },
         "capture": {
           "type": "array",
           "uniqueItems": true,
@@ -312,7 +323,7 @@
     },
     {
       "if": { "properties": { "environment": { "properties": { "provider": { "const": "url" } } } } },
-      "then": { "properties": { "data": { "properties": { "teardown": { "const": "none" } } } } }
+      "then": { "properties": { "data": { "properties": { "teardown": { "const": "none" }, "seed": { "properties": { "kind": { "enum": ["api", "none"] } } } } } } }
     }
   ],
   "$defs": {
@@ -321,6 +332,7 @@
     "projectRef": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "integer", "minimum": 1 }] },
     "statusKey": { "type": "string", "pattern": "^status_[a-z0-9_]+$", "description": "gitlab-sync-config KEY, never a label name." },
     "positive": { "type": "number", "minimum": 0.000001 },
-    "nonNegative": { "type": "number", "minimum": 0 }
+    "nonNegative": { "type": "number", "minimum": 0 },
+    "seconds": { "type": "integer", "minimum": 1 }
   }
 }

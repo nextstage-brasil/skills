@@ -89,21 +89,12 @@ Run proceeds past Q1 only when every **applicable** side is in its `*_running` s
 | Key | R | Type / values | Default | Rule |
 | --- | - | ------------- | ------- | ---- |
 | `provider` | R | `script`\|`url`\|`none` | — | `script` = run-owned env via qa-env. `url` = env provisioned outside agent, dedicated to this run (e.g. preview/review env); seeding allowed; **not** run-owned → Q10 never touches it; leftover data → ledger `residual_state`. `none` → no execution (L0 behavior) |
-| `script` | when `script` | path | — | **qa-env contract** below |
+| `script` | when `script` | path | — | qa-env script: `qa-env-contract.md`; scaffold `../templates/qa-env.template.sh` |
 | `url` | when `url` | URL | — | Dedicated run env (see `provider`) |
+| `version_url` | when `url` | URL | — | Returns deployed commit (bare SHA or JSON `commit`); compared with MR commit at Q5 |
 | `isolation` | R | `slot` | — | Only value: env dedicated to this run (`provider: script` run-owned, or `provider: url` external). Shared env forbidden — test data only in dedicated env (`data.location`) |
-| `health_checks[]` | when `script`/`url` | `{kind: http, url, expect}` \| `{kind: login}` | — | All pass → env healthy |
-
-**qa-env contract** — consumer script, subcommands:
-
-| Subcommand | Effect |
-| ---------- | ------ |
-| `up` | Create run env; print created resources for `run.json` |
-| `health` | Exit 0 only when healthy |
-| `seed` | Create run data (`data.seed`) |
-| `reset` | Restore env to post-seed state |
-| `down --run <run_id>` | Remove exactly resources in that run's `run.json` |
-| `info` | Print URLs + deployed commit (JSON) |
+| `health_checks[]` | when `script`/`url` | `{kind: http, url, expect}` \| `{kind: login}` | — | All pass → env healthy. `{name}` in `url` = qa-env `urls` entry |
+| `timeouts.up` / `seed` / `reset` / `default` | — | int seconds ≥1 | `1800`, `600`, `600`, `120` | Per qa-env call; exceeded → ENV failure (`environment.md`) |
 
 ### `auth`
 

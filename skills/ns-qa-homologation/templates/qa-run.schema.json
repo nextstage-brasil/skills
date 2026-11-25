@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-run.schema.json",
+  "title": "QA homologation run manifest (run.json)",
+  "description": "Single source of run state and of every resource the run created. Q10 cleanup and 'qa-env down' act only on created_resources. Validated by scripts/qa_gate.py --check-run; cross-field rules (unique resources, run-owned ids, provider/via/kind pairing, phase and pause consistency) live in qa_run_rules.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_version",
+    "run_id",
+    "issue",
+    "level",
+    "profile_sha256",
+    "environment",
+    "phase",
+    "phases",
+    "created_resources",
+    "checkpoints",
+    "pauses"
+  ],
+  "properties": {
+    "run_version": {
+      "const": 1
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[0-9]+-[0-9]{8}T[0-9]{4}Z$",
+      "description": "<dev issue iid>-<UTC YYYYMMDDTHHMMZ>."
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dev",
+        "qa"
+      ],
+      "properties": {
+        "dev": {
+          "$ref": "#/$defs/issueRef"
+        },
+        "qa": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/issueRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "declared",
+        "effective",
+        "caps"
+      ],
+      "properties": {
+        "declared": {
+          "$ref": "#/$defs/level"
+        },
+        "effective": {
+          "$ref": "#/$defs/level"
+        },
+        "caps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "autonomy_caps reasons from qa_gate.py --check-profile."
+        }
+      }
+    },
+    "profile_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider"
+      ],
+      "properties": {
+        "provider": {
+          "enum": [
+            "script",
+            "url",
+            "none"
+          ],
+          "description": "Profile environment.provider at Q0."
+        }
+      }
+    },
+    "phase": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/phaseId"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Last phase whose exit gate passed; null before Q0 passes. Resume starts at the next phase."
+    },
+    "phases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "phase",
+          "state",
+          "updated_at"
+        ],
+        "properties": {
+          "phase": {
+            "$ref": "#/$defs/phaseId"
+          },
+          "state": {
+            "enum": [
+              "running",
+              "passed",
+              "failed",
+              "skipped"
+            ]
+          },
+          "updated_at": {
+            "$ref": "#/$defs/timestamp"
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "created_resources": {
+      "type": "array",
+      "description": "Every resource this run created, appended at creation time. Nothing else is ever removed.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "id",
+          "created_at",
+          "created_by_phase",
+          "via"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "container",
+              "volume",
+              "database",
+              "image",
+              "worktree",
+              "evidence_dir"
+            ]
+          },
+          "id": {
+            "$ref": "#/$defs/resourceId"
+          },
+          "created_at": {
+            "$ref": "#/$defs/timestamp"
+          },
+          "created_by_phase": {
+            "$ref": "#/$defs/phaseId"
+          },
+          "via": {
+            "enum": [
+              "qa-env",
+              "agent"
+            ],
+            "description": "Who removes it: qa-env = 'qa-env down'; agent = the agent itself (worktree, evidence_dir)."
+          }
+        }
+      }
+    },
+    "checkpoints": {
+      "type": "array",
+      "description": "One entry per execution.budget.checkpoint_min window reached, in order.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "window",
+          "at",
+          "decision"
+        ],
+        "properties": {
+          "window": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "at": {
+            "$ref": "#/$defs/timestamp"
+          },
+          "decision": {
+            "enum": [
+              "pending",
+              "continue",
+              "stop"
+            ]
+          }
+        }
+      }
+    },
+    "pauses": {
+      "type": "array",
+      "description": "Every wait on the human. resolved_at and answer are null while waiting; at most one open pause.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "at",
+          "phase",
+          "reason",
+          "resolved_at",
+          "answer"
+        ],
+        "properties": {
+          "at": {
+            "$ref": "#/$defs/timestamp"
+          },
+          "phase": {
+            "$ref": "#/$defs/phaseId"
+          },
+          "reason": {
+            "enum": [
+              "checkpoint",
+              "stall",
+              "below_min_score",
+              "preview_approval"
+            ]
+          },
+          "resolved_at": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/timestamp"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "answer": {
+            "enum": [
+              "continue",
+              "stop",
+              "approve",
+              "adjust",
+              "do_not_publish",
+              null
+            ]
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "issueRef": {
+      "type": "string",
+      "pattern": "^[^\\s#]+#[0-9]+$"
+    },
+    "level": {
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3"
+      ]
+    },
+    "phaseId": {
+      "enum": [
+        "Q0",
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
+        "Q5",
+        "Q6",
+        "Q7",
+        "Q7b",
+        "Q8",
+        "Q9",
+        "Q10"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$"
+    },
+    "resourceId": {
+      "type": "string",
+      "pattern": "^(?!.*\\.\\.)[A-Za-z0-9.][A-Za-z0-9._/:@+-]*$",
+      "description": "Name or repo-relative path. Safe for command arguments: starts alphanumeric or '.' (never '-'), only [A-Za-z0-9._/:@+-], no '..'. Must embed the run_id (boundary-aware)."
+    }
+  }
+}

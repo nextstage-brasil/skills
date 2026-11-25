@@ -15,6 +15,8 @@ TESTS = Path(__file__).resolve().parent
 SCRIPTS = TESTS.parent
 SKILL = SCRIPTS.parent
 GATE = SCRIPTS / "qa_gate.py"
+CLEANUP_PLAN = SCRIPTS / "qa_cleanup_plan.py"
+ENV_TEMPLATE = SKILL / "templates" / "qa-env.template.sh"
 PROFILE_TEMPLATE = SKILL / "templates" / "qa-profile.template.md"
 PLACEHOLDER = re.compile(r"<[^<>\n]+>")
 RUNNER_PLACEHOLDER = "<cypress | playwright | none>"
@@ -33,9 +35,9 @@ status_homologation_rejected: "Status: Rejected"
 """
 
 
-def run_gate(args: list[str], cwd: Path | None = None) -> tuple[int, dict]:
+def _run_script(script: Path, args: list[str], cwd: Path | None) -> tuple[int, dict]:
     result = subprocess.run(
-        [sys.executable, str(GATE), *args],
+        [sys.executable, str(script), *args],
         text=True,
         capture_output=True,
         cwd=str(cwd) if cwd else None,
@@ -43,6 +45,14 @@ def run_gate(args: list[str], cwd: Path | None = None) -> tuple[int, dict]:
     )
     payload = json.loads(result.stdout) if result.stdout.strip() else {}
     return result.returncode, payload
+
+
+def run_gate(args: list[str], cwd: Path | None = None) -> tuple[int, dict]:
+    return _run_script(GATE, args, cwd)
+
+
+def run_cleanup_plan(args: list[str], cwd: Path | None = None) -> tuple[int, dict]:
+    return _run_script(CLEANUP_PLAN, args, cwd)
 
 
 def filled_profile_text(replacements: dict[str, str] | None = None) -> str:
@@ -221,3 +231,64 @@ def write_plan_run(run_dir: Path, acceptance: str = ACCEPTANCE_YML, plan: str = 
 
 def clone(data: dict) -> dict:
     return copy.deepcopy(data)
+
+
+RUN_ID = "42-20261124T1200Z"
+RUN_NS = "qa-42-20261124t1200z"
+
+
+def base_run() -> dict:
+    """Valid run.json: script-provider L1 run that passed every gate (Q0-Q7), one resource of every kind."""
+    stamp = "2026-11-24T12:00:00Z"
+
+    def resource(kind: str, rid: str, phase: str, via: str) -> dict:
+        return {"kind": kind, "id": rid, "created_at": stamp, "created_by_phase": phase, "via": via}
+
+    return {
+        "run_version": 1,
+        "run_id": RUN_ID,
+        "issue": {"dev": "group/app#42", "qa": "group/qa#7"},
+        "level": {"declared": "L2", "effective": "L1", "caps": ["1 inferred field(s) cap autonomy at L1"]},
+        "profile_sha256": "a" * 64,
+        "environment": {"provider": "script"},
+        "phase": "Q7",
+        "phases": [
+            {"phase": phase, "state": "passed", "updated_at": stamp}
+            for phase in ("Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7")
+        ],
+        "created_resources": [
+            resource("evidence_dir", f"docs/qa/{RUN_ID}", "Q0", "agent"),
+            resource("worktree", f".worktrees/{RUN_NS}", "Q5", "qa-env"),
+            resource("image", f"{RUN_NS}-app:latest", "Q5", "qa-env"),
+            resource("volume", f"{RUN_NS}_db", "Q5", "qa-env"),
+            resource("database", "qa_42_20261124t1200z", "Q5", "qa-env"),
+            resource("container", f"{RUN_NS}-app-1", "Q5", "qa-env"),
+        ],
+        "checkpoints": [{"window": 1, "at": stamp, "decision": "continue"}],
+        "pauses": [
+            {"at": stamp, "phase": "Q5", "reason": "checkpoint", "resolved_at": stamp, "answer": "continue"}
+        ],
+    }
+
+
+def write_json(path: Path, payload: object) -> Path:
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return path
+
+
+def env_output(command: str, **payload) -> dict:
+    """Valid qa-env stdout for one command; keyword arguments override the payload."""
+    defaults = {
+        "up": {
+            "urls": [{"name": "app", "url": "http://localhost:49153"}],
+            "commit": None,
+            "created_resources": [{"kind": "container", "id": f"{RUN_NS}-app-1"}],
+        },
+        "health": {"checks": [{"name": f"{RUN_NS}-app-1", "ok": True, "detail": "healthy"}]},
+        "seed": {"data": [{"entity": "user", "ref": f"qa-bot-{RUN_ID}", "data_source": "real"}]},
+        "reset": {"data": [], "created_resources": []},
+        "down": {"removed": [{"kind": "container", "id": f"{RUN_NS}-app-1"}], "failed": None, "skipped": []},
+        "info": {"urls": [{"name": "app", "url": "http://localhost:49153"}], "commit": "abc1234"},
+    }
+    envelope = {"contract_version": 1, "command": command, "run_id": RUN_ID, "ok": True, "error": None}
+    return {**envelope, **defaults[command], **payload}

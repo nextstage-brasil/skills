@@ -2,6 +2,19 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## `ns-qa-homologation` 0.2.0 — Phase 2: environment, data, cleanup (2026-11-24)
+
+Q5 (environment + data) and Q10 (cleanup) specified with deterministic checks. Execution still capped at L0 (`IMPLEMENTED_MAX_LEVEL`); Q5/Q10 run from Phase 3 (L1). No routing or tracker behavior change.
+
+| Surface | Version | Change |
+| ------- | ------- | ------ |
+| `ns-qa-homologation` | 0.1.0 → 0.2.0 | New `references/qa-env-contract.md` (consumer `qa-env` script: CLI, JSON per subcommand, exit 0/1/2, run-owned ids, idempotency, `down` order + stop on first failure, timeouts), `references/environment.md` (Q5: providers `script`/`url`, health + commit check, data cycle prepare → test → discard with `data_source` ladder, `residual_state`, ENV ≤2 reset → run Blocked, DATA ≤2 reseed, contract break → stall), `references/cleanup.md` (Q10 registration, outcome matrix, never-deleted list, procedure, leftovers). `templates/qa-env.template.sh` (providers `fixed_url`, `compose`, `slot`). `templates/qa-run.schema.json` (`run.json`: level, phases, `created_resources[] {kind, id, created_at, created_by_phase, via}`, checkpoints, pauses) + `templates/qa-env-output.schema.json`. `qa_gate.py --check-run` / `--check-env [--run-id]` (exit 0/2/3). `scripts/qa_cleanup_plan.py` (prints ordered plan with `argv` + shell-quoted `command`; executes nothing; `success` only when `run.json` proves every gate of the level passed; effective L0 → no Q10; profile validated). Resource ids: strict charset (no whitespace, shell metacharacters, leading `-`, `..`) + boundary-aware run-id match. `run.json` key `resources` → `created_resources` |
+| QA profile | — | `environment.version_url` (required when `provider: url`), optional `environment.timeouts {up, seed, reset, default}`; `provider: url` → `data.seed.kind` `api`\|`none`. Existing `provider: url` profiles must add `version_url` |
+| Harness tests | — | `packages/harness/test/fixtures/qa-app/` (static app + fake offline `qa-env.sh`) + `test/qa-env-fixture.mjs` in `npm test` (needs `bash` + `python3`) |
+| CI | — | `validate-skills.yml`: Python set up before `npm test`; runs `scripts/tests/test_qa_run.py` |
+
+Consumers: `harness sync` to update the skill. Profiles with `provider: url` add `environment.version_url`. Scaffold `environment.script` from `templates/qa-env.template.sh` before Phase 3.
+
 ## Add catalog skill — `ns-qa-homologation` 0.1.0, Phase 1 (2026-11-24)
 
 Acceptance homologation face (Q0–Q10). Phase 1 = Q0–Q4 + local report (L0). Profile level ≥ L1 runs as L0 until Q5–Q9 land; report states declared vs effective level. Explicit invocation only — no routing row yet (Phase 6). Python 3.9+ mandatory (Q0 stops without it; deliberate divergence from `ns-judge`).

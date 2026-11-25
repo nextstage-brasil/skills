@@ -284,6 +284,21 @@ class CheckProfileTests(ReasonAssertions):
                 {"    project: filled-": "    projectx: filled-"},
                 "/tracker/qa_issues: missing required 'project'",
             ),
+            "url provider without version_url": (
+                {"provider: script ": "provider: url ", "teardown: discard_env": "teardown: none",
+                 "seed: { kind: script,": "seed: { kind: api,", "  # url: filled-": "  url: filled-"},
+                "/environment: missing required 'version_url'",
+            ),
+            "url provider with seed script": (
+                {"provider: script ": "provider: url ", "teardown: discard_env": "teardown: none",
+                 "  # url: filled-": "  url: filled-", "  # version_url: filled-": "  version_url: filled-"},
+                '/data/seed/kind: must be one of ["api", "none"]',
+            ),
+            "evidence dir without run id": (
+                {"dir: docs/qa/{run_id}": "dir: docs/qa/latest"},
+                "/evidence/dir: does not match",
+            ),
+            "timeout zero": ({"timeouts: { up: 1800,": "timeouts: { up: 0,"}, "/environment/timeouts/up: below minimum 1"),
         }
         for name, (replacements, reason) in cases.items():
             with self.subTest(case=name):
@@ -291,6 +306,19 @@ class CheckProfileTests(ReasonAssertions):
                 self.assertEqual(code, 3, payload)
                 self.assertReason(payload["errors"], reason)
                 self.assertIsNone(payload["autonomy_effective"])
+
+    def test_url_provider_profile_valid(self):
+        text = filled_profile_text(
+            {
+                "provider: script ": "provider: url ",
+                "teardown: discard_env": "teardown: none",
+                "seed: { kind: script,": "seed: { kind: api,",
+                "  # url: filled-": "  url: filled-",
+                "  # version_url: filled-": "  version_url: filled-",
+            }
+        )
+        code, payload = self._run(text)
+        self.assertEqual(code, 0, payload)
 
     def test_mode_none_needs_no_qa_status_keys(self):
         text = filled_profile_text(
