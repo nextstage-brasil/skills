@@ -1,10 +1,10 @@
 ---
 name: ns-qa-homologation
-description: "(NS) Acceptance homologation (QA) of a delivered GitLab issue: QA profile, intake, AC-n, MR impact, risk-ordered test plan, execution + evidence, local report. Explicit only: \"homologate <URL>\", \"homologar\", \"acceptance QA\", /ns-qa-homologation. Do NOT: implement or bare ISSUE_URL (ns-execution-gitlab-issue), delivery proof (ns-judge), write E2E specs (ns-e2e-tests), code review (ns-reviewer)."
+description: "(NS) Acceptance homologation (QA) of a delivered GitLab issue: profile, ACs, MR impact, risk-ordered plan, evidence, verdict, homologation score, approved publication. Explicit only: \"homologate <URL>\", \"homologar\", \"acceptance QA\", /ns-qa-homologation. Do NOT: implement or bare ISSUE_URL (ns-execution-gitlab-issue), delivery proof (ns-judge), E2E specs (ns-e2e-tests), code review (ns-reviewer)."
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "0.3.0"
+  version: "0.4.0"
 depends:
   - ns-harness
   - ns-e2e-tests
@@ -14,20 +14,19 @@ depends:
 
 # QA Homologation
 
-Acceptance homologation of a **delivered** issue against the running system. Phases Q0–Q10, state on disk, project values only in QA profile. Evaluates product, not code: `ns-judge` proves diff vs ACs; this skill homologates behavior. Verdict scale (4 levels + confidence) belongs here only — `ns-judge` "no second rubric" rule stays inside `ns-judge`. Ledger consistency stays binary (`qa_gate.py` exit 0 or reject).
+Acceptance homologation of a **delivered** issue against the running system. Phases Q0–Q10, state on disk, project values only in QA profile. Evaluates product, not code: `ns-judge` proves diff vs ACs; this skill homologates behavior. Verdict scale (4 levels + confidence) + homologation score belong here only — `ns-judge` "no second rubric" rule stays inside `ns-judge`. Ledger consistency stays binary (`qa_gate.py` exit 0 or reject).
 
-## Implementation status (v0.3.0)
+## Implementation status (v0.4.0)
 
 | Delivered | Phases | Level |
 | --------- | ------ | ----- |
-| **Yes** (Phase 1) | Q0 boot, Q1 intake, Q2 criteria, Q3 impact, Q4 plan, Q7 report (local) | L0 |
-| **Yes** (Phases 2–3) | Q1 status sync, Q5 environment + data, Q6 execution + evidence (lanes, triage, ledger), Q7 report without verdict | L1 |
-| Specified, not run | Q10 cleanup (planner needs Q7 verdict gate → L1 keeps everything) | Phase 4 |
-| No — Phase 4 | Q7 verdict, Q7b homologation score, Q9 approval + publication | L2 |
+| **Yes** (Phase 1) | Q0 boot, Q1 intake, Q2 criteria, Q3 impact, Q4 plan, local report | L0 |
+| **Yes** (Phases 2–4) | Q1 status sync, Q5 env + data, Q6 execution + evidence, Q7 verdict, Q7b judge + completion loop, Q10 cleanup | L1 |
+| **Yes** (Phase 4) | Q9 preview approval + publication + result status | L2 |
 | No — Phase 5 | Q8 automation | L3 |
 | No — Phase 6 | Routing row, `qa-agent` bridge, dev → QA handoff | — |
 
-**Until phases land:** L2/L3 run as **L1**; `environment.provider: none` runs as **L0**. `qa_gate.py --check-profile` returns `autonomy_effective` + `autonomy_caps`; report §1 states declared vs effective + reasons. Never run a phase marked No.
+**Caps:** L3 runs as **L2**; `environment.provider: none` runs as **L0**. `qa_gate.py --check-profile` returns `autonomy_effective` + `autonomy_caps`; report §1 states declared vs effective + reasons. Never run a phase marked No.
 
 ## Routing
 
@@ -39,7 +38,7 @@ Explicit invocation only — no automatic URL routing. Reliable entry until Phas
 | Diff vs ACs after `Code Review: Approved` | `ns-judge` |
 | Write / refactor E2E specs (Q6 runner lane, Q8) | E2E repo own skills; none → `ns-e2e-tests` (`references/execution-lanes.md`) |
 | Review generated E2E specs (Q8) | profile `policy.e2e_reviewer` (default `ns-reviewer`) |
-| GitLab tool contracts | `mcp-gitlab-usage` (MCP-provisioned; read before first MCP call) |
+| GitLab tool contracts | `mcp-gitlab-usage` (MCP-provisioned; read before first MCP call; runtime only, never `depends`) |
 
 ## Session boot
 
@@ -50,7 +49,7 @@ Explicit invocation only — no automatic URL routing. Reliable entry until Phas
 | Level | Execute | Publish comment | Status | E2E commit/MR |
 | ----- | ------- | --------------- | ------ | ------------- |
 | L0 plan | no | no | no | no |
-| L1 execute | yes | no (local report) | Q1 sync only | no |
+| L1 execute | yes (verdict + score informative) | no (local report) | Q1 sync only | no |
 | L2 publish | yes | yes, after human approval | yes | no |
 | L3 autonomous | yes | yes, after human approval | yes | own branch, never merge |
 
@@ -58,7 +57,7 @@ Effective level = min(profile `autonomy_level`, L1 if any `# inferred` field, L0
 
 ## Invariants (every level)
 
-Never: close issue · log time · merge · push protected branch · change product code · print credentials · remove a resource not registered in this run's `run.json` · publish comment or final status without human approval of the preview · weaken/skip an assertion or use `force` to go green.
+Never: close issue · log time · merge · push protected branch · change product code · print credentials · remove a resource not registered in this run's `run.json` · publish comment or final status without human approval of the exact preview (`qa_publish_plan.py`) · publish below `judge.min_score` without the human answer `publish_anyway` · weaken/skip an assertion or use `force` to go green.
 
 ## Run directory
 
@@ -66,18 +65,20 @@ Never: close issue · log time · merge · push protected branch · change produ
 
 | File | Phase | Content |
 | ---- | ----- | ------- |
-| `run.json` | Q0 | Manifest `templates/qa-run.schema.json`: `run_id`, issues, level (declared/effective/caps), `profile_sha256`, provider, `phase` (last gate passed), `phases[]`, `created_resources[]` (registered at creation), `checkpoints[]`, `pauses[]` |
+| `run.json` | Q0 | Manifest `templates/qa-run.schema.json`: `run_id`, issues, level (declared/effective/caps), `profile_sha256`, provider, `phase` (last gate passed), `phases[]`, `created_resources[]` (registered at creation; worktree `repo_root`), `checkpoints[]`, `pauses[]`, `publication` (Q9 approvals + outcome) |
 | `intake.md` | Q1 | `references/intake.md` |
 | `acceptance.yml` | Q2 | `references/acceptance-criteria.md` |
 | `impact.md` | Q3 | `references/impact-mapping.md` |
 | `plan.yml` | Q4 | `references/test-design.md` |
 | `env.json`, `env/<command>-<n>.json` | Q5 | `references/environment.md`, `references/qa-env-contract.md` |
 | `qa-ledger.json`, `results/*.xml`, `evidence/` (+ `index.md`), `raw/` | Q6 | `references/execution-lanes.md`, `references/failure-triage.md` |
-| `report.md` | Q7 | `references/report.template.md` |
-| `verdict.json`, `qa-judgment.json`, `preview.md`, `publish.json` | Q7–Q9 | Planned (Phase 4) |
+| `verdict.json` | Q7 | `references/verdict-rubric.md` |
+| `qa-judgment.json`; ledger `adherence`, `judge_rounds` | Q7b | `references/homologation-judge.md` |
+| `report.md` | after Q7b | `references/report.template.md` (L2+: comment body) |
+| `preview.md`, `publish.json`, `publish-payload.md` (offline) | Q9 | `references/publication.md` |
 | Profile `cleanup.log` (shared, append-only) | Q10 | One line per run: `references/cleanup.md` |
 
-**Resume:** same dev issue + `run.json` with `phase` before done → continue at next phase; never redo a passed gate. L1 run done = Q7 entry `skipped` (verdict pending). Inside Q6: `references/execution-lanes.md` → Resume. Context compaction → re-read `run.json` first.
+**Resume:** same dev issue + `run.json` with `phase` before done → continue at next phase; never redo a passed gate. Open pause → re-ask its question, wait. Inside Q6: `references/execution-lanes.md` → Resume. Context compaction → re-read `run.json` first.
 
 ## Phases
 
@@ -90,11 +91,11 @@ Never: close issue · log time · merge · push protected branch · change produ
 | Q4 Plan | `plan.yml` | `--check-plan` exit 0 (coverage, minimum types, risk order) | Ready |
 | Q5 Environment | `env.json` | `qa-env health` + profile `health_checks` ok; deployed commit = MR commit | Ready (≥L1) |
 | Q6 Execution | ledger + evidence | every scenario terminal; `qa_evidence.py index` + `--check-ledger` exit 0 | Ready (≥L1) |
-| Q7 Verdict + report | `verdict.json`, `report.md` | L0/L1: report only, Q7 `skipped`; verdict gate Phase 4 | Report ready; verdict Phase 4 |
-| Q7b Score | `qa-judgment.json` | score ≥ `judge.min_score`; else complement cycle | Phase 4 |
+| Q7 Verdict | `verdict.json` | `--verdict` exit 0 | Ready (≥L1) |
+| Q7b Judge | `qa-judgment.json`, `report.md` | `loop.state` `passed`, or `ended_below_min` + D50 answer `publish_anyway` (L2+ only) | Ready (≥L1) |
 | Q8 Automation | E2E MR | ≥`stability_runs` green, review approved | Phase 5 |
-| Q9 Approval + publish | `preview.md`, `publish.json` | human approved preview; idempotent publish | Phase 4 |
-| Q10 Cleanup | `cleanup.log` line | plan from `qa_cleanup_plan.py`; registered resources only; stop on first failure | Specified; not run (Phase 4) |
+| Q9 Approval + publish | `preview.md`, `publish.json` | approved preview published (`record` → outcome `published`) | Ready (≥L2) |
+| Q10 Cleanup | `cleanup.log` line | plan from `qa_cleanup_plan.py`; registered resources only; stop on first failure | Ready (≥L1) |
 
 ### Q0 Boot
 
@@ -106,19 +107,27 @@ Never: close issue · log time · merge · push protected branch · change produ
 
 ### Q1–Q4
 
-Follow each reference in order. One artifact per phase; update `run.json.phase` after each gate. L0: MCP **read** tools only. ≥L1: Q1 status sync via `set_issue_status` (`references/intake.md`); only tracker write before Phase 4.
+Follow each reference in order. One artifact per phase; update `run.json.phase` after each gate. L0: MCP **read** tools only. ≥L1: Q1 status sync via `set_issue_status` (`references/intake.md`); only tracker write before Q9.
 
 ### Q5 + Q6 (effective ≥ L1)
 
 Q5: `references/environment.md` + `references/qa-env-contract.md`. Q6: `references/execution-lanes.md` (runner lane first, browser lane complement, ledger, evidence), `references/browser-tools.md`, `references/failure-triage.md` (classes, caps, checkpoint, stall). Every created resource → `run.json` at creation, then `--check-run`. ENV exhausted / commit mismatch → stop executing; ledger records it (Blocked).
 
-### Q7 report (L0 / L1)
+### L0 report
 
-Fill `references/report.template.md` in profile `language`. §1 verdict = not computed (L1: pending Q7 verdict, Phase 4); §1 lists level downgrade + every cap reason. L0: §6/§8 not executed/scored. L1: §6 from ledger; §8 lists kept resources. `run.json`: Q7 `skipped` (note: verdict pending), `phase` stays Q6. Report local; no comment; no status change beyond Q1.
+Fill `references/report.template.md` in profile `language`: §1 verdict not computed + level downgrade + every cap reason; §6/§8 not executed/scored. Q5–Q10 never run.
 
-### Q10 (not run in v0.3.0)
+### Q7 + Q7b (effective ≥ L1)
 
-`references/cleanup.md`. Planner requires Q7 `passed` for `success`; L1 run ends with Q7 `skipped` → `success` unprovable → Q10 not executed, **every** resource kept (fail-safe), no `cleanup.log` line. Report §8 names kept resources + leftover command (`cleanup.md` → Leftovers); removal only on human request.
+Q7: `references/verdict-rubric.md` — `qa_gate.py --verdict` → `verdict.json`. Q7b: `references/homologation-judge.md` — record adherence per executed scenario × AC, `qa_judge.py` → `qa-judgment.json`; `complement` → round on actionable gaps only (Q4 → Q5 → Q6 → Q7 → Q7b, `--record-round`); `ended_below_min` (any level) → D50 pause (`below_min_score`), nothing published or deleted; L1 answers `continue` / `stop` only. Then fill report (verdict, confidence, score, rounds, missing for 10, mocked scenarios). L1: report local, no comment, no status beyond Q1.
+
+### Q9 (effective ≥ L2)
+
+`references/publication.md`: `qa_publish_plan.py preview` → show `preview.md` → `approval` → `payload` → MCP publish (marker check, all uploads first with `upload_url` as returned; any failure → post nothing, `preview --not-uploaded`, ask again) → `set_issue_status` when preview names a status → `record` → Q9 `passed`. MCP down → offline payload.
+
+### Q10
+
+`references/cleanup.md`. `success` = every gate of effective level passed (L1: Q0–Q7b with judge loop `passed`; L2: + Q9 published with every capture uploaded). Otherwise keep all; report §8 names kept resources + leftover command; removal only on human request.
 
 ## Gate script
 
@@ -128,15 +137,18 @@ Fill `references/report.template.md` in profile `language`. §1 verdict = not co
 | ---- | ------- | ---- |
 | Profile | `--check-profile <profile.md> [--repo .]` | 0 valid; 3 invalid |
 | Plan (L0) | `--check-plan <run_dir>` | 0 consistent; 2 rejected; 3 missing/unparseable |
+| Verdict (Q7) | `--verdict <qa-ledger.json> --profile <md> [--evidence-dir <dir>]` | 0 `verdict.json` written; 2 ledger rejected; 3 unreadable / invalid profile / no `--profile` |
+| Judge (Q7b) | `scripts/qa_judge.py --run-dir <dir> --profile <md> [--record-round [--added <item>]...]` | 0 judged; 2 ledger rejected / adherence missing / rounds inconsistent; 3 unreadable |
+| Publication (Q9) | `scripts/qa_publish_plan.py preview\|approval\|payload\|record --run-dir <dir> --profile <md> ...` | 0 done; 2 refused (level, gate, stale, score, approval, hash); 3 unreadable |
 | Ledger | `--check-ledger <qa-ledger.json> [--evidence-dir <dir>]` | 0 consistent (may report `blocked: true`); 2 rejected; 3 unreadable |
 | Run manifest | `--check-run <run.json>` | 0 consistent (may report `paused: true`); 2 rejected; 3 unreadable |
 | qa-env output | `--check-env <output.json> [--run-id <id>]` | 0 contract kept; 2/3 → stall |
-| Cleanup plan | `scripts/qa_cleanup_plan.py --run <run.json> --outcome <o> [--profile <md>]` | 0 plan printed (`argv` per step; executes nothing); 2 run rejected / outcome unproven; 3 unreadable / invalid profile |
+| Cleanup plan | `scripts/qa_cleanup_plan.py --run <run.json> --outcome <o> [--profile <md>]` (`--profile` required for `success`: Q7b recomputed) | 0 plan printed (`argv` per step; executes nothing); 2 run rejected / outcome unproven; 3 unreadable / invalid profile |
 | JUnit merge | `scripts/junit_to_ledger.py --ledger <ledger> --junit results/<f>.xml [--change S-n=<c>]... [--dry-run]` | 0 merged; 2 refused (unsafe path/XML, nothing mapped, re-merge, triage break); 3 unreadable |
 | Triage | `scripts/qa_triage.py --ledger <ledger> --scenario S-<n>` | 0 decision (writes nothing); 2 history breaks protocol; 3 bad input |
 | Evidence | `scripts/qa_evidence.py add\|verify\|index ...` | 0 done; 2 refused (name, symlink, content, PII/capture rule, unreferenced, hash); 3 unreadable |
 
-Exit **1 never used** (unlike `ns-judge`, where 1 = skip). Exit 2 → fix artifact per `errors`, re-run (`--check-env`: stall instead). `--verdict` + `qa_judge.py` = Phase 4 (not present). Ledger contract: `templates/qa-ledger.schema.json`; `mr: null`, commit mismatch, unhealthy env, ENV exhausted → `blocked_reasons`, not schema failure. `--check-ledger` also replays each scenario `history` (status/triage must match), re-reads each runner run's own JUnit `source` (same outcome; one run per file), matches `plan.yml` (ids, lane, type, covers; required after Q4 passed), lane evidence, evidence layout.
+Exit **1 never used** (unlike `ns-judge`, where 1 = skip). Exit 2 → fix artifact per `errors`, re-run (`--check-env`: stall instead). Ledger contract: `templates/qa-ledger.schema.json`; `mr: null`, commit mismatch, unhealthy env, ENV exhausted → `blocked_reasons`, not schema failure. `--check-ledger` also replays each scenario `history` (status/triage must match), re-reads each runner run's own JUnit `source` (same outcome; one run per file), matches `plan.yml` (ids, lane, type, covers; required after Q4 passed), lane evidence, evidence layout, `adherence` pairs, `judge_rounds` chain.
 
 ## Checkpoint + stall
 
@@ -145,9 +157,9 @@ Detail + `run.json` records: `references/failure-triage.md`.
 - **Checkpoint** every `execution.budget.checkpoint_min`: near it start no long step; at it finish in-flight cycle, pause + ask; wait indefinitely, delete nothing. "continue" → next window; "stop" → unrun = `not_run`, never `pass`; run incomplete.
 - **Stall** (any time): failure outside triage classes, repeat without change, unexpected tool/MCP/env answer, unresolvable ambiguity, step outside profile/invariants → stop + ask: phase, what was tried, what is needed. Foreseen failures follow caps without asking.
 
-## Approval before publish (Q9, Phase 4)
+## Approval before publish (Q9)
 
-L2/L3 only. After all phases (incl. Q8 at L3): send human the exact comment, attachment list (file → AC), target status, target issue. Approve → publish exactly the preview (same source file). Adjust → new preview. Do not publish → end incomplete, keep everything. Waiting = indefinite; nothing published, changed, or deleted meanwhile. Q1 status sync + Q8 MR stay automatic.
+L2+ only, after all phases (incl. Q8 at L3). One `preview.md`: exact comment(s) with marker, attachments (file → scenario → AC, sha256, local folder), target status, target issue + project. Approve → publish exactly the approved file (payload parsed from it, hash-bound). Adjust → new preview, new hash. Do not publish → end incomplete, keep all. Waiting = indefinite; nothing published, changed, deleted meanwhile. Approval of the preview naming the project = MCP project confirmation. Q1 status sync + Q8 MR stay automatic.
 
 ## References
 
@@ -163,8 +175,11 @@ L2/L3 only. After all phases (incl. Q8 at L3): send human the exact comment, att
 | `references/execution-lanes.md` | Q6 lanes, ledger skeleton, spec source, evidence |
 | `references/browser-tools.md` | Q6 browser lane tool + capability probe |
 | `references/failure-triage.md` | Any failed run; checkpoint; stall |
+| `references/verdict-rubric.md` | Q7 verdict + confidence |
+| `references/homologation-judge.md` | Q7b adherence, score, completion loop, D50 pause |
+| `references/publication.md` | Q9 preview, approval, MCP publish, status, offline |
 | `references/cleanup.md` | Q10; leftover removal |
-| `references/report.template.md` | Q7 report |
+| `references/report.template.md` | Report (L2+: comment body) |
 | `references/entry-triggers.md` | Trigger phrases |
 | `templates/qa-profile.template.md`, `templates/qa-env.template.sh` | Profile / `qa-env` scaffolds |
-| `templates/*.schema.json` | Profile / acceptance / plan / ledger / run / qa-env output contracts |
+| `templates/*.schema.json` | Profile / acceptance / plan / ledger / run / qa-env output / verdict / judgment contracts |

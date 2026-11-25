@@ -42,7 +42,7 @@ Continuation of `profile-schema.md` (legend, YAML subset, gate extras there). `R
 | `flaky_on_critical_cap` | — | `with_reservations` | `with_reservations` | Flaky scenario on critical AC → max With reservations |
 | `derived_critical_cap` | — | `with_reservations` | `with_reservations` | Critical AC with `source: derived` → max With reservations |
 
-Verdicts: Homologated \| With reservations \| Not homologated \| Blocked. Ledger `mr: null` or env commit not verifiable against `mr.commit` → Blocked.
+Verdicts: Homologated \| With reservations \| Not homologated \| Blocked. Ledger `mr: null` or env commit not verifiable against `mr.commit` → Blocked. Rubric: `verdict-rubric.md`.
 
 ### `judge` (Q7b — quality of homologation itself)
 
@@ -50,16 +50,16 @@ Verdicts: Homologated \| With reservations \| Not homologated \| Blocked. Ledger
 | --- | - | ------------- | ------- | ---- |
 | `weights` | — | `{coverage, depth, impact, evidence, data_realism, stability}` | `3, 2, 1.5, 1.5, 1, 1` | Sum 10 |
 | `min_score` | — | number 0–10 | `8.5` | Below → complement cycle |
-| `on_below_min` | — | `complete` | `complete` | Plan/run only missing items; still below at cycle end → no publish, ask human |
+| `on_below_min` | — | `complete` | `complete` | Plan/run only actionable gaps; still below at cycle end → no publish, ask human (L2+) |
 
-Distinct gate from `ns-judge` (acceptance, not delivery proof).
+Distinct gate from `ns-judge` (acceptance, not delivery proof). Dimensions, loop: `homologation-judge.md`.
 
 ### `policy`
 
 | Key | R | Type / values | Default | Rule |
 | --- | - | ------------- | ------- | ---- |
 | `verdict_publish` | — | `final` | `final` | No provisional verdict |
-| `publish_comment` | — | `on_approval` | `on_approval` | Full preview to human; publish only on explicit approval |
+| `publish_comment` | — | `on_approval` | `on_approval` | Full preview to human; publish only on explicit approval (`publication.md`) |
 | `set_status_labels` | — | `auto` | `auto` | Q9 result status (L2+) |
 | `open_e2e_mr` | — | `auto` | `auto` | L3 only; own branch, never merge |
 | `e2e_reviewer` | — | skill or project agent | `ns-reviewer` | Reviews generated E2E specs |
@@ -72,10 +72,10 @@ Distinct gate from `ns-judge` (acceptance, not delivery proof).
 | Level | Execute | Publish comment | Status labels | E2E commit/MR |
 | ----- | ------- | --------------- | ------------- | ------------- |
 | `L0` plan | no | no | no | no |
-| `L1` execute | yes | no (local report) | Q1 sync only | no |
+| `L1` execute | yes (verdict + score in local report) | no (local report) | Q1 sync only | no |
 | `L2` publish | yes | yes, on approval | yes | no |
 | `L3` autonomous | yes | yes, on approval | yes | yes (own branch, never merge) |
 
-Invariants, every level: never close issue; never log time; never merge; never push protected branch; never change product code; never print credentials; never remove resource not in this run's `run.json`.
+Invariants, every level: never close issue; never log time; never merge; never push protected branch; never change product code; never print credentials; never remove resource not in this run's `run.json`; never publish comment or final status without approval of the exact preview.
 
 Docker/E2E/GitLab authorization: `../../ns-harness/references/acceptance-tier.md`.

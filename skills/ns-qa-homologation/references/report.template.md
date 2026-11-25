@@ -1,9 +1,11 @@
 # Homologation report template
 
-Write `<run_dir>/report.md` from this template at the end of the run (Q7 report step).
+Write `<run_dir>/report.md` from this template after the judge phase (Q7b; at L0 after the plan, Q4). At L2+ this file is the body of the published comment (`references/publication.md`), so write it for the issue reader.
 
 - Write the report in the profile `language`. Section titles and labels come from the **i18n table** below: use the `en` column as-is, or translate each key once for another language and keep that wording for the whole run.
-- Facts come from run artifacts only (`intake.md`, `acceptance.yml`, `impact.md`, `plan.yml`, `env.json`, `qa-ledger.json`, `evidence/index.md`). Never state a result the artifacts do not hold.
+- Facts come from run artifacts only (`intake.md`, `acceptance.yml`, `impact.md`, `plan.yml`, `env.json`, `qa-ledger.json`, `evidence/index.md`, `verdict.json`, `qa-judgment.json`). Never state a result the artifacts do not hold.
+- Never write the text `ns-qa:run=` in the report: it is the idempotency marker of published comments.
+- At L2+ the published comment opens with a summary block written by `qa_publish_plan.py` from `verdict.json` and `qa-judgment.json` (verdict, confidence, score, loop, rounds). That block is the single source: at L2+ everything except the title line (`# {title} — {dev issue ref}`, which carries the issue's own text) and sections 2–7 (so the rest of the title area, §1, §8, any later section, footer) contains no score (`x/10`), no percentage (`x%`, `x percent`, `x por cento`), no verdict label and no `Verdict:` line, whatever the value; otherwise publication is refused. Keep the numbered headings `## 1.` … `## 8.` (a missing §1 or §8 heading is refused). Sections 2–7 are not checked (criteria text, ratios and percentages there are fine). At L1 (no comment) §1 and §8 restate the results.
 - Keep the 8 sections in this order. A section with nothing to say keeps its title and one line saying why (for example "Not executed at L0").
 - Status label names (when quoted) come from `tracker.status_source`, never from this template.
 - Never include credentials, tokens, or personal data.
@@ -26,7 +28,15 @@ Write `<run_dir>/report.md` from this template at the end of the run (Q7 report 
 | `verdict_not_homologated` | Not homologated |
 | `verdict_blocked` | Blocked |
 | `verdict_not_computed` | Not computed (plan only) |
-| `verdict_pending` | Not computed (verdict pending) |
+| `confidence` | Confidence |
+| `homologation_score` | Homologation score |
+| `score_below_min` | Below the minimum score {min_score}: published on explicit human decision |
+| `missing_for_100` | Everything that keeps confidence below full |
+| `missing_for_10` | What is missing for 10 |
+| `actionable` | Actionable |
+| `not_actionable` | Not actionable |
+| `rounds` | Complement rounds |
+| `e2e_mr` | E2E automation merge request |
 | `mocked_data` | Run with mocked data |
 | `kept_resources` | Kept resources |
 | `source_issue` | from issue |
@@ -41,10 +51,12 @@ Run `{run_id}` · Profile level `{declared}` · Effective level `{effective}` ·
 
 ## 1. {s1}
 
-- Verdict: {verdict label} {confidence when computed} — L0: `verdict_not_computed`; L1: `verdict_pending` (scenario results below are facts, not a verdict)
+- L0: `verdict_not_computed`. L1 (local report only, informative): verdict label of `verdict.json` `label_key`, `confidence` %, `homologation_score` /10 and the `score_below_min` line when below the minimum. L2+: omit — the summary block of the published comment states them
+- Verdict reasons: L1 {`verdict.json` reasons as given, one per line; caps included}; L2+ omit (summary block lists them)
 - {level_downgrade line, followed by every reason from `autonomy_caps`; omit when declared = effective}
 - Criteria: {n} ({derived count} derived) · Scenarios planned: {m} · Impact areas: {k}
 - Executed (L1+): {pass} pass · {fail} fail · {flaky} flaky · {blocked} blocked · {not_run} not run — and every ledger `blocked_reasons` entry
+- {`e2e_mr`}: {E2E MR link — L3 only (Q8); omit below L3}
 - One-sentence conclusion: {what this run establishes and what it does not}
 
 ## 2. {s2}
@@ -90,22 +102,32 @@ Run `{run_id}` · Profile level `{declared}` · Effective level `{effective}` ·
 | S-1 | AC-1 | {runner / browser} | {pass / fail / flaky / blocked / not_run} | {attempts} | {class or —} | {data_source} | {file (sha256 prefix)} |
 
 - Browser tool: {tool id — missing capabilities, or "browser lane not used"}
-- {`mocked_data`}: {scenarios whose `data_source` is not `real`, with how the data was simulated — or "none"}
+- {`mocked_data`}: {`verdict.json` `mocked`: scenario, covered ACs, data source, `mock_reason` when present — or "none"}
 - Screenshots not publishable (PII not masked): {files — or "none"}
-- Blocked / not run: {scenario — `blocked_reason` / `not_run_reason`}
+- Not executed: {scenario — status, `blocked_reason` / `not_run_reason`}
 
 ## 7. {s7}
 
-{Everything that prevents 100%: one row per item with AC, reason, scenario. Findings (severity, class, reproduced). Intake gaps (missing partner issue, missing MR). Ambiguous or derived criteria.}
+{`missing_for_100`: one row per `verdict.json` `missing_for_100` item (AC, scenario, reason). Then findings (severity, class, reproduced), intake gaps (missing partner issue, missing MR) and ambiguous criteria.}
 
 | Item | AC | Scenario | Reason |
 | ---- | -- | -------- | ------ |
 
 ## 8. {s8}
 
-{Homologation score 0–10 per dimension and "what is missing for 10" once the judge phase exists. At L0: "Not scored (plan only)". At L1: "Not scored (verdict pending)". Next steps: what a higher level would run, and which profile fields still carry `# inferred`.}
+{At L0: "Not scored (plan only)". From L1, from `qa-judgment.json`:}
 
-{From L1 — `kept_resources`: every `run.json` `created_resources` entry (kind, id). Cleanup (Q10) did not run, so nothing was removed. A human may remove them on request with the leftovers command from `references/cleanup.md`.}
+| Dimension | Weight | Ratio | Points |
+| --------- | ------ | ----- | ------ |
+| {dimension} | {weight} | {ratio} | {points} |
+
+- Loop: {`loop.state`} ({`loop.reason`}) — L1 also {`homologation_score`}: {score}/10; L2+ the summary block states the score
+- {`rounds`}: {each ledger `judge_rounds` entry: round, score before → after, added — or "none"}
+- {`missing_for_10`} — {`actionable`}: {items with `actionable: true` (dimension, ref, reason) — or "none"}
+- {`missing_for_10`} — {`not_actionable`}: {items with `actionable: false` — or "none"}
+- Next steps: {what a higher level would run, and which profile fields still carry `# inferred`}
+
+{L1 and unpublished runs — `kept_resources`: every `run.json` `created_resources` entry (kind, id) that cleanup (Q10) has not removed. A human may remove them on request with the leftovers command from `references/cleanup.md`.}
 
 ---
 

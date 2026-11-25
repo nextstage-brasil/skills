@@ -36,7 +36,7 @@ Unknown id in profile → `--check-profile` warning; skipped.
 
 ## Rules
 
-- Missing capability → its evidence kind absent; gate rejects evidence of a missing capability. Report §6 lists tool + missing; Phase 4 lowers confidence.
+- Missing capability → its evidence kind absent; gate rejects evidence of a missing capability. Report §6 lists tool + missing; judge `evidence` dimension loses the scenario when a missing capability is in `evidence.capture` (`homologation-judge.md`).
 - Session: reuse when `auth.session_check` keys present; login via `auth.strategy` once; credentials never printed or captured.
 - PII masking via script channel before each screenshot (`execution-lanes.md` → Evidence). Script unavailable → screenshots stay local (`pii_scrubbed: false`) unless `pii_fields` empty.
 - Tool answers unexpectedly (unknown format, incoherent state) → stall (`failure-triage.md`), not a triage class.

@@ -8,6 +8,8 @@ import json
 import os
 import re
 import tempfile
+from datetime import datetime, timezone
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path, PurePosixPath
 
 # Resource ids are interpolated into commands (docker, git, stack tools): the
@@ -28,6 +30,10 @@ CAPTURE_EXTENSIONS = {
     "network": ("har", "json"),
     "runner_video": ("mp4", "webm"),
 }
+
+
+# Scenario statuses that prove the scenario actually ran (verdict, judge, ledger lane rules).
+EXECUTED_STATUSES = ("pass", "fail", "flaky")
 
 
 class CliError(Exception):
@@ -56,6 +62,26 @@ def write_text_atomic(path: Path, text: str) -> None:
     except BaseException:
         Path(temp).unlink(missing_ok=True)
         raise
+
+
+def write_json_atomic(path: Path, payload: object) -> None:
+    write_text_atomic(path, json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
+
+
+def canonical_sha256(value: object) -> str:
+    """Hash of a JSON value independent of key order and whitespace."""
+    text = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def round_half_up(value: float, places: int) -> float:
+    """Decimal rounding (0.125 -> 0.13), never banker's rounding of binary floats."""
+    quantum = Decimal(1).scaleb(-places)
+    return float(Decimal(repr(value)).quantize(quantum, rounding=ROUND_HALF_UP))
+
+
+def utc_timestamp() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def id_key(identifier: str) -> int:

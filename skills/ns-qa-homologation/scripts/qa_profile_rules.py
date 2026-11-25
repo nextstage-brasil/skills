@@ -14,18 +14,22 @@ from qa_yaml_lite import YamlLiteError, extract_yaml_block, parse
 
 _LEVELS = ("L0", "L1", "L2", "L3")
 _INFERRED_CAP = "L1"
-# Highest level whose phases exist in this skill version. Raise when Q7 verdict / Q9 publish land.
-IMPLEMENTED_MAX_LEVEL = "L1"
+# Highest level whose phases exist in this skill version. Raise to L3 when Q8 automation lands.
+IMPLEMENTED_MAX_LEVEL = "L2"
 _IMPLEMENTED_REASON = (
-    "verdict, homologation score, publication and automation (Q7 verdict, Q7b, Q8, Q9) not implemented "
-    "in this skill version: run is execute + local report without verdict"
+    "E2E automation (Q8) not implemented in this skill version: run is execute + verdict + score + "
+    "publication after approval, without E2E commit/MR"
 )
 _NO_PROVIDER_LEVEL = "L0"
 _NO_PROVIDER_REASON = "environment.provider none: nothing to execute; run is plan + local report"
 # Browser tool ids of references/browser-tools.md (capability map), in its order.
 KNOWN_BROWSER_TOOLS = ("playwright-mcp", "claude-in-chrome", "claude-browser-pane", "cursor-ide-browser")
 _PLACEHOLDER = re.compile(r"^<[^<>]+>$")
-_STATUS_KEY_LINE = re.compile(r"^\s*(status_[a-z0-9_]+)\s*:", re.MULTILINE)
+# One status entry of tracker.status_source: key, then a quoted or plain label (trailing comment ignored).
+_STATUS_KEY_LINE = re.compile(
+    r"^[ \t]*(status_[a-z0-9_]+)[ \t]*:[ \t]*(?:\"([^\"\n]*)\"|'([^'\n]*)'|([^#\n]*?))[ \t]*(?:#.*)?$",
+    re.MULTILINE,
+)
 _JUDGE_WEIGHT_TOTAL = 10.0
 _WEIGHT_TOLERANCE = 1e-9
 
@@ -95,6 +99,16 @@ def _configured_status_keys(data: dict) -> list[tuple[str, str]]:
     return keys
 
 
+def status_labels(text: str) -> dict[str, str]:
+    """status_* key -> label name from the status_source text (uncommented lines; empty label = absent)."""
+    labels = {}
+    for match in _STATUS_KEY_LINE.finditer(text):
+        label = next((group for group in match.groups()[1:] if group is not None), "").strip()
+        if label:
+            labels[match.group(1)] = label
+    return labels
+
+
 def _status_key_warnings(data: dict, repo: Path) -> list[str]:
     """Absent status keys are skipped + logged at run time, never an error."""
     source = (data.get("tracker") or {}).get("status_source")
@@ -104,7 +118,7 @@ def _status_key_warnings(data: dict, repo: Path) -> list[str]:
     if not path.is_file():
         return [f"tracker.status_source: {source} not found; every status step will be skipped"]
     try:
-        defined = set(_STATUS_KEY_LINE.findall(path.read_text(encoding="utf-8")))
+        defined = set(status_labels(path.read_text(encoding="utf-8")))
     except (OSError, UnicodeDecodeError) as exc:
         return [f"tracker.status_source: {source} unreadable ({exc}); every status step will be skipped"]
     return [

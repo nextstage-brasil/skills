@@ -17,9 +17,12 @@ _LEVELS = ("L0", "L1", "L2", "L3")
 _ANSWERS_BY_REASON = {
     "checkpoint": frozenset({"continue", "stop"}),
     "stall": frozenset({"continue", "stop"}),
-    "below_min_score": frozenset({"continue", "stop"}),
+    "below_min_score": frozenset({"continue", "stop", "publish_anyway"}),
     "preview_approval": frozenset({"approve", "adjust", "do_not_publish"}),
 }
+_PUBLISHING_LEVELS = ("L2", "L3")
+_OFFLINE = "offline"
+_NO_UPLOAD = "none"
 _KINDS_BY_VIA = {
     "agent": frozenset({"worktree", "evidence_dir"}),
     "qa-env": frozenset({"container", "volume", "database", "image", "worktree"}),
@@ -131,6 +134,72 @@ def _checkpoint_pauses(run: dict) -> list[str]:
     return errors
 
 
+def _repo_root_kind(run: dict) -> list[str]:
+    return [
+        f"{_resource_label(item)}: repo_root only on worktree resources"
+        for item in run["created_resources"]
+        if "repo_root" in item and item["kind"] != "worktree"
+    ]
+
+
+def _publish_anyway_level(run: dict) -> list[str]:
+    """D50 at L1: the below-min pause only resumes (continue) or ends (stop); nothing to publish."""
+    if run["level"]["effective"] in _PUBLISHING_LEVELS:
+        return []
+    return [
+        f"/pauses/{index}: answer publish_anyway needs effective L2+ (L1: continue or stop)"
+        for index, pause in enumerate(run["pauses"])
+        if pause["answer"] == "publish_anyway"
+    ]
+
+
+def _publication(run: dict) -> dict:
+    return run.get("publication") or {"approvals": [], "outcome": None}
+
+
+def _approval_pauses(run: dict) -> list[str]:
+    """k-th approval = k-th answered preview_approval pause (same answer)."""
+    answers = [pause["answer"] for pause in run["pauses"]
+               if pause["reason"] == "preview_approval" and pause["answer"] is not None]
+    approvals = _publication(run)["approvals"]
+    if len(approvals) != len(answers):
+        return [f"/publication/approvals: {len(approvals)} approval(s) but {len(answers)} answered "
+                "preview_approval pause(s)"]
+    return [
+        f"/publication/approvals/{index}: answer {approval['answer']} but its pause answer is {answer}"
+        for index, (approval, answer) in enumerate(zip(approvals, answers))
+        if approval["answer"] != answer
+    ]
+
+
+def _outcome_problems(publication: dict) -> list[str]:
+    outcome = publication["outcome"]
+    if outcome is None:
+        return []
+    approvals = publication["approvals"]
+    errors = []
+    if not approvals or approvals[-1]["answer"] != "approve":
+        errors.append("/publication/outcome: needs the last approval to be approve")
+    if (outcome["state"] == _OFFLINE) != (outcome["evidence_upload"] == _NO_UPLOAD):
+        errors.append(f"/publication/outcome: state {outcome['state']} with evidence_upload "
+                      f"{outcome['evidence_upload']} (offline <-> none)")
+    return errors
+
+
+def _publication_consistency(run: dict) -> list[str]:
+    """Publication only at effective L2+, after an approval; Q9 passes only when published."""
+    publication = _publication(run)
+    errors = []
+    if "publication" in run and run["level"]["effective"] not in _PUBLISHING_LEVELS:
+        errors.append(f"/publication: effective {run['level']['effective']} never publishes (local report only)")
+    errors.extend(_outcome_problems(publication))
+    q9_passed = any(item["phase"] == "Q9" and item["state"] == "passed" for item in run["phases"])
+    outcome = publication["outcome"]
+    if q9_passed and (outcome is None or outcome["state"] != "published"):
+        errors.append("/phases: Q9 passed needs publication outcome published")
+    return errors
+
+
 _CHECKS: tuple[_Check, ...] = (
     _unique_resources,
     _run_owned_ids,
@@ -140,6 +209,10 @@ _CHECKS: tuple[_Check, ...] = (
     _pause_consistency,
     _checkpoint_sequence,
     _checkpoint_pauses,
+    _repo_root_kind,
+    _publish_anyway_level,
+    _approval_pauses,
+    _publication_consistency,
 )
 
 

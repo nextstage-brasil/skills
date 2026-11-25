@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-judgment.schema.json",
+  "title": "QA homologation judgment (qa-judgment.json)",
+  "description": "Written by scripts/qa_judge.py (Q7b, references/homologation-judge.md): score 0-10 of the homologation itself, per dimension, what is missing for 10 and the completion-loop state. Distinct from the Q7 verdict and from ns-judge.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "judgment_version",
+    "run_id",
+    "score",
+    "min_score",
+    "dimensions",
+    "missing_for_10",
+    "actionable_gaps",
+    "blocked_reasons",
+    "loop",
+    "rounds",
+    "scenario_ids",
+    "ledger_fingerprint",
+    "adherence_sha256",
+    "judge_rounds_sha256"
+  ],
+  "properties": {
+    "judgment_version": { "const": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "score": { "$ref": "#/$defs/score" },
+    "min_score": { "$ref": "#/$defs/score" },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage", "depth", "impact", "evidence", "data_realism", "stability"],
+      "properties": {
+        "coverage": { "$ref": "#/$defs/dimension" },
+        "depth": { "$ref": "#/$defs/dimension" },
+        "impact": { "$ref": "#/$defs/dimension" },
+        "evidence": { "$ref": "#/$defs/dimension" },
+        "data_realism": { "$ref": "#/$defs/dimension" },
+        "stability": { "$ref": "#/$defs/dimension" }
+      }
+    },
+    "missing_for_10": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension", "ref", "reason", "actionable"],
+        "properties": {
+          "dimension": { "enum": ["coverage", "depth", "impact", "evidence", "data_realism", "stability"] },
+          "ref": {
+            "anyOf": [{ "type": "string", "pattern": "^(AC|S|IA)-[0-9]{1,6}$" }, { "type": "null" }]
+          },
+          "reason": { "type": "string", "minLength": 1 },
+          "actionable": {
+            "type": "boolean",
+            "description": "true = a complement round (Q4-Q7b) can close it; false = environment, waiver, tool, flakiness or unavoidable mock."
+          }
+        }
+      }
+    },
+    "actionable_gaps": { "type": "integer", "minimum": 0 },
+    "blocked_reasons": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "loop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "reason"],
+      "properties": {
+        "state": {
+          "enum": ["passed", "complement", "ended_below_min"],
+          "description": "passed: score >= min_score. complement: plan the actionable gaps only. ended_below_min: D50 pause (L2+), never publish without the human answer publish_anyway."
+        },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "rounds": { "type": "integer", "minimum": 0, "description": "Ledger judge_rounds length." },
+    "scenario_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^S-[0-9]{1,6}$" },
+      "description": "Ledger scenario ids at judgment time (default 'added' of the next round)."
+    },
+    "ledger_fingerprint": { "$ref": "#/$defs/sha256" },
+    "adherence_sha256": { "$ref": "#/$defs/sha256" },
+    "judge_rounds_sha256": {
+      "$ref": "#/$defs/sha256",
+      "description": "Ledger judge_rounds at judgment time: rounds are appended only by qa_judge.py --record-round."
+    }
+  },
+  "$defs": {
+    "score": { "type": "number", "minimum": 0, "maximum": 10 },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weight", "ratio", "points"],
+      "properties": {
+        "weight": { "type": "number", "minimum": 0 },
+        "ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "points": { "type": "number", "minimum": 0 }
+      }
+    }
+  }
+}

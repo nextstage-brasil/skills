@@ -94,9 +94,9 @@ function manifestFrom(upOutput) {
     level: { declared: 'L1', effective: 'L1', caps: [] },
     profile_sha256: 'b'.repeat(64),
     environment: { provider: 'script' },
-    // Completed L1 run: every gate through Q7 passed, so the Q10 planner accepts outcome success.
-    phase: 'Q7',
-    phases: ['Q0', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7'].map((phase) => ({ phase, state: 'passed', updated_at: STAMP })),
+    // Completed L1 run: every gate through Q7b passed.
+    phase: 'Q7b',
+    phases: ['Q0', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q7b'].map((phase) => ({ phase, state: 'passed', updated_at: STAMP })),
     created_resources: [
       resource('evidence_dir', `docs/qa/${RUN_ID}`, 'Q0', 'agent'),
       ...upOutput.created_resources.map((item) => resource(item.kind, item.id, 'Q5', 'qa-env')),
@@ -137,23 +137,22 @@ try {
   assert(tamperedCheck.status === 2, 'run.json naming a resource outside the run is rejected');
   assert(json(tamperedCheck, 'check-run').errors.some((e) => e.includes('not run-owned')), 'rejection names the rule');
 
-  // Q10 plans: blocked keeps all; success at L1 orders steps and keeps the local report.
+  // Q10 plans: blocked keeps all; success needs --profile (Q7b recomputed from the run's ledger, covered by
+  // the skill's Python tests); leftover orders the qa-env removals executed below.
   const blocked = json(fixture.cleanupPlan(runPath, 'blocked'), 'plan blocked');
   assert(blocked.steps.length === 0 && blocked.keep.length === 4, 'blocked run keeps every resource');
-  const unfinished = structuredClone(manifest);
-  unfinished.phases[6].state = 'failed';
-  const refused = fixture.cleanupPlan(fixture.writeRun('unfinished.json', unfinished), 'success');
-  assert(refused.status === 2, 'success is refused while a phase gate failed');
-  const success = json(fixture.cleanupPlan(runPath, 'success'), 'plan success');
+  const noProfile = fixture.cleanupPlan(runPath, 'success');
+  assert(noProfile.status === 3, 'success without --profile is a usage error');
+  const leftover = json(fixture.cleanupPlan(runPath, 'leftover'), 'plan leftover');
   assert(
-    success.steps.map((step) => step.kind).join(',') === 'container,volume,image,evidence_dir',
-    `cleanup order: ${success.steps.map((step) => step.kind)}`,
+    leftover.steps.map((step) => step.kind).join(',') === 'container,volume,image',
+    `cleanup order: ${leftover.steps.map((step) => step.kind)}`,
   );
-  assert(success.steps.at(-1).action === 'delete_except', 'L1 keeps report.md + qa-ledger.json');
+  assert(leftover.keep.map((item) => item.kind).join(',') === 'evidence_dir', 'agent-owned evidence dir kept');
 
   // down refuses a resource outside run.json, then removes exactly the registered ones, in plan order.
   fixture.contractCall(2, 'down', '--run', RUN_ID, '--manifest', runPath, '--resource', 'container:daily-app-1');
-  for (const step of success.steps.filter((item) => item.via === 'qa-env')) {
+  for (const step of leftover.steps.filter((item) => item.via === 'qa-env')) {
     const target = `${step.kind}:${step.id}`;
     const removed = fixture.contractCall(0, 'down', '--run', RUN_ID, '--manifest', runPath, '--resource', target);
     assert(removed.removed.length === 1 && removed.removed[0].id === step.id, `down removed ${step.id}`);

@@ -18,7 +18,7 @@ ACs + impact → risk-ordered scenarios. Output `<run_dir>/plan.yml` (shape: `..
 | `critical`, `high` | `positive` + `negative` + `business_rule` |
 | `medium`, `low` | `positive` |
 
-Type truly not applicable → `waivers: [{ac, type, reason}]` (`negative` / `business_rule` only). Waivers listed in report §5; Phase 4 judge scores depth without them.
+Type truly not applicable → `waivers: [{ac, type, reason}]` (`negative` / `business_rule` only). Waivers listed in report §5; judge counts a waived type as missing depth (not actionable, `homologation-judge.md`).
 
 Every AC ≥1 scenario. Every area ≥1 scenario. Unlimited scenario count (`budget.max_scenarios`).
 
@@ -32,7 +32,7 @@ Scenario list order = execution order. Rank = highest criticality among `covers`
 | --------- | ---- |
 | `execution.runner` ≠ `none`; deterministic assertion possible | `runner` |
 | Usability, visual, responsive, exploratory | `browser` |
-| `runner: none` | `browser` only (critical AC verdict cap, Phase 4) |
+| `runner: none` | `browser` only (critical AC verdict cap, `verdict-rubric.md`) |
 
 Browser tool + capability detection: `browser-tools.md`.
 

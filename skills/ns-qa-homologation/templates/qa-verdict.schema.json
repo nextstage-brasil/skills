@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-verdict.schema.json",
+  "title": "QA homologation verdict (verdict.json)",
+  "description": "Written by scripts/qa_gate.py --verdict from a ledger that passed --check-ledger (references/verdict-rubric.md). Final verdict (no provisional state). Labels come from the report i18n table (label_key).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "verdict_version",
+    "run_id",
+    "verdict",
+    "label_key",
+    "confidence",
+    "reasons",
+    "caps",
+    "blocked_scenario_ratio",
+    "criteria",
+    "missing_for_100",
+    "mocked",
+    "weights",
+    "ledger_fingerprint"
+  ],
+  "properties": {
+    "verdict_version": { "const": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "verdict": { "enum": ["homologated", "with_reservations", "not_homologated", "blocked"] },
+    "label_key": {
+      "enum": ["verdict_homologated", "verdict_with_reservations", "verdict_not_homologated", "verdict_blocked"],
+      "description": "Key of references/report.template.md i18n table."
+    },
+    "confidence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Percent: sum(weight x credit) / sum(weight), rounded half up."
+    },
+    "reasons": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "caps": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "blocked_scenario_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "criticality", "source", "status", "credit", "scenarios"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^AC-[0-9]{1,6}$" },
+          "criticality": { "enum": ["critical", "high", "medium", "low"] },
+          "source": { "enum": ["issue", "derived"] },
+          "status": { "enum": ["fail", "blocked", "not_run", "flaky", "pass"] },
+          "credit": { "type": "number", "minimum": 0, "maximum": 1 },
+          "scenarios": { "type": "array", "items": { "type": "string", "pattern": "^S-[0-9]{1,6}$" } }
+        }
+      }
+    },
+    "missing_for_100": {
+      "type": "array",
+      "description": "Everything that keeps confidence below 100%, from the ledger.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ac", "scenario", "reason"],
+        "properties": {
+          "ac": { "anyOf": [{ "type": "string", "pattern": "^AC-[0-9]{1,6}$" }, { "type": "null" }] },
+          "scenario": { "anyOf": [{ "type": "string", "pattern": "^S-[0-9]{1,6}$" }, { "type": "null" }] },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "mocked": {
+      "type": "array",
+      "description": "Scenarios run with data_source other than real (D25: listed, never a cap).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scenario", "covers", "data_source"],
+        "properties": {
+          "scenario": { "type": "string", "pattern": "^S-[0-9]{1,6}$" },
+          "covers": { "type": "array", "items": { "type": "string", "pattern": "^AC-[0-9]{1,6}$" } },
+          "data_source": { "enum": ["db_fixture", "response_intercept"] },
+          "mock_reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "weights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["critical", "high", "medium", "low"],
+      "properties": {
+        "critical": { "type": "number", "minimum": 0 },
+        "high": { "type": "number", "minimum": 0 },
+        "medium": { "type": "number", "minimum": 0 },
+        "low": { "type": "number", "minimum": 0 }
+      }
+    },
+    "ledger_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "sha256 of the canonical ledger without judge_rounds and adherence (Q7b records)."
+    }
+  }
+}

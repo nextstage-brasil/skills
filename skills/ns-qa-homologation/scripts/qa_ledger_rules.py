@@ -14,9 +14,11 @@ from pathlib import Path
 from typing import Callable
 
 from qa_common import (
+    EXECUTED_STATUSES,
     JUNIT_KIND,
     InvalidInput,
     Rejected,
+    canonical_sha256,
     evidence_file_problem,
     evidence_path_problem,
     find_duplicates,
@@ -27,13 +29,18 @@ from qa_schema_lite import SchemaLite
 from qa_triage_rules import PRODUCT_MIN_REPRODUCTIONS, STOP_RUN, Decision, TriageError, replay
 
 _FAILURE_STATUSES = {"fail", "blocked", "flaky"}
-_RAN_STATUSES = {"pass", "fail", "flaky"}
 _BROWSER_REQUIRED = ("navigate", "screenshot")
 _BROWSER_FORBIDDEN_KINDS = {JUNIT_KIND, "runner_video"}
 _CAPABILITY_KINDS = {"screenshot", "console", "network"}  # evidence kinds a browser capability produces
 _NO_TOOL = "none"
 _NEEDS_RUNS = {"FLAKY", "PRODUCT"}  # classes only a replayed history can assign
 _PLAN_FIELDS = ("lane", "type", "covers")  # scenario fields the ledger must keep from plan.yml
+_JUDGE_KEYS = ("judge_rounds", "adherence")  # Q7b records; never part of what the verdict judged
+
+
+def ledger_fingerprint(ledger: dict) -> str:
+    """Hash of the execution facts (everything except the Q7b judge records)."""
+    return canonical_sha256({key: value for key, value in ledger.items() if key not in _JUDGE_KEYS})
 
 
 @dataclass
@@ -138,7 +145,7 @@ def _runner_lane_problems(scenario: dict, kinds: set[str]) -> list[str]:
     problems = []
     if "tool" in scenario:
         problems.append("lane runner records no browser tool")
-    if scenario["status"] in _RAN_STATUSES and JUNIT_KIND not in kinds:
+    if scenario["status"] in EXECUTED_STATUSES and JUNIT_KIND not in kinds:
         problems.append(f"lane runner status {scenario['status']} needs junit evidence")
     return problems
 
@@ -150,7 +157,7 @@ def _browser_lane_problems(scenario: dict, kinds: set[str]) -> list[str]:
     problems.extend(
         f"{kind} evidence but tool {tool['name']} lacks {kind}" for kind in sorted(kinds & _CAPABILITY_KINDS & missing)
     )
-    if scenario["status"] not in _RAN_STATUSES:
+    if scenario["status"] not in EXECUTED_STATUSES:
         return problems
     if tool["name"] == _NO_TOOL:
         problems.append(f"status {scenario['status']} without a browser tool (tool none: blocked or not_run only)")
@@ -298,6 +305,7 @@ def _findings_consistency(ctx: _LedgerContext) -> list[str]:
 
 
 def _judge_rounds_sequence(ctx: _LedgerContext) -> list[str]:
+    """Rounds numbered 1..n, chained scores; after a round without gain only a human-resumed round may follow."""
     rounds = ctx.ledger["judge_rounds"]
     errors = []
     for index, item in enumerate(rounds):
@@ -306,9 +314,37 @@ def _judge_rounds_sequence(ctx: _LedgerContext) -> list[str]:
             errors.append(f"{where}: round must be {index + 1}")
         if index and item["score_before"] != rounds[index - 1]["score_after"]:
             errors.append(f"{where}: score_before must equal previous score_after")
-        if item["score_after"] <= item["score_before"] and index != len(rounds) - 1:
-            errors.append(f"{where}: a round without score gain must end the cycle")
+        resumed = index + 1 < len(rounds) and rounds[index + 1].get("resume") is True
+        if item["score_after"] <= item["score_before"] and index != len(rounds) - 1 and not resumed:
+            errors.append(f"{where}: a round without score gain must end the cycle (next round needs resume: true)")
     return errors
+
+
+def _adherence_consistency(ctx: _LedgerContext) -> list[str]:
+    """One decision per (executed scenario, covered AC); the judge consumes them (homologation-judge.md)."""
+    scenarios = {item["id"]: item for item in ctx.scenarios}
+    decisions = ctx.ledger.get("adherence", [])
+    pairs = [f"{item['scenario']}/{item['ac']}" for item in decisions]
+    errors = [f"/adherence: duplicate decision {pair}" for pair in find_duplicates(pairs)]
+    for index, item in enumerate(decisions):
+        where = f"/adherence/{index}"
+        scenario = scenarios.get(item["scenario"])
+        if scenario is None:
+            errors.append(f"{where}: unknown scenario {item['scenario']}")
+            continue
+        if item["ac"] not in scenario["covers"]:
+            errors.append(f"{where}: {item['scenario']} does not cover {item['ac']}")
+        if scenario["status"] not in EXECUTED_STATUSES:
+            errors.append(f"{where}: {item['scenario']} is {scenario['status']}; only executed scenarios are judged")
+    return errors
+
+
+def _mock_reason_consistency(ctx: _LedgerContext) -> list[str]:
+    return [
+        f"/scenarios/{scenario['id']}: mock_reason only with data_source other than real"
+        for scenario in ctx.scenarios
+        if "mock_reason" in scenario and scenario["data_source"] == "real"
+    ]
 
 
 def _plan_match(ctx: _LedgerContext) -> list[str]:
@@ -340,6 +376,8 @@ _CROSS_CHECKS: tuple[_Check, ...] = (
     _triage_consistency,
     _findings_consistency,
     _judge_rounds_sequence,
+    _adherence_consistency,
+    _mock_reason_consistency,
 )
 
 

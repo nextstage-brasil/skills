@@ -23,7 +23,7 @@ Same behavior in two sources → one AC; `origin` cites both.
 - Bug report: AC = expected behavior + "defect no longer reproduces" with original steps.
 - `ambiguity: ambiguous` when wording admits >1 test outcome. Pick most literal reading → `assumption`.
 - `source: derived` or `ambiguity: ambiguous` → `assumption` REQUIRED (gate checks).
-- Derived **critical** AC → verdict cap With reservations (Phase 4); report names the assumption.
+- Derived **critical** AC → verdict cap With reservations (`verdict-rubric.md`); report names the assumption.
 - Do not invent product rules absent from all sources. No evidence → no AC; note gap in report §7.
 
 ## Criticality
@@ -35,7 +35,7 @@ Same behavior in two sources → one AC; `origin` cites both.
 | `medium` | Secondary path, edge case, recoverable error |
 | `low` | Copy, cosmetic, non-blocking UX |
 
-Weights (verdict, Phase 4): profile `verdict.criticality_weights`.
+Weights (verdict confidence, judge coverage/depth): profile `verdict.criticality_weights`.
 
 ## Shape
 

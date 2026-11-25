@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-run.schema.json",
   "title": "QA homologation run manifest (run.json)",
-  "description": "Single source of run state and of every resource the run created. Q10 cleanup and 'qa-env down' act only on created_resources. Validated by scripts/qa_gate.py --check-run; cross-field rules (unique resources, run-owned ids, provider/via/kind pairing, phase and pause consistency) live in qa_run_rules.py.",
+  "description": "Single source of run state and of every resource the run created. Q10 cleanup and 'qa-env down' act only on created_resources. Validated by scripts/qa_gate.py --check-run; cross-field rules (unique resources, run-owned ids, provider/via/kind pairing, phase and pause consistency, publication approvals) live in qa_run_rules.py.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -76,8 +76,7 @@
       }
     },
     "profile_sha256": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
+      "$ref": "#/$defs/sha256"
     },
     "environment": {
       "type": "object",
@@ -178,6 +177,10 @@
               "agent"
             ],
             "description": "Who removes it: qa-env = 'qa-env down'; agent = the agent itself (worktree, evidence_dir)."
+          },
+          "repo_root": {
+            "$ref": "#/$defs/repoPath",
+            "description": "kind worktree only: repo the worktree belongs to, relative to the project root; id is relative to it. Agent worktree removal = git -C <repo_root> worktree remove <id> (never --force); absent = kept."
           }
         }
       }
@@ -253,6 +256,7 @@
             "enum": [
               "continue",
               "stop",
+              "publish_anyway",
               "approve",
               "adjust",
               "do_not_publish",
@@ -264,6 +268,82 @@
             "minLength": 1,
             "description": "What was asked: phase, what was tried, what is needed (stall); window summary (checkpoint)."
           }
+        }
+      }
+    },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approvals",
+        "outcome"
+      ],
+      "description": "Q9 (effective >= L2): one approval per answered preview_approval pause, in order (scripts/qa_publish_plan.py approval), then the publication outcome (qa_publish_plan.py record).",
+      "properties": {
+        "approvals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "answer",
+              "preview_sha256",
+              "at"
+            ],
+            "properties": {
+              "answer": {
+                "enum": [
+                  "approve",
+                  "adjust",
+                  "do_not_publish"
+                ]
+              },
+              "preview_sha256": {
+                "$ref": "#/$defs/sha256",
+                "description": "sha256 of the preview.md the human answered."
+              },
+              "at": {
+                "$ref": "#/$defs/timestamp"
+              }
+            }
+          }
+        },
+        "outcome": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "state",
+                "evidence_upload",
+                "at"
+              ],
+              "properties": {
+                "state": {
+                  "enum": [
+                    "published",
+                    "offline"
+                  ],
+                  "description": "offline = MCP unavailable; publish-payload.md written; nothing posted."
+                },
+                "evidence_upload": {
+                  "enum": [
+                    "complete",
+                    "partial",
+                    "not_needed",
+                    "none"
+                  ],
+                  "description": "partial = an upload failed; remaining captures kept locally. not_needed = no attachment. none = offline."
+                },
+                "at": {
+                  "$ref": "#/$defs/timestamp"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     }
@@ -305,6 +385,15 @@
       "type": "string",
       "pattern": "^(?!.*\\.\\.)[A-Za-z0-9.][A-Za-z0-9._/:@+-]*$",
       "description": "Name or repo-relative path. Safe for command arguments: starts alphanumeric or '.' (never '-'), only [A-Za-z0-9._/:@+-], no '..'. Must embed the run_id (boundary-aware)."
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repoPath": {
+      "type": "string",
+      "pattern": "^(?!.*\\.\\.)[A-Za-z0-9.][A-Za-z0-9._/@+-]*$",
+      "description": "Relative path safe for command arguments: starts alphanumeric or '.', only [A-Za-z0-9._/@+-], no '..'."
     }
   }
 }

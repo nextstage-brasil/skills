@@ -27,6 +27,9 @@ from qa_fixtures import (
     env_output,
     filled_profile_text,
     run_cleanup_plan,
+    run_judge,
+    sha256_bytes,
+    write_publishable_run,
     run_gate,
     write_json,
 )
@@ -70,12 +73,27 @@ def _set(path: list, value):
     return mutate
 
 
+APPROVED_SHA = "b" * 64
+
+
+def _published(run: dict, evidence_upload: str = "complete") -> None:
+    """Approved preview + published outcome (Q9 at L2+)."""
+    run["pauses"].append({**_open_pause("preview_approval", "Q9"), "resolved_at": "2026-11-24T14:00Z",
+                          "answer": "approve"})
+    run["publication"] = {
+        "approvals": [{"answer": "approve", "preview_sha256": APPROVED_SHA, "at": "2026-11-24T14:00Z"}],
+        "outcome": {"state": "published", "evidence_upload": evidence_upload, "at": "2026-11-24T14:05Z"},
+    }
+
+
 def _completed_at(level: str, phases: tuple[str, ...]):
     def mutate(run: dict) -> None:
         run["level"]["effective"] = level
         run["level"]["declared"] = "L3"
         run["phases"] += [{"phase": phase, "state": "passed", "updated_at": "2026-11-24T14:00Z"} for phase in phases]
         run["phase"] = phases[-1]
+        if "Q9" in phases:
+            _published(run)
 
     return mutate
 
@@ -203,7 +221,7 @@ class CheckRunTests(ReasonAssertions):
             url_with_qa_env: "provider url has no qa-env script",
             none_with_qa_env: "provider none has no qa-env script",
             level_above_declared: "effective L3 above declared L2",
-            phase_not_passed: "/phase: Q7 must have state passed",
+            phase_not_passed: "/phase: Q7b must have state passed",
             duplicate_phase: "/phases: duplicate phase Q0",
             half_resolved_pause: "/pauses/0: resolved_at and answer must be set together",
             two_open_pauses: "2 open pauses",
@@ -250,6 +268,14 @@ class CheckRunTests(ReasonAssertions):
         def stall_answered_approve(run):
             run["pauses"].append({**_open_pause("stall"), "resolved_at": "2026-11-24T13:30Z", "answer": "do_not_publish"})
 
+        def below_min_answered_approve(run):
+            run["pauses"].append({**_open_pause("below_min_score", "Q7b"), "resolved_at": "2026-11-24T13:30Z",
+                                  "answer": "approve"})
+
+        def publish_anyway_at_l1(run):
+            run["pauses"].append({**_open_pause("below_min_score", "Q7b"), "resolved_at": "2026-11-24T13:30Z",
+                                  "answer": "publish_anyway"})
+
         def preview_answered_continue(run):
             run["pauses"].append({**_open_pause("preview_approval", "Q9"), "resolved_at": "2026-11-24T13:30Z", "answer": "continue"})
 
@@ -260,6 +286,8 @@ class CheckRunTests(ReasonAssertions):
             answer_wrong_for_reason: "/pauses/0: answer approve not valid for reason checkpoint",
             stall_answered_approve: "/pauses/1: answer do_not_publish not valid for reason stall",
             preview_answered_continue: "/pauses/1: answer continue not valid for reason preview_approval",
+            below_min_answered_approve: "/pauses/1: answer approve not valid for reason below_min_score",
+            publish_anyway_at_l1: "/pauses/1: answer publish_anyway needs effective L2+ (L1: continue or stop)",
         }
         for mutate, reason in cases.items():
             with self.subTest(case=mutate.__name__):
@@ -418,17 +446,26 @@ FULL_SUCCESS = "on_full_success: [containers, volumes, images, worktrees, eviden
 
 
 class CleanupPlanTests(ReasonAssertions):
-    def _plan(self, outcome: str, mutate=None, profile: str | None = None) -> tuple[int, dict]:
+    def _plan(self, outcome: str, mutate=None, profile: str | None = None, ledger_mutate=None,
+              artifacts=None) -> tuple[int, dict]:
+        """base_run() inside a real run dir (ledger, plan, verdict, judgment); profile pinned.
+        --profile is passed for success (Q7b recomputation) or when a profile text is given;
+        artifacts(run_dir, profile_path) may edit the run dir before the planner runs."""
         with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            profile_path, run_dir = write_publishable_run(root, ledger_mutate=ledger_mutate)
+            if artifacts:
+                artifacts(run_dir, profile_path)
+            if profile is not None:
+                profile_path.write_text(profile, encoding="utf-8")
             run = clone(base_run())
+            run["profile_sha256"] = sha256_bytes(profile_path.read_bytes())
             if mutate:
                 mutate(run)
-            args = ["--run", str(write_json(Path(tmp) / "run.json", run)), "--outcome", outcome]
-            if profile is not None:
-                profile_path = Path(tmp) / "qa-profile.md"
-                profile_path.write_text(profile, encoding="utf-8")
+            args = ["--run", str(write_json(run_dir / "run.json", run)), "--outcome", outcome]
+            if outcome == "success" or profile is not None:
                 args += ["--profile", str(profile_path)]
-            return run_cleanup_plan(args)
+            return run_cleanup_plan(args, cwd=root)
 
     def test_success_l1_orders_steps_and_keeps_local_report(self):
         code, plan = self._plan("success")
@@ -445,7 +482,7 @@ class CleanupPlanTests(ReasonAssertions):
         self.assertTrue(manifest.endswith("run.json"), container)
         self.assertEqual(
             container["argv"],
-            ["<environment.script>", "down", "--run", RUN_ID, "--manifest", manifest,
+            ["scripts/qa-env.sh", "down", "--run", RUN_ID, "--manifest", manifest,
              "--resource", f"container:{RUN_NS}-app-1"],
         )
         self.assertEqual(shlex.split(container["command"]), container["argv"])
@@ -457,13 +494,31 @@ class CleanupPlanTests(ReasonAssertions):
 
     def test_agent_worktree_command_is_argv_without_force(self):
         def agent_worktree(run):
-            run["created_resources"][1].update(id=f".worktrees/{RUN_NS}-e2e", via="agent")
+            run["created_resources"][1].update(id=f".worktrees/{RUN_NS}-e2e", via="agent", repo_root="e2e-repo")
 
         code, plan = self._plan("success", agent_worktree)
         self.assertEqual(code, 0, plan)
         step = next(item for item in plan["steps"] if item["kind"] == "worktree")
-        self.assertEqual(step["argv"], ["git", "worktree", "remove", f".worktrees/{RUN_NS}-e2e"])
+        self.assertEqual(step["argv"], ["git", "-C", "e2e-repo", "worktree", "remove", f".worktrees/{RUN_NS}-e2e"])
         self.assertNotIn("--force", step["command"])
+
+    def test_agent_worktree_without_repo_root_is_kept(self):
+        def agent_worktree(run):
+            run["created_resources"][1].update(id=f".worktrees/{RUN_NS}-e2e", via="agent")
+
+        code, plan = self._plan("success", agent_worktree)
+        self.assertEqual(code, 0, plan)
+        self.assertNotIn("worktree", [step["kind"] for step in plan["steps"]])
+        self.assertEqual(
+            [(item["kind"], item["reason"]) for item in plan["keep"]],
+            [("worktree", "agent worktree without repo_root: git -C target unknown; human removes (never --force)")],
+        )
+
+    def test_qa_env_worktree_with_repo_root_still_goes_through_qa_env(self):
+        code, plan = self._plan("success", lambda run: run["created_resources"][1].update(repo_root="."))
+        self.assertEqual(code, 0, plan)
+        step = next(item for item in plan["steps"] if item["kind"] == "worktree")
+        self.assertEqual(step["argv"][1:3], ["down", "--run"])
 
     def test_commands_are_shell_quoted(self):
         profile = filled_profile_text({"script: scripts/qa-env.sh": 'script: "scripts/qa env;x.sh"'})
@@ -475,23 +530,144 @@ class CleanupPlanTests(ReasonAssertions):
         self.assertEqual(shlex.split(step["command"]), step["argv"])
 
     def test_success_l2_l3_delete_whole_evidence_dir(self):
-        for level, phases in (("L2", ("Q7b", "Q9")), ("L3", ("Q7b", "Q8", "Q9"))):
+        for level, phases in (("L2", ("Q9",)), ("L3", ("Q8", "Q9"))):
             with self.subTest(level=level):
                 code, plan = self._plan("success", _completed_at(level, phases))
                 self.assertEqual(code, 0, plan)
                 self.assertEqual(plan["steps"][-1]["action"], "delete")
                 self.assertNotIn("keep_files", plan["steps"][-1])
 
-    def test_success_l1_with_score_phase(self):
-        def scored(run):
-            run["phases"].append({"phase": "Q7b", "state": "passed", "updated_at": "2026-11-24T14:00Z"})
-            run["phase"] = "Q7b"
+    def test_success_l2_needs_every_capture_uploaded(self):
+        def partial(run):
+            _completed_at("L2", ("Q9",))(run)
+            run["publication"]["outcome"]["evidence_upload"] = "partial"
 
-        code, plan = self._plan("success", scored)
-        self.assertEqual(code, 0, plan)
-        code, payload = self._plan("success", lambda run: scored(run) or run.update(phase="Q7"))
+        code, payload = self._plan("success", partial)
         self.assertEqual(code, 2, payload)
-        self.assertReason(payload["errors"], "/phase: Q7 is not the final gate Q7b for L1")
+        self.assertEqual(payload["errors"], [
+            "outcome success not proven by run.json /publication/outcome: evidence_upload partial: "
+            "captures not uploaded (outcome upload_partial)"])
+        code, plan = self._plan("upload_partial", partial)
+        self.assertEqual((code, plan["steps"]), (0, []))
+
+        def nothing_to_upload(run):
+            _completed_at("L2", ("Q9",))(run)
+            run["publication"]["outcome"]["evidence_upload"] = "not_needed"
+
+        code, plan = self._plan("success", nothing_to_upload)
+        self.assertEqual(code, 0, plan)
+
+    def _assert_unproven(self, result: tuple[int, dict], reason: str) -> None:
+        code, payload = result
+        self.assertEqual(code, 2, payload)
+        self.assertEqual(payload["errors"], [f"outcome success not proven by run.json {reason}"])
+
+    def test_success_needs_profile(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run_path = write_json(Path(tmp) / "run.json", base_run())
+            code, payload = run_cleanup_plan(["--run", str(run_path), "--outcome", "success"])
+        self.assertEqual((code, payload["errors"]),
+                         (3, ["usage: --outcome success needs --profile <qa-profile.md> (Q7b is recomputed)"]))
+
+    def test_success_refuses_forged_or_foreign_judgment(self):
+        def edit(**fields):
+            def artifacts(run_dir, _profile):
+                path = run_dir / "qa-judgment.json"
+                write_json(path, {**json.loads(path.read_text(encoding="utf-8")), **fields})
+            return artifacts
+
+        self._assert_unproven(self._plan("success", artifacts=edit(loop={"state": "passed", "reason": "forged"},
+                                                                  actionable_gaps=0)),
+                              "/qa-judgment.json: stale or edited (differs from recomputation): re-run qa_judge.py")
+        self._assert_unproven(self._plan("success", artifacts=edit(run_id="999-20261124T1200Z")),
+                              "/qa-judgment.json: belongs to run 999-20261124T1200Z, not " + RUN_ID)
+        self._assert_unproven(self._plan("success", artifacts=edit(score=11)),
+                              "/qa-judgment.json/score: above maximum 10")
+        self._assert_unproven(self._plan("success", artifacts=lambda run_dir, _p: (run_dir / "qa-judgment.json").unlink()),
+                              "/qa-judgment.json: missing beside run.json: Q7b not proven")
+
+        def tamper_ledger(run_dir, _profile):
+            (run_dir / "evidence" / "S-1-01-saved.png").write_bytes(b"tampered")
+
+        code, payload = self._plan("success", artifacts=tamper_ledger)
+        self.assertEqual(code, 2, payload)
+        self.assertTrue(any("/qa-ledger.json rejected: " in error and "sha256 mismatch" in error
+                            for error in payload["errors"]), payload)
+
+        def drop_adherence(run_dir, _profile):
+            path = run_dir / "qa-ledger.json"
+            ledger = json.loads(path.read_text(encoding="utf-8"))
+            ledger["adherence"] = ledger["adherence"][:1]
+            write_json(path, ledger)
+
+        self._assert_unproven(self._plan("success", artifacts=drop_adherence),
+                              "/qa-ledger.json: adherence decision missing for S-2/AC-2")
+
+        def broken_json(run_dir, _profile):
+            (run_dir / "qa-judgment.json").write_text("{", encoding="utf-8")
+
+        code, payload = self._plan("success", artifacts=broken_json)
+        self.assertEqual(code, 3, payload)
+        self.assertTrue(payload["errors"][0].startswith("qa-judgment.json: invalid JSON"), payload)
+
+    def test_success_pins_profile(self):
+        def repinned_away(run):
+            run["profile_sha256"] = "0" * 64
+
+        code, payload = self._plan("success", repinned_away)
+        self.assertEqual(code, 2, payload)
+        self.assertTrue(payload["errors"][0].startswith("profile changed since Q0: sha256 "), payload)
+
+    def test_success_needs_judgment_loop_closed(self):
+        def complement(ledger, _run_dir):
+            ledger["criteria"][0]["criticality"] = "critical"
+            ledger["scenarios"][1]["data_source"] = "response_intercept"
+
+        self._assert_unproven(self._plan("success", ledger_mutate=complement),
+                              "/qa-judgment.json: loop complement without the human answer publish_anyway: Q7b not passed")
+
+        def ended_below_min(run_dir, profile):
+            ledger_path = run_dir / "qa-ledger.json"
+            ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+            ledger["criteria"][0]["criticality"] = "critical"
+            ledger["scenarios"][1].update(data_source="response_intercept", mock_reason="external service")
+            write_json(ledger_path, ledger)
+            plan = (run_dir / "plan.yml").read_text(encoding="utf-8").replace(
+                "waivers: []\n", "waivers:\n  - { ac: AC-1, type: negative, reason: none }\n"
+                "  - { ac: AC-1, type: business_rule, reason: none }\n")
+            (run_dir / "plan.yml").write_text(plan, encoding="utf-8")
+            (run_dir / "qa-judgment.json").unlink()
+            code, payload = run_judge(["--run-dir", str(run_dir), "--profile", str(profile)], cwd=run_dir.parents[2])
+            self.assertEqual((code, payload["loop"]["state"]), (0, "ended_below_min"), payload)
+
+        below = "/qa-judgment.json: loop ended_below_min without the human answer publish_anyway: Q7b not passed"
+        self._assert_unproven(self._plan("success", artifacts=ended_below_min), below)
+
+        def anyway_at_l2(run):
+            _completed_at("L2", ("Q9",))(run)
+            run["pauses"].insert(1, {**_open_pause("below_min_score", "Q7b"), "resolved_at": "2026-11-24T13:30Z",
+                                     "answer": "publish_anyway"})
+
+        code, plan = self._plan("success", anyway_at_l2, artifacts=ended_below_min)
+        self.assertEqual(code, 0, plan)
+
+        def resumed_at_l2(run):
+            anyway_at_l2(run)
+            run["pauses"][1]["answer"] = "continue"
+
+        self._assert_unproven(self._plan("success", resumed_at_l2, artifacts=ended_below_min), below)
+
+    def test_success_l1_needs_judge_phase(self):
+        def unscored(run):
+            run["phases"] = run["phases"][:-1]
+            run["phase"] = "Q7"
+
+        code, payload = self._plan("success", unscored)
+        self.assertEqual(code, 2, payload)
+        self.assertEqual(payload["errors"], [
+            "outcome success not proven by run.json /phases: Q7b not passed (required for success at L1)",
+            "outcome success not proven by run.json /phase: Q7 is not the final gate Q7b for L1",
+        ])
 
     def test_success_rejected_unless_every_gate_passed(self):
         def at_q0(run):
@@ -505,7 +681,7 @@ class CleanupPlanTests(ReasonAssertions):
             run["phases"].append({"phase": "Q8", "state": "running", "updated_at": "2026-11-24T14:00Z"})
 
         def l3_without_q8(run):
-            _completed_at("L3", ("Q7b", "Q9"))(run)
+            _completed_at("L3", ("Q9",))(run)
 
         def l2_at_q7(run):
             run["level"]["effective"] = "L2"
@@ -515,7 +691,7 @@ class CleanupPlanTests(ReasonAssertions):
             failed_q6: "/phases: Q6 is failed: run not complete",
             running_q8: "/phases: Q8 is running: run not complete",
             l3_without_q8: "/phases: Q8 not passed (required for success at L3)",
-            l2_at_q7: "/phase: Q7 is not the final gate Q9 for L2",
+            l2_at_q7: "/phase: Q7b is not the final gate Q9 for L2",
         }
         for mutate, reason in cases.items():
             with self.subTest(case=mutate.__name__):
@@ -526,9 +702,10 @@ class CleanupPlanTests(ReasonAssertions):
         self.assertEqual((code, plan["steps"]), (0, []))
 
     def test_l1_run_without_verdict_keeps_everything(self):
-        """Phase 3 L1 run: report written, Q7 verdict pending (skipped) -> success unprovable, Q10 keeps all."""
+        """Run whose Q7 was skipped (pre-0.4 L1 report) -> success unprovable, Q10 keeps all."""
 
         def report_without_verdict(run):
+            run["phases"] = run["phases"][:-1]
             run["phases"][7].update(state="skipped", note="report written; verdict pending")
             run["phase"] = "Q6"
 
@@ -537,7 +714,8 @@ class CleanupPlanTests(ReasonAssertions):
         self.assertEqual(
             payload["errors"],
             ["outcome success not proven by run.json /phases: Q7 not passed (required for success at L1)",
-             "outcome success not proven by run.json /phase: Q6 is not the final gate Q7 for L1"],
+             "outcome success not proven by run.json /phases: Q7b not passed (required for success at L1)",
+             "outcome success not proven by run.json /phase: Q6 is not the final gate Q7b for L1"],
         )
 
     def test_human_stop_never_proves_success(self):
@@ -547,6 +725,10 @@ class CleanupPlanTests(ReasonAssertions):
                 run["pauses"].append({**_open_pause(reason, phase), "resolved_at": "2026-11-24T13:30Z", "answer": answer})
                 if reason == "checkpoint":
                     run["checkpoints"].append({"window": 2, "at": "2026-11-24T13:00Z", "decision": answer})
+                if reason == "preview_approval":
+                    run["level"].update(declared="L2", effective="L2")
+                    run["publication"] = {"approvals": [{"answer": answer, "preview_sha256": APPROVED_SHA,
+                                                         "at": "2026-11-24T13:30Z"}], "outcome": None}
 
             with self.subTest(reason=reason):
                 code, payload = self._plan("success", stopped)
@@ -568,8 +750,8 @@ class CleanupPlanTests(ReasonAssertions):
         cases = (
             (drop("Q0"), "Q0", "L1"),
             (drop("Q6"), "Q6", "L1"),
-            (drop("Q7b", _completed_at("L2", ("Q7b", "Q9"))), "Q7b", "L2"),
-            (drop("Q8", _completed_at("L3", ("Q7b", "Q8", "Q9"))), "Q8", "L3"),
+            (drop("Q7b", _completed_at("L2", ("Q9",))), "Q7b", "L2"),
+            (drop("Q8", _completed_at("L3", ("Q8", "Q9"))), "Q8", "L3"),
         )
         for mutate, phase, level in cases:
             with self.subTest(case=mutate.__name__):

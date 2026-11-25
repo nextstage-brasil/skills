@@ -100,6 +100,11 @@
             "description": "Why the scenario is blocked: cap exhausted, run stopped, browser tool missing, interrupted."
           },
           "data_source": { "enum": ["real", "db_fixture", "response_intercept"] },
+          "mock_reason": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Why real data could not be used (data_source other than real only). Present = the judge lists the data-realism gap as not actionable."
+          },
           "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
           "history": {
             "type": "array",
@@ -168,9 +173,24 @@
         }
       }
     },
+    "adherence": {
+      "type": "array",
+      "description": "Scenario <-> AC adherence decisions (Q7b, the only LLM judgment of the judge): one per executed scenario and covered AC. adherent false = that scenario does not count for that AC. Recorded by the agent before scripts/qa_judge.py.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scenario", "ac", "adherent", "reason"],
+        "properties": {
+          "scenario": { "type": "string", "pattern": "^S-[0-9]{1,6}$" },
+          "ac": { "type": "string", "pattern": "^AC-[0-9]{1,6}$" },
+          "adherent": { "type": "boolean" },
+          "reason": { "type": "string", "minLength": 1, "description": "Why the steps and evidence do (not) show the AC behavior." }
+        }
+      }
+    },
     "judge_rounds": {
       "type": "array",
-      "description": "Homologation-score complement rounds (Q7b); empty when the first score met judge.min_score.",
+      "description": "Homologation-score complement rounds (Q7b), appended by scripts/qa_judge.py --record-round; empty when the first score met judge.min_score.",
       "items": {
         "type": "object",
         "additionalProperties": false,
@@ -179,6 +199,10 @@
           "round": { "type": "integer", "minimum": 1 },
           "score_before": { "$ref": "#/$defs/score" },
           "score_after": { "$ref": "#/$defs/score" },
+          "resume": {
+            "const": true,
+            "description": "Round started by a human 'continue' after the cycle ended below judge.min_score (D50); allowed after a round without score gain."
+          },
           "added": {
             "type": "array",
             "items": { "type": "string", "minLength": 1 },

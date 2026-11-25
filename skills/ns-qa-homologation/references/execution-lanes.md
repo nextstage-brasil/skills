@@ -21,7 +21,7 @@ Write before first run:
 | `environment {commit, url, health, resets}` | `env.json` (`resets` = ENV resets so far, run-wide) |
 | `criteria[]` | `acceptance.yml` (`id`, `text`, `source`, `criticality`) |
 | `scenarios[]` | `plan.yml`, same order: `status: not_run`, `not_run_reason: "pending execution"`, `attempts: 0`, `triage: null`, `data_source` (Q5), `evidence: []`, `history: []`; browser lane + `tool` (`browser-tools.md`) |
-| `findings`, `judge_rounds` | `[]` |
+| `findings`, `judge_rounds` | `[]` (`adherence` added at Q7b) |
 | `residual_state` | `environment.md` → `residual_state` |
 
 Every planned scenario stays in ledger. Never delete one to go green.
@@ -37,7 +37,7 @@ Every planned scenario stays in ledger. Never delete one to go green.
 | `ns-e2e-tests` | `ns-e2e-tests` (Cypress only). `runner: playwright` + no repo-local skills → stall |
 
 2. **Reuse first:** plan `existing` hit → run that spec. New/adjusted spec only when no hit covers scenario.
-3. **Where:** run-owned worktree of E2E repo: `git -C <e2e_root> worktree add .worktrees/qa-<run_id>-e2e` (register `kind: worktree`, `via: agent` in `run.json` before writing; `--check-run`). Never write specs in human checkout. No commit/push below L3 (Q8). Kept at L1 (Q10 does not run, SKILL.md).
+3. **Where:** run-owned worktree of E2E repo: `git -C <e2e_root> worktree add .worktrees/qa-<run_id>-e2e` (register `kind: worktree`, `via: agent`, `repo_root: <e2e_root>`, `id` relative to it, in `run.json` before writing; `--check-run`). Never write specs in human checkout. No commit/push below L3 (Q8). Removed by Q10 only on full success (`cleanup.md`).
 4. **Tags** in `it`/`test` title: `@S-n` + one `@AC-n` per covered AC; coexist with `@smoke` / `@regression`. Exact tokens; mapping rules: `junit_to_ledger.py` docstring.
 5. **Run** one explicit run per invocation, runner retries forced 0 on CLI (profile `runner_retries_during_verification: 0`): Cypress `--config retries=0`, Playwright `--retries=0`. JUnit → `<run_dir>/results/run-<n>.xml` (one file per spec when reporter splits); raw screenshots/videos → `<run_dir>/raw/`.
 6. **Merge** each JUnit file once: `python3 scripts/junit_to_ledger.py --ledger <run_dir>/qa-ledger.json --junit results/run-<n>.xml [--change S-<n>=<env_reset|reseed|spec_fix>]...`. Appends one history run per mapped scenario (`health: unknown`, `source`), junit evidence + sha256, applies terminal triage (non-terminal → `not_run` "triage in progress"). Scenario already closed `fail`/`flaky`/`blocked` (shared spec re-run) → no run, listed `ignored_terminal` with `outcome`. Closed scenario now passing → `contradicts: true`, report `stall: true` → **stall** (D49, `failure-triage.md`): human decides; never ignored. One JUnit file = one run per scenario. Suite nesting > 256 `<testsuite>` levels refused. `unmapped` / `skipped` → fix tags or spec, re-run (new file).
@@ -60,7 +60,7 @@ Every planned scenario stays in ledger. Never delete one to go green.
 | Verify + index | `python3 scripts/qa_evidence.py index --run-dir <run_dir> --ledger <run_dir>/qa-ledger.json` → `evidence/index.md` |
 
 - Name `evidence/S-<n>-<seq>-<slug>.<ext>`; JUnit `results/<name>.xml`. Gate rejects other layouts.
-- **PII (D4):** before each screenshot hide every profile `evidence.pii_fields` selector in DOM (script channel of tool); pass each masked (or absent) selector as `--pii-masked`. No OCR. Selector not masked → `pii_scrubbed: false` → never published (Phase 4); kept locally for human.
+- **PII (D4):** before each screenshot hide every profile `evidence.pii_fields` selector in DOM (script channel of tool); pass each masked (or absent) selector as `--pii-masked`. No OCR. Selector not masked → `pii_scrubbed: false` → never published (`publication.md`); kept locally for human.
 - Kind outside `evidence.capture` → refused. Symlinks, unsafe labels, content not matching extension → refused (exit 2).
 
 ## Data

@@ -11,7 +11,8 @@ from qa_schema_lite import SchemaLite
 
 _CRITICALITY_RANK = {"critical": 3, "high": 2, "medium": 1, "low": 0}
 _FULL_DEPTH = ("positive", "negative", "business_rule")
-_MINIMUM_TYPES = {
+# Minimum scenario types per criticality (references/test-design.md); the judge depth dimension reuses it.
+MINIMUM_TYPES = {
     "critical": _FULL_DEPTH,
     "high": _FULL_DEPTH,
     "medium": ("positive",),
@@ -105,7 +106,7 @@ def _minimum_types(ctx: _PlanContext) -> list[str]:
     for ac, criterion in ctx.criteria_by_id.items():
         if not types[ac]:
             continue
-        for required in _MINIMUM_TYPES[criterion["criticality"]]:
+        for required in MINIMUM_TYPES[criterion["criticality"]]:
             if required not in types[ac] and (ac, required) not in waived:
                 errors.append(
                     f"acceptance.criteria.{ac}: {criterion['criticality']} needs a {required} scenario (or a waiver)"

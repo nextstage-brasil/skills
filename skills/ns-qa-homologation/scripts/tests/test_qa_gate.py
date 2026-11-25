@@ -229,13 +229,16 @@ class CheckProfileTests(ReasonAssertions):
         self.assertEqual(payload["warnings"], [])
         self.assertEqual(len(payload["profile_sha256"]), 64)
 
-    def test_levels_above_implemented_capped_to_l1(self):
-        for declared in ("L2", "L3"):
-            with self.subTest(declared=declared):
-                code, payload = self._run(filled_profile_text({"autonomy_level: L1  ": f"autonomy_level: {declared}  "}))
-                self.assertEqual(code, 0, payload)
-                self.assertEqual(payload["autonomy_effective"], "L1")
-                self.assertReason(payload["autonomy_caps"], "Q7 verdict, Q7b, Q8, Q9) not implemented")
+    def test_l2_runs_as_l2_and_l3_capped_to_l2(self):
+        code, payload = self._run(filled_profile_text({"autonomy_level: L1  ": "autonomy_level: L2  "}))
+        self.assertEqual(code, 0, payload)
+        self.assertEqual((payload["autonomy_effective"], payload["autonomy_caps"]), ("L2", []))
+        code, payload = self._run(filled_profile_text({"autonomy_level: L1  ": "autonomy_level: L3  "}))
+        self.assertEqual(code, 0, payload)
+        self.assertEqual(payload["autonomy_effective"], "L2")
+        self.assertEqual(payload["autonomy_caps"], [
+            "E2E automation (Q8) not implemented in this skill version: run is execute + verdict + score + "
+            "publication after approval, without E2E commit/MR"])
 
     def test_provider_none_caps_to_l0(self):
         text = filled_profile_text(

@@ -51,7 +51,7 @@ Window = `execution.budget.checkpoint_min` from Q0 pass, then from each "continu
 | "continue" | Pause `answer: continue`, checkpoint `decision: continue`; next window |
 | "stop" | `answer: stop`, `decision: stop`; unrun scenarios `not_run` ("stopped at checkpoint"); in-flight → interrupted; current phase `failed` (note); report; Q10 outcome `incomplete` (keep all) |
 
-`--check-run`: k-th checkpoint ↔ k-th checkpoint pause (pending = open; decision = answer); answers per reason: checkpoint/stall/below_min_score `continue|stop`, preview_approval `approve|adjust|do_not_publish`. Cleanup planner rejects `success` after any `stop` / `do_not_publish`.
+`--check-run`: k-th checkpoint ↔ k-th checkpoint pause (pending = open; decision = answer); answers per reason: checkpoint/stall `continue|stop`, below_min_score `continue|stop|publish_anyway` (`publish_anyway` L2+ only; `homologation-judge.md`), preview_approval `approve|adjust|do_not_publish` (`publication.md`). Cleanup planner rejects `success` after any `stop` / `do_not_publish`.
 
 ## Stall (D49) — any time
 

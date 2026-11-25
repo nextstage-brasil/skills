@@ -280,7 +280,7 @@ RUN_NS = "qa-42-20261124t1200z"
 
 
 def base_run() -> dict:
-    """Valid run.json: script-provider L1 run that passed every gate (Q0-Q7), one resource of every kind."""
+    """Valid run.json: script-provider L1 run that passed every gate (Q0-Q7b), one resource of every kind."""
     stamp = "2026-11-24T12:00:00Z"
 
     def resource(kind: str, rid: str, phase: str, via: str) -> dict:
@@ -293,10 +293,10 @@ def base_run() -> dict:
         "level": {"declared": "L2", "effective": "L1", "caps": ["1 inferred field(s) cap autonomy at L1"]},
         "profile_sha256": "a" * 64,
         "environment": {"provider": "script"},
-        "phase": "Q7",
+        "phase": "Q7b",
         "phases": [
             {"phase": phase, "state": "passed", "updated_at": stamp}
-            for phase in ("Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7")
+            for phase in ("Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q7b")
         ],
         "created_resources": [
             resource("evidence_dir", f"docs/qa/{RUN_ID}", "Q0", "agent"),
@@ -334,3 +334,123 @@ def env_output(command: str, **payload) -> dict:
     }
     envelope = {"contract_version": 1, "command": command, "run_id": RUN_ID, "ok": True, "error": None}
     return {**envelope, **defaults[command], **payload}
+
+
+JUDGE = SCRIPTS / "qa_judge.py"
+PUBLISH_PLAN = SCRIPTS / "qa_publish_plan.py"
+STAMP = "2026-11-24T12:00:00Z"
+
+PUBLISHABLE_PLAN_YML = """plan_version: 1
+areas:
+  - { id: IA-1, kind: direct, summary: "Form save handler" }
+scenarios:
+  - id: S-1
+    title: "Save valid form"
+    covers: [AC-1]
+    areas: [IA-1]
+    type: positive
+    lane: runner
+    data: "one draft record"
+    existing: []
+    automate: true
+  - id: S-2
+    title: "List shows the saved record"
+    covers: [AC-2]
+    areas: [IA-1]
+    type: positive
+    lane: browser
+    data: none
+    existing: []
+    automate: false
+waivers: []
+"""
+
+# L2+ report.md: results live in the script summary block, so §1 and §8 restate none of them.
+L2_REPORT_MD = (
+    "# Homologation report — group/app#42\n\n## 1. Summary\n\n- Scenarios planned: 2\n\n"
+    "## 3. Acceptance criteria\n\n| AC-1 | Save applies a 50% discount |\n\n"
+    "## 8. Homologation score and next steps\n\n- Loop: passed\n"
+)
+
+
+def run_judge(args: list[str], cwd: Path | None = None) -> tuple[int, dict]:
+    return _run_script(JUDGE, args, cwd)
+
+
+def run_publish(args: list[str], cwd: Path | None = None) -> tuple[int, dict]:
+    return _run_script(PUBLISH_PLAN, args, cwd)
+
+
+def publishable_ledger(run_dir: Path) -> dict:
+    """Ledger that scores 10 and is Homologated: two medium/low criteria, real data, masked screenshots."""
+    ledger = base_ledger(run_dir)
+    ledger["criteria"] = [
+        {"id": "AC-1", "text": "Save stores the record", "source": "issue", "criticality": "medium"},
+        {"id": "AC-2", "text": "List shows the record", "source": "issue", "criticality": "low"},
+    ]
+    second = ledger["scenarios"][1]
+    second.update(type="positive", status="pass", attempts=1, triage=None, data_source="real",
+                  history=[run_attempt("pass")])
+    ledger["findings"] = []
+    ledger["judge_rounds"] = []
+    ledger["adherence"] = [
+        {"scenario": "S-1", "ac": "AC-1", "adherent": True, "reason": "asserts the stored record"},
+        {"scenario": "S-2", "ac": "AC-2", "adherent": True, "reason": "screenshot shows the record in the list"},
+    ]
+    return ledger
+
+
+def publishable_run_json() -> dict:
+    """run.json of an effective L2 run that passed Q0-Q7b (no pause, no publication yet)."""
+    phases = ("Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q7b")
+    return {
+        "run_version": 1,
+        "run_id": RUN_ID,
+        "issue": {"dev": "group/app#42", "qa": "group/qa#7"},
+        "level": {"declared": "L2", "effective": "L2", "caps": []},
+        "profile_sha256": "a" * 64,
+        "environment": {"provider": "url"},
+        "phase": "Q7b",
+        "phases": [{"phase": phase, "state": "passed", "updated_at": STAMP} for phase in phases],
+        "created_resources": [
+            {"kind": "evidence_dir", "id": f"docs/qa/{RUN_ID}", "created_at": STAMP, "created_by_phase": "Q0",
+             "via": "agent"},
+        ],
+        "checkpoints": [],
+        "pauses": [],
+    }
+
+
+def write_publishable_run(root: Path, ledger_mutate=None, run_mutate=None,
+                          profile_replacements: dict[str, str] | None = None) -> tuple[Path, Path]:
+    """Repo + profile (L2) + run dir with ledger, plan, run.json, verdict.json, qa-judgment.json, report.md."""
+    replacements = {"autonomy_level: L1  ": "autonomy_level: L2  ", **(profile_replacements or {})}
+    profile = write_repo_with_profile(root, filled_profile_text(replacements))
+    run_dir = root / "docs" / "qa" / RUN_ID
+    run_dir.mkdir(parents=True)
+    ledger = publishable_ledger(run_dir)
+    if ledger_mutate:
+        ledger_mutate(ledger, run_dir)
+    write_ledger(run_dir, ledger)
+    (run_dir / "plan.yml").write_text(PUBLISHABLE_PLAN_YML, encoding="utf-8")
+    run = publishable_run_json()
+    run["profile_sha256"] = sha256_bytes(profile.read_bytes())
+    if run_mutate:
+        run_mutate(run)
+    write_json(run_dir / "run.json", run)
+    code, payload = run_gate(["--verdict", str(run_dir / "qa-ledger.json"), "--profile", str(profile)], cwd=root)
+    if code != 0:
+        raise AssertionError(f"fixture verdict failed: {payload}")
+    code, payload = run_judge(["--run-dir", str(run_dir), "--profile", str(profile)], cwd=root)
+    if code != 0:
+        raise AssertionError(f"fixture judge failed: {payload}")
+    (run_dir / "report.md").write_text(L2_REPORT_MD, encoding="utf-8")
+    return profile, run_dir
+
+
+def repin_profile(profile: Path, run_dir: Path) -> None:
+    """Tests that edit the profile on purpose re-pin run.json (as a new Q0 would)."""
+    path = run_dir / "run.json"
+    run = json.loads(path.read_text(encoding="utf-8"))
+    run["profile_sha256"] = sha256_bytes(profile.read_bytes())
+    write_json(path, run)
