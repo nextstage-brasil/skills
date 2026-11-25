@@ -14,6 +14,12 @@ from qa_common import embeds_run_id, find_duplicates
 from qa_schema_lite import SchemaLite
 
 _LEVELS = ("L0", "L1", "L2", "L3")
+_ANSWERS_BY_REASON = {
+    "checkpoint": frozenset({"continue", "stop"}),
+    "stall": frozenset({"continue", "stop"}),
+    "below_min_score": frozenset({"continue", "stop"}),
+    "preview_approval": frozenset({"approve", "adjust", "do_not_publish"}),
+}
 _KINDS_BY_VIA = {
     "agent": frozenset({"worktree", "evidence_dir"}),
     "qa-env": frozenset({"container", "volume", "database", "image", "worktree"}),
@@ -88,6 +94,8 @@ def _pause_consistency(run: dict) -> list[str]:
     for index, pause in enumerate(run["pauses"]):
         if (pause["resolved_at"] is None) != (pause["answer"] is None):
             errors.append(f"/pauses/{index}: resolved_at and answer must be set together")
+        if pause["answer"] is not None and pause["answer"] not in _ANSWERS_BY_REASON[pause["reason"]]:
+            errors.append(f"/pauses/{index}: answer {pause['answer']} not valid for reason {pause['reason']}")
     open_count = sum(1 for pause in run["pauses"] if pause["resolved_at"] is None)
     if open_count > 1:
         errors.append(f"/pauses: {open_count} open pauses; at most one wait at a time")
@@ -109,6 +117,20 @@ def _checkpoint_sequence(run: dict) -> list[str]:
     return errors
 
 
+def _checkpoint_pauses(run: dict) -> list[str]:
+    """Checkpoint k is answered by the k-th checkpoint pause: pending = open, decision = answer."""
+    pauses = [pause for pause in run["pauses"] if pause["reason"] == "checkpoint"]
+    checkpoints = run["checkpoints"]
+    if len(pauses) != len(checkpoints):
+        return [f"/checkpoints: {len(checkpoints)} checkpoint(s) but {len(pauses)} checkpoint pause(s)"]
+    errors = []
+    for index, (checkpoint, pause) in enumerate(zip(checkpoints, pauses)):
+        expected = "pending" if pause["answer"] is None else pause["answer"]
+        if checkpoint["decision"] != expected:
+            errors.append(f"/checkpoints/{index}: decision {checkpoint['decision']} but its pause answer is {expected}")
+    return errors
+
+
 _CHECKS: tuple[_Check, ...] = (
     _unique_resources,
     _run_owned_ids,
@@ -117,6 +139,7 @@ _CHECKS: tuple[_Check, ...] = (
     _phase_consistency,
     _pause_consistency,
     _checkpoint_sequence,
+    _checkpoint_pauses,
 )
 
 

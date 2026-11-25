@@ -18,9 +18,9 @@ Continuation of `profile-schema.md` (legend, YAML subset, gate extras there). `R
 | Key | R | Type / values | Default | Rule |
 | --- | - | ------------- | ------- | ---- |
 | `dir` | R | path template, MUST contain `{run_id}` | `docs/qa/{run_id}` | Gitignored; never versioned. `run_id` starts with dev iid. Run dir = `run.json` `evidence_dir` |
-| `capture` | — | subset of `screenshot`, `console`, `network`, `runner_video` | all | |
+| `capture` | — | subset of `screenshot`, `console`, `network`, `runner_video` | all | Kinds `qa_evidence.py add` accepts |
 | `pii_masking` | R | `dom` | `dom` | Hide fields in DOM before capture; no OCR. Mask fail → image not published |
-| `pii_fields` | — | CSS selector[] | `[]` | |
+| `pii_fields` | — | CSS selector[] | `[]` | Each masked before screenshot (`--pii-masked`); any unmasked → `pii_scrubbed: false` |
 | `keep_on_upload_failure` | — | bool | `true` | Unuploaded captures kept for human |
 
 ### `cleanup` (Q10)

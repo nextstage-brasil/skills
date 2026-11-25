@@ -1,6 +1,6 @@
 # QA profile schema
 
-Consumer file: `docs/context/qa-profile.md` — Markdown + one fenced `yaml` block. Profile = **only** place for project-specific QA values; skill reads keys, never hardcodes values. Q0 validates via `scripts/qa_gate.py --check-profile` (machine form: `templates/qa-profile.schema.json`). Invalid value / missing required key / unknown key (typo guard) / unfilled `<placeholder>` → exit 3, stop at Q0 with reason.
+Consumer file: `docs/context/qa-profile.md` — Markdown + one fenced `yaml` block. Profile = **only** place for project QA values; skill reads keys, never hardcodes values. Q0 validates via `scripts/qa_gate.py --check-profile` (machine form: `templates/qa-profile.schema.json`). Invalid value / missing required key / unknown key (typo guard) / unfilled `<placeholder>` → exit 3, stop at Q0 with reason.
 
 Full example: `templates/qa-profile.template.md`. Sections `data`, `evidence`, `cleanup`, `verdict`, `judge`, `policy` + **Autonomy** table: `profile-schema-policy.md`.
 
@@ -27,6 +27,8 @@ Stdlib parser (`scripts/qa_yaml_lite.py`); no PyYAML — same result on every ho
 | Any `# inferred` field | `autonomy_effective` ≤ L1 |
 | `inferred` in comment, not first word | inferred (fail closed) + warning |
 | Phase cap (`IMPLEMENTED_MAX_LEVEL` in `qa_profile_rules.py`) | `autonomy_effective` ≤ highest implemented level |
+| `environment.provider: none` | `autonomy_effective` = L0 |
+| Unknown `browser_tool_preference` id | warning; skipped |
 
 Output JSON: `autonomy_declared`, `autonomy_effective`, `autonomy_caps` (reasons), `inferred`, `warnings`, `profile_sha256`.
 
@@ -88,13 +90,13 @@ Run proceeds past Q1 only when every **applicable** side is in its `*_running` s
 
 | Key | R | Type / values | Default | Rule |
 | --- | - | ------------- | ------- | ---- |
-| `provider` | R | `script`\|`url`\|`none` | — | `script` = run-owned env via qa-env. `url` = env provisioned outside agent, dedicated to this run (e.g. preview/review env); seeding allowed; **not** run-owned → Q10 never touches it; leftover data → ledger `residual_state`. `none` → no execution (L0 behavior) |
+| `provider` | R | `script`\|`url`\|`none` | — | `script` = run-owned env via qa-env. `url` = env provisioned outside agent, dedicated to run (preview/review env); seeding allowed; **not** run-owned → Q10 never touches it; leftovers → ledger `residual_state`. `none` → no execution (effective L0) |
 | `script` | when `script` | path | — | qa-env script: `qa-env-contract.md`; scaffold `../templates/qa-env.template.sh` |
 | `url` | when `url` | URL | — | Dedicated run env (see `provider`) |
 | `version_url` | when `url` | URL | — | Returns deployed commit (bare SHA or JSON `commit`); compared with MR commit at Q5 |
-| `isolation` | R | `slot` | — | Only value: env dedicated to this run (`provider: script` run-owned, or `provider: url` external). Shared env forbidden — test data only in dedicated env (`data.location`) |
+| `isolation` | R | `slot` | — | Env dedicated to run (`script` run-owned, `url` external). Shared env forbidden; test data only there (`data.location`) |
 | `health_checks[]` | when `script`/`url` | `{kind: http, url, expect}` \| `{kind: login}` | — | All pass → env healthy. `{name}` in `url` = qa-env `urls` entry |
-| `timeouts.up` / `seed` / `reset` / `default` | — | int seconds ≥1 | `1800`, `600`, `600`, `120` | Per qa-env call; exceeded → ENV failure (`environment.md`) |
+| `timeouts.up` / `seed` / `reset` / `default` | — | int seconds ≥1 | `1800`, `600`, `600`, `120` | Per qa-env call; exceeded → ENV failure |
 
 ### `auth`
 
@@ -115,7 +117,7 @@ Run proceeds past Q1 only when every **applicable** side is in its `*_running` s
 | `e2e_authoring` | — | `auto`\|`repo-local`\|`ns-e2e-tests` | `auto` | `auto`: E2E repo's own skills when present, else `ns-e2e-tests` |
 | `e2e_git.base_branch` / `branch_pattern` / `commit_prefix` | when L3 | string | — | Target E2E repo convention |
 | `e2e_git.commit_language` | when L3 | BCP 47 tag | — | Target E2E repo convention |
-| `browser_tool_preference` | — | string[] | `[]` | Capability order for exploratory lane |
+| `browser_tool_preference` | — | tool id[] | `[]` | Browser lane order; ids: `browser-tools.md` |
 | `stability_runs` | — | int ≥1 | `2` | Green runs required before automation MR |
 | `runner_retries_during_verification` | R | `0` | `0` | Runner retries off; stability via explicit runs |
 | `budget.max_scenarios` | — | `unlimited` \| int | `unlimited` | Full plan by risk order |

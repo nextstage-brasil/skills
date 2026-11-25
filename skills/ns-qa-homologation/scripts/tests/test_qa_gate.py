@@ -58,6 +58,10 @@ class YamlLiteTests(ReasonAssertions):
         self.assertEqual(result.inferred, ["a.b", "a.c", "a.e", "a.f", "l.0"])
         self.assertEqual(result.unclear_inferred, ["a.f"])
 
+    def test_huge_digit_run_never_crashes(self):
+        self.assertEqual(parse("a: 123456789012345678\n").data, {"a": 123456789012345678})
+        self.assertIsInstance(parse("a: " + "9" * 5000 + "\n").data["a"], float)
+
     def test_hash_inside_quotes_is_not_comment(self):
         self.assertEqual(parse('a: "x # y"\n').data, {"a": "x # y"})
 
@@ -215,15 +219,40 @@ class CheckProfileTests(ReasonAssertions):
         self.assertEqual(code, 3)
         self.assertReason(payload["errors"], "tracker.mcp_server: unfilled placeholder")
 
-    def test_filled_template_valid_and_capped_to_implemented_level(self):
+    def test_filled_template_valid_at_implemented_level(self):
         code, payload = self._run(filled_profile_text())
         self.assertEqual(code, 0, payload)
         self.assertEqual(payload["autonomy_declared"], "L1")
-        self.assertEqual(payload["autonomy_effective"], "L0")
-        self.assertReason(payload["autonomy_caps"], "not implemented")
+        self.assertEqual(payload["autonomy_effective"], "L1")
+        self.assertEqual(payload["autonomy_caps"], [])
         self.assertEqual(payload["inferred"], [])
         self.assertEqual(payload["warnings"], [])
         self.assertEqual(len(payload["profile_sha256"]), 64)
+
+    def test_levels_above_implemented_capped_to_l1(self):
+        for declared in ("L2", "L3"):
+            with self.subTest(declared=declared):
+                code, payload = self._run(filled_profile_text({"autonomy_level: L1  ": f"autonomy_level: {declared}  "}))
+                self.assertEqual(code, 0, payload)
+                self.assertEqual(payload["autonomy_effective"], "L1")
+                self.assertReason(payload["autonomy_caps"], "Q7 verdict, Q7b, Q8, Q9) not implemented")
+
+    def test_provider_none_caps_to_l0(self):
+        text = filled_profile_text(
+            {"provider: script ": "provider: none ", "teardown: discard_env": "teardown: none",
+             "seed: { kind: script,": "seed: { kind: none,"}
+        )
+        code, payload = self._run(text)
+        self.assertEqual(code, 0, payload)
+        self.assertEqual(payload["autonomy_effective"], "L0")
+        self.assertEqual(payload["autonomy_caps"], ["environment.provider none: nothing to execute; run is plan + local report"])
+
+    def test_unknown_browser_tool_is_warning(self):
+        text = filled_profile_text({"[playwright-mcp, claude-in-chrome,": "[playwright-mcp, my-browser, claude-in-chrome,"})
+        code, payload = self._run(text)
+        self.assertEqual(code, 0, payload)
+        self.assertEqual(payload["autonomy_effective"], "L1")
+        self.assertReason(payload["warnings"], "execution.browser_tool_preference: unknown tool 'my-browser'")
 
     def test_declared_l0_has_no_caps(self):
         code, payload = self._run(filled_profile_text({"autonomy_level: L1  ": "autonomy_level: L0  "}))
@@ -503,9 +532,9 @@ class CheckLedgerTests(ReasonAssertions):
         cases = {
             uncovered: "/criteria/AC-3: not covered by any scenario",
             pass_without_evidence: "/scenarios/0/evidence: needs at least 1",
-            dotdot_to_existing_file: "path ../outside.xml escapes the evidence dir",
-            absolute_to_existing_file: "escapes the evidence dir",
-            symlink_escape: "resolves outside the evidence dir",
+            dotdot_to_existing_file: "path ../outside.xml escapes the run dir",
+            absolute_to_existing_file: "escapes the run dir",
+            symlink_escape: "path results/run-1.xml goes through a symlink (refused)",
             missing_file: "file results/run-1.xml not found",
             tampered_file: "sha256 mismatch for evidence/S-1-01-saved.png",
             fail_without_triage: "/scenarios/S-2: status fail requires a triage class",

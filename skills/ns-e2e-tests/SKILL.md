@@ -4,7 +4,7 @@ description: "(NS) Cypress E2E in independent tests-e2e/ at repo root (bootstrap
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.2"
+  version: "1.3"
 ---
 
 # Create E2E Tests
@@ -18,6 +18,10 @@ Load `.nextstage-harness/rules/e2e-tests-rules.md` when present (optional siblin
 ## Phase 0 — Resolve or bootstrap Cypress root
 
 **Before any spec or command code**, locate the Cypress project or create it.
+
+### 0.0 — QA profile root (homologation only)
+
+Called from `ns-qa-homologation` (`execution.e2e_authoring` resolved to this skill) with `docs/context/qa-profile.md` `execution.e2e_root` set → **`{e2e_root}` = that path**; skip 0.1–0.3 (never bootstrap). Separate E2E repo: its own `AGENTS.md` conventions win over Phases 2–3 layout on conflict; git inside that repo only. `cypress.config.*` missing there → stop, report. Every other trigger: 0.1 onward, unchanged.
 
 ### 0.1 — Detect existing E2E (brownfield)
 
@@ -99,6 +103,7 @@ Forbidden: specs directly under `cypress/e2e/` without `device/` prefix.
 - No fixed `cy.wait(N)` — intercepts or assertion timeouts
 - Third-party HTTP/API calls **stubbed by default** (intercepts/fixtures). Real third-party flows → opt-in project/tag (live tier); exclude from default `cypress:run` / CI unless human asks
 - RBAC: menu hidden + direct URL denial
+- Homologation scenario (called from `ns-qa-homologation`): `it` title carries exact tokens `@S-n` + one `@AC-n` per covered AC; coexist with `@smoke` / `@regression`; never rename existing tags. Other triggers: tags unchanged
 - Auth: login via UI or support session; tenant-aware fixtures
 
 ## Phase 5 — Run and report

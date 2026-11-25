@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,6 +14,7 @@ from qa_fixtures import (
     base_ledger,
     base_run,
     clone,
+    run_attempt,
     run_gate,
     write_json,
     write_ledger,
@@ -50,6 +52,60 @@ def duplicate_scenario_id(ledger: dict, _run_dir: Path) -> None:
     ledger["scenarios"][1]["id"] = ledger["scenarios"][0]["id"]
 
 
+def pass_over_alternation(ledger: dict, _run_dir: Path) -> None:
+    scenario = ledger["scenarios"][0]
+    scenario["history"].insert(0, run_attempt("fail", health="ok", suggested_class="PRODUCT", source="results/run-1.xml"))
+    scenario["attempts"] = 2
+
+
+def product_after_one_run(ledger: dict, _run_dir: Path) -> None:
+    scenario = ledger["scenarios"][1]
+    scenario["history"] = scenario["history"][:1]
+    scenario["attempts"] = 1
+
+
+def drop_runner_junit(ledger: dict, _run_dir: Path) -> None:
+    scenario = ledger["scenarios"][0]
+    scenario["evidence"] = [entry for entry in scenario["evidence"] if entry["kind"] != "junit"]
+
+
+def browser_tool_without_screenshot(ledger: dict, _run_dir: Path) -> None:
+    ledger["scenarios"][1]["tool"]["missing"].append("screenshot")
+
+
+def capture_named_for_other_scenario(ledger: dict, _run_dir: Path) -> None:
+    ledger["scenarios"][1]["evidence"][0]["path"] = "evidence/S-1-01-saved.png"
+
+
+def attempts_drift(ledger: dict, _run_dir: Path) -> None:
+    ledger["scenarios"][1]["attempts"] = 5
+
+
+def env_reset_beyond_counter(ledger: dict, _run_dir: Path) -> None:
+    scenario = ledger["scenarios"][0]
+    scenario["history"] = [
+        run_attempt("fail", health="failed", source="results/run-1.xml"),
+        run_attempt("pass", change="env_reset", source="results/run-1.xml"),
+    ]
+    scenario.update(attempts=2, triage="ENV")
+
+
+def pass_history_over_failing_junit(ledger: dict, run_dir: Path) -> None:
+    data = b'<testsuite><testcase name="save @S-1"><failure>boom</failure></testcase></testsuite>'
+    (run_dir / "results" / "run-1.xml").write_bytes(data)
+    ledger["scenarios"][0]["evidence"][0]["sha256"] = hashlib.sha256(data).hexdigest()
+
+
+def same_source_twice(ledger: dict, run_dir: Path) -> None:
+    data = b'<testsuite><testcase name="save @S-1"><failure>boom</failure></testcase></testsuite>'
+    (run_dir / "results" / "run-1.xml").write_bytes(data)
+    scenario = ledger["scenarios"][0]
+    scenario["evidence"][0]["sha256"] = hashlib.sha256(data).hexdigest()
+    reproduction = run_attempt("fail", health="ok", suggested_class="PRODUCT", source="results/run-1.xml")
+    scenario.update(status="fail", triage="PRODUCT", attempts=2, history=[reproduction, dict(reproduction)])
+    ledger["findings"].append({"id": "F-2", "scenario": "S-1", "severity": "high", "class": "delivery_defect", "reproduced": 2})
+
+
 LEDGER_MUTATIONS = {
     tamper_evidence_file: "sha256 mismatch for evidence/S-1-01-saved.png",
     delete_evidence_file: "file results/run-1.xml not found",
@@ -58,6 +114,15 @@ LEDGER_MUTATIONS = {
     drop_residual_state: "missing required 'residual_state'",
     orphan_finding: "/findings/F-1: references unknown scenario S-99",
     duplicate_scenario_id: "/scenarios: duplicate id S-1",
+    pass_over_alternation: "/scenarios/S-1: triage replay not terminal (next action rerun_stability)",
+    product_after_one_run: "/scenarios/S-2: triage replay not terminal (next action reproduce)",
+    drop_runner_junit: "/scenarios/S-1: lane runner status pass needs junit evidence",
+    browser_tool_without_screenshot: "tool playwright-mcp lacks required screenshot",
+    capture_named_for_other_scenario: "names S-1, not S-2",
+    attempts_drift: "/scenarios/S-2: attempts 5 != history length 2",
+    env_reset_beyond_counter: "1 env_reset run(s) in history > environment.resets 0",
+    pass_history_over_failing_junit: "outcome pass but results/run-1.xml gives fail for S-1",
+    same_source_twice: "source results/run-1.xml backs more than one run (one run per JUnit file)",
 }
 
 def rename_resource_outside_run(run: dict) -> None:
@@ -84,6 +149,18 @@ def claim_other_run(run: dict) -> None:
     run["created_resources"][-1]["id"] = run["created_resources"][-1]["id"].replace("qa-42-", "qa-142-")
 
 
+def flip_checkpoint_decision(run: dict) -> None:
+    run["checkpoints"][0]["decision"] = "stop"
+
+
+def checkpoint_without_pause(run: dict) -> None:
+    run["pauses"] = []
+
+
+def answer_outside_reason(run: dict) -> None:
+    run["pauses"][0]["answer"] = "approve"
+
+
 RUN_MUTATIONS = {
     rename_resource_outside_run: "id does not embed run_id",
     register_resource_twice: "/created_resources: duplicate resource evidence_dir:",
@@ -91,6 +168,9 @@ RUN_MUTATIONS = {
     escape_evidence_dir: "/created_resources/0/id: does not match",
     inject_shell_into_id: "/created_resources/5/id: does not match",
     claim_other_run: "id does not embed run_id",
+    flip_checkpoint_decision: "/checkpoints/0: decision stop but its pause answer is continue",
+    checkpoint_without_pause: "/checkpoints: 1 checkpoint(s) but 0 checkpoint pause(s)",
+    answer_outside_reason: "/pauses/0: answer approve not valid for reason checkpoint",
 }
 
 PLAN_MUTATIONS = {

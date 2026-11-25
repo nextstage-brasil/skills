@@ -8,17 +8,22 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from qa_common import InvalidInput
 from qa_schema_lite import SchemaLite
-from qa_yaml_lite import extract_yaml_block, parse
+from qa_yaml_lite import YamlLiteError, extract_yaml_block, parse
 
 _LEVELS = ("L0", "L1", "L2", "L3")
 _INFERRED_CAP = "L1"
-# Highest level whose phases exist in this skill version. Raise when Q5-Q9 land.
-IMPLEMENTED_MAX_LEVEL = "L0"
+# Highest level whose phases exist in this skill version. Raise when Q7 verdict / Q9 publish land.
+IMPLEMENTED_MAX_LEVEL = "L1"
 _IMPLEMENTED_REASON = (
-    "execution phases Q5-Q9 not implemented in this skill version (Q5/Q10 specified only): "
-    "run is plan + local report"
+    "verdict, homologation score, publication and automation (Q7 verdict, Q7b, Q8, Q9) not implemented "
+    "in this skill version: run is execute + local report without verdict"
 )
+_NO_PROVIDER_LEVEL = "L0"
+_NO_PROVIDER_REASON = "environment.provider none: nothing to execute; run is plan + local report"
+# Browser tool ids of references/browser-tools.md (capability map), in its order.
+KNOWN_BROWSER_TOOLS = ("playwright-mcp", "claude-in-chrome", "claude-browser-pane", "cursor-ide-browser")
 _PLACEHOLDER = re.compile(r"^<[^<>]+>$")
 _STATUS_KEY_LINE = re.compile(r"^\s*(status_[a-z0-9_]+)\s*:", re.MULTILINE)
 _JUDGE_WEIGHT_TOTAL = 10.0
@@ -116,12 +121,23 @@ def _evidence_dir_warnings(data: dict) -> list[str]:
     return []
 
 
+def _browser_tool_warnings(data: dict) -> list[str]:
+    preference = (data.get("execution") or {}).get("browser_tool_preference") or []
+    return [
+        f"execution.browser_tool_preference: unknown tool '{tool}' (known: {', '.join(KNOWN_BROWSER_TOOLS)}); skipped"
+        for tool in preference
+        if isinstance(tool, str) and tool not in KNOWN_BROWSER_TOOLS
+    ]
+
+
 def _min_level(*levels: str) -> str:
     return _LEVELS[min(_LEVELS.index(level) for level in levels)]
 
 
-def _effective_level(declared: str, inferred: list[str]) -> tuple[str, list[str]]:
+def _effective_level(declared: str, inferred: list[str], provider: object) -> tuple[str, list[str]]:
     caps: list[tuple[str, str]] = [(IMPLEMENTED_MAX_LEVEL, _IMPLEMENTED_REASON)]
+    if provider == "none":
+        caps.append((_NO_PROVIDER_LEVEL, _NO_PROVIDER_REASON))
     if inferred:
         caps.append((_INFERRED_CAP, f"{len(inferred)} inferred field(s) cap autonomy at {_INFERRED_CAP}"))
     effective = _min_level(declared, *(level for level, _ in caps))
@@ -148,9 +164,24 @@ def check_profile(profile_path: Path, repo: Path, schema: SchemaLite) -> Profile
     report.errors.extend(_judge_weight_errors(data))
     report.warnings.extend(_status_key_warnings(data, repo))
     report.warnings.extend(_evidence_dir_warnings(data))
+    report.warnings.extend(_browser_tool_warnings(data))
     declared = data.get("autonomy_level")
     if declared in _LEVELS:
         report.declared_level = declared
         if not report.errors:
-            report.effective_level, report.level_caps = _effective_level(declared, report.inferred)
+            provider = (data.get("environment") or {}).get("provider")
+            report.effective_level, report.level_caps = _effective_level(declared, report.inferred, provider)
     return report
+
+
+def load_valid_profile(profile_path: Path, repo: Path, schema: SchemaLite) -> dict:
+    """Profile data for scripts that act on it; validated with the Q0 rules (any error -> InvalidInput)."""
+    try:
+        report = check_profile(profile_path, repo, schema)
+        if report.errors:
+            raise InvalidInput(*(f"profile {error}" for error in report.errors))
+        return parse(extract_yaml_block(profile_path.read_text(encoding="utf-8"))).data
+    except OSError as exc:
+        raise InvalidInput(f"profile: {exc.strerror or exc}") from exc
+    except (YamlLiteError, UnicodeDecodeError) as exc:
+        raise InvalidInput(f"profile: {exc}") from exc

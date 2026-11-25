@@ -258,6 +258,11 @@
               "do_not_publish",
               null
             ]
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What was asked: phase, what was tried, what is needed (stall); window summary (checkpoint)."
           }
         }
       }

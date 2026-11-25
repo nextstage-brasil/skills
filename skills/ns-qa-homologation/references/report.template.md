@@ -3,7 +3,7 @@
 Write `<run_dir>/report.md` from this template at the end of the run (Q7 report step).
 
 - Write the report in the profile `language`. Section titles and labels come from the **i18n table** below: use the `en` column as-is, or translate each key once for another language and keep that wording for the whole run.
-- Facts come from run artifacts only (`intake.md`, `acceptance.yml`, `impact.md`, `plan.yml`, later `qa-ledger.json`). Never state a result the artifacts do not hold.
+- Facts come from run artifacts only (`intake.md`, `acceptance.yml`, `impact.md`, `plan.yml`, `env.json`, `qa-ledger.json`, `evidence/index.md`). Never state a result the artifacts do not hold.
 - Keep the 8 sections in this order. A section with nothing to say keeps its title and one line saying why (for example "Not executed at L0").
 - Status label names (when quoted) come from `tracker.status_source`, never from this template.
 - Never include credentials, tokens, or personal data.
@@ -26,6 +26,9 @@ Write `<run_dir>/report.md` from this template at the end of the run (Q7 report 
 | `verdict_not_homologated` | Not homologated |
 | `verdict_blocked` | Blocked |
 | `verdict_not_computed` | Not computed (plan only) |
+| `verdict_pending` | Not computed (verdict pending) |
+| `mocked_data` | Run with mocked data |
+| `kept_resources` | Kept resources |
 | `source_issue` | from issue |
 | `source_derived` | derived (assumption) |
 | `level_downgrade` | Requested level {declared} ran as {effective} |
@@ -38,9 +41,10 @@ Run `{run_id}` · Profile level `{declared}` · Effective level `{effective}` ·
 
 ## 1. {s1}
 
-- Verdict: {verdict label} {confidence when computed}
+- Verdict: {verdict label} {confidence when computed} — L0: `verdict_not_computed`; L1: `verdict_pending` (scenario results below are facts, not a verdict)
 - {level_downgrade line, followed by every reason from `autonomy_caps`; omit when declared = effective}
 - Criteria: {n} ({derived count} derived) · Scenarios planned: {m} · Impact areas: {k}
+- Executed (L1+): {pass} pass · {fail} fail · {flaky} flaky · {blocked} blocked · {not_run} not run — and every ledger `blocked_reasons` entry
 - One-sentence conclusion: {what this run establishes and what it does not}
 
 ## 2. {s2}
@@ -50,7 +54,7 @@ Run `{run_id}` · Profile level `{declared}` · Effective level `{effective}` ·
 | Development issue | {ref — title} |
 | Homologation issue | {ref or "none" + reason} |
 | Merge request(s) | {ref, state, head commit — or "none declared"} |
-| Environment | {URL + deployed commit — or "not provisioned at this level"} |
+| Environment | {URL + deployed commit + health + ENV resets used, from `env.json` — or "not provisioned at this level"} |
 | Status guard | {per side: current → target, action taken or "would set"} |
 
 ## 3. {s3}
@@ -79,7 +83,16 @@ Run `{run_id}` · Profile level `{declared}` · Effective level `{effective}` ·
 
 ## 6. {s6}
 
-{From `qa-ledger.json` when executed: per scenario status, attempts, triage, data source, evidence files with hash. Scenarios run with mocked data listed separately. At L0: "Not executed (plan only)".}
+{At L0: "Not executed (plan only)". From L1, from `qa-ledger.json` and `evidence/index.md`:}
+
+| Scenario | Covers | Lane | Status | Runs | Triage | Data | Evidence |
+| -------- | ------ | ---- | ------ | ---- | ------ | ---- | -------- |
+| S-1 | AC-1 | {runner / browser} | {pass / fail / flaky / blocked / not_run} | {attempts} | {class or —} | {data_source} | {file (sha256 prefix)} |
+
+- Browser tool: {tool id — missing capabilities, or "browser lane not used"}
+- {`mocked_data`}: {scenarios whose `data_source` is not `real`, with how the data was simulated — or "none"}
+- Screenshots not publishable (PII not masked): {files — or "none"}
+- Blocked / not run: {scenario — `blocked_reason` / `not_run_reason`}
 
 ## 7. {s7}
 
@@ -90,7 +103,9 @@ Run `{run_id}` · Profile level `{declared}` · Effective level `{effective}` ·
 
 ## 8. {s8}
 
-{Homologation score 0–10 per dimension and "what is missing for 10" once the judge phase exists. At L0: "Not scored (plan only)". Next steps: what a higher level would run, and which profile fields still carry `# inferred`.}
+{Homologation score 0–10 per dimension and "what is missing for 10" once the judge phase exists. At L0: "Not scored (plan only)". At L1: "Not scored (verdict pending)". Next steps: what a higher level would run, and which profile fields still carry `# inferred`.}
+
+{From L1 — `kept_resources`: every `run.json` `created_resources` entry (kind, id). Cleanup (Q10) did not run, so nothing was removed. A human may remove them on request with the leftovers command from `references/cleanup.md`.}
 
 ---
 

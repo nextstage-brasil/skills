@@ -33,11 +33,10 @@ if sys.version_info < MIN_PYTHON:
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from qa_common import load_json  # noqa: E402
-from qa_profile_rules import check_profile  # noqa: E402
+from qa_common import InvalidInput, Rejected, load_json  # noqa: E402
+from qa_profile_rules import load_valid_profile  # noqa: E402
 from qa_run_rules import check_run  # noqa: E402
 from qa_schema_lite import SchemaLiteError, load_schema  # noqa: E402
-from qa_yaml_lite import YamlLiteError, extract_yaml_block, parse  # noqa: E402
 
 EXIT_OK = 0
 EXIT_REJECTED = 2
@@ -67,6 +66,7 @@ _REQUIRED_PASSED = {
     "L3": (*_BASE_PHASES, "Q7b", "Q8", "Q9"),
 }
 _OPEN_STATES = ("failed", "running")
+_ENDING_ANSWERS = ("stop", "do_not_publish")
 
 _KEEP_ALL_REASONS = {
     "upload_partial": "captures not uploaded: human attaches them from the evidence dir",
@@ -77,20 +77,6 @@ _KEEP_ALL_REASONS = {
 OUTCOMES = ("success", "paused", "leftover", *_KEEP_ALL_REASONS)
 _PAUSED_REASON = "run paused: nothing is deleted while waiting"
 _L0_REASON = "effective L0: Q10 never runs (run dir = plan + local report)"
-
-
-class _PlanError(Exception):
-    def __init__(self, errors: list[str]):
-        super().__init__("; ".join(errors))
-        self.errors = errors
-
-
-class _InvalidInput(_PlanError):
-    """Input cannot be evaluated (exit 3)."""
-
-
-class _Rejected(_PlanError):
-    """Run manifest unusable for cleanup (exit 2)."""
 
 
 @dataclass(frozen=True)
@@ -213,9 +199,9 @@ def _decision_for(outcome: str):
 
 def _check_outcome_matches_run(outcome: str, paused: bool) -> None:
     if paused and outcome != "paused":
-        raise _Rejected([f"run.json has an open pause: outcome must be paused, got {outcome}"])
+        raise Rejected(f"run.json has an open pause: outcome must be paused, got {outcome}")
     if outcome == "paused" and not paused:
-        raise _Rejected(["outcome paused but run.json has no open pause"])
+        raise Rejected("outcome paused but run.json has no open pause")
 
 
 def _completion_errors(run: dict, level: str) -> list[str]:
@@ -233,6 +219,11 @@ def _completion_errors(run: dict, level: str) -> list[str]:
         for phase in required
         if states.get(phase) != "passed"
     )
+    errors.extend(
+        f"/pauses/{index}: answered {pause['answer']}: run ended incomplete"
+        for index, pause in enumerate(run["pauses"])
+        if pause["answer"] in _ENDING_ANSWERS
+    )
     final = required[-1]
     if run["phase"] != final:
         errors.append(f"/phase: {run['phase']} is not the final gate {final} for {level}")
@@ -248,7 +239,7 @@ def _keep_everything(plan: CleanupPlan, resources: list[dict], reason: str) -> C
 def build_plan(run: dict, outcome: str, policy: CleanupPolicy, run_path: str) -> CleanupPlan:
     report = check_run(run, load_schema(TEMPLATES / "qa-run.schema.json"))
     if report.errors:
-        raise _Rejected([f"run.json {error}" for error in report.errors])
+        raise Rejected(*(f"run.json {error}" for error in report.errors))
     _check_outcome_matches_run(outcome, report.open_pause is not None)
     level = run["level"]["effective"]
     plan = CleanupPlan(run_id=run["run_id"], outcome=outcome, level=level, run_q10=True)
@@ -259,7 +250,7 @@ def build_plan(run: dict, outcome: str, policy: CleanupPolicy, run_path: str) ->
     if outcome == "success":
         errors = _completion_errors(run, level)
         if errors:
-            raise _Rejected([f"outcome success not proven by run.json {error}" for error in errors])
+            raise Rejected(*(f"outcome success not proven by run.json {error}" for error in errors))
     decide = _decision_for(outcome)
     factory = _StepFactory(run_path, run["run_id"], policy)
     for resource in _ordered(run["created_resources"]):
@@ -280,16 +271,7 @@ def _load_policy(profile: str | None) -> CleanupPolicy:
     """Profile is validated with the Q0 gate rules; any error is invalid input (exit 3)."""
     if profile is None:
         return CleanupPolicy()
-    path = Path(profile)
-    try:
-        report = check_profile(path, Path.cwd(), load_schema(TEMPLATES / "qa-profile.schema.json"))
-        if report.errors:
-            raise _InvalidInput([f"profile {error}" for error in report.errors])
-        data = parse(extract_yaml_block(path.read_text(encoding="utf-8"))).data
-    except OSError as exc:
-        raise _InvalidInput([f"profile: {exc.strerror or exc}"]) from exc
-    except (YamlLiteError, UnicodeDecodeError) as exc:
-        raise _InvalidInput([f"profile: {exc}"]) from exc
+    data = load_valid_profile(Path(profile), Path.cwd(), load_schema(TEMPLATES / "qa-profile.schema.json"))
     return CleanupPolicy.from_profile(data)
 
 
@@ -317,15 +299,15 @@ def main(argv: list[str] | None = None) -> int:
         try:
             run = load_json(Path(args.run))
         except ValueError as exc:
-            raise _InvalidInput([f"run: {exc}"]) from exc
+            raise InvalidInput(f"run: {exc}") from exc
         plan = build_plan(run, args.outcome, _load_policy(args.profile), args.run)
-    except _InvalidInput as exc:
+    except InvalidInput as exc:
         _emit({"ok": False, "errors": exc.errors})
         return EXIT_INVALID
     except SchemaLiteError as exc:
         _emit({"ok": False, "errors": [f"bundled schema unsupported: {exc}"]})
         return EXIT_INVALID
-    except _Rejected as exc:
+    except Rejected as exc:
         _emit({"ok": False, "errors": exc.errors})
         return EXIT_REJECTED
     _emit(plan.as_dict())

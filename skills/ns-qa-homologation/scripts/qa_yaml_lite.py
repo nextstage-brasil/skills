@@ -28,7 +28,7 @@ _MENTION = "mention"
 _KEY_LINE = re.compile(
     r"""^(?P<key>[A-Za-z_][\w.-]*|"[^"]*"|'[^']*')\s*:(?:\s+(?P<value>.*))?$"""
 )
-_INT_PATTERN = re.compile(r"^[-+]?[0-9]+$")
+_INT_PATTERN = re.compile(r"^[-+]?[0-9]{1,18}$")  # longer digit runs parse as float (int() caps digits)
 _FLOAT_PATTERN = re.compile(r"^[-+]?([0-9]+\.[0-9]*|\.[0-9]+|[0-9]+)([eE][-+]?[0-9]+)?$")
 _YAML_FENCE_OPEN = re.compile(r"^\s*```\s*ya?ml\s*$", re.IGNORECASE)
 _FENCE_CLOSE = re.compile(r"^\s*```\s*$")

@@ -27,7 +27,7 @@ Resolve dev issue, QA issue, MRs, relevant comments. Output `<run_dir>/intake.md
 | Effective level | Action |
 | --------------- | ------ |
 | L0 | Read-only. Write planned transitions (`would set <key>`) or mismatch reason to `intake.md` |
-| ≥ L1 (once Phase 3 lands) | Apply via `set_issue_status` only (never `set_issue_labels`). Any side outside `*_from` / `*_running` → change nothing, log reason, stop at Q1 |
+| ≥ L1 | Apply via `set_issue_status` only (never `set_issue_labels`). Any side outside `*_from` / `*_running` → change nothing, log reason, stop at Q1 |
 
 Status names come only from `tracker.status_source`. Key absent → skip that side + log; never guess a label.
 

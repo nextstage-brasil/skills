@@ -2,6 +2,20 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## `ns-qa-homologation` 0.3.0 — Phase 3: execution and evidence, L1 (2026-11-24)
+
+`IMPLEMENTED_MAX_LEVEL` = `L1`: runs execute Q0–Q6 + local report (verdict not computed, pending Phase 4). Q1 status sync active at L1. L2/L3 profiles run as L1; `environment.provider: none` runs as L0. Q10 does not run at L1 yet (planner needs Q7 verdict gate) → every run-owned resource kept; human removes via leftovers.
+
+| Surface | Version | Change |
+| ------- | ------- | ------ |
+| `ns-qa-homologation` | 0.2.0 → 0.3.0 | New `references/execution-lanes.md` (runner lane first, browser lane complement, ledger skeleton, spec source D34, retries 0, tags, evidence flow, Q6 gate, resume), `references/browser-tools.md` (capabilities, tool map, probe, no tool → browser lane blocked), `references/failure-triage.md` (ENV/DATA/TEST/FLAKY/PRODUCT order + caps, run record fields, checkpoint D48, stall D49). Scripts: `qa_triage_rules.py` + `qa_triage.py` (history replay → class / next action / cap), `junit_to_ledger.py` (DOCTYPE/ENTITY refused, `@S-n` / `@AC-n` exact tokens, one run per JUnit file, re-merge refused), `qa_evidence.py` (`add` / `verify` / `index`; names `S-<n>-<seq>-<slug>.<ext>`, sha256, `pii_scrubbed` from masked `pii_fields`, confinement, no symlinks). `--check-ledger` replays each scenario `history` (status/triage must match), re-reads each runner run's own JUnit `source` (outcome for the scenario must match; one run per file), matches `<run_dir>/plan.yml` (ids, lane, type, covers; required once `run.json` shows Q4 passed; output `plan_checked`), checks lane evidence + evidence layout (no symlinks anywhere), ENV exhaustion → `blocked_reasons`. Shared `qa_junit_rules.py` (safe JUnit read, suite nesting cap 256, tag mapping). Unchanged re-run after a `pass` allowed (later fail → FLAKY); `junit_to_ledger.py` skips scenarios already closed `fail`/`flaky`/`blocked` (`ignored_terminal`). Ids bounded to 6 digits. `--check-run`: pause answers per reason, k-th checkpoint ↔ k-th checkpoint pause, optional pause `note`. Cleanup planner rejects `success` after a `stop` / `do_not_publish` answer. Report template: L1 §6 table, `verdict_pending`, kept resources. Evals: broken env, flaky, product defect |
+| Ledger schema | `ledger_version` 1 | **Breaking for hand-written ledgers** (none could exist: L0 never wrote one): required `environment.resets` (0–2), `scenarios[].history[]` (`outcome`, `change`, `health`, `signals`, `suggested_class`, `source` required on runner lane), `blocked_reason` when `blocked`, `tool {name, missing}` when lane `browser`; junit paths `results/<name>.xml`, other kinds `evidence/S-<n>-<seq>-<slug>.<ext>`. `S-`/`AC-`/`F-`/`IA-` ids (ledger, plan, acceptance) max 6 digits |
+| QA profile | — | `execution.browser_tool_preference` = tool ids of `browser-tools.md` (unknown id → warning); template default lists all four. No new keys |
+| `ns-e2e-tests` | 1.2 → 1.3 | Phase 0.0: homologation call with QA-profile `execution.e2e_root` (incl. separate repo with own `AGENTS.md`) → use it, never bootstrap. Homologation specs carry `@S-n` + `@AC-n` title tokens next to `@smoke` / `@regression`. Other triggers unchanged |
+| CI | — | `validate-skills.yml` runs `test_qa_triage.py`, `test_qa_junit.py`, `test_qa_evidence.py` |
+
+Consumers: `harness sync`. Profiles at L1 now execute (env + runner/browser); keep `provider: none` or set `autonomy_level: L0` to stay plan-only. Replace `browser_tool_preference` placeholders with tool ids.
+
 ## `ns-qa-homologation` 0.2.0 — Phase 2: environment, data, cleanup (2026-11-24)
 
 Q5 (environment + data) and Q10 (cleanup) specified with deterministic checks. Execution still capped at L0 (`IMPLEMENTED_MAX_LEVEL`); Q5/Q10 run from Phase 3 (L1). No routing or tracker behavior change.

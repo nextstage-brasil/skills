@@ -31,6 +31,7 @@ from qa_fixtures import (
     write_json,
 )
 from qa_common import RESOURCE_ID_PATTERN  # noqa: E402  (qa_fixtures puts scripts/ on sys.path)
+from qa_run_rules import _ANSWERS_BY_REASON  # noqa: E402  (private table under test)
 
 RUN_DB = "qa_42_20261124t1200z"
 FOREIGN_NS = "qa-142-20261124t1200z"  # another run whose iid ends with this run's iid
@@ -90,6 +91,17 @@ class ResourceIdPatternSyncTests(unittest.TestCase):
         shell_pattern = RESOURCE_ID_PATTERN.replace(_DOTDOT_LOOKAHEAD, "")
         self.assertIn(f"ID_PATTERN='{shell_pattern}'", template)
         self.assertIn("[[ $1 != *..* ]]", template)
+
+
+class PauseAnswerSyncTests(unittest.TestCase):
+    """Answers allowed per pause reason (qa_run_rules) cover exactly the schema enums."""
+
+    def test_answers_by_reason_match_schema(self):
+        pause = json.loads((SKILL / "templates" / "qa-run.schema.json").read_text(encoding="utf-8"))
+        properties = pause["properties"]["pauses"]["items"]["properties"]
+        self.assertEqual(set(_ANSWERS_BY_REASON), set(properties["reason"]["enum"]))
+        answers = set().union(*_ANSWERS_BY_REASON.values())
+        self.assertEqual(answers | {None}, set(properties["answer"]["enum"]))
 
 
 class CheckRunTests(ReasonAssertions):
@@ -204,6 +216,53 @@ class CheckRunTests(ReasonAssertions):
         }
         for mutate, reason in cases.items():
             with self.subTest(case=getattr(mutate, "__name__", reason)):
+                code, payload = self._run(mutate)
+                self.assertEqual(code, 2, payload)
+                self.assertReason(payload["errors"], reason)
+
+    def test_checkpoint_pause_pairing_accepted(self):
+        def second_window_waiting(run):
+            run["checkpoints"].append({"window": 2, "at": "2026-11-24T13:00Z", "decision": "pending"})
+            run["pauses"].append({**_open_pause("checkpoint"), "note": "window 2 reached during Q6"})
+
+        def stall_answered_with_note(run):
+            run["pauses"].append({**_open_pause("stall"), "resolved_at": "2026-11-24T13:30Z", "answer": "continue",
+                                  "note": "Q6 S-3: unexpected MCP answer; tried twice; need guidance"})
+
+        for mutate in (second_window_waiting, stall_answered_with_note):
+            with self.subTest(case=mutate.__name__):
+                code, payload = self._run(mutate)
+                self.assertEqual(code, 0, payload)
+
+    def test_checkpoint_pause_pairing_rejected(self):
+        def checkpoint_without_pause(run):
+            run["checkpoints"].append({"window": 2, "at": "2026-11-24T13:00Z", "decision": "continue"})
+
+        def decision_differs_from_answer(run):
+            run["checkpoints"][0]["decision"] = "stop"
+
+        def pending_but_answered(run):
+            run["checkpoints"][0]["decision"] = "pending"
+
+        def answer_wrong_for_reason(run):
+            run["pauses"][0]["answer"] = "approve"
+
+        def stall_answered_approve(run):
+            run["pauses"].append({**_open_pause("stall"), "resolved_at": "2026-11-24T13:30Z", "answer": "do_not_publish"})
+
+        def preview_answered_continue(run):
+            run["pauses"].append({**_open_pause("preview_approval", "Q9"), "resolved_at": "2026-11-24T13:30Z", "answer": "continue"})
+
+        cases = {
+            checkpoint_without_pause: "/checkpoints: 2 checkpoint(s) but 1 checkpoint pause(s)",
+            decision_differs_from_answer: "/checkpoints/0: decision stop but its pause answer is continue",
+            pending_but_answered: "/checkpoints/0: decision pending but its pause answer is continue",
+            answer_wrong_for_reason: "/pauses/0: answer approve not valid for reason checkpoint",
+            stall_answered_approve: "/pauses/1: answer do_not_publish not valid for reason stall",
+            preview_answered_continue: "/pauses/1: answer continue not valid for reason preview_approval",
+        }
+        for mutate, reason in cases.items():
+            with self.subTest(case=mutate.__name__):
                 code, payload = self._run(mutate)
                 self.assertEqual(code, 2, payload)
                 self.assertReason(payload["errors"], reason)
@@ -465,6 +524,36 @@ class CleanupPlanTests(ReasonAssertions):
                 self.assertReason(payload["errors"], "outcome success not proven by run.json " + reason)
         code, plan = self._plan("blocked", failed_q6)
         self.assertEqual((code, plan["steps"]), (0, []))
+
+    def test_l1_run_without_verdict_keeps_everything(self):
+        """Phase 3 L1 run: report written, Q7 verdict pending (skipped) -> success unprovable, Q10 keeps all."""
+
+        def report_without_verdict(run):
+            run["phases"][7].update(state="skipped", note="report written; verdict pending")
+            run["phase"] = "Q6"
+
+        code, payload = self._plan("success", report_without_verdict)
+        self.assertEqual(code, 2, payload)
+        self.assertEqual(
+            payload["errors"],
+            ["outcome success not proven by run.json /phases: Q7 not passed (required for success at L1)",
+             "outcome success not proven by run.json /phase: Q6 is not the final gate Q7 for L1"],
+        )
+
+    def test_human_stop_never_proves_success(self):
+        for reason, answer, phase in (("checkpoint", "stop", "Q6"), ("stall", "stop", "Q5"),
+                                      ("preview_approval", "do_not_publish", "Q9")):
+            def stopped(run, reason=reason, answer=answer, phase=phase):
+                run["pauses"].append({**_open_pause(reason, phase), "resolved_at": "2026-11-24T13:30Z", "answer": answer})
+                if reason == "checkpoint":
+                    run["checkpoints"].append({"window": 2, "at": "2026-11-24T13:00Z", "decision": answer})
+
+            with self.subTest(reason=reason):
+                code, payload = self._plan("success", stopped)
+                self.assertEqual(code, 2, payload)
+                self.assertReason(payload["errors"], f"/pauses/1: answered {answer}: run ended incomplete")
+                code, plan = self._plan("incomplete", stopped)
+                self.assertEqual((code, plan["steps"]), (0, []))
 
     def test_each_required_gate_alone_blocks_success(self):
         def drop(phase: str, setup=None):

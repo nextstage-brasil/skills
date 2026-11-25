@@ -133,4 +133,7 @@ jobs:
         run: |
           python3 skills/ns-qa-homologation/scripts/tests/test_qa_gate.py
           python3 skills/ns-qa-homologation/scripts/tests/test_qa_run.py
+          python3 skills/ns-qa-homologation/scripts/tests/test_qa_triage.py
+          python3 skills/ns-qa-homologation/scripts/tests/test_qa_junit.py
+          python3 skills/ns-qa-homologation/scripts/tests/test_qa_evidence.py
           python3 skills/ns-qa-homologation/scripts/tests/mutate_qa_gate.py

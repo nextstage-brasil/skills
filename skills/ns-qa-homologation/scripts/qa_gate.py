@@ -4,7 +4,10 @@
 Modes (exactly one):
   --check-profile PATH   QA profile Markdown (one fenced yaml block)
   --check-plan RUN_DIR   L0 artifacts RUN_DIR/acceptance.yml + RUN_DIR/plan.yml
-  --check-ledger PATH    qa-ledger.json (evidence paths relative to --evidence-dir)
+  --check-ledger PATH    qa-ledger.json; evidence/JUnit paths relative to the run dir
+                         (--evidence-dir, default: ledger dir); RUN_DIR/plan.yml, when present,
+                         must match the ledger scenarios ("plan_checked"); required once
+                         RUN_DIR/run.json shows Q4 passed
   --check-run PATH       run.json manifest (schema + run-owned resource rules)
   --check-env PATH       stdout JSON of one qa-env subcommand (optional --run-id)
 
@@ -31,7 +34,7 @@ if sys.version_info < MIN_PYTHON:
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from qa_common import load_json  # noqa: E402
+from qa_common import InvalidInput, load_json  # noqa: E402
 from qa_env_rules import check_env_output  # noqa: E402
 from qa_ledger_rules import check_ledger  # noqa: E402
 from qa_plan_rules import check_plan  # noqa: E402
@@ -46,10 +49,7 @@ EXIT_INVALID = 3
 TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
 ACCEPTANCE_FILE = "acceptance.yml"
 PLAN_FILE = "plan.yml"
-
-
-class _InvalidInput(Exception):
-    """Input cannot be evaluated (exit 3)."""
+RUN_FILE = "run.json"
 
 
 class _Parser(argparse.ArgumentParser):
@@ -66,9 +66,9 @@ def _read_yaml(path: Path) -> object:
     try:
         return parse(path.read_text(encoding="utf-8")).data
     except OSError as exc:
-        raise _InvalidInput(f"{path.name}: {exc.strerror or exc}") from exc
+        raise InvalidInput(f"{path.name}: {exc.strerror or exc}") from exc
     except (YamlLiteError, UnicodeDecodeError) as exc:
-        raise _InvalidInput(f"{path.name}: {exc}") from exc
+        raise InvalidInput(f"{path.name}: {exc}") from exc
 
 
 def _run_profile(args: argparse.Namespace) -> tuple[int, dict]:
@@ -77,9 +77,9 @@ def _run_profile(args: argparse.Namespace) -> tuple[int, dict]:
             Path(args.check_profile), Path(args.repo).resolve(), load_schema(TEMPLATES / "qa-profile.schema.json")
         )
     except OSError as exc:
-        raise _InvalidInput(f"profile: {exc.strerror or exc}") from exc
+        raise InvalidInput(f"profile: {exc.strerror or exc}") from exc
     except (YamlLiteError, UnicodeDecodeError) as exc:
-        raise _InvalidInput(f"profile: {exc}") from exc
+        raise InvalidInput(f"profile: {exc}") from exc
     return (EXIT_OK if not report.errors else EXIT_INVALID), report.as_dict()
 
 
@@ -98,14 +98,39 @@ def _read_json(path: Path, label: str) -> object:
     try:
         return load_json(path)
     except ValueError as exc:
-        raise _InvalidInput(f"{label}: {exc}") from exc
+        raise InvalidInput(f"{label}: {exc}") from exc
+
+
+def _plan_gate_passed(run_dir: Path) -> bool:
+    """run.json of the run records Q4 passed (plan.yml then must exist)."""
+    path = run_dir / RUN_FILE
+    if not path.exists():
+        return False
+    run = _read_json(path, RUN_FILE)
+    phases = run.get("phases") if isinstance(run, dict) else None
+    return isinstance(phases, list) and any(
+        isinstance(item, dict) and item.get("phase") == "Q4" and item.get("state") == "passed" for item in phases
+    )
+
+
+def _run_plan_for_ledger(run_dir: Path) -> tuple[dict | None, list[str]]:
+    """plan.yml of the run (None when absent) + its errors; required once run.json shows Q4 passed."""
+    path = run_dir / PLAN_FILE
+    if not path.exists():
+        missing = _plan_gate_passed(run_dir)
+        return None, ([f"{PLAN_FILE} missing but {RUN_FILE} shows Q4 passed"] if missing else [])
+    plan = _read_yaml(path)
+    errors = load_schema(TEMPLATES / "qa-plan.schema.json").validate(plan)
+    return (None, [f"{PLAN_FILE} {error}" for error in errors]) if errors else (plan, [])
 
 
 def _run_ledger(args: argparse.Namespace) -> tuple[int, dict]:
     path = Path(args.check_ledger)
     ledger = _read_json(path, "ledger")
-    evidence_root = Path(args.evidence_dir) if args.evidence_dir else path.resolve().parent
-    report = check_ledger(ledger, evidence_root, load_schema(TEMPLATES / "qa-ledger.schema.json"))
+    run_dir = Path(args.evidence_dir) if args.evidence_dir else path.resolve().parent
+    plan, plan_errors = _run_plan_for_ledger(run_dir)
+    report = check_ledger(ledger, run_dir, load_schema(TEMPLATES / "qa-ledger.schema.json"), plan)
+    report.errors[:0] = plan_errors
     return (EXIT_OK if not report.errors else EXIT_REJECTED), report.as_dict()
 
 
@@ -141,7 +166,8 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     group.add_argument("--check-run", metavar="RUN_JSON")
     group.add_argument("--check-env", metavar="QA_ENV_OUTPUT_JSON")
     parser.add_argument("--repo", default=".", help="repo root for profile tracker.status_source")
-    parser.add_argument("--evidence-dir", help="evidence root for ledger paths (default: ledger dir)")
+    parser.add_argument("--evidence-dir", metavar="RUN_DIR",
+                        help="run dir that ledger evidence/JUnit paths are relative to (default: ledger dir)")
     parser.add_argument("--run-id", help="--check-env: expected run_id")
     return parser.parse_args(argv)
 
@@ -152,8 +178,8 @@ def main(argv: list[str] | None = None) -> int:
     mode, runner = _MODES[attribute]
     try:
         code, payload = runner(args)
-    except _InvalidInput as exc:
-        code, payload = EXIT_INVALID, {"ok": False, "errors": [str(exc)]}
+    except InvalidInput as exc:
+        code, payload = EXIT_INVALID, {"ok": False, "errors": exc.errors}
     except SchemaLiteError as exc:
         code, payload = EXIT_INVALID, {"ok": False, "errors": [f"bundled schema unsupported: {exc}"]}
     _emit({"mode": mode, **payload})

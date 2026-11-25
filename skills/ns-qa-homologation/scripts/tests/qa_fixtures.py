@@ -16,6 +16,9 @@ SCRIPTS = TESTS.parent
 SKILL = SCRIPTS.parent
 GATE = SCRIPTS / "qa_gate.py"
 CLEANUP_PLAN = SCRIPTS / "qa_cleanup_plan.py"
+TRIAGE = SCRIPTS / "qa_triage.py"
+JUNIT_TO_LEDGER = SCRIPTS / "junit_to_ledger.py"
+EVIDENCE = SCRIPTS / "qa_evidence.py"
 ENV_TEMPLATE = SKILL / "templates" / "qa-env.template.sh"
 PROFILE_TEMPLATE = SKILL / "templates" / "qa-profile.template.md"
 PLACEHOLDER = re.compile(r"<[^<>\n]+>")
@@ -55,6 +58,18 @@ def run_cleanup_plan(args: list[str], cwd: Path | None = None) -> tuple[int, dic
     return _run_script(CLEANUP_PLAN, args, cwd)
 
 
+def run_triage(args: list[str]) -> tuple[int, dict]:
+    return _run_script(TRIAGE, args, None)
+
+
+def run_junit_to_ledger(args: list[str]) -> tuple[int, dict]:
+    return _run_script(JUNIT_TO_LEDGER, args, None)
+
+
+def run_evidence(args: list[str], cwd: Path | None = None) -> tuple[int, dict]:
+    return _run_script(EVIDENCE, args, cwd)
+
+
 def filled_profile_text(replacements: dict[str, str] | None = None) -> str:
     """Template with every placeholder filled; optional raw text replacements after."""
     text = PROFILE_TEMPLATE.read_text(encoding="utf-8").replace(RUNNER_PLACEHOLDER, "playwright")
@@ -81,10 +96,31 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def run_attempt(
+    outcome: str,
+    change: str = "none",
+    health: str = "unknown",
+    signals: list[str] | None = None,
+    suggested_class: str | None = None,
+    source: str | None = None,
+) -> dict:
+    """One ledger history entry (explicit run)."""
+    attempt = {
+        "outcome": outcome,
+        "change": change,
+        "health": health,
+        "signals": signals or [],
+        "suggested_class": suggested_class,
+    }
+    if source is not None:
+        attempt["source"] = source
+    return attempt
+
+
 def base_ledger(run_dir: Path) -> dict:
     """Valid ledger; writes its evidence files under run_dir."""
     files = {
-        "results/run-1.xml": b"<testsuite tests='1'/>",
+        "results/run-1.xml": b'<testsuite name="records"><testcase name="save stores the record @S-1 @AC-1"/></testsuite>',
         "evidence/S-1-01-saved.png": b"png-bytes-1",
         "evidence/S-2-01-error.png": b"png-bytes-2",
     }
@@ -98,7 +134,7 @@ def base_ledger(run_dir: Path) -> dict:
         "run_id": "42-20261124T1200Z",
         "issue": {"dev": "group/app#42", "qa": "group/qa#7"},
         "mr": {"ref": "group/app!9", "commit": "abc1234def5678"},
-        "environment": {"commit": "abc1234", "url": "http://localhost:8080", "health": "ok"},
+        "environment": {"commit": "abc1234", "url": "http://localhost:8080", "health": "ok", "resets": 0},
         "criteria": [
             {"id": "AC-1", "text": "Save stores the record", "source": "issue", "criticality": "critical"},
             {"id": "AC-2", "text": "Invalid input shows an error", "source": "derived", "criticality": "medium"},
@@ -113,6 +149,7 @@ def base_ledger(run_dir: Path) -> dict:
                 "attempts": 1,
                 "triage": None,
                 "data_source": "real",
+                "history": [run_attempt("pass", source="results/run-1.xml")],
                 "evidence": [
                     {"kind": "junit", "path": "results/run-1.xml", "sha256": digest["results/run-1.xml"]},
                     {
@@ -132,6 +169,11 @@ def base_ledger(run_dir: Path) -> dict:
                 "attempts": 2,
                 "triage": "PRODUCT",
                 "data_source": "db_fixture",
+                "tool": {"name": "playwright-mcp", "missing": ["storage"]},
+                "history": [
+                    run_attempt("fail", health="ok", suggested_class="PRODUCT"),
+                    run_attempt("fail", health="ok", suggested_class="PRODUCT"),
+                ],
                 "evidence": [
                     {
                         "kind": "screenshot",

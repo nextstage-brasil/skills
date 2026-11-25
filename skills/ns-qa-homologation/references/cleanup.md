@@ -1,6 +1,6 @@
 # Q10 Cleanup
 
-Remove what this run created, only on full success, only from `run.json.created_resources`. Planner `scripts/qa_cleanup_plan.py` = single authority (prints plan, executes nothing); agent executes. Effective L0 → planner returns `run_q10: false`, keeps all, no log line.
+Remove what this run created, only on full success, only from `run.json.created_resources`. Planner `scripts/qa_cleanup_plan.py` = single authority (prints plan, executes nothing); agent executes. Effective L0 → planner returns `run_q10: false`, keeps all, no log line. v0.3.0: L1 run ends with Q7 `skipped` (verdict pending) → `success` unprovable → Q10 not executed; all kept (fail-safe); human removes via **Leftovers**.
 
 ## Registration (every phase)
 
@@ -28,7 +28,7 @@ Id rule (schemas + template): `^[A-Za-z0-9.][A-Za-z0-9._/:@+-]*$`, no `..` (no w
 | `paused` | Waiting on human (checkpoint, stall, score below min, preview) | No Q10; no log line; wait indefinitely |
 | `leftover` | Human asked to remove a kept run's env | Delete `via: qa-env` only; agent-owned kept |
 
-Planner rejects (exit 2): open pause unless `paused`; `paused` without one; `success` unless `run.json` proves it — no `phases[]` entry `failed`/`running`, required gates `passed` (L1: Q0–Q7, + Q7b when present; L2: + Q7b, Q9; L3: + Q7b, Q8, Q9) and `phase` = last required gate. L3 run with Q8 skipped (nothing to automate) cannot prove success yet → keeps everything; Q8 no-op semantics land in Phase 5.
+Planner rejects (exit 2): open pause unless `paused`; `paused` without one; `success` unless `run.json` proves it — no pause answered `stop`/`do_not_publish`, no `phases[]` entry `failed`/`running`, required gates `passed` (L1: Q0–Q7, + Q7b when present; L2: + Q7b, Q9; L3: + Q7b, Q8, Q9) and `phase` = last required gate. L3 run with Q8 skipped (nothing to automate) cannot prove success yet → keeps everything; Q8 no-op semantics land in Phase 5.
 
 ## Matrix (`success`, effective ≥ L1)
 
@@ -38,6 +38,8 @@ Planner rejects (exit 2): open pause unless `paused`; `paused` without one; `suc
 | L1 | delete | delete | delete | delete all except `report.md` + `qa-ledger.json` (`cleanup.keep_local_report_at_L1`, default `true`) |
 
 Category absent from `cleanup.on_full_success` → kept, reason logged.
+
+**Known gap (Phase 4):** E2E-repo worktrees (`execution-lanes.md`, `git -C <e2e_root> worktree add`) get step `git worktree remove <id>` without `-C` → fails, keeps (fail-safe). Fix: resource repo-root field + `git -C`. Unreachable at L1 (Q10 not run).
 
 ## Never deleted
 

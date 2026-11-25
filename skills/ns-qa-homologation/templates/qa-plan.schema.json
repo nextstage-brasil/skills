@@ -16,7 +16,7 @@
         "additionalProperties": false,
         "required": ["id", "kind", "summary"],
         "properties": {
-          "id": { "type": "string", "pattern": "^IA-[0-9]+$" },
+          "id": { "type": "string", "pattern": "^IA-[0-9]{1,6}$" },
           "kind": { "enum": ["direct", "indirect"] },
           "summary": { "type": "string", "minLength": 1 }
         }
@@ -30,18 +30,18 @@
         "additionalProperties": false,
         "required": ["id", "title", "covers", "areas", "type", "lane", "data", "existing", "automate"],
         "properties": {
-          "id": { "type": "string", "pattern": "^S-[0-9]+$" },
+          "id": { "type": "string", "pattern": "^S-[0-9]{1,6}$" },
           "title": { "type": "string", "minLength": 1 },
           "covers": {
             "type": "array",
             "minItems": 1,
             "uniqueItems": true,
-            "items": { "type": "string", "pattern": "^AC-[0-9]+$" }
+            "items": { "type": "string", "pattern": "^AC-[0-9]{1,6}$" }
           },
           "areas": {
             "type": "array",
             "uniqueItems": true,
-            "items": { "type": "string", "pattern": "^IA-[0-9]+$" }
+            "items": { "type": "string", "pattern": "^IA-[0-9]{1,6}$" }
           },
           "type": { "enum": ["positive", "negative", "business_rule", "regression"] },
           "lane": { "enum": ["runner", "browser"] },
@@ -63,7 +63,7 @@
         "additionalProperties": false,
         "required": ["ac", "type", "reason"],
         "properties": {
-          "ac": { "type": "string", "pattern": "^AC-[0-9]+$" },
+          "ac": { "type": "string", "pattern": "^AC-[0-9]{1,6}$" },
           "type": { "enum": ["negative", "business_rule"] },
           "reason": { "type": "string", "minLength": 1 }
         }

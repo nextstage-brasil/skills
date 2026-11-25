@@ -66,7 +66,7 @@ execution:
     branch_pattern: "qa/{iid}-{slug}"
     commit_prefix: "test(e2e):"
     commit_language: en
-  browser_tool_preference: [<browser-tool>, <browser-tool>]
+  browser_tool_preference: [playwright-mcp, claude-in-chrome, claude-browser-pane, cursor-ide-browser]   # references/browser-tools.md
   stability_runs: 2
   runner_retries_during_verification: 0
   budget:

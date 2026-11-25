@@ -34,7 +34,7 @@ Scenario list order = execution order. Rank = highest criticality among `covers`
 | Usability, visual, responsive, exploratory | `browser` |
 | `runner: none` | `browser` only (critical AC verdict cap, Phase 4) |
 
-Browser capability detection: Phase 3.
+Browser tool + capability detection: `browser-tools.md`.
 
 ## Data
 
@@ -44,7 +44,7 @@ Browser capability detection: Phase 3.
 
 Under `execution.e2e_root`:
 
-1. **Tag:** spec titles containing exact token `@AC-n` (dev-flow tag convention). Token match only.
+1. **Tag:** spec titles containing exact token `@AC-n` or `@S-n` (dev-flow tag convention). Token match only.
 2. **Route → spec map:** list navigations per spec (`cy.visit(` / `page.goto(` targets) → route; map routes of direct areas to specs.
 
 Record hits in `existing` as `"<spec path> (@AC-n)"` or `"<spec path> (route <path>)"`. Hit ≠ coverage proof: scenario stays in plan (reuse candidate at execution). No feature-word text search.

@@ -8,23 +8,39 @@ unhealthy environment) are reported as ``blocked_reasons``, not errors.
 
 from __future__ import annotations
 
-import hashlib
 from dataclasses import dataclass, field
-from pathlib import Path, PurePosixPath
+from functools import cached_property
+from pathlib import Path
 from typing import Callable
 
-from qa_common import find_duplicates
+from qa_common import (
+    JUNIT_KIND,
+    InvalidInput,
+    Rejected,
+    evidence_file_problem,
+    evidence_path_problem,
+    find_duplicates,
+    load_json,
+)
+from qa_junit_rules import load_junit, map_cases, scenario_outcome
 from qa_schema_lite import SchemaLite
+from qa_triage_rules import PRODUCT_MIN_REPRODUCTIONS, STOP_RUN, Decision, TriageError, replay
 
 _FAILURE_STATUSES = {"fail", "blocked", "flaky"}
-_PRODUCT_MIN_REPRODUCTIONS = 2
-_HASH_CHUNK_BYTES = 1024 * 1024
+_RAN_STATUSES = {"pass", "fail", "flaky"}
+_BROWSER_REQUIRED = ("navigate", "screenshot")
+_BROWSER_FORBIDDEN_KINDS = {JUNIT_KIND, "runner_video"}
+_CAPABILITY_KINDS = {"screenshot", "console", "network"}  # evidence kinds a browser capability produces
+_NO_TOOL = "none"
+_NEEDS_RUNS = {"FLAKY", "PRODUCT"}  # classes only a replayed history can assign
+_PLAN_FIELDS = ("lane", "type", "covers")  # scenario fields the ledger must keep from plan.yml
 
 
 @dataclass
 class LedgerReport:
     errors: list[str] = field(default_factory=list)
     blocked_reasons: list[str] = field(default_factory=list)
+    plan_checked: bool = False
 
     def as_dict(self) -> dict:
         return {
@@ -32,13 +48,15 @@ class LedgerReport:
             "errors": self.errors,
             "blocked": bool(self.blocked_reasons),
             "blocked_reasons": self.blocked_reasons,
+            "plan_checked": self.plan_checked,
         }
 
 
 @dataclass(frozen=True)
 class _LedgerContext:
     ledger: dict
-    evidence_root: Path
+    run_dir: Path
+    plan: dict | None
 
     @property
     def criteria_ids(self) -> list[str]:
@@ -47,6 +65,36 @@ class _LedgerContext:
     @property
     def scenarios(self) -> list[dict]:
         return self.ledger["scenarios"]
+
+    @cached_property
+    def replays(self) -> dict[str, Decision | TriageError | None]:
+        """Triage replay per scenario id: Decision, protocol error, or None (no run recorded)."""
+        results: dict[str, Decision | TriageError | None] = {}
+        for scenario in self.scenarios:
+            if not scenario["history"]:
+                results[scenario["id"]] = None
+                continue
+            try:
+                results[scenario["id"]] = replay(scenario["history"], self.ledger["environment"]["resets"])
+            except TriageError as exc:
+                results[scenario["id"]] = exc
+        return results
+
+    @cached_property
+    def junit_outcomes(self) -> dict[str, dict[str, str] | str]:
+        """Per cited JUnit source: {scenario id: outcome in that file}, or why it cannot be read."""
+        sources = {
+            attempt["source"] for scenario in self.scenarios for attempt in scenario["history"] if "source" in attempt
+        }
+        results: dict[str, dict[str, str] | str] = {}
+        for source in sorted(sources):
+            try:
+                per_scenario, _unmapped = map_cases(load_junit(self.run_dir, source), self.scenarios)
+            except (Rejected, InvalidInput) as exc:
+                results[source] = "; ".join(exc.errors)
+                continue
+            results[source] = {key: scenario_outcome(cases) for key, cases in per_scenario.items()}
+        return results
 
 
 _Check = Callable[[_LedgerContext], list[str]]
@@ -76,37 +124,128 @@ def _every_criterion_covered(ctx: _LedgerContext) -> list[str]:
     return [f"/criteria/{ac}: not covered by any scenario" for ac in ctx.criteria_ids if ac not in covered]
 
 
-def _sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(_HASH_CHUNK_BYTES), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+def _evidence_layout(ctx: _LedgerContext) -> list[str]:
+    return [
+        f"/scenarios/{scenario['id']}/evidence: {problem}"
+        for scenario in ctx.scenarios
+        for entry in scenario["evidence"]
+        for problem in [evidence_path_problem(entry["kind"], entry["path"], scenario["id"])]
+        if problem
+    ]
 
 
-def _evidence_problem(entry: dict, root: Path) -> str | None:
-    relative = PurePosixPath(entry["path"])
-    if relative.is_absolute() or ".." in relative.parts:
-        return f"path {entry['path']} escapes the evidence dir"
-    target = root / Path(*relative.parts)
-    if not target.is_file():
-        return f"file {entry['path']} not found"
-    if not target.resolve().is_relative_to(root.resolve()):
-        return f"path {entry['path']} resolves outside the evidence dir"
-    try:
-        digest = _sha256_file(target)
-    except OSError as exc:
-        return f"file {entry['path']} unreadable: {exc.strerror or exc}"
-    if digest != entry["sha256"]:
-        return f"sha256 mismatch for {entry['path']}"
+def _runner_lane_problems(scenario: dict, kinds: set[str]) -> list[str]:
+    problems = []
+    if "tool" in scenario:
+        problems.append("lane runner records no browser tool")
+    if scenario["status"] in _RAN_STATUSES and JUNIT_KIND not in kinds:
+        problems.append(f"lane runner status {scenario['status']} needs junit evidence")
+    return problems
+
+
+def _browser_lane_problems(scenario: dict, kinds: set[str]) -> list[str]:
+    tool = scenario["tool"]
+    missing = set(tool["missing"])
+    problems = [f"lane browser cannot cite {kind} evidence" for kind in sorted(kinds & _BROWSER_FORBIDDEN_KINDS)]
+    problems.extend(
+        f"{kind} evidence but tool {tool['name']} lacks {kind}" for kind in sorted(kinds & _CAPABILITY_KINDS & missing)
+    )
+    if scenario["status"] not in _RAN_STATUSES:
+        return problems
+    if tool["name"] == _NO_TOOL:
+        problems.append(f"status {scenario['status']} without a browser tool (tool none: blocked or not_run only)")
+    lacking = [capability for capability in _BROWSER_REQUIRED if capability in missing]
+    if lacking:
+        problems.append(f"tool {tool['name']} lacks required {', '.join(lacking)}: browser lane cannot run")
+    if "screenshot" not in kinds:
+        problems.append(f"lane browser status {scenario['status']} needs screenshot evidence")
+    return problems
+
+
+def _lane_evidence(ctx: _LedgerContext) -> list[str]:
+    errors = []
+    for scenario in ctx.scenarios:
+        kinds = {entry["kind"] for entry in scenario["evidence"]}
+        check = _runner_lane_problems if scenario["lane"] == "runner" else _browser_lane_problems
+        errors.extend(f"/scenarios/{scenario['id']}: {problem}" for problem in check(scenario, kinds))
+    return errors
+
+
+def _replay_problems(scenario: dict, decision: Decision | TriageError | None) -> list[str]:
+    status, triage = scenario["status"], scenario["triage"]
+    if isinstance(decision, TriageError):
+        return [f"history: {decision}"]
+    if decision is None:
+        if status not in ("not_run", "blocked"):
+            return [f"status {status} without any run in history"]
+        return [f"triage {triage} needs runs in history"] if triage in _NEEDS_RUNS else []
+    if status == "not_run":
+        return [f"status not_run but history has {len(scenario['history'])} run(s)"]
+    if decision.terminal:
+        if (status, triage) != (decision.status, decision.triage):
+            replayed = f"{decision.status}/{decision.triage} ({decision.reason})"
+            return [f"status/triage {status}/{triage} but triage replay gives {replayed}"]
+        return []
+    if status != "blocked":
+        return [
+            f"triage replay not terminal (next action {decision.action}): "
+            f"only blocked (interrupted) allowed, got {status}"
+        ]
+    if triage != decision.triage:
+        return [f"triage {triage} but triage replay gives {decision.triage}"]
+    return []
+
+
+def _source_problem(ctx: _LedgerContext, scenario: dict, attempt: dict, cited: set[str]) -> str | None:
+    source = attempt.get("source")
+    if source is None:
+        return None
+    if scenario["lane"] != "runner":
+        return f"source {source}: browser lane runs cite no junit"
+    if source not in cited:
+        return f"source {source} is not a junit evidence of this scenario"
+    outcomes = ctx.junit_outcomes[source]
+    if isinstance(outcomes, str):
+        return f"source {source} unreadable: {outcomes}"
+    observed = outcomes.get(scenario["id"])
+    if observed is None:
+        return f"{source} has no testcase for {scenario['id']}"
+    if observed != attempt["outcome"]:
+        return f"outcome {attempt['outcome']} but {source} gives {observed} for {scenario['id']}"
     return None
+
+
+def _junit_sources(ctx: _LedgerContext, scenario: dict) -> list[str]:
+    """Every runner run is backed by its own JUnit file (one run per file), same outcome for this scenario."""
+    cited = {entry["path"] for entry in scenario["evidence"] if entry["kind"] == JUNIT_KIND}
+    sources = [attempt["source"] for attempt in scenario["history"] if "source" in attempt]
+    problems = [f"history: source {source} backs more than one run (one run per JUnit file)"
+                for source in find_duplicates(sources)]
+    problems.extend(
+        f"history run {index + 1}: {problem}"
+        for index, attempt in enumerate(scenario["history"])
+        for problem in [_source_problem(ctx, scenario, attempt, cited)]
+        if problem
+    )
+    return problems
+
+
+def _triage_replay(ctx: _LedgerContext) -> list[str]:
+    errors = []
+    for scenario in ctx.scenarios:
+        where = f"/scenarios/{scenario['id']}"
+        if scenario["attempts"] != len(scenario["history"]):
+            errors.append(f"{where}: attempts {scenario['attempts']} != history length {len(scenario['history'])}")
+        problems = _replay_problems(scenario, ctx.replays[scenario["id"]]) + _junit_sources(ctx, scenario)
+        errors.extend(f"{where}: {problem}" for problem in problems)
+    return errors
 
 
 def _evidence_files(ctx: _LedgerContext) -> list[str]:
     errors = []
     for scenario in ctx.scenarios:
         for entry in scenario["evidence"]:
-            problem = _evidence_problem(entry, ctx.evidence_root)
+            problem = evidence_file_problem(ctx.run_dir, entry["path"], entry["sha256"])
             if problem:
                 errors.append(f"/scenarios/{scenario['id']}/evidence: {problem}")
     return errors
@@ -123,6 +262,11 @@ def _triage_consistency(ctx: _LedgerContext) -> list[str]:
     return errors
 
 
+def _replayed_reproductions(ctx: _LedgerContext, scenario_id: str) -> int | None:
+    decision = ctx.replays[scenario_id]
+    return decision.counters["reproductions"] if isinstance(decision, Decision) else None
+
+
 def _findings_consistency(ctx: _LedgerContext) -> list[str]:
     scenario_ids = {item["id"] for item in ctx.scenarios}
     findings = ctx.ledger["findings"]
@@ -132,15 +276,23 @@ def _findings_consistency(ctx: _LedgerContext) -> list[str]:
         if finding["scenario"] not in scenario_ids
     ]
     for scenario in ctx.scenarios:
-        if scenario["triage"] != "PRODUCT":
-            continue
+        if (scenario["status"], scenario["triage"]) != ("fail", "PRODUCT"):
+            continue  # an interrupted PRODUCT suspicion (blocked) is not a confirmed defect
         linked = [finding for finding in findings if finding["scenario"] == scenario["id"]]
         if not linked:
             errors.append(f"/scenarios/{scenario['id']}: triage PRODUCT without a finding")
         errors.extend(
-            f"/findings/{finding['id']}: PRODUCT finding reproduced {finding['reproduced']} < {_PRODUCT_MIN_REPRODUCTIONS}"
+            f"/findings/{finding['id']}: PRODUCT finding reproduced {finding['reproduced']} "
+            f"< {PRODUCT_MIN_REPRODUCTIONS}"
             for finding in linked
-            if finding["reproduced"] < _PRODUCT_MIN_REPRODUCTIONS
+            if finding["reproduced"] < PRODUCT_MIN_REPRODUCTIONS
+        )
+        replayed = _replayed_reproductions(ctx, scenario["id"])
+        errors.extend(
+            f"/findings/{finding['id']}: reproduced {finding['reproduced']} > {replayed} "
+            "healthy reproduction(s) in history"
+            for finding in linked
+            if replayed is not None and finding["reproduced"] > replayed
         )
     return errors
 
@@ -159,11 +311,32 @@ def _judge_rounds_sequence(ctx: _LedgerContext) -> list[str]:
     return errors
 
 
+def _plan_match(ctx: _LedgerContext) -> list[str]:
+    """Ledger scenarios = plan.yml scenarios (ids, lane, type, covers): no relabel to dodge a lane rule."""
+    if ctx.plan is None:
+        return []
+    planned = {item["id"]: item for item in ctx.plan["scenarios"]}
+    recorded = {item["id"]: item for item in ctx.scenarios}
+    errors = [f"/scenarios: {key} in plan.yml but not in ledger" for key in planned if key not in recorded]
+    errors.extend(f"/scenarios/{key}: not in plan.yml" for key in recorded if key not in planned)
+    for key in planned.keys() & recorded.keys():
+        errors.extend(
+            f"/scenarios/{key}: {name} {recorded[key][name]} but plan.yml says {planned[key][name]}"
+            for name in _PLAN_FIELDS
+            if recorded[key][name] != planned[key][name]
+        )
+    return errors
+
+
 _CROSS_CHECKS: tuple[_Check, ...] = (
     _unique_ids,
+    _plan_match,
     _known_covers,
     _every_criterion_covered,
+    _evidence_layout,
     _evidence_files,
+    _lane_evidence,
+    _triage_replay,
     _triage_consistency,
     _findings_consistency,
     _judge_rounds_sequence,
@@ -175,8 +348,13 @@ def _commits_match(left: str, right: str) -> bool:
     return left.startswith(right) or right.startswith(left)
 
 
-def _blocked_reasons(ledger: dict) -> list[str]:
-    reasons = []
+def _blocked_reasons(ctx: _LedgerContext) -> list[str]:
+    ledger = ctx.ledger
+    reasons = [
+        f"{scenario_id}: ENV retries exhausted; run stopped"
+        for scenario_id, decision in ctx.replays.items()
+        if isinstance(decision, Decision) and decision.action == STOP_RUN
+    ]
     environment = ledger["environment"]
     merge_request = ledger["mr"]
     if merge_request is None:
@@ -190,12 +368,26 @@ def _blocked_reasons(ledger: dict) -> list[str]:
     return reasons
 
 
-def check_ledger(ledger: object, evidence_root: Path, schema: SchemaLite) -> LedgerReport:
+def load_valid_ledger(path: Path, schema: SchemaLite) -> dict:
+    """Schema-valid ledger for the scripts that update it mid-run (cross-checks are the Q6 gate's job)."""
+    try:
+        ledger = load_json(path)
+    except ValueError as exc:
+        raise InvalidInput(f"ledger: {exc}") from exc
+    errors = schema.validate(ledger)
+    if errors:
+        raise Rejected(*(f"ledger {error}" for error in errors))
+    return ledger
+
+
+def check_ledger(ledger: object, run_dir: Path, schema: SchemaLite, plan: dict | None = None) -> LedgerReport:
+    """Evidence/JUnit paths are relative to run_dir. plan = schema-valid plan.yml of the run, when present."""
     report = LedgerReport(errors=schema.validate(ledger))
     if report.errors:
         return report
-    ctx = _LedgerContext(ledger=ledger, evidence_root=evidence_root)
+    ctx = _LedgerContext(ledger=ledger, run_dir=run_dir, plan=plan)
+    report.plan_checked = plan is not None
     for check in _CROSS_CHECKS:
         report.errors.extend(check(ctx))
-    report.blocked_reasons = _blocked_reasons(ledger)
+    report.blocked_reasons = _blocked_reasons(ctx)
     return report

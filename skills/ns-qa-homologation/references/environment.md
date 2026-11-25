@@ -8,7 +8,7 @@ Env dedicated to run, healthy, at MR commit, seeded. Output `<run_dir>/env.json`
 | ---------------------- | ---------- | --------- | ------------- | ---- | ----------- |
 | `script` | `qa-env` creates it | yes (registered resources) | yes | `qa-env seed` or product API | `qa-env info` |
 | `url` | Provisioned outside agent, dedicated to this run | **never** — Q10 never touches it | no | product API only | `environment.version_url` |
-| `none` | — | — | — | — | — (no execution; L0 behavior) |
+| `none` | — | — | — | — | — (no execution; effective L0) |
 
 Isolation `slot` only: env dedicated to this run. Shared env → MUST NOT seed or execute; stop.
 
@@ -58,7 +58,7 @@ Feeds ledger `environment {commit, url, health}`.
 | `response_intercept` | Runner/browser stubs response at Q6; last resort | `response_intercept` |
 
 - Every scenario declares `data_source` in ledger. Non-`real` counted normally; report lists them apart.
-- **Test** (Q6, Phase 3) uses only prepared data.
+- **Test** (Q6, `execution-lanes.md`) uses only prepared data.
 - **Discard**: `provider: script` → Q10 removes env (`data.teardown: discard_env`). `provider: url` → `teardown: none`: nothing deleted.
 
 ## `residual_state`
@@ -73,4 +73,4 @@ Ledger key always present (`[]` = nothing left). One `{entity, ref, reason}` per
 | DATA | Precondition missing, prefix conflict, `seed` exit 1 | Reseed (`seed` / API) → re-run scenario | 2 per scenario | Scenario `blocked`; others continue |
 | Contract break | `--check-env` exit 2/3, exit/`ok` mismatch, exit 2 refusal, non-run-owned id, unexpected answer | **Stall** (SKILL.md): stop + ask — phase, what was tried, what is needed | — | — |
 
-Before triaging any failure as PRODUCT: health (steps 3–4) passes again. Counters in `env.json.attempts`; caps independent of checkpoint.
+Before triaging any failure as PRODUCT: health (steps 3–4) passes again. Counters in `env.json.attempts` (ledger `environment.resets` mirrors ENV count); caps independent of checkpoint. Q6 failures: `failure-triage.md`.

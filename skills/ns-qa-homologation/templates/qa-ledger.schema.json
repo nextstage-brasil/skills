@@ -43,11 +43,17 @@
     "environment": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["commit", "url", "health"],
+      "required": ["commit", "url", "health", "resets"],
       "properties": {
         "commit": { "$ref": "#/$defs/commit", "description": "Deployed commit; must equal mr.commit." },
         "url": { "type": "string", "minLength": 1 },
-        "health": { "enum": ["ok", "failed"] }
+        "health": { "enum": ["ok", "failed"] },
+        "resets": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2,
+          "description": "ENV resets used by the whole run (Q5 + Q6); cap 2 (references/failure-triage.md)."
+        }
       }
     },
     "criteria": {
@@ -58,7 +64,7 @@
         "additionalProperties": false,
         "required": ["id", "text", "source", "criticality"],
         "properties": {
-          "id": { "type": "string", "pattern": "^AC-[0-9]+$" },
+          "id": { "type": "string", "pattern": "^AC-[0-9]{1,6}$" },
           "text": { "type": "string", "minLength": 1 },
           "source": { "enum": ["issue", "derived"], "description": "derived = assumed by the agent; a derived critical AC caps the verdict at with reservations." },
           "criticality": { "enum": ["critical", "high", "medium", "low"] }
@@ -70,26 +76,40 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "covers", "type", "lane", "status", "attempts", "triage", "data_source", "evidence"],
+        "required": ["id", "covers", "type", "lane", "status", "attempts", "triage", "data_source", "evidence", "history"],
         "properties": {
-          "id": { "type": "string", "pattern": "^S-[0-9]+$" },
+          "id": { "type": "string", "pattern": "^S-[0-9]{1,6}$" },
           "covers": {
             "type": "array",
             "minItems": 1,
             "uniqueItems": true,
-            "items": { "type": "string", "pattern": "^AC-[0-9]+$" }
+            "items": { "type": "string", "pattern": "^AC-[0-9]{1,6}$" }
           },
           "type": { "enum": ["positive", "negative", "business_rule", "regression"] },
           "lane": { "enum": ["runner", "browser"], "description": "runner = deterministic E2E runner; browser = exploratory browser tool." },
           "status": { "enum": ["pass", "fail", "blocked", "not_run", "flaky"] },
-          "attempts": { "type": "integer", "minimum": 0 },
+          "attempts": { "type": "integer", "minimum": 0, "description": "Explicit runs; equals the history length." },
           "triage": {
             "enum": ["ENV", "DATA", "TEST", "FLAKY", "PRODUCT", null],
             "description": "Failure class assigned before any retry; null when no failure occurred."
           },
           "not_run_reason": { "type": "string", "minLength": 1 },
+          "blocked_reason": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Why the scenario is blocked: cap exhausted, run stopped, browser tool missing, interrupted."
+          },
           "data_source": { "enum": ["real", "db_fixture", "response_intercept"] },
-          "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+          "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
+          "history": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/attempt" },
+            "description": "Every explicit run in order. Replayed by the triage rules: status and triage must match the replay."
+          },
+          "tool": {
+            "$ref": "#/$defs/browserTool",
+            "description": "Browser lane only: tool used and capabilities it lacked (references/browser-tools.md)."
+          }
         },
         "allOf": [
           {
@@ -99,6 +119,18 @@
           {
             "if": { "properties": { "status": { "const": "not_run" } } },
             "then": { "required": ["not_run_reason"] }
+          },
+          {
+            "if": { "properties": { "status": { "const": "blocked" } } },
+            "then": { "required": ["blocked_reason"] }
+          },
+          {
+            "if": { "properties": { "lane": { "const": "browser" } } },
+            "then": { "required": ["tool"] }
+          },
+          {
+            "if": { "properties": { "lane": { "const": "runner" } } },
+            "then": { "properties": { "history": { "items": { "required": ["source"] } } } }
           }
         ]
       }
@@ -110,8 +142,8 @@
         "additionalProperties": false,
         "required": ["id", "scenario", "severity", "class", "reproduced"],
         "properties": {
-          "id": { "type": "string", "pattern": "^F-[0-9]+$" },
-          "scenario": { "type": "string", "pattern": "^S-[0-9]+$" },
+          "id": { "type": "string", "pattern": "^F-[0-9]{1,6}$" },
+          "scenario": { "type": "string", "pattern": "^S-[0-9]{1,6}$" },
           "severity": { "enum": ["blocker", "high", "medium", "low"] },
           "class": {
             "type": "string",
@@ -164,13 +196,62 @@
     },
     "commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$" },
     "score": { "type": "number", "minimum": 0, "maximum": 10 },
+    "capability": { "enum": ["navigate", "a11y_snapshot", "screenshot", "console", "network", "storage"] },
+    "browserTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "missing"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "description": "Tool id from references/browser-tools.md; none = no tool available."
+        },
+        "missing": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capability" } }
+      }
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "change", "health", "signals", "suggested_class"],
+      "properties": {
+        "outcome": { "enum": ["pass", "fail"] },
+        "change": {
+          "enum": ["none", "env_reset", "reseed", "spec_fix"],
+          "description": "What changed before this run; must follow the previous triage action."
+        },
+        "health": {
+          "enum": ["ok", "failed", "unknown"],
+          "description": "Health re-checked after a failed run; unknown until checked."
+        },
+        "signals": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["infra_timeout", "systemic_5xx", "precondition_missing", "data_conflict", "seed_failed", "spec_error"] },
+          "description": "Objective failure signals; empty for a pass."
+        },
+        "suggested_class": {
+          "enum": ["TEST", "PRODUCT", null],
+          "description": "Agent judgment for the residue (failure without objective signal); null for a pass."
+        },
+        "source": {
+          "type": "string",
+          "pattern": "^results/[A-Za-z0-9][A-Za-z0-9._-]*\\.xml$",
+          "description": "JUnit file of this run; required on runner lane (its outcome for the scenario must match), absent on browser lane."
+        }
+      }
+    },
     "evidence": {
       "type": "object",
       "additionalProperties": false,
       "required": ["kind", "path", "sha256"],
       "properties": {
         "kind": { "enum": ["junit", "screenshot", "console", "network", "runner_video"] },
-        "path": { "type": "string", "minLength": 1, "description": "Relative to the run evidence dir." },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Relative to the run dir: junit under results/<name>.xml; other kinds evidence/S-<n>-<seq>-<slug>.<ext> (qa_evidence.py)."
+        },
         "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
         "pii_scrubbed": { "type": "boolean" }
       },
