@@ -16,7 +16,7 @@ Worst status among covering scenarios: `fail` > `blocked` > `not_run` > `flaky` 
 
 | # | Verdict | Condition |
 | - | ------- | --------- |
-| 1 | `blocked` | Ledger `blocked_reasons`: `mr: null`, env commit ≠ `mr.commit`, env health not ok, ENV retries exhausted |
+| 1 | `blocked` | Ledger `blocked_reasons`: `mr: null`, env commit ≠ `mr.commit` (unless `commit-ancestry.json` proves `mr.commit` is an ancestor of the env commit), env health not ok, ENV retries exhausted |
 | 2 | `not_homologated` | Any critical AC `fail` **or** finding `blocker`/`high` with class `delivery_defect` |
 | 3 | `blocked` | Any critical AC `blocked`/`not_run` **or** blocked scenarios / all scenarios > `verdict.blocked_scenario_ratio` |
 | 4 | `with_reservations` | Any reservation or cap (below) |

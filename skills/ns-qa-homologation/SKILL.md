@@ -148,6 +148,7 @@ Q7: `references/verdict-rubric.md` — `qa_gate.py --verdict` → `verdict.json`
 | Ledger | `--check-ledger <qa-ledger.json> [--evidence-dir <dir>]` | 0 consistent (may report `blocked: true`); 2 rejected; 3 unreadable |
 | Run manifest | `--check-run <run.json>` | 0 consistent (may report `paused: true`); 2 rejected; 3 unreadable |
 | qa-env output | `--check-env <output.json> [--run-id <id>]` | 0 contract kept; 2/3 → stall |
+| Commit ancestry (Q5) | `scripts/qa_commit_ancestry.py --run-dir <dir> --repo . --mr-commit <sha> --env-commit <sha>` | 0 mr commit is env commit or its ancestor (writes `commit-ancestry.json`); 2 not an ancestor / unknown commit; 3 invalid input |
 | Cleanup plan | `scripts/qa_cleanup_plan.py --run <run.json> --outcome <o> [--profile <md>]` (`--profile` required for `success`: Q7b recomputed) | 0 plan printed (`argv` per step; executes nothing); 2 run rejected / outcome unproven; 3 unreadable / invalid profile |
 | JUnit merge | `scripts/junit_to_ledger.py --ledger <ledger> --junit results/<f>.xml [--change S-n=<c>]... [--dry-run]` | 0 merged; 2 refused (unsafe path/XML, nothing mapped, re-merge, triage break); 3 unreadable |
 | Triage | `scripts/qa_triage.py --ledger <ledger> --scenario S-<n>` | 0 decision (writes nothing); 2 history breaks protocol; 3 bad input |

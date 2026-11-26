@@ -26,7 +26,7 @@
       }
     },
     "mr": {
-      "description": "Merge request under homologation, or null when none exists (legal). environment.commit must equal mr.commit; mr null or an unverifiable commit forces verdict Blocked (gate rule, not a schema failure).",
+      "description": "Merge request under homologation, or null when none exists (legal). environment.commit must equal mr.commit, or RUN_DIR/commit-ancestry.json (qa_commit_ancestry.py) must prove mr.commit is its ancestor; mr null or an unverifiable commit forces verdict Blocked (gate rule, not a schema failure).",
       "anyOf": [
         {
           "type": "object",

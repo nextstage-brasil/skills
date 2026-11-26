@@ -8,6 +8,7 @@ unhealthy environment) are reported as ``blocked_reasons``, not errors.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path
@@ -386,6 +387,18 @@ def _commits_match(left: str, right: str) -> bool:
     return left.startswith(right) or right.startswith(left)
 
 
+def _ancestry_proves(run_dir: Path, env_commit: str, mr_commit: str) -> bool:
+    """RUN_DIR/commit-ancestry.json (qa_commit_ancestry.py) names exactly these two commits and says mr is an ancestor."""
+    try:
+        proof = json.loads((run_dir / "commit-ancestry.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return False
+    return (isinstance(proof, dict) and proof.get("is_ancestor") is True
+            and proof.get("verified_with") == "git merge-base --is-ancestor"
+            and isinstance(proof.get("mr_commit"), str) and isinstance(proof.get("env_commit"), str)
+            and _commits_match(proof["mr_commit"], mr_commit) and _commits_match(proof["env_commit"], env_commit))
+
+
 def _blocked_reasons(ctx: _LedgerContext) -> list[str]:
     ledger = ctx.ledger
     reasons = [
@@ -397,7 +410,9 @@ def _blocked_reasons(ctx: _LedgerContext) -> list[str]:
     merge_request = ledger["mr"]
     if merge_request is None:
         reasons.append("mr is null: deployed commit cannot be verified")
-    elif not _commits_match(environment["commit"], merge_request["commit"]):
+    elif not _commits_match(environment["commit"], merge_request["commit"]) and not _ancestry_proves(
+        ctx.run_dir, environment["commit"], merge_request["commit"]
+    ):
         reasons.append(
             f"environment.commit {environment['commit']} != mr.commit {merge_request['commit']}"
         )

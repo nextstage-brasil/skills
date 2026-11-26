@@ -30,7 +30,8 @@ Isolation `slot` only: env dedicated to this run. Shared env → MUST NOT seed o
 | --------- | ------ |
 | Script + profile checks all pass | healthy |
 | Env commit = MR commit | verified |
-| Commit mismatch / unreadable / `mr: none` | Gate fails, no retry (redeploy is not the agent's call). Stop execution; `env.json` + ledger `environment` record observed commit → `--check-ledger` `blocked_reasons` → verdict Blocked; Q10 outcome `blocked` |
+| Env commit ≠ MR commit, but MR commit is an ancestor of it (monorepo import, merge commit inside the deployed history) | Run `python3 scripts/qa_commit_ancestry.py --run-dir <run_dir> --repo . --mr-commit <mr sha> --env-commit <env sha>` (read-only `git merge-base --is-ancestor`; use the MR's merge commit as seen in the repo). Exit 0 writes `commit-ancestry.json`; the ledger gate then treats the commit as verified. Exit 2 → mismatch below. Ledger keeps the real, different SHAs |
+| Commit mismatch (no proof) / unreadable / `mr: none` | Gate fails, no retry (redeploy is not the agent's call). Stop execution; `env.json` + ledger `environment` record observed commit → `--check-ledger` `blocked_reasons` → verdict Blocked; Q10 outcome `blocked` |
 | Health still failing after ENV retries | Whole run Blocked (see **Failures**) |
 
 ## `env.json`
