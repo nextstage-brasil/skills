@@ -6,7 +6,7 @@ Turn intake into testable `AC-n` with criticality + origin. Output `<run_dir>/ac
 
 | # | Source | `source` |
 | - | ------ | -------- |
-| 1 | `qa-handoff.md` left by dev flow (Phase 6) — reuse AC ids verbatim | `issue` |
+| 1 | `qa-handoff.md` from dev flow (intake `Dev handoff`; `stale` still usable for ACs) — reuse AC ids verbatim; its criticality suffix = hint, QA may re-rate | `issue` |
 | 2 | Issue description AC section / checklist | `issue` |
 | 3 | AC synthesis of `ns-execution-gitlab-issue` (`--ac-file`: checkbox lines under `#### Acceptance criteria:`) | `issue` |
 | 4 | Version requirements when issue maps to a version: `docs/versions/<version_san>/sdd/requirements.md` `#### Acceptance criteria:` | `issue` |

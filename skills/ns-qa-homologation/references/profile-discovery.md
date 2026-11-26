@@ -1,6 +1,6 @@
 # Profile discovery
 
-Infer `docs/context/qa-profile.md` from repo evidence. Runs at Q0 when profile absent, or on explicit request ("discover QA profile"). Presets have no hooks + `init` runs no LLM → no install-time discovery. `ns-harness` prepare hook = Phase 6.
+Infer `docs/context/qa-profile.md` from repo evidence. Runs at Q0 when profile absent, or on explicit request ("discover QA profile"). Presets have no hooks + `init` runs no LLM → no install-time discovery. No `ns-harness` prepare hook (not implemented).
 
 ## Mandate
 

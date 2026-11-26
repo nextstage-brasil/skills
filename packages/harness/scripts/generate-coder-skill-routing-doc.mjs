@@ -11,6 +11,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(__dirname, '../../..');
 
 const ENTRY_SKILLS = [
+  { priority: 0, name: 'ns-qa-homologation' },
   { priority: 1, name: 'ns-execution-gitlab-issue' },
   { priority: 2, name: 'ns-spec-driven' },
   { priority: 3, name: 'ns-autonomous' },
@@ -62,7 +63,7 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | Source | Role |
 | ------ | ---- |
 | \`skills/ns-harness/references/code-skill-routing.md\` | Entry priority, tie-breakers, handoff summary, diagram source |
-| \`skills/*/references/entry-triggers.md\` | Per-skill trigger phrases (priorities 1–5) |
+| \`skills/*/references/entry-triggers.md\` | Per-skill trigger phrases (priorities 0–5) |
 | \`skills/*/SKILL.md\` routing sections | Per-skill handoffs out |
 | \`skills/_meta/code-skill-routing-changelog.md\` | Doc version history |
 

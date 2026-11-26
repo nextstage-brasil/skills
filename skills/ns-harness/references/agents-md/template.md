@@ -45,10 +45,11 @@ Invoke via Cursor/Claude project agents — **exact** `name` from this table. Or
 
 ## Implementation routing
 
-Priority scan **1 → 5**; first match wins. Full handoffs: installed `ns-harness` → `references/code-skill-routing.md`.
+Priority scan **1 → 5**; first match wins. When `ns-qa-homologation` installed: scan **0 → 5**, row 0 = explicit homologation keyword + issue URL/IID (not a bare `ISSUE_URL`). Full handoffs: installed `ns-harness` → `references/code-skill-routing.md`.
 
 | Priority | Signal | Skill |
 | -------- | ------ | ----- |
+| 0 | *(only when `ns-qa-homologation` installed)* Explicit homologation keyword ("homologate" / "homologar" / "acceptance QA" / `/ns-qa-homologation`) + issue URL or IID — not a bare `ISSUE_URL` | `ns-qa-homologation` |
 | 1 | GitLab `ISSUE_URL` or "implement this issue" | `ns-execution-gitlab-issue` |
 | 2 | Feature / version / SDD / multi-day scope | `ns-spec-driven` |
 | 3 | Autonomous local plan, no issue | `ns-autonomous` |
@@ -76,7 +77,7 @@ Priority scan **1 → 5**; first match wins. Full handoffs: installed `ns-harnes
 - Do not invent folders, skills, or agent personas not listed here (harness `*-agent` bridges in Project subagents are allowed).
 - Do not skip `architecture-rules.md` before implementation.
 - Do not commit, push, or mutate GitLab state unless the active skill explicitly allows it for this run.
-- GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` — never ad-hoc coder on the main checkout.
+- GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` — never ad-hoc coder on the main checkout. Exception (only when `ns-qa-homologation` installed): homologation keyword + issue URL → `ns-qa-homologation`.
 - Do not fabricate `{version_san}` or `docs/versions/` unless the active skill's workflow requires it.
 
 ## Engineering guardrails

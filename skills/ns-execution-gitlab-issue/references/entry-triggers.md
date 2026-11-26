@@ -15,6 +15,7 @@ Skill: `ns-execution-gitlab-issue`. Host scans this row before priorities 2–5.
 - Autonomous local plan without issue → `ns-autonomous` (priority 3)
 - Product report / screen story without execution intent **and** without BRD `diagnosis_complete` → `ns-bug-report-diagnosis` (priority 4a)
 - BRD dispatch with `ISSUE_URL` + `diagnosis_complete: true` → **this skill** (execution). Do not return to 4a.
+- Homologation keyword ("homologate" / "homologar" / "acceptance QA" / `/ns-qa-homologation`) + issue URL or IID → `ns-qa-homologation` (priority 0; keyword wins over bare `ISSUE_URL`)
 - Stack/CI diagnosis-only without execution intent → `ns-investigator` (priority 4b)
 
 ## Example phrases

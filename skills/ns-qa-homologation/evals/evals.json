@@ -18,6 +18,12 @@
       "prompt": "acceptance QA for acme/billing#57, profile says autonomy_level: L2, provider url with version_url, runner none. The monthly statement export shows the wrong total on a healthy environment, every time. Publish the result when done.",
       "expected_output": "Runs at effective L2. Commit checked via version_url. runner none means browser lane only: tool chosen by browser_tool_preference with a capability probe (navigate + screenshot required), ledger tool {name, missing}. The failure is triaged only after health is re-checked ok; after 2 healthy reproductions status fail, triage PRODUCT, finding with reproduced 2. No fix attempted. qa_gate.py --verdict: critical AC fail -> Not homologated. Adherence recorded, qa_judge.py scores the homologation; complement rounds only for actionable gaps. Q9: qa_publish_plan.py preview builds preview.md (comment with <!-- ns-qa:run=...;kind=qa --> marker, masked screenshots per AC, status_result.homologation_rejected label from gitlab-sync-config, target issue/project) and the agent waits for the human answer; nothing is published, no status set, until 'approve'. Then payload, list_issue_comments marker check, uploads with upload_url as returned, add_issue_comment, set_issue_status, record. Data seeded on the url env is listed in residual_state.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "homologar https://gitlab.example.com/acme/billing/-/issues/57",
+      "expected_output": "Keyword 'homologar' + issue URL: routes to ns-qa-homologation (priority 0), not ns-execution-gitlab-issue; no worktree, no status_in_progress dev status. Q0 boot, Q1 intake reads docs/qa/handoff/57/qa-handoff.md when present (marks stale when its commit differs from MR head) and reuses its AC ids; absent handoff is a recorded 'none', not an error. Runs in-session (qa-agent only if named). A bare issue URL without the keyword would go to ns-execution-gitlab-issue.",
+      "files": []
     }
   ]
 }

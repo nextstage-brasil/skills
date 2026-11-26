@@ -55,8 +55,8 @@ Session boot; note `.nextstage-harness/`. **Create** vs **refresh**; read existi
 
 - **First action** — obey `AGENTS.md` (no tool-Read), then `agents.local.md` when present (case-insensitive), then GitLab MCP from project notes.
 - **How to start** — Planning / Implementation / Ad-hoc table with skill entry points.
-- **Implementation routing** — priority 1–5 from `code-skill-routing.md`; link `ns-harness` for handoffs.
-- **Hard stops / FORBIDDEN** — no invented personas; no skip architecture-rules; ISSUE_URL → gitlab-issue; no speculative version folders.
+- **Implementation routing** — priority 1–5 from `code-skill-routing.md`; link `ns-harness` for handoffs. `ns-qa-homologation` installed → row 0 (homologation keyword + issue URL/IID) + one-line QA note.
+- **Hard stops / FORBIDDEN** — no invented personas; no skip architecture-rules; ISSUE_URL → gitlab-issue (exception: homologation keyword + URL → `ns-qa-homologation`, only when installed); no speculative version folders.
 - **Engineering guardrails** — Ask before (deps, abstractions, schema/contract, CI/infra, cross-package moves); Never (secrets in VCS; default-tier live/LLM; weaken/skip tests; unjustified type escapes); library API wins over drifted docs — report drift.
 - **Local overrides** — `agents.local.md` (case-insensitive) after `AGENTS.md`; mark present/absent in Layout; never inline.
 - **Installed skills** — exact `.agents/skills/` names, **grouped by role**. SDD chain from installed only.

@@ -1001,7 +1001,7 @@ Should not land in canonical.
     const subagentsDir = mkdtempSync(join(tmpdir(), 'harness-subagents-'));
     try {
       scaffoldProject(subagentsDir, { agents: true, docs: false });
-      for (const skill of ['ns-coder', 'ns-reviewer', 'ns-spec-driven']) {
+      for (const skill of ['ns-coder', 'ns-reviewer', 'ns-spec-driven', 'ns-qa-homologation']) {
         const skillDir = join(subagentsDir, AGENTS_HOME, 'skills', skill);
         mkdirSync(skillDir, { recursive: true });
         writeFileSync(join(skillDir, 'SKILL.md'), `# ${skill}\n`, 'utf8');
@@ -1011,6 +1011,19 @@ Should not land in canonical.
       assert(firstSync.seeded.includes('coder-agent'), 'should seed coder-agent');
       assert(firstSync.seeded.includes('reviewer-agent'), 'should seed reviewer-agent');
       assert(firstSync.seeded.includes('task-writer-agent'), 'should seed task-writer-agent');
+      assert(firstSync.seeded.includes('qa-agent'), 'should seed qa-agent');
+      const cursorQa = readFileSync(join(subagentsDir, '.cursor', 'agents', 'qa-agent.md'), 'utf8');
+      assert(cursorQa.includes('name: qa-agent'), 'cursor qa-agent adapter should have name');
+      assert(cursorQa.includes('readonly: false'), 'qa-agent should not be readonly');
+      assert(cursorQa.includes('model: inherit'), 'qa-agent default cursor model');
+      assert(
+        cursorQa.includes('.agents/skills/ns-qa-homologation/SKILL.md'),
+        'qa-agent adapter should point at ns-qa-homologation',
+      );
+      assert(
+        readFileSync(join(subagentsDir, '.claude', 'agents', 'qa-agent.md'), 'utf8').includes('model: sonnet'),
+        'qa-agent default claude model is sonnet',
+      );
       assert(
         existsSync(join(subagentsDir, '.nextstage-harness', 'agents', 'coder-agent.md')),
         'should create canonical coder-agent.md',
@@ -1124,12 +1137,46 @@ Should not land in canonical.
         'AGENTS.md subagents section should cite spawn gate, forbid inherit stand-in',
       );
 
+      assert(agentsContent.includes('`qa-agent`'), 'AGENTS.md should list qa-agent when skill installed');
+      assert(agentsContent.includes('Priority scan **0 → 5**'), 'AGENTS.md scan starts at 0 when ns-qa-homologation installed');
+      assert(
+        agentsContent.includes('| 0 |') &&
+        agentsContent.includes('homologation keyword') &&
+        agentsContent.includes('Exception: homologation keyword + issue URL'),
+        'AGENTS.md should route homologation keyword + URL when ns-qa-homologation installed',
+      );
+
       assert(
         buildSubagentBody({ name: 'coder-agent', skill: 'ns-coder' }).includes('AGENTS.md'),
         'buildSubagentBody should mention AGENTS.md',
       );
     } finally {
       rmSync(subagentsDir, { recursive: true, force: true });
+    }
+
+    // Without ns-qa-homologation: no qa-agent, no homologation routing in AGENTS.md
+    const noQaDir = mkdtempSync(join(tmpdir(), 'harness-noqa-'));
+    try {
+      scaffoldProject(noQaDir, { agents: true, docs: false });
+      for (const skill of ['ns-coder', 'ns-reviewer', 'ns-execution-gitlab-issue']) {
+        const skillDir = join(noQaDir, AGENTS_HOME, 'skills', skill);
+        mkdirSync(skillDir, { recursive: true });
+        writeFileSync(join(skillDir, 'SKILL.md'), `# ${skill}\n`, 'utf8');
+      }
+      const noQaSync = syncSubagents(noQaDir, { agents: ['cursor', 'claude-code'] });
+      assert(!noQaSync.seeded.includes('qa-agent'), 'qa-agent must not seed without ns-qa-homologation');
+      generateAgentsMd(noQaDir, { force: true });
+      const noQaContent = readFileSync(join(noQaDir, 'AGENTS.md'), 'utf8');
+      assert(
+        !noQaContent.includes('qa-agent') &&
+        !noQaContent.includes('| 0 |') &&
+        !noQaContent.includes('Exception: homologation keyword') &&
+        !/homologation keyword|homologar|acceptance QA/i.test(noQaContent) &&
+        noQaContent.includes('Priority scan **1 → 5**'),
+        'AGENTS.md must not mention homologation/QA routing without ns-qa-homologation',
+      );
+    } finally {
+      rmSync(noQaDir, { recursive: true, force: true });
     }
 
     const listOut = runCli(['list'], harnessRoot);

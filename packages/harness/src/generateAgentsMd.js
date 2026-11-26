@@ -134,6 +134,11 @@ function buildSddChain(installed) {
 function buildImplementationRoutingTable(installed) {
   const set = new Set(installed);
   const rows = [
+    {
+      priority: 0,
+      signal: 'Explicit homologation keyword ("homologate" / "homologar" / "acceptance QA" / `/ns-qa-homologation`) + issue URL or IID — not a bare `ISSUE_URL`',
+      skill: 'ns-qa-homologation',
+    },
     { priority: 1, signal: 'GitLab `ISSUE_URL` or "implement this issue"', skill: 'ns-execution-gitlab-issue' },
     { priority: 2, signal: 'Feature / version / SDD / multi-day scope', skill: 'ns-spec-driven' },
     { priority: 3, signal: 'Autonomous local plan, no issue', skill: 'ns-autonomous' },
@@ -149,6 +154,18 @@ function buildImplementationRoutingTable(installed) {
       return `| ${priority} | ${signal} | ${status} |`;
     })
     .join('\n');
+}
+
+/** Homologation routing exception is embedded only when the skill it routes to is installed. */
+function buildIssueUrlHardStop(installed) {
+  const base = 'GitLab `ISSUE_URL` → `ns-execution-gitlab-issue` — never ad-hoc coder on the main checkout.';
+  if (!installed.includes(ACCEPTANCE_TIER_SKILL)) return base;
+  return `${base} Exception: homologation keyword + issue URL → \`${ACCEPTANCE_TIER_SKILL}\` (keyword wins; no URL-only routing to QA).`;
+}
+
+function buildQaRoutingNote(installed) {
+  if (!installed.includes(ACCEPTANCE_TIER_SKILL)) return '';
+  return `\n\n**QA:** acceptance homologation of a delivered issue starts only on an explicit keyword ("homologate" / "homologar" / "acceptance QA") or \`/${ACCEPTANCE_TIER_SKILL}\`, followed by an issue URL or IID. Dev delivery never auto-starts it. Runs in-session; \`qa-agent\` only when asked by name.`;
 }
 
 function buildImplementationNote(installed) {
@@ -305,11 +322,11 @@ ${buildSubagentsSection(root, installed)}
 
 ## Implementation routing
 
-Priority scan **1 → 5**; first matching signal wins. Full handoffs: installed \`ns-harness\` skill → \`references/code-skill-routing.md\`.
+Priority scan ${installed.includes(ACCEPTANCE_TIER_SKILL) ? '**0 → 5**' : '**1 → 5**'}; first matching signal wins. Full handoffs: installed \`ns-harness\` skill → \`references/code-skill-routing.md\`.
 
 | Priority | Signal | Skill |
 | -------- | ------ | ----- |
-${buildImplementationRoutingTable(installed)}
+${buildImplementationRoutingTable(installed)}${buildQaRoutingNote(installed)}
 
 ## Workflows
 
@@ -347,7 +364,7 @@ ${buildSkillCreatorSection(installed)}
 - Do not invent folders, skills, or agent personas not listed here (harness \`*-agent\` bridges in Project subagents are allowed).
 - Do not skip \`architecture-rules.md\` or \`project-rules.md\` before implementation.
 - Do not commit, push, or mutate GitLab state unless the active skill explicitly allows it for this run.
-- GitLab \`ISSUE_URL\` → \`ns-execution-gitlab-issue\` — never ad-hoc coder on the main checkout.
+- ${buildIssueUrlHardStop(installed)}
 - Do not fabricate \`{version_san}\` or \`docs/versions/\` unless the active skill's workflow requires it.
 
 ## Engineering guardrails

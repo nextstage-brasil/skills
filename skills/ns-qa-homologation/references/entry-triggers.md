@@ -1,12 +1,10 @@
 # Entry triggers — explicit invocation only
 
-Skill: `ns-qa-homologation`. **No automatic routing**: a bare `ISSUE_URL` stays priority 1 (`ns-execution-gitlab-issue`). Host table wiring (`code-skill-routing.md` keyword row, priority 0) = Phase 6; until then this file is the trigger source.
+Skill: `ns-qa-homologation`. **No automatic routing**: never URL-driven. Host table row **0** (`ns-harness` → `references/code-skill-routing.md`) fires on an explicit keyword only.
 
-## Reliable entry (until Phase 6)
+## Routing rule
 
-**`/ns-qa-homologation <ISSUE_URL or IID>`**. Generated consumer `AGENTS.md` still hard-stops any GitLab `ISSUE_URL` to `ns-execution-gitlab-issue`, which sets `status_in_progress` on first act. Host routing that table can misroute keyword phrases → use the slash command.
-
-Homologation keyword + URL ≠ bare `ISSUE_URL`: **keyword wins** (routing row for this lands in Phase 6).
+Homologation keyword + issue URL/IID ≠ bare `ISSUE_URL`: **keyword wins** (priority 0). Bare `ISSUE_URL` without keyword → `ns-execution-gitlab-issue` (priority 1). Generated consumer `AGENTS.md` carries the same exception on its `ISSUE_URL` hard stop when this skill is installed. Dev delivery never starts homologation; it only leaves `qa-handoff.md` (`ns-execution-gitlab-issue` Phase 5). Runs in-session; bridge `qa-agent` only when asked by name.
 
 ## Use when
 

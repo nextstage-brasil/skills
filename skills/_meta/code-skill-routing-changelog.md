@@ -12,3 +12,4 @@ Tracks `docs/coder-skill-routing.md` (generated) and canonical skill sources.
 | 1.6 | 2026-09-12 | spawn gate | Cheap vs heavy execute; G single-unit skips A; C2 defer per-unit REV |
 | 1.7 | 2026-09-18 | product-report diagnosis | Priority **4a** `ns-bug-report-diagnosis` (screen story); **4b** `ns-investigator` (stack/CI); scan 1→5 intact |
 | 1.8 | 2026-09-18 | BRD auto-handoff | After the eight-section report, `BRD → G` (`ISSUE_URL`) or `BRD → C` (else), payload `diagnosis_complete`. Diagnose-only opt-out keeps `BRD → U2`. `C`/`G` must not bounce to 4a with that payload. |
+| 1.9 | 2026-11-25 | QA homologation | Priority **0** `ns-qa-homologation`: explicit keyword ("homologate" / "homologar" / "acceptance QA" / `/ns-qa-homologation`) + issue URL or IID only. Keyword + URL is not a bare `ISSUE_URL`; bare `ISSUE_URL` stays **1**. No automatic URL routing. Scan 0→5. |

@@ -4,7 +4,7 @@ description: "(NS) Execute a GitLab issue end-to-end — status gates, worktree 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.7"
+  version: "1.8"
 depends:
   - ns-harness
   - ns-reviewer
@@ -168,7 +168,11 @@ Canonical rules: `../ns-reviewer/references/review-gate-workflow.md`.
    - Call 3 only after that second coder (delta found residual and/or introduced Critical). Call 3 not score **10**, or `Blocked`, or rounds exhausted → `status_blocked` (Em Impedimento), post findings, stop. No coder on `Blocked`. No `END_TIME`, spent, or Dev 100%. No judge.
 3. On `Code Review: Approved` only: read `../ns-judge/SKILL.md` in-session (`--mode issue --ac-file` from synthesis). Python optional. `Delivery Review: Approved` only at 10. Judge Rejected: fix map; product files changed → code review again (must Approved) then judge again. Max 3 judge rounds.
 4. Both Approved → Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
-5. Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` + `Delivery Review: {verdict}` — exact strings returned.
+5. Phase 5 handoff (Approved only). Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` + `Delivery Review: {verdict}` — exact strings returned.
+
+## Phase 5 — QA handoff (after both Approved)
+
+Only after Phase 3 step 4 (both `Approved`, MR open). Write `qa-handoff.md` and, in SDD unit mode, fill the unit issue `## Homologation` section with the ACs — `references/qa-handoff.md`. Then stop: **never** dispatch QA or set QA status. Homologation starts only when a human invokes `ns-qa-homologation` (`../ns-qa-homologation/SKILL.md`).
 
 ## Stop and ask the human
 
@@ -208,3 +212,4 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 | `references/mr-conventions.md`           | MR title, draft, linking, reuse note                                        |
 | `references/delivery-report.template.md` | Phase 3 internal delivery comment                                           |
 | `references/time-tracking.md`            | Estimate fill-if-empty; spent-time wall-clock + pause rules                 |
+| `references/qa-handoff.md`               | Phase 5 — `qa-handoff.md` + unit issue `## Homologation`                   |

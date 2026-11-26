@@ -20,6 +20,7 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | Product report | `ns-bug-report-diagnosis` | Screen story; chat only; no patch **here**; then `G` (URL) or `C` unless diagnose-only |
 | Root-cause | `ns-investigator` | Stack/CI/log; diagnosis + Suggested Code; implement = separate user step |
 | Review gate | `ns-reviewer` in-session | Code path — `../ns-reviewer/references/review-gate-workflow.md` |
+| Acceptance QA | `ns-qa-homologation` | Keyword only; in-session; never auto-started by dev |
 | Delivery gate | `ns-judge` in-session after `Code Review: Approved` | Same parent; no `judge-agent` v1 — `../ns-judge/SKILL.md` |
 
 ## Install vs runtime
@@ -28,10 +29,13 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 
 ## Entry priority (host agent) {#entry-priority}
 
-Scan **1 → 5**; **first matching signal wins**. Lower beats higher — e.g. `ISSUE_URL` + multi-day feature → **1** (`G`), not 2 (`S`).
+Scan **0 → 5**; **first matching signal wins**. Lower beats higher — e.g. `ISSUE_URL` + multi-day feature → **1** (`G`), not 2 (`S`).
+
+Row **0**: explicit keyword only, never URL-driven. Keyword + URL/IID ≠ bare `ISSUE_URL` — **0 wins**; bare `ISSUE_URL` → **1**.
 
 | Priority | Signal | Entry skill | Trigger phrases |
 | -------- | ------ | ----------- | ----------------- |
+| 0 | Explicit homologation keyword ("homologate" / "homologar" / "acceptance QA" / `/ns-qa-homologation`) + issue URL or IID | `ns-qa-homologation` | `../ns-qa-homologation/references/entry-triggers.md` |
 | 1 | External GitLab `ISSUE_URL` or explicit "implement this issue" | `ns-execution-gitlab-issue` | `../ns-execution-gitlab-issue/references/entry-triggers.md` |
 | 1b | *(not entry scan)* SDD `unit` + `issue_iid` from `delivery-units.md` | `ns-execution-gitlab-issue` SDD unit mode | Dispatched by `ns-spec-driven` / `run-implementation.md` — **not** external URL |
 | 2 | Feature / version / SDD / multi-day scope | `ns-spec-driven` | `../ns-spec-driven/references/entry-triggers.md` |
@@ -40,12 +44,13 @@ Scan **1 → 5**; **first matching signal wins**. Lower beats higher — e.g. `I
 | 4b | Root-cause only — stack/CI/log, **without** implement request | `ns-investigator` | `../ns-investigator/references/entry-triggers.md` |
 | 5 | Default — quick fix, "implement X", small ad-hoc diff | `ns-coder` | `../ns-coder/references/entry-triggers.md` |
 
-Scan is still **1 → 5**. 4a is checked before 4b. Either 4 row still beats 5.
+Scan is still **0 → 5**. 4a is checked before 4b. Either 4 row still beats 5.
 
 ### Multi-signal examples (first match wins) {#multi-signal-examples}
 
 | User message (signals present) | Winner | Why |
 | ------------------------------ | ------ | --- |
+| "homologate `ISSUE_URL`" | Priority **0** → `QA` | Keyword present; not a bare `ISSUE_URL` |
 | `ISSUE_URL` + "big feature for v2" | Priority **1** → `G` | `ISSUE_URL` scanned before SDD scope |
 | `ISSUE_URL` + pasted stack trace | Priority **1** → `G` | Issue execution owns worktree path |
 | "Build notifications v2" + "CI is red" (no `ISSUE_URL`) | Priority **2** → `S` | SDD scope before investigator |
@@ -130,6 +135,7 @@ Mermaid extracted into `docs/coder-skill-routing.md` by generator.
 flowchart TD
   U[User request] --> R{Entry router}
 
+  R -->|"0 homologation keyword + URL"| QA[ns-qa-homologation]
   R -->|"1 ISSUE_URL"| G[ns-execution-gitlab-issue]
   R -->|"2 feature / version / SDD"| S[ns-spec-driven]
   R -->|"3 autonomous local"| A[ns-autonomous]

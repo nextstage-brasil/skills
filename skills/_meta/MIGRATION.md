@@ -2,6 +2,18 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## `ns-qa-homologation` 0.6.0 — Phase 6: orchestrator integration (2026-11-25)
+
+Routing row 0 (explicit keyword), `qa-agent` bridge, dev → QA handoff. Spawn rule unchanged (D21): subagent only when asked by name; else in-session. No automatic URL routing (D33).
+
+| Surface | Version | Change |
+| ------- | ------- | ------ |
+| `ns-qa-homologation` | 0.5.0 → 0.6.0 | "Reliable entry until Phase 6" caveat replaced by the final rule: keyword + issue URL/IID wins over bare `ISSUE_URL` (`SKILL.md` Routing, `entry-triggers.md`). Intake step "Dev handoff" reads `docs/qa/handoff/<dev iid>/qa-handoff.md` (`fresh` / `stale` vs MR head / `none`); Q2 source 1 reuses its AC ids. Evals: keyword + URL routing |
+| `ns-execution-gitlab-issue` | 1.7 → 1.8 | Phase 5 + `references/qa-handoff.md`: after `Code Review: Approved` + `Delivery Review: Approved` + MR open, writes `docs/qa/handoff/<iid>/qa-handoff.md` (main checkout, gitignored: header, `AC-<n>` lines, how to verify) and, in SDD unit mode, replaces only the unit issue `## Homologation` section with the ACs. Never dispatches QA or sets QA status. `entry-triggers.md`: Do-not row for homologation keyword + URL (description budget full) |
+| `ns-harness` | 1.6.2 → 1.7.0 | `code-skill-routing.md`: priority row 0 + multi-signal example + Mermaid edge `R → QA`, scan 0→5; `subagent-dispatch.md` + `rules-sync.md` bridge lists gain `qa-agent` (spawn gate rule unchanged); `agents-md.md` + template: row 0 + `ISSUE_URL` hard-stop exception only when `ns-qa-homologation` installed; `artifact-layout.md`: `docs/qa/handoff/` |
+| Harness | — | `DEFAULT_SUBAGENTS` += `qa-agent` (`ns-qa-homologation`, `readonly: false`, claude `sonnet`, cursor/antigravity `inherit`); seeded by `harness sync` into `.cursor/agents` + `.claude/agents` when the skill is installed. `generateAgentsMd.js`: row 0, scan `0 → 5`, hard-stop exception, one-line QA note — all conditional on `ns-qa-homologation`. `generate-coder-skill-routing-doc.mjs`: priority 0 entry triggers. `harness-README.md` bridge table. `sync-smoke.mjs`: qa-agent generation + conditional AGENTS.md routing |
+| Docs | — | `docs/coder-skill-routing.md` regenerated (v1.9); `code-routing-diagram` conventions: node `QA`, edge `R → QA` |
+
 ## `ns-qa-homologation` 0.5.0 — Phase 5: Q8 automation, L3 (2026-11-25)
 
 `IMPLEMENTED_MAX_LEVEL` = `L3`: L3 runs Q8 (E2E branch + MR, no approval, never merged) before Q9; the Q9 preview carries the MR link or the no-op reason.

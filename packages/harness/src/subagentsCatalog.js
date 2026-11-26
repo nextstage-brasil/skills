@@ -40,6 +40,18 @@ export const DEFAULT_SUBAGENTS = [
     },
     readonly: false,
   },
+  {
+    name: 'qa-agent',
+    skill: 'ns-qa-homologation',
+    description:
+      '(NS) Thin bridge to ns-qa-homologation. Invoke only when asked by name for acceptance homologation of a delivered issue — loads AGENTS.md then the skill workflow.',
+    model: {
+      cursor: 'inherit',
+      claude: 'sonnet',
+      antigravity: 'inherit',
+    },
+    readonly: false,
+  },
 ];
 
 export function defaultSubagentByName(name) {

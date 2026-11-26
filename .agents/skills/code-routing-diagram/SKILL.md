@@ -20,6 +20,7 @@ Produce an accurate Mermaid flowchart of runtime handoffs between implementation
 | Path | Role |
 | ---- | ---- |
 | `skills/ns-harness/references/code-skill-routing.md` | Priority table, handoffs, **canonical ` ```mermaid ` block** |
+| `skills/ns-qa-homologation/references/entry-triggers.md` | Priority 0 |
 | `skills/ns-execution-gitlab-issue/references/entry-triggers.md` | Priority 1 |
 | `skills/ns-spec-driven/references/entry-triggers.md` | Priority 2 |
 | `skills/ns-autonomous/references/entry-triggers.md` | Priority 3 |

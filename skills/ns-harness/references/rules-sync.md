@@ -101,6 +101,7 @@ Cursor subagents use same skill catalog as parent — no `.cursor/skills/` copy.
 | `coder-agent` | `ns-coder` | `inherit` / `sonnet` / `inherit` | `false` |
 | `reviewer-agent` | `ns-reviewer` | `inherit` / `opus` / `inherit` | `true` |
 | `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | `inherit` / `haiku` / `inherit` | `false` |
+| `qa-agent` | `ns-qa-homologation` | `inherit` / `sonnet` / `inherit` | `false` |
 
 Presets get bridges on `init` / `sync` / `update`. Bridge body: obey `AGENTS.md` (no tool-Read) → Session boot (`session-boot.md`) → skill. Seeded bridges: spawn by **exact `{name}`** when spawn gate requires — `subagent-dispatch.md` (no child `inherit`). Cheap execute = in-session.
 

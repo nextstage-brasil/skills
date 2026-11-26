@@ -9,7 +9,8 @@
 | Node | Meaning |
 | ---- | ------- |
 | `U` / User request | Entry from human |
-| `R` / Entry router | Host priority scan 1→5 (not a skill) |
+| `R` / Entry router | Host priority scan 0→5 (not a skill) |
+| `QA` | `ns-qa-homologation` (priority 0, explicit keyword) |
 | `G` | `ns-execution-gitlab-issue` |
 | `S` | `ns-spec-driven` |
 | `A` | `ns-autonomous` |
@@ -28,6 +29,7 @@
 
 **Entry router (priorities on edge labels):**
 
+- `R → QA` (0 homologation keyword + URL)
 - `R → G` (1 ISSUE_URL)
 - `R → S` (2 feature / version / SDD)
 - `R → A` (3 autonomous local)

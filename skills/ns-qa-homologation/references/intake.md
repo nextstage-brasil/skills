@@ -18,9 +18,10 @@ Resolve dev issue, QA issue, MRs, relevant comments. Output `<run_dir>/intake.md
    - `list_issue_merge_requests` → prefer open/merged MR whose `source_branch` matches `work/<iid>-*`; else MR linked in issue/comments.
    - `read_merge_request` → `ref` (`<project>!<iid>`), head commit, target branch, file diffs (Q3 input).
    - Several MRs → list all; homologate head of each; ledger `mr` = MR that delivers the issue (latest merged/open). None → `mr: none` declared (later verdict Blocked; plan still built).
-5. **Comments:** `list_issue_comments` on both issues. Drop: authors in `tracker.ignore_authors`, system notes, comments carrying marker `ns-qa:run=`. Keep: scope/AC changes, reproduction steps, decisions. Summarize; quote ≤1 line each.
-6. **Attachments:** `download_markdown_upload` only. Never open `/uploads/` URLs in browser.
-7. **Status guard** (table: `profile-schema.md` → Q1 status guard). Read current `Status:` of each applicable side. Evaluate **all** sides before any write.
+5. **Dev handoff:** `docs/qa/handoff/<dev iid>/qa-handoff.md` in the main checkout (written by `ns-execution-gitlab-issue` Phase 5; gitignored). Present → read; record path, `commit`, AC lines, verify steps. Header `commit` ≠ MR head → mark `stale`: keep ACs, treat verify steps as hints, log gap. Absent → record `none`; never an error.
+6. **Comments:** `list_issue_comments` on both issues. Drop: authors in `tracker.ignore_authors`, system notes, comments carrying marker `ns-qa:run=`. Keep: scope/AC changes, reproduction steps, decisions. Summarize; quote ≤1 line each.
+7. **Attachments:** `download_markdown_upload` only. Never open `/uploads/` URLs in browser.
+8. **Status guard** (table: `profile-schema.md` → Q1 status guard). Read current `Status:` of each applicable side. Evaluate **all** sides before any write.
 
 ## Status sync by level
 
@@ -37,6 +38,7 @@ Status names come only from `tracker.status_source`. Key absent → skip that si
 | ------- | ------- |
 | Issues | dev ref + title + state; QA ref or `none` (+ reason) |
 | Merge requests | ref, state, source → target, head commit, files changed count |
+| Dev handoff | path or `none`; handoff `commit`; `fresh` / `stale`; AC count; verify-step summary |
 | Relevant comments | author role, date, one-line summary |
 | Attachments | file → local path, what it shows |
 | Status guard | per side: current key, target key, action (`set` / `no-op` / `would set` / `stop`) |

@@ -4,7 +4,7 @@ description: "(NS) Harness boot + brownfield prepare. Triggers: /ns-harness, pre
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.6.2"
+  version: "1.7.0"
 ---
 
 # NextStage Harness

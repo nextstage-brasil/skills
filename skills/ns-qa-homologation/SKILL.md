@@ -4,7 +4,7 @@ description: "(NS) Acceptance homologation (QA) of a delivered GitLab issue: pro
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "0.5.0"
+  version: "0.6.0"
 depends:
   - ns-harness
   - ns-e2e-tests
@@ -16,7 +16,7 @@ depends:
 
 Acceptance homologation of a **delivered** issue against the running system. Phases Q0–Q10, state on disk, project values only in QA profile. Evaluates product, not code: `ns-judge` proves diff vs ACs; this skill homologates behavior. Verdict scale (4 levels + confidence) + homologation score belong here only — `ns-judge` "no second rubric" rule stays inside `ns-judge`. Ledger consistency stays binary (`qa_gate.py` exit 0 or reject).
 
-## Implementation status (v0.5.0)
+## Implementation status (v0.6.0)
 
 | Delivered | Phases | Level |
 | --------- | ------ | ----- |
@@ -24,13 +24,13 @@ Acceptance homologation of a **delivered** issue against the running system. Pha
 | **Yes** (Phases 2–4) | Q1 status sync, Q5 env + data, Q6 execution + evidence, Q7 verdict, Q7b judge + completion loop, Q10 cleanup | L1 |
 | **Yes** (Phase 4) | Q9 preview approval + publication + result status | L2 |
 | **Yes** (Phase 5) | Q8 automation: E2E branch + MR before Q9 | L3 |
-| No — Phase 6 | Routing row, `qa-agent` bridge, dev → QA handoff | — |
+| **Yes** (Phase 6) | Routing row 0 (keyword), `qa-agent` bridge, dev → QA handoff (`qa-handoff.md`) | — |
 
 **Caps:** `environment.provider: none` runs as **L0**; `# inferred` field → ≤ L1. `qa_gate.py --check-profile` returns `autonomy_effective` + `autonomy_caps`; report §1 states declared vs effective + reasons. Never run a phase marked No.
 
 ## Routing
 
-Explicit invocation only — no automatic URL routing. Reliable entry until Phase 6: **`/ns-qa-homologation <ISSUE_URL or IID>`** (generated `AGENTS.md` hard stop still sends GitLab URLs to `ns-execution-gitlab-issue`). Homologation keyword + URL ≠ bare `ISSUE_URL` — keyword wins. Bare `ISSUE_URL` → `ns-execution-gitlab-issue`. Triggers: `references/entry-triggers.md`.
+Explicit invocation only — no automatic URL routing. Entry = priority 0 keyword ("homologate" / "homologar" / "acceptance QA") or **`/ns-qa-homologation <ISSUE_URL or IID>`**. Keyword + URL ≠ bare `ISSUE_URL` — keyword wins. Bare `ISSUE_URL` → `ns-execution-gitlab-issue`. Runs in-session; `qa-agent` bridge only when asked by name. Dev flow leaves `qa-handoff.md`, never starts QA. Triggers: `references/entry-triggers.md`.
 
 | Need | Target |
 | ---- | ------ |
@@ -174,7 +174,7 @@ L2+ only, after all phases (incl. Q8 at L3). One `preview.md`: exact comment(s) 
 | ---- | ---- |
 | `references/profile-schema.md`, `references/profile-schema-execution.md`, `references/profile-schema-policy.md` | Profile keys, YAML subset, gate extras, autonomy |
 | `references/profile-discovery.md` | Q0, profile absent |
-| `references/intake.md` | Q1 |
+| `references/intake.md` | Q1 (incl. dev `qa-handoff.md`) |
 | `references/acceptance-criteria.md` | Q2 |
 | `references/impact-mapping.md` | Q3 |
 | `references/test-design.md` | Q4 |

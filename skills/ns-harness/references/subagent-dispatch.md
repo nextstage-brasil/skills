@@ -13,6 +13,7 @@ Skills = **workflow SoT**. Bridges bind `model` / `readonly`, Session boot at co
 | `coder-agent` | `ns-coder` | Implement task / slice / ad-hoc (heavy execute) |
 | `reviewer-agent` | `ns-reviewer` | Review gate (readonly) |
 | `task-writer-agent` | `ns-spec-driven` (`references/task-generator.md`) | SDD task files |
+| `qa-agent` | `ns-qa-homologation` | Acceptance homologation (by name only; else in-session) |
 
 Defaults: `rules-sync.md` Default subagents. Project owns `model` in `.nextstage-harness/manifest.json` `subagents`.
 

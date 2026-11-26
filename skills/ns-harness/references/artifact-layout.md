@@ -45,6 +45,7 @@ New versions: create SDD artifacts only under `sdd/`.
 | Agent architecture ADR | `docs/specs/agent-architecture.md` (`ns-agent-architecture`; living + Changelog — not under `docs/versions/`) |
 | Agent architecture defense pack | `docs/specs/agent-architecture-defense.md` (`ns-agent-architecture` Step 9 opt-in — stakeholder canvases; not under `docs/versions/`) |
 | Agent platform | `docs/specs/agent-platform.md` (`ns-agent-platform`; compute + tenant/platform; after ADR) |
+| QA handoff | `docs/qa/handoff/<issue_iid>/qa-handoff.md` (`ns-execution-gitlab-issue` Phase 5; gitignored) |
 | QA homologation run | `docs/qa/<run_id>/` (`ns-qa-homologation`; gitignored, never versioned — run state, plan, evidence, local report) |
 
 ## Branch role (feature vs integration)

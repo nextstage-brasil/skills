@@ -89,6 +89,7 @@ Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readon
 | `coder-agent.md` | `ns-coder` | `inherit` / `sonnet` | `false` |
 | `reviewer-agent.md` | `ns-reviewer` | `inherit` / `opus` | `true` |
 | `task-writer-agent.md` | `ns-spec-driven` (`references/task-generator.md`) | `inherit` / `haiku` | `false` |
+| `qa-agent.md` | `ns-qa-homologation` | `inherit` / `sonnet` | `false` |
 
 **Project owns `model`.** Edit `manifest.json`, then `harness sync`. `harness update` refreshes adapter bodies but **never** resets your model values.
 
