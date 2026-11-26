@@ -17,6 +17,7 @@ Infer `docs/context/qa-profile.md` from repo evidence. Runs at Q0 when profile a
 | -------- | ------ | ----- |
 | `cypress.config.*` | `execution.runner: cypress`, `e2e_root` (config dir), `baseUrl` → `{api}` hint, `env` key **names** | Never read `cypress.env.json` values |
 | `playwright.config.*` | `runner: playwright`, `testDir` → `e2e_root`, `use.baseURL` | |
+| In-repo E2E folder (`e2e-tests/`, `cypress.config.*` / `playwright.config.*` below the repo root, no own `.git`) | `e2e_root` = that folder; Q8 MR project = `tracker.product_project`; `e2e_git.base_branch` = the product repo's integration branch (ask) | Single-project mode: product and E2E share one git root and one MR project |
 | Separate E2E repo (sibling / submodule with own `AGENTS.md` + runner config) | `e2e_root` = its path; `e2e_authoring: auto` | Its own skills win at Q8 |
 | No runner config | `runner: none` `# inferred` | Critical AC verdict cap applies |
 | `docker-compose*.yml`, `compose*.y*ml`, stack scripts | `environment.provider: script` candidate, health URL from `healthcheck` | Never run compose. `scripts/qa-env.sh` absent → keep `script` placeholder; human scaffolds it from `../templates/qa-env.template.sh` (`qa-env-contract.md`) |

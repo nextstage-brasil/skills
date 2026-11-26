@@ -59,7 +59,7 @@ auth:
 
 execution:
   runner: <cypress | playwright | none>
-  e2e_root: <in-repo e2e dir or external e2e repo path>
+  e2e_root: <in-repo e2e dir or external e2e repo path>   # monorepo: e.g. e2e-tests (subdirectory of the product repo)
   e2e_authoring: auto             # auto | repo-local | ns-e2e-tests
   e2e_git:                        # required at L3 (Q8 automation MR)
     base_branch: <e2e-base-branch>

@@ -686,6 +686,66 @@ class AutomationFlowTests(_AutomationRepo):
         self.assertEqual(self.ok("status")["next"], "record-review")
 
 
+IN_REPO_SPEC = f"e2e/{E2E_SPEC}"
+
+
+class AutomationInRepoTests(_AutomationRepo):
+    """Monorepo layout: e2e_root `e2e` is a folder of the product repo; the E2E worktree is a worktree of the
+    whole repo (run.json repo_root "."), specs are relative to it and live under e2e_root."""
+
+    def setUp(self):
+        super().setUp()
+        self.nested = self.worktree
+        self.worktree = self.root / WT
+        self.wt_abs = os.path.abspath(self.worktree)
+        (self.worktree / "e2e" / "cypress" / "e2e").mkdir(parents=True)
+        (self.worktree / ".git").write_text("gitdir: ../.git/worktrees/qa\n", encoding="utf-8")
+        self.write_spec(SPEC_OK, IN_REPO_SPEC)
+
+        def to_in_repo(run):
+            run["created_resources"][-1]["repo_root"] = "."
+
+        self.edit_run(to_in_repo)
+
+    def declare(self) -> None:
+        self.ok("plan", "--title", "Save form")
+        self.ok("specs", "--spec", IN_REPO_SPEC)
+
+    def test_full_flow_in_repo_worktree(self):
+        plan = self.ok("plan", "--title", "Save form")
+        self.assertEqual(plan["argv"][0][:3], ["git", "-C", self.wt_abs])
+        self.ok("specs", "--spec", IN_REPO_SPEC)
+        self.green()
+        self.green()
+        self.ok("record-review", "--verdict", "Approved", "--score", "10")
+        commit = self.ok("commit", "--subject", "cover form save")
+        self.assertIn(IN_REPO_SPEC, commit["argv"][0])
+        self.assertEqual(commit["argv"][0][:3], ["git", "-C", self.wt_abs])
+
+    def test_spec_outside_e2e_root_refused(self):
+        self.ok("plan", "--title", "x")
+        self.write_spec("x", "backend.cy.ts")
+        self.refused("must be inside e2e/", "specs", "--spec", "backend.cy.ts")
+
+    def test_missing_worktree_names_repo_relative_path(self):
+        self.worktree.rename(self.root / "elsewhere")
+        self.refused(f"worktree {WT} missing on disk", "plan", "--title", "x")
+
+    def test_lint_config_comes_from_repo_checkout(self):
+        self.declare()
+        self.green()
+        self.green()
+        (self.worktree / "e2e" / ".e2e-antipatterns.json").write_text(
+            '{"version": 1, "disable": ["fixed-wait"]}', encoding="utf-8")
+        self.refused("worktree .e2e-antipatterns.json differs from the E2E repo checkout", "record-review",
+                     "--verdict", "Approved", "--score", "10")
+
+    def test_both_layouts_registered_refused(self):
+        self.edit_run(lambda run: run["created_resources"].append(
+            dict(run["created_resources"][-1], id=WT + "-2", repo_root="e2e")))
+        self.refused("under both repo_root e2e and .", "plan", "--title", "x")
+
+
 class AutomationProbeTests(_AutomationRepo):
     """Regression tests for adversarial probes P1-P5."""
 

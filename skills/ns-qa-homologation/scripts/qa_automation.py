@@ -57,6 +57,7 @@ from qa_artifacts import (  # noqa: E402
 )
 from qa_automation_rules import (  # noqa: E402
     AUTOMATION_LEVEL,
+    IN_REPO_ROOT,
     MAX_REVIEW_ROUNDS,
     REPORT_DIR,
     REPORT_PATH,
@@ -139,18 +140,37 @@ class _Context:
         """E2E repo checkout (execution.e2e_root): source of the repo's own lint config, never written."""
         return self.repo / normalize_repo_path(self.policy.e2e_root or "")
 
+    def worktree_repo_root(self) -> str:
+        """run.json repo_root of the run-owned E2E worktree: the E2E repo (execution.e2e_root, nested or
+        separate repo) or "." when the E2E folder lives inside the product repo (monorepo, in-repo layout)."""
+        root = normalize_repo_path(self.policy.e2e_root or "")
+        candidates = {root, IN_REPO_ROOT}
+        found = {normalize_repo_path(item.get("repo_root", "")) for item in self.run["created_resources"]
+                 if item["kind"] == "worktree" and item["via"] == "agent"
+                 and normalize_repo_path(item.get("repo_root", "")) in candidates}
+        if len(found) > 1:
+            raise Rejected(f"run-owned E2E worktrees under both repo_root {root} and {IN_REPO_ROOT} in {RUN_FILE}: need exactly one")
+        return found.pop() if found else root
+
+    def in_repo(self) -> bool:
+        return self.worktree_repo_root() == IN_REPO_ROOT and normalize_repo_path(self.policy.e2e_root or "") != IN_REPO_ROOT
+
+    def e2e_subdir(self) -> str:
+        """E2E folder inside the worktree: the e2e_root in the in-repo layout, "" when the worktree is the E2E repo."""
+        return normalize_repo_path(self.policy.e2e_root or "") if self.in_repo() else ""
+
     def worktree(self) -> str:
         """Absolute path of the run-owned E2E worktree: the one agent worktree with repo_root =
-        execution.e2e_root, a linked git worktree (regular `.git` file), so `git -C` never climbs to
-        an enclosing repository."""
-        root = normalize_repo_path(self.policy.e2e_root or "")
+        execution.e2e_root (E2E repo) or "." (E2E folder inside the product repo), a linked git worktree
+        (regular `.git` file), so `git -C` never climbs to an enclosing repository."""
+        root = self.worktree_repo_root()
         found = [item for item in self.run["created_resources"]
                  if item["kind"] == "worktree" and item["via"] == "agent"
                  and normalize_repo_path(item.get("repo_root", "")) == root]
         if len(found) != 1:
             raise Rejected(f"{len(found)} run-owned E2E worktree(s) with repo_root {root} in {RUN_FILE}: need exactly "
                            "one (create + register it first: execution-lanes.md Runner lane step 3)")
-        path = f"{root}/{found[0]['id']}"
+        path = found[0]["id"] if root == IN_REPO_ROOT else f"{root}/{found[0]['id']}"
         target = self.repo
         for part in PurePosixPath(path).parts:
             target = target / part
@@ -173,6 +193,9 @@ class _Context:
             problem = repo_path_problem(path)
             if problem:
                 raise Rejected(problem)
+            subdir = self.e2e_subdir()
+            if subdir and not path.startswith(f"{subdir}/"):
+                raise Rejected(f"spec {path}: must be inside {subdir}/ (in-repo E2E folder)")
             target = base
             for part in PurePosixPath(path).parts:
                 target = target / part
@@ -301,7 +324,7 @@ def command_record_review(ctx: _Context, args: argparse.Namespace) -> dict:
         raise Rejected(f"max {MAX_REVIEW_ROUNDS} review rounds reached (ADR-18): stall, ask the human")
     current = ctx.current_specs(automation)
     root = Path(ctx.worktree())
-    config_sha256 = _lint_config_sha256(ctx.checkout(), root)
+    config_sha256 = _lint_config_sha256(ctx.checkout(), root / ctx.e2e_subdir())
     try:
         lint = lint_files(root, [item["path"] for item in automation["specs"]], load_config(ctx.checkout(), None),
                           ctx.policy.forbid_spec_intercepts)

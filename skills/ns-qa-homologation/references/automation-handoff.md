@@ -10,7 +10,7 @@ All subcommands: `--run-dir <run_dir> --profile docs/context/qa-profile.md [--re
 | - | ---------- | ---------- |
 | 1 | `plan [--title "<dev issue title>"]` | Skip → `run.json` Q8 `skipped` (note = reason) → Q9. Else run `argv` (fetch base, `switch -c` branch from `<remote>/<base>`) |
 | 2 | Author specs (below) in run-owned E2E worktree | — |
-| 3 | `specs --spec <path>...` (relative to worktree) | Re-run after any spec edit: new spec set, stability restarts |
+| 3 | `specs --spec <path>...` (relative to worktree; in-repo layout: under `<e2e_root>/`, e.g. `e2e-tests/cypress/e2e/x.cy.js`) | Re-run after any spec edit: new spec set, stability restarts |
 | 4 | Runner run → `<run_dir>/automation/run-<k>.xml`; `record-run --junit automation/run-<k>.xml` | Repeat until `stability.stable`; each report must differ in content (comments/whitespace ignored) |
 | 5 | `lint_e2e_antipatterns.py` + reviewer (below); `record-review --verdict <V> --score <S>` | Rejected → fix → step 3 |
 | 6 | `commit --subject "<text in commit_language>"` | Run `argv` (`add`, `commit -- <specs>`) |
@@ -42,7 +42,7 @@ Q8 `skipped` valid only when `skip_reason` + `excluded` equal the recomputation 
 
 Outside homologation nothing changes. Q6 specs in worktree reused. Tags `@S-n` + `@AC-n` in title. Never weaken assertion, add retries, fixed wait, `force`.
 
-Worktree: exactly one `run.json` resource `kind: worktree`, `via: agent`, `repo_root = execution.e2e_root` (Q6); on disk a linked git worktree (regular `.git` file, no symlink). Emitted `git -C` path is absolute. None (Q6 reused every spec) → `git -C <e2e_root> worktree add .worktrees/qa-<run_id>-e2e`, register (`created_by_phase: Q8`), `--check-run`, then `plan`.
+Worktree: exactly one `run.json` resource `kind: worktree`, `via: agent`, `repo_root = execution.e2e_root` (Q6) or `repo_root = .` when `e2e_root` is a folder of the product repo (monorepo layout: `id` relative to the project root, `git -C . worktree add .worktrees/qa-<run_id>-e2e`; both layouts registered = refused); on disk a linked git worktree (regular `.git` file, no symlink). Emitted `git -C` path is absolute. None (Q6 reused every spec) → `git -C <e2e_root> worktree add .worktrees/qa-<run_id>-e2e`, register (`created_by_phase: Q8`), `--check-run`, then `plan`.
 
 ## Stability
 
@@ -50,7 +50,7 @@ Runner retries 0 on CLI (Cypress `--config retries=0`, Playwright `--retries=0`)
 
 ## Review gate (ADR-18)
 
-1. Lint: `python3 scripts/lint_e2e_antipatterns.py --root <worktree> [--forbid-spec-intercepts] <spec>...` (exit 0 clean, 2 findings, 3 bad input). Flag from profile `execution.e2e_lint.forbid_spec_intercepts`. E2E repo checkout (`e2e_root`) `.e2e-antipatterns.json` overrides rules (`version`, `disable`, `forbidden_selectors`, `forbid_spec_intercepts`); Q8 never creates or edits it; a differing worktree copy → `record-review` refused; config sha256 recorded. Spec-only rules (`raw-selector`, `spec-intercept`, `cypress-env`, `focused-or-skipped`) lint spec files only (`*.cy.*`, `*.spec.*`, `*.test.*`); support/page objects/fixtures get `fixed-wait`, `force-action`, `uncaught-exception`. `record-review` re-runs lint in-process; findings + enforced rules recorded, rules disclosed in MR description.
+1. Lint: `python3 scripts/lint_e2e_antipatterns.py --root <worktree> [--forbid-spec-intercepts] <spec>...` (exit 0 clean, 2 findings, 3 bad input). Flag from profile `execution.e2e_lint.forbid_spec_intercepts`. E2E repo checkout (`e2e_root`; in-repo layout: `<e2e_root>/.e2e-antipatterns.json`, worktree copy at the same relative path) `.e2e-antipatterns.json` overrides rules (`version`, `disable`, `forbidden_selectors`, `forbid_spec_intercepts`); Q8 never creates or edits it; a differing worktree copy → `record-review` refused; config sha256 recorded. Spec-only rules (`raw-selector`, `spec-intercept`, `cypress-env`, `focused-or-skipped`) lint spec files only (`*.cy.*`, `*.spec.*`, `*.test.*`); support/page objects/fixtures get `fixed-wait`, `force-action`, `uncaught-exception`. `record-review` re-runs lint in-process; findings + enforced rules recorded, rules disclosed in MR description.
 2. Reviewer = profile `policy.e2e_reviewer`: `ns-reviewer` → mode `e2e-spec` (`../../ns-reviewer/references/e2e-spec-review.md`), in-session, given specs + lint JSON; project agent name → that agent.
 3. max 3 rounds. Approved only at score 10 with 0 lint findings, on current spec set; 4th round refused → stall. `Blocked` → stall.
 

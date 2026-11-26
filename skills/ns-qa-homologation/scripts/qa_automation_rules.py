@@ -46,6 +46,7 @@ _MR_URL = re.compile(r"^https?://[A-Za-z0-9.-]+(?::[0-9]{1,5})?/[A-Za-z0-9._/-]+
 REPORT_PATH = re.compile(r"^automation/[A-Za-z0-9][A-Za-z0-9._-]*\.xml$")
 REPORT_DIR = "automation"
 # Emitted git argv: allowed subcommands, and flags that are never emitted (defense in depth).
+IN_REPO_ROOT = "."  # run.json repo_root of the E2E worktree when e2e_root is a folder of the product repo
 _GIT_SUBCOMMANDS = ("fetch", "switch", "add", "commit", "push")
 _FORBIDDEN_FLAGS = ("-f", "--force", "--force-with-lease", "--force-if-includes", "--mirror", "--delete", "-d", "-D",
                     "--prune", "--no-verify", "--amend", "--all", "-a", "--tags", "-C", "-B", "--force-create",

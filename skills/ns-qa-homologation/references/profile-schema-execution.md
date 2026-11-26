@@ -7,7 +7,7 @@ Continuation of `profile-schema.md` (legend, YAML subset, gate extras there). `R
 | Key | R | Type / values | Default | Rule |
 | --- | - | ------------- | ------- | ---- |
 | `runner` | R | `cypress`\|`playwright`\|`none` | — | No harness default. `none` → critical AC max verdict = `policy.runner_none_critical_cap`; Q8 no-op |
-| `e2e_root` | when runner ≠ `none` | path | — | In-repo dir or external E2E repo (own `AGENTS.md`). L3: relative, inside project, no `..` (worktree `repo_root`) |
+| `e2e_root` | when runner ≠ `none` | path | — | In-repo dir or external E2E repo (own `AGENTS.md`). L3: relative, inside project, no `..` (worktree `repo_root`). Monorepo (E2E folder tracked by the product repo, e.g. `e2e-tests`): the Q6/Q8 worktree is a worktree of the whole repo (`repo_root: .`); Q8 branch/commit/MR target the product repo project (`tracker.product_project`, single-project mode) |
 | `e2e_authoring` | — | `auto`\|`repo-local`\|`ns-e2e-tests` | `auto` | `auto`: E2E repo's own skills when present, else `ns-e2e-tests` (D34) |
 | `e2e_git.base_branch` | when L3 | branch | — | Q8 branch start + MR target; never pushed |
 | `e2e_git.branch_pattern` | when L3 | string | — | Placeholders `{iid}` `{run_id}` `{slug}`; MUST hold `{iid}` or `{run_id}`; render = valid branch |
