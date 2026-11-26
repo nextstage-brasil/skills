@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Callable
 
+from qa_automation_rules import run_automation_problems
 from qa_common import embeds_run_id, find_duplicates
 from qa_schema_lite import SchemaLite
 
@@ -213,6 +214,7 @@ _CHECKS: tuple[_Check, ...] = (
     _publish_anyway_level,
     _approval_pauses,
     _publication_consistency,
+    run_automation_problems,
 )
 
 

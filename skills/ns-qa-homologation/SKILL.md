@@ -4,7 +4,7 @@ description: "(NS) Acceptance homologation (QA) of a delivered GitLab issue: pro
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "0.4.0"
+  version: "0.5.0"
 depends:
   - ns-harness
   - ns-e2e-tests
@@ -16,17 +16,17 @@ depends:
 
 Acceptance homologation of a **delivered** issue against the running system. Phases Q0–Q10, state on disk, project values only in QA profile. Evaluates product, not code: `ns-judge` proves diff vs ACs; this skill homologates behavior. Verdict scale (4 levels + confidence) + homologation score belong here only — `ns-judge` "no second rubric" rule stays inside `ns-judge`. Ledger consistency stays binary (`qa_gate.py` exit 0 or reject).
 
-## Implementation status (v0.4.0)
+## Implementation status (v0.5.0)
 
 | Delivered | Phases | Level |
 | --------- | ------ | ----- |
 | **Yes** (Phase 1) | Q0 boot, Q1 intake, Q2 criteria, Q3 impact, Q4 plan, local report | L0 |
 | **Yes** (Phases 2–4) | Q1 status sync, Q5 env + data, Q6 execution + evidence, Q7 verdict, Q7b judge + completion loop, Q10 cleanup | L1 |
 | **Yes** (Phase 4) | Q9 preview approval + publication + result status | L2 |
-| No — Phase 5 | Q8 automation | L3 |
+| **Yes** (Phase 5) | Q8 automation: E2E branch + MR before Q9 | L3 |
 | No — Phase 6 | Routing row, `qa-agent` bridge, dev → QA handoff | — |
 
-**Caps:** L3 runs as **L2**; `environment.provider: none` runs as **L0**. `qa_gate.py --check-profile` returns `autonomy_effective` + `autonomy_caps`; report §1 states declared vs effective + reasons. Never run a phase marked No.
+**Caps:** `environment.provider: none` runs as **L0**; `# inferred` field → ≤ L1. `qa_gate.py --check-profile` returns `autonomy_effective` + `autonomy_caps`; report §1 states declared vs effective + reasons. Never run a phase marked No.
 
 ## Routing
 
@@ -57,7 +57,7 @@ Effective level = min(profile `autonomy_level`, L1 if any `# inferred` field, L0
 
 ## Invariants (every level)
 
-Never: close issue · log time · merge · push protected branch · change product code · print credentials · remove a resource not registered in this run's `run.json` · publish comment or final status without human approval of the exact preview (`qa_publish_plan.py`) · publish below `judge.min_score` without the human answer `publish_anyway` · weaken/skip an assertion or use `force` to go green.
+Never: close issue · log time · merge · push base/protected branch · `--force` / `--no-verify` / rewrite pushed commit · change product code · print credentials · remove a resource not registered in this run's `run.json` · publish comment or final status without human approval of the exact preview (`qa_publish_plan.py`) · publish below `judge.min_score` without the human answer `publish_anyway` · weaken/skip an assertion or use `force` to go green.
 
 ## Run directory
 
@@ -75,6 +75,7 @@ Never: close issue · log time · merge · push protected branch · change produ
 | `verdict.json` | Q7 | `references/verdict-rubric.md` |
 | `qa-judgment.json`; ledger `adherence`, `judge_rounds` | Q7b | `references/homologation-judge.md` |
 | `report.md` | after Q7b | `references/report.template.md` (L2+: comment body) |
+| `automation/run-<k>.xml`, `automation/mr.md`; `run.json` `automation` | Q8 | `references/automation-handoff.md` |
 | `preview.md`, `publish.json`, `publish-payload.md` (offline) | Q9 | `references/publication.md` |
 | Profile `cleanup.log` (shared, append-only) | Q10 | One line per run: `references/cleanup.md` |
 
@@ -93,7 +94,7 @@ Never: close issue · log time · merge · push protected branch · change produ
 | Q6 Execution | ledger + evidence | every scenario terminal; `qa_evidence.py index` + `--check-ledger` exit 0 | Ready (≥L1) |
 | Q7 Verdict | `verdict.json` | `--verdict` exit 0 | Ready (≥L1) |
 | Q7b Judge | `qa-judgment.json`, `report.md` | `loop.state` `passed`, or `ended_below_min` + D50 answer `publish_anyway` (L2+ only) | Ready (≥L1) |
-| Q8 Automation | E2E MR | ≥`stability_runs` green, review approved | Phase 5 |
+| Q8 Automation | E2E branch + MR, or no-op | `record-mr` (≥`stability_runs` green on one spec set, review 10 + lint clean, ≤3 rounds) → `passed`; `plan` no-op → `skipped` | Ready (L3) |
 | Q9 Approval + publish | `preview.md`, `publish.json` | approved preview published (`record` → outcome `published`) | Ready (≥L2) |
 | Q10 Cleanup | `cleanup.log` line | plan from `qa_cleanup_plan.py`; registered resources only; stop on first failure | Ready (≥L1) |
 
@@ -121,13 +122,17 @@ Fill `references/report.template.md` in profile `language`: §1 verdict not comp
 
 Q7: `references/verdict-rubric.md` — `qa_gate.py --verdict` → `verdict.json`. Q7b: `references/homologation-judge.md` — record adherence per executed scenario × AC, `qa_judge.py` → `qa-judgment.json`; `complement` → round on actionable gaps only (Q4 → Q5 → Q6 → Q7 → Q7b, `--record-round`); `ended_below_min` (any level) → D50 pause (`below_min_score`), nothing published or deleted; L1 answers `continue` / `stop` only. Then fill report (verdict, confidence, score, rounds, missing for 10, mocked scenarios). L1: report local, no comment, no status beyond Q1.
 
+### Q8 (effective L3)
+
+`references/automation-handoff.md`: `qa_automation.py plan` → candidates (`automate: true`, runner, no existing coverage, ledger `pass`) or recorded no-op (Q8 `skipped`) → author (D34) in run-owned E2E worktree → `specs` → runs (retries 0) + `record-run` until stable → lint + reviewer (`policy.e2e_reviewer`) + `record-review` → `commit` / `record-commit` / push argv → `record-push` → MCP MR (no approval, D51; never merge) → `record-mr` → Q8 `passed`. Script prints argv; agent runs them; never `--force`, never push base/protected.
+
 ### Q9 (effective ≥ L2)
 
 `references/publication.md`: `qa_publish_plan.py preview` → show `preview.md` → `approval` → `payload` → MCP publish (marker check, all uploads first with `upload_url` as returned; any failure → post nothing, `preview --not-uploaded`, ask again) → `set_issue_status` when preview names a status → `record` → Q9 `passed`. MCP down → offline payload.
 
 ### Q10
 
-`references/cleanup.md`. `success` = every gate of effective level passed (L1: Q0–Q7b with judge loop `passed`; L2: + Q9 published with every capture uploaded). Otherwise keep all; report §8 names kept resources + leftover command; removal only on human request.
+`references/cleanup.md`. `success` = every gate of effective level passed (L1: Q0–Q7b with judge loop `passed`; L2: + Q9 published with every capture uploaded; L3: + Q8 MR recorded or justified no-op). Otherwise keep all; report §8 names kept resources + leftover command; removal only on human request.
 
 ## Gate script
 
@@ -147,6 +152,8 @@ Q7: `references/verdict-rubric.md` — `qa_gate.py --verdict` → `verdict.json`
 | JUnit merge | `scripts/junit_to_ledger.py --ledger <ledger> --junit results/<f>.xml [--change S-n=<c>]... [--dry-run]` | 0 merged; 2 refused (unsafe path/XML, nothing mapped, re-merge, triage break); 3 unreadable |
 | Triage | `scripts/qa_triage.py --ledger <ledger> --scenario S-<n>` | 0 decision (writes nothing); 2 history breaks protocol; 3 bad input |
 | Evidence | `scripts/qa_evidence.py add\|verify\|index ...` | 0 done; 2 refused (name, symlink, content, PII/capture rule, unreferenced, hash); 3 unreadable |
+| Automation (Q8) | `scripts/qa_automation.py plan\|specs\|record-run\|record-review\|commit\|record-commit\|record-push\|record-mr\|status --run-dir <dir> --profile <md>` | 0 done (argv printed, never executed); 2 refused (level, order, branch, spec change, unstable, review, sha/url, `mr.md` edited); 3 unreadable / usage |
+| E2E lint (Q8) | `scripts/lint_e2e_antipatterns.py --root <worktree> [--config <json>] [--forbid-spec-intercepts] <spec>...` | 0 clean; 2 findings (file:line); 3 bad input |
 
 Exit **1 never used** (unlike `ns-judge`, where 1 = skip). Exit 2 → fix artifact per `errors`, re-run (`--check-env`: stall instead). Ledger contract: `templates/qa-ledger.schema.json`; `mr: null`, commit mismatch, unhealthy env, ENV exhausted → `blocked_reasons`, not schema failure. `--check-ledger` also replays each scenario `history` (status/triage must match), re-reads each runner run's own JUnit `source` (same outcome; one run per file), matches `plan.yml` (ids, lane, type, covers; required after Q4 passed), lane evidence, evidence layout, `adherence` pairs, `judge_rounds` chain.
 
@@ -165,7 +172,7 @@ L2+ only, after all phases (incl. Q8 at L3). One `preview.md`: exact comment(s) 
 
 | File | When |
 | ---- | ---- |
-| `references/profile-schema.md`, `references/profile-schema-policy.md` | Profile keys, YAML subset, gate extras, autonomy |
+| `references/profile-schema.md`, `references/profile-schema-execution.md`, `references/profile-schema-policy.md` | Profile keys, YAML subset, gate extras, autonomy |
 | `references/profile-discovery.md` | Q0, profile absent |
 | `references/intake.md` | Q1 |
 | `references/acceptance-criteria.md` | Q2 |
@@ -177,6 +184,7 @@ L2+ only, after all phases (incl. Q8 at L3). One `preview.md`: exact comment(s) 
 | `references/failure-triage.md` | Any failed run; checkpoint; stall |
 | `references/verdict-rubric.md` | Q7 verdict + confidence |
 | `references/homologation-judge.md` | Q7b adherence, score, completion loop, D50 pause |
+| `references/automation-handoff.md` | Q8 candidates, authoring, stability, review, git, MR |
 | `references/publication.md` | Q9 preview, approval, MCP publish, status, offline |
 | `references/cleanup.md` | Q10; leftover removal |
 | `references/report.template.md` | Report (L2+: comment body) |

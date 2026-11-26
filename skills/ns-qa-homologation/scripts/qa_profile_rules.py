@@ -8,18 +8,16 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from qa_automation_rules import AUTOMATION_LEVEL, git_profile_problems, normalize_repo_path, repo_path_problem
 from qa_common import InvalidInput
 from qa_schema_lite import SchemaLite
 from qa_yaml_lite import YamlLiteError, extract_yaml_block, parse
 
 _LEVELS = ("L0", "L1", "L2", "L3")
 _INFERRED_CAP = "L1"
-# Highest level whose phases exist in this skill version. Raise to L3 when Q8 automation lands.
-IMPLEMENTED_MAX_LEVEL = "L2"
-_IMPLEMENTED_REASON = (
-    "E2E automation (Q8) not implemented in this skill version: run is execute + verdict + score + "
-    "publication after approval, without E2E commit/MR"
-)
+# Highest level whose phases exist in this skill version (caps a declared level above it).
+IMPLEMENTED_MAX_LEVEL = "L3"
+_IMPLEMENTED_REASON = f"phases above {IMPLEMENTED_MAX_LEVEL} not implemented in this skill version"
 _NO_PROVIDER_LEVEL = "L0"
 _NO_PROVIDER_REASON = "environment.provider none: nothing to execute; run is plan + local report"
 # Browser tool ids of references/browser-tools.md (capability map), in its order.
@@ -144,6 +142,19 @@ def _browser_tool_warnings(data: dict) -> list[str]:
     ]
 
 
+def _e2e_errors(data: dict) -> list[str]:
+    """e2e_git names become git argv (Q8); at L3 the run-owned worktree registers repo_root = e2e_root."""
+    execution = data.get("execution") or {}
+    git = execution.get("e2e_git")
+    errors = git_profile_problems(git, _PLACEHOLDER.match) if isinstance(git, dict) else []
+    root = execution.get("e2e_root")
+    if data.get("autonomy_level") == AUTOMATION_LEVEL and isinstance(root, str) and not _PLACEHOLDER.match(root):
+        problem = repo_path_problem(normalize_repo_path(root), "e2e_root")
+        if problem:
+            errors.append(f"execution.{problem} (L3: worktree repo_root inside the project)")
+    return errors
+
+
 def _min_level(*levels: str) -> str:
     return _LEVELS[min(_LEVELS.index(level) for level in levels)]
 
@@ -176,6 +187,7 @@ def check_profile(profile_path: Path, repo: Path, schema: SchemaLite) -> Profile
     report.errors.extend(schema.validate(data))
     report.errors.extend(_placeholder_errors(data))
     report.errors.extend(_judge_weight_errors(data))
+    report.errors.extend(_e2e_errors(data))
     report.warnings.extend(_status_key_warnings(data, repo))
     report.warnings.extend(_evidence_dir_warnings(data))
     report.warnings.extend(_browser_tool_warnings(data))

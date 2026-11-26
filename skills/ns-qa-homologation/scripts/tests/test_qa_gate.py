@@ -151,9 +151,9 @@ _BACKTICK = re.compile(r"`([^`]+)`")
 
 
 def _documented_profile_paths() -> set[str]:
-    """Key paths from the field tables of profile-schema.md + profile-schema-policy.md."""
+    """Key paths from the field tables of profile-schema.md, profile-schema-execution.md, profile-schema-policy.md."""
     paths: set[str] = set()
-    for name in ("profile-schema.md", "profile-schema-policy.md"):
+    for name in ("profile-schema.md", "profile-schema-execution.md", "profile-schema-policy.md"):
         section = None
         in_field_table = False
         for line in (SKILL / "references" / name).read_text(encoding="utf-8").splitlines():
@@ -229,16 +229,19 @@ class CheckProfileTests(ReasonAssertions):
         self.assertEqual(payload["warnings"], [])
         self.assertEqual(len(payload["profile_sha256"]), 64)
 
-    def test_l2_runs_as_l2_and_l3_capped_to_l2(self):
-        code, payload = self._run(filled_profile_text({"autonomy_level: L1  ": "autonomy_level: L2  "}))
+    def test_e2e_root_outside_project_allowed_below_l3(self):
+        code, payload = self._run(filled_profile_text({"  e2e_root: filled-": "  e2e_root: ../e2e-repo  # filled-"}))
         self.assertEqual(code, 0, payload)
-        self.assertEqual((payload["autonomy_effective"], payload["autonomy_caps"]), ("L2", []))
-        code, payload = self._run(filled_profile_text({"autonomy_level: L1  ": "autonomy_level: L3  "}))
+        code, payload = self._run(filled_profile_text({"autonomy_level: L1  ": "autonomy_level: L3  ",
+                                                       "  e2e_root: filled-": "  e2e_root: ./e2e/  # filled-"}))
         self.assertEqual(code, 0, payload)
-        self.assertEqual(payload["autonomy_effective"], "L2")
-        self.assertEqual(payload["autonomy_caps"], [
-            "E2E automation (Q8) not implemented in this skill version: run is execute + verdict + score + "
-            "publication after approval, without E2E commit/MR"])
+
+    def test_l2_and_l3_run_as_declared(self):
+        for level in ("L2", "L3"):
+            with self.subTest(level=level):
+                code, payload = self._run(filled_profile_text({"autonomy_level: L1  ": f"autonomy_level: {level}  "}))
+                self.assertEqual(code, 0, payload)
+                self.assertEqual((payload["autonomy_effective"], payload["autonomy_caps"]), (level, []))
 
     def test_provider_none_caps_to_l0(self):
         text = filled_profile_text(
@@ -331,6 +334,23 @@ class CheckProfileTests(ReasonAssertions):
                 "/evidence/dir: does not match",
             ),
             "timeout zero": ({"timeouts: { up: 1800,": "timeouts: { up: 0,"}, "/environment/timeouts/up: below minimum 1"),
+            "one stability run": ({"stability_runs: 2": "stability_runs: 1"}, "/execution/stability_runs: below minimum 2"),
+            "branch pattern unknown placeholder": (
+                {'"qa/{iid}-{slug}"': '"qa/{iid}-{user}"'}, "execution.e2e_git: branch_pattern placeholder(s) user unknown"),
+            "branch pattern without id": (
+                {'"qa/{iid}-{slug}"': '"qa/{slug}"'}, "execution.e2e_git: branch_pattern must contain {iid} or {run_id}"),
+            "branch pattern option": ({'"qa/{iid}-{slug}"': '"--force{iid}"'}, "execution.e2e_git: branch_pattern renders an invalid branch"),
+            "base branch dotdot": ({"base_branch: filled-": "base_branch: a..b-"}, "execution.e2e_git: branch 'a..b-"),
+            "remote option": ({"remote: origin": 'remote: "--upload-pack=x"'}, "execution.e2e_git: remote '--upload-pack=x' must match"),
+            "protected not a name": ({"protected_branches: []": 'protected_branches: ["a b"]'},
+                                     "execution.e2e_git: protected branch 'a b' must be a branch name"),
+            "commit prefix marker": ({'commit_prefix: "test(e2e):"': 'commit_prefix: "ns-qa:run=1"'},
+                                     "execution.e2e_git: commit_prefix must not contain the marker prefix"),
+            "L3 e2e_root outside project": (
+                {"autonomy_level: L1  ": "autonomy_level: L3  ", "  e2e_root: filled-": "  e2e_root: ../e2e-repo  # filled-"},
+                "execution.e2e_root '../e2e-repo' must be a relative path"),
+            "lint flag not bool": ({"forbid_spec_intercepts: false": "forbid_spec_intercepts: maybe"},
+                                   "/execution/e2e_lint/forbid_spec_intercepts: expected boolean"),
         }
         for name, (replacements, reason) in cases.items():
             with self.subTest(case=name):

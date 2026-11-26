@@ -258,4 +258,5 @@ def judge(ledger: dict, plan: dict, blocked_reasons: list[str], policy: QaPolicy
         "ledger_fingerprint": ledger_fingerprint(ledger),
         "adherence_sha256": adherence_sha256(ledger),
         "judge_rounds_sha256": canonical_sha256(ledger["judge_rounds"]),
+        "plan_sha256": canonical_sha256(plan),
     }

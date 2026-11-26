@@ -49,7 +49,7 @@ Under `execution.e2e_root`:
 
 Record hits in `existing` as `"<spec path> (@AC-n)"` or `"<spec path> (route <path>)"`. Hit ≠ coverage proof: scenario stays in plan (reuse candidate at execution). No feature-word text search.
 
-`automate: true` → runner-lane scenario with no `existing` hit (input to Q8, Phase 5).
+`automate: true` → runner-lane scenario with no `existing` hit (input to Q8 at L3: `automation-handoff.md`).
 
 ## Shape
 

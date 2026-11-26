@@ -5,7 +5,7 @@ Project QA profile for `ns-qa-homologation`. Install at `docs/context/qa-profile
 - This file is the **only** place for project-specific QA values. The skill reads keys; it never hardcodes values.
 - Replace every `<placeholder>`. A profile that still contains a placeholder fails `qa_gate.py --check-profile` (exit 3).
 - Keep exactly **one** fenced `yaml` block. It must stay inside the supported YAML subset (see `references/profile-schema.md` → YAML subset).
-- Field reference: `references/profile-schema.md` and `references/profile-schema-policy.md`.
+- Field reference: `references/profile-schema.md`, `references/profile-schema-execution.md` and `references/profile-schema-policy.md`.
 - Fields written by discovery carry a trailing `# inferred` comment. While any remains, autonomy is capped at L1. Remove the marker after you confirm the value.
 - `autonomy_level` starts at `L1` (execute + local report). Raising it to `L2` / `L3` is an explicit human edit.
 - Status **label names** live only in `tracker.status_source` (the GitLab sync config). This profile stores the config **keys**.
@@ -61,11 +61,15 @@ execution:
   runner: <cypress | playwright | none>
   e2e_root: <in-repo e2e dir or external e2e repo path>
   e2e_authoring: auto             # auto | repo-local | ns-e2e-tests
-  e2e_git:                        # required at L3
+  e2e_git:                        # required at L3 (Q8 automation MR)
     base_branch: <e2e-base-branch>
-    branch_pattern: "qa/{iid}-{slug}"
+    branch_pattern: "qa/{iid}-{slug}"   # placeholders {iid} {run_id} {slug}; {iid} or {run_id} required
     commit_prefix: "test(e2e):"
-    commit_language: en
+    commit_language: en           # E2E repo commit convention (BCP 47)
+    remote: origin
+    protected_branches: []        # branch names or * globs never pushed; base_branch always protected
+  e2e_lint:
+    forbid_spec_intercepts: false # true: network intercepts belong in support code, not in specs
   browser_tool_preference: [playwright-mcp, claude-in-chrome, claude-browser-pane, cursor-ide-browser]   # references/browser-tools.md
   stability_runs: 2
   runner_retries_during_verification: 0

@@ -162,11 +162,20 @@
             "base_branch": { "$ref": "#/$defs/text" },
             "branch_pattern": { "$ref": "#/$defs/text" },
             "commit_prefix": { "$ref": "#/$defs/text" },
-            "commit_language": { "type": "string", "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$" }
+            "commit_language": { "type": "string", "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$" },
+            "remote": { "$ref": "#/$defs/text" },
+            "protected_branches": { "$ref": "#/$defs/textList" }
+          }
+        },
+        "e2e_lint": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "forbid_spec_intercepts": { "type": "boolean" }
           }
         },
         "browser_tool_preference": { "$ref": "#/$defs/textList" },
-        "stability_runs": { "type": "integer", "minimum": 1 },
+        "stability_runs": { "type": "integer", "minimum": 2 },
         "runner_retries_during_verification": { "const": 0 },
         "budget": {
           "type": "object",

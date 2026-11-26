@@ -4,7 +4,7 @@ description: "(NS) Cypress E2E in independent tests-e2e/ at repo root (bootstrap
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "1.3"
+  version: "1.4"
 ---
 
 # Create E2E Tests
@@ -21,7 +21,7 @@ Load `.nextstage-harness/rules/e2e-tests-rules.md` when present (optional siblin
 
 ### 0.0 — QA profile root (homologation only)
 
-Called from `ns-qa-homologation` (`execution.e2e_authoring` resolved to this skill) with `docs/context/qa-profile.md` `execution.e2e_root` set → **`{e2e_root}` = that path**; skip 0.1–0.3 (never bootstrap). Separate E2E repo: its own `AGENTS.md` conventions win over Phases 2–3 layout on conflict; git inside that repo only. `cypress.config.*` missing there → stop, report. Every other trigger: 0.1 onward, unchanged.
+Called from `ns-qa-homologation` (`execution.e2e_authoring` resolved to this skill) with `docs/context/qa-profile.md` `execution.e2e_root` set → **`{e2e_root}` = that path**; skip 0.1–0.3 (never bootstrap). Separate E2E repo: its own `AGENTS.md` conventions win over Phases 2–3 layout on conflict; git inside that repo only. Runner config (`cypress.config.*`; `playwright.config.*` when `execution.runner: playwright`) missing there → stop, report. Profile `execution.runner: playwright` (homologation calls only) → `references/playwright-architecture.md` replaces the Cypress paths/commands of Phases 1–5; their rules stay (discovery first, no invented test ids, no fixed waits, stubs, tags). Every other trigger: 0.1 onward, unchanged.
 
 ### 0.1 — Detect existing E2E (brownfield)
 
@@ -121,6 +121,7 @@ suite. The human runs E2E at version end.
 | File                             | When                              |
 | -------------------------------- | --------------------------------- |
 | `references/e2e-architecture.md` | Root layout, bootstrap tree, rules |
+| `references/playwright-architecture.md` | Homologation call with `runner: playwright` |
 | `../ns-spec-driven/references/e2e-test-task-generator.md` | Task contract source |
 
 ## Related skills

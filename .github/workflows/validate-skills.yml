@@ -139,4 +139,6 @@ jobs:
           python3 skills/ns-qa-homologation/scripts/tests/test_qa_verdict.py
           python3 skills/ns-qa-homologation/scripts/tests/test_qa_judge.py
           python3 skills/ns-qa-homologation/scripts/tests/test_qa_publish.py
+          python3 skills/ns-qa-homologation/scripts/tests/test_qa_automation.py
+          python3 skills/ns-qa-homologation/scripts/tests/test_lint_e2e.py
           python3 skills/ns-qa-homologation/scripts/tests/mutate_qa_gate.py

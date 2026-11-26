@@ -61,8 +61,8 @@ Distinct gate from `ns-judge` (acceptance, not delivery proof). Dimensions, loop
 | `verdict_publish` | — | `final` | `final` | No provisional verdict |
 | `publish_comment` | — | `on_approval` | `on_approval` | Full preview to human; publish only on explicit approval (`publication.md`) |
 | `set_status_labels` | — | `auto` | `auto` | Q9 result status (L2+) |
-| `open_e2e_mr` | — | `auto` | `auto` | L3 only; own branch, never merge |
-| `e2e_reviewer` | — | skill or project agent | `ns-reviewer` | Reviews generated E2E specs |
+| `open_e2e_mr` | — | `auto` | `auto` | L3 only (Q8); own branch, MR without approval (D51), never merge |
+| `e2e_reviewer` | — | skill or project agent | `ns-reviewer` | Q8 spec review (`ns-reviewer` mode `e2e-spec`); max 3 rounds; Approved only at 10 |
 | `runner_none_critical_cap` | — | `with_reservations` | `with_reservations` | Verdict cap without runner |
 | `close_issues` | R | `never` | `never` | Fixed |
 | `log_spent_time` | R | `never` | `never` | Fixed |
@@ -76,6 +76,6 @@ Distinct gate from `ns-judge` (acceptance, not delivery proof). Dimensions, loop
 | `L2` publish | yes | yes, on approval | yes | no |
 | `L3` autonomous | yes | yes, on approval | yes | yes (own branch, never merge) |
 
-Invariants, every level: never close issue; never log time; never merge; never push protected branch; never change product code; never print credentials; never remove resource not in this run's `run.json`; never publish comment or final status without approval of the exact preview.
+Invariants, every level: never close issue; never log time; never merge; never push base/protected branch; never `--force`; never change product code; never print credentials; never remove resource not in this run's `run.json`; never publish comment or final status without approval of the exact preview.
 
 Docker/E2E/GitLab authorization: `../../ns-harness/references/acceptance-tier.md`.

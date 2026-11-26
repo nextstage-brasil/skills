@@ -35,6 +35,7 @@ if sys.version_info < MIN_PYTHON:
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from qa_automation_rules import AUTOMATION_LEVEL, AUTOMATION_PHASE, TERMINAL_STATES, selection_problems  # noqa: E402
 from qa_artifacts import (  # noqa: E402
     JUDGMENT_FILE,
     LEDGER_FILE,
@@ -77,6 +78,8 @@ _REQUIRED_PASSED = {
     "L2": (*_BASE_PHASES, "Q9"),
     "L3": (*_BASE_PHASES, "Q8", "Q9"),
 }
+# Q8 skipped is accepted only as the script-recorded no-op (--check-run ties skipped to automation.skip_reason).
+_ACCEPTED_STATES = {AUTOMATION_PHASE: TERMINAL_STATES}
 _UPLOADED = ("complete", "not_needed")
 _OPEN_STATES = ("failed", "running")
 _ENDING_ANSWERS = ("stop", "do_not_publish")
@@ -264,6 +267,13 @@ def _judge_errors(run: dict, run_path: str, profile: Path) -> list[str]:
     return [f"/{JUDGMENT_FILE}: loop {state} without the human answer publish_anyway: Q7b not passed"]
 
 
+def _automation_errors(run: dict, run_dir: Path, profile: Path) -> list[str]:
+    """L3: Q8 selection / no-op skip equals its recomputation (plan.yml pinned by the judgment + ledger)."""
+    checked = checked_ledger(run_dir / LEDGER_FILE, run_dir)
+    runner_none = load_policy(profile, Path.cwd()).runner_none
+    return selection_problems(run.get("automation"), checked.plan, checked.ledger, runner_none)
+
+
 def _completion_errors(run: dict, level: str, run_path: str, profile: Path) -> list[str]:
     """Reasons `success` is not proven by run.json (empty = every gate of the level passed)."""
     states = {item["phase"]: item["state"] for item in run["phases"]}
@@ -274,9 +284,9 @@ def _completion_errors(run: dict, level: str, run_path: str, profile: Path) -> l
     ]
     required = _REQUIRED_PASSED[level]
     errors.extend(
-        f"/phases: {phase} not passed (required for success at {level})"
+        f"/phases: {phase} not {' or '.join(_ACCEPTED_STATES.get(phase, ('passed',)))} (required for success at {level})"
         for phase in required
-        if states.get(phase) != "passed"
+        if states.get(phase) not in _ACCEPTED_STATES.get(phase, ("passed",))
     )
     errors.extend(
         f"/pauses/{index}: answered {pause['answer']}: run ended incomplete"
@@ -286,7 +296,10 @@ def _completion_errors(run: dict, level: str, run_path: str, profile: Path) -> l
     final = required[-1]
     if run["phase"] != final:
         errors.append(f"/phase: {run['phase']} is not the final gate {final} for {level}")
-    errors.extend(_judge_errors(run, run_path, profile))
+    judge_errors = _judge_errors(run, run_path, profile)
+    errors.extend(judge_errors)
+    if level == AUTOMATION_LEVEL and not judge_errors:
+        errors.extend(_automation_errors(run, Path(run_path).parent, profile))
     outcome = (run.get("publication") or {}).get("outcome")
     if outcome is not None and outcome["evidence_upload"] not in _UPLOADED:
         errors.append(f"/publication/outcome: evidence_upload {outcome['evidence_upload']}: "

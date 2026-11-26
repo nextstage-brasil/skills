@@ -454,3 +454,44 @@ def repin_profile(profile: Path, run_dir: Path) -> None:
     run = json.loads(path.read_text(encoding="utf-8"))
     run["profile_sha256"] = sha256_bytes(profile.read_bytes())
     write_json(path, run)
+
+
+AUTOMATION = SCRIPTS / "qa_automation.py"
+LINT = SCRIPTS / "lint_e2e_antipatterns.py"
+E2E_SPEC = "cypress/e2e/save.cy.ts"
+MR_URL = "https://gitlab.example.com/group/e2e/-/merge_requests/5"
+
+
+def run_automation(args: list[str], cwd: Path | None = None, env: dict | None = None) -> tuple[int, dict]:
+    if env is None:
+        return _run_script(AUTOMATION, args, cwd)
+    import os
+
+    result = subprocess.run([sys.executable, str(AUTOMATION), *args], text=True, capture_output=True,
+                            cwd=str(cwd) if cwd else None, check=False, env={**os.environ, **env})
+    return result.returncode, json.loads(result.stdout) if result.stdout.strip() else {}
+
+
+def run_lint(args: list[str], cwd: Path | None = None) -> tuple[int, dict]:
+    return _run_script(LINT, args, cwd)
+
+
+def automation_passed() -> dict:
+    """run.json automation of a Q8 that opened its MR (two green runs + approved review on one spec set)."""
+    from qa_automation_rules import specs_sha256
+
+    specs = [{"path": E2E_SPEC, "sha256": "c" * 64}]
+    digest = specs_sha256(specs)
+    runs = [{"source": f"automation/run-{n}.xml", "sha256": str(n) * 64, "specs_sha256": digest, "green": True,
+             "outcomes": [{"scenario": "S-1", "outcome": "pass"}], "at": STAMP} for n in (1, 2)]
+    review = {"round": 1, "reviewer": "ns-reviewer", "verdict": "Approved", "score": 10, "lint_findings": 0,
+              "lint_rules": ["raw-selector", "fixed-wait"], "lint_config_sha256": None, "specs_sha256": digest, "at": STAMP}
+    return {"scenarios": ["S-1"], "excluded": [], "skip_reason": None, "branch": "qa/42-save-form", "specs": specs,
+            "runs": runs, "reviews": [review], "subject": "cover form save", "commit_specs_sha256": digest,
+            "commit": "d" * 40, "pushed": True,
+            "mr": {"iid": 5, "url": MR_URL}}
+
+
+def automation_skipped(reason: str = "no plan scenario marked automate: true") -> dict:
+    return {"scenarios": [], "excluded": [], "skip_reason": reason, "branch": None, "specs": [], "runs": [],
+            "reviews": [], "subject": None, "commit_specs_sha256": None, "commit": None, "pushed": False, "mr": None}

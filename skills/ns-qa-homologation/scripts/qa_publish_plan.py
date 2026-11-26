@@ -47,8 +47,15 @@ from qa_artifacts import (  # noqa: E402
     VERDICT_FILE,
     checked_ledger,
     read_json,
+    read_text,
     require_profile_pin,
     verdict_labels,
+)
+from qa_automation_rules import (  # noqa: E402
+    AUTOMATION_LEVEL,
+    automation_cell,
+    automation_terminal,
+    selection_problems,
 )
 from qa_common import (  # noqa: E402
     InvalidInput,
@@ -95,15 +102,6 @@ BELOW_MIN_REASON = "below_min_score"
 PUBLISH_ANYWAY = "publish_anyway"
 
 
-def _read_text(path: Path) -> str:
-    try:
-        return path.read_text(encoding="utf-8")
-    except OSError as exc:
-        raise InvalidInput(f"{path.name}: {exc.strerror or exc}") from exc
-    except UnicodeDecodeError as exc:
-        raise InvalidInput(f"{path.name}: not UTF-8: {exc}") from exc
-
-
 def _checked_run(run_dir: Path) -> dict:
     run = read_json(run_dir / RUN_FILE, RUN_FILE)
     report = check_run(run, load_schema(TEMPLATES / "qa-run.schema.json"))
@@ -116,6 +114,8 @@ def _checked_run(run_dir: Path) -> dict:
     missing = [phase for phase in REQUIRED_PHASES if states.get(phase) != "passed"]
     if missing:
         raise Rejected(f"{', '.join(missing)} not passed in {RUN_FILE}: publish only after the verdict and the judge")
+    if level == AUTOMATION_LEVEL and not automation_terminal(run):
+        raise Rejected(f"Q8 not passed or skipped in {RUN_FILE}: at L3 automation runs before publication (D51)")
     return run
 
 
@@ -148,12 +148,12 @@ def _evidence_folder(run: dict) -> str:
 
 
 def _report_text(run_dir: Path) -> str:
-    text = _read_text(run_dir / REPORT_FILE)
+    text = read_text(run_dir / REPORT_FILE)
     if not text.strip():
         raise Rejected(f"{REPORT_FILE} is empty")
     if MARKER_PREFIX in text:
         raise Rejected(f"{REPORT_FILE} contains the idempotency marker prefix {MARKER_PREFIX}")
-    conflicts = report_conflicts(text, verdict_labels(_read_text(REPORT_TEMPLATE)))
+    conflicts = report_conflicts(text, verdict_labels(read_text(REPORT_TEMPLATE)))
     if conflicts:
         raise Rejected(*conflicts)
     return text
@@ -165,14 +165,14 @@ def saved_not_uploaded(run_dir: Path) -> list[str]:
     if not path.is_file():
         return []
     try:
-        return parse_preview(_read_text(path))["not_uploaded"]
+        return parse_preview(read_text(path))["not_uploaded"]
     except PreviewFormatError as exc:
         raise Rejected(f"{PREVIEW_FILE} stale or edited ({exc}): regenerate (preview) and ask the human again") from exc
 
 
 def _labels(repo: Path, policy: QaPolicy) -> dict:
     path = repo / policy.status_source
-    return status_labels(_read_text(path)) if path.is_file() else {}
+    return status_labels(read_text(path)) if path.is_file() else {}
 
 
 @dataclass
@@ -189,7 +189,7 @@ class _Context:
     def saved_preview(self) -> str:
         if not self.preview_path.is_file():
             raise Rejected(f"{PREVIEW_FILE} missing: run preview first")
-        return _read_text(self.preview_path)
+        return read_text(self.preview_path)
 
     def require_fresh_preview(self) -> str:
         saved = self.saved_preview()
@@ -246,6 +246,10 @@ def load_context(run_dir: Path, profile: Path, repo: Path, not_uploaded: list[st
     judgment = _judgment(ledger, checked.plan, blocked, policy)
     _same_as_file(run_dir, JUDGMENT_FILE, judgment, "qa_judge.py")
     _score_allows(run, judgment)
+    if run["level"]["effective"] == AUTOMATION_LEVEL:
+        problems = selection_problems(run.get("automation"), checked.plan, ledger, policy.runner_none)
+        if problems:
+            raise Rejected(*problems)
     target = target_of(run["issue"])
     captures, unpublishable = captures_of(ledger)
     unknown = [path for path in not_uploaded if path not in {item.path for item in captures}]
@@ -255,6 +259,7 @@ def load_context(run_dir: Path, profile: Path, repo: Path, not_uploaded: list[st
     parts = attachments[-1].part if attachments else 1
     summary = Summary.from_results(verdict, judgment)
     folder = _evidence_folder(run)
+    automation = automation_cell(run)
     plan = PublicationPlan(
         run_id=run["run_id"],
         target=target,
@@ -265,8 +270,9 @@ def load_context(run_dir: Path, profile: Path, repo: Path, not_uploaded: list[st
         attachments=attachments,
         unpublishable=unpublishable,
         not_uploaded=kept,
+        automation=automation,
         bodies=comment_bodies(run["run_id"], target.kind, _report_text(run_dir), parts,
-                              intro_lines(summary, kept, folder)),
+                              intro_lines(summary, kept, folder, automation)),
     )
     return _Context(run_dir=run_dir, run=run, plan=plan, preview=render_preview(plan))
 

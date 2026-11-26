@@ -19,7 +19,8 @@
     "scenario_ids",
     "ledger_fingerprint",
     "adherence_sha256",
-    "judge_rounds_sha256"
+    "judge_rounds_sha256",
+    "plan_sha256"
   ],
   "properties": {
     "judgment_version": { "const": 1 },
@@ -83,6 +84,10 @@
     "judge_rounds_sha256": {
       "$ref": "#/$defs/sha256",
       "description": "Ledger judge_rounds at judgment time: rounds are appended only by qa_judge.py --record-round."
+    },
+    "plan_sha256": {
+      "$ref": "#/$defs/sha256",
+      "description": "Canonical sha256 of plan.yml judged: a later plan edit (e.g. automate / existing flipped before Q8) makes the judgment stale."
     }
   },
   "$defs": {

@@ -56,7 +56,7 @@ Run `{run_id}` · Profile level `{declared}` · Effective level `{effective}` ·
 - {level_downgrade line, followed by every reason from `autonomy_caps`; omit when declared = effective}
 - Criteria: {n} ({derived count} derived) · Scenarios planned: {m} · Impact areas: {k}
 - Executed (L1+): {pass} pass · {fail} fail · {flaky} flaky · {blocked} blocked · {not_run} not run — and every ledger `blocked_reasons` entry
-- {`e2e_mr`}: {E2E MR link — L3 only (Q8); omit below L3}
+- {`e2e_mr`}: omit — at L3 the summary block of the published comment states the Q8 MR link or skip reason
 - One-sentence conclusion: {what this run establishes and what it does not}
 
 ## 2. {s2}

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/nextstage-brasil/skills/skills/ns-qa-homologation/templates/qa-run.schema.json",
   "title": "QA homologation run manifest (run.json)",
-  "description": "Single source of run state and of every resource the run created. Q10 cleanup and 'qa-env down' act only on created_resources. Validated by scripts/qa_gate.py --check-run; cross-field rules (unique resources, run-owned ids, provider/via/kind pairing, phase and pause consistency, publication approvals) live in qa_run_rules.py.",
+  "description": "Single source of run state and of every resource the run created. Q10 cleanup and 'qa-env down' act only on created_resources. Validated by scripts/qa_gate.py --check-run; cross-field rules (unique resources, run-owned ids, provider/via/kind pairing, phase and pause consistency, publication approvals, Q8 automation) live in qa_run_rules.py.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -346,6 +346,291 @@
           ]
         }
       }
+    },
+    "automation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenarios",
+        "excluded",
+        "skip_reason",
+        "branch",
+        "specs",
+        "runs",
+        "reviews",
+        "subject",
+        "commit_specs_sha256",
+        "commit",
+        "pushed",
+        "mr"
+      ],
+      "description": "Q8 (effective L3 only), written by scripts/qa_automation.py: selected scenarios or the no-op skip reason, E2E branch, spec set, stability runs, review rounds, commit, push, MR (references/automation-handoff.md).",
+      "properties": {
+        "scenarios": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^S-[0-9]{1,6}$"
+          },
+          "description": "plan automate: true, runner lane, no existing coverage, ledger pass."
+        },
+        "excluded": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "scenario",
+              "reason"
+            ],
+            "properties": {
+              "scenario": {
+                "type": "string",
+                "pattern": "^S-[0-9]{1,6}$"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "skip_reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Non-null = nothing to automate: Q8 skipped (justified no-op)."
+        },
+        "branch": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/branch"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "specs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "$ref": "#/$defs/repoPath"
+              },
+              "sha256": {
+                "$ref": "#/$defs/sha256"
+              }
+            }
+          },
+          "description": "Spec files relative to the E2E worktree (last declared set)."
+        },
+        "runs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source",
+              "sha256",
+              "specs_sha256",
+              "green",
+              "outcomes",
+              "at"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "pattern": "^automation/[A-Za-z0-9][A-Za-z0-9._-]*\\.xml$"
+              },
+              "sha256": {
+                "$ref": "#/$defs/sha256",
+                "description": "sha256 of the report with all whitespace removed: a re-recorded report (same content, other path or spacing) is refused."
+              },
+              "specs_sha256": {
+                "$ref": "#/$defs/sha256"
+              },
+              "green": {
+                "type": "boolean"
+              },
+              "outcomes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "scenario",
+                    "outcome"
+                  ],
+                  "properties": {
+                    "scenario": {
+                      "type": "string",
+                      "pattern": "^S-[0-9]{1,6}$"
+                    },
+                    "outcome": {
+                      "enum": [
+                        "pass",
+                        "fail",
+                        "skipped",
+                        "missing"
+                      ]
+                    }
+                  }
+                },
+                "description": "One entry per automated scenario, in automation.scenarios order (missing = no test case mapped)."
+              },
+              "at": {
+                "$ref": "#/$defs/timestamp"
+              }
+            }
+          }
+        },
+        "reviews": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "round",
+              "reviewer",
+              "verdict",
+              "score",
+              "lint_findings",
+              "lint_rules",
+              "lint_config_sha256",
+              "specs_sha256",
+              "at"
+            ],
+            "properties": {
+              "round": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "reviewer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "verdict": {
+                "enum": [
+                  "Approved",
+                  "Rejected",
+                  "Blocked"
+                ]
+              },
+              "score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "lint_findings": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "lint_rules": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z-]*$"
+                },
+                "description": "Lint rule ids enforced in this round (repo config may disable some); disclosed in the MR description."
+              },
+              "lint_config_sha256": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/sha256"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "E2E repo checkout .e2e-antipatterns.json sha256 used by lint; null = built-in rules."
+              },
+              "specs_sha256": {
+                "$ref": "#/$defs/sha256"
+              },
+              "at": {
+                "$ref": "#/$defs/timestamp"
+              }
+            }
+          }
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Commit subject (E2E repo commit_language) after commit_prefix; MR title = prefix + subject."
+        },
+        "commit_specs_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Spec set the printed commit argv covers (set by commit, cleared by specs); record-commit requires the current set."
+        },
+        "commit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pushed": {
+          "type": "boolean"
+        },
+        "mr": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "iid",
+                "url"
+              ],
+              "properties": {
+                "iid": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
     }
   },
   "$defs": {
@@ -394,6 +679,11 @@
       "type": "string",
       "pattern": "^(?!.*\\.\\.)[A-Za-z0-9.][A-Za-z0-9._/@+-]*$",
       "description": "Relative path safe for command arguments: starts alphanumeric or '.', only [A-Za-z0-9._/@+-], no '..'."
+    },
+    "branch": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$",
+      "description": "E2E branch; full rules in qa_automation_rules.branch_problem."
     }
   }
 }

@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ElementTree
 from dataclasses import dataclass
 from pathlib import Path
 
-from qa_common import ID_DIGITS, JUNIT_PATH, InvalidInput, Rejected, id_key
+from qa_common import ID_DIGITS, JUNIT_PATH, InvalidInput, Rejected, canonical_sha256, id_key
 
 MAX_JUNIT_BYTES = 32 * 1024 * 1024
 MAX_SUITE_DEPTH = 256
@@ -36,10 +36,15 @@ class JunitCase:
 
 
 def resolve_junit(run_dir: Path, relative: str) -> Path:
-    """Confine the report to RUN_DIR/results/ (no symlink anywhere on the way)."""
-    if not JUNIT_PATH.match(relative):
-        raise Rejected(f"{relative!r} must be results/<name>.xml relative to the run dir")
-    results = run_dir / RESULTS_DIR
+    """Confine a Q6 report to RUN_DIR/results/ (no symlink anywhere on the way)."""
+    return resolve_report(run_dir, relative, RESULTS_DIR, JUNIT_PATH)
+
+
+def resolve_report(run_dir: Path, relative: str, directory: str, pattern: re.Pattern) -> Path:
+    """Confine a JUnit report to RUN_DIR/<directory>/ (pattern = <directory>/<name>.xml; no symlink on the way)."""
+    if not pattern.match(relative):
+        raise Rejected(f"{relative!r} must be {directory}/<name>.xml relative to the run dir")
+    results = run_dir / directory
     target = results / relative.split("/", 1)[1]
     if results.is_symlink() or target.is_symlink():
         raise Rejected(f"{relative}: symlinks are refused")
@@ -80,6 +85,15 @@ def _parse_root(raw: bytes, label: str) -> ElementTree.Element:
     if root.tag not in _SUITE_TAGS:
         raise Rejected(f"{label}: root <{root.tag}> is not <testsuites>/<testsuite>")
     return root
+
+
+def report_fingerprint(raw: bytes, label: str) -> str:
+    """Identity of one report's content: elements, attributes and text in document order, whitespace and
+    comments ignored. A re-saved or comment-padded copy of a report has the same fingerprint."""
+    root = _parse_root(raw, label)
+    nodes = [[node.tag, sorted(node.attrib.items()), " ".join((node.text or "").split())] for node in root.iter()
+             if isinstance(node.tag, str)]
+    return canonical_sha256(nodes)
 
 
 def _outcome(case: ElementTree.Element) -> str:

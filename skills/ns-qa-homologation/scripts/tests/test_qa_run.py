@@ -19,6 +19,8 @@ from pathlib import Path
 
 from qa_fixtures import (
     ENV_TEMPLATE,
+    automation_passed,
+    automation_skipped,
     RUN_ID,
     RUN_NS,
     SKILL,
@@ -92,6 +94,8 @@ def _completed_at(level: str, phases: tuple[str, ...]):
         run["level"]["declared"] = "L3"
         run["phases"] += [{"phase": phase, "state": "passed", "updated_at": "2026-11-24T14:00Z"} for phase in phases]
         run["phase"] = phases[-1]
+        if "Q8" in phases:
+            run["automation"] = automation_passed()
         if "Q9" in phases:
             _published(run)
 
@@ -678,10 +682,11 @@ class CleanupPlanTests(ReasonAssertions):
             run["phases"][6]["state"] = "failed"
 
         def running_q8(run):
+            run["level"].update(declared="L3", effective="L3")
             run["phases"].append({"phase": "Q8", "state": "running", "updated_at": "2026-11-24T14:00Z"})
 
         def l3_without_q8(run):
-            _completed_at("L3", ("Q9",))(run)
+            run["level"].update(declared="L3", effective="L3")
 
         def l2_at_q7(run):
             run["level"]["effective"] = "L2"
@@ -690,7 +695,7 @@ class CleanupPlanTests(ReasonAssertions):
             at_q0: "/phases: Q7 not passed (required for success at L1)",
             failed_q6: "/phases: Q6 is failed: run not complete",
             running_q8: "/phases: Q8 is running: run not complete",
-            l3_without_q8: "/phases: Q8 not passed (required for success at L3)",
+            l3_without_q8: "/phases: Q8 not passed or skipped (required for success at L3)",
             l2_at_q7: "/phase: Q7b is not the final gate Q9 for L2",
         }
         for mutate, reason in cases.items():
@@ -751,7 +756,6 @@ class CleanupPlanTests(ReasonAssertions):
             (drop("Q0"), "Q0", "L1"),
             (drop("Q6"), "Q6", "L1"),
             (drop("Q7b", _completed_at("L2", ("Q9",))), "Q7b", "L2"),
-            (drop("Q8", _completed_at("L3", ("Q8", "Q9"))), "Q8", "L3"),
         )
         for mutate, phase, level in cases:
             with self.subTest(case=mutate.__name__):
@@ -761,6 +765,55 @@ class CleanupPlanTests(ReasonAssertions):
                     payload["errors"],
                     [f"outcome success not proven by run.json /phases: {phase} not passed (required for success at {level})"],
                 )
+
+    def test_l3_success_accepts_only_justified_q8_skip(self):
+        def skipped(run, automation=True):
+            run["level"].update(declared="L3", effective="L3")
+            run["phases"].append({"phase": "Q8", "state": "skipped", "updated_at": "2026-11-24T13:50Z",
+                                  "note": "nothing to automate"})
+            if automation:
+                run["automation"] = automation_skipped()
+            run["phases"].append({"phase": "Q9", "state": "passed", "updated_at": "2026-11-24T14:00Z"})
+            run["phase"] = "Q9"
+            _published(run)
+
+        def nothing_to_automate(run_dir, profile):
+            """Plan edit + fresh Q7b judgment: no scenario marked automate (the skip's recomputed reason)."""
+            plan = run_dir / "plan.yml"
+            plan.write_text(plan.read_text(encoding="utf-8").replace("automate: true", "automate: false"), encoding="utf-8")
+            (run_dir / "qa-judgment.json").unlink()
+            code, payload = run_judge(["--run-dir", str(run_dir), "--profile", str(profile)], cwd=run_dir.parents[2])
+            self.assertEqual(code, 0, payload)
+
+        code, plan = self._plan("success", skipped, artifacts=nothing_to_automate)
+        self.assertEqual(code, 0, plan)
+        self.assertEqual(plan["level"], "L3")
+        code, payload = self._plan("success", lambda run: (skipped(run), run["automation"].update(skip_reason="lazy")),
+                                   artifacts=nothing_to_automate)
+        self.assertEqual(code, 2, payload)
+        self.assertReason(payload["errors"], "/automation: selection or skip_reason differs from recomputation")
+        code, payload = self._plan("success", skipped)  # S-1 still automate: true, runner, pass: skip hand-written
+        self.assertEqual(code, 2, payload)
+        self.assertReason(payload["errors"], "/automation: selection or skip_reason differs from recomputation")
+        code, payload = self._plan("success", lambda run: skipped(run, automation=False), artifacts=nothing_to_automate)
+        self.assertEqual(code, 2, payload)
+        self.assertEqual(payload["errors"], [
+            "run.json /phases: Q8 skipped needs automation.skip_reason (no-op recorded by qa_automation.py plan)"])
+
+    def test_l3_publication_needs_q8_first(self):
+        def dropped_q8(run):
+            _completed_at("L3", ("Q8", "Q9"))(run)
+            run["phases"] = [item for item in run["phases"] if item["phase"] != "Q8"]
+
+        def failed_q8(run):
+            _completed_at("L3", ("Q8", "Q9"))(run)
+            next(item for item in run["phases"] if item["phase"] == "Q8")["state"] = "failed"
+
+        for mutate in (dropped_q8, failed_q8):
+            with self.subTest(case=mutate.__name__):
+                code, payload = self._plan("success", mutate)
+                self.assertEqual(code, 2, payload)
+                self.assertReason(payload["errors"], "run.json /publication: at L3 Q8 (passed or skipped) runs before Q9")
 
     def test_effective_l0_never_runs_q10(self):
         for outcome in ("success", "leftover", "blocked"):

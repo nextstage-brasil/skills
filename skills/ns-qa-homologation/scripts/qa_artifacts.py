@@ -34,6 +34,15 @@ def read_yaml(path: Path) -> object:
         raise InvalidInput(f"{path.name}: {exc}") from exc
 
 
+def read_text(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise InvalidInput(f"{path.name}: {exc.strerror or exc}") from exc
+    except UnicodeDecodeError as exc:
+        raise InvalidInput(f"{path.name}: not UTF-8: {exc}") from exc
+
+
 def read_json(path: Path, label: str) -> object:
     try:
         return load_json(path)

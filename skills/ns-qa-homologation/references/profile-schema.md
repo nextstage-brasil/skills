@@ -2,7 +2,7 @@
 
 Consumer file: `docs/context/qa-profile.md` — Markdown + one fenced `yaml` block. Profile = **only** place for project QA values; skill reads keys, never hardcodes values. Q0 validates via `scripts/qa_gate.py --check-profile` (machine form: `templates/qa-profile.schema.json`). Invalid value / missing required key / unknown key (typo guard) / unfilled `<placeholder>` → exit 3, stop at Q0 with reason.
 
-Full example: `templates/qa-profile.template.md`. Sections `data`, `evidence`, `cleanup`, `verdict`, `judge`, `policy` + **Autonomy** table: `profile-schema-policy.md`.
+Full example: `templates/qa-profile.template.md`. Section `execution`: `profile-schema-execution.md`. Sections `data`, `evidence`, `cleanup`, `verdict`, `judge`, `policy` + **Autonomy** table: `profile-schema-policy.md`.
 
 ## YAML subset
 
@@ -28,6 +28,7 @@ Stdlib parser (`scripts/qa_yaml_lite.py`); no PyYAML — same result on every ho
 | `inferred` in comment, not first word | inferred (fail closed) + warning |
 | Phase cap (`IMPLEMENTED_MAX_LEVEL` in `qa_profile_rules.py`) | `autonomy_effective` ≤ highest implemented level |
 | `environment.provider: none` | `autonomy_effective` = L0 |
+| `execution.e2e_git` names invalid (`profile-schema-execution.md`); L3 `e2e_root` not project-relative | error |
 | Unknown `browser_tool_preference` id | warning; skipped |
 
 Output JSON: `autonomy_declared`, `autonomy_effective`, `autonomy_caps` (reasons), `inferred`, `warnings`, `profile_sha256`.
@@ -107,20 +108,3 @@ Run proceeds past Q1 only when every **applicable** side is in its `*_running` s
 | `credentials_file` | — | path | — | Gitignored single source; never printed |
 | `session_check` | — | `{kind, keys[]}` | — | Reuse session when keys present |
 | `profile_under_test` | — | string | — | Role/profile used in tests |
-
-### `execution`
-
-| Key | R | Type / values | Default | Rule |
-| --- | - | ------------- | ------- | ---- |
-| `runner` | R | `cypress`\|`playwright`\|`none` | — | No harness default. `none` → critical AC max verdict = `policy.runner_none_critical_cap` |
-| `e2e_root` | when runner ≠ `none` | path | — | In-repo dir or external E2E repo (own `AGENTS.md`) |
-| `e2e_authoring` | — | `auto`\|`repo-local`\|`ns-e2e-tests` | `auto` | `auto`: E2E repo's own skills when present, else `ns-e2e-tests` |
-| `e2e_git.base_branch` / `branch_pattern` / `commit_prefix` | when L3 | string | — | Target E2E repo convention |
-| `e2e_git.commit_language` | when L3 | BCP 47 tag | — | Target E2E repo convention |
-| `browser_tool_preference` | — | tool id[] | `[]` | Browser lane order; ids: `browser-tools.md` |
-| `stability_runs` | — | int ≥1 | `2` | Green runs required before automation MR |
-| `runner_retries_during_verification` | R | `0` | `0` | Runner retries off; stability via explicit runs |
-| `budget.max_scenarios` | — | `unlimited` \| int | `unlimited` | Full plan by risk order |
-| `budget.checkpoint_min` | — | int | `60` | Recurring check-in, not work limit |
-| `budget.on_checkpoint` | — | `ask` | `ask` | Finish in-flight cycle → pause → ask; wait indefinitely |
-| `budget.on_stall` | — | `ask` | `ask` | Unforeseen no-progress → stop + ask, any time |

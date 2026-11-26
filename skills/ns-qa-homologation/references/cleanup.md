@@ -16,7 +16,7 @@ Id rule (schemas + template): `^[A-Za-z0-9.][A-Za-z0-9._/:@+-]*$`, no `..` (no w
 
 ## Outcome
 
-**Full success** = every phase gate of the effective level passed, any verdict (Not homologated published correctly = success): L1 Q0–Q7b; L2 + Q9 (preview approved, comment published, every capture uploaded); L3 + Q8 (branch pushed + MR open).
+**Full success** = every phase gate of the effective level passed, any verdict (Not homologated published correctly = success): L1 Q0–Q7b; L2 + Q9 (preview approved, comment published, every capture uploaded); L3 + Q8 (MR recorded, or `skipped` with the no-op reason `qa_automation.py plan` recorded).
 
 | `--outcome` | Situation | Plan |
 | ----------- | --------- | ---- |
@@ -28,7 +28,7 @@ Id rule (schemas + template): `^[A-Za-z0-9.][A-Za-z0-9._/:@+-]*$`, no `..` (no w
 | `paused` | Waiting on human (checkpoint, stall, score below min, preview) | No Q10; no log line; wait indefinitely |
 | `leftover` | Human asked to remove a kept run's env | Delete `via: qa-env` only; agent-owned kept |
 
-Planner rejects (exit 2): open pause unless `paused`; `paused` without one; `success` unless `run.json` proves it — no pause answered `stop`/`do_not_publish`, no `phases[]` entry `failed`/`running`, required gates `passed` (L1: Q0–Q7b; L2: + Q9; L3: + Q8, Q9), `phase` = last required gate, `qa-judgment.json` beside `run.json` of this `run_id`, equal to its recomputation (ledger + `plan.yml` + profile pinned by `profile_sha256`; `--profile` required for `success`), loop `passed` (or `ended_below_min` + latest `below_min_score` answer `publish_anyway`, L2+), `publication.outcome.evidence_upload` not `partial`. `--check-run` already ties Q9 `passed` to outcome `published`. L3 is capped at L2 until Q8 lands (Phase 5).
+Planner rejects (exit 2): open pause unless `paused`; `paused` without one; `success` unless `run.json` proves it — no pause answered `stop`/`do_not_publish`, no `phases[]` entry `failed`/`running`, required gates `passed` (L1: Q0–Q7b; L2: + Q9; L3: + Q8 `passed` or justified `skipped`, Q9), `phase` = last required gate, `qa-judgment.json` beside `run.json` of this `run_id`, equal to its recomputation (ledger + `plan.yml` + profile pinned by `profile_sha256`; `--profile` required for `success`), loop `passed` (or `ended_below_min` + latest `below_min_score` answer `publish_anyway`, L2+), `publication.outcome.evidence_upload` not `partial`. `--check-run` already ties Q9 `passed` to outcome `published`, Q8 `passed` to a recorded MR, Q8 `skipped` to `automation.skip_reason`, and (L3) publication to a terminal Q8.
 
 ## Matrix (`success`, effective ≥ L1)
 
@@ -43,7 +43,7 @@ Agent worktree without `repo_root` → kept (reason logged): removal target unkn
 
 ## Never deleted
 
-Anything not in `run.json` (shared/daily stack, base images, other runs' resources, pool slots) · E2E remote branch + MR (Q8) · published comment · `cleanup.log`.
+Anything not in `run.json` (shared/daily stack, base images, other runs' resources, pool slots) · E2E branch (local + remote) + MR (Q8) · published comment · `cleanup.log`.
 
 ## Procedure
 

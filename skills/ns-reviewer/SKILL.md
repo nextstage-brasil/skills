@@ -4,7 +4,7 @@ description: "(NS) Code quality gate: SOLID, clean code, performance, security, 
 license: Apache-2.0
 metadata:
   author: nextstage-brasil
-  version: "2.4"
+  version: "2.5"
 depends:
   - ns-harness
 ---
@@ -59,6 +59,10 @@ Invoker passes `ISSUE_URL` (or `project_id` + `issue_iid`):
 5. Post internal GitLab comment via `mcp-gitlab-usage` — first line: `Code Review | YYYY-MM-DD HH:MM (UTC) | Verdict: {Approved|Rejected|Blocked}`
 6. Last line to parent: `Code Review: {Approved|Rejected|Blocked}`
 7. `Rejected`/`Blocked`: GitLab comment = same fix-map facts (**Fix map rounds**).
+
+### E2E spec mode (`e2e-spec`)
+
+Invoker `ns-qa-homologation` Q8 passes generated E2E specs + lint JSON (no `ISSUE_URL`, no GitLab comment). Follow `references/e2e-spec-review.md`; **Score gate** + output format unchanged. Last line to parent: `Code Review: {Approved|Rejected|Blocked}`.
 
 ### Fix map rounds
 
@@ -210,6 +214,7 @@ Then: `Code Review: Rejected` or `Code Review: Blocked`
 | File | When |
 | ---- | ---- |
 | `references/review-fix-map.template.md` | Rejected/Blocked response body |
+| `references/e2e-spec-review.md` | E2E spec mode (Q8 generated specs) |
 | `../../ns-harness/references/artifact-layout.md` | Artifact paths |
 | `mcp-gitlab-usage` | Posting internal review comments |
 | `../ns-judge/SKILL.md` | Delivery proof after this skill returns `Approved` |

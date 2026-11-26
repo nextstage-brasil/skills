@@ -133,6 +133,7 @@ class PublicationPlan:
     attachments: list[Attachment] = field(default_factory=list)
     unpublishable: list[str] = field(default_factory=list)
     not_uploaded: list[Capture] = field(default_factory=list)
+    automation: str | None = None  # L3 only: Q8 MR link or "none — <skip reason>"
     bodies: list[str] = field(default_factory=list)
 
 
@@ -178,8 +179,10 @@ def batch_attachments(captures: list[Capture], not_uploaded: list[str], max_per_
     return batched, kept
 
 
-def intro_lines(summary: Summary, not_uploaded: list[Capture], folder: str) -> list[str]:
+def intro_lines(summary: Summary, not_uploaded: list[Capture], folder: str, automation: str | None = None) -> list[str]:
     lines = summary.lines()
+    if automation is not None:
+        lines.append(f"**E2E automation:** {automation}")
     if not_uploaded:
         files = ", ".join(f"`{item.path}` ({item.scenario}: {', '.join(item.covers)})" for item in not_uploaded)
         lines.append(f"**Reservation — evidence upload partial:** not uploaded, kept locally in `{folder}`: {files}")
@@ -220,6 +223,7 @@ def render_preview(plan: PublicationPlan) -> str:
         f"| Homologation score | {plan.summary.score:g}/10 (minimum {plan.summary.min_score:g}; loop "
         f"`{plan.summary.loop}`; rounds {plan.summary.rounds}) |",
         f"| Not uploaded | {', '.join(f'`{item.path}`' for item in plan.not_uploaded) or 'none'} |",
+        *([f"| E2E merge request | {plan.automation} |"] if plan.automation is not None else []),
         f"| Comments | {parts} |",
         f"| Local evidence folder | `{plan.evidence_folder}` |",
         "",

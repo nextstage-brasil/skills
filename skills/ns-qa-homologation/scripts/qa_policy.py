@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from qa_automation_rules import GitPolicy
 from qa_profile_rules import load_valid_profile
 from qa_schema_lite import load_schema
 
@@ -21,6 +22,10 @@ JUDGE_WEIGHTS = {"coverage": 3, "depth": 2, "impact": 1.5, "evidence": 1.5, "dat
 JUDGE_MIN_SCORE = 8.5
 MAX_ATTACHMENTS_PER_COMMENT = 10
 CAPTURE_KINDS = ("screenshot", "console", "network", "runner_video")
+STABILITY_RUNS = 2
+E2E_REVIEWER = "ns-reviewer"
+E2E_REMOTE = "origin"
+E2E_AUTHORING = "auto"
 
 
 @dataclass(frozen=True)
@@ -57,7 +62,52 @@ class QaPolicy:
         )
 
 
+@dataclass(frozen=True)
+class AutomationPolicy:
+    """Validated profile slice for Q8 (execution runner/E2E repo/git/lint + policy.e2e_reviewer)."""
+
+    runner: str
+    e2e_root: str | None
+    authoring: str
+    git: GitPolicy | None
+    stability_runs: int = STABILITY_RUNS
+    reviewer: str = E2E_REVIEWER
+    forbid_spec_intercepts: bool = False
+
+    @classmethod
+    def from_profile(cls, data: dict) -> "AutomationPolicy":
+        execution = data["execution"]
+        git = execution.get("e2e_git")
+        return cls(
+            runner=execution["runner"],
+            e2e_root=execution.get("e2e_root"),
+            authoring=execution.get("e2e_authoring", E2E_AUTHORING),
+            git=git_policy(git) if git else None,
+            stability_runs=execution.get("stability_runs", STABILITY_RUNS),
+            reviewer=(data.get("policy") or {}).get("e2e_reviewer", E2E_REVIEWER),
+            forbid_spec_intercepts=(execution.get("e2e_lint") or {}).get("forbid_spec_intercepts", False),
+        )
+
+
+def git_policy(git: dict) -> GitPolicy:
+    return GitPolicy(
+        base_branch=git["base_branch"],
+        branch_pattern=git["branch_pattern"],
+        commit_prefix=git["commit_prefix"],
+        remote=git.get("remote", E2E_REMOTE),
+        protected=tuple(git.get("protected_branches", ())),
+    )
+
+
+def _valid_profile(profile: Path, repo: Path) -> dict:
+    return load_valid_profile(profile, repo, load_schema(TEMPLATES / "qa-profile.schema.json"))
+
+
 def load_policy(profile: Path, repo: Path) -> QaPolicy:
     """Profile validated with the Q0 rules (any error -> InvalidInput, exit 3)."""
-    data = load_valid_profile(profile, repo, load_schema(TEMPLATES / "qa-profile.schema.json"))
-    return QaPolicy.from_profile(data)
+    return QaPolicy.from_profile(_valid_profile(profile, repo))
+
+
+def load_automation_policy(profile: Path, repo: Path) -> AutomationPolicy:
+    """Profile validated with the Q0 rules (any error -> InvalidInput, exit 3)."""
+    return AutomationPolicy.from_profile(_valid_profile(profile, repo))
