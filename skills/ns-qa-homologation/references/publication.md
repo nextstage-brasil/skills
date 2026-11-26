@@ -18,7 +18,7 @@ Effective L2+ only (L1: report stays local, no preview). GitLab only, via `mcp-g
 | Verdict, confidence, score | Header rows + script-rendered summary block opening part 1, from `verdict.json` + `qa-judgment.json` (verdict, confidence %, score / min, loop, rounds, verdict reasons; below-min note) |
 | Not uploaded | Header row + part 1 reservation line (files, scenario, AC, local folder) after a failed upload (step 4); else `none` |
 | E2E merge request | L3 only: header row + part 1 line `**E2E automation:**` from `run.json` `automation`: `<url> (!<iid>)` or `none — <skip reason>` (`automation-handoff.md`). Below L3: absent |
-| Comment(s) | Part 1 = `<!-- ns-qa:run=<run_id>;kind=<dev\|qa> -->` + summary block + `report.md`. Part n ≥ 2 (extra batches) = `<!-- ns-qa:run=<run_id>;kind=<k>;part=<n> -->` + run id + n/total |
+| Comment(s) | Part 1 = `<!-- ns-qa:run=<run_id>;kind=<dev\|qa> -->` + summary block + `report.md`. The GitLab MCP rejects bodies above 10000 characters, so text longer than `MAX_COMMENT_CHARS` (9500) continues in parts n ≥ 2, cut at `## ` headings (then blank lines, then lines); parts also grow with attachment batches. Part n ≥ 2 = `<!-- ns-qa:run=<run_id>;kind=<k>;part=<n> -->` + run id + n/total (+ the continued text) |
 
 Show `preview.md` to human verbatim (chat). Approval of a preview naming the target project = MCP project confirmation for this publication (D37 server change not required).
 

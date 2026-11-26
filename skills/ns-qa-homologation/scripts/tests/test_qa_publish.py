@@ -33,7 +33,10 @@ from qa_publish_rules import (  # noqa: E402  (qa_fixtures puts scripts/ on sys.
     StatusChange,
     Summary,
     Target,
+    MAX_COMMENT_CHARS,
+    marker,
     comment_bodies,
+    split_comment_text,
     marker,
     parse_preview,
     render_preview,
@@ -689,6 +692,52 @@ class PublicationSyncTests(unittest.TestCase):
             self.assertIn(f"| `{answer}` |", text)
         for state in ("not_needed", "complete", "partial", "none"):
             self.assertIn(f"`{state}`", text)
+
+
+class SplitCommentTests(unittest.TestCase):
+    """Reports above the MCP comment limit continue in extra parts, cut at headings, nothing lost."""
+
+    def _report(self, sections: int, rows: int) -> str:
+        parts = ["# Report"]
+        for number in range(1, sections + 1):
+            table = "\n".join(f"| row {index} | {'x' * 60} |" for index in range(rows))
+            parts.append(f"## {number}. Section\n\n{table}\n")
+        return "\n".join(parts)
+
+    def test_short_text_is_one_chunk(self):
+        self.assertEqual(split_comment_text("short"), ["short"])
+
+    def test_chunks_respect_limit_and_cut_at_headings(self):
+        text = self._report(6, 20)
+        chunks = split_comment_text(text, 3000)
+        self.assertGreater(len(chunks), 1)
+        self.assertTrue(all(len(chunk) <= 3000 for chunk in chunks))
+        self.assertEqual("".join(chunks), text)
+        self.assertTrue(all(chunk.startswith("## ") for chunk in chunks[1:]))
+
+    def test_oversized_section_is_cut_without_losing_text(self):
+        text = "## One\n\n" + "\n".join(f"line {i} {'y' * 80}" for i in range(200))
+        chunks = split_comment_text(text, 2000)
+        self.assertTrue(all(len(chunk) <= 2000 for chunk in chunks))
+        self.assertEqual("".join(chunks), text)
+
+    def test_bodies_split_with_markers_and_stay_under_limit(self):
+        report = self._report(8, 20)
+        bodies = comment_bodies(RUN_ID, "qa", report, 1, ["**Verdict:** `homologated`"])
+        self.assertGreater(len(bodies), 1)
+        self.assertTrue(all(len(body) <= MAX_COMMENT_CHARS + 300 for body in bodies))
+        for number, body in enumerate(bodies, start=1):
+            self.assertTrue(body.startswith(marker(RUN_ID, "qa", number)))
+        self.assertIn(f"`{RUN_ID}` · 2/{len(bodies)}", bodies[1])
+        rebuilt = "".join(body.split("\n\n", 1)[1] for body in [bodies[0]])
+        self.assertIn("**Verdict:**", rebuilt)
+        for body in bodies:
+            self.assertLess(len(body), 10000)
+
+    def test_attachment_parts_still_raise_the_count(self):
+        bodies = comment_bodies(RUN_ID, "qa", "# Report\n", 3, ["intro"])
+        self.assertEqual(len(bodies), 3)
+        self.assertIn(f"`{RUN_ID}` · 3/3", bodies[2])
 
 
 if __name__ == "__main__":

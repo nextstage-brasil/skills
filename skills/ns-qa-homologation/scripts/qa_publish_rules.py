@@ -189,11 +189,51 @@ def intro_lines(summary: Summary, not_uploaded: list[Capture], folder: str, auto
     return lines
 
 
+MAX_COMMENT_CHARS = 9500  # GitLab MCP add_issue_comment rejects bodies above 10000 characters; margin for the part header
+
+
+def _pack(blocks: list[str], limit: int) -> list[str]:
+    """Greedy: consecutive blocks joined while the chunk stays within limit."""
+    chunks: list[str] = []
+    for block in blocks:
+        if chunks and len(chunks[-1]) + len(block) <= limit:
+            chunks[-1] += block
+        else:
+            chunks.append(block)
+    return chunks
+
+
+def split_comment_text(text: str, limit: int = MAX_COMMENT_CHARS) -> list[str]:
+    """Chunks of at most `limit` characters, cut at `## ` headings first, then at blank lines, then at lines."""
+    if len(text) <= limit:
+        return [text]
+    chunks: list[str] = []
+    for section in _pack(re.split(r"(?m)^(?=## )", text), limit):
+        if len(section) <= limit:
+            chunks.append(section)
+            continue
+        paragraphs = _pack(re.split(r"(?<=\n\n)", section), limit)
+        for paragraph in paragraphs:
+            if len(paragraph) <= limit:
+                chunks.append(paragraph)
+                continue
+            lines = _pack(paragraph.splitlines(keepends=True), limit)
+            chunks += [piece for line in lines for piece in (line[i:i + limit] for i in range(0, len(line), limit))]
+    return chunks
+
+
 def comment_bodies(run_id: str, kind: str, report: str, parts: int, intro: list[str]) -> list[str]:
+    """Part 1 = marker + summary + report start; a report longer than the MCP limit continues in parts 2..n (cut at
+    headings), each with its own marker and `run · n/total`. `parts` = minimum count (attachment batches)."""
     summary = "\n".join(intro)
-    main = f"{marker(run_id, kind, 1)}\n\n{summary}\n\n{report.rstrip()}\n"
-    rest = [f"{marker(run_id, kind, part)}\n\n`{run_id}` · {part}/{parts}\n" for part in range(2, parts + 1)]
-    return [main, *rest]
+    chunks = split_comment_text(f"{summary}\n\n{report.rstrip()}\n")
+    total = max(parts, len(chunks))
+    bodies = [f"{marker(run_id, kind, 1)}\n\n{chunks[0].rstrip()}\n"]
+    for part in range(2, total + 1):
+        text = chunks[part - 1].rstrip() if part <= len(chunks) else ""
+        tail = f"\n\n{text}" if text else ""
+        bodies.append(f"{marker(run_id, kind, part)}\n\n`{run_id}` · {part}/{total}{tail}\n")
+    return bodies
 
 
 def _fence(body: str) -> str:
