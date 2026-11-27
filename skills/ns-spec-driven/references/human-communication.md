@@ -1,6 +1,6 @@
 # Human communication (chat)
 
-Delivery face + workers talk **to human**. Separate from agent-facing file compression (`../../../ns-harness/references/agent-artifact-compress.md`).
+Delivery face + workers talk **to human**. Separate from agent-facing file compression (`../../ns-harness/references/agent-artifact-compress.md`).
 
 ## Mandate
 

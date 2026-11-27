@@ -1,9 +1,11 @@
 /**
  * Append a managed ignore block or merge missing entries into an existing block.
  * Unprefixed managed paths are rewritten to root-anchored form (`/path`).
+ * Lines in `retiredEntries` found inside the managed block are removed.
  */
-export function patchIgnoreContent(existingContent, header, entries) {
+export function patchIgnoreContent(existingContent, header, entries, retiredEntries = []) {
   const byKey = new Map(entries.map((entry) => [ignoreEntryKey(entry), entry]));
+  const retiredKeys = new Set(retiredEntries.map(ignoreEntryKey));
 
   if (!existingContent.includes(header)) {
     const block = `${header}\n${entries.join('\n')}\n`;
@@ -21,6 +23,11 @@ export function patchIgnoreContent(existingContent, header, entries) {
     const line = lines[i];
     if (line.trim() === '') {
       i += 1;
+      continue;
+    }
+    if (retiredKeys.has(ignoreEntryKey(line))) {
+      lines.splice(i, 1);
+      changed = true;
       continue;
     }
     const canonical = byKey.get(ignoreEntryKey(line));

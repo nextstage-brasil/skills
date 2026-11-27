@@ -37,7 +37,7 @@ Missing `docs/specs/agent-architecture.md`: **Stop**. Run `ns-agent-architecture
 5. **No cheerleading.**
 6. **No graph/framework/code.** Not LangGraph vs CrewAI. Not `graph-spec.md` wiring.
 
-AskQuestion: recommended option `(preferred)` first.
+Structured question tool (`AskQuestion` in Cursor, `AskUserQuestion` in Claude Code): recommended option `(preferred)` first.
 
 Codebase or ADR already answers: explore first. Confirm only.
 

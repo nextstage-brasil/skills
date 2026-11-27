@@ -37,7 +37,7 @@ Invoke via Skills menu / slash **or** harness project subagents below. Skills = 
 
 When `.nextstage-harness/manifest.json` has `subagents`, include this table (name / skill / cursor model). Omit section if none.
 
-Invoke via Cursor/Claude project agents — **exact** `name` from this table. Orchestrators **MUST** spawn that agent file so YAML `model:` applies (`ns-harness` → `subagent-dispatch.md`). **FORBIDDEN:** child Task `inherit` / `coder` / `reviewer` / `generalPurpose` as stand-in (parent model leaks). Inline mapped skill while bridge present = forbidden.
+Invoke via Cursor/Claude project agents — **exact** `name` from this table. Orchestrators **MUST** spawn that agent file so YAML `model:` applies (`ns-harness` → `subagent-dispatch.md`). **FORBIDDEN:** child Task `inherit` / `coder` / `reviewer` / `generalPurpose` / `general-purpose` as stand-in (parent model leaks). Inline mapped skill while bridge present = forbidden.
 
 | Agent | Skill | Model (cursor) |
 | ----- | ----- | -------------- |

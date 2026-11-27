@@ -4,7 +4,7 @@ Entry shell for Clarify-Strict. Ambiguities **before** Specify. Doctrine: `clari
 
 ## Harness
 
-`../../../ns-harness/references/session-boot.md` + `../../../ns-harness/references/artifact-layout.md`.
+`../../ns-harness/references/session-boot.md` + `../../ns-harness/references/artifact-layout.md`.
 
 Stack/architecture questions = stack detection — not this phase.
 

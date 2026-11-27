@@ -106,7 +106,7 @@ export function runAgentsSet(projectRoot, agentIds, options = {}) {
     console.log(`Synced ${subagentsWritten} subagent adapter(s)`);
   }
   if (claudeMd.written.length > 0) {
-    console.log('Created CLAUDE.md (Claude Code boot stub)');
+    console.log(claudeMd.upgraded ? 'Upgraded CLAUDE.md (legacy Claude Code boot stub)' : 'Created CLAUDE.md (Claude Code boot stub)');
   }
 
   const readmeResult = refreshHarnessReadme(projectRoot);

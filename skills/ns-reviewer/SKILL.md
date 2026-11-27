@@ -17,13 +17,13 @@ Deep constructive review vs project rules. **Code only.** Delivery proof (`requi
 
 Invoker: `ns-coder`, `ns-autonomous`, `ns-execution-gitlab-issue` (in-session by default; harness **`reviewer-agent`** only on explicit user request):
 
-- Caller **must** run this skill — read this `SKILL.md` in-session (`reviewer-agent` only on explicit user request; `../../ns-harness/references/subagent-dispatch.md`). No Cursor Task personas (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or improvised review.
+- Caller **must** run this skill — read this `SKILL.md` in-session (`reviewer-agent` only on explicit user request; `../ns-harness/references/subagent-dispatch.md`). No Cursor Task personas (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or improvised review.
 - Gate rules: `references/review-gate-workflow.md`.
 - Every response to workflow caller **must** end exact line: `Code Review: {Approved|Rejected|Blocked}`. Overall score in **Executive Summary**.
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** before any other step — cold start this reviewer run; mid-session skip only if steps 1–6 done and files unchanged. Never tool-Read `AGENTS.md`.
+See `../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** before any other step — cold start this reviewer run; mid-session skip only if steps 1–6 done and files unchanged. Never tool-Read `AGENTS.md`.
 
 ## Workflow
 
@@ -210,6 +210,6 @@ Then: `Code Review: Rejected` or `Code Review: Blocked`
 | File | When |
 | ---- | ---- |
 | `references/review-fix-map.template.md` | Rejected/Blocked response body |
-| `../../ns-harness/references/artifact-layout.md` | Artifact paths |
+| `../ns-harness/references/artifact-layout.md` | Artifact paths |
 | `mcp-gitlab-usage` | Posting internal review comments |
 | `../ns-judge/SKILL.md` | Delivery proof after this skill returns `Approved` |

@@ -26,6 +26,23 @@ function runNpx(args, projectRoot) {
   });
 }
 
+/** Skills CLI agents whose project skills dir is the canonical `.agents/skills/`. */
+const CANONICAL_DIR_AGENTS = new Set(['cursor', 'antigravity', 'universal']);
+
+/**
+ * Agents passed to `npx skills add`. Harness layout assumes skills live in `.agents/skills/`
+ * (AGENTS.md generation, subagent bridges, skill references) with `.claude/skills/` as symlinks.
+ * The skills CLI only writes there when a universal agent is targeted, so a Claude-only project
+ * gets the `universal` agent added. Global installs are left as requested.
+ * @param {string[]} agents
+ * @param {boolean} global
+ */
+export function skillsCliAgents(agents, global = false) {
+  if (global || agents.length === 0) return [...agents];
+  if (agents.some((agent) => CANONICAL_DIR_AGENTS.has(agent))) return [...agents];
+  return [...agents, 'universal'];
+}
+
 function runSkillsAdd({
   source,
   skills,
@@ -47,7 +64,7 @@ function runSkillsAdd({
 
   if (global) args.push('-g');
   if (copy) args.push('--copy');
-  for (const agent of agents) {
+  for (const agent of skillsCliAgents(agents, global)) {
     args.push('--agent', agent);
   }
 

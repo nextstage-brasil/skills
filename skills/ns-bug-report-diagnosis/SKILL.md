@@ -13,11 +13,11 @@ depends:
 
 Readonly **for this skill**. Input = a **product report** (chat, ticket, described screenshot, user steps). Output = a chat diagnosis in **two audiences**: plain language for whoever will retest, and a short pointer for the next coding agent. Then dispatch that agent unless diagnose-only.
 
-This skill does **not** change product code. `ns-execution-gitlab-issue` or `ns-coder` owns the patch. Entry priority **4a**. Full routing: `../../ns-harness/references/code-skill-routing.md`. Continue rules: `references/continue-handoff.md`.
+This skill does **not** change product code. `ns-execution-gitlab-issue` or `ns-coder` owns the patch. Entry priority **4a**. Full routing: `../ns-harness/references/code-skill-routing.md`. Continue rules: `references/continue-handoff.md`.
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** before any other step — cold start only; mid-session skip if already booted and files unchanged. Never tool-Read `AGENTS.md`.
+See `../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** before any other step — cold start only; mid-session skip if already booted and files unchanged. Never tool-Read `AGENTS.md`.
 
 Load `architecture-rules.md` and `project-rules.md`. If `docs/context/` exists, open only what the investigation map asks (overlay or the matching brownfield row) — not the whole corpus. This skill does **not** write product code or `docs/context/` files (session-boot implementation writes do not apply).
 
@@ -112,4 +112,4 @@ Then dispatch `G` or `C` unless opt-out. Do not implement inside this skill.
 | `references/output-template.md` | Eight-section chat report |
 | `references/entry-triggers.md` | Priority 4a vs investigator / coder |
 | `references/continue-handoff.md` | Opt-out, dispatch G/C, anti-cycle payload |
-| `../../ns-harness/references/code-skill-routing.md` | Entry priority and handoff |
+| `../ns-harness/references/code-skill-routing.md` | Entry priority and handoff |

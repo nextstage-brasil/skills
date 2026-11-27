@@ -4,6 +4,7 @@ import {
   AGENTS_SKILLS_DIR,
   GITIGNORE_BLOCK_HEADER,
   GITIGNORE_ENTRIES,
+  LEGACY_GITIGNORE_ENTRIES,
 } from './agentsLayout.js';
 import { readManifestSkills } from './manifest.js';
 import { patchIgnoreContent } from './patchIgnoreContent.js';
@@ -23,7 +24,12 @@ export function buildGitignoreBlock(projectRoot) {
 }
 
 export function patchGitignoreContent(existingContent, projectRoot) {
-  return patchIgnoreContent(existingContent, GITIGNORE_BLOCK_HEADER, gitignoreEntries(projectRoot));
+  return patchIgnoreContent(
+    existingContent,
+    GITIGNORE_BLOCK_HEADER,
+    gitignoreEntries(projectRoot),
+    LEGACY_GITIGNORE_ENTRIES,
+  );
 }
 
 /**

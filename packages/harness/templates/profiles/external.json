@@ -12,6 +12,10 @@
     {
       "from": "../../ns-harness/references/session-boot.md",
       "to": "references/session-boot.md"
+    },
+    {
+      "from": "../ns-harness/references/session-boot.md",
+      "to": "references/session-boot.md"
     }
   ]
 }

@@ -2,7 +2,12 @@
 
 Harness **thin bridges** exist for optional isolation. Skills do **not** spawn them by default — only on explicit user request (see **Default: one session**).
 
-**Spawn vehicle (Cursor):** project agent whose **`name` equals** `manifest.json` `subagents[].name` — file `.cursor/agents/{name}.md` (slash `/{name}`). That YAML `model:` is bound model.
+**Spawn vehicle:** project agent whose **`name` equals** `manifest.json` `subagents[].name`. That YAML `model:` is bound model.
+
+| Host | Adapter file | How to spawn |
+| ---- | ------------ | ------------ |
+| Cursor | `.cursor/agents/{name}.md` | Project agent / slash `/{name}` |
+| Claude Code | `.claude/agents/{name}.md` | Agent tool with `subagent_type: {name}` (user: `@{name}`). Readonly bridges carry `disallowedTools` |
 
 Skills = **workflow SoT**. Bridges bind `model` / `readonly`, Session boot at cold start per `session-boot.md` (obey `AGENTS.md` in context — no tool-Read; then rules), then skill. Worker owns boot — parent **MUST NOT** instruct per-task `AGENTS.md` re-read.
 
@@ -42,12 +47,12 @@ Clarify / Specify / Consistency / Partition: always in-session.
 - Do not re-read rules, `AGENTS.md`, or full `source/` per batch; read only the task card and cited anchors.
 - **Review independence:** in-session review must be **read-only and diff-grounded** — judge the diff against `AGENTS.md` + rules + cited contracts, not against your own implementation notes. Do not fix inside the review step; apply the `Rejected` map afterward per `review-gate-workflow.md`.
 - Engine `C2` / SDD handoff batches = implement only — **no** per-unit / per-batch review. One review at closure (G Phase 4, A standalone step 5, `run-implementation` Step 5). Ad-hoc `/ns-coder` = one review after diff.
-- `ns-execution-gitlab-issue` external Phase 2: single-unit (≤5 files / one-paragraph AC) → follow `ns-coder` in the worktree, skip `ns-autonomous`; multi-unit → `ns-autonomous` Engine (`../ns-autonomous/references/planning-decision.md`), units executed sequentially in-session.
+- `ns-execution-gitlab-issue` external Phase 2: single-unit (≤5 files / one-paragraph AC) → follow `ns-coder` in the worktree, skip `ns-autonomous`; multi-unit → `ns-autonomous` Engine (`../../ns-autonomous/references/planning-decision.md`), units executed sequentially in-session.
 
 ## Dispatch rules (when the user did ask for a spawn)
 
 1. Spawn the project agent whose `name` equals the bridge (exact). Presence: `.cursor/agents/{name}.md`, `.claude/agents/{name}.md`, or `manifest.json` `subagents[]` + `.agents/skills/{skill}/` installed.
-2. **Do not** paraphrase skill into a custom persona; **do not** use Task `inherit` / `coder` / `reviewer` / `generalPurpose` as stand-in; no Cursor Task personas (`senior-tech-lead-reviewer`, `bugbot`, `security-review`).
+2. **Do not** paraphrase skill into a custom persona; **do not** use Task `inherit` / `coder` / `reviewer` / `generalPurpose` / `general-purpose` as stand-in; no Cursor Task personas (`senior-tech-lead-reviewer`, `bugbot`, `security-review`).
 3. Pass task context (paths, `ISSUE_URL`, unit scope, mode) in the dispatch message; bridge boots then skill. Child runs adapter `model` from manifest.
 4. Platform cannot spawn `{name}`: tell the human to invoke `/{name}`; do not spawn inherit-as-bridge.
 5. Parallel units: only Gate 4 `parallel` + `A ∥ B` + `max_parallel_units`.
@@ -57,9 +62,9 @@ Clarify / Specify / Consistency / Partition: always in-session.
 Cite this gate (default in-session):
 
 - `ns-spec-driven` (Tasks / Execute / Quick / Close / partitioned)
-- `../ns-coder/references/run-implementation.md`
+- `../../ns-coder/references/run-implementation.md`
 - `ns-autonomous` (C2 + review gate)
 - `ns-coder` (review loop)
 - `ns-execution-gitlab-issue` (Phase 2 / Phase 4)
-- `../ns-reviewer/references/review-gate-workflow.md`
-- `../ns-judge/SKILL.md`
+- `../../ns-reviewer/references/review-gate-workflow.md`
+- `../../ns-judge/SKILL.md`

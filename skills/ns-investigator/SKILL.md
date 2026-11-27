@@ -11,17 +11,17 @@ depends:
 
 # Code Investigator
 
-Root-cause diagnosis and minimal fix **proposal** — not implementation. Entry priority **4b**. Full routing: `../../ns-harness/references/code-skill-routing.md`.
+Root-cause diagnosis and minimal fix **proposal** — not implementation. Entry priority **4b**. Full routing: `../ns-harness/references/code-skill-routing.md`.
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md`. Load rules from `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` is absent.
+See `../ns-harness/references/session-boot.md`. Load rules from `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` is absent.
 
 ## Routing (read first)
 
 ### Entry (priority 4b)
 
-Trigger phrases: `references/entry-triggers.md`. Harness priority table: `../../ns-harness/references/code-skill-routing.md`.
+Trigger phrases: `references/entry-triggers.md`. Harness priority table: `../ns-harness/references/code-skill-routing.md`.
 
 Use when the user wants diagnosis only — stack trace, CI fail, obscure bug, "why does X break?" — **without** asking to implement the fix, and **without** a product screen story.
 
@@ -111,7 +111,7 @@ Regression test, dependency pin, guard, logging, documentation.
 | ---------------------------- | -------------------------------- |
 | `references/rca-template.md` | Optional structured RCA document |
 | `references/entry-triggers.md` | Priority 4b entry phrases vs 4a and coder |
-| `../../ns-harness/references/code-skill-routing.md` | Entry priority and investigator handoff |
+| `../ns-harness/references/code-skill-routing.md` | Entry priority and investigator handoff |
 
 ## Constraints
 

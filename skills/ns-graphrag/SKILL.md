@@ -41,7 +41,7 @@ SQL/DDL shapes stay in `ns-postgres-rag` snippets.
 
 ## Boot (mandatory)
 
-1. `../../ns-harness/references/session-boot.md` — Session boot (blocking).
+1. `../ns-harness/references/session-boot.md` — Session boot (blocking).
 2. Read `../ns-postgres-rag/SKILL.md` routing + Gates 1–2. If no approved Retrieval Design Report and mode is GraphRAG, fill or demand that report first.
 3. Scan corpus formats, existing cadastre keys, permission model, question archetypes.
 4. Continue this skill.

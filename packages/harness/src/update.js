@@ -199,7 +199,7 @@ export async function runUpdate(argv = {}) {
 
   const claudeMd = syncClaudeMd(projectRoot, { agents });
   if (claudeMd.written.length > 0) {
-    details.push('Created CLAUDE.md (Claude Code boot stub)');
+    details.push(claudeMd.upgraded ? 'Upgraded CLAUDE.md (legacy Claude Code boot stub)' : 'Created CLAUDE.md (Claude Code boot stub)');
   }
 
   const readmeResult = refreshHarnessReadme(projectRoot);

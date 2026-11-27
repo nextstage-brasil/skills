@@ -15,7 +15,7 @@ Maintain `docs/specs/` as current functional truth of product.
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md` and `../../ns-harness/references/artifact-layout.md`.
+See `../ns-harness/references/session-boot.md` and `../ns-harness/references/artifact-layout.md`.
 
 ## Modes
 
@@ -34,10 +34,10 @@ Orthogonal to **Modes** (which decide *what* to document and which gates apply).
 | Target | When | Writes |
 | ------ | ---- | ------ |
 | **Direct** | Integration branch, or branch role unknown, or `docs/specs/_pending/` absent (legacy repo) | `docs/specs/{domain}.md` + `INDEX.md` per **Workflow**. If `_pending/` holds fragments, run **Consolidate** first |
-| **Fragment** | Feature branch (`../../ns-harness/references/artifact-layout.md` → **Branch role**) and `docs/specs/_pending/` exists | Exactly one new file per domain: `docs/specs/_pending/{label}-{slug}.md` from `references/pending-fragment.template.md`. **Nothing else** under `docs/specs/` |
+| **Fragment** | Feature branch (`../ns-harness/references/artifact-layout.md` → **Branch role**) and `docs/specs/_pending/` exists | Exactly one new file per domain: `docs/specs/_pending/{label}-{slug}.md` from `references/pending-fragment.template.md`. **Nothing else** under `docs/specs/` |
 | **Consolidate** | Integration branch: asked explicitly, or before a Direct write | Applies every fragment, then deletes it (see **Consolidate**) |
 
-Why: parallel MRs editing the same domain file conflict; distinct new files never do. Layout: `../../ns-harness/references/artifact-layout.md` → **Living spec fragments**.
+Why: parallel MRs editing the same domain file conflict; distinct new files never do. Layout: `../ns-harness/references/artifact-layout.md` → **Living spec fragments**.
 
 **Fragment** keeps every gate, skip rule, and domain-mapping step of the active mode. Only step 2 changes (write the delta to the fragment instead of editing the domain file) and step 3 is skipped (`INDEX.md` is touched only on consolidate). `{slug}` = short kebab-case of task or issue; `{label}` = changelog label of the mode. Report with **Living specs staged** (domains + fragment paths).
 

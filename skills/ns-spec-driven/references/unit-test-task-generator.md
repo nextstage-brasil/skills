@@ -11,7 +11,7 @@ Face **MUST** read after backend implementation tasks exist (`task-generator.md`
 
 ## Session boot
 
-Load `.nextstage-harness/rules/backend-tests-rules.mdc` and `backend-rules.mdc` when present.
+Load `.nextstage-harness/rules/backend-tests-rules.md` and `backend-rules.md` when present.
 
 ## Inputs
 

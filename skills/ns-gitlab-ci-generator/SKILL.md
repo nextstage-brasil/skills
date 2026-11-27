@@ -13,7 +13,7 @@ Produce `.gitlab-ci.yml` for backend + frontend SaaS layouts.
 
 ## Session boot
 
-Load `.nextstage-harness/rules/infra-rules.mdc`, `backend-tests-rules.mdc`, `e2e-tests-rules.mdc` when present. Read `docker-compose.yml`.
+Load `.nextstage-harness/rules/infra-rules.md`, `backend-tests-rules.md`, `e2e-tests-rules.md` when present. Read `docker-compose.yml`.
 
 ## When to use
 

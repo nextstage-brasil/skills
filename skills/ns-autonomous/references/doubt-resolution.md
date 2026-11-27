@@ -5,7 +5,7 @@ Applies identically in Engine mode and standalone — only the escalation channe
 ## Sequence
 
 1. **Self-ask** — before implementing a unit, name the doubt precisely: what's ambiguous, and what would change depending on the answer.
-2. **Docs-first lookup** — search `docs/context/` and `docs/specs/` (see `../../../ns-harness/references/artifact-layout.md`) for an existing answer before asking anyone. Most doubts about stack, conventions, or prior decisions are already documented.
+2. **Docs-first lookup** — search `docs/context/` and `docs/specs/` (see `../../ns-harness/references/artifact-layout.md`) for an existing answer before asking anyone. Most doubts about stack, conventions, or prior decisions are already documented.
 3. **Self-answer non-destructive doubts** — if docs don't resolve it but the doubt is non-destructive (see criteria below), pick the most conventional/reversible interpretation, note the assumption in the unit's checkpoint commit message or the delivery report, and proceed. Don't stop the pipeline for reversible judgment calls.
 4. **Escalate destructive doubts** — stop dispatch of the affected unit(s) and raise the doubt per the escalation shape below. Do not guess on anything destructive.
 

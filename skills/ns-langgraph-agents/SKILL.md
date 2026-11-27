@@ -32,12 +32,12 @@ Brownfield open ReAct valid until deliberate topology change. Greenfield MUST = 
 | Conceptual design unlocked (agent vs RAG vs fine-tune) | **Stop** → `ns-agent-adaptation`                                                                                          |
 | No framework lock / CrewAI requested                   | **Stop** → `ns-agent-architecture`                                                                                      |
 | Orphan / lost structure / layout unclear               | Run orphan checklist **before** features (`references/orphan-recovery-checklist.md`)                                       |
-| GitLab `ISSUE_URL` or SDD version scope                | **Defer** to harness `../../ns-harness/references/code-skill-routing.md` — do not absorb                                   |
+| GitLab `ISSUE_URL` or SDD version scope                | **Defer** to harness `../ns-harness/references/code-skill-routing.md` — do not absorb                                   |
 | Approved placement/inject plan ready for diff          | Hand off to `ns-coder` for implementation — except greenfield **bootstrap copy** (`references/bootstrap-agent-runtime.md`) |
 
 ## Boot (mandatory)
 
-See `../../ns-harness/references/session-boot.md` — **complete Session boot (blocking)** there, then:
+See `../ns-harness/references/session-boot.md` — **complete Session boot (blocking)** there, then:
 
 1. Confirm `{agent_api_root}` and `graph-spec.md` when touching runtime
 2. Load placement/inject refs before path decisions (`references/placement-and-domains.md`, `references/prompt-and-capability-injection.md`)

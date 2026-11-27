@@ -260,7 +260,7 @@ export async function runInit(argv = {}) {
   try {
     const claudeMd = syncClaudeMd(detection.projectRoot, { agents });
     if (claudeMd.written.length > 0) {
-      p.log.success('Created CLAUDE.md (Claude Code boot stub)');
+      p.log.success(claudeMd.upgraded ? 'Upgraded CLAUDE.md (legacy Claude Code boot stub)' : 'Created CLAUDE.md (Claude Code boot stub)');
     }
   } catch (error) {
     p.log.warn(error instanceof Error ? error.message : String(error));

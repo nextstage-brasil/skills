@@ -62,7 +62,7 @@ function buildSubagentsSection(projectRoot, installed) {
     return '_No harness subagent bridges (install coder/reviewer/task skills via a preset)._';
   }
 
-  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`, \`/reviewer-agent\`, \`/task-writer-agent\`) — **exact** \`name\` from this table, **only when the user explicitly asks** for a subagent (\`subagent-dispatch.md\`). Per the spawn gate, default = Tasks, Execute and Review all run in the current session; the host harness manages context. **FORBIDDEN:** child Task \`inherit\` / \`coder\` / \`reviewer\` / \`generalPurpose\` as stand-in for a requested bridge. Each bridge obeys this \`AGENTS.md\` (already in context — no tool-Read), boots rules per \`session-boot.md\`, then the mapped skill. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
+  return `Invoke via Cursor/Claude project agents (e.g. \`/coder-agent\`, \`/reviewer-agent\`, \`/task-writer-agent\`) — **exact** \`name\` from this table, **only when the user explicitly asks** for a subagent (\`subagent-dispatch.md\`). Per the spawn gate, default = Tasks, Execute and Review all run in the current session; the host harness manages context. **FORBIDDEN:** child Task \`inherit\` / \`coder\` / \`reviewer\` / \`generalPurpose\` / \`general-purpose\` as stand-in for a requested bridge. Each bridge obeys this \`AGENTS.md\` (already in context — no tool-Read), boots rules per \`session-boot.md\`, then the mapped skill. Edit \`model\` in \`.nextstage-harness/manifest.json\` → \`subagents\`; \`harness update\` never resets your model.
 
 | Agent | Skill | Model (cursor / claude) |
 | ----- | ----- | ----------------------- |

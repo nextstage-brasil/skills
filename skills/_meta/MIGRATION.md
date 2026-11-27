@@ -2,6 +2,22 @@
 
 Migration notes for skills promoted into this repository as the canonical home for agent-agnostic workflows.
 
+## Claude Code alignment (2026-11-18)
+
+Harness outputs now work for Claude Code without changing Cursor or Antigravity behavior. Each change is either Claude-only (adapter/stub) or a bug fix for every host.
+
+| Surface | Change | Cursor / Antigravity impact |
+| ------- | ------ | --------------------------- |
+| `CLAUDE.md` stub | `@AGENTS.md` import (Claude Code does not load `AGENTS.md` natively); calm wording; dropped `@.claude/agents` (directories cannot be imported). Unchanged legacy stubs upgrade on `sync` / `update` / `agents set`; edited files are left alone | None — file is Claude-only |
+| Claude subagent adapter | `readonly: true` → `disallowedTools: Edit, Write, NotebookEdit` (Claude Code has no `readonly` field) | None — Cursor adapter keeps `readonly` |
+| Claude-only install (`--agent claude-code`) | Adds the skills CLI `universal` agent so skills land in `.agents/skills/` with `.claude/skills/` symlinks; `agents-md` and subagent seeding now work | None — Cursor/Antigravity already used `.agents/skills/` |
+| Managed `.gitignore` | Blanket `/.claude/` replaced by generated paths only (`skills/`, `agents/`, `rules/`, `worktrees/`, `settings.local.json`); legacy line removed on sync. Prune of an excluded Claude agent keeps `.claude/settings.json` | None |
+| Cross-skill paths | 109 wrong-depth relative links fixed (e.g. `../../ns-harness/` from `SKILL.md`); new CI step `validate-skill-links.js` | Fix for all hosts |
+| Layer rule paths | `ns-backend-tests`, `ns-gitlab-ci-generator`, `ns-spec-driven` unit-test generator read `.md` canonical rules (were `.mdc`) | Fix for all hosts |
+| `ns-harness` 1.6.0 → 1.7.0 | `session-boot.md`: skip Reads of rules the host already injected (Read canonical when absent — Antigravity, missing adapter, fresh subagent). `subagent-dispatch.md`: Claude spawn vehicle. Question-tool wording covers `AskQuestion` / `AskUserQuestion` | Antigravity keeps reading canonical rules |
+
+Consumers: `npx @nextstage-brasil/harness update` (or `sync`) refreshes adapters, `CLAUDE.md` stub, and `.gitignore`. A hand-edited `CLAUDE.md` needs the `@AGENTS.md` line added manually.
+
 ## Engineering guardrails + Test tiers (2026-10-24)
 
 Portable engineering guardrails landed in generated/refined `AGENTS.md`, architecture-rules template, docker-and-testing snippets, and worker/review skills.

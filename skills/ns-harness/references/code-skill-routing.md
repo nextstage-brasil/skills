@@ -2,7 +2,7 @@
 
 Runtime routing: **entry priority** + cross-skill handoffs. Entry skills own triggers in `references/entry-triggers.md`. Each `SKILL.md` owns **handoffs out**.
 
-**Derived:** `docs/coder-skill-routing.md` — do not hand-edit. Maintainer: `.cursor/skills/code-routing-diagram/`. Optional regen:
+**Derived:** `docs/coder-skill-routing.md` — do not hand-edit. Maintainer: `.agents/skills/code-routing-diagram/`. Optional regen:
 
 ```bash
 node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
@@ -19,8 +19,8 @@ node packages/harness/scripts/generate-coder-skill-routing-doc.mjs
 | Spec / version planning | `ns-spec-driven` | Tasks, implementation and review all in-session; host manages context |
 | Product report | `ns-bug-report-diagnosis` | Screen story; chat only; no patch **here**; then `G` (URL) or `C` unless diagnose-only |
 | Root-cause | `ns-investigator` | Stack/CI/log; diagnosis + Suggested Code; implement = separate user step |
-| Review gate | `ns-reviewer` in-session | Code path — `../ns-reviewer/references/review-gate-workflow.md` |
-| Delivery gate | `ns-judge` in-session after `Code Review: Approved` | Same parent; no `judge-agent` v1 — `../ns-judge/SKILL.md` |
+| Review gate | `ns-reviewer` in-session | Code path — `../../ns-reviewer/references/review-gate-workflow.md` |
+| Delivery gate | `ns-judge` in-session after `Code Review: Approved` | Same parent; no `judge-agent` v1 — `../../ns-judge/SKILL.md` |
 
 ## Install vs runtime
 
@@ -32,13 +32,13 @@ Scan **1 → 5**; **first matching signal wins**. Lower beats higher — e.g. `I
 
 | Priority | Signal | Entry skill | Trigger phrases |
 | -------- | ------ | ----------- | ----------------- |
-| 1 | External GitLab `ISSUE_URL` or explicit "implement this issue" | `ns-execution-gitlab-issue` | `../ns-execution-gitlab-issue/references/entry-triggers.md` |
+| 1 | External GitLab `ISSUE_URL` or explicit "implement this issue" | `ns-execution-gitlab-issue` | `../../ns-execution-gitlab-issue/references/entry-triggers.md` |
 | 1b | *(not entry scan)* SDD `unit` + `issue_iid` from `delivery-units.md` | `ns-execution-gitlab-issue` SDD unit mode | Dispatched by `ns-spec-driven` / `run-implementation.md` — **not** external URL |
-| 2 | Feature / version / SDD / multi-day scope | `ns-spec-driven` | `../ns-spec-driven/references/entry-triggers.md` |
-| 3 | "Run autonomously" with local plan, no issue | `ns-autonomous` | `../ns-autonomous/references/entry-triggers.md` |
-| 4a | Product bug report — screen story (then auto-continue unless diagnose-only) | `ns-bug-report-diagnosis` | `../ns-bug-report-diagnosis/references/entry-triggers.md` |
-| 4b | Root-cause only — stack/CI/log, **without** implement request | `ns-investigator` | `../ns-investigator/references/entry-triggers.md` |
-| 5 | Default — quick fix, "implement X", small ad-hoc diff | `ns-coder` | `../ns-coder/references/entry-triggers.md` |
+| 2 | Feature / version / SDD / multi-day scope | `ns-spec-driven` | `../../ns-spec-driven/references/entry-triggers.md` |
+| 3 | "Run autonomously" with local plan, no issue | `ns-autonomous` | `../../ns-autonomous/references/entry-triggers.md` |
+| 4a | Product bug report — screen story (then auto-continue unless diagnose-only) | `ns-bug-report-diagnosis` | `../../ns-bug-report-diagnosis/references/entry-triggers.md` |
+| 4b | Root-cause only — stack/CI/log, **without** implement request | `ns-investigator` | `../../ns-investigator/references/entry-triggers.md` |
+| 5 | Default — quick fix, "implement X", small ad-hoc diff | `ns-coder` | `../../ns-coder/references/entry-triggers.md` |
 
 Scan is still **1 → 5**. 4a is checked before 4b. Either 4 row still beats 5.
 
@@ -112,7 +112,7 @@ Detail in each `SKILL.md` routing section.
 
 **SDD unit:** `G` invokes `run-implementation.md` / `Cimpl`. No `A`. Rejection (`G → Cimpl → REV`) stays inside. Status/spent: `delivery-units.md` **GitLab status/spent (SSoT)**.
 
-See `../ns-autonomous/references/routing.md`.
+See `../../ns-autonomous/references/routing.md`.
 
 ## Investigator handoff {#investigator-handoff}
 
@@ -120,7 +120,7 @@ See `../ns-autonomous/references/routing.md`.
 
 ## Bug-report diagnosis handoff {#bug-report-diagnosis-handoff}
 
-`BRD` ends: eight-section chat report (tester + fixer pointer). Readonly **in BRD**. Then auto-dispatch: `ISSUE_URL` → `G`; else → `C`, with `diagnosis_complete: true`. Diagnose-only phrases ("do not fix", "só diagnostica") → stop at the user. `U2` is **opt-out only**. Low confidence still dispatches. `C`/`G` receiving that payload must not bounce to 4a. Full rule: `../ns-bug-report-diagnosis/references/continue-handoff.md`.
+`BRD` ends: eight-section chat report (tester + fixer pointer). Readonly **in BRD**. Then auto-dispatch: `ISSUE_URL` → `G`; else → `C`, with `diagnosis_complete: true`. Diagnose-only phrases ("do not fix", "só diagnostica") → stop at the user. `U2` is **opt-out only**. Low confidence still dispatches. `C`/`G` receiving that payload must not bounce to 4a. Full rule: `../../ns-bug-report-diagnosis/references/continue-handoff.md`.
 
 ## Skill handoffs (diagram source)
 

@@ -15,7 +15,7 @@ Once per session: confirm `.agents/skills/<id>/` exists. Present: **delegate** p
 | `ns-docs-writer` | README, `docs/` guides after delivery or on request (not code comments) |
 | `ns-best-practices` | Security headers, CSP, compat/a11y hygiene, Web Interface Guidelines audit — **not** MR/SOLID review |
 
-`ns-coder` routing: `../ns-coder/SKILL.md` — **Complement delegation**.
+`ns-coder` routing: `../../ns-coder/SKILL.md` — **Complement delegation**.
 
 ### Missing (minimal / custom install only)
 

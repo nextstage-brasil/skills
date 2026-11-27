@@ -42,11 +42,11 @@ Read **repo** (DDL, migrations, Postgres version, extensions, source formats). D
 | Answer needs N≥2 hops; no single document holds chain | GraphRAG mode — `references/retrieval-decision.md`. If `ns-graphrag` is installed: after Retrieval Design Report, continue there for ontology / extract / answer shapes / cite-or-refuse (Process Report) before `ns-spec-driven` |
 | Ontology, schema-locked extract, answer-shape routing, cite-or-refuse | `ns-graphrag` when installed — not this skill |
 | Topic search, small corpus, no hop chain | Vector-only — refuse graph tables |
-| GitLab `ISSUE_URL` or SDD version scope | Defer `../../ns-harness/references/code-skill-routing.md` |
+| GitLab `ISSUE_URL` or SDD version scope | Defer `../ns-harness/references/code-skill-routing.md` |
 
 ## Boot (mandatory)
 
-See `../../ns-harness/references/session-boot.md` — **complete Session boot (blocking)**. Then scan:
+See `../ns-harness/references/session-boot.md` — **complete Session boot (blocking)**. Then scan:
 
 1. DDL / migrations (tables, indexes, `vector`, `tsvector`, entity/edge)
 2. Postgres version; extensions (`pgvector` required; Timescale if present or Gate 2 trigger)

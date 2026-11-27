@@ -4,7 +4,7 @@ Produce structured `requirements.md` for `docs/versions/{version_san}/sdd/`.
 
 ## Session boot
 
-`../../../ns-harness/references/session-boot.md` + `../../../ns-harness/references/artifact-layout.md`. Create `docs/versions/{version_san}/sdd/` before writing.
+`../../ns-harness/references/session-boot.md` + `../../ns-harness/references/artifact-layout.md`. Create `docs/versions/{version_san}/sdd/` before writing.
 
 ## Inputs
 

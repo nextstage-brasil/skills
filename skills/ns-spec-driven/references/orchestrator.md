@@ -4,7 +4,7 @@ Drive partitioned version to completion **and implement it in this same session*
 
 ## Session boot
 
-`../../../ns-harness/references/session-boot.md` + `../../../ns-harness/references/artifact-layout.md`. Obey `AGENTS.md` already in context (no tool-Read). Load `core-subversions` and execution-routing / scope-isolation rules from `.nextstage-harness/rules/*` when present. Do not assume stack until rules or context resolve it. Human: project's configured language (`AGENTS.md`; default user's language). Code and comments English.
+`../../ns-harness/references/session-boot.md` + `../../ns-harness/references/artifact-layout.md`. Obey `AGENTS.md` already in context (no tool-Read). Load `core-subversions` and execution-routing / scope-isolation rules from `.nextstage-harness/rules/*` when present. Do not assume stack until rules or context resolve it. Human: project's configured language (`AGENTS.md`; default user's language). Code and comments English.
 
 ## Session inputs (ask once if missing)
 
@@ -58,7 +58,7 @@ Each slice whose roadmap `status` is `planned` or `in_progress`:
 
 1. **Select** next `{subversion_san}` per roadmap DAG order.
 2. **Mark** roadmap row `in_progress`.
-3. **Execute** the slice in-session — follow `ns-coder` inline (no spawn; `../../../ns-harness/references/subagent-dispatch.md` Default: one session). Scope **only**:
+3. **Execute** the slice in-session — follow `ns-coder` inline (no spawn; `../../ns-harness/references/subagent-dispatch.md` Default: one session). Scope **only**:
    - `{version_san}`, `{subversion_san}`
    - Paths limited to resolved slice folder — `sdd/subversions/{subversion_san}/` first, else legacy `subversions/{subversion_san}/` (`artifact-layout.md` **Legacy path resolution**); also load `docs/context/` per **Implementation boot rule** before coding (+ layer rules from harness as needed)
    - Mandate: implement **all** tasks of slice, no confirmation between tasks, commit once at slice end (step 5)

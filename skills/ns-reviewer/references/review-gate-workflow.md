@@ -2,7 +2,7 @@
 
 Fixed close for implementation skills. **Two sequential gates.** Code first (`ns-reviewer`), then delivery (`ns-judge`). Each `Approved` only at score **10**/10.
 
-**Not** "run any review". Code path = `ns-reviewer` **in-session** (`reviewer-agent` only if the user explicitly asks — `../../ns-harness/references/subagent-dispatch.md`). Judge path = **same parent** reads `../ns-judge/SKILL.md` **in-session** after the code review returns `Code Review: Approved`. No `judge-agent` in v1. Human `/ns-judge` = session face only.
+**Not** "run any review". Code path = `ns-reviewer` **in-session** (`reviewer-agent` only if the user explicitly asks — `../../ns-harness/references/subagent-dispatch.md`). Judge path = **same parent** reads `../../ns-judge/SKILL.md` **in-session** after the code review returns `Code Review: Approved`. No `judge-agent` in v1. Human `/ns-judge` = session face only.
 
 `ns-reviewer` is **read-only** and **MUST NOT** dispatch `ns-judge`.
 

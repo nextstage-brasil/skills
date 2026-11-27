@@ -15,7 +15,9 @@ import { groupExternalSkillsBySource, getExternalPreset } from '../src/externalS
 import { pruneExcludedAgentAdapters } from '../src/pruneExcludedAgentAdapters.js';
 import { listSkillsToUpdate } from '../src/update.js';
 import { computeSkillFolderHash, planSkillUpdates } from '../src/skillUpdateDiff.js';
-import { resolveAgentsConfig } from '../src/agentsLayout.js';
+import { resolveAgentsConfig, CLAUDE_MD_CONTENT, LEGACY_CLAUDE_MD_CONTENTS } from '../src/agentsLayout.js';
+import { syncClaudeMd } from '../src/syncClaudeMd.js';
+import { skillsCliAgents } from '../src/installer.js';
 import { writeManifestAgents, writeManifestSkills, readManifestSkills } from '../src/manifest.js';
 import { untrackManagedSkills } from '../src/untrackManagedSkills.js';
 import { syncRootReadme, stripRootReadme } from '../src/syncRootReadme.js';
@@ -226,12 +228,38 @@ try {
     assert(!agentsMd.skipped, 'agents-md should write files');
     assert(exists(join(tempDir, 'AGENTS.md')), 'AGENTS.md missing');
     const claudeMd = readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8');
-    assert(claudeMd.includes('# Rules'), 'CLAUDE.md must start with Rules section');
-    assert(claudeMd.includes('AGENTS.md'), 'CLAUDE.md must require AGENTS.md');
+    assert(claudeMd.includes('\n@AGENTS.md\n'), 'CLAUDE.md must import AGENTS.md (Claude Code does not load it natively)');
     assert(claudeMd.includes('AGENTS.local.md'), 'CLAUDE.md must require AGENTS.local.md');
-    assert(claudeMd.includes('.nextstage-harness/rules/'), 'CLAUDE.md must require alwaysApply harness rules');
-    assert(claudeMd.includes('@.claude/agents'), 'CLAUDE.md must point to project subagents');
-    assert(claudeMd.includes('model optional'), 'CLAUDE.md must note subagent model is optional');
+    assert(claudeMd.includes('.claude/rules/'), 'CLAUDE.md must point at injected rule adapters');
+    assert(claudeMd.includes('.claude/agents/'), 'CLAUDE.md must point to project subagents');
+    assert(!claudeMd.includes('@.claude/agents'), 'CLAUDE.md must not @-import a directory');
+
+    // 6a. Claude-only install still lands in canonical .agents/skills/
+    assert(
+      skillsCliAgents(['claude-code']).join(',') === 'claude-code,universal',
+      'claude-only install must add universal agent for .agents/skills/',
+    );
+    assert(
+      skillsCliAgents(['cursor', 'claude-code']).join(',') === 'cursor,claude-code',
+      'cursor already targets .agents/skills/',
+    );
+    assert(skillsCliAgents(['claude-code'], true).join(',') === 'claude-code', 'global install unchanged');
+
+    // 6b. legacy stub upgraded in place; hand-edited CLAUDE.md left alone
+    const legacyDir = join(tempDir, 'claude-legacy');
+    mkdirSync(legacyDir, { recursive: true });
+    writeFileSync(join(legacyDir, 'CLAUDE.md'), LEGACY_CLAUDE_MD_CONTENTS[0], 'utf8');
+    const legacyCheck = syncClaudeMd(legacyDir, { agents: ['claude-code'], check: true });
+    assert(legacyCheck.drifts.includes('CLAUDE.md'), 'sync --check should report legacy CLAUDE.md stub as drift');
+    const legacySync = syncClaudeMd(legacyDir, { agents: ['claude-code'] });
+    assert(legacySync.upgraded, 'legacy CLAUDE.md stub should be upgraded');
+    assert(
+      readFileSync(join(legacyDir, 'CLAUDE.md'), 'utf8') === CLAUDE_MD_CONTENT,
+      'upgraded CLAUDE.md should equal current stub',
+    );
+    writeFileSync(join(legacyDir, 'CLAUDE.md'), `${LEGACY_CLAUDE_MD_CONTENTS[0]}\nTeam note.\n`, 'utf8');
+    const editedSync = syncClaudeMd(legacyDir, { agents: ['claude-code'] });
+    assert(editedSync.written.length === 0, 'hand-edited CLAUDE.md must not be overwritten');
     const agentsMdPath = join(tempDir, 'AGENTS.md');
     let agentsMdText = readFileSync(agentsMdPath, 'utf8');
     assert(agentsMdText.includes('ns-harness'), 'AGENTS.md should list installed skill');
@@ -614,11 +642,28 @@ Should not land in canonical.
     assert(gitignoreContent.includes('/.worktrees/'), 'gitignore should include /.worktrees/');
     assert(gitignoreContent.includes('/.cursor/rules/'), 'gitignore should include /.cursor/rules/');
     assert(gitignoreContent.includes('/.cursor/agents/'), 'gitignore should include /.cursor/agents/');
-    assert(gitignoreContent.includes('/.claude/'), 'gitignore should include /.claude/');
+    for (const entry of ['/.claude/skills/', '/.claude/agents/', '/.claude/rules/', '/.claude/settings.local.json']) {
+      assert(gitignoreContent.includes(entry), `gitignore should include ${entry}`);
+    }
+    assert(!/^\/\.claude\/$/m.test(gitignoreContent), 'gitignore must not ignore all of .claude/ (team settings.json)');
     assert(
       gitignoreContent.includes(buildGitignoreBlock().trim()),
       'gitignore should contain full managed block',
     );
+
+    const legacyGitignoreDir = join(tempDir, 'gitignore-legacy');
+    mkdirSync(legacyGitignoreDir, { recursive: true });
+    writeFileSync(
+      join(legacyGitignoreDir, '.gitignore'),
+      'vendor/\n\n# Nextstage-harness ignore files\n/.agents/skills/ns-*\n/.claude/\n/.worktrees/\n',
+      'utf8',
+    );
+    syncGitignore(legacyGitignoreDir);
+    const legacyMigratedGitignore = readFileSync(join(legacyGitignoreDir, '.gitignore'), 'utf8');
+    assert(!/^\/\.claude\/$/m.test(legacyMigratedGitignore), 'sync should drop legacy /.claude/ entry');
+    assert(legacyMigratedGitignore.includes('/.claude/skills/'), 'sync should add granular .claude entries');
+    assert(legacyMigratedGitignore.includes('/.worktrees/'), 'sync should keep managed entries after legacy line');
+    assert(syncGitignore(legacyGitignoreDir).written.length === 0, 'legacy migration should be idempotent');
 
     const gitignoreResync = syncGitignore(tempDir);
     assert(gitignoreResync.written.length === 0, 'syncGitignore should be idempotent');
@@ -903,6 +948,17 @@ Should not land in canonical.
     assert(!existsSync(join(tempDir, 'CLAUDE.md')), 'CLAUDE.md should be removed after cursor-only prune');
     assert(prunedAgents.removed.some((path) => path.endsWith('.agents/rules')), 'cursor-only should remove .agents/rules');
     assert(!existsSync(join(tempDir, '.agents', 'rules')), '.agents/rules should be removed after cursor-only prune');
+
+    const keepSettingsDir = join(tempDir, 'prune-keep-settings');
+    mkdirSync(join(keepSettingsDir, '.claude', 'agents'), { recursive: true });
+    writeFileSync(join(keepSettingsDir, '.claude', 'agents', 'coder-agent.md'), '# gen\n', 'utf8');
+    writeFileSync(join(keepSettingsDir, '.claude', 'settings.json'), '{}\n', 'utf8');
+    pruneExcludedAgentAdapters(keepSettingsDir, ['cursor']);
+    assert(!existsSync(join(keepSettingsDir, '.claude', 'agents')), 'prune should remove generated .claude/agents');
+    assert(
+      existsSync(join(keepSettingsDir, '.claude', 'settings.json')),
+      'prune must keep team .claude/settings.json',
+    );
     assert(existsSync(join(tempDir, '.agents', 'skills')), '.agents/skills must be kept after prune');
 
     const missingClaudeCheck = runCli(['sync', '--check', '--dir', tempDir], harnessRoot);
@@ -916,8 +972,8 @@ Should not land in canonical.
     assert(recreateClaude.status === 0, `sync should recreate CLAUDE.md: ${recreateClaude.stderr}${recreateClaude.stdout}`);
     assert(existsSync(join(tempDir, 'CLAUDE.md')), 'sync should create CLAUDE.md when claude-code is active');
     const recreatedClaudeMd = readFileSync(join(tempDir, 'CLAUDE.md'), 'utf8');
-    assert(recreatedClaudeMd.includes('# Rules'), 'recreated CLAUDE.md must use the boot stub');
-    assert(recreatedClaudeMd.includes('@.claude/agents'), 'recreated CLAUDE.md must point at .claude/agents');
+    assert(recreatedClaudeMd === CLAUDE_MD_CONTENT, 'recreated CLAUDE.md must use the boot stub');
+    assert(recreatedClaudeMd.includes('.claude/agents/'), 'recreated CLAUDE.md must point at .claude/agents');
 
     writeFileSync(join(tempDir, 'CLAUDE.md'), '# custom claude entry\n', 'utf8');
     const keepCustomClaude = runCli(['sync', '--dir', tempDir], harnessRoot);
@@ -1020,7 +1076,17 @@ Should not land in canonical.
         'utf8',
       );
       assert(claudeTask.includes('model: haiku'), 'task-writer default claude model is haiku');
-      assert(claudeTask.includes('readonly: false'), 'task-writer-agent should not be readonly');
+      assert(!claudeTask.includes('readonly:'), 'claude adapter must not emit unsupported readonly field');
+      assert(!claudeTask.includes('disallowedTools'), 'task-writer-agent keeps write tools in Claude');
+      const claudeReviewer = readFileSync(
+        join(subagentsDir, '.claude', 'agents', 'reviewer-agent.md'),
+        'utf8',
+      );
+      assert(
+        claudeReviewer.includes('disallowedTools: Edit, Write, NotebookEdit'),
+        'readonly reviewer-agent must drop write tools in Claude',
+      );
+      assert(!claudeReviewer.includes('readonly:'), 'claude reviewer must not emit readonly field');
       assert(
         claudeTask.includes('references/task-generator.md'),
         'task-writer-agent should point at ns-spec-driven task-generator reference',

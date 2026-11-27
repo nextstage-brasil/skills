@@ -32,7 +32,7 @@ Phases 2–4 shared. Phase 1 (MCP load) = **issue** only.
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** before MCP or codebase investigation.
+See `../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** before MCP or codebase investigation.
 
 GitLab MCP after boot: follow `mcp-gitlab-usage` (`get_mcp_gitlab_skill` version check on first access). Absent → **MCP fallback**.
 
@@ -353,4 +353,4 @@ Template in `references/comment-template.md` is the English skeleton. Translate 
 | ---- | ---- |
 | `references/comment-template.md` | Phase 4–5 — brief / GitLab body |
 | `references/question-checklist.md` | Phase 3 — gap scan |
-| `../../ns-harness/references/session-boot.md` | Session boot (blocking) |
+| `../ns-harness/references/session-boot.md` | Session boot (blocking) |

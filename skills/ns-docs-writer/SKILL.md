@@ -15,7 +15,7 @@ Author **clear, maintainable** project documentation under `docs/` and README fi
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md`.
+See `../ns-harness/references/session-boot.md`.
 
 ## Scope
 

@@ -10,14 +10,16 @@
 | Same agent mid-session | Skip re-boot unless `agents.local.md` or harness rules changed |
 | Cross-skill "Complete Session boot" | Steps 1–6 done + files unchanged: continue; else finish or re-boot |
 
-Fresh subagents = empty **rules** context — always boot rules/local overrides. No invented skip/cache. "Already booted" = steps **1–6 complete**.
+Fresh subagents may start without the parent's rules — check what is in context and boot the rest (local overrides always). No invented skip/cache. "Already booted" = steps **1–6 complete**.
 
-**`AGENTS.md`:** already in host context (Cursor injects; Claude via `CLAUDE.md`). **Never** tool-Read `AGENTS.md`. Obey loaded text.
+**`AGENTS.md`:** already in host context (Cursor and Antigravity inject it; Claude Code through the `@AGENTS.md` import in `CLAUDE.md`). Do not tool-Read it. Obey loaded text. Only exception: its text is genuinely absent from your context (e.g. an old `CLAUDE.md` without the import) — then open it once.
+
+**Injected rules — do not read twice.** Hosts inject harness rule adapters on their own: Claude Code loads `.claude/rules/{name}.md` (always, or on matching files when the adapter has `paths:`); Cursor loads `.cursor/rules/{name}.mdc` (`alwaysApply`, or `globs` on matching files). When a rule's text is already in your context, skip the Read in steps 2–4. When it is not — Antigravity, a missing adapter, or a fresh subagent without it — Read the canonical file under `.nextstage-harness/rules/`.
 
 1. `agents.local.md` beside `AGENTS.md` (case-insensitive) — read **once** if present.
-2. `.nextstage-harness/rules/architecture-rules.md` when `.nextstage-harness/` exists.
-3. `.nextstage-harness/rules/project-rules.md` when present (language, codes, MCP server, agent names).
-4. Layer rules under `.nextstage-harness/rules/` matching files you change (backend, frontend, tests, e2e).
+2. `.nextstage-harness/rules/architecture-rules.md` when `.nextstage-harness/` exists (skip if injected).
+3. `.nextstage-harness/rules/project-rules.md` when present — language, codes, MCP server, agent names (skip if injected).
+4. Layer rules under `.nextstage-harness/rules/` matching files you change — backend, frontend, tests, e2e (skip if injected).
 5. **Legacy:** `.nextstage-harness/` missing + `.cursor/rules/*.mdc` exists — read adapters + one-time deprecation note.
 6. `docs/context/` present — follow **Implementation boot rule** in `artifact-layout.md` before code writes.
 

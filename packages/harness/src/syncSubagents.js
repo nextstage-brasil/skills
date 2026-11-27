@@ -44,6 +44,12 @@ export function buildCursorSubagentAdapter(entry, body, hash) {
   return `${lines.join('\n').trimEnd()}\n`;
 }
 
+/**
+ * Claude Code has no `readonly` subagent field (unknown keys are ignored, so the agent keeps
+ * write tools). Readonly bridges map to `disallowedTools` instead.
+ */
+export const CLAUDE_READONLY_DISALLOWED_TOOLS = ['Edit', 'Write', 'NotebookEdit'];
+
 export function buildClaudeSubagentAdapter(entry, body, hash) {
   const model = entry.model?.claude ?? 'inherit';
   const readonly = Boolean(entry.readonly);
@@ -52,7 +58,7 @@ export function buildClaudeSubagentAdapter(entry, body, hash) {
     `name: ${entry.name}`,
     `description: ${yamlQuote(entry.description ?? entry.name)}`,
     `model: ${yamlQuote(model)}`,
-    `readonly: ${readonly}`,
+    ...(readonly ? [`disallowedTools: ${CLAUDE_READONLY_DISALLOWED_TOOLS.join(', ')}`] : []),
     '---',
     '',
     GENERATION_MARKER,

@@ -10,12 +10,12 @@ Full flow when this skill is the entry point — no `ns-execution-gitlab-issue` 
 ## 2. Allocate the version
 
 - Infer `change_kind` (`fix` or `feat`) from the descriptor.
-- Allocate `{version_san}` (sanitized version id — see `../../../ns-harness/references/artifact-layout.md`).
+- Allocate `{version_san}` (sanitized version id — see `../../ns-harness/references/artifact-layout.md`).
 - Create `docs/versions/{version_san}/sdd/` only if the planning-depth decision (`planning-decision.md`) calls for artifacts; a single-unit run doesn't need the folder.
 
 ## 3. Create the worktree
 
-Follow `../../../ns-harness/references/worktree-setup.md` with:
+Follow `../../ns-harness/references/worktree-setup.md` with:
 
 ```
 {run_id} = {version_san}

@@ -45,14 +45,14 @@ Map natural-language triggers to **phase** and **reference** (under `references/
 
 | Trigger phrases | Reference | Order |
 | --------------- | ------ | ----- |
-| "generate tasks", "task breakdown", Medium+ execute prep | `task-generator.md` in-session (`../../../ns-harness/references/subagent-dispatch.md`) | After requirements (+ consistency if Large) |
+| "generate tasks", "task breakdown", Medium+ execute prep | `task-generator.md` in-session (`../../ns-harness/references/subagent-dispatch.md`) | After requirements (+ consistency if Large) |
 | after tasks exist | `execution-handoff.md` | Creates/updates `execution-handoff.md` |
 
 ## Execute
 
 | Trigger phrases | Reference |
 | --------------- | ------ |
-| "implement", "build it", "run tasks" | See parent SKILL.md execute routing + spawn gate `../../../ns-harness/references/subagent-dispatch.md` (implementation always in-session — no `coder-agent`) |
+| "implement", "build it", "run tasks" | See parent SKILL.md execute routing + spawn gate `../../ns-harness/references/subagent-dispatch.md` (implementation always in-session — no `coder-agent`) |
 | GitLab issue URL | `ns-execution-gitlab-issue` (if installed + MCP) |
 | subversion / slice | `orchestrator.md` |
 | handoff present | `../../ns-coder/references/run-implementation.md` in-session (`ns-coder`; no `coder-agent`) / `ns-autonomous` |

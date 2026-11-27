@@ -43,6 +43,7 @@ npx @nextstage-brasil/harness <command>
 | `.cursor/agents/*.md` | Cursor subagent bridges | **No** — generated; set `model` in manifest; gitignored |
 | `.claude/agents/*.md` | Claude subagent bridges | **No** — generated; set `model` in manifest; gitignored |
 | `.claude/skills/` | Claude skill symlinks | **No** — generated when `claude-code` is active; gitignored |
+| `.claude/settings.json` | Team Claude Code settings (permissions, hooks) | **Yes** — not managed by the harness |
 
 **Mental model:** truth = `.nextstage-harness/` + `.agents/skills/` · mirrors = `.cursor/` + `.claude/` + `.agents/rules/` (regenerated via `harness sync`; gitignored).
 
@@ -82,7 +83,7 @@ Cursor and Antigravity read skills from `.agents/skills/` directly. Claude Code 
 
 ## Project subagents (model bridges)
 
-Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readonly) in `manifest.json` → `"subagents"`. Seeded when matching skills are installed (aligned with presets that pull `ns-coder`, `ns-reviewer`, `ns-spec-driven`):
+Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readonly) in `manifest.json` → `"subagents"`. `readonly` becomes `readonly: true` in the Cursor adapter and `disallowedTools: Edit, Write, NotebookEdit` in the Claude Code adapter. Seeded when matching skills are installed (aligned with presets that pull `ns-coder`, `ns-reviewer`, `ns-spec-driven`):
 
 | Agent file | Skill | Default model (cursor / claude) | `readonly` |
 |------------|-------|----------------------------------|------------|
@@ -92,7 +93,7 @@ Canonical bodies live in `agents/{name}.md`. Metadata (skill link, model, readon
 
 **Project owns `model`.** Edit `manifest.json`, then `harness sync`. `harness update` refreshes adapter bodies but **never** resets your model values.
 
-Orchestrators follow spawn gate in `ns-harness` → `references/subagent-dispatch.md`: **Default = everything in-session** (Tasks, Execute, Review); spawn an adapter by **exact** `name` **only on explicit user request**, so YAML `model` applies. Cursor Task types `coder` and `reviewer` are **not** these bridges. Spawning Task with `inherit` (or `coder` / `reviewer` / `generalPurpose`) uses the **parent** model / platform persona — forbidden when a spawn was requested. If the platform cannot bind `{name}`, stop and ask the human to invoke `/{name}`.
+Orchestrators follow spawn gate in `ns-harness` → `references/subagent-dispatch.md`: **Default = everything in-session** (Tasks, Execute, Review); spawn an adapter by **exact** `name` **only on explicit user request**, so YAML `model` applies. Cursor Task types `coder` and `reviewer` are **not** these bridges. Spawning Task with `inherit` (or `coder` / `reviewer` / `generalPurpose` / `general-purpose`) uses the **parent** model / platform persona — forbidden when a spawn was requested. If the platform cannot bind `{name}`, stop and ask the human to invoke `/{name}`.
 
 ```json
 "subagents": [

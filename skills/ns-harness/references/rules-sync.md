@@ -92,7 +92,7 @@ Cursor subagents use same skill catalog as parent — no `.cursor/skills/` copy.
 | `subagents[].canonical` | Path relative to `.nextstage-harness/` (default `agents/{name}.md`) |
 | `subagents[].skill` | Installed skill bridge loads |
 | `subagents[].model` | **Project-owned** — `harness update` never overwrites |
-| `subagents[].readonly` | No write tools when `true` (reviewer default); filled from catalog if missing |
+| `subagents[].readonly` | No write tools when `true` (reviewer default); filled from catalog if missing. Cursor adapter: `readonly: true`. Claude adapter: `disallowedTools: Edit, Write, NotebookEdit` (Claude Code has no `readonly` field) |
 
 ### Default subagents (seeded when skill installed)
 
@@ -150,7 +150,7 @@ Marker (first body line):
 
 Commit canonical only: `.nextstage-harness/` (`rules/`, `agents/`, `manifest.json` + `subagents`); project-authored skills in `.agents/skills/` (harness-installed `ns-*` / external skills and `skills-lock.json` are gitignored — `harness update` restores them from `manifest.json` → `skills`); `AGENTS.md`, `CLAUDE.md`.
 
-Generated `.cursor/rules/`, `.cursor/agents/`, `.claude/` **gitignored** — `harness sync` adds to `.gitignore` on init/update. After clone:
+Generated `.cursor/rules/`, `.cursor/agents/`, `.claude/skills/`, `.claude/agents/`, `.claude/rules/` (plus `.claude/worktrees/`, `.claude/settings.local.json`) **gitignored** — `harness sync` adds to `.gitignore` on init/update and drops the legacy blanket `/.claude/` entry. Team-shared `.claude/settings.json` (permissions, hooks) can be committed. After clone:
 
 ```bash
 npx @nextstage-brasil/harness sync

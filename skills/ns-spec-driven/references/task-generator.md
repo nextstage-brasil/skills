@@ -2,16 +2,16 @@
 
 Convert Features into `task-NNN-slug.md`. Unit = **1 Feature × 1 impl layer = 1 implementation task** (+ capped test tasks — **Decomposition**).
 
-Face follows this file **in-session** (`task-writer-agent` only on explicit user request — `../../../ns-harness/references/subagent-dispatch.md`).
+Face follows this file **in-session** (`task-writer-agent` only on explicit user request — `../../ns-harness/references/subagent-dispatch.md`).
 
 ## Session boot
 
-`../../../ns-harness/references/session-boot.md` steps 1–6 first; task-generator adds:
+`../../ns-harness/references/session-boot.md` steps 1–6 first; task-generator adds:
 
 - Load **all** `.nextstage-harness/rules/*.md` marked **always-applicable** in harness `manifest.json`, plus layer rules for target layer.
 - Load **agent-requested** rules when `manifest.json` `description` matches task scope (persistence, auth, tenancy, build). No manifest: scan `rules/*.md`; read files whose scope matches.
 - Unread mandatory rules = **incomplete boot**. Do not pick stack default to fill gap.
-- **Stack signals:** detected stack implies expected sibling rule — `../../../ns-harness/references/architecture-rules/stack-signals.md`. Rule present: load. Absent: ask or mark `needs-clarification` — never assume framework default.
+- **Stack signals:** detected stack implies expected sibling rule — `../../ns-harness/references/architecture-rules/stack-signals.md`. Rule present: load. Absent: ask or mark `needs-clarification` — never assume framework default.
 - Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent.
 - Read `requirements.md` strict — invent no tables or endpoints.
 

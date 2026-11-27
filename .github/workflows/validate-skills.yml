@@ -100,6 +100,10 @@ jobs:
       - name: Catalog sync with skills
         run: node packages/harness/scripts/validate-catalog.js
 
+      - name: Relative cross-skill paths resolve
+        # Hosts that Read literal paths (Claude Code) fail on wrong-depth links; `--fix` repairs unambiguous ones locally.
+        run: node packages/harness/scripts/validate-skill-links.js
+
       - name: Token budget (report-only)
         run: node packages/harness/scripts/token-budget.js
 

@@ -19,10 +19,27 @@ export const DOCS_LAYOUT_DIRS = [
 export const AGENTS_SKILLS_DIR = join(AGENTS_HOME, 'skills');
 
 /**
- * Claude Code project entry (`CLAUDE.md`). Boot rules + AGENTS.md + subagents.
- * Written by scaffold, `harness sync` (create-if-missing when `claude-code` is active), and `harness agents-md`.
+ * Claude Code project entry (`CLAUDE.md`). Imports AGENTS.md natively (`@AGENTS.md`):
+ * Claude Code loads CLAUDE.md, not AGENTS.md, so the import is what puts the project contract in context.
+ * Written by scaffold, `harness sync` / `update` / `agents` (create-if-missing when `claude-code` is active),
+ * and `harness agents-md`. A file that still equals a legacy stub is upgraded in place.
  */
 export const CLAUDE_MD_CONTENT = `\
+# Claude Code entry
+
+@AGENTS.md
+
+\`AGENTS.md\` (imported above) is the project contract — follow its First action, routing, and hard stops.
+
+- Project rules from \`.nextstage-harness/rules/\` reach Claude Code through \`.claude/rules/\`: always-on rules are already in context, path-scoped ones load when you touch matching files. Read a canonical rule file only when its \`.claude/rules/\` adapter is missing.
+- When \`AGENTS.local.md\` exists beside \`AGENTS.md\` (any case), read it once at session start; it overrides \`AGENTS.md\`.
+- Project subagents live in \`.claude/agents/\`. Spawn them only when the user asks (see AGENTS.md → Project subagents).
+- If a file that AGENTS.md requires is missing, ask the human before continuing.
+`;
+
+/** Previous stubs written by older harness versions — upgraded in place when found unchanged. */
+export const LEGACY_CLAUDE_MD_CONTENTS = [
+  `\
 # Rules
 
 CRITICAL — NO EXCEPTIONS.
@@ -41,7 +58,8 @@ Then skills / subagents / task as AGENTS.md says.
 ## Subagents
 
 \`@.claude/agents\` — use them; model optional per agent.
-`;
+`,
+];
 
 export { DEFAULT_AGENTS };
 
@@ -104,5 +122,15 @@ export const GITIGNORE_ENTRIES = [
   '/.worktrees/',
   '/.cursor/rules/',
   '/.cursor/agents/',
-  '/.claude/',
+  '/.claude/skills/',
+  '/.claude/agents/',
+  '/.claude/rules/',
+  '/.claude/worktrees/',
+  '/.claude/settings.local.json',
 ];
+
+/**
+ * Entries older harness versions wrote to the managed gitignore block; removed on sync.
+ * `/.claude/` blocked team-shared `.claude/settings.json` (permissions, hooks) — now only generated paths are ignored.
+ */
+export const LEGACY_GITIGNORE_ENTRIES = ['/.claude/'];

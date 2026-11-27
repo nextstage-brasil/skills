@@ -4,7 +4,7 @@ Split master `requirements.md` into subversions. Sequential planning.
 
 ## Session boot
 
-See `../../../ns-harness/references/artifact-layout.md` and `../../../ns-harness/references/session-boot.md`. Read `core-subversions` rule from harness when present.
+See `../../ns-harness/references/artifact-layout.md` and `../../ns-harness/references/session-boot.md`. Read `core-subversions` rule from harness when present.
 
 ## Scope
 

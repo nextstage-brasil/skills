@@ -22,11 +22,11 @@ depends:
 
 # Code Coder
 
-Central **execution worker** for ad-hoc diffs (and `C2` under `ns-autonomous`). **Not front door** — host picks entry per `../../ns-harness/references/code-skill-routing.md`.
+Central **execution worker** for ad-hoc diffs (and `C2` under `ns-autonomous`). **Not front door** — host picks entry per `../ns-harness/references/code-skill-routing.md`.
 
 ## Workflow mode (mandatory)
 
-**Fixed workflow**, not loose checklist. Steps in order; handoffs = **named skills**, run in-session (bridges `coder-agent` / `reviewer-agent` only on explicit user request — `../../ns-harness/references/subagent-dispatch.md`). No platform Task personas or improvised review.
+**Fixed workflow**, not loose checklist. Steps in order; handoffs = **named skills**, run in-session (bridges `coder-agent` / `reviewer-agent` only on explicit user request — `../ns-harness/references/subagent-dispatch.md`). No platform Task personas or improvised review.
 
 Canonical review gate: `../ns-reviewer/references/review-gate-workflow.md` — steps 7–9 **ad-hoc / C2 only**. Code review **only** via `ns-reviewer` in-session; then `ns-judge` in-session **only if** `Code Review: Approved`. Max **3** rounds per gate; **`Approved` = score 10 only**. Score **9** = `Rejected` (Lift + mandatory re-review). No success without **both** `Approved` or **blocked**. After `Delivery Review: Approved`: Living specs (8) if match, then Final report (9).
 
@@ -43,7 +43,7 @@ Canonical review gate: `../ns-reviewer/references/review-gate-workflow.md` — s
 | Obscure bug, root cause unclear (stack/CI) | `ns-investigator` |
 | Ad-hoc diff ready | `ns-reviewer` in-session; `ns-judge` only if `Code Review: Approved` |
 
-Entry priority **5** (default). Harness table: `../../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
+Entry priority **5** (default). Harness table: `../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
 
 ### When to use (entry)
 
@@ -70,14 +70,14 @@ Parent `run-implementation` (classic SDD) or dispatch **SDD handoff / execution-
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** before any other step — cold start only; mid-session skip if already booted and files unchanged. Never tool-Read `AGENTS.md`.
+See `../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** before any other step — cold start only; mid-session skip if already booted and files unchanged. Never tool-Read `AGENTS.md`.
 
 After session-boot steps 1–6:
 
 - Load **all** `.nextstage-harness/rules/*.md` marked **always-applicable** in harness `manifest.json`, plus layer rules for target layer.
 - Load **agent-requested** rules when `manifest.json` `description` matches task scope (persistence, auth, tenancy, build). No manifest: scan `rules/*.md`; read files whose scope matches.
 - Unread mandatory rules = **incomplete boot**. Do not pick stack default to fill gap.
-- **Stack signals:** detected stack implies expected sibling rule — `../../ns-harness/references/architecture-rules/stack-signals.md`. Rule present: load. Absent: ask or mark `needs-clarification` — never assume framework default.
+- **Stack signals:** detected stack implies expected sibling rule — `../ns-harness/references/architecture-rules/stack-signals.md`. Rule present: load. Absent: ask or mark `needs-clarification` — never assume framework default.
 
 ## Session inputs
 
@@ -92,7 +92,7 @@ Operate only inside the repo + harness docs.
 
 ## Boot (mandatory)
 
-**Session boot** (`../../ns-harness/references/session-boot.md`) — one rule for ad-hoc, C2, SDD handoff:
+**Session boot** (`../ns-harness/references/session-boot.md`) — one rule for ad-hoc, C2, SDD handoff:
 
 | Agent state | Action |
 | ----------- | ------ |
@@ -118,7 +118,7 @@ Then:
 - **Prefer editing** existing files over new files
 - **Minimal change** — reuse ladder, no speculative code, root-cause fix at shared callers: `references/minimal-change.md`
 - **Large change gate:** >1 file simultaneously, >20 lines in one file, or public contract change: one-line plan, wait for approval
-- **No commits** unless human explicitly asks — when committing, see `../../ns-harness/references/agent-git-identity.md`
+- **No commits** unless human explicitly asks — when committing, see `../ns-harness/references/agent-git-identity.md`
 - **No SDD version artifacts** — no `task-NNN.md`, `requirements.md`, `execution-handoff.md`, or `docs/versions/` writes. Conditional living-spec updates under `docs/specs/` via `ns-living-spec` allowed (see **Living specs**).
 - **No gratuitous comments** unless requested
 - Tests per `AGENTS.md` Docker + testing; container/commands in `architecture-rules.md`
@@ -156,7 +156,7 @@ MR/SOLID review stays **`ns-reviewer`** only. Missing complement: continue with 
 
 ### Pre-review (before step 7; also before SDD report complete)
 
-- Run **default tier** only (unit/integration / default `test` — see Test tiers in `../../ns-harness/references/docker-and-testing.md`). **Never** run live tier unless human asks this run.
+- Run **default tier** only (unit/integration / default `test` — see Test tiers in `../ns-harness/references/docker-and-testing.md`). **Never** run live tier unless human asks this run.
 - New tests needing real LLM or live third-party → put in live group/marker; report how to trigger; do **not** run them.
 - Diff removes exports/constants/env flags/public symbols: search remaining call sites; resolve before review.
 - List **new or newly exported** public names (`return { }`, `module.exports`, `export`, `public`/`public static`, window/global attach).

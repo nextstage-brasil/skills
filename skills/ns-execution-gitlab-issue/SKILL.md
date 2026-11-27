@@ -15,17 +15,17 @@ depends:
 
 # Execute GitLab Issue
 
-Entry priority **1** for external GitLab `ISSUE_URL`. **SDD unit mode** (below) when `delivery-units.md` supplies `unit` + `issue_iid` — not an external URL. Full routing: `../../ns-harness/references/code-skill-routing.md`.
+Entry priority **1** for external GitLab `ISSUE_URL`. **SDD unit mode** (below) when `delivery-units.md` supplies `unit` + `issue_iid` — not an external URL. Full routing: `../ns-harness/references/code-skill-routing.md`.
 
 ## Routing (read first)
 
-Entry priority **1**. Harness table: `../../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
+Entry priority **1**. Harness table: `../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`.
 
 | Handoff | Target |
 | ------- | ------ |
 | Phase 2 execution (external, single unit) | `ns-coder` in-session, existing worktree — **skip** `ns-autonomous` (`planning-decision.md` single-unit; spawn gate) |
 | Phase 2 execution (external, multi-unit) | `ns-autonomous` (Engine mode) |
-| Phase 2 execution (SDD unit) | `../../ns-coder/references/run-implementation.md` (unit tasks only) |
+| Phase 2 execution (SDD unit) | `../ns-coder/references/run-implementation.md` (unit tasks only) |
 | MR / status / time / comments | `mcp-gitlab-usage` |
 | Phase 4 review gate | `ns-reviewer` in-session; then `ns-judge` in-session only if `Code Review: Approved` |
 | Rejected fix loop (external, single unit) | `ns-coder` in-session (same worktree; no A) |
@@ -36,7 +36,7 @@ Entry priority **1**. Harness table: `../../ns-harness/references/code-skill-rou
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** there before any MCP call. Read `mcp-gitlab-usage` after Session boot.
+See `../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** there before any MCP call. Read `mcp-gitlab-usage` after Session boot.
 
 ## Inputs
 
@@ -57,13 +57,13 @@ See `../../ns-harness/references/session-boot.md`. **Complete Session boot (bloc
 - `WORKTREE_ROOT = .worktrees/{unit}`
 - `WORK_BRANCH = work/{unit}-{slug}` per `delivery-units.md` / `source-branch-resolution.md`
 - `SOURCE_BRANCH` = version-resolved branch recorded in `delivery-units.md` header (Gate 1 uses same rules; skip re-discovery when header set)
-- Phase 2 coding: `../../ns-coder/references/run-implementation.md` for **unit tasks only** — not `ns-autonomous` Engine
+- Phase 2 coding: `../ns-coder/references/run-implementation.md` for **unit tasks only** — not `ns-autonomous` Engine
 - Status/spent: this skill owns lifecycle (First act + Phase 3). Skip Flow D. Cite `../ns-spec-driven/references/delivery-units.md` **GitLab status/spent (SSoT)**
 - `add_issue_spent_time` **once per unit** at Phase 3 (wall-clock) — not per task, not estimate sum
 
 ## Phase 0 — Context (boot before MCP)
 
-1. **Session boot (blocking)** — complete `../../ns-harness/references/session-boot.md` before any MCP call.
+1. **Session boot (blocking)** — complete `../ns-harness/references/session-boot.md` before any MCP call.
 2. Ensure `.worktrees/` is gitignored (see `references/worktree-setup.md`).
 3. Read `mcp-gitlab-usage` before the first MCP call.
 4. **Mode detect:** external `ISSUE_URL` → **external issue mode**. `unit` + `issue_iid` from `delivery-units.md` → **SDD unit mode** — set `WORKTREE_ROOT`, `WORK_BRANCH`, `ISSUE_ID` substitutes below.
@@ -128,7 +128,7 @@ Never under `.cursor/`. Abort if a worktree already exists for this id and is in
 1. Read full issue payload via MCP (title, description, comments, attachments). Note `time_stats.time_estimate` for estimate gate below.
 2. Set `START_TIME` / `START_EPOCH` **now** (UTC + Unix epoch) — immediately before first coding invoke. See `references/time-tracking.md`.
 3. **Planning-depth gate** — apply `../ns-autonomous/references/planning-decision.md` heuristic on issue payload **before** calling A:
-   - **Single unit** (≤5 files / one-paragraph AC, no real DAG): **skip** `ns-autonomous`. Follow `ns-coder` in-session inside `WORKTREE_ROOT` / `WORK_BRANCH`. Implement only; **defer review** to Phase 4 (`../../ns-harness/references/subagent-dispatch.md` Review once per closure).
+   - **Single unit** (≤5 files / one-paragraph AC, no real DAG): **skip** `ns-autonomous`. Follow `ns-coder` in-session inside `WORKTREE_ROOT` / `WORK_BRANCH`. Implement only; **defer review** to Phase 4 (`../ns-harness/references/subagent-dispatch.md` Review once per closure).
    - **Multi-unit** (Requirements+tasks path): invoke `ns-autonomous` **Engine mode**, passing issue payload, `WORKTREE_ROOT`, `WORK_BRANCH`, `SOURCE_BRANCH`. Engine plans depth, doubt protocol, dispatches units — see `ns-autonomous` `references/routing.md`.
 4. **Estimate (first invocation only):** call `set_issue_estimate` **only if** `time_stats.time_estimate` empty (`0` / missing) **and** worker/engine returned `estimate_seconds` ≥ 60. Estimate already exists, or value < 60 — **skip**; never overwrite, never write 1-second estimate. Full rules: `references/time-tracking.md`.
 5. **Doubt escalation contract** — engine never mutates GitLab state. When Engine returns destructive-doubt event (multi-unit path only):
@@ -143,13 +143,13 @@ Never under `.cursor/`. Abort if a worktree already exists for this id and is in
 
 1. `read_issue` for `issue_iid` — execution + review checklists in description.
 2. Set `START_TIME` / `START_EPOCH` before first task in unit.
-3. Run `../../ns-coder/references/run-implementation.md` scoped to **unit tasks** inside `WORKTREE_ROOT` — handoff rows stay per task; **no Flow D** here (G owns status/spent).
+3. Run `../ns-coder/references/run-implementation.md` scoped to **unit tasks** inside `WORKTREE_ROOT` — handoff rows stay per task; **no Flow D** here (G owns status/spent).
 4. Skip `ns-autonomous` Engine. Skip per-task `add_issue_spent_time`.
 5. Estimate at publish time = sum of task estimates (`delivery-units.md` `estimate_sum`) — do not re-estimate per task.
 
 ## Phase 3 — Delivery
 
-1. **Squash to one Conventional Commit** before push (`<type>(#{issue_iid}): <imperative description in English>`, types: feat/fix/refactor/test/docs/chore). External mode may use `ISSUE_ID` in message when that is the issue identifier. Squash internal checkpoint commits to preserve one-commit-per-delivery atomicity. See `../../ns-harness/references/agent-git-identity.md` for attribution.
+1. **Squash to one Conventional Commit** before push (`<type>(#{issue_iid}): <imperative description in English>`, types: feat/fix/refactor/test/docs/chore). External mode may use `ISSUE_ID` in message when that is the issue identifier. Squash internal checkpoint commits to preserve one-commit-per-delivery atomicity. See `../ns-harness/references/agent-git-identity.md` for attribution.
 2. Push `WORK_BRANCH`.
 3. Run Phase 4 (review gate). Do **not** set `END_TIME`, spent time, or Dev 100% until Phase 4 returns **both** `Code Review: Approved` and `Delivery Review: Approved`.
 4. **On `Approved` only — close the clock and board** (same instant):
@@ -162,7 +162,7 @@ Never under `.cursor/`. Abort if a worktree already exists for this id and is in
 
 Canonical rules: `../ns-reviewer/references/review-gate-workflow.md`.
 
-1. **MUST** run **`ns-reviewer`** in-session in **Issue review mode** — pass `ISSUE_URL` **or** `project_id` + `issue_iid` (SDD unit mode). Read-only **code** gate; posts internal GitLab comment. **Does not** parse ACs / `requirements.md`. **Forbidden:** Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or substitute unless human explicitly requests this run. **Allowed:** harness `reviewer-agent` only on explicit user request. See `../../ns-harness/references/subagent-dispatch.md`. Reviewer **MUST NOT** dispatch judge.
+1. **MUST** run **`ns-reviewer`** in-session in **Issue review mode** — pass `ISSUE_URL` **or** `project_id` + `issue_iid` (SDD unit mode). Read-only **code** gate; posts internal GitLab comment. **Does not** parse ACs / `requirements.md`. **Forbidden:** Task subagents (`senior-tech-lead-reviewer`, `bugbot`, `security-review`) or substitute unless human explicitly requests this run. **Allowed:** harness `reviewer-agent` only on explicit user request. See `../ns-harness/references/subagent-dispatch.md`. Reviewer **MUST NOT** dispatch judge.
 2. Code loop = `review-gate-workflow.md` **Code** ordered contract (max **3**; `Approved` = **10**). One coder target per map — never split:
    - Call 1 / call 2 `Rejected` with rounds left → pass map **verbatim** to **external single-unit:** `ns-coder` in-session (same worktree); **external multi-unit:** `ns-autonomous` (same worktree) as **one** fix unit (no map split); **SDD unit:** `run-implementation` in-session (same worktree). Next reviewer prompt = `delta` + prior map IDs via `ns-reviewer` in-session. Keep `START_TIME`; no spent/Dev 100% yet. **No judge.**
    - Call 3 only after that second coder (delta found residual and/or introduced Critical). Call 3 not score **10**, or `Blocked`, or rounds exhausted → `status_blocked` (Em Impedimento), post findings, stop. No coder on `Blocked`. No `END_TIME`, spent, or Dev 100%. No judge.

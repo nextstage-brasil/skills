@@ -33,7 +33,7 @@ docs/specs/             # Living domain specs (when consolidating)
 
 ## Harness
 
-See `../../ns-harness/references/session-boot.md` and `../../ns-harness/references/artifact-layout.md`.
+See `../ns-harness/references/session-boot.md` and `../ns-harness/references/artifact-layout.md`.
 
 ## Near-miss routing
 

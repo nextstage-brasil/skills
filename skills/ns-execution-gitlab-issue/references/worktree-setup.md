@@ -1,6 +1,6 @@
 # Worktree setup override
 
-Mechanics are canonical in `../../../ns-harness/references/worktree-setup.md`. This skill's only override:
+Mechanics are canonical in `../../ns-harness/references/worktree-setup.md`. This skill's only override:
 
 **External issue mode:**
 

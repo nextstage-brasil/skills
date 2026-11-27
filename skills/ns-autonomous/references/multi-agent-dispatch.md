@@ -15,7 +15,7 @@ From single implicit unit or `execution-plan.md` DAG (`planning-decision.md`):
 | **1** | Follow `ns-coder` **in A session** inside `WORKTREE_ROOT`. **MUST NOT** spawn `coder-agent`. Defer review to caller (G Phase 4) or standalone step 5. |
 | **≥2** | Follow `ns-coder` in A session per unit, sequential in DAG order. `coder-agent` / parallel only on explicit user request (disjoint + no DAG edge). |
 
-See `../../../ns-harness/references/subagent-dispatch.md` spawn gate.
+See `../../ns-harness/references/subagent-dispatch.md` spawn gate.
 
 ## Executing a unit (≥2)
 

@@ -15,7 +15,7 @@ Execution-phase PHPUnit implementation. Planning-phase: `ns-spec-driven/referenc
 
 ## Session boot
 
-Load `.nextstage-harness/rules/backend-tests-rules.mdc` and `backend-rules.mdc` when present. See `references/backend-testing-architecture.md` for layout, run contract, and bootstrap summary.
+Load `.nextstage-harness/rules/backend-tests-rules.md` and `backend-rules.md` when present. See `references/backend-testing-architecture.md` for layout, run contract, and bootstrap summary.
 
 ## Phase 0 — Resolve or bootstrap backend test root
 
@@ -60,7 +60,7 @@ Do not proceed to Phase 1 until `{backend_root}` is confirmed and `phpunit.xml` 
 
 ## Phase 2 — Write tests
 
-- Unit/feature **default tier:** no HTTP/network to live third parties — fake/fixtures only (see Test tiers in `../../ns-harness/references/docker-and-testing.md`)
+- Unit/feature **default tier:** no HTTP/network to live third parties — fake/fixtures only (see Test tiers in `../ns-harness/references/docker-and-testing.md`)
 - Unit: mock dependencies — no real DB/queue/cache I/O
 - Feature: HTTP tests with auth, 401/403, cross-tenant P0 when applicable
 - Real external service or real LLM required → PHPUnit **live** group (e.g. `#[Group('live')]`); exclude that group in `phpunit.xml` from default run; record marker + on-demand command in `architecture-rules.md`
@@ -70,7 +70,7 @@ Do not proceed to Phase 1 until `{backend_root}` is confirmed and `phpunit.xml` 
 
 ## Phase 3 — Run (mandatory contract)
 
-See also `../../ns-harness/references/docker-and-testing.md`.
+See also `../ns-harness/references/docker-and-testing.md`.
 
 1. Run `docker ps` — confirm the documented **test** container (ask once if undocumented)
 2. Execute **inside the test container** at `{backend_root}` workdir — **default suite only** (live group excluded). Never include the live group unless the human asks this run:

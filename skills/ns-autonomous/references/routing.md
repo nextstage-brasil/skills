@@ -1,6 +1,6 @@
 # Routing: issue vs. standalone
 
-Entry priority and handoff summary: `../../../ns-harness/references/code-skill-routing.md`.
+Entry priority and handoff summary: `../../ns-harness/references/code-skill-routing.md`.
 
 ## Decision
 

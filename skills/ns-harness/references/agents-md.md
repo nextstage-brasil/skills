@@ -79,27 +79,19 @@ Write post-compress. Don't modify application source unless asked. If `architect
 **Exactly:**
 
 ```markdown
-# Rules
+# Claude Code entry
 
-CRITICAL — NO EXCEPTIONS.
+@AGENTS.md
 
-Obey \`AGENTS.md\` (already in context when the host injects it; open once only if absent — **never** re-Read). Then load every file it requires and follow its flow.
+`AGENTS.md` (imported above) is the project contract — follow its First action, routing, and hard stops.
 
-Must load:
-- \`AGENTS.local.md\` (when present; case-insensitive)
-- all \`alwaysApply: true\` rules (\`.nextstage-harness/rules/\`)
-- any NON-NEGOTIABLE / FIRST ACTION file for the task
-
-No skip. No defer. No memory-only. Missing required file → stop, ask human.
-
-Then skills / subagents / task as AGENTS.md says.
-
-## Subagents
-
-`@.claude/agents` — use them; model optional per agent.
+- Project rules from `.nextstage-harness/rules/` reach Claude Code through `.claude/rules/`: always-on rules are already in context, path-scoped ones load when you touch matching files. Read a canonical rule file only when its `.claude/rules/` adapter is missing.
+- When `AGENTS.local.md` exists beside `AGENTS.md` (any case), read it once at session start; it overrides `AGENTS.md`.
+- Project subagents live in `.claude/agents/`. Spawn them only when the user asks (see AGENTS.md → Project subagents).
+- If a file that AGENTS.md requires is missing, ask the human before continuing.
 ```
 
-No other content. Replace entirely unless user asked to preserve something.
+No other content. Replace entirely unless user asked to preserve something. Matches the CLI stub (`packages/harness/src/agentsLayout.js` → `CLAUDE_MD_CONTENT`). The `@AGENTS.md` line is required: Claude Code loads `CLAUDE.md`, not `AGENTS.md`.
 
 ### Step 6 — Report
 

@@ -45,10 +45,16 @@ export function pruneExcludedAgentAdapters(projectRoot, agents, options = {}) {
     if (target.has(agent)) continue;
 
     if (agent === 'claude-code') {
-      const claudeRoot = join(projectRoot, '.claude');
-      if (existsSync(claudeRoot)) {
-        if (!dryRun) removePath(claudeRoot);
-        removed.push(claudeRoot);
+      // Only generated adapters go; team files such as `.claude/settings.json` stay.
+      for (const rel of AGENT_ADAPTER_PATHS[agent]) {
+        const path = join(projectRoot, rel);
+        if (!existsSync(path)) continue;
+        if (!dryRun) removePath(path);
+        removed.push(path);
+      }
+      if (!dryRun) {
+        const emptyRoot = removeAgentRootIfEmpty(projectRoot, '.claude');
+        if (emptyRoot) removed.push(emptyRoot);
       }
       const claudeMd = join(projectRoot, 'CLAUDE.md');
       if (existsSync(claudeMd)) {

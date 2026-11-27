@@ -7,7 +7,7 @@ Objective reference for `@nextstage-brasil/harness` — what gets installed, how
 ```
 # Project root (harness --dir)
 AGENTS.md                         # entry pointer (human-edited)
-CLAUDE.md                         # stub: Rules boot + AGENTS.md + .claude/agents (if missing)
+CLAUDE.md                         # stub: @AGENTS.md import + rules/subagents pointers (if missing; legacy stub upgraded)
 .nextstage-harness/               # CANONICAL — edit rules here
   README.md                       # Human guide (add/edit rules)
   manifest.json
@@ -134,7 +134,7 @@ Commit:
 
 Do **not** commit generated adapters — `harness sync` manages a block in `.gitignore`:
 
-- `/.cursor/rules/`, `/.cursor/agents/`, `/.claude/`
+- `/.cursor/rules/`, `/.cursor/agents/`, `/.claude/skills/`, `/.claude/agents/`, `/.claude/rules/`, `/.claude/worktrees/`, `/.claude/settings.local.json`
 
 After clone, run `npx @nextstage-brasil/harness sync` to regenerate adapters locally.
 
@@ -210,7 +210,7 @@ npx @nextstage-brasil/harness agents-md
 npx @nextstage-brasil/harness agents-md --force   # overwrite hand-edited file
 ```
 
-**Output:** `AGENTS.md`, `CLAUDE.md` (Rules boot + AGENTS.md + `.claude/agents`)
+**Output:** `AGENTS.md`, `CLAUDE.md` (`@AGENTS.md` import + rules/subagents pointers)
 
 Step 5 of `/ns-harness prepare` refines this with project context.
 

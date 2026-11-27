@@ -22,20 +22,20 @@ Completeness before fidelity, both by construction. Clarify-Strict **grill** = G
 
 **Orchestrate** — **not** implement phase bodies inline. **Read** phase reference at delegation time. State on **disk** (`docs/versions/`, `docs/context/`, handoff files), not chat history.
 
-Entry priority **2** (feature / version / SDD / multi-day / resume). Harness table: `../../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`. Bare quick fix, no SDD context → redirect `ns-coder` (priority 5) unless user explicitly invoked this skill.
+Entry priority **2** (feature / version / SDD / multi-day / resume). Harness table: `../ns-harness/references/code-skill-routing.md`. Trigger phrases: `references/entry-triggers.md`. Bare quick fix, no SDD context → redirect `ns-coder` (priority 5) unless user explicitly invoked this skill.
 
 ## Routing (read first)
 
 | Handoff                        | Target                                                                                                                       |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Small / quick inside SDD       | In-session `ns-coder` (cheap execute — **MUST NOT** spawn `coder-agent`; `../../ns-harness/references/subagent-dispatch.md`) |
-| Version + handoff              | `references/execution-handoff.md` + `../ns-coder/references/run-implementation.md` — **in-session** (**MUST NOT** spawn `coder-agent`; `../../ns-harness/references/subagent-dispatch.md` Default: one session) |
-| Task file generation           | In-session → `references/task-generator.md` (`task-writer-agent` only on explicit user request; `../../ns-harness/references/subagent-dispatch.md`) |
+| Small / quick inside SDD       | In-session `ns-coder` (cheap execute — **MUST NOT** spawn `coder-agent`; `../ns-harness/references/subagent-dispatch.md`) |
+| Version + handoff              | `references/execution-handoff.md` + `../ns-coder/references/run-implementation.md` — **in-session** (**MUST NOT** spawn `coder-agent`; `../ns-harness/references/subagent-dispatch.md` Default: one session) |
+| Task file generation           | In-session → `references/task-generator.md` (`task-writer-agent` only on explicit user request; `../ns-harness/references/subagent-dispatch.md`) |
 | Bare quick fix, no SDD context | Redirect `ns-coder` (priority 5) — cheap; in-session; **MUST NOT** spawn `coder-agent`                                      |
 
 ## Harness
 
-See `../../ns-harness/references/session-boot.md`, `../../ns-harness/references/artifact-layout.md`, `references/gates.md`.
+See `../ns-harness/references/session-boot.md`, `../ns-harness/references/artifact-layout.md`, `references/gates.md`.
 
 | Variable        | Resolve via                                          |
 | --------------- | ---------------------------------------------------- |
@@ -122,7 +122,7 @@ Chat short, natural language. **Read `references/human-communication.md` before 
 
 ## Orchestration mandate
 
-- **Delegate** = spawn gate in `../../ns-harness/references/subagent-dispatch.md`. **Tasks, implementation (Quick, handoff, units, slices) and review all run in this session** — host manages context. Spawn a bridge only on explicit user request.
+- **Delegate** = spawn gate in `../ns-harness/references/subagent-dispatch.md`. **Tasks, implementation (Quick, handoff, units, slices) and review all run in this session** — host manages context. Spawn a bridge only on explicit user request.
 - **Read** phase reference before that phase — never improvise from memory.
 - **Do not** ask "continue to next phase?" between phases in same sized pipeline.
 - **Do not** invoke `/ns-harness prepare` or brownfield prepare references.
@@ -141,7 +141,7 @@ Chat short, natural language. **Read `references/human-communication.md` before 
 
 ## Execute routing
 
-Worker dispatch: spawn gate — `../../ns-harness/references/subagent-dispatch.md`. **Everything is in-session** — tasks, implementation, review (no subagents unless the user explicitly asks). Context compaction/reset = host harness; state on disk.
+Worker dispatch: spawn gate — `../ns-harness/references/subagent-dispatch.md`. **Everything is in-session** — tasks, implementation, review (no subagents unless the user explicitly asks). Context compaction/reset = host harness; state on disk.
 
 | Context                                    | Worker                                                                                                                                                                                                                                                                                                                |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

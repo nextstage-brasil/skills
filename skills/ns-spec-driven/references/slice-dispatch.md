@@ -1,6 +1,6 @@
 # Slice / unit execution — scope and validation
 
-Orchestrator executes **in-session** (follow `ns-coder` inline; **MUST NOT** spawn `coder-agent` — `../../../ns-harness/references/subagent-dispatch.md` Default: one session):
+Orchestrator executes **in-session** (follow `ns-coder` inline; **MUST NOT** spawn `coder-agent` — `../../ns-harness/references/subagent-dispatch.md` Default: one session):
 - **`delivery-units.md` present:** one **unit** at a time (`orchestrator.md` per-unit loop).
 - **Else:** one **slice** at a time.
 

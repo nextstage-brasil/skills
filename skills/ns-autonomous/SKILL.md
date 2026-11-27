@@ -17,7 +17,7 @@ Harness-aware execution engine: planning depth, doubt resolution, multi-agent di
 
 ## Workflow mode (mandatory)
 
-Fixed workflow — named skill handoffs or harness bridges (`../../ns-harness/references/subagent-dispatch.md` spawn gate). Review gate: `../ns-reviewer/references/review-gate-workflow.md`. `ns-reviewer` in-session; then `ns-judge` in-session only if `Code Review: Approved`. No Task persona substitutes. **Every** unit (1 or ≥2) → follow `ns-coder` in A's session (worktree), sequentially — **MUST NOT** spawn `coder-agent` unless the user explicitly asks. C2 / single-unit workers = implement only; **no** per-unit review — parent owns REV at closure.
+Fixed workflow — named skill handoffs or harness bridges (`../ns-harness/references/subagent-dispatch.md` spawn gate). Review gate: `../ns-reviewer/references/review-gate-workflow.md`. `ns-reviewer` in-session; then `ns-judge` in-session only if `Code Review: Approved`. No Task persona substitutes. **Every** unit (1 or ≥2) → follow `ns-coder` in A's session (worktree), sequentially — **MUST NOT** spawn `coder-agent` unless the user explicitly asks. C2 / single-unit workers = implement only; **no** per-unit review — parent owns REV at closure.
 
 ## Isolation invariant (non-negotiable)
 
@@ -29,7 +29,7 @@ Skill **never** writes application code on main product checkout; **never** comm
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** there before any other step in this skill.
+See `../ns-harness/references/session-boot.md`. **Complete Session boot (blocking)** there before any other step in this skill.
 
 ### After session boot — Engine and Standalone
 
@@ -38,7 +38,7 @@ See `../../ns-harness/references/session-boot.md`. **Complete Session boot (bloc
 
 ## Routing (read first)
 
-Entry priority table: `../../ns-harness/references/code-skill-routing.md`. Standalone triggers: `references/entry-triggers.md`.
+Entry priority table: `../ns-harness/references/code-skill-routing.md`. Standalone triggers: `references/entry-triggers.md`.
 
 1. **Origin is a GitLab issue** (`ISSUE_URL` or issue reference) → entry priority **1** — follow `ns-execution-gitlab-issue` end to end; this skill only runs as its Phase 2 engine (**Engine mode** below). Do not run the standalone pipeline, do not touch GitLab state, do not create a worktree.
 2. **Standalone autonomous** (local plan file, pasted text/plan, ad-hoc "implement this autonomously" without an issue) → entry priority **3** — run the **standalone pipeline**: own worktree, own state, own review loop.
@@ -51,7 +51,7 @@ Inputs (already resolved by the caller — this skill never creates them): issue
 
 1. **Planning-depth self-decision** — evaluate the issue payload and decide single work unit vs. light `requirements.md` + `tasks/task-NNN-*.md` + `execution-plan.md` under `docs/versions/{version_san}/sdd/`. See `references/planning-decision.md`.
 2. **Doubt protocol** — self-ask, docs-first lookup, self-answer non-destructive doubts, escalate destructive ones as a structured event to the caller instead of mutating GitLab state; pause dependent units until resumed. See `references/doubt-resolution.md`.
-3. **Multi-agent dispatch** — parse work units. **1 unit:** follow `ns-coder` in this session inside `WORKTREE_ROOT` (defer review to caller / standalone step 5). **≥2 units:** follow `ns-coder` in this session per unit, sequentially in DAG order (parallel workers only on explicit user request, units with no DAG edge and disjoint file scopes). **No** per-unit review. See `references/multi-agent-dispatch.md` and `../../ns-harness/references/subagent-dispatch.md`.
+3. **Multi-agent dispatch** — parse work units. **1 unit:** follow `ns-coder` in this session inside `WORKTREE_ROOT` (defer review to caller / standalone step 5). **≥2 units:** follow `ns-coder` in this session per unit, sequentially in DAG order (parallel workers only on explicit user request, units with no DAG edge and disjoint file scopes). **No** per-unit review. See `references/multi-agent-dispatch.md` and `../ns-harness/references/subagent-dispatch.md`.
 4. **Checkpoint commits** — one commit per completed sequential unit or per completed parallel batch, inside the worktree; the caller squashes at delivery.
 5. **Fix-loop entry point** — when re-invoked after `Rejected`, run **one** coder call on the whole map **verbatim** (no unit-count split, no “or units”). Skip units already done.
 6. **Return to caller**: unit statuses, files changed, any open destructive doubt, and (first invocation only) a plan-based `estimate_seconds` hint — the caller applies `set_issue_estimate` only when the issue estimate is empty and the value is ≥ 60 (see `../ns-execution-gitlab-issue/references/time-tracking.md`).
@@ -62,7 +62,7 @@ Same internals as Engine mode, but this skill owns the whole run:
 
 1. Resolve the descriptor — local plan path or pasted text. No MCP calls.
 2. Infer `change_kind` (fix/feat), allocate `{version_san}`, create `docs/versions/{version_san}/sdd/` when artifacts needed.
-3. **Create its own worktree**: `.worktrees/{version_san}/` + branch `work/{version_san}` from the resolved base branch, following `../../ns-harness/references/worktree-setup.md`. Path is under the **repo root**, never under `.cursor/`. On failure → abort (do not fall back to the main checkout) — see `references/standalone-pipeline.md`.
+3. **Create its own worktree**: `.worktrees/{version_san}/` + branch `work/{version_san}` from the resolved base branch, following `../ns-harness/references/worktree-setup.md`. Path is under the **repo root**, never under `.cursor/`. On failure → abort (do not fall back to the main checkout) — see `references/standalone-pipeline.md`.
 4. Planning-depth self-decision, doubt protocol (destructive doubt → chat-only gate, no GitLab actions available), multi-agent dispatch — identical logic to Engine mode.
 5. **Internal review loop** — `../ns-reviewer/references/review-gate-workflow.md` (exhaustive map → one coder → `delta`; **`Approved` = 10** only): `ns-reviewer` in-session, version-closure **code** mode. **Do not** run `ns-judge` until code `Approved`. Then in-session `../ns-judge/SKILL.md` (`closure`). Product files changed after judge Rejected: code review again then judge again.
 6. Report per `review-gate-workflow.md` **Final report** fields plus `{version_san}`, worktree path, commit(s), and follow-ups. No GitLab board, no MR — unless `docs/context/gitlab-sync-config.md` exists and the human explicitly asked for one (out of scope for v1; standalone stays local-only otherwise).

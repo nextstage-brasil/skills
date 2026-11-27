@@ -4,7 +4,7 @@ Pre-execution: plan vs plan before coding.
 
 ## Session boot
 
-`../../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent.
+`../../ns-harness/references/session-boot.md`. Load `.nextstage-harness/rules/*.md`. Read `architecture-rules.md` first. Legacy: `.cursor/rules/*.mdc` only if `.nextstage-harness/` absent.
 
 ## When to use
 

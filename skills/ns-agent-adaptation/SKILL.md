@@ -51,7 +51,7 @@ Detail: `references/adaptation-ladder.md`.
 5. **No cheerleading.** Assumptions and gaps only.
 6. **No framework / language / code.** Never recommend LangGraph, CrewAI, LangChain, AutoGen, or any stack. Never write implementation.
 
-AskQuestion / structured tools: recommended option label starts `(preferred)`; preferred first.
+Structured question tool (`AskQuestion` in Cursor, `AskUserQuestion` in Claude Code): recommended option label starts `(preferred)`; preferred first.
 
 Codebase or docs already answer: explore first. Confirm only.
 

@@ -39,7 +39,7 @@ Follow phases in order. Do not skip Phase 0.
 
 ### Phase 0 — Scope and intent
 
-Ask user (one question at a time, or `AskQuestion`):
+Ask user (one question at a time, or the structured question tool (`AskQuestion` in Cursor, `AskUserQuestion` in Claude Code)):
 
 | Question | Why |
 | -------- | --- |

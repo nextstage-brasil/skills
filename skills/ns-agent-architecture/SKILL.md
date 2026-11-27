@@ -48,7 +48,7 @@ Walk tree depth-first. Resolve A before B.
 5. **No cheerleading.** Assumptions and gaps only.
 6. **Close** when: five reference blocks mapped, every subtask row classified, trade-off budget locked for all components (extra rows when interactive vs batch diverge), **Orchestration pattern** locked per segment, architecture change signal locked, four pillars resolved. Then announce complete. Then final report.
 
-AskQuestion / structured tools:
+Structured question tool (`AskQuestion` in Cursor, `AskUserQuestion` in Claude Code):
 
 - Recommended option label starts `(preferred)`
 - Recommended option first

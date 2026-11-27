@@ -33,7 +33,7 @@ No `Code Review: Approved` → **stop**. Do not judge. Tell parent run reviewer 
 
 ## Session boot
 
-See `../../ns-harness/references/session-boot.md`. Cold start this judge run: Session boot 1–6 before probe. Never tool-Read `AGENTS.md`.
+See `../ns-harness/references/session-boot.md`. Cold start this judge run: Session boot 1–6 before probe. Never tool-Read `AGENTS.md`.
 
 ## Probe (Python optional)
 
