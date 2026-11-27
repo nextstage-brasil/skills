@@ -38,6 +38,8 @@ Envelope (every command): `contract_version: 1`, `command`, `run_id`, `ok`, `err
 
 `kind` (qa-env): `container` \| `volume` \| `database` \| `image` \| `worktree`. `evidence_dir` = agent only. `urls[].name` = `[a-z][a-z0-9_]*`; health check `{name}` resolves against it.
 
+`seed` and `reset` run the project's seed/reset commands with `QA_RUN_ID` and `QA_DATA_PREFIX` in their environment (the template passes both for either command).
+
 ## Run ownership
 
 - Id charset `^[A-Za-z0-9.][A-Za-z0-9._/:@+-]*$`, no `..` — ids reach command arguments (`cleanup.md` → Registration).

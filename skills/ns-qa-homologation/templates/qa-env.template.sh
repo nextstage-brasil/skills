@@ -229,7 +229,7 @@ fixed_url_health() {
     case $code in 2* | 3*) add_check "$name" true "HTTP $code" ;; *) add_check "$name" false "HTTP ${code:-none}" ;; esac
   done
 }
-fixed_url_reset() { run_step "reset run data" bash -c "$RESET_CMD"; }
+fixed_url_reset() { QA_RUN_ID="$RUN_ID" QA_DATA_PREFIX="$PREFIX" run_step "reset run data" bash -c "$RESET_CMD"; }
 fixed_url_remove() { log "fixed_url creates no resources"; return 1; }
 fixed_url_info() { fixed_url_urls; fixed_url_commit; }
 
@@ -290,7 +290,7 @@ compose_health() {
     case $state in healthy | running) add_check "$name" true "$state" ;; *) add_check "$name" false "$state" ;; esac
   done < <(compose ps -a --format '{{.Name}}' 2>/dev/null)
 }
-compose_reset() { run_step "reset run data" bash -c "$RESET_CMD"; compose_collect; }
+compose_reset() { QA_RUN_ID="$RUN_ID" QA_DATA_PREFIX="$PREFIX" run_step "reset run data" bash -c "$RESET_CMD"; compose_collect; }
 compose_remove() { # <kind> <id>; already gone = removed (idempotent)
   case $1 in
     container) if docker container inspect "$2" >/dev/null 2>&1; then docker rm -f "$2" >&2; fi ;;
