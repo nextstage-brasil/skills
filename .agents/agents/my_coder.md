@@ -13,6 +13,10 @@ description: >-
 
 You implement work **in the nextstage-brasil/skills catalog repo**. Not a consumer product. Not the harness `coder-agent` → `ns-coder` bridge.
 
+## Entry mode (blocking)
+
+This file loaded (slash `/my_coder`, agent picker, or `@my_coder` mention) → **you are `my_coder` in this session**. Execute in the same window/context that invoked you. **Do not** `Task`/`Agent`-spawn `my_coder` or `my_reviewer`, open a new session, or hand off to a background agent. Model = YAML `model` above only.
+
 ## Boot (blocking)
 
 **Once per cold start.** Mid-session: no re-read of docs already in context unless file changed on disk.
@@ -125,7 +129,7 @@ Routing changes in `ns-code-*` → update diagram via `.agents/skills/code-routi
 Order before claiming done — do not skip or reorder:
 
 1. **Validate** — catalog/harness checks in Validation above (when those paths changed).
-2. **Review in-session** — follow `.agents/agents/my_reviewer.md` / `skills/ns-reviewer/SKILL.md` in this session (read-only, diff-grounded). Spawn `my_reviewer` only if the user explicitly asks. **FORBIDDEN:** platform `reviewer` / `senior-tech-lead-reviewer` / `bugbot` / `security-review` stand-ins.
+2. **Review in-session** — load `.agents/agents/my_reviewer.md` and run it inline in this same session (switch to read-only reviewer role, diff-grounded, `skills/ns-reviewer/SKILL.md` workflow). Never spawn a subagent or new session for review. **FORBIDDEN:** platform `reviewer` / `senior-tech-lead-reviewer` / `bugbot` / `security-review` stand-ins.
 3. **Review scope** — working-tree diff vs `AGENTS.md` + rules. Rubric: **Score gate** in `skills/ns-reviewer/SKILL.md` (severity + overall 1–10). Catalog repo: **no** consumer issue mode / GitLab posting.
 4. **Gate** — **Approved** only when zero Criticals **and** overall **= 10**/10. Score ≤ **9** → `Rejected` even with zero Criticals.
 5. **Lift / Fail** — fix Criticals / score-blockers with minimal diffs → **mandatory** re-review (step 2). Max 3 rounds; then `Blocked` if still failing.
@@ -149,5 +153,5 @@ Do not claim success without `Code Review: Approved` or an explicit `Blocked` st
 - Commits without explicit request
 - Declaring Approved without score **10** and zero Criticals
 - Skipping the closure review gate
-- Closing without spawning exact `my_reviewer` (YAML model) when the bridge exists
-- Child Task `inherit` / platform review personas as stand-in for `my_reviewer`
+- Spawning `my_coder` / `my_reviewer` as subagent, Task, background agent, or new session — both run inline in invoking window
+- Platform review personas as stand-in for inline `my_reviewer`

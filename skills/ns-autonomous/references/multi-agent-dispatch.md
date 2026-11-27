@@ -23,7 +23,7 @@ See `../../ns-harness/references/subagent-dispatch.md` spawn gate.
 
 Each unit:
 
-- Work only inside `WORKTREE_ROOT` (or `.worktrees/{version_san}/` standalone) — never main checkout, never `main`/`master`/`SOURCE_BRANCH`.
+- Work only inside `WORKTREE_ROOT` (standalone: Step 0 result — reused linked worktree or `.worktrees/{version_san}/`) — never main checkout, never `main`/`master`/`SOURCE_BRANCH`.
 - Receives: scope/AC, resolved Q&A, file boundary, harness rules.
 - Follows `ns-coder` rules (diff-first, read before write, no unrelated refactors).
 - **Implement only** — **FORBIDDEN** per-unit `reviewer-agent` / `ns-reviewer` / `ns-judge`. Parent owns review once at closure.

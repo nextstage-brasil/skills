@@ -48,13 +48,13 @@ See `../ns-harness/references/session-boot.md`. **Complete Session boot (blockin
 
 **External issue mode** (priority 1 unchanged): single worktree, single branch, single MR, single commit per issue:
 
-- `WORKTREE_ROOT = .worktrees/{ISSUE_ID}`
+- `WORKTREE_ROOT` = `ns-harness` worktree Step 0 result: reused linked worktree or `.worktrees/{ISSUE_ID}`
 - `WORK_BRANCH = work/{ISSUE_ID}-{ISSUE_SLUG}`
 
 **SDD unit mode** — when `ns-spec-driven` dispatches a published delivery unit:
 
 - Input: `unit` id (e.g. `unit-001`) + `issue_iid` from `delivery-units.md` — **not** external `ISSUE_URL`
-- `WORKTREE_ROOT = .worktrees/{unit}`
+- `WORKTREE_ROOT` = Step 0 result: reused linked worktree (first unit only) or `.worktrees/{unit}`
 - `WORK_BRANCH = work/{unit}-{slug}` per `delivery-units.md` / `source-branch-resolution.md`
 - `SOURCE_BRANCH` = version-resolved branch recorded in `delivery-units.md` header (Gate 1 uses same rules; skip re-discovery when header set)
 - Phase 2 coding: `../ns-coder/references/run-implementation.md` for **unit tasks only** — not `ns-autonomous` Engine
@@ -109,10 +109,10 @@ After resolution, validate on the remote (fetch, `ls-remote`, `_` ↔ `-` altern
 
 ### Gate 1.5 — Single worktree (monorepo)
 
-Create `WORKTREE_ROOT` per `references/worktree-setup.md`:
+Resolve `WORKTREE_ROOT` per `references/worktree-setup.md` — run `ns-harness` **Step 0** first:
 
-- **External issue mode:** `.worktrees/{ISSUE_ID}`
-- **SDD unit mode:** `.worktrees/{unit}`
+- Session inside pre-existing linked worktree passing Step 0: reuse it (`WORKTREE_MODE = reused`); no second tree.
+- Else create **external:** `.worktrees/{ISSUE_ID}`; **SDD unit:** `.worktrees/{unit}`.
 
 Never under `.cursor/`. Abort if a worktree already exists for this id and is in use by another run, unless explicit resume. Never implement in main checkout or on `main`/`master`/`SOURCE_BRANCH`. If `git worktree add` fails → abort with exact error (no main-checkout fallback). Isolation is hard gate before Phase 2.
 
@@ -150,7 +150,7 @@ Never under `.cursor/`. Abort if a worktree already exists for this id and is in
 ## Phase 3 — Delivery
 
 1. **Squash to one Conventional Commit** before push (`<type>(#{issue_iid}): <imperative description in English>`, types: feat/fix/refactor/test/docs/chore). External mode may use `ISSUE_ID` in message when that is the issue identifier. Squash internal checkpoint commits to preserve one-commit-per-delivery atomicity. See `../ns-harness/references/agent-git-identity.md` for attribution.
-2. Push `WORK_BRANCH`.
+2. Push `WORK_BRANCH`. `WORKTREE_MODE = reused`: `git push -u origin HEAD:{WORK_BRANCH}` every push (Step 0).
 3. Run Phase 4 (review gate). Do **not** set `END_TIME`, spent time, or Dev 100% until Phase 4 returns **both** `Code Review: Approved` and `Delivery Review: Approved`.
 4. **On `Approved` only — close the clock and board** (same instant):
    - Set `END_TIME` / `END_EPOCH` **now**.
@@ -168,7 +168,7 @@ Canonical rules: `../ns-reviewer/references/review-gate-workflow.md`.
    - Call 3 only after that second coder (delta found residual and/or introduced Critical). Call 3 not score **10**, or `Blocked`, or rounds exhausted → `status_blocked` (Em Impedimento), post findings, stop. No coder on `Blocked`. No `END_TIME`, spent, or Dev 100%. No judge.
 3. On `Code Review: Approved` only: read `../ns-judge/SKILL.md` in-session (`--mode issue --ac-file` from synthesis). Python optional. `Delivery Review: Approved` only at 10. Judge Rejected: fix map; product files changed → code review again (must Approved) then judge again. Max 3 judge rounds.
 4. Both Approved → Phase 3 step 4 (END + spent + Dev 100% + delivery comment).
-5. Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` + `Delivery Review: {verdict}` — exact strings returned.
+5. Final output: `Fatto!` + `MR_URLS` + `Code Review: {verdict}` + `Delivery Review: {verdict}` — exact strings returned. `WORKTREE_MODE = reused`: also Step 0 local test commands (`git fetch origin && git switch {WORK_BRANCH}`).
 
 ## Stop and ask the human
 
@@ -177,6 +177,7 @@ Canonical rules: `../ns-reviewer/references/review-gate-workflow.md`.
 | Gate 1: `develop` fallback missing on remote                  | Stop — ask once                                   |
 | Gate 1: non-default base (`main`/`master`/`homolog`/…) without express human confirmation this run | Stop — ask once |
 | Worktree conflict (same issue, another run)               | Stop unless explicit resume                       |
+| Step 0: linked worktree on base branch, detached, dirty, sandbox path, or foreign commits | Stop — ask once; no second tree |
 | Ambiguous or conflicting acceptance criteria              | Stop — `/ns-requirements-enricher` first; do not start Phase 1 coding |
 | MCP unavailable or auth failure                           | Stop — state blocker                              |
 | `project_id` trio not confirmed                           | Stop per `mcp-gitlab-usage`                       |
@@ -204,7 +205,7 @@ See `mcp-gitlab-usage` for MCP tool contracts and confirmation gates.
 | File                                     | When                                                                        |
 | ---------------------------------------- | --------------------------------------------------------------------------- |
 | `references/source-branch-resolution.md` | Gate 1 — milestone/version discovery, `develop` fallback, remote validation |
-| `references/worktree-setup.md`           | `ISSUE_ID` → `run_id` override (canonical mechanics in `ns-harness`) |
+| `references/worktree-setup.md`           | Gate 1.5 — `run_id` override; Step 0 linked-worktree reuse (canonical mechanics in `ns-harness`) |
 | `references/mr-conventions.md`           | MR title, draft, linking, reuse note                                        |
 | `references/delivery-report.template.md` | Phase 3 internal delivery comment                                           |
 | `references/time-tracking.md`            | Estimate fill-if-empty; spent-time wall-clock + pause rules                 |

@@ -31,7 +31,7 @@ If classic artifacts only at version root → nest migration STOP (`session-cont
 1. Read `delivery-units.md` — waves, deps, `issue_iid`, `gate4_mode`
 2. **Current unit:** if caller set `unit` → use it. Else (local loop only) → lowest wave with `pending`/`in_progress` whose deps are `completed`
 3. **Batch** = all tasks listed in that unit only — never mix units in one dispatch
-4. Worktree per unit: `.worktrees/{unit}`; work branch `work/{unit}-{slug}`
+4. Worktree per unit: `.worktrees/{unit}` (first unit may reuse pre-existing linked worktree per `../../ns-harness/references/worktree-setup.md` Step 0; later/parallel units own tree); work branch `work/{unit}-{slug}`
 5. Parallel: only when `gate4_mode` = parallel **and** same-wave units satisfy `A ∥ B`; respect `max_parallel_units`. Caller-set `unit` never stolen by a different wave pick.
 6. **GitLab:** if caller is G → no board writes in this file. Else apply SSoT at **unit** start/end only.
 

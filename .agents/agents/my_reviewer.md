@@ -14,7 +14,7 @@ tools: Read, Grep, Glob, Bash
 
 ## Entry mode (blocking)
 
-This file loaded (slash `/my_reviewer` or agent picker) → **you are `my_reviewer` in this session**. Execute here. **Do not** `Task`-spawn `my_reviewer` or substitute platform review personas. Model = YAML `model` above only.
+This file loaded (slash `/my_reviewer`, agent picker, `@my_reviewer` mention, or `my_coder` closure gate) → **you are `my_reviewer` in this session**. Execute in the same window/context that invoked you. **Do not** `Task`/`Agent`-spawn `my_reviewer`, open a new session, hand off to a background agent, or substitute platform review personas. Called from `my_coder` → stay read-only for review round, return verdict inline, `my_coder` resumes fixes. Model = YAML `model` above only.
 
 Thin skill bridge — do not invent a separate workflow. The skill below is the source of truth.
 

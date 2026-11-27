@@ -22,7 +22,7 @@ Keep context small: load only the unit/slice tasks and cited `source/` anchors, 
 
 Execute **by unit** — not whole slice:
 
-- Worktree: `.worktrees/{unit_id}`
+- Worktree: `.worktrees/{unit_id}` (first unit may reuse pre-existing linked worktree per `../../ns-harness/references/worktree-setup.md` Step 0; later/parallel units own tree)
 - Work branch: `work/{unit_id}-{slug}`
 - Implement **all tasks in unit** only
 - Wave barrier: do not start wave N+1 until all units in wave N complete or blocked

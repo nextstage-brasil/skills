@@ -31,7 +31,7 @@ Drive partitioned version to completion **and implement it in this same session*
 ## Orchestration mandate
 
 - Execute **all** pending work in **roadmap DAG order** (respect inter-slice dependencies).
-- `delivery-units.md` exists: dispatch **by unit** — worktree `.worktrees/{unit}`, wave barrier, **one commit/MR per unit**. Sequential in-session by default; parallel workers only if Gate 4 said so. Failed unit blocks next wave.
+- `delivery-units.md` exists: dispatch **by unit** — worktree `.worktrees/{unit}` (first unit may reuse pre-existing linked worktree per `../../ns-harness/references/worktree-setup.md` Step 0; later/parallel units own tree), wave barrier, **one commit/MR per unit**. Sequential in-session by default; parallel workers only if Gate 4 said so. Failed unit blocks next wave.
 - No units file: one **slice** at a time, in-session; one Conventional Commit per slice.
 - **Do not** ask "start next slice?", "continue?", or "commit?" between units/slices.
 - **Do** implement tasks in this session (`ns-coder`); **do not** spawn `coder-agent` per unit/slice. Update handoff rows as each task completes so compaction/restart resumes from disk.

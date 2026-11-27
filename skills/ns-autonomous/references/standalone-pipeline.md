@@ -19,15 +19,16 @@ Follow `../../ns-harness/references/worktree-setup.md` with:
 
 ```
 {run_id} = {version_san}
-WORKTREE_ROOT = .worktrees/{version_san}/
+WORKTREE_ROOT = reused linked worktree (Step 0) | .worktrees/{version_san}/
 WORK_BRANCH = work/{version_san}
 ```
 
 **Hard rules for this step:**
 
 - Work inside the repo — never `.cursor` or any Cursor IDE folder.
-- Use plain `git worktree add` into `.worktrees/{version_san}/` (mkdir parent if needed).
-- Do **not** use Cursor Task / best-of-n / agent-runtime worktrees as a substitute.
+- Run canonical **Step 0** first. Pre-existing linked worktree of same repo passing Step 0: reuse; no second tree.
+- Else plain `git worktree add` into `.worktrees/{version_san}/` (mkdir parent if needed).
+- Do **not** use Cursor Task / best-of-n / IDE sandbox trees as a substitute.
 - If `git worktree add` fails → **abort** with the exact error; do **not** continue in the main checkout.
 - **Never** implement on `main`/`master` (or the base branch) as a workaround. That violates isolation even if a sandbox blocked the worktree.
 - Exception only when the human **explicitly** said for this run: do not create a new branch / work in place on the current branch. Document that exception in the report.
